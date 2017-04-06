@@ -82,32 +82,22 @@ public class MainActivity extends Activity {
     }
 
     public void setTrainingInfo(TrainingInfo info) {
-        binding.title.setText(info.title);
-        String rounds = getResources().getQuantityString(R.plurals.rounds, info.roundCount, info.roundCount);
-        binding.rounds.setText(rounds);
-        setRoundInfo(info.round);
+        setCommonTrainingInfo(info);
         binding.date.setText(R.string.today);
     }
 
     private void setTraining(Training training) {
-        binding.title.setText(training.title);
-        int roundCount = training.getRounds().size();
-        String rounds = getResources().getQuantityString(R.plurals.rounds, roundCount, roundCount);
-        binding.rounds.setText(rounds);
         Round round = training.getRounds().get(0);
-        setRoundInfo(round);
+        TrainingInfo info = new TrainingInfo(training, round, null);
+        setCommonTrainingInfo(info);
         binding.date.setText("");
     }
 
-    private void setRoundInfo(Round round) {
-        String ends;
-        if(round.maxEndCount == null) {
-            ends = getResources().getQuantityString(R.plurals.arrows_per_end, round.shotsPerEnd, round.shotsPerEnd);
-        } else {
-            ends = getResources().getQuantityString(R.plurals.ends_arrow, round.shotsPerEnd, round.maxEndCount, round.shotsPerEnd);
-        }
-        binding.ends.setText(ends);
-        binding.distance.setText(round.distance.toString());
+    private void setCommonTrainingInfo(TrainingInfo info) {
+        binding.title.setText(info.title);
+        binding.rounds.setText(info.getRoundDetails(this));
+        binding.ends.setText(info.getEndDetails(this));
+        binding.distance.setText(info.round.distance.toString());
     }
 
     @Override

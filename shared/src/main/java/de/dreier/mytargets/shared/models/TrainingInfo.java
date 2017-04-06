@@ -14,6 +14,9 @@
  */
 package de.dreier.mytargets.shared.models;
 
+import android.content.Context;
+
+import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
 
@@ -31,5 +34,30 @@ public class TrainingInfo {
         this.title = training.title;
         this.roundCount = training.getRounds().size();
         this.timerSettings = timerSettings;
+    }
+
+    public String getRoundDetails(Context context) {
+        if (round.getEnds().isEmpty()) {
+            return context.getResources()
+                    .getQuantityString(R.plurals.rounds, roundCount, roundCount);
+        } else {
+            return round.getReachedScore().toString();
+        }
+    }
+
+    public String getEndDetails(Context context) {
+        if (round.getEnds().isEmpty()) {
+            if (round.maxEndCount == null) {
+                return context.getResources()
+                        .getQuantityString(R.plurals.arrows_per_end, round.shotsPerEnd, round.shotsPerEnd);
+            } else {
+                return context.getResources()
+                        .getQuantityString(R.plurals.ends_arrow, round.shotsPerEnd, round.maxEndCount, round.shotsPerEnd);
+            }
+        } else {
+            return context.getResources()
+                    .getQuantityString(R.plurals.ends_arrow, round.shotsPerEnd, round.getEnds()
+                            .size(), round.shotsPerEnd);
+        }
     }
 }

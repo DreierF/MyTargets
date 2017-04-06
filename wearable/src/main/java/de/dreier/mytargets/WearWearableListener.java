@@ -31,7 +31,6 @@ import de.dreier.mytargets.shared.models.TimerSettings;
 import de.dreier.mytargets.shared.models.TimerSettings$$Parcelable;
 import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.TrainingInfo$$Parcelable;
-import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.models.db.Training$$Parcelable;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
@@ -50,16 +49,19 @@ public class WearWearableListener extends WearableListenerService {
         byte[] data = messageEvent.getData();
         switch (messageEvent.getPath()) {
             case TRAINING_UPDATE:
-                TrainingInfo info = Parcels.unwrap(ParcelableUtil.unmarshall(data, TrainingInfo$$Parcelable.CREATOR));
+                TrainingInfo info = Parcels
+                        .unwrap(ParcelableUtil.unmarshall(data, TrainingInfo$$Parcelable.CREATOR));
                 showNotification(info);
                 ApplicationInstance.wearableClient.sendTrainingUpdate(info);
                 break;
             case TRAINING_TEMPLATE:
-                Training training = Parcels.unwrap(ParcelableUtil.unmarshall(data, Training$$Parcelable.CREATOR));
+                Training training = Parcels
+                        .unwrap(ParcelableUtil.unmarshall(data, Training$$Parcelable.CREATOR));
                 ApplicationInstance.wearableClient.sendTrainingTemplate(training);
                 break;
             case TIMER_SETTINGS:
-                TimerSettings settings = Parcels.unwrap(ParcelableUtil.unmarshall(data, TimerSettings$$Parcelable.CREATOR));
+                TimerSettings settings = Parcels
+                        .unwrap(ParcelableUtil.unmarshall(data, TimerSettings$$Parcelable.CREATOR));
                 ApplicationInstance.wearableClient.sendTimerSettingsFromRemote(settings);
                 break;
             default:
@@ -94,14 +96,8 @@ public class WearWearableListener extends WearableListenerService {
     }
 
     private String describe(TrainingInfo info) {
-        String rounds = getResources().getQuantityString(R.plurals.rounds, info.roundCount, info.roundCount);
-        Round round = info.round;
-        String ends;
-        if(round.maxEndCount == null) {
-            ends = getResources().getQuantityString(R.plurals.arrows_per_end, round.shotsPerEnd, round.shotsPerEnd);
-        } else {
-            ends = getResources().getQuantityString(R.plurals.ends_arrow, round.shotsPerEnd, round.maxEndCount, round.shotsPerEnd);
-        }
-        return rounds + "\n" + ends + "\n" + round.distance.toString();
+        return info.getRoundDetails(this) + "\n" +
+                info.getEndDetails(this) + "\n" +
+                info.round.distance.toString();
     }
 }
