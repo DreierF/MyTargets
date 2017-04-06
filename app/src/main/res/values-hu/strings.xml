@@ -123,7 +123,6 @@
   <string name="donate_text">Az összegek tartalmazzák az ÁFA-t és a Google 30%-os díját. Esetleg, szíves adományként a PayPal-on a dreier.florian@gmail.com számlára.</string>
   <!-- Timer -->
   <string name="timer">Stopper</string>
-  <string name="stop">STOP</string>
   <string name="touch_to_start">Érintésre índít</string>
   <string name="preparation">Készülj</string>
   <string name="shooting">Lövés</string>

@@ -54,4 +54,15 @@
   <string name="right_front">从右前方</string>
   <string name="left_back">从左后方</string>
   <string name="right_back">从右后方</string>
+  <string name="stop">STOP</string>
+  <string name="end_n">End %d</string>
+  <plurals name="rounds">
+    <item quantity="other">%d rounds</item>
+  </plurals>
+  <plurals name="ends_arrow">
+    <item quantity="other">%1$d \u00D7 %2$d arrows</item>
+  </plurals>
+  <plurals name="arrows_per_end">
+    <item quantity="other">%d arrows per end</item>
+  </plurals>
 </resources>

@@ -117,7 +117,6 @@
   <string name="donate_text">以上金額包含商品及服務稅, 三成金額將會繳交給谷歌(Google). 另外, 歡迎捐贈到 PayPal 帳號 dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">計時器</string>
-  <string name="stop">STOP</string>
   <string name="touch_to_start">觸碰螢幕開始</string>
   <string name="preparation">預備</string>
   <string name="shooting">發射</string>

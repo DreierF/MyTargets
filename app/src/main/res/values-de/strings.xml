@@ -123,7 +123,6 @@
   <string name="donate_text">Die Beträge sind inkl. Mehrwertsteuer und 30% Gebühren für Google. Alternativ kannst du mir auch gerne auf das PayPal Konto dreier.florian@gmail.com spenden.</string>
   <!-- Timer -->
   <string name="timer">Schießuhr</string>
-  <string name="stop">STOP</string>
   <string name="touch_to_start">Berühren zum starten</string>
   <string name="preparation">Fertig machen</string>
   <string name="shooting">Schießen</string>

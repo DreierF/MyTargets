@@ -117,7 +117,6 @@
   <string name="donate_text">款项含有增值税和给谷歌的30%费用。你可能乐意直接捐助到PayPal帐户 dreier.florian@gmail.com。</string>
   <!-- Timer -->
   <string name="timer">定时器</string>
-  <string name="stop">STOP</string>
   <string name="touch_to_start">触摸启动</string>
   <string name="preparation">做好准备</string>
   <string name="shooting">射击</string>

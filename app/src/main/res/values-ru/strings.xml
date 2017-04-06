@@ -69,10 +69,10 @@
   <string name="bow_type">Тип лука</string>
   <string name="properties">Параметры</string>
   <string name="brand">Производитель</string>
-  <string name="size">Размер</string>
+  <string name="size">Длина рукоятки / общая длина лука</string>
   <string name="description">Описание</string>
-  <string name="height">Общая длина лука</string>
-  <string name="tiller">Режим плечей</string>
+  <string name="height">Режим нижнего плеча</string>
+  <string name="tiller">Режим верхнего плеча</string>
   <string name="sight_settings">Настройки прицела</string>
   <string name="add">Добавить</string>
   <string name="take_picture">Сделать снимок</string>
@@ -129,7 +129,6 @@
   <string name="donate_text">Сумма включает НДС и 30% платежи для Google. Вместо этого можете воспользоваться PayPal. Мой аккаунт dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Таймер</string>
-  <string name="stop">STOP</string>
   <string name="touch_to_start">Коснитесь экрана для старта</string>
   <string name="preparation">Приготовились</string>
   <string name="shooting">Стрельба</string>
@@ -307,7 +306,7 @@
   <string name="bow_rest">Полочка</string>
   <string name="bow_rest_horizontal_position">Положение по горизонтали</string>
   <string name="bow_cam_settings">Настройки блоков</string>
-  <string name="bow_letoff_weight">Letoff weight</string>
+  <string name="bow_letoff_weight">Снижение веса</string>
   <string name="bow_nocking_point">Седло</string>
   <string name="bow_string">Тетива</string>
   <string name="bow_scope_magnification">Увеличение прицела</string>
@@ -316,7 +315,7 @@
   <string name="more_fields">Дополнительные поля</string>
   <string name="recently_used">Недавно использованные</string>
   <string name="intro_title_track_training_progress">Забудьте бумажные бланки!</string>
-  <string name="intro_description_track_training_progress">With exact arrow plotting,\nyou can get more useful insights\nout of your training data.</string>
+  <string name="intro_description_track_training_progress">Правильное указание положения стрелы в мишени даст более точный анализ результатов тренировки</string>
   <string name="intro_title_everything_in_one_place">Все, что вам нужно в одном месте</string>
   <string name="intro_description_everything_in_one_place">Включая лук, стрелы, настроцки прицела, стрелковый таймер, статистика и многое другое&#8230;</string>
   <string name="average_arrow_score_per_end">Средний результат одного выстрела за серию</string>
