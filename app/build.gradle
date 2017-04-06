@@ -168,6 +168,8 @@ dependencies {
     compile "com.github.Raizlabs.DBFlow:dbflow-core:$libraryVersion.dbFlow"
     compile "com.github.Raizlabs.DBFlow:dbflow:$libraryVersion.dbFlow"
 
+    compile "com.github.chrisbanes:PhotoView:$libraryVersion.photoView"
+
     compile project(':shared')
     wearApp project(':wearable')
 

@@ -132,6 +132,9 @@ public class HtmlUtils {
 
     @NonNull
     private static String getPoints(ScoreboardConfiguration configuration, Shot shot, Target target) {
+        if(shot.scoringRing == Shot.NOTHING_SELECTED) {
+            return "";
+        }
         final String points = target.zoneToString(shot.scoringRing, shot.index);
         if (configuration.showPointsColored) {
             int fillColor = target.getModel().getZone(shot.scoringRing).getFillColor();

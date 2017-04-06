@@ -241,4 +241,9 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
         return index - end.index;
     }
 
+    public boolean isEmpty() {
+        return Stream.of(getShots())
+                .allMatch(s -> s.scoringRing == Shot.NOTHING_SELECTED);
+    }
+
 }

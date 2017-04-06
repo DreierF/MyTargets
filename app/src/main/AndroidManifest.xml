@@ -181,6 +181,9 @@
                 android:value=".features.main.MainActivity" />
         </activity>
         <activity
+            android:name=".base.gallery.GalleryActivity"
+            android:theme="@style/AppTheme.CustomToolbar.Translucent" />
+        <activity
             android:name=".features.scoreboard.ScoreboardActivity"
             android:label="@string/scoreboard" />
         <activity
@@ -292,7 +295,7 @@
         <activity
             android:name=".features.settings.about.DonateActivity"
             android:parentActivityName=".features.settings.about.AboutActivity"
-            android:theme="@style/AppTheme.CustomToolbar.Translucent">
+            android:theme="@style/AppTheme.Translucent">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".features.settings.about.AboutActivity" />

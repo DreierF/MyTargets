@@ -38,7 +38,12 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
-    <style name="AppBaseTheme.CustomToolbar.Translucent" parent="AppBaseTheme.CustomToolbar">
+    <style name="AppBaseTheme.CustomToolbar.Translucent">
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="AppBaseTheme.Translucent" parent="AppBaseTheme.CustomToolbar">
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@null</item>
@@ -59,6 +64,8 @@
     <style name="AppTheme.CustomToolbar" parent="AppBaseTheme.CustomToolbar"/>
 
     <style name="AppTheme.CustomToolbar.Translucent" parent="AppBaseTheme.CustomToolbar.Translucent"/>
+
+    <style name="AppTheme.Translucent" parent="AppBaseTheme.Translucent"/>
 
     <style name="AppTheme.CustomToolbar.Launcher">
         <item name="android:windowBackground">@drawable/launch_screen</item>

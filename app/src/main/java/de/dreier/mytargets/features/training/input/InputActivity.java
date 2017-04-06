@@ -39,6 +39,7 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.activities.ChildActivityBase;
+import de.dreier.mytargets.base.gallery.GalleryActivity;
 import de.dreier.mytargets.databinding.ActivityInputBinding;
 import de.dreier.mytargets.features.rounds.EditRoundFragment;
 import de.dreier.mytargets.features.settings.SettingsManager;
@@ -180,12 +181,14 @@ public class InputActivity extends ChildActivityBase
         final MenuItem grouping = menu.findItem(R.id.action_grouping);
         final MenuItem timer = menu.findItem(R.id.action_timer);
         final MenuItem newRound = menu.findItem(R.id.action_new_round);
+        final MenuItem takePicture = menu.findItem(R.id.action_photo);
         if (targetView == null || data.getEnds().size() == 0) {
             eye.setVisible(false);
             keyboard.setVisible(false);
             grouping.setVisible(false);
             timer.setVisible(false);
             newRound.setVisible(false);
+            takePicture.setVisible(false);
         } else {
             final boolean plotting = targetView.getInputMode() == EInputMethod.PLOTTING;
             eye.setVisible(plotting);
@@ -194,13 +197,14 @@ public class InputActivity extends ChildActivityBase
                     ? R.drawable.ic_keyboard_white_24dp
                     : R.drawable.ic_keyboard_white_off_24dp);
             keyboard.setChecked(!plotting);
-            keyboard.setVisible(data.getCurrentEnd().getId() == null);
+            keyboard.setVisible(data.getCurrentEnd().isEmpty());
             timer.setIcon(SettingsManager.getTimerEnabled()
                     ? R.drawable.ic_timer_off_white_24dp
                     : R.drawable.ic_timer_white_24dp);
             timer.setVisible(true);
             timer.setChecked(SettingsManager.getTimerEnabled());
             newRound.setVisible(data.training.standardRoundId == null);
+            takePicture.setVisible(Utils.hasCameraHardware(this));
         }
 
         switch (SettingsManager.getShowMode()) {
@@ -275,6 +279,11 @@ public class InputActivity extends ChildActivityBase
                         .withContext(this)
                         .start();
                 return true;
+            case R.id.action_photo:
+                GalleryActivity.getIntent(data.getCurrentEnd())
+                        .withContext(this)
+                        .start();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -336,7 +345,8 @@ public class InputActivity extends ChildActivityBase
         // Create a new end
         data.endIndex = endIndex;
         if (endIndex >= data.getEnds().size()) {
-            data.getCurrentRound().addEnd();
+            End end = data.getCurrentRound().addEnd();
+            end.exact = SettingsManager.getInputMethod() == EInputMethod.PLOTTING;
             updateOldShoots();
         }
 
@@ -361,9 +371,7 @@ public class InputActivity extends ChildActivityBase
     }
 
     private void openTimer() {
-        if (data.getCurrentEnd().getId() == null
-                && data.getCurrentEnd().getShots().get(0).scoringRing == Shot.NOTHING_SELECTED
-                && SettingsManager.getTimerEnabled()) {
+        if (data.getCurrentEnd().isEmpty() && SettingsManager.getTimerEnabled()) {
             if (transitionFinished) {
                 TimerFragment.getIntent()
                         .withContext(this)
@@ -417,10 +425,10 @@ public class InputActivity extends ChildActivityBase
         // Initialize message text
         if (data.getEnds().size() > 0) {
             End lastEnd = lastItem(data.getEnds());
-            if (lastEnd != null && lastEnd.getId() == null && data.getEnds().size() > 1) {
+            if (lastEnd != null && lastEnd.isEmpty() && data.getEnds().size() > 1) {
                 lastEnd = data.getEnds().get(data.getEnds().size() - 2);
             }
-            if (lastEnd != null && lastEnd.getId() != null) { //TODO change when merging with #4
+            if (lastEnd != null && !lastEnd.isEmpty()) {
                 title = getString(R.string.passe) + " " + (lastEnd.index + 1);
                 for (Shot shot : lastEnd.getShots()) {
                     text += data.getCurrentRound().getTarget()
@@ -500,6 +508,7 @@ public class InputActivity extends ChildActivityBase
     @Override
     public void onEndUpdated(List<Shot> changedEnd) {
         data.getCurrentEnd().setShots(changedEnd);
+        data.getCurrentEnd().save();
 
         // Set current end score
         Score reachedEndScore = data.getCurrentRound().getTarget()
@@ -538,13 +547,13 @@ public class InputActivity extends ChildActivityBase
     public void onEndFinished(List<Shot> shots, boolean remote) {
         if (remote) {
             data.endIndex = data.getCurrentRound().getEnds().size() - 1;
-            if (data.getCurrentEnd().getId() != null) {
+            if (!data.getCurrentEnd().isEmpty()) {
                 data.endIndex = data.getCurrentRound().getEnds().size();
             }
         }
         data.getCurrentEnd().setShots(shots);
         data.getCurrentEnd().exact = targetView.getInputMode() == EInputMethod.PLOTTING && !remote;
-        if (data.getCurrentEnd().getId() == null) {
+        if (data.getCurrentEnd().isEmpty()) {
             data.getCurrentEnd().saveTime = new DateTime();
         }
 
@@ -647,7 +656,8 @@ public class InputActivity extends ChildActivityBase
             List<End> ends = getEnds();
             if (ends.size() <= endIndex || endIndex < 0 || ends.size() == 0) {
                 endIndex = ends.size();
-                getCurrentRound().addEnd();
+                End end = getCurrentRound().addEnd();
+                end.exact = SettingsManager.getInputMethod() == EInputMethod.PLOTTING;
                 ends = getEnds();
             }
             return ends.get(endIndex);

@@ -19,6 +19,12 @@
       tools:context=".SetTargetsActivity">
 
     <item
+        android:id="@+id/action_photo"
+        android:icon="@drawable/ic_photo_camera_white_24dp"
+        android:title="@string/take_picture"
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/action_grouping"
         android:icon="@drawable/ic_bubble_chart_white_24px"
         android:title="@string/grouping"
