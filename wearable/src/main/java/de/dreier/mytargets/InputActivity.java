@@ -34,7 +34,6 @@ import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.views.TargetViewBase;
-import timber.log.Timber;
 
 public class InputActivity extends Activity implements TargetViewBase.OnEndFinishedListener {
 
@@ -73,29 +72,30 @@ public class InputActivity extends Activity implements TargetViewBase.OnEndFinis
         binding.delayedConfirm.setVisibility(View.VISIBLE);
         binding.delayedConfirm.setTotalTimeMs(2500);
         binding.delayedConfirm.start();
-        binding.delayedConfirm.setListener(new DelayedConfirmationView.DelayedConfirmationListener() {
-            @Override
-            public void onTimerSelected(View view) {
-                binding.target.setEnd(new End(round.shotsPerEnd, 0));
-                binding.delayedConfirm.setVisibility(View.INVISIBLE);
-                binding.delayedConfirm.reset();
-            }
+        binding.delayedConfirm
+                .setListener(new DelayedConfirmationView.DelayedConfirmationListener() {
+                    @Override
+                    public void onTimerSelected(View view) {
+                        binding.target.setEnd(new End(round.shotsPerEnd, 0));
+                        binding.delayedConfirm.setVisibility(View.INVISIBLE);
+                        binding.delayedConfirm.reset();
+                    }
 
-            @Override
-            public void onTimerFinished(View view) {
-                Intent intent = new Intent(InputActivity.this, ConfirmationActivity.class);
-                intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
-                        ConfirmationActivity.SUCCESS_ANIMATION);
-                intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, getString(R.string.saved));
-                startActivity(intent);
-                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                v.vibrate(200);
-                finish();
-                End end = new End(round.shotsPerEnd, 0);
-                end.setShots(shotList);
-                end.roundId = round.getId();
-                ApplicationInstance.wearableClient.sendEndUpdate(end);
-            }
-        });
+                    @Override
+                    public void onTimerFinished(View view) {
+                        Intent intent = new Intent(InputActivity.this, ConfirmationActivity.class);
+                        intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
+                                ConfirmationActivity.SUCCESS_ANIMATION);
+                        intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, getString(R.string.saved));
+                        startActivity(intent);
+                        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                        v.vibrate(200);
+                        finish();
+                        End end = new End(round.shotsPerEnd, 0);
+                        end.setShots(shotList);
+                        end.roundId = round.getId();
+                        ApplicationInstance.wearableClient.sendEndUpdate(end);
+                    }
+                });
     }
 }

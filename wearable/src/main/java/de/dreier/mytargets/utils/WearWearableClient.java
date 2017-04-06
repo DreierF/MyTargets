@@ -28,7 +28,6 @@ import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.wearable.WearableClientBase;
-import timber.log.Timber;
 
 import static org.parceler.Parcels.unwrap;
 
@@ -58,6 +57,8 @@ public class WearWearableClient extends WearableClientBase {
                 case BROADCAST_UPDATE_END_FROM_LOCAL:
                     End end = unwrap(intent.getParcelableExtra(EXTRA_END));
                     updateEnd(end);
+                    break;
+                default:
                     break;
             }
         }

@@ -63,6 +63,8 @@ public class MainActivity extends Activity {
                     });
                     binding.wearableDrawerView.setVisibility(View.GONE);
                     break;
+                default:
+                    break;
             }
         }
     };

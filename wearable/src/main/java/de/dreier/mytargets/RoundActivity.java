@@ -77,6 +77,8 @@ public class RoundActivity extends WearableActivity {
                     timerSettings = Parcels.unwrap(intent.getParcelableExtra(EXTRA_TIMER_SETTINGS));
                     applyTimerState();
                     break;
+                default:
+                    break;
             }
         }
     };
