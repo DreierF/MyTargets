@@ -46,7 +46,7 @@ public class AppDatabase {
     public static final String DATABASE_FILE_NAME = "database.db";
     public static final String DATABASE_IMPORT_FILE_NAME = "database";
 
-    public static final int VERSION = 20;
+    public static final int VERSION = 21;
 
     @Migration(version = 0, database = AppDatabase.class)
     public static class Migration0 extends BaseMigration {
@@ -57,8 +57,8 @@ public class AppDatabase {
         }
     }
 
-    @Migration(version = 20, database = AppDatabase.class)
-    public static class Migration20 extends BaseMigration {
+    @Migration(version = 21, database = AppDatabase.class)
+    public static class Migration21 extends BaseMigration {
 
         @Override
         public void migrate(DatabaseWrapper database) {
