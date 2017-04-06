@@ -21,10 +21,10 @@
         android:visible="false" />
     <item
         android:id="@+id/menu_vibrate"
-        android:icon="@drawable/ic_vibration_black_24dp"
+        android:icon="@drawable/ic_vibration_white_24dp"
         android:title="@string/vibration" />
     <item
         android:id="@+id/menu_sound"
-        android:icon="@drawable/ic_volume_up_black_24dp"
+        android:icon="@drawable/ic_volume_up_white_24dp"
         android:title="@string/sound" />
 </menu>

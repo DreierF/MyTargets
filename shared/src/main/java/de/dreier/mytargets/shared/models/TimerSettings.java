@@ -17,7 +17,7 @@ package de.dreier.mytargets.shared.models;
 
 public class TimerSettings {
     public boolean enabled;
-    public boolean soundEnabled;
+    public boolean sound;
     public boolean vibrate;
     public int timerWaitTime;
     public int timerShootTime;

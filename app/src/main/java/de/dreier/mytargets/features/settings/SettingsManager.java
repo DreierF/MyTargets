@@ -321,7 +321,7 @@ public class SettingsManager {
         TimerSettings settings = new TimerSettings();
         settings.enabled = lastUsed.getBoolean(KEY_TIMER, false);
         settings.vibrate = preferences.getBoolean(KEY_TIMER_VIBRATE, false);
-        settings.soundEnabled = preferences.getBoolean(KEY_TIMER_SOUND, true);
+        settings.sound = preferences.getBoolean(KEY_TIMER_SOUND, true);
         settings.timerWaitTime = getPrefTime(KEY_TIMER_WAIT_TIME, 10);
         settings.timerShootTime = getPrefTime(KEY_TIMER_SHOOT_TIME, 120);
         settings.timerWarnTime = getPrefTime(KEY_TIMER_WARN_TIME, 30);
@@ -335,7 +335,7 @@ public class SettingsManager {
         preferences
                 .edit()
                 .putBoolean(KEY_TIMER_VIBRATE, settings.vibrate)
-                .putBoolean(KEY_TIMER_SOUND, settings.soundEnabled)
+                .putBoolean(KEY_TIMER_SOUND, settings.sound)
                 .putString(KEY_TIMER_WAIT_TIME, String.valueOf(settings.timerWaitTime))
                 .putString(KEY_TIMER_SHOOT_TIME, String.valueOf(settings.timerShootTime))
                 .putString(KEY_TIMER_WARN_TIME, String.valueOf(settings.timerWarnTime))

@@ -147,7 +147,7 @@ public abstract class TimerFragmentBase extends Fragment implements View.OnClick
 
     private void playSignal(final int n) {
         if (n > 0) {
-            if (settings.soundEnabled) {
+            if (settings.sound) {
                 playHorn(n);
             }
             if (settings.vibrate) {
