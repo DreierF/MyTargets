@@ -24,16 +24,14 @@ public class TrainingInfo {
     public String title;
     public int roundCount;
     public Round round;
-    public TimerSettings timerSettings;
 
     public TrainingInfo() {
     }
 
-    public TrainingInfo(Training training, Round round, TimerSettings timerSettings) {
+    public TrainingInfo(Training training, Round round) {
         this.round = round;
         this.title = training.title;
         this.roundCount = training.getRounds().size();
-        this.timerSettings = timerSettings;
     }
 
     public String getRoundDetails(Context context) {

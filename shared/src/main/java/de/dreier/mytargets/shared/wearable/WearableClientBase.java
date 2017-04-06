@@ -41,7 +41,7 @@ public class WearableClientBase {
 
     private static final String BROADCAST_TIMER_SETTINGS_FROM_LOCAL = "timer_settings_local";
     public static final String BROADCAST_TIMER_SETTINGS_FROM_REMOTE = "timer_settings_remote";
-    public static final String EXTRA_TIMER_SETTINGS = "timer_enabled";
+    private static final String EXTRA_TIMER_SETTINGS = "timer_settings";
 
     private GoogleApiClient googleApiClient;
     protected final Context context;
@@ -50,7 +50,7 @@ public class WearableClientBase {
         @Override
         public void onReceive(Context context, Intent intent) {
             TimerSettings settings = Parcels.unwrap(intent.getParcelableExtra(EXTRA_TIMER_SETTINGS));
-            updateTimer(settings);
+            sendTimerSettings(settings);
         }
     };
 
@@ -92,7 +92,7 @@ public class WearableClientBase {
                 );
     }
 
-    private void updateTimer(TimerSettings settings) {
+    protected void sendTimerSettings(TimerSettings settings) {
         final byte[] data = ParcelableUtil.marshall(Parcels.wrap(settings));
         sendMessage(TIMER_SETTINGS, data);
     }
@@ -103,9 +103,8 @@ public class WearableClientBase {
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
-    public void sendTimerSettingsFromRemote(TimerSettings settings) {
+    public void sendTimerSettingsFromRemote() {
         Intent intent = new Intent(BROADCAST_TIMER_SETTINGS_FROM_REMOTE);
-        intent.putExtra(EXTRA_TIMER_SETTINGS, Parcels.wrap(settings));
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 }

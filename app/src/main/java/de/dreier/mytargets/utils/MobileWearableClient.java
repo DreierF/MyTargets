@@ -97,10 +97,13 @@ public class MobileWearableClient extends WearableClientBase {
                 .filter(end -> Stream.of(end.getShots())
                         .allMatch(s -> s.scoringRing != Shot.NOTHING_SELECTED))
                 .toList();
-        TrainingInfo notificationInfo = new TrainingInfo(training, round,
-                SettingsManager.getTimerSettings());
-        final byte[] data = ParcelableUtil.marshall(Parcels.wrap(notificationInfo));
+        TrainingInfo trainingInfo = new TrainingInfo(training, round);
+        sendTrainingInfo(trainingInfo);
+        sendTimerSettings(SettingsManager.getTimerSettings());
+    }
 
+    private void sendTrainingInfo(TrainingInfo trainingInfo) {
+        final byte[] data = ParcelableUtil.marshall(Parcels.wrap(trainingInfo));
         sendMessage(WearableClientBase.TRAINING_UPDATE, data);
     }
 

@@ -58,7 +58,6 @@ public class MainActivity extends Activity {
                     binding.root.setOnClickListener(v -> {
                         Intent i = new Intent(MainActivity.this, RoundActivity.class);
                         i.putExtra(RoundActivity.EXTRA_ROUND, Parcels.wrap(info.round));
-                        i.putExtra(RoundActivity.EXTRA_TIMER, Parcels.wrap(info.timerSettings));
                         startActivity(i);
                     });
                     binding.wearableDrawerView.setVisibility(View.GONE);
@@ -90,7 +89,7 @@ public class MainActivity extends Activity {
 
     private void setTraining(Training training) {
         Round round = training.getRounds().get(0);
-        TrainingInfo info = new TrainingInfo(training, round, null);
+        TrainingInfo info = new TrainingInfo(training, round);
         setCommonTrainingInfo(info);
         binding.date.setText("");
     }

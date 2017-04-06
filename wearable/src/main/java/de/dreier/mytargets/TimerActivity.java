@@ -67,7 +67,7 @@ public class TimerActivity extends WearableActivity implements
         binding.bottomActionDrawer.getMenu().findItem(R.id.menu_sound)
                 .setIcon(settings.sound
                         ? R.drawable.ic_volume_up_white_24dp
-                        : R.drawable.ic_volume_off_black_24dp);
+                        : R.drawable.ic_volume_off_white_24dp);
         binding.drawerLayout.peekDrawer(Gravity.BOTTOM);
     }
 
@@ -90,7 +90,7 @@ public class TimerActivity extends WearableActivity implements
                 timerFragment.settings.sound = !timerFragment.settings.sound;
                 menuItem.setIcon(timerFragment.settings.sound
                         ? R.drawable.ic_volume_up_white_24dp
-                        : R.drawable.ic_volume_off_black_24dp);
+                        : R.drawable.ic_volume_off_white_24dp);
                 ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(timerFragment.settings);
                 return true;
             default:

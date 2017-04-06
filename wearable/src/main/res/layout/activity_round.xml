@@ -32,6 +32,7 @@
             android:scrollbars="vertical" />
 
         <android.support.wearable.view.drawer.WearableDrawerView
+            android:id="@+id/wearableDrawerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="bottom"

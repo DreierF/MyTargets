@@ -34,6 +34,7 @@ import de.dreier.mytargets.shared.models.TrainingInfo$$Parcelable;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.models.db.Training$$Parcelable;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
+import de.dreier.mytargets.utils.WearSettingsManager;
 
 import static de.dreier.mytargets.shared.wearable.WearableClientBase.TIMER_SETTINGS;
 import static de.dreier.mytargets.shared.wearable.WearableClientBase.TRAINING_TEMPLATE;
@@ -62,7 +63,8 @@ public class WearWearableListener extends WearableListenerService {
             case TIMER_SETTINGS:
                 TimerSettings settings = Parcels
                         .unwrap(ParcelableUtil.unmarshall(data, TimerSettings$$Parcelable.CREATOR));
-                ApplicationInstance.wearableClient.sendTimerSettingsFromRemote(settings);
+                WearSettingsManager.setTimerSettings(settings);
+                ApplicationInstance.wearableClient.sendTimerSettingsFromRemote();
                 break;
             default:
                 break;
@@ -73,7 +75,6 @@ public class WearWearableListener extends WearableListenerService {
         // Build the intent to display our custom notification
         Intent notificationIntent = new Intent(this, RoundActivity.class);
         notificationIntent.putExtra(RoundActivity.EXTRA_ROUND, Parcels.wrap(info.round));
-        notificationIntent.putExtra(RoundActivity.EXTRA_TIMER, Parcels.wrap(info.timerSettings));
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 

@@ -191,6 +191,14 @@ public class SettingsManager {
         return settings;
     }
 
+    private static int getPrefTime(String key, int def) {
+        try {
+            return Integer.parseInt(preferences.getString(key, String.valueOf(def)));
+        } catch (NumberFormatException e) {
+            return def;
+        }
+    }
+
     public static void setTimerSettings(TimerSettings settings) {
         lastUsed.edit()
                 .putBoolean(KEY_TIMER, settings.enabled)
@@ -283,14 +291,6 @@ public class SettingsManager {
                 .edit()
                 .putString(KEY_AGGREGATION_STRATEGY, aggregationStrategy.toString())
                 .apply();
-    }
-
-    private static int getPrefTime(String key, int def) {
-        try {
-            return Integer.parseInt(preferences.getString(key, String.valueOf(def)));
-        } catch (NumberFormatException e) {
-            return def;
-        }
     }
 
     public static String getProfileFirstName() {

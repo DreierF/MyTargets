@@ -27,6 +27,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.parceler.Parcels;
@@ -40,29 +41,22 @@ import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.views.EndView;
+import de.dreier.mytargets.utils.WearSettingsManager;
 import de.dreier.mytargets.utils.WearWearableClient;
 import icepick.Icepick;
 import icepick.State;
 
 import static de.dreier.mytargets.shared.wearable.WearableClientBase.BROADCAST_TIMER_SETTINGS_FROM_REMOTE;
-import static de.dreier.mytargets.shared.wearable.WearableClientBase.EXTRA_TIMER_SETTINGS;
 import static de.dreier.mytargets.utils.WearWearableClient.BROADCAST_TRAINING_UPDATED;
 
-/**
- * Demonstrates use of Navigation and Action Drawers on Android Wear.
- */
 public class RoundActivity extends WearableActivity {
 
     public static final String EXTRA_ROUND = "round";
-    public static final String EXTRA_TIMER = "timer";
 
     private ActivityRoundBinding binding;
 
     @State(ParcelsBundler.class)
     Round round;
-
-    @State(ParcelsBundler.class)
-    TimerSettings timerSettings;
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -74,7 +68,6 @@ public class RoundActivity extends WearableActivity {
                     showRoundData();
                     break;
                 case BROADCAST_TIMER_SETTINGS_FROM_REMOTE:
-                    timerSettings = Parcels.unwrap(intent.getParcelableExtra(EXTRA_TIMER_SETTINGS));
                     applyTimerState();
                     break;
                 default:
@@ -95,15 +88,17 @@ public class RoundActivity extends WearableActivity {
             Intent intent = getIntent();
             if (intent != null && intent.getExtras() != null) {
                 round = Parcels.unwrap(intent.getParcelableExtra(EXTRA_ROUND));
-                timerSettings = Parcels.unwrap(intent.getParcelableExtra(EXTRA_TIMER));
             }
         }
 
         showRoundData();
 
-        // Peeks action drawer on the bottom.
         binding.drawerLayout.peekDrawer(Gravity.BOTTOM);
-        binding.primaryActionTimer.setOnClickListener(view -> toggleTimer());
+
+        // Replaces the on click behaviour that open the (empty) drawer
+        LinearLayout peekView = ((LinearLayout) binding.primaryActionTimer.getParent());
+        ViewGroup peekContainer = ((ViewGroup) peekView.getParent());
+        peekContainer.setOnClickListener(view -> toggleTimer());
         applyTimerState();
 
         final IntentFilter filter = new IntentFilter();
@@ -135,6 +130,7 @@ public class RoundActivity extends WearableActivity {
         intent.putExtra(InputActivity.EXTRA_ROUND, Parcels.wrap(round));
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
+        TimerSettings timerSettings = WearSettingsManager.getTimerSettings();
         if (timerSettings.enabled) {
             Intent intentTimer = new Intent(this, TimerActivity.class);
             intentTimer.putExtra(TimerActivity.EXTRA_TIMER_SETTINGS, Parcels.wrap(timerSettings));
@@ -143,12 +139,14 @@ public class RoundActivity extends WearableActivity {
     }
 
     public void toggleTimer() {
+        TimerSettings timerSettings = WearSettingsManager.getTimerSettings();
         timerSettings.enabled = !timerSettings.enabled;
         ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(timerSettings);
         applyTimerState();
     }
 
     private void applyTimerState() {
+        TimerSettings timerSettings = WearSettingsManager.getTimerSettings();
         binding.primaryActionTimer.setImageResource(
                 timerSettings.enabled ? R.drawable.ic_traffic_white_24dp
                         : R.drawable.ic_timer_off_white_24dp);

@@ -210,6 +210,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
             round.trainingId = id;
             round.setTarget(template.getTargetTemplate());
             round.comment = "";
+            round.ends = new ArrayList<>();
             round.save();
             rounds.add(round);
         }

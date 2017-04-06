@@ -72,7 +72,7 @@ public class MobileWearableListener extends WearableListenerService {
         byte[] data = messageEvent.getData();
         TimerSettings settings = unwrap(ParcelableUtil.unmarshall(data, TimerSettings$$Parcelable.CREATOR));
         SettingsManager.setTimerSettings(settings);
-        ApplicationInstance.wearableClient.sendTimerSettingsFromRemote(settings);
+        ApplicationInstance.wearableClient.sendTimerSettingsFromRemote();
     }
 
     public void trainingTemplate() {
@@ -80,8 +80,7 @@ public class MobileWearableListener extends WearableListenerService {
                 .sorted(Collections.reverseOrder())
                 .findFirst().get();
         if (lastTraining != null && lastTraining.date.isEqual(LocalDate.now())) {
-            lastTraining.getRounds(); // Ensure rounds are loaded
-            ApplicationInstance.wearableClient.updateTraining(lastTraining);
+            ApplicationInstance.wearableClient.updateTraining(lastTraining.ensureLoaded());
         } else {
             Training training = new Training();
             training.title = getString(R.string.training);

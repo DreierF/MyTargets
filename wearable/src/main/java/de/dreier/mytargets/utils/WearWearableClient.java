@@ -23,6 +23,7 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import org.parceler.Parcels;
 
+import de.dreier.mytargets.shared.models.TimerSettings;
 import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Training;
@@ -116,5 +117,11 @@ public class WearWearableClient extends WearableClientBase {
         Intent intent = new Intent(BROADCAST_TRAINING_TEMPLATE);
         intent.putExtra(EXTRA_TRAINING, Parcels.wrap(training));
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
+
+    @Override
+    public void sendTimerSettingsFromLocal(TimerSettings settings) {
+        super.sendTimerSettingsFromLocal(settings);
+        WearSettingsManager.setTimerSettings(settings);
     }
 }
