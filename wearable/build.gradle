@@ -29,8 +29,8 @@ android {
         applicationId 'de.dreier.mytargets'
         minSdkVersion 20
         targetSdkVersion 25
-        versionCode appVersionCode
-        versionName appVersionName
+        versionCode gitVersionCode
+        versionName gitVersionName
     }
 
     signingConfigs {
@@ -59,7 +59,7 @@ android {
             signingConfig signingConfigs.release
             shrinkResources true
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), '../proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), '../tools/rules-proguard.pro'
         }
     }
 }

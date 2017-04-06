@@ -59,4 +59,6 @@
     <string name="right_front">from front right</string>
     <string name="left_back">from back left</string>
     <string name="right_back">from back right</string>
+
+    <string name="end_n">End %d</string>
 </resources>

@@ -13,7 +13,24 @@
  * GNU General Public License for more details.
  */
 
-include ':app'
-include ':wearable'
-include ':shared'
-include ':tools'
+import org.ajoberstar.grgit.Grgit
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.ajoberstar:grgit:1.9.0'
+    }
+}
+
+ext {
+    git = Grgit.open()
+    gitVersionCode = git.tag.list().size()
+    gitVersionName = git.describe()
+            .replace("v", "")
+            .replace("_b", "-Beta")
+            .replace("_rc", "-RC")
+
+    print("Code $gitVersionCode")
+}

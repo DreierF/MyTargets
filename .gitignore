@@ -1,9 +1,56 @@
-.*
-/local.properties
-/build
-*.iml
-googlePlayAndroidDeveloper.json
+### Android ###
+# Built application files
+*.apk
+*.ap_
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+out/
+
+# Gradle files
+.gradle/
+build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Log Files
+*.log
+
+# Android Studio captures folder
+captures/
+
+# Keystore files
+*.jks
+
+### Android Patch ###
+gen-external-apklibs
+
+### Intellij ###
+
+# User-specific stuff:
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/dictionaries
+
+# Gradle:
+.idea/**/gradle.xml
+.idea/**/libraries
+
+### Specific files ###
+## Play store artifacts
 app/src/main/play
+
+## Secrets
+.dropbox_uploader
+googlePlayAndroidDeveloper.json
 google-services.json
 firebase-crashreporting.json
 services.tar
