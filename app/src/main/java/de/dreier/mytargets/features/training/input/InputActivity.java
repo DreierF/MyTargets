@@ -112,6 +112,7 @@ public class InputActivity extends ChildActivityBase
     private final BroadcastReceiver timerReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Timber.d("onReceive: ");
             supportInvalidateOptionsMenu();
         }
     };
@@ -232,6 +233,7 @@ public class InputActivity extends ChildActivityBase
                     : R.drawable.ic_timer_white_24dp);
             timer.setVisible(true);
             timer.setChecked(SettingsManager.getTimerEnabled());
+            Timber.d("onPrepareOptionsMenu: "+SettingsManager.getTimerEnabled());
             newRound.setVisible(data.training.standardRoundId == null);
         }
 
