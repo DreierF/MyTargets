@@ -64,8 +64,8 @@ public class GalleryActivity extends ChildActivityBase {
     public static final String EXTRA_END = "end";
 
     ViewPagerAdapter adapter;
-    LinearLayoutManager mLayoutManager;
-    HorizontalListAdapters hAdapter;
+    LinearLayoutManager layoutManager;
+    HorizontalListAdapters previewAdapter;
 
     @State(ParcelsBundler.class)
     End end;
@@ -91,18 +91,18 @@ public class GalleryActivity extends ChildActivityBase {
         setSupportActionBar(binding.toolbar);
 
         ToolbarUtils.showHomeAsUp(this);
-        ToolbarUtils.setTitle(this, getString(R.string.passe) + " " + (end.index + 1));
+        ToolbarUtils.setTitle(this, getString(R.string.end_n, end.index + 1));
         Utils.showSystemUI(this);
 
-        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        binding.imagesHorizontalList.setLayoutManager(mLayoutManager);
+        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        binding.imagesHorizontalList.setLayoutManager(layoutManager);
 
         adapter = new ViewPagerAdapter(this, end.getImages(), binding.toolbar, binding.imagesHorizontalList);
         binding.pager.setAdapter(adapter);
 
-        hAdapter = new HorizontalListAdapters(this, end.getImages(), this::goToImage);
-        binding.imagesHorizontalList.setAdapter(hAdapter);
-        hAdapter.notifyDataSetChanged();
+        previewAdapter = new HorizontalListAdapters(this, end.getImages(), this::goToImage);
+        binding.imagesHorizontalList.setAdapter(previewAdapter);
+        previewAdapter.notifyDataSetChanged();
 
         binding.pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -112,7 +112,7 @@ public class GalleryActivity extends ChildActivityBase {
             @Override
             public void onPageSelected(int position) {
                 binding.imagesHorizontalList.smoothScrollToPosition(position);
-                hAdapter.setSelectedItem(position);
+                previewAdapter.setSelectedItem(position);
             }
 
             @Override
@@ -122,7 +122,7 @@ public class GalleryActivity extends ChildActivityBase {
         });
 
         int currentPos = 0;
-        hAdapter.setSelectedItem(currentPos);
+        previewAdapter.setSelectedItem(currentPos);
         binding.pager.setCurrentItem(currentPos);
 
         if (end.getImages().size() == 0 && savedInstanceState == null) {
@@ -179,7 +179,7 @@ public class GalleryActivity extends ChildActivityBase {
                     end.save();
                     adapter.notifyDataSetChanged();
                     int nextItem = Math.min(end.getImages().size() - 1, currentItem);
-                    hAdapter.setSelectedItem(nextItem);
+                    previewAdapter.setSelectedItem(nextItem);
                     binding.pager.setCurrentItem(nextItem);
                 })
                 .show();
@@ -256,10 +256,10 @@ public class GalleryActivity extends ChildActivityBase {
                 super.onPostExecute(files);
                 end.getImages().addAll(files);
                 end.save();
-                hAdapter.notifyDataSetChanged();
+                previewAdapter.notifyDataSetChanged();
                 adapter.notifyDataSetChanged();
                 int currentPos = end.getImages().size() - 1;
-                hAdapter.setSelectedItem(currentPos);
+                previewAdapter.setSelectedItem(currentPos);
                 binding.pager.setCurrentItem(currentPos);
             }
         }.execute();

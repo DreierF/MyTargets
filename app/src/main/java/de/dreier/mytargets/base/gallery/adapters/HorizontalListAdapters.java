@@ -30,19 +30,18 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.gallery.HorizontalImageViewHolder;
-import de.dreier.mytargets.base.gallery.OnImgClick;
 import de.dreier.mytargets.shared.models.db.Image;
 
 public class HorizontalListAdapters extends RecyclerView.Adapter<HorizontalImageViewHolder> {
     private List<? extends Image> images;
     private Activity activity;
     private int selectedItem = -1;
-    private OnImgClick imgClick;
+    private OnItemClickListener clickListener;
 
-    public HorizontalListAdapters(Activity activity, List<? extends Image> images, OnImgClick imgClick) {
+    public HorizontalListAdapters(Activity activity, List<? extends Image> images, OnItemClickListener clickListener) {
         this.activity = activity;
         this.images = images;
-        this.imgClick = imgClick;
+        this.clickListener = clickListener;
     }
 
     @Override
@@ -58,28 +57,23 @@ public class HorizontalListAdapters extends RecyclerView.Adapter<HorizontalImage
         } else {
             holder.camera.setVisibility(View.GONE);
             holder.image.setVisibility(View.VISIBLE);
-            Image image = images.get(position);
             Picasso.with(activity)
-                    .load(new File(image.getFileName()))
+                    .load(new File(images.get(position).getFileName()))
                     .fit()
                     .into(holder.image);
             ColorMatrix matrix = new ColorMatrix();
             if (selectedItem != position) {
                 matrix.setSaturation(0);
-
-                ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
-                holder.image.setColorFilter(filter);
                 holder.image.setAlpha(0.5f);
             } else {
                 matrix.setSaturation(1);
-
-                ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
-                holder.image.setColorFilter(filter);
                 holder.image.setAlpha(1f);
             }
+            ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+            holder.image.setColorFilter(filter);
         }
 
-        holder.itemView.setOnClickListener(view -> imgClick.onClick(position));
+        holder.itemView.setOnClickListener(view -> clickListener.onClick(position));
     }
 
     @Override
@@ -90,5 +84,9 @@ public class HorizontalListAdapters extends RecyclerView.Adapter<HorizontalImage
     public void setSelectedItem(int position) {
         selectedItem = position;
         notifyDataSetChanged();
+    }
+
+    public interface OnItemClickListener {
+        void onClick(int pos);
     }
 }

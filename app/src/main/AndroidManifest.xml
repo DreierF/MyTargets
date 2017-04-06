@@ -47,7 +47,7 @@
         android:name="android.hardware.camera.flash"
         android:required="false" />
     <uses-feature
-        android:name="android.hardware.location.gps"
+        android:name="android.hardware.location"
         android:required="false" />
     <uses-feature
         android:name="android.hardware.location.network"
