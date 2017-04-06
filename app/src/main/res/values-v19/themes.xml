@@ -1,4 +1,4 @@
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2017 Florian Dreier
   ~
   ~ This file is part of MyTargets.
@@ -13,13 +13,10 @@
   ~ GNU General Public License for more details.
   -->
 
-<paths>
-    <cache-path
-        name="share"
-        path="."/>
-    <files-path
-        name="files"
-        path="."/>
-    <external-cache-path name="picturesext" path="EasyImage/" />
-    <cache-path name="picturesint" path="EasyImage/" />
-</paths>
+<resources>
+
+    <style name="AppTheme.CustomToolbar.Translucent" parent="AppBaseTheme.CustomToolbar.Translucent">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+</resources>
