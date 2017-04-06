@@ -151,33 +151,30 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
         final List<Training> trainings = Training.getAll();
-        return new LoaderUICallback() {
-            @Override
-            public void applyData() {
-                TrainingsFragment.this.setList(trainings, false);
-                if (trainings.isEmpty() && !SettingsManager.isFirstTrainingShown()) {
-                    new MaterialTapTargetPrompt.Builder(TrainingsFragment.this.getActivity())
-                            .setDrawView(binding.fab)
-                            .setTarget(binding.fab.getChildAt(2))
-                            .setBackgroundColourFromRes(R.color.colorPrimary)
-                            .setPrimaryText(R.string.your_first_training)
-                            .setSecondaryText(R.string.first_training_description)
-                            .setAnimationInterpolator(new FastOutSlowInInterpolator())
-                            .setOnHidePromptListener(
-                                    new MaterialTapTargetPrompt.OnHidePromptListener() {
-                                        @Override
-                                        public void onHidePrompt(MotionEvent event, boolean tappedTarget) {
-                                            //Do something such as storing a value so that this prompt is never shown again
-                                            SettingsManager.setFirstTrainingShown(true);
-                                        }
+        return () -> {
+            TrainingsFragment.this.setList(trainings, false);
+            if (trainings.isEmpty() && !SettingsManager.isFirstTrainingShown()) {
+                new MaterialTapTargetPrompt.Builder(TrainingsFragment.this.getActivity())
+                        .setDrawView(binding.fab)
+                        .setTarget(binding.fab.getChildAt(2))
+                        .setBackgroundColourFromRes(R.color.colorPrimary)
+                        .setPrimaryText(R.string.your_first_training)
+                        .setSecondaryText(R.string.first_training_description)
+                        .setAnimationInterpolator(new FastOutSlowInInterpolator())
+                        .setOnHidePromptListener(
+                                new MaterialTapTargetPrompt.OnHidePromptListener() {
+                                    @Override
+                                    public void onHidePrompt(MotionEvent event, boolean tappedTarget) {
+                                        //Do something such as storing a value so that this prompt is never shown again
+                                        SettingsManager.setFirstTrainingShown(true);
+                                    }
 
-                                        @Override
-                                        public void onHidePromptComplete() {
+                                    @Override
+                                    public void onHidePromptComplete() {
 
-                                        }
-                                    })
-                            .show();
-                }
+                                    }
+                                })
+                        .show();
             }
         };
     }

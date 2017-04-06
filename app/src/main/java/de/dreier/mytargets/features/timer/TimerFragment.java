@@ -69,8 +69,7 @@ public class TimerFragment extends TimerFragmentBase {
 
     @Override
     public void applyTime(String text) {
-        binding.timerTime.setText(
-                text);
+        binding.timerTime.setText(text);
     }
 
     @Override
@@ -79,7 +78,7 @@ public class TimerFragment extends TimerFragmentBase {
         if (Utils.isLollipop()) {
             Window window = getActivity().getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getActivity().getResources().getColor(status.color));
+            window.setStatusBarColor(getResources().getColor(status.color));
         }
         binding.timerStatus.setText(getStatusText(status));
 

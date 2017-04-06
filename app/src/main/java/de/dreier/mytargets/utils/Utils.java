@@ -25,7 +25,6 @@ import android.text.Spanned;
 
 import org.joda.time.LocalDate;
 
-import java.util.List;
 import java.util.Locale;
 
 import de.dreier.mytargets.features.main.MainActivity;
@@ -79,9 +78,5 @@ public class Utils {
     public static int argb(int alpha, int color) {
         return Color.argb(alpha, Color.red(color), Color.green(color),
                 Color.blue(color));
-    }
-
-    public static <T> T getLast(List<T> list) {
-        return list.isEmpty() ? null : list.get(list.size() - 1);
     }
 }

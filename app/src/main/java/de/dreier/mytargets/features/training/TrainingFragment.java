@@ -146,25 +146,21 @@ public class TrainingFragment extends EditableListFragment<Round> {
     protected LoaderUICallback onLoad(Bundle args) {
         training = Training.get(trainingId);
         List<Round> rounds = training.getRounds();
-        return new LoaderUICallback() {
-            @Override
-            public void applyData() {
+        return () -> {
+            // Hide fab for standard rounds
+            supportsDeletion = training.standardRoundId == null;
+            binding.fab.setVisibility(supportsDeletion ? View.VISIBLE : View.GONE);
 
-                // Hide fab for standard rounds
-                supportsDeletion = training.standardRoundId == null;
-                binding.fab.setVisibility(supportsDeletion ? View.VISIBLE : View.GONE);
+            // Set round info
+            binding.weatherIcon.setImageResource(training.getEnvironment().getColorDrawable());
+            binding.detailRoundInfo.setText(Utils
+                    .fromHtml(HtmlUtils.getTrainingInfoHTML(training, rounds, equals, false)));
+            adapter.setList(rounds);
 
-                // Set round info
-                binding.weatherIcon.setImageResource(training.getEnvironment().getColorDrawable());
-                binding.detailRoundInfo.setText(Utils
-                        .fromHtml(HtmlUtils.getTrainingInfoHTML(training, rounds, equals, false)));
-                adapter.setList(rounds);
+            getActivity().supportInvalidateOptionsMenu();
 
-                getActivity().supportInvalidateOptionsMenu();
-
-                ToolbarUtils.setTitle(TrainingFragment.this, training.title);
-                ToolbarUtils.setSubtitle(TrainingFragment.this, training.getFormattedDate());
-            }
+            ToolbarUtils.setTitle(TrainingFragment.this, training.title);
+            ToolbarUtils.setSubtitle(TrainingFragment.this, training.getFormattedDate());
         };
     }
 

@@ -93,6 +93,12 @@ public class MobileWearableClient extends WearableClientBase {
             return;
         }
         Round round = new Round(rounds.get(roundCount - 1));
+        for (Round r : rounds) {
+            if (r.getEnds().isEmpty()) {
+                round = new Round(r);
+                break;
+            }
+        }
         round.ends = Stream.of(round.getEnds())
                 .filter(end -> Stream.of(end.getShots())
                         .allMatch(s -> s.scoringRing != Shot.NOTHING_SELECTED))

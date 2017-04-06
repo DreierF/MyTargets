@@ -43,8 +43,6 @@ import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.utils.typeconverters.EWeatherConverter;
 import de.dreier.mytargets.shared.utils.typeconverters.LocalDateConverter;
 
-import static de.dreier.mytargets.shared.models.db.Round_Table.training;
-
 @Parcel
 @Table(database = AppDatabase.class)
 public class Training extends BaseModel implements IIdSettable, Comparable<Training> {
@@ -137,7 +135,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
         if (rounds == null) {
             rounds = SQLite.select()
                     .from(Round.class)
-                    .where(training.eq(id))
+                    .where(Round_Table.training.eq(id))
                     .queryList();
         }
         return rounds;

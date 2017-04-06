@@ -61,7 +61,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix '.debug'
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
             minifyEnabled false
             testCoverageEnabled true
         }
@@ -117,9 +117,8 @@ dependencies {
     compile "com.android.support:preference-v14:$libraryVersion.support"
 
     compile "com.google.android.gms:play-services-drive:$libraryVersion.playService"
-
-    compile "com.google.firebase:firebase-core:$libraryVersion.firebase"
-    compile "com.google.firebase:firebase-crash:$libraryVersion.firebase"
+    compile "com.google.firebase:firebase-core:$libraryVersion.playService"
+    compile "com.google.firebase:firebase-crash:$libraryVersion.playService"
 
     compile "com.google.code.gson:gson:$libraryVersion.gson"
 

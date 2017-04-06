@@ -28,7 +28,7 @@
   <string name="rain">Deštivé</string>
   <string name="round_desc">%1$s: %2$d × %3$d šípy (%4$s terč)</string>
   <string name="mini">Mini</string>
-  <string name="small">Malé</string>
+  <string name="small">Malý</string>
   <string name="medium">Střední</string>
   <string name="large">Velký</string>
   <string name="xlarge">Extra Velký</string>
@@ -55,7 +55,7 @@
   <string name="left_back">zadní levý</string>
   <string name="right_back">zadní pravý</string>
   <string name="stop">STOP</string>
-  <string name="end_n">End %d</string>
+  <string name="end_n">Sada %d</string>
   <plurals name="rounds">
     <item quantity="one">%d round</item>
     <item quantity="few">%d rounds</item>

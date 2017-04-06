@@ -116,7 +116,7 @@ public class RoundFragment extends EditableListFragment<End> {
                         .withContext(this)
                         .fromFab(binding.fab)
                         .start());
-        // Get round
+
         if (getArguments() != null) {
             roundId = getArguments().getLong(ROUND_ID, -1);
         }
@@ -139,7 +139,6 @@ public class RoundFragment extends EditableListFragment<End> {
         final boolean showFab = round.maxEndCount == null || ends.size() < round.maxEndCount;
 
         return () -> {
-            // Set round info
             adapter.setList(ends);
             binding.fab.setVisibility(showFab ? View.VISIBLE : View.GONE);
 
