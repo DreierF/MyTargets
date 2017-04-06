@@ -127,11 +127,11 @@ public abstract class TimerFragmentBase extends Fragment implements View.OnClick
     protected int getDuration(ETimerState status) {
         switch (status) {
             case PREPARATION:
-                return settings.timerWaitTime;
+                return settings.waitTime;
             case SHOOTING:
-                return settings.timerShootTime - settings.timerWarnTime;
+                return settings.shootTime - settings.warnTime;
             case COUNTDOWN:
-                return settings.timerWarnTime;
+                return settings.warnTime;
             default:
                 throw new IllegalArgumentException();
         }
@@ -139,7 +139,7 @@ public abstract class TimerFragmentBase extends Fragment implements View.OnClick
 
     protected int getOffset(ETimerState status) {
         if (status == ETimerState.SHOOTING) {
-            return settings.timerWarnTime;
+            return settings.warnTime;
         } else {
             return 0;
         }

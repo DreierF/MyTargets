@@ -19,7 +19,33 @@ public class TimerSettings {
     public boolean enabled;
     public boolean sound;
     public boolean vibrate;
-    public int timerWaitTime;
-    public int timerShootTime;
-    public int timerWarnTime;
+    public int waitTime;
+    public int shootTime;
+    public int warnTime;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        TimerSettings settings = (TimerSettings) o;
+        return enabled == settings.enabled && sound == settings.sound &&
+                vibrate == settings.vibrate && waitTime == settings.waitTime &&
+                shootTime == settings.shootTime && warnTime == settings.warnTime;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (enabled ? 1 : 0);
+        result = 31 * result + (sound ? 1 : 0);
+        result = 31 * result + (vibrate ? 1 : 0);
+        result = 31 * result + waitTime;
+        result = 31 * result + shootTime;
+        result = 31 * result + warnTime;
+        return result;
+    }
 }

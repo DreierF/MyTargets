@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.settings;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.shared.models.TimerSettings;
 
 import static de.dreier.mytargets.features.settings.SettingsManager.KEY_TIMER_SHOOT_TIME;
 import static de.dreier.mytargets.features.settings.SettingsManager.KEY_TIMER_WAIT_TIME;
@@ -24,9 +25,10 @@ import static de.dreier.mytargets.features.settings.SettingsManager.KEY_TIMER_WA
 public class TimerSettingsFragment extends SettingsFragmentBase {
     @Override
     protected void updateItemSummaries() {
-        setSecondsSummary(KEY_TIMER_WAIT_TIME, SettingsManager.getTimerWaitTime());
-        setSecondsSummary(KEY_TIMER_SHOOT_TIME, SettingsManager.getTimerShootTime());
-        setSecondsSummary(KEY_TIMER_WARN_TIME, SettingsManager.getTimerWarnTime());
+        TimerSettings settings = SettingsManager.getTimerSettings();
+        setSecondsSummary(KEY_TIMER_WAIT_TIME, settings.waitTime);
+        setSecondsSummary(KEY_TIMER_SHOOT_TIME, settings.shootTime);
+        setSecondsSummary(KEY_TIMER_WARN_TIME, settings.warnTime);
     }
 
     private void setSecondsSummary(String key, int value) {

@@ -180,6 +180,31 @@ public class SettingsManager {
                 .apply();
     }
 
+    public static TimerSettings getTimerSettings() {
+        TimerSettings settings = new TimerSettings();
+        settings.enabled = lastUsed.getBoolean(KEY_TIMER, false);
+        settings.vibrate = preferences.getBoolean(KEY_TIMER_VIBRATE, false);
+        settings.sound = preferences.getBoolean(KEY_TIMER_SOUND, true);
+        settings.waitTime = getPrefTime(KEY_TIMER_WAIT_TIME, 10);
+        settings.shootTime = getPrefTime(KEY_TIMER_SHOOT_TIME, 120);
+        settings.warnTime = getPrefTime(KEY_TIMER_WARN_TIME, 30);
+        return settings;
+    }
+
+    public static void setTimerSettings(TimerSettings settings) {
+        lastUsed.edit()
+                .putBoolean(KEY_TIMER, settings.enabled)
+                .apply();
+        preferences
+                .edit()
+                .putBoolean(KEY_TIMER_VIBRATE, settings.vibrate)
+                .putBoolean(KEY_TIMER_SOUND, settings.sound)
+                .putString(KEY_TIMER_WAIT_TIME, String.valueOf(settings.waitTime))
+                .putString(KEY_TIMER_SHOOT_TIME, String.valueOf(settings.shootTime))
+                .putString(KEY_TIMER_WARN_TIME, String.valueOf(settings.warnTime))
+                .apply();
+    }
+
     public static boolean getArrowNumbersEnabled() {
         return lastUsed.getBoolean(KEY_NUMBERING_ENABLED, true);
     }
@@ -257,88 +282,6 @@ public class SettingsManager {
         preferences
                 .edit()
                 .putString(KEY_AGGREGATION_STRATEGY, aggregationStrategy.toString())
-                .apply();
-    }
-
-    public static boolean getTimerVibrate() {
-        return preferences
-                .getBoolean(KEY_TIMER_VIBRATE, false);
-    }
-
-    public static void setTimerVibrate(boolean vibrate) {
-        preferences
-                .edit()
-                .putBoolean(KEY_TIMER_VIBRATE, vibrate)
-                .apply();
-    }
-
-    public static boolean getTimerSoundEnabled() {
-        return preferences
-                .getBoolean(KEY_TIMER_SOUND, true);
-    }
-
-    public static void setTimerSoundEnabled(boolean soundEnabled) {
-        preferences
-                .edit()
-                .putBoolean(KEY_TIMER_SOUND, soundEnabled)
-                .apply();
-    }
-
-    public static int getTimerWaitTime() {
-        return getPrefTime(KEY_TIMER_WAIT_TIME, 10);
-    }
-
-    public static void setTimerWaitTime(int waitTime) {
-        preferences
-                .edit()
-                .putString(KEY_TIMER_WAIT_TIME, String.valueOf(waitTime))
-                .apply();
-    }
-
-    public static int getTimerShootTime() {
-        return getPrefTime(KEY_TIMER_SHOOT_TIME, 120);
-    }
-
-    public static void setTimerShootTime(int shootTime) {
-        preferences
-                .edit()
-                .putString(KEY_TIMER_SHOOT_TIME, String.valueOf(shootTime))
-                .apply();
-    }
-
-    public static int getTimerWarnTime() {
-        return getPrefTime(KEY_TIMER_WARN_TIME, 30);
-    }
-
-    public static void setTimerWarnTime(int warnTime) {
-        preferences
-                .edit()
-                .putString(KEY_TIMER_WARN_TIME, String.valueOf(warnTime))
-                .apply();
-    }
-
-    public static TimerSettings getTimerSettings() {
-        TimerSettings settings = new TimerSettings();
-        settings.enabled = lastUsed.getBoolean(KEY_TIMER, false);
-        settings.vibrate = preferences.getBoolean(KEY_TIMER_VIBRATE, false);
-        settings.sound = preferences.getBoolean(KEY_TIMER_SOUND, true);
-        settings.timerWaitTime = getPrefTime(KEY_TIMER_WAIT_TIME, 10);
-        settings.timerShootTime = getPrefTime(KEY_TIMER_SHOOT_TIME, 120);
-        settings.timerWarnTime = getPrefTime(KEY_TIMER_WARN_TIME, 30);
-        return settings;
-    }
-
-    public static void setTimerSettings(TimerSettings settings) {
-        lastUsed.edit()
-                .putBoolean(KEY_TIMER, settings.enabled)
-                .apply();
-        preferences
-                .edit()
-                .putBoolean(KEY_TIMER_VIBRATE, settings.vibrate)
-                .putBoolean(KEY_TIMER_SOUND, settings.sound)
-                .putString(KEY_TIMER_WAIT_TIME, String.valueOf(settings.timerWaitTime))
-                .putString(KEY_TIMER_SHOOT_TIME, String.valueOf(settings.timerShootTime))
-                .putString(KEY_TIMER_WARN_TIME, String.valueOf(settings.timerWarnTime))
                 .apply();
     }
 
