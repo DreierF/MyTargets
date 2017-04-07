@@ -32,6 +32,7 @@ import org.parceler.Parcel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.Dimension;
@@ -115,7 +116,11 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
     private void updateRoundIndicesForTraining() {
         // TODO very inefficient
         int i = 0;
-        for (Round r : Training.get(trainingId).getRounds()) {
+        Training training = Training.get(trainingId);
+        if(training == null) {
+            return; //FIXME This should not happen, but does for some users
+        }
+        for (Round r : training.getRounds()) {
             r.index = i;
             r.save();
             i++;

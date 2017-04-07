@@ -25,6 +25,7 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
@@ -407,7 +408,8 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
     }
 
     private void leaveBackupSettings() {
-        getActivity().getSupportFragmentManager().popBackStack();
+        Handler h = new Handler();
+        h.post(() -> getActivity().getSupportFragmentManager().popBackStack());
     }
 
     @Override
