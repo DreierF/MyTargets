@@ -21,8 +21,6 @@ import android.database.Cursor;
 
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
-import java.util.ArrayList;
-
 public class StandardRoundDataSource extends IdProviderDataSource<StandardRoundOld> {
     public static final String TABLE = "STANDARD_ROUND_TEMPLATE";
     public static final String NAME = "name";
@@ -83,17 +81,5 @@ public class StandardRoundDataSource extends IdProviderDataSource<StandardRoundO
         cursor.close();
 
         return sr;
-    }
-
-    public ArrayList<StandardRoundOld> getAll() {
-        Cursor cursor = database.rawQuery("SELECT s._id FROM STANDARD_ROUND_TEMPLATE s", null);
-        ArrayList<StandardRoundOld> list = new ArrayList<>(cursor.getCount());
-        if (cursor.moveToFirst()) {
-            do {
-                list.add(get(cursor.getLong(0)));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return list;
     }
 }

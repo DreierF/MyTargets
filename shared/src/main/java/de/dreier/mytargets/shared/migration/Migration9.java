@@ -23,15 +23,12 @@ import com.raizlabs.android.dbflow.annotation.Migration;
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.SharedApplicationInstance;
-import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 
@@ -115,6 +112,7 @@ public class Migration9 extends BaseMigration {
                 "template INTEGER," +
                 "target INTEGER," +
                 "scoring_style INTEGER);");
+        RoundTemplateDataSource roundTemplateDataSource = new RoundTemplateDataSource(SharedApplicationInstance.getContext(), database);
 
         Cursor trainings = database.rawQuery("SELECT _id FROM TRAINING", null);
         if (trainings.moveToFirst()) {
@@ -141,7 +139,7 @@ public class Migration9 extends BaseMigration {
                     database.execSQL(
                             "UPDATE TRAINING SET bow=" + bow + ", arrow=" + arrow + " WHERE _id=" + training);
                     do {
-                        RoundTemplate info = RoundTemplate.get(sid, index);
+                        RoundTemplateOld info = roundTemplateDataSource.get(sid, index);
                         int target = res.getInt(2);
                         ContentValues contentValues = new ContentValues();
                         contentValues.put("_id", res.getLong(0));
@@ -172,28 +170,29 @@ public class Migration9 extends BaseMigration {
                         "ORDER BY r._id ASC", null);
         int index = 0;
         HashSet<Long> sid = new HashSet<>();
-        StandardRound sr = new StandardRound();
+        StandardRoundOld sr = new StandardRoundOld();
         sr.name = "Practice";
         sr.club = 512;
-        sr.setRounds(new ArrayList<>());
         if (res.moveToFirst()) {
+            sr.indoor = res.getInt(5) == 1;
             do {
-                RoundTemplate template = new RoundTemplate();
-                template.shotsPerEnd = res.getInt(0);
+                RoundTemplateOld template = new RoundTemplateOld();
+                template.arrowsPerPasse = res.getInt(0);
                 int target = res.getInt(1);
-                template.setTargetTemplate(new Target(target == 4 ? 5 : target, target == 5 ? 1 : 0));
-                template.distance = new Dimension(res.getInt(2), res.getString(3));
-                template.endCount = res.getInt(4);
+                template.target = new Target(target == 4 ? 5 : target, target == 5 ? 1 : 0);
+                template.distance = new DistanceOld(res.getInt(2), res.getString(3));
+                template.passes = res.getInt(4);
+                template.targetTemplate = template.target;
                 sr.insert(template);
-                long tid = template.getTargetTemplate().getId();
+                long tid = template.target.getId();
                 tid = tid < 7 ? 0 : tid;
                 tid = tid == 11 ? 10 : tid;
                 Cursor sids = db.rawQuery("SELECT sid FROM ROUND_TEMPLATE " +
                         "WHERE r_index=" + index + " " +
                         "AND distance=" + template.distance.value + " " +
                         "AND unit=\"" + template.distance.unit + "\" " +
-                        "AND arrows=" + template.shotsPerEnd + " " +
-                        "AND passes=" + template.endCount + " " +
+                        "AND arrows=" + template.arrowsPerPasse + " " +
+                        "AND passes=" + template.passes + " " +
                         "AND target=" + tid + " " +
                         "AND (SELECT COUNT(r._id) FROM ROUND_TEMPLATE r WHERE r.sid=ROUND_TEMPLATE.sid)=" +
                         res.getCount(), null);
@@ -222,7 +221,7 @@ public class Migration9 extends BaseMigration {
         if (sr.getRounds().isEmpty()) {
             return 0L;
         }
-        sr.save(db);
+        new StandardRoundDataSource(SharedApplicationInstance.getContext(), db).update(sr);
         return sr.getId();
     }
 }
