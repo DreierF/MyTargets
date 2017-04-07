@@ -54,3 +54,6 @@ googlePlayAndroidDeveloper.json
 google-services.json
 firebase-crashreporting.json
 services.tar
+app/app.iml
+shared/shared.iml
+wearable/wearable.iml

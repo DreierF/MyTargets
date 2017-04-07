@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.utils;
 
+import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
@@ -76,11 +77,11 @@ public class MobileWearableListener extends WearableListenerService {
     }
 
     public void trainingTemplate() {
-        Training lastTraining = Stream.of(Training.getAll())
+        Optional<Training> lastTraining = Stream.of(Training.getAll())
                 .sorted(Collections.reverseOrder())
-                .findFirst().get();
-        if (lastTraining != null && lastTraining.date.isEqual(LocalDate.now())) {
-            ApplicationInstance.wearableClient.updateTraining(lastTraining.ensureLoaded());
+                .findFirst();
+        if (lastTraining.isPresent() && lastTraining.get().date.isEqual(LocalDate.now())) {
+            ApplicationInstance.wearableClient.updateTraining(lastTraining.get().ensureLoaded());
         } else {
             Training training = new Training();
             training.title = getString(R.string.training);
@@ -90,7 +91,7 @@ public class MobileWearableListener extends WearableListenerService {
             training.arrowId = SettingsManager.getArrow();
             training.arrowNumbering = false;
 
-            boolean freeTraining = !(lastTraining != null && lastTraining.standardRoundId != null);
+            boolean freeTraining = !(lastTraining.isPresent() && lastTraining.get().standardRoundId != null);
             if(freeTraining) {
                 Round round = new Round();
                 round.setTarget(SettingsManager.getTarget());
@@ -100,7 +101,7 @@ public class MobileWearableListener extends WearableListenerService {
                 training.rounds = new ArrayList<>();
                 training.rounds.add(round);
             } else {
-                training.initRoundsFromTemplate(lastTraining.getStandardRound());
+                training.initRoundsFromTemplate(lastTraining.get().getStandardRound());
             }
             ApplicationInstance.wearableClient.sendTrainingTemplate(training);
         }
