@@ -15,30 +15,30 @@
 
 package de.dreier.mytargets.shared.migration;
 
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.db.RoundTemplate;
 
-public class RoundTemplateOld implements IIdSettableOld {
+public class RoundTemplateOld {
+    public long id;
     public long standardRound;
     public int index;
     public int arrowsPerPasse;
     public Target target;
-    public DistanceOld distance;
+    public Dimension distance;
     public int passes;
     public Target targetTemplate;
-    protected long id;
 
-    public long getId() {
-        return id;
-    }
+    public RoundTemplateOld() {}
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    @Override
-    public boolean equals(Object another) {
-        return another instanceof RoundTemplateOld &&
-                getClass().equals(another.getClass()) &&
-                id == ((RoundTemplateOld) another).id;
+    public RoundTemplateOld(RoundTemplate roundTemplate) {
+        id = roundTemplate.getId();
+        standardRound = roundTemplate.standardRound;
+        index = roundTemplate.index;
+        arrowsPerPasse = roundTemplate.shotsPerEnd;
+        target = roundTemplate.getTargetTemplate();
+        distance = roundTemplate.distance;
+        passes = roundTemplate.endCount;
+        targetTemplate = roundTemplate.getTargetTemplate();
     }
 }

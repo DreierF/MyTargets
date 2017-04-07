@@ -16,33 +16,42 @@ package de.dreier.mytargets.shared.migration;
 
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
-public class StandardRoundDataSource extends IdProviderDataSource<StandardRoundOld> {
+public class StandardRoundDataSource {
+    public static final String ID = "_id";
     public static final String TABLE = "STANDARD_ROUND_TEMPLATE";
     public static final String NAME = "name";
     public static final String INSTITUTION = "club";
     public static final String INDOOR = "indoor";
+    private final DatabaseWrapper database;
 
-    public StandardRoundDataSource(Context context, DatabaseWrapper database) {
-        super(context, TABLE, database);
+    public StandardRoundDataSource(DatabaseWrapper database) {
+        this.database = database;
     }
 
-    @Override
     public void update(StandardRoundOld item) {
-        super.update(item);
-        RoundTemplateDataSource rtds = new RoundTemplateDataSource(getContext(), database);
-        for (RoundTemplateOld template : item.getRounds()) {
+        ContentValues values = getContentValues(item);
+        if (values == null) {
+            return;
+        }
+        if (item.getId() <= 0) {
+            item.setId(database.insertWithOnConflict(TABLE, null, values, SQLiteDatabase.CONFLICT_NONE));
+        } else {
+            values.put(ID, item.getId());
+            database.insertWithOnConflict(TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        }
+        RoundTemplateDataSource rtds = new RoundTemplateDataSource(database);
+        for (RoundTemplateOld template : item.rounds) {
             template.standardRound = item.getId();
             rtds.update(template);
         }
     }
 
-    @Override
-    public ContentValues getContentValues(StandardRoundOld standardRound) {
+    private ContentValues getContentValues(StandardRoundOld standardRound) {
         ContentValues values = new ContentValues();
         values.put(NAME, standardRound.name);
         values.put(INSTITUTION, standardRound.club);
@@ -58,7 +67,6 @@ public class StandardRoundDataSource extends IdProviderDataSource<StandardRoundO
         standardRound.indoor = cursor.getInt(3) == 1;
         return standardRound;
     }
-
 
     public StandardRoundOld get(long standardRoundId) {
         Cursor cursor = database.rawQuery("SELECT s._id, s.name, s.club, s.indoor, " +

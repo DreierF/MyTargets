@@ -16,18 +16,16 @@
 package de.dreier.mytargets.shared.migration;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 
 import com.raizlabs.android.dbflow.annotation.Migration;
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
-import java.util.HashSet;
 import java.util.List;
 
 import de.dreier.mytargets.shared.AppDatabase;
-import de.dreier.mytargets.shared.SharedApplicationInstance;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
@@ -80,14 +78,13 @@ public class Migration9 extends BaseMigration {
                 "WHERE r.target<11 AND s.points=0);");
         database.execSQL("ALTER TABLE ROUND RENAME TO ROUND_OLD");
 
-        Context context = SharedApplicationInstance.getContext();
         database.execSQL("CREATE TABLE IF NOT EXISTS " + StandardRoundDataSource.TABLE + " (" +
-                IdProviderDataSource.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                StandardRoundDataSource.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 StandardRoundDataSource.NAME + " TEXT," +
                 StandardRoundDataSource.INSTITUTION + " INTEGER," +
                 StandardRoundDataSource.INDOOR + " INTEGER);");
         database.execSQL("CREATE TABLE IF NOT EXISTS " + RoundTemplateDataSource.TABLE + " (" +
-                IdProviderDataSource.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                RoundTemplateDataSource.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 RoundTemplateDataSource.STANDARD_ID + " INTEGER," +
                 RoundTemplateDataSource.INDEX + " INTEGER," +
                 RoundTemplateDataSource.DISTANCE + " INTEGER," +
@@ -100,7 +97,7 @@ public class Migration9 extends BaseMigration {
                 RoundTemplateDataSource.SCORING_STYLE + " INTEGER," +
                 "UNIQUE(sid, r_index) ON CONFLICT REPLACE);");
         List<StandardRound> rounds = StandardRoundFactory.initTable();
-        StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(context, database);
+        StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(database);
         for (StandardRound round : rounds) {
             standardRoundDataSource.update(new StandardRoundOld(round));
         }
@@ -112,7 +109,7 @@ public class Migration9 extends BaseMigration {
                 "template INTEGER," +
                 "target INTEGER," +
                 "scoring_style INTEGER);");
-        RoundTemplateDataSource roundTemplateDataSource = new RoundTemplateDataSource(SharedApplicationInstance.getContext(), database);
+        RoundTemplateDataSource roundTemplateDataSource = new RoundTemplateDataSource(database);
 
         Cursor trainings = database.rawQuery("SELECT _id FROM TRAINING", null);
         if (trainings.moveToFirst()) {
@@ -145,7 +142,7 @@ public class Migration9 extends BaseMigration {
                         contentValues.put("_id", res.getLong(0));
                         contentValues.put("comment", res.getString(1));
                         contentValues.put("training", training);
-                        contentValues.put("template", info.getId());
+                        contentValues.put("template", info.id);
                         contentValues
                                 .put("target", target == 4 ? 5 : target);
                         contentValues.put("scoring_style",
@@ -169,7 +166,6 @@ public class Migration9 extends BaseMigration {
                         "GROUP BY r._id " +
                         "ORDER BY r._id ASC", null);
         int index = 0;
-        HashSet<Long> sid = new HashSet<>();
         StandardRoundOld sr = new StandardRoundOld();
         sr.name = "Practice";
         sr.club = 512;
@@ -180,48 +176,20 @@ public class Migration9 extends BaseMigration {
                 template.arrowsPerPasse = res.getInt(0);
                 int target = res.getInt(1);
                 template.target = new Target(target == 4 ? 5 : target, target == 5 ? 1 : 0);
-                template.distance = new DistanceOld(res.getInt(2), res.getString(3));
+                template.distance = new Dimension(res.getInt(2), res.getString(3));
                 template.passes = res.getInt(4);
                 template.targetTemplate = template.target;
+                template.index = index;
                 sr.insert(template);
-                long tid = template.target.getId();
-                tid = tid < 7 ? 0 : tid;
-                tid = tid == 11 ? 10 : tid;
-                Cursor sids = db.rawQuery("SELECT sid FROM ROUND_TEMPLATE " +
-                        "WHERE r_index=" + index + " " +
-                        "AND distance=" + template.distance.value + " " +
-                        "AND unit=\"" + template.distance.unit + "\" " +
-                        "AND arrows=" + template.arrowsPerPasse + " " +
-                        "AND passes=" + template.passes + " " +
-                        "AND target=" + tid + " " +
-                        "AND (SELECT COUNT(r._id) FROM ROUND_TEMPLATE r WHERE r.sid=ROUND_TEMPLATE.sid)=" +
-                        res.getCount(), null);
-                HashSet<Long> sid_tmp = new HashSet<>();
-                if (sids.moveToFirst()) {
-                    do {
-                        sid_tmp.add(sids.getLong(0));
-                    } while (sids.moveToNext());
-                }
-                sids.close();
-                if (index == 0) {
-                    sid = sid_tmp;
-                } else {
-                    sid.retainAll(sid_tmp);
-                }
                 index++;
             } while (res.moveToNext());
         }
         res.close();
 
-        // A standard round exists that matches this specific pattern
-        if (!sid.isEmpty()) {
-            return sid.toArray(new Long[sid.size()])[0];
-        }
-
-        if (sr.getRounds().isEmpty()) {
+        if (sr.rounds.isEmpty()) {
             return 0L;
         }
-        new StandardRoundDataSource(SharedApplicationInstance.getContext(), db).update(sr);
+        new StandardRoundDataSource(db).update(sr);
         return sr.getId();
     }
 }

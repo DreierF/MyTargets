@@ -16,15 +16,16 @@ package de.dreier.mytargets.shared.migration;
 
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 
-public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplateOld> {
+public class RoundTemplateDataSource {
+    public static final String ID = "_id";
     public static final String TARGET = "target";
     public static final String SCORING_STYLE = "scoring_style";
     public static final String TABLE = "ROUND_TEMPLATE";
@@ -36,14 +37,28 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplateO
     public static final String ARROWS_PER_PASSE = "arrows";
     public static final String TARGET_SIZE = "size";
     public static final String TARGET_SIZE_UNIT = "target_unit";
+    private final DatabaseWrapper database;
 
-    public RoundTemplateDataSource(Context context, DatabaseWrapper database) {
-        super(context, TABLE, database);
+    public RoundTemplateDataSource(DatabaseWrapper database) {
+        this.database = database;
+    }
+
+    public void update(RoundTemplateOld item) {
+        ContentValues values = getContentValues(item);
+        if (values == null) {
+            return;
+        }
+        if (item.id <= 0) {
+            item.id = database.insertWithOnConflict(TABLE, null, values, SQLiteDatabase.CONFLICT_NONE);
+        } else {
+            values.put(ID, item.id);
+            database.insertWithOnConflict(TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        }
     }
 
     static RoundTemplateOld cursorToRoundTemplate(Cursor cursor, int startColumnIndex) {
         RoundTemplateOld roundTemplate = new RoundTemplateOld();
-        roundTemplate.setId(cursor.getLong(startColumnIndex));
+        roundTemplate.id = cursor.getLong(startColumnIndex);
         roundTemplate.index = cursor.getInt(startColumnIndex + 1);
         roundTemplate.arrowsPerPasse = cursor.getInt(startColumnIndex + 2);
         final Dimension diameter = new Dimension(
@@ -52,20 +67,19 @@ public class RoundTemplateDataSource extends IdProviderDataSource<RoundTemplateO
                 cursor.getInt(startColumnIndex + 4), diameter);
         roundTemplate.target = new Target(cursor.getInt(startColumnIndex + 5),
                 cursor.getInt(startColumnIndex + 6), diameter);
-        roundTemplate.distance = new DistanceOld(cursor.getInt(startColumnIndex + 7),
+        roundTemplate.distance = new Dimension(cursor.getInt(startColumnIndex + 7),
                 cursor.getString(startColumnIndex + 8));
         roundTemplate.passes = cursor.getInt(startColumnIndex + 11);
         roundTemplate.standardRound = cursor.getLong(startColumnIndex + 12);
         return roundTemplate;
     }
 
-    @Override
-    public ContentValues getContentValues(RoundTemplateOld roundTemplate) {
+    private ContentValues getContentValues(RoundTemplateOld roundTemplate) {
         ContentValues values = new ContentValues();
         values.put(STANDARD_ID, roundTemplate.standardRound);
         values.put(INDEX, roundTemplate.index);
         values.put(DISTANCE, roundTemplate.distance.value);
-        values.put(UNIT, roundTemplate.distance.unit);
+        values.put(UNIT, Dimension.Unit.toStringHandleNull(roundTemplate.distance.unit));
         values.put(PASSES, roundTemplate.passes);
         values.put(ARROWS_PER_PASSE, roundTemplate.arrowsPerPasse);
         values.put(TARGET, roundTemplate.targetTemplate.id);
