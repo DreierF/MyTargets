@@ -62,6 +62,7 @@ ext {
             mpAndroidChart       : 'v3.0.2',
             mockito              : '2.8.9',
             okhttp               : '3.7.0',
+            openCV               : '3.1.0',
             parceler             : '1.1.7',
             permissionsdispatcher: '2.4.0',
             photoView            : '2.0.0',
@@ -85,6 +86,7 @@ allprojects {
         jcenter()
         maven { url 'https://jitpack.io' }
         maven { url 'https://clojars.org/repo/' }
+        maven { url  'http://dl.bintray.com/steveliles/maven' }
         maven { url 'https://maven.google.com' }
     }
 }

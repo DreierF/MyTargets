@@ -66,7 +66,7 @@
         android:restoreAnyVersion="false"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:name">
+        tools:replace="android:name,android:label">
         <meta-data
             android:name="android.max_aspect"
             android:value="2.1" />
@@ -92,6 +92,17 @@
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
+
+        <activity
+            android:name=".features.training.input.opencv.MainActivity"
+            android:label="OpenCVTest"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".features.main.IntroActivity"
             android:theme="@style/Theme.Intro" />

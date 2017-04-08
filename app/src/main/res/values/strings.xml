@@ -347,6 +347,7 @@
     <string name="show_total_score">Show total score</string>
     <string name="show_percentage">Show percentage</string>
     <string name="show_arrow_average">Show arrow average</string>
+    <string name="arrow_detection">Arrow detection</string>
     <string name="image_deleted">Image deleted</string>
     <string name="delete_image">Delete image?</string>
     <string name="keyboard_type">Keyboard type</string>

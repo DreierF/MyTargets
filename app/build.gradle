@@ -80,6 +80,28 @@ android {
         regular {}
         screengrab {}
     }
+
+    splits {
+
+        // Configures multiple APKs based on ABI.
+        abi {
+
+            // Enables building multiple APKs per ABI.
+            enable true
+
+            // By default all ABIs are included, so use reset() and include to specify that we only
+            // want APKs for x86, armeabi-v7a, and mips.
+
+            // Resets the list of ABIs that Gradle should create APKs for to none.
+            reset()
+
+            // Specifies a list of ABIs that Gradle should create APKs for.
+            include "armeabi-v7a"//, "x86", "mips"
+
+            // Specifies that we do not want to also generate a universal APK that includes all ABIs.
+            universalApk false
+        }
+    }
 }
 
 apply from: '../tools/script-codacy.gradle'
@@ -148,6 +170,7 @@ dependencies {
     compile "com.github.Raizlabs.DBFlow:dbflow:$libraryVersion.dbFlow"
 
     compile "com.github.chrisbanes:PhotoView:$libraryVersion.photoView"
+    compile "org.opencv:OpenCV-Android:$libraryVersion.openCV"
 
     compile project(':shared')
     wearApp project(':wearable')
