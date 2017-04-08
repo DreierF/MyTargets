@@ -23,6 +23,7 @@ import com.raizlabs.android.dbflow.annotation.Migration;
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.AppDatabase;
@@ -37,23 +38,24 @@ import static android.database.sqlite.SQLiteDatabase.CONFLICT_IGNORE;
 @Migration(version = 9, database = AppDatabase.class)
 public class Migration9 extends BaseMigration {
 
-    public static final String ID = "_id";
-    private static final String TARGET = "target";
-    private static final String SCORING_STYLE = "scoring_style";
-    public static final String TABLE = "ROUND_TEMPLATE";
-    private static final String STANDARD_ID = "sid";
-    private static final String INDEX = "r_index";
-    private static final String DISTANCE = "distance";
-    private static final String UNIT = "unit";
-    private static final String PASSES = "passes";
-    private static final String ARROWS_PER_PASSE = "arrows";
-    private static final String TARGET_SIZE = "size";
-    private static final String TARGET_SIZE_UNIT = "target_unit";
     private static final String SR_ID = "_id";
     private static final String SR_TABLE = "STANDARD_ROUND_TEMPLATE";
     private static final String SR_NAME = "name";
     private static final String SR_INSTITUTION = "club";
     private static final String SR_INDOOR = "indoor";
+
+    private static final String RT_ID = "_id";
+    private static final String RT_TARGET = "target";
+    private static final String RT_SCORING_STYLE = "scoring_style";
+    private static final String RT_TABLE = "ROUND_TEMPLATE";
+    private static final String RT_STANDARD_ID = "sid";
+    private static final String RT_INDEX = "r_index";
+    private static final String RT_DISTANCE = "distance";
+    private static final String RT_UNIT = "unit";
+    private static final String RT_PASSES = "passes";
+    private static final String RT_ARROWS_PER_PASSE = "arrows";
+    private static final String RT_TARGET_SIZE = "size";
+    private static final String RT_TARGET_SIZE_UNIT = "target_unit";
 
     @Override
     public void migrate(DatabaseWrapper database) {
@@ -103,18 +105,18 @@ public class Migration9 extends BaseMigration {
                 SR_NAME + " TEXT," +
                 SR_INSTITUTION + " INTEGER," +
                 SR_INDOOR + " INTEGER);");
-        database.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE + " (" +
-                ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                STANDARD_ID + " INTEGER," +
-                INDEX + " INTEGER," +
-                DISTANCE + " INTEGER," +
-                UNIT + " TEXT," +
-                PASSES + " INTEGER," +
-                ARROWS_PER_PASSE + " INTEGER," +
-                TARGET + " INTEGER," +
-                TARGET_SIZE + " INTEGER," +
-                TARGET_SIZE_UNIT + " INTEGER," +
-                SCORING_STYLE + " INTEGER," +
+        database.execSQL("CREATE TABLE IF NOT EXISTS " + RT_TABLE + " (" +
+                RT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                RT_STANDARD_ID + " INTEGER," +
+                RT_INDEX + " INTEGER," +
+                RT_DISTANCE + " INTEGER," +
+                RT_UNIT + " TEXT," +
+                RT_PASSES + " INTEGER," +
+                RT_ARROWS_PER_PASSE + " INTEGER," +
+                RT_TARGET + " INTEGER," +
+                RT_TARGET_SIZE + " INTEGER," +
+                RT_TARGET_SIZE_UNIT + " INTEGER," +
+                RT_SCORING_STYLE + " INTEGER," +
                 "UNIQUE(sid, r_index) ON CONFLICT REPLACE);");
         List<StandardRound> rounds = StandardRoundFactory.initTable();
         for (StandardRound round : rounds) {
@@ -186,6 +188,7 @@ public class Migration9 extends BaseMigration {
         StandardRound sr = new StandardRound();
         sr.name = "Practice";
         sr.club = 512;
+        sr.setRounds(new ArrayList<>());
         if (res.moveToFirst()) {
             do {
                 RoundTemplate template = new RoundTemplate();
@@ -212,8 +215,8 @@ public class Migration9 extends BaseMigration {
         values.put(SR_NAME, item.name);
         values.put(SR_INSTITUTION, item.club);
         values.put(SR_INDOOR, 0);
-        if (item.getId() <= 0) {
-            item.setId( database.insertWithOnConflict(SR_TABLE, null, values, SQLiteDatabase.CONFLICT_NONE));
+        if (item.getId() == null) {
+            item.setId(database.insertWithOnConflict(SR_TABLE, null, values, SQLiteDatabase.CONFLICT_NONE));
             for (RoundTemplate r : item.getRounds()) {
                 r.standardRound = item.getId();
             }
@@ -229,21 +232,21 @@ public class Migration9 extends BaseMigration {
 
     private static void insertRoundTemplate(DatabaseWrapper database, RoundTemplate item) {
         ContentValues values = new ContentValues();
-        values.put(STANDARD_ID, item.standardRound);
-        values.put(INDEX, item.index);
-        values.put(DISTANCE, item.distance.value);
-        values.put(UNIT, Dimension.Unit.toStringHandleNull(item.distance.unit));
-        values.put(PASSES, item.endCount);
-        values.put(ARROWS_PER_PASSE, item.shotsPerEnd);
-        values.put(TARGET, item.getTargetTemplate().id);
-        values.put(TARGET_SIZE, item.getTargetTemplate().size.value);
-        values.put(TARGET_SIZE_UNIT, Dimension.Unit.toStringHandleNull(item.getTargetTemplate().size.unit));
-        values.put(SCORING_STYLE, item.getTargetTemplate().scoringStyle);
-        if (item.getId() <= 0) {
-            item.setId(database.insertWithOnConflict(TABLE, null, values, SQLiteDatabase.CONFLICT_NONE));
+        values.put(RT_STANDARD_ID, item.standardRound);
+        values.put(RT_INDEX, item.index);
+        values.put(RT_DISTANCE, item.distance.value);
+        values.put(RT_UNIT, Dimension.Unit.toStringHandleNull(item.distance.unit));
+        values.put(RT_PASSES, item.endCount);
+        values.put(RT_ARROWS_PER_PASSE, item.shotsPerEnd);
+        values.put(RT_TARGET, item.getTargetTemplate().id);
+        values.put(RT_TARGET_SIZE, item.getTargetTemplate().size.value);
+        values.put(RT_TARGET_SIZE_UNIT, Dimension.Unit.toStringHandleNull(item.getTargetTemplate().size.unit));
+        values.put(RT_SCORING_STYLE, item.getTargetTemplate().scoringStyle);
+        if (item.getId() == null) {
+            item.setId(database.insertWithOnConflict(RT_TABLE, null, values, SQLiteDatabase.CONFLICT_NONE));
         } else {
-            values.put(ID, item.getId());
-            database.insertWithOnConflict(TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+            values.put(RT_ID, item.getId());
+            database.insertWithOnConflict(RT_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
         }
     }
 
@@ -251,9 +254,7 @@ public class Migration9 extends BaseMigration {
         Cursor cursor = database.rawQuery("SELECT _id, r_index, arrows, target, scoring_style, " +
                         "target, scoring_style, distance, unit, size, target_unit, passes, sid " +
                         "FROM ROUND_TEMPLATE WHERE sid=? AND r_index=?",
-                new String[]{String.valueOf(sid),
-                        String.valueOf(index)
-                });
+                new String[]{String.valueOf(sid), String.valueOf(index)});
         RoundTemplate r = null;
         if (cursor.moveToFirst()) {
             r = cursorToRoundTemplate(cursor, 0);
