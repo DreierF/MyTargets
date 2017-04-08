@@ -17,6 +17,7 @@ package de.dreier.mytargets.shared.migration;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.raizlabs.android.dbflow.annotation.Migration;
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
@@ -35,6 +36,24 @@ import static android.database.sqlite.SQLiteDatabase.CONFLICT_IGNORE;
 
 @Migration(version = 9, database = AppDatabase.class)
 public class Migration9 extends BaseMigration {
+
+    public static final String ID = "_id";
+    private static final String TARGET = "target";
+    private static final String SCORING_STYLE = "scoring_style";
+    public static final String TABLE = "ROUND_TEMPLATE";
+    private static final String STANDARD_ID = "sid";
+    private static final String INDEX = "r_index";
+    private static final String DISTANCE = "distance";
+    private static final String UNIT = "unit";
+    private static final String PASSES = "passes";
+    private static final String ARROWS_PER_PASSE = "arrows";
+    private static final String TARGET_SIZE = "size";
+    private static final String TARGET_SIZE_UNIT = "target_unit";
+    private static final String SR_ID = "_id";
+    private static final String SR_TABLE = "STANDARD_ROUND_TEMPLATE";
+    private static final String SR_NAME = "name";
+    private static final String SR_INSTITUTION = "club";
+    private static final String SR_INDOOR = "indoor";
 
     @Override
     public void migrate(DatabaseWrapper database) {
@@ -79,28 +98,27 @@ public class Migration9 extends BaseMigration {
                 "WHERE r.target<11 AND s.points=0);");
         database.execSQL("ALTER TABLE ROUND RENAME TO ROUND_OLD");
 
-        database.execSQL("CREATE TABLE IF NOT EXISTS " + StandardRoundDataSource.TABLE + " (" +
-                StandardRoundDataSource.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                StandardRoundDataSource.NAME + " TEXT," +
-                StandardRoundDataSource.INSTITUTION + " INTEGER," +
-                StandardRoundDataSource.INDOOR + " INTEGER);");
-        database.execSQL("CREATE TABLE IF NOT EXISTS " + RoundTemplateDataSource.TABLE + " (" +
-                RoundTemplateDataSource.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                RoundTemplateDataSource.STANDARD_ID + " INTEGER," +
-                RoundTemplateDataSource.INDEX + " INTEGER," +
-                RoundTemplateDataSource.DISTANCE + " INTEGER," +
-                RoundTemplateDataSource.UNIT + " TEXT," +
-                RoundTemplateDataSource.PASSES + " INTEGER," +
-                RoundTemplateDataSource.ARROWS_PER_PASSE + " INTEGER," +
-                RoundTemplateDataSource.TARGET + " INTEGER," +
-                RoundTemplateDataSource.TARGET_SIZE + " INTEGER," +
-                RoundTemplateDataSource.TARGET_SIZE_UNIT + " INTEGER," +
-                RoundTemplateDataSource.SCORING_STYLE + " INTEGER," +
+        database.execSQL("CREATE TABLE IF NOT EXISTS " + SR_TABLE + " (" +
+                SR_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                SR_NAME + " TEXT," +
+                SR_INSTITUTION + " INTEGER," +
+                SR_INDOOR + " INTEGER);");
+        database.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE + " (" +
+                ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                STANDARD_ID + " INTEGER," +
+                INDEX + " INTEGER," +
+                DISTANCE + " INTEGER," +
+                UNIT + " TEXT," +
+                PASSES + " INTEGER," +
+                ARROWS_PER_PASSE + " INTEGER," +
+                TARGET + " INTEGER," +
+                TARGET_SIZE + " INTEGER," +
+                TARGET_SIZE_UNIT + " INTEGER," +
+                SCORING_STYLE + " INTEGER," +
                 "UNIQUE(sid, r_index) ON CONFLICT REPLACE);");
         List<StandardRound> rounds = StandardRoundFactory.initTable();
-        StandardRoundDataSource standardRoundDataSource = new StandardRoundDataSource(database);
         for (StandardRound round : rounds) {
-            standardRoundDataSource.update(new StandardRoundOld(round));
+            insertStandardRound(database, round);
         }
 
         database.execSQL("CREATE TABLE IF NOT EXISTS ROUND (" +
@@ -110,7 +128,6 @@ public class Migration9 extends BaseMigration {
                 "template INTEGER," +
                 "target INTEGER," +
                 "scoring_style INTEGER);");
-        RoundTemplateDataSource roundTemplateDataSource = new RoundTemplateDataSource(database);
 
         Cursor trainings = database.rawQuery("SELECT _id FROM TRAINING", null);
         if (trainings.moveToFirst()) {
@@ -137,7 +154,7 @@ public class Migration9 extends BaseMigration {
                     database.execSQL(
                             "UPDATE TRAINING SET bow=" + bow + ", arrow=" + arrow + " WHERE _id=" + training);
                     do {
-                        RoundTemplate info = roundTemplateDataSource.get(sid, index);
+                        RoundTemplate info = getRoundTemplate(database, sid, index);
                         int target = res.getInt(2);
                         ContentValues contentValues = new ContentValues();
                         contentValues.put("_id", res.getLong(0));
@@ -166,12 +183,10 @@ public class Migration9 extends BaseMigration {
                         "WHERE r.training=" + training + " " +
                         "GROUP BY r._id " +
                         "ORDER BY r._id ASC", null);
-        int index = 0;
-        StandardRoundOld sr = new StandardRoundOld();
+        StandardRound sr = new StandardRound();
         sr.name = "Practice";
         sr.club = 512;
         if (res.moveToFirst()) {
-            sr.indoor = res.getInt(5) == 1;
             do {
                 RoundTemplate template = new RoundTemplate();
                 template.shotsPerEnd = res.getInt(0);
@@ -179,17 +194,87 @@ public class Migration9 extends BaseMigration {
                 template.setTargetTemplate(new Target(target == 4 ? 5 : target, target == 5 ? 1 : 0));
                 template.distance = new Dimension(res.getInt(2), res.getString(3));
                 template.endCount = res.getInt(4);
-                template.index = index;
-                sr.insert(template);
-                index++;
+                template.index = sr.getRounds().size();
+                sr.getRounds().add(template);
             } while (res.moveToNext());
         }
         res.close();
 
-        if (sr.rounds.isEmpty()) {
+        if (sr.getRounds().isEmpty()) {
             return 0L;
         }
-        new StandardRoundDataSource(db).update(sr);
-        return sr.id;
+        insertStandardRound(db, sr);
+        return sr.getId();
+    }
+
+    private static void insertStandardRound(DatabaseWrapper database, StandardRound item) {
+        ContentValues values = new ContentValues();
+        values.put(SR_NAME, item.name);
+        values.put(SR_INSTITUTION, item.club);
+        values.put(SR_INDOOR, 0);
+        if (item.getId() <= 0) {
+            item.setId( database.insertWithOnConflict(SR_TABLE, null, values, SQLiteDatabase.CONFLICT_NONE));
+            for (RoundTemplate r : item.getRounds()) {
+                r.standardRound = item.getId();
+            }
+        } else {
+            values.put(SR_ID, item.getId());
+            database.insertWithOnConflict(SR_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        }
+        for (RoundTemplate template : item.getRounds()) {
+            template.standardRound = item.getId();
+            insertRoundTemplate(database, template);
+        }
+    }
+
+    private static void insertRoundTemplate(DatabaseWrapper database, RoundTemplate item) {
+        ContentValues values = new ContentValues();
+        values.put(STANDARD_ID, item.standardRound);
+        values.put(INDEX, item.index);
+        values.put(DISTANCE, item.distance.value);
+        values.put(UNIT, Dimension.Unit.toStringHandleNull(item.distance.unit));
+        values.put(PASSES, item.endCount);
+        values.put(ARROWS_PER_PASSE, item.shotsPerEnd);
+        values.put(TARGET, item.getTargetTemplate().id);
+        values.put(TARGET_SIZE, item.getTargetTemplate().size.value);
+        values.put(TARGET_SIZE_UNIT, Dimension.Unit.toStringHandleNull(item.getTargetTemplate().size.unit));
+        values.put(SCORING_STYLE, item.getTargetTemplate().scoringStyle);
+        if (item.getId() <= 0) {
+            item.setId(database.insertWithOnConflict(TABLE, null, values, SQLiteDatabase.CONFLICT_NONE));
+        } else {
+            values.put(ID, item.getId());
+            database.insertWithOnConflict(TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        }
+    }
+
+    private static RoundTemplate getRoundTemplate(DatabaseWrapper database, long sid, int index) {
+        Cursor cursor = database.rawQuery("SELECT _id, r_index, arrows, target, scoring_style, " +
+                        "target, scoring_style, distance, unit, size, target_unit, passes, sid " +
+                        "FROM ROUND_TEMPLATE WHERE sid=? AND r_index=?",
+                new String[]{String.valueOf(sid),
+                        String.valueOf(index)
+                });
+        RoundTemplate r = null;
+        if (cursor.moveToFirst()) {
+            r = cursorToRoundTemplate(cursor, 0);
+        }
+        cursor.close();
+        return r;
+    }
+
+    private static RoundTemplate cursorToRoundTemplate(Cursor cursor, int startColumnIndex) {
+        RoundTemplate roundTemplate = new RoundTemplate();
+        roundTemplate.setId(cursor.getLong(startColumnIndex));
+        roundTemplate.index = cursor.getInt(startColumnIndex + 1);
+        roundTemplate.shotsPerEnd = cursor.getInt(startColumnIndex + 2);
+        final Dimension diameter = new Dimension(
+                cursor.getInt(startColumnIndex + 9), cursor.getString(startColumnIndex + 10));
+        roundTemplate.setTargetTemplate(new Target(cursor.getInt(startColumnIndex + 3),
+                cursor.getInt(startColumnIndex + 4), diameter));
+        roundTemplate.distance = new Dimension(cursor.getInt(startColumnIndex + 7),
+                cursor.getString(startColumnIndex + 8));
+        roundTemplate.endCount = cursor.getInt(startColumnIndex + 11);
+        roundTemplate.standardRound = cursor.getLong(startColumnIndex + 12);
+        return roundTemplate;
     }
 }
