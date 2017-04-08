@@ -100,7 +100,7 @@ public class CsvExporter {
         csv.add(t.title);
         // Date
         csv.add(dateFormat.format(t.date.toDate()));
-        // StandardRoundOld
+        // StandardRound
         csv.add(t.standardRoundId == null ? get(R.string.practice) : t.getStandardRound()
                 .getName());
         // Indoor
