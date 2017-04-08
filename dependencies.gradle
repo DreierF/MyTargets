@@ -36,6 +36,7 @@ ext {
             mockito              : '2.13.0',
             multidex             : '1.0.2',
             okhttp               : '3.9.1',
+            openCV               : '3.1.0',
             permissionsdispatcher: '3.1.0',
             photoView            : '2.1.3',
             picasso              : '2.5.2',
@@ -150,6 +151,8 @@ ext {
 
             threeTenABP                   : "com.jakewharton.threetenabp:threetenabp:$libraryVersion.threeTenABP",
 
-            timber                        : "com.jakewharton.timber:timber:$libraryVersion.timber"
+            timber                        : "com.jakewharton.timber:timber:$libraryVersion.timber",
+
+            openCV                        : "org.opencv:OpenCV-Android:$libraryVersion.openCV"
     ]
 }

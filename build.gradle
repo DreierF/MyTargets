@@ -46,6 +46,7 @@ allprojects {
         google()
         maven { url 'https://jitpack.io' }
         maven { url 'https://clojars.org/repo/' }
+        maven { url  'http://dl.bintray.com/steveliles/maven' }
     }
 }
 

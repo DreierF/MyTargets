@@ -18,6 +18,12 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_arrow_detection"
+        android:icon="@drawable/ic_arrow_detection_white_24dp"
+        android:title="@string/arrow_detection"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_share"
         android:icon="@drawable/ic_share_white_24dp"
         android:title="@string/share"
