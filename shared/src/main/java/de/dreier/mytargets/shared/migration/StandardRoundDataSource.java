@@ -21,6 +21,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
+import de.dreier.mytargets.shared.models.db.RoundTemplate;
+
 public class StandardRoundDataSource {
     public static final String ID = "_id";
     public static final String TABLE = "STANDARD_ROUND_TEMPLATE";
@@ -31,41 +33,6 @@ public class StandardRoundDataSource {
 
     public StandardRoundDataSource(DatabaseWrapper database) {
         this.database = database;
-    }
-
-    public void update(StandardRoundOld item) {
-        ContentValues values = getContentValues(item);
-        if (values == null) {
-            return;
-        }
-        if (item.getId() <= 0) {
-            item.setId(database.insertWithOnConflict(TABLE, null, values, SQLiteDatabase.CONFLICT_NONE));
-        } else {
-            values.put(ID, item.getId());
-            database.insertWithOnConflict(TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-        }
-        RoundTemplateDataSource rtds = new RoundTemplateDataSource(database);
-        for (RoundTemplateOld template : item.rounds) {
-            template.standardRound = item.getId();
-            rtds.update(template);
-        }
-    }
-
-    private ContentValues getContentValues(StandardRoundOld standardRound) {
-        ContentValues values = new ContentValues();
-        values.put(NAME, standardRound.name);
-        values.put(INSTITUTION, standardRound.club);
-        values.put(INDOOR, standardRound.indoor ? 1 : 0);
-        return values;
-    }
-
-    private StandardRoundOld cursorToStandardRound(Cursor cursor) {
-        StandardRoundOld standardRound = new StandardRoundOld();
-        standardRound.setId(cursor.getLong(0));
-        standardRound.name = cursor.getString(1);
-        standardRound.club = cursor.getInt(2);
-        standardRound.indoor = cursor.getInt(3) == 1;
-        return standardRound;
     }
 
     public StandardRoundOld get(long standardRoundId) {
@@ -89,5 +56,40 @@ public class StandardRoundDataSource {
         cursor.close();
 
         return sr;
+    }
+
+    private StandardRoundOld cursorToStandardRound(Cursor cursor) {
+        StandardRoundOld standardRound = new StandardRoundOld();
+        standardRound.setId(cursor.getLong(0));
+        standardRound.name = cursor.getString(1);
+        standardRound.club = cursor.getInt(2);
+        standardRound.indoor = cursor.getInt(3) == 1;
+        return standardRound;
+    }
+
+    public void update(StandardRoundOld item) {
+        ContentValues values = getContentValues(item);
+        if (values == null) {
+            return;
+        }
+        if (item.id <= 0) {
+            item.setId(database.insertWithOnConflict(TABLE, null, values, SQLiteDatabase.CONFLICT_NONE));
+        } else {
+            values.put(ID, item.id);
+            database.insertWithOnConflict(TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        }
+        RoundTemplateDataSource rtds = new RoundTemplateDataSource(database);
+        for (RoundTemplate template : item.rounds) {
+            template.standardRound = item.id;
+            rtds.update(template);
+        }
+    }
+
+    private ContentValues getContentValues(StandardRoundOld standardRound) {
+        ContentValues values = new ContentValues();
+        values.put(NAME, standardRound.name);
+        values.put(INSTITUTION, standardRound.club);
+        values.put(INDOOR, standardRound.indoor ? 1 : 0);
+        return values;
     }
 }

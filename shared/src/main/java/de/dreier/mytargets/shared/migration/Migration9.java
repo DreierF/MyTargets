@@ -27,6 +27,7 @@ import java.util.List;
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 
@@ -136,13 +137,13 @@ public class Migration9 extends BaseMigration {
                     database.execSQL(
                             "UPDATE TRAINING SET bow=" + bow + ", arrow=" + arrow + " WHERE _id=" + training);
                     do {
-                        RoundTemplateOld info = roundTemplateDataSource.get(sid, index);
+                        RoundTemplate info = roundTemplateDataSource.get(sid, index);
                         int target = res.getInt(2);
                         ContentValues contentValues = new ContentValues();
                         contentValues.put("_id", res.getLong(0));
                         contentValues.put("comment", res.getString(1));
                         contentValues.put("training", training);
-                        contentValues.put("template", info.id);
+                        contentValues.put("template", info.getId());
                         contentValues
                                 .put("target", target == 4 ? 5 : target);
                         contentValues.put("scoring_style",
@@ -172,13 +173,12 @@ public class Migration9 extends BaseMigration {
         if (res.moveToFirst()) {
             sr.indoor = res.getInt(5) == 1;
             do {
-                RoundTemplateOld template = new RoundTemplateOld();
-                template.arrowsPerPasse = res.getInt(0);
+                RoundTemplate template = new RoundTemplate();
+                template.shotsPerEnd = res.getInt(0);
                 int target = res.getInt(1);
-                template.target = new Target(target == 4 ? 5 : target, target == 5 ? 1 : 0);
+                template.setTargetTemplate(new Target(target == 4 ? 5 : target, target == 5 ? 1 : 0));
                 template.distance = new Dimension(res.getInt(2), res.getString(3));
-                template.passes = res.getInt(4);
-                template.targetTemplate = template.target;
+                template.endCount = res.getInt(4);
                 template.index = index;
                 sr.insert(template);
                 index++;
@@ -190,6 +190,6 @@ public class Migration9 extends BaseMigration {
             return 0L;
         }
         new StandardRoundDataSource(db).update(sr);
-        return sr.getId();
+        return sr.id;
     }
 }

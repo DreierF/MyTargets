@@ -15,6 +15,7 @@
 package de.dreier.mytargets.shared.migration;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.StandardRound;
@@ -25,7 +26,7 @@ public class StandardRoundOld {
     public int club;
     public String name;
     public boolean indoor;
-    public ArrayList<RoundTemplateOld> rounds = new ArrayList<>();
+    public List<RoundTemplate> rounds = new ArrayList<>();
 
     public StandardRoundOld() {}
 
@@ -33,32 +34,19 @@ public class StandardRoundOld {
         id = round.getId();
         club = round.club;
         indoor = false;
-        for (RoundTemplate roundTemplate : round.getRounds()) {
-            rounds.add(new RoundTemplateOld(roundTemplate));
-        }
+        rounds = round.getRounds();
     }
 
-    public void insert(RoundTemplateOld template) {
+    public void insert(RoundTemplate template) {
         template.index = rounds.size();
         template.standardRound = id;
         rounds.add(template);
     }
 
-    public long getId() {
-        return id;
-    }
-
     public void setId(long id) {
         this.id = id;
-        for (RoundTemplateOld r : rounds) {
+        for (RoundTemplate r : rounds) {
             r.standardRound = id;
         }
-    }
-
-    public String getName() {
-        if (name != null) {
-            return name;
-        }
-        return "";
     }
 }
