@@ -35,7 +35,6 @@ import android.view.MenuItem;
 
 import com.annimon.stream.Stream;
 
-import org.joda.time.DateTime;
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
 
@@ -74,7 +73,6 @@ import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import de.dreier.mytargets.utils.transitions.TransitionAdapter;
 import icepick.Icepick;
 import icepick.State;
-import timber.log.Timber;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -465,7 +463,7 @@ public class InputActivity extends ChildActivityBase
     }
 
     private void updateNextButton() {
-        final boolean endFinished = data != null && data.getCurrentEnd().getId() != null;
+        final boolean endFinished = data != null && !data.getCurrentEnd().isEmpty();
         boolean isLastEnd = data != null &&
                 data.getCurrentRound().maxEndCount != null &&
                 data.endIndex + 1 == data.getCurrentRound().maxEndCount;
@@ -541,9 +539,6 @@ public class InputActivity extends ChildActivityBase
     public void onEndFinished(List<Shot> shots) {
         data.getCurrentEnd().setShots(shots);
         data.getCurrentEnd().exact = targetView.getInputMode() == EInputMethod.PLOTTING;
-        if (data.getCurrentEnd().isEmpty()) {
-            data.getCurrentEnd().saveTime = new DateTime();
-        }
         data.getCurrentEnd().save();
 
         updateWearNotification();

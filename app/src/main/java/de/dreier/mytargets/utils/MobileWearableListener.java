@@ -71,7 +71,8 @@ public class MobileWearableListener extends WearableListenerService {
 
     private void timerSettings(MessageEvent messageEvent) {
         byte[] data = messageEvent.getData();
-        TimerSettings settings = unwrap(ParcelableUtil.unmarshall(data, TimerSettings$$Parcelable.CREATOR));
+        TimerSettings settings = unwrap(ParcelableUtil
+                .unmarshall(data, TimerSettings$$Parcelable.CREATOR));
         SettingsManager.setTimerSettings(settings);
         ApplicationInstance.wearableClient.sendTimerSettingsFromRemote();
     }
@@ -91,8 +92,9 @@ public class MobileWearableListener extends WearableListenerService {
             training.arrowId = SettingsManager.getArrow();
             training.arrowNumbering = false;
 
-            boolean freeTraining = !(lastTraining.isPresent() && lastTraining.get().standardRoundId != null);
-            if(freeTraining) {
+            boolean freeTraining = !(lastTraining.isPresent() &&
+                    lastTraining.get().standardRoundId != null);
+            if (freeTraining) {
                 Round round = new Round();
                 round.setTarget(SettingsManager.getTarget());
                 round.shotsPerEnd = SettingsManager.getShotsPerEnd();
@@ -119,12 +121,20 @@ public class MobileWearableListener extends WearableListenerService {
         byte[] data = messageEvent.getData();
         End end = unwrap(ParcelableUtil.unmarshall(data, End$$Parcelable.CREATOR));
         Round round = Round.get(end.roundId);
-        End newEnd = round.addEnd();  //TODO change to take last empty end when merging with #4
+        End lastEnd = round.getEnds().get(round.getEnds().size() - 1);
+        End newEnd;
+        if(lastEnd.isEmpty()) {
+            newEnd = lastEnd;
+        } else {
+            newEnd = round.addEnd();
+        }
         newEnd.exact = false;
         newEnd.setShots(end.getShots());
         newEnd.save();
 
         ApplicationInstance.wearableClient.sendUpdateTrainingFromRemoteBroadcast(round, newEnd);
-        ApplicationInstance.wearableClient.sendUpdateTrainingFromLocalBroadcast(Training.get(round.trainingId).ensureLoaded());
+        ApplicationInstance.wearableClient
+                .sendUpdateTrainingFromLocalBroadcast(Training.get(round.trainingId)
+                        .ensureLoaded());
     }
 }

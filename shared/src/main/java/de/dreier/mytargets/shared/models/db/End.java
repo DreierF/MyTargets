@@ -67,7 +67,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
     public boolean exact;
 
     @Column(typeConverter = DateTimeConverter.class)
-    public DateTime saveTime = new DateTime();
+    public DateTime saveTime;
 
     List<Shot> shots;
 
@@ -190,6 +190,9 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
 
     @Override
     public void save() {
+        if (saveTime == null) {
+            saveTime = new DateTime();
+        }
         super.save();
         if (shots != null) {
             SQLite.delete(Shot.class)
@@ -201,7 +204,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
                 s.save();
             }
         }
-        if(images != null) {
+        if (images != null) {
             SQLite.delete(EndImage.class)
                     .where(EndImage_Table.end.eq(id))
                     .execute();
@@ -220,7 +223,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
     }
 
     private void updateEndIndicesForRound() {
-        // TODO very inefficient
+        // FIXME very inefficient
         int i = 0;
         for (End end : Round.get(roundId).getEnds()) {
             end.index = i;
@@ -243,7 +246,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
 
     public boolean isEmpty() {
         return Stream.of(getShots())
-                .allMatch(s -> s.scoringRing == Shot.NOTHING_SELECTED);
+                .anyMatch(s -> s.scoringRing == Shot.NOTHING_SELECTED) && getImages().isEmpty();
     }
 
 }
