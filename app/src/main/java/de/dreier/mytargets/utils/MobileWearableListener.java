@@ -121,13 +121,7 @@ public class MobileWearableListener extends WearableListenerService {
         byte[] data = messageEvent.getData();
         End end = unwrap(ParcelableUtil.unmarshall(data, End$$Parcelable.CREATOR));
         Round round = Round.get(end.roundId);
-        End lastEnd = round.getEnds().get(round.getEnds().size() - 1);
-        End newEnd;
-        if(lastEnd.isEmpty()) {
-            newEnd = lastEnd;
-        } else {
-            newEnd = round.addEnd();
-        }
+        End newEnd = getLastEmptyOrCreateNewEnd(round);
         newEnd.exact = false;
         newEnd.setShots(end.getShots());
         newEnd.save();
@@ -136,5 +130,17 @@ public class MobileWearableListener extends WearableListenerService {
         ApplicationInstance.wearableClient
                 .sendUpdateTrainingFromLocalBroadcast(Training.get(round.trainingId)
                         .ensureLoaded());
+    }
+
+    private End getLastEmptyOrCreateNewEnd(Round round) {
+        if (round.getEnds().isEmpty()) {
+            return round.addEnd();
+        }
+        End lastEnd = round.getEnds().get(round.getEnds().size() - 1);
+        if (lastEnd.isEmpty()) {
+            return lastEnd;
+        } else {
+            return round.addEnd();
+        }
     }
 }
