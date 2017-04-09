@@ -308,16 +308,16 @@
   <string name="bow_cam_settings">Nastavení foťáku</string>
   <string name="bow_letoff_weight">Celková váha</string>
   <string name="bow_nocking_point">Sedlo končíku</string>
-  <string name="bow_string">Řetězec</string>
+  <string name="bow_string">Tětiva</string>
   <string name="bow_scope_magnification">Rozsah zvětšení</string>
   <string name="bow_rest_stiffness">Tuhost</string>
   <string name="bow_button">Button</string>
-  <string name="more_fields">Další terén</string>
+  <string name="more_fields">Další podrobnosti</string>
   <string name="recently_used">Poslední použité</string>
   <string name="intro_title_track_training_progress">Zapomeňte na papírovou výsledkovou listinu!</string>
   <string name="intro_description_track_training_progress">S přesným průměrem zásahů,\nzískáte více užitečných informací\nz vašeho tréninku.</string>
   <string name="intro_title_everything_in_one_place">Vše, co potřebujete\nna jednom místě</string>
-  <string name="intro_description_everything_in_one_place">Včetně luku-, šípu-\na cíle-nastavení,\nlukostřelecké časomíry, statistiky \na mnoho dalšího&#8230;</string>
+  <string name="intro_description_everything_in_one_place">Včetně nastavení luku,\nšípu a zaměřovače,\nlukostřelecké časomíry, statistiky \na mnoho dalšího&#8230;</string>
   <string name="average_arrow_score_per_end">Průměr zásahů na sadu</string>
   <string name="show_end">Zobrazit sadu</string>
   <string name="show_round">Zobrazit kolo</string>
@@ -337,4 +337,6 @@
   <string name="show_total_score">Zobrazit celkové skóre</string>
   <string name="show_percentage">Zobrazit procenta</string>
   <string name="show_arrow_average">Zobrazit průměr na šíp</string>
+  <string name="image_deleted">Image deleted</string>
+  <string name="delete_image">Delete image?</string>
 </resources>

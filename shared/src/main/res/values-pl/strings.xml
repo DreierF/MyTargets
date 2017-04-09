@@ -15,7 +15,7 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <string name="recurve_bow">Łuk refleksyjny</string>
+  <string name="recurve_bow">Łuk klasyczny</string>
   <string name="compound_bow">Łuk bloczkowy</string>
   <string name="bare_bow">Łuk klasyczny</string>
   <string name="long_bow">Łuk długi (angielski)</string>
@@ -55,7 +55,7 @@
   <string name="left_back">z lewego tyłu</string>
   <string name="right_back">z prawego tyłu</string>
   <string name="stop">STOP</string>
-  <string name="end_n">End %d</string>
+  <string name="end_n">Koniec %d</string>
   <plurals name="rounds">
     <item quantity="one">%d round</item>
     <item quantity="few">%d rounds</item>

@@ -337,4 +337,6 @@
   <string name="show_total_score">Zobraziť celkové skóre</string>
   <string name="show_percentage">Zobraziť percento</string>
   <string name="show_arrow_average">Zobraziť priemer na šíp</string>
+  <string name="image_deleted">Image deleted</string>
+  <string name="delete_image">Delete image?</string>
 </resources>

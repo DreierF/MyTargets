@@ -323,4 +323,6 @@
   <string name="show_total_score">Voir le score total</string>
   <string name="show_percentage">Voir le pourcentage</string>
   <string name="show_arrow_average">Afficher la moyenne par flèche</string>
+  <string name="image_deleted">Image deleted</string>
+  <string name="delete_image">Delete image?</string>
 </resources>

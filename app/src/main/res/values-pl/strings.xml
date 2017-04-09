@@ -337,4 +337,6 @@
   <string name="show_total_score">Pokaż całkowity wynik</string>
   <string name="show_percentage">Pokaż procenty</string>
   <string name="show_arrow_average">Pokaż średnią strzały</string>
+  <string name="image_deleted">Image deleted</string>
+  <string name="delete_image">Delete image?</string>
 </resources>

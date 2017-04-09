@@ -55,7 +55,7 @@
   <string name="left_back">zozadu z ľava</string>
   <string name="right_back">zozadu z prava</string>
   <string name="stop">STOP</string>
-  <string name="end_n">End %d</string>
+  <string name="end_n">Sada %d</string>
   <plurals name="rounds">
     <item quantity="one">%d round</item>
     <item quantity="few">%d rounds</item>
