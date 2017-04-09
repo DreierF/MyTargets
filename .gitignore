@@ -34,6 +34,9 @@ captures/
 gen-external-apklibs
 
 ### Intellij ###
+app/app.iml
+shared/shared.iml
+wearable/wearable.iml
 
 # User-specific stuff:
 .idea/**/workspace.xml
@@ -46,7 +49,7 @@ gen-external-apklibs
 
 ### Specific files ###
 ## Play store artifacts
-app/src/main/play
+**/play/**
 
 ## Secrets
 .dropbox_uploader
@@ -54,6 +57,3 @@ googlePlayAndroidDeveloper.json
 google-services.json
 firebase-crashreporting.json
 services.tar
-app/app.iml
-shared/shared.iml
-wearable/wearable.iml

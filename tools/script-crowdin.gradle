@@ -13,6 +13,18 @@
  * GNU General Public License for more details.
  */
 
+import org.apache.commons.io.FileUtils
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'org.apache.commons:commons-io:1.3.2'
+    }
+}
+
 crowdinUpload {
     apiKey = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
     projectId = 'mytargets'
@@ -27,20 +39,23 @@ crowdinUpload {
 
 crowdinDownload {
     doLast {
-        file('app/src/main/play/af-ZA').deleteDir()
-        file('app/src/main/play/ar-SA').deleteDir()
-        file('app/src/main/play/el-GR').deleteDir()
-        file('app/src/main/play/fi-FI').deleteDir()
-        file('app/src/main/play/he-IL').deleteDir()
-        file('app/src/main/play/id-ID').deleteDir()
-        file('app/src/main/play/ko-KR').deleteDir()
-        file('app/src/main/play/ro-RO').deleteDir()
-        file('app/src/main/play/sr-SP').deleteDir()
-        file('app/src/main/play/uk-UA').deleteDir()
-        file('app/src/main/play/vi-VN').deleteDir()
-        file('app/src/main/play/ca-ES').renameTo(file('app/src/main/play/ca'))
-        file('app/src/main/play/sk-SK').renameTo(file('app/src/main/play/sk'))
-        file('app/src/main/play/sl-SI').renameTo(file('app/src/main/play/sl'))
+        FileUtils.copyDirectory(file('app/src/regular/play/ca-ES'), file('app/src/regular/play/ca'))
+        FileUtils.copyDirectory(new File('app/src/regular/play/sk-SK'), new File('app/src/regular/play/sk'))
+        FileUtils.copyDirectory(new File('app/src/regular/play/sl-SI'), new File('app/src/regular/play/sl'))
+        file('app/src/regular/play/af-ZA').deleteDir()
+        file('app/src/regular/play/ar-SA').deleteDir()
+        file('app/src/regular/play/ca-ES').deleteDir()
+        file('app/src/regular/play/el-GR').deleteDir()
+        file('app/src/regular/play/fi-FI').deleteDir()
+        file('app/src/regular/play/he-IL').deleteDir()
+        file('app/src/regular/play/id-ID').deleteDir()
+        file('app/src/regular/play/ko-KR').deleteDir()
+        file('app/src/regular/play/ro-RO').deleteDir()
+        file('app/src/regular/play/sk-SK').deleteDir()
+        file('app/src/regular/play/sl-SI').deleteDir()
+        file('app/src/regular/play/sr-SP').deleteDir()
+        file('app/src/regular/play/uk-UA').deleteDir()
+        file('app/src/regular/play/vi-VN').deleteDir()
     }
     apiKey = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
     projectId = 'mytargets'

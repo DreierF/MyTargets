@@ -53,7 +53,7 @@ script:
 after_success:
 - |
   if [[ "$TRAVIS_TAG" ]]; then
-    ./gradlew publishRegularRelease
+    ./gradlew bootstrapRegularReleasePlayResources publishRegularRelease
     ./gradlew -PFirebaseServiceAccountFilePath=$PWD/app/src/release/google-services.json :app:firebaseUploadRegularReleaseProguardMapping
     ./dropbox_uploader.sh upload app/build/outputs/apk/app-regular-release.apk /Release/$TRAVIS_TAG/MyTargets.apk
     ./dropbox_uploader.sh upload app/build/outputs/mapping/regular/release/mapping.txt /Release/$TRAVIS_TAG/mapping.txt
