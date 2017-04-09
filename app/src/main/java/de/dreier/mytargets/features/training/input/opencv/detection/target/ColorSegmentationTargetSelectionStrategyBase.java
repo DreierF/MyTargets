@@ -32,6 +32,8 @@ import org.opencv.imgproc.Imgproc;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 public abstract class ColorSegmentationTargetSelectionStrategyBase {
     private static final String TAG = "ColorSegmentationTarget";
 
@@ -105,7 +107,7 @@ public abstract class ColorSegmentationTargetSelectionStrategyBase {
             // Sort out contours that are too small
             double area = Imgproc.contourArea(contour);
             Log.d(TAG, "findAndDrawCenteredContour: " + area);
-            if (area < 10000) {
+            if (area < 5000) {
                 continue;
             }
 
@@ -116,6 +118,8 @@ public abstract class ColorSegmentationTargetSelectionStrategyBase {
             List<Point> points = contour.toList();
             matOfPoint2f.fromList(points);
             Imgproc.minEnclosingCircle(matOfPoint2f, center, radius);
+
+            Timber.d("findAndDrawCenteredContour: "+center);
 
             // If center of the circle is more or less in the center of the image...
             if (center.inside(rect)) {

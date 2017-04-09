@@ -39,6 +39,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.models.WA6Ring;
 import de.dreier.mytargets.shared.targets.models.WAFull;
+import timber.log.Timber;
 
 public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
@@ -113,6 +114,8 @@ public class MainActivity extends Activity {
     private Bitmap getBmp(Target target, int drawable) throws IOException {
         Mat mRgba = Utils.loadResource(this, drawable, Imgcodecs.CV_LOAD_IMAGE_COLOR);
 
+        Timber.uprootAll();
+        Timber.plant(new Timber.DebugTree());
         IPerspectiveDetection perspectiveDetection = new PerspectiveDetection();
         mRgba = perspectiveDetection.detectPerspective(mRgba, target);
 
