@@ -22,12 +22,13 @@ import org.opencv.imgproc.Imgproc;
 
 import java.util.List;
 
+import de.dreier.mytargets.features.training.input.opencv.ColorSegmentationUtils;
 import de.dreier.mytargets.features.training.input.opencv.transformation.ITransformation;
 import de.dreier.mytargets.features.training.input.opencv.transformation.SimpleAffineTransformation;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
 
-public class SimpleColorSegmentationTargetSelectionStrategy extends ColorSegmentationTargetSelectionStrategyBase implements ITargetDetectionStrategy {
+public class SimpleColorSegmentationTargetSelectionStrategy implements ITargetDetectionStrategy {
 
     @Override
     public ITransformation detectTargetFace(Mat image, Target target) {
@@ -38,9 +39,9 @@ public class SimpleColorSegmentationTargetSelectionStrategy extends ColorSegment
 
         // Get ellipses for target round
 
-        Mat bin1 = segmentationForColor(hsv, new Scalar(95, 140, 160), new Scalar(105, 255, 255));
+        Mat bin1 = ColorSegmentationUtils.segmentationForColor(hsv, new Scalar(95, 140, 160), new Scalar(105, 255, 255));
 
-        RotatedRect rotatedRect1 = findAndDrawCenteredContour(bin1);
+        RotatedRect rotatedRect1 = ColorSegmentationUtils.findAndDrawCenteredContour(bin1);
 
         return new SimpleAffineTransformation(rotatedRect1);
     }

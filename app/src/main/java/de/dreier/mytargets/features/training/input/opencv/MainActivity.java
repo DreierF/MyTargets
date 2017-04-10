@@ -36,6 +36,8 @@ import java.io.IOException;
 import java.util.List;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.features.training.input.opencv.detection.perspective.IPerspectiveCorrection;
+import de.dreier.mytargets.features.training.input.opencv.detection.perspective.PerspectiveCorrection;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.models.WA6Ring;
 import de.dreier.mytargets.shared.targets.models.WAFull;
@@ -116,13 +118,12 @@ public class MainActivity extends Activity {
 
         Timber.uprootAll();
         Timber.plant(new Timber.DebugTree());
-        IPerspectiveDetection perspectiveDetection = new PerspectiveDetection();
+        IPerspectiveCorrection perspectiveDetection = new PerspectiveCorrection();
         mRgba = perspectiveDetection.detectPerspective(mRgba, target);
 
 //        ITargetDetectionStrategy targetDetectionStrategy = new ColorSegmentationTargetSelectionStrategy();
 //        ITransformation transformation = targetDetectionStrategy.detectTargetFace(mRgba, target);
         // TODO Look again at http://vision.stanford.edu/teaching/cs231a_autumn1213_internal/project/final/writeup/nondistributable/lin_nguyen_paper_arrowsmith_cs231a_final_project.pdf
-        // TODO Test with detecting the target boundaries for transformation
 
         //correctEllipseProportion(targetBounds, target);
 
