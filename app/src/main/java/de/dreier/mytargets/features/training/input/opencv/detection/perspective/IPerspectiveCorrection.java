@@ -13,12 +13,12 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training.input.opencv;
+package de.dreier.mytargets.features.training.input.opencv.detection.perspective;
 
 import org.opencv.core.Mat;
 
 import de.dreier.mytargets.shared.models.Target;
 
-interface IPerspectiveDetection {
+public interface IPerspectiveCorrection {
     Mat detectPerspective(Mat image, Target target);
 }
