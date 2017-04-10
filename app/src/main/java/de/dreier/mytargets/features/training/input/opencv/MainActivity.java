@@ -66,10 +66,6 @@ public class MainActivity extends Activity {
     private int currentIndex = 0;
     private TextView imageTitle;
 
-    public MainActivity() {
-        Log.i(TAG, "Instantiated new " + this.getClass());
-    }
-
     /**
      * Called when the activity is first created.
      */

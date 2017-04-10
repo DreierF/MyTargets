@@ -18,5 +18,5 @@ package de.dreier.mytargets.features.training.input.opencv.transformation;
 import org.opencv.core.Mat;
 
 public interface ITransformation {
-    void transform(Mat mRgba);
+    void transform(Mat src, Mat dst);
 }
