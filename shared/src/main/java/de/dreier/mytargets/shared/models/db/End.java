@@ -121,7 +121,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
         Map<SelectableZone, Integer> scoreCount = getAllPossibleZones(t);
         for (Round round : rounds) {
             for (End end : round.getEnds()) {
-                for (Shot s : end.shots) {
+                for (Shot s : end.getShots()) {
                     SelectableZone tuple = new SelectableZone(s.scoringRing,
                             t.getModel().getZone(s.scoringRing),
                             t.zoneToString(s.scoringRing, s.index),
