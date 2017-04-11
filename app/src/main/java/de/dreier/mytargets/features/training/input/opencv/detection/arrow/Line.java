@@ -45,7 +45,7 @@ public class Line {
     public boolean sameOrientation(Line line2) {
         return similar(n[0], line2.n[0], 0.08) &&
                 similar(n[1], line2.n[1], 0.08) &&
-                similar(d, line2.d, 5);
+                similar(d, line2.d, 10);
     }
 
     private boolean similar(double v1, double v2, double threshold) {
@@ -59,7 +59,7 @@ public class Line {
     }
 
 
-    void recalcDistance() {
+    public void recalcDistance() {
         d = point2.x * n[0] + point2.y * n[1];
     }
 

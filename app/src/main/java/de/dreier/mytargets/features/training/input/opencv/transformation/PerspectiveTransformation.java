@@ -36,12 +36,12 @@ public class PerspectiveTransformation implements ITransformation {
     @Override
     public void transform(Mat src, Mat dst) {
         MatOfPoint2f srcPoints = new MatOfPoint2f(
-            new Point(outerBounds.x, outerBounds.y + outerBounds.height * 0.5f),
-            new Point(center.x, outerBounds.y),
-            new Point(center.x, outerBounds.y + outerBounds.height),
-            new Point(
-                    outerBounds.x + outerBounds.width,
-                    outerBounds.y + outerBounds.height * 0.5f));
+                new Point(outerBounds.x, outerBounds.y + outerBounds.height * 0.5f),
+                new Point(center.x, outerBounds.y),
+                new Point(center.x, outerBounds.y + outerBounds.height),
+                new Point(
+                        outerBounds.x + outerBounds.width,
+                        outerBounds.y + outerBounds.height * 0.5f));
 
         double size = dst.size().width;
         MatOfPoint2f dstPoints = new MatOfPoint2f(
@@ -52,6 +52,10 @@ public class PerspectiveTransformation implements ITransformation {
 
         Mat transform = Imgproc.getPerspectiveTransform(srcPoints, dstPoints);
         Imgproc.warpPerspective(src, dst, transform, new Size(size, size));
+    }
+
+    public boolean isFromLeftViewpoint() {
+        return outerBounds.x + outerBounds.width * 0.5f < center.x;
     }
 
     // Ported from here: http://code.opencv.org/issues/3396

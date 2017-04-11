@@ -22,10 +22,6 @@ import java.util.List;
 
 import de.dreier.mytargets.shared.models.Target;
 
-/**
- * Created by florian on 02/03/2017.
- */
-
 public interface IArrowDetectionStrategy {
     List<Point> detectArrows(Mat image, Target target, int arrows, boolean fromLeftViewpoint);
 }

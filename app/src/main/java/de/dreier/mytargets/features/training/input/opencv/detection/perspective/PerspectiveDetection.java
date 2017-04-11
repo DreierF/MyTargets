@@ -15,23 +15,20 @@
 
 package de.dreier.mytargets.features.training.input.opencv.detection.perspective;
 
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.RotatedRect;
-import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
+import de.dreier.mytargets.features.training.input.opencv.ColorUtils;
 import de.dreier.mytargets.features.training.input.opencv.transformation.PerspectiveTransformation;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
@@ -39,48 +36,41 @@ import de.dreier.mytargets.shared.targets.zone.CircularZone;
 import de.dreier.mytargets.shared.targets.zone.ZoneBase;
 
 import static de.dreier.mytargets.features.training.input.opencv.ColorSegmentationUtils.findAndDrawCenteredContour;
-import static de.dreier.mytargets.shared.utils.Color.BLACK;
 import static de.dreier.mytargets.shared.utils.Color.CERULEAN_BLUE;
 import static de.dreier.mytargets.shared.utils.Color.FLAMINGO_RED;
 import static de.dreier.mytargets.shared.utils.Color.LEMON_YELLOW;
-import static de.dreier.mytargets.shared.utils.Color.WHITE;
 
-public class PerspectiveCorrection implements IPerspectiveCorrection {
+public class PerspectiveDetection {
 
-    @Override
-    public Mat detectPerspective(Mat image, Target target) {
-        float scale = getScale(image);
-        Mat temp = scaleImage(image, scale);
-        removeNoise(temp);
+    public PerspectiveTransformation detectPerspective(Mat image, Target target) {
+        Mat temp = new Mat();
+        removeNoise(image, temp);
 
-        List<CircularZone> distinctColorZones = getDistinctColorTargetZones(target);
+        List<CircularZone> distinctColorZones = ColorUtils.getDistinctColorTargetZones(target);
         List<Pair<Float, RotatedRect>> values = getEllipsisForZones(temp, distinctColorZones);
 
         // Scale up the ellipsis to its original size
-        for (Pair<Float, RotatedRect> value : values) {
-            reverseScale(value.second, scale);
+//        for (Pair<Float, RotatedRect> value : values) {
+//            reverseScale(value.second, scale);
 //            Imgproc.ellipse(image, value.second, new Scalar(255, 0, 0), 2, 8);
-        }
+//        }
 
         float targetUpscale = 1 / distinctColorZones.get(0).radius;
         Pair<Point, Point> points = generateLinearRegressionLine(values, targetUpscale);
         if (points == null) {
-            return image;
+            return null;
         }
         Point center = points.first;
-        Imgproc.circle(image, center, 5, new Scalar(0, 255, 255));
+        // Imgproc.circle(image, center, 5, new Scalar(0, 255, 255));
         RotatedRect outer = values.get(0).second;
         extendToFullTarget(target, outer);
         outer.center = points.second;
 
         //Imgproc.ellipse(image, outer, new Scalar(255, 0, 0), 2, 8);
 
-        new PerspectiveTransformation(outer, center)
-                .transform(image, image);
-
         //Imgproc.rectangle(image, outerBounds.tl(), outerBounds.br(), new Scalar(255, 0, 0));
 
-        return image;
+        return new PerspectiveTransformation(outer, center);
     }
 
     /**
@@ -96,7 +86,7 @@ public class PerspectiveCorrection implements IPerspectiveCorrection {
     private List<Pair<Float, RotatedRect>> getEllipsisForZones(Mat image, List<CircularZone> distinctColorZones) {
         List<Pair<Float, RotatedRect>> values = new ArrayList<>();
         for (CircularZone distinctColorZone : distinctColorZones) {
-            Mat mask = detectCircularZoneViaColor(image, distinctColorZone);
+            Mat mask = ColorUtils.getColorMask(image, distinctColorZone.fillColor, true);
             RotatedRect rect = findAndDrawCenteredContour(mask);
             if (rect == null) {
                 continue;
@@ -104,14 +94,6 @@ public class PerspectiveCorrection implements IPerspectiveCorrection {
             values.add(new Pair<>(distinctColorZone.radius, rect));
         }
         return values;
-    }
-
-    private void reverseScale(RotatedRect rect, float scale) {
-        float revScale = 1 / scale;
-        rect.center.x = rect.center.x * revScale;
-        rect.center.y = rect.center.y * revScale;
-        rect.size.width = rect.size.width * revScale;
-        rect.size.height = rect.size.height * revScale;
     }
 
     private void extendToFullTarget(Target target, RotatedRect rect) {
@@ -128,76 +110,9 @@ public class PerspectiveCorrection implements IPerspectiveCorrection {
         }
     }
 
-    @NonNull
-    private Mat detectCircularZoneViaColor(Mat image, CircularZone zone) {
-        Mat hsv = new Mat();
-        Imgproc.cvtColor(image, hsv, Imgproc.COLOR_BGR2HSV);
-
-        Mat mask = new Mat();
-        switch (zone.fillColor) {
-            case CERULEAN_BLUE:
-                Core.inRange(hsv, new Scalar(95, 140, 100), new Scalar(116, 255, 255), mask);
-                break;
-            case FLAMINGO_RED:
-                Core.inRange(hsv, new Scalar(160, 115, 170), new Scalar(180, 255, 255), mask);
-                Mat mask2 = new Mat();
-                Core.inRange(hsv, new Scalar(0, 115, 170), new Scalar(15, 255, 255), mask2);
-                Core.bitwise_or(mask, mask2, mask);
-                break;
-            case LEMON_YELLOW:
-                Core.inRange(hsv, new Scalar(26, 102, 170), new Scalar(30, 255, 255), mask);
-                break;
-            case BLACK:
-                Core.inRange(hsv, new Scalar(0, 0, 0), new Scalar(180, 76.5, 100), mask);
-                break;
-            default:
-                float[] hsvColor = new float[3];
-                Color.colorToHSV(zone.fillColor, hsvColor);
-                float hue = hsvColor[0] / 2f;
-                Core.inRange(hsv, new Scalar(hue - 10, 100, 170), new Scalar(
-                        hue + 10, 255, 255), mask);
-                break;
-        }
-
-        // noise removal
+    private void removeNoise(Mat image, Mat temp) {
         Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(9, 9));
-        Imgproc.morphologyEx(mask, mask, Imgproc.MORPH_DILATE, kernel);
-
-        return mask;
-    }
-
-    private List<CircularZone> getDistinctColorTargetZones(Target target) {
-        List<SelectableZone> allZones = target.getSelectableZoneList(0);
-        List<CircularZone> distinctZones = new ArrayList<>();
-        HashSet<Integer> colors = new HashSet<>();
-        colors.add(BLACK);
-        colors.add(WHITE);
-        for (int i = allZones.size() - 1; i >= 0; i--) {
-            SelectableZone zone = allZones.get(i);
-            if (!colors.contains(zone.zone.fillColor)) {
-                distinctZones.add((CircularZone) zone.zone);
-                colors.add(zone.zone.fillColor);
-            }
-        }
-        return distinctZones;
-    }
-
-    private void removeNoise(Mat temp) {
-        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(9, 9));
-        Imgproc.morphologyEx(temp, temp, Imgproc.MORPH_CLOSE, kernel);
-    }
-
-    @NonNull
-    private Mat scaleImage(Mat image, float scale) {
-        Size newSize = new Size(image.width() * scale, image.height() * scale);
-        Mat temp = new Mat();
-        Imgproc.resize(image, temp, newSize);
-        return temp;
-    }
-
-    private float getScale(Mat image) {
-        int maxImageEdge = Math.max(image.width(), image.height());
-        return 1000 / (float) maxImageEdge;
+        Imgproc.morphologyEx(image, temp, Imgproc.MORPH_CLOSE, kernel);
     }
 
     private Pair<Point, Point> generateLinearRegressionLine(List<Pair<Float, RotatedRect>> values, float targetUpscale) {
