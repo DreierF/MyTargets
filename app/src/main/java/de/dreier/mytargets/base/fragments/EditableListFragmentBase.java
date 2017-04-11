@@ -24,6 +24,7 @@ import android.view.MenuItem;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.raizlabs.android.dbflow.structure.Model;
 
 import java.util.List;
@@ -129,6 +130,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model,
     }
 
     private void remove(List<T> deleted) {
+        FirebaseAnalytics.getInstance(getContext()).logEvent("delete", null);
         for (T item : deleted) {
             adapter.removeItem(item);
         }
@@ -146,6 +148,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model,
                         new Snackbar.Callback() {
                             @Override
                             public void onDismissed(Snackbar snackbar, int event) {
+                                // TODO delete directly on remove and restore item in case of undo
                                 for (T item : deleted) {
                                     item.delete();
                                 }

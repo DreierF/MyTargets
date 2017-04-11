@@ -59,7 +59,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
 
     @ForeignKey(tableClass = StandardRound.class, references = {
             @ForeignKeyReference(columnName = "standardRound", columnType = Long.class, foreignKeyColumnName = "_id")},
-            onDelete = ForeignKeyAction.SET_NULL)
+            onDelete = ForeignKeyAction.SET_NULL) // FIXME old migrations still have NO ACTION in here
     public Long standardRoundId;
 
     @ForeignKey(tableClass = Bow.class, references = {
