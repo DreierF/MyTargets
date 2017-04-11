@@ -21,6 +21,7 @@ import android.support.v4.util.Pair;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.RotatedRect;
+import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
@@ -29,6 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.dreier.mytargets.features.training.input.opencv.ColorUtils;
+import de.dreier.mytargets.features.training.input.opencv.MainActivity;
 import de.dreier.mytargets.features.training.input.opencv.transformation.PerspectiveTransformation;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
@@ -49,26 +51,20 @@ public class PerspectiveDetection {
         List<CircularZone> distinctColorZones = ColorUtils.getDistinctColorTargetZones(target);
         List<Pair<Float, RotatedRect>> values = getEllipsisForZones(temp, distinctColorZones);
 
-        // Scale up the ellipsis to its original size
-//        for (Pair<Float, RotatedRect> value : values) {
-//            reverseScale(value.second, scale);
-//            Imgproc.ellipse(image, value.second, new Scalar(255, 0, 0), 2, 8);
-//        }
-
         float targetUpscale = 1 / distinctColorZones.get(0).radius;
         Pair<Point, Point> points = generateLinearRegressionLine(values, targetUpscale);
         if (points == null) {
             return null;
         }
         Point center = points.first;
-        // Imgproc.circle(image, center, 5, new Scalar(0, 255, 255));
         RotatedRect outer = values.get(0).second;
         extendToFullTarget(target, outer);
         outer.center = points.second;
 
-        //Imgproc.ellipse(image, outer, new Scalar(255, 0, 0), 2, 8);
-
-        //Imgproc.rectangle(image, outerBounds.tl(), outerBounds.br(), new Scalar(255, 0, 0));
+        if(MainActivity.DEBUG_STEP == MainActivity.DebugStep.PERSPECTIVE) {
+            Imgproc.circle(image, center, 5, new Scalar(0, 255, 255));
+            Imgproc.ellipse(image, outer, new Scalar(255, 0, 0), 2, 8);
+        }
 
         return new PerspectiveTransformation(outer, center);
     }

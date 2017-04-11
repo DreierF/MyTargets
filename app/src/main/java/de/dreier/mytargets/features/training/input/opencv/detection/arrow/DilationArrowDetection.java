@@ -26,6 +26,7 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
@@ -33,48 +34,51 @@ import java.util.List;
 
 import de.dreier.mytargets.features.training.input.opencv.ColorUtils;
 import de.dreier.mytargets.features.training.input.opencv.LineUtils;
-import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.features.training.input.opencv.MainActivity;
+import de.dreier.mytargets.features.training.input.opencv.detection.target.TargetZone;
 
-import static de.dreier.mytargets.shared.utils.Color.CERULEAN_BLUE;
-import static de.dreier.mytargets.shared.utils.Color.FLAMINGO_RED;
-import static de.dreier.mytargets.shared.utils.Color.LEMON_YELLOW;
+import static de.dreier.mytargets.features.training.input.opencv.ColorUtils.getZoneMask;
 
 public class DilationArrowDetection implements IArrowDetectionStrategy {
 
     @Override
-    public List<Point> detectArrows(Mat image, Target target, int arrows, boolean fromLeftViewpoint) {
+    public List<Point> detectArrows(Mat image, List<TargetZone> zones, int arrows, boolean fromLeftViewpoint) {
 //        Mat image = new Mat();
 //        Imgproc.bilateralFilter(org, image, 5, 30, 10);
 
-        Mat mask1 = ColorUtils.getColorMask(image, CERULEAN_BLUE, false);
-        Mat mask2 = ColorUtils.getColorMask(image, FLAMINGO_RED, false);
-        Mat mask3 = ColorUtils.getColorMask(image, LEMON_YELLOW, false);
-        Mat mask4 = new Mat(image.size(), CvType.CV_8U, new Scalar(255, 255, 255));
-        Imgproc.circle(mask4, new Point(image.width() / 2, image.height() / 2), image.width() / 2,
-                new Scalar(0, 0, 0), Core.FILLED, 8, 0);
-        Core.bitwise_or(mask1, mask4, mask1);
+        Mat mask = new Mat(image.size(), CvType.CV_8U, new Scalar(0, 0, 0));
+        for (TargetZone zone : zones) {
+            Mat colorMask = ColorUtils.getColorMask(image, zone.color, zone.model.zone.fillColor);
+            Mat maskExpectedPosition = getZoneMask(image.size(), zone, 20);
+            Core.bitwise_and(maskExpectedPosition, colorMask, colorMask);
+            Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(3, 3));
+            Imgproc.morphologyEx(colorMask, colorMask, Imgproc.MORPH_DILATE, kernel);
+            Core.bitwise_or(mask, colorMask, mask);
+        }
 
-        Core.bitwise_or(mask1, mask2, mask1);
-        Core.bitwise_or(mask1, mask3, mask1);
+//        Mat mask4 = new Mat(image.size(), CvType.CV_8U, new Scalar(255, 255, 255));
+//        Imgproc.circle(mask4, new Point(image.width() / 2, image.height() / 2), image.width() / 2,
+//                new Scalar(0, 0, 0), Core.FILLED, 8, 0);
+//        Core.bitwise_or(mask, mask4, mask);
 
         // noise removal
-//        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(8, 8));
-//        Imgproc.morphologyEx(mask1, mask1, Imgproc.MORPH_DILATE, kernel);
+//        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(6, 6));
+//        Imgproc.morphologyEx(mask, mask, Imgproc.MORPH_DILATE, kernel);
 
-        Mat inv = new Mat(image.size(), CvType.CV_8U, new Scalar(255,255,255));
-        Core.bitwise_xor(mask1, inv, mask1);
+//        Mat inv = new Mat(image.size(), CvType.CV_8U, new Scalar(255,255,255));
+//        Core.bitwise_xor(mask, inv, mask);
 
-        List<Line> potentialArrows = LineUtils.getLines(mask1, 70, 50, 10);
-
-//        Imgproc.Canny(mask1, mask1, 80, 100);
-//        Imgproc.cvtColor(mask1, image, Imgproc.COLOR_GRAY2RGB, 4);
-//        LineUtils.draw(image, potentialArrows);
-
+        List<Line> potentialArrows = LineUtils.getLines(mask, 70, 30, 10);
         List<List<Line>> buckets = groupLinesToBuckets(potentialArrows);
-//        Imgproc.cvtColor(mask1, image, Imgproc.COLOR_GRAY2RGB, 4);
-//        drawBuckets(image, buckets);
+
+        if (MainActivity.DEBUG_STEP == MainActivity.DebugStep.ARROWS) {
+//            Imgproc.Canny(mask, mask, 80, 100);
+            Imgproc.cvtColor(mask, image, Imgproc.COLOR_GRAY2RGB, 4);
+            LineUtils.draw(image, potentialArrows);
+            drawBuckets(image, buckets);
+        }
+
         return extractArrowPositions(buckets, arrows, fromLeftViewpoint);
-//        return Collections.emptyList();
     }
 
 

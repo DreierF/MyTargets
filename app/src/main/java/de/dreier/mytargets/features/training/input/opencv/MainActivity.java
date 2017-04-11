@@ -16,14 +16,11 @@
 package de.dreier.mytargets.features.training.input.opencv;
 
 import android.app.Activity;
+import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.opencv.android.OpenCVLoader;
@@ -41,15 +38,23 @@ import java.io.IOException;
 import java.util.List;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.databinding.ImageManipulationsSurfaceViewBinding;
 import de.dreier.mytargets.features.training.input.opencv.detection.arrow.DilationArrowDetection;
 import de.dreier.mytargets.features.training.input.opencv.detection.arrow.IArrowDetectionStrategy;
 import de.dreier.mytargets.features.training.input.opencv.detection.perspective.PerspectiveDetection;
+import de.dreier.mytargets.features.training.input.opencv.detection.target.ColorTargetDetection;
+import de.dreier.mytargets.features.training.input.opencv.detection.target.ITargetDetectionStrategy;
+import de.dreier.mytargets.features.training.input.opencv.detection.target.TargetZone;
 import de.dreier.mytargets.features.training.input.opencv.transformation.PerspectiveTransformation;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.models.WA6Ring;
 import de.dreier.mytargets.shared.targets.models.WAFull;
 import timber.log.Timber;
 
+import static de.dreier.mytargets.features.training.input.opencv.MainActivity.DebugStep.ARROWS;
+import static de.dreier.mytargets.features.training.input.opencv.MainActivity.DebugStep.PERSPECTIVE;
+import static de.dreier.mytargets.features.training.input.opencv.MainActivity.DebugStep.RESULT;
+import static de.dreier.mytargets.features.training.input.opencv.MainActivity.DebugStep.TARGET;
 import static org.opencv.core.Core.NORM_MINMAX;
 
 public class MainActivity extends Activity {
@@ -70,9 +75,16 @@ public class MainActivity extends Activity {
             new TargetDataSet(R.drawable.a8_xxx99988_front, WA6Ring.ID, 8),
             new TargetDataSet(R.drawable.a8_xxx99988_overlap, WA6Ring.ID, 8)
     };
-    private ImageView img;
-    private int currentIndex = 0;
-    private TextView imageTitle;
+
+    int currentIndex = 0;
+    private ImageManipulationsSurfaceViewBinding binding;
+
+    public void setDebugStep(DebugStep debugStep) {
+        DEBUG_STEP = debugStep;
+        updateImage();
+    }
+
+    public static DebugStep DEBUG_STEP = RESULT;
 
     /**
      * Called when the activity is first created.
@@ -82,18 +94,25 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        setContentView(R.layout.image_manipulations_surface_view);
-
-        Button mButton = (Button) findViewById(R.id.button);
-        mButton.setVisibility(View.GONE);
-        img = (ImageView) findViewById(R.id.imageView);
-
-        imageTitle = (TextView) findViewById(R.id.imageTitle);
+        binding = DataBindingUtil
+                .setContentView(this, R.layout.image_manipulations_surface_view);
 
         Timber.uprootAll();
         Timber.plant(new Timber.DebugTree());
 
-        //mButton.setOnClickListener(v -> takePic = true);
+        binding.perspective.setOnClickListener(v -> setDebugStep(PERSPECTIVE));
+        binding.target.setOnClickListener(v -> setDebugStep(TARGET));
+        binding.arrow.setOnClickListener(v -> setDebugStep(ARROWS));
+        binding.result.setOnClickListener(v -> setDebugStep(RESULT));
+
+        binding.prev.setOnClickListener(v -> {
+            currentIndex = (currentIndex + 1) % images.length;
+            updateImage();
+        });
+        binding.next.setOnClickListener(v -> {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            updateImage();
+        });
     }
 
     @Override
@@ -103,22 +122,20 @@ public class MainActivity extends Activity {
             finish();
             return;
         }
-
-        img.setOnClickListener(v -> showNextImage());
-        showNextImage();
+        updateImage();
     }
 
-    private void showNextImage() {
+    private void updateImage() {
         try {
             TargetDataSet image = images[currentIndex];
-            Target target = new Target(image.targetId, 2);
-            img.setImageBitmap(getBmp(target, image.drawable, image.arrows));
-            imageTitle.setText(getResources().getResourceName(image.drawable));
-            currentIndex = (currentIndex + 1) % images.length;
+            Target target = new Target(image.targetId, 0);
+            binding.imageView.setImageBitmap(getBmp(target, image.drawable, image.arrows));
+            binding.imageTitle.setText(getResources().getResourceName(image.drawable));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (RuntimeException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
     }
 
@@ -135,21 +152,46 @@ public class MainActivity extends Activity {
         if (perspective == null) {
             throw new RuntimeException("Perspective detection failed!");
         }
+        if (DEBUG_STEP == PERSPECTIVE) {
+            perspective.drawTransformationToSource(temp);
+            Imgproc.cvtColor(temp, temp, Imgproc.COLOR_RGB2BGRA, 4);
+            return toBitmap(temp);
+        }
         perspective.transform(temp, temp);
 
 // TODO Look again at http://vision.stanford.edu/teaching/cs231a_autumn1213_internal/project/final/writeup/nondistributable/lin_nguyen_paper_arrowsmith_cs231a_final_project.pdf
+        // TODO:
+        // - improve ranking algorithm (black area size spanned by the lines)
+        // - extend detected arrow at the end to get more accurate position
+        // - more accurate technique to decide which of the line ends is the arrow head
+        // - add a second pass to the perspective detection, which also includes smaller areas at the expected areas
+        // - exclude vertical edges at the target border
+        // - make target (circle) detection more accurate
+        //
 
-//        ITargetDetectionStrategy targetDetection = new HoughCircleBasedTargetDetectionStrategy();
-//        targetDetection.detectTargetFace(image, target);
-
-//        for (RotatedRect rotatedRect : targetBounds) {
-//            Imgproc.ellipse(image, rotatedRect, new Scalar(255, 0, 255));
-//        }
+        ITargetDetectionStrategy targetDetection = new ColorTargetDetection();
+        List<TargetZone> zones = targetDetection.detectTargetFace(temp, target);
+        if (DEBUG_STEP == TARGET) {
+            for (TargetZone zone : zones) {
+                int radius = (int) ((zone.outerRadius - zone.innerRadius) * 0.5f);
+                Timber.d("getBmp: %d", radius);
+                Point center = new Point(zone.center.x, zone.center.y - zone.innerRadius - radius);
+                Imgproc.circle(temp, center, radius, zone.color, Core.FILLED, 8, 0);
+                Imgproc.circle(temp, zone.center, zone.outerRadius, new Scalar(255, 0, 255));
+            }
+            Imgproc.cvtColor(temp, temp, Imgproc.COLOR_RGB2BGRA, 4);
+            return toBitmap(temp);
+        }
 
         boolean fromLeftViewpoint = perspective.isFromLeftViewpoint();
         IArrowDetectionStrategy arrowDetectionStrategy = new DilationArrowDetection();
         List<Point> points = arrowDetectionStrategy
-                .detectArrows(temp, target, arrows, fromLeftViewpoint);
+                .detectArrows(temp, zones, arrows, fromLeftViewpoint);
+
+        if (DEBUG_STEP == ARROWS) {
+            Imgproc.cvtColor(temp, temp, Imgproc.COLOR_RGB2BGRA, 4);
+            return toBitmap(temp);
+        }
 
         if (temp.channels() == 1) {
             Imgproc.cvtColor(temp, temp, Imgproc.COLOR_GRAY2BGRA, 4);
@@ -197,13 +239,20 @@ public class MainActivity extends Activity {
 
     private class TargetDataSet {
         private final int drawable;
-        private final int targetId;
+        private final long targetId;
         private final int arrows;
 
-        public TargetDataSet(int drawable, int targetId, int arrows) {
+        public TargetDataSet(int drawable, long targetId, int arrows) {
             this.drawable = drawable;
             this.targetId = targetId;
             this.arrows = arrows;
         }
+    }
+
+    public enum DebugStep {
+        PERSPECTIVE,
+        TARGET,
+        ARROWS,
+        RESULT
     }
 }

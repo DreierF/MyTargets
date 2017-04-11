@@ -13,10 +13,17 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training.input.opencv.transformation;
+package de.dreier.mytargets.features.training.input.opencv.detection.target;
 
-import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
 
-public interface ITransformation {
-    void transform(Mat src, Mat dst);
+import de.dreier.mytargets.shared.models.SelectableZone;
+
+public class TargetZone {
+    public Scalar color;
+    public int innerRadius;
+    public int outerRadius;
+    public Point center;
+    public SelectableZone model;
 }

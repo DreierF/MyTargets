@@ -31,12 +31,12 @@ import java.util.List;
 
 import de.dreier.mytargets.features.training.input.opencv.ContourUtils;
 import de.dreier.mytargets.features.training.input.opencv.LineUtils;
-import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.features.training.input.opencv.detection.target.TargetZone;
 
 public class ContourHoughLineBasedArrowDetectionStrategy implements IArrowDetectionStrategy {
 
     @Override
-    public List<Point> detectArrows(Mat image, Target target, int arrows, boolean fromLeftViewpoint) {
+    public List<Point> detectArrows(Mat image, List<TargetZone> target, int arrows, boolean fromLeftViewpoint) {
         // Convert to gray scale and get contours
 //        List<MatOfPoint> contours = getContour(image);
 //

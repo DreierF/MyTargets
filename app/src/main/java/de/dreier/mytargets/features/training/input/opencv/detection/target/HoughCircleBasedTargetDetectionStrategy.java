@@ -21,14 +21,15 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
-import de.dreier.mytargets.features.training.input.opencv.transformation.ITransformation;
+import java.util.List;
+
 import de.dreier.mytargets.shared.models.Target;
 import timber.log.Timber;
 
 public class HoughCircleBasedTargetDetectionStrategy implements ITargetDetectionStrategy {
 
     @Override
-    public ITransformation detectTargetFace(Mat image, Target target) {
+    public List<TargetZone> detectTargetFace(Mat image, Target target) {
         Mat grayImage = new Mat();
         Imgproc.cvtColor(image, grayImage, Imgproc.COLOR_BGR2GRAY);
 
