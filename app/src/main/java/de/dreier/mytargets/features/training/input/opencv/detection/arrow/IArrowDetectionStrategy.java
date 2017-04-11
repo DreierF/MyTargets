@@ -20,8 +20,8 @@ import org.opencv.core.Point;
 
 import java.util.List;
 
-import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.features.training.input.opencv.detection.target.TargetZone;
 
 public interface IArrowDetectionStrategy {
-    List<Point> detectArrows(Mat image, Target target, int arrows, boolean fromLeftViewpoint);
+    List<Point> detectArrows(Mat image, List<TargetZone> targetZones, int arrows, boolean fromLeftViewpoint);
 }

@@ -30,8 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.features.training.input.opencv.detection.arrow.Line;
-import de.dreier.mytargets.shared.models.SelectableZone;
-import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.features.training.input.opencv.detection.target.TargetZone;
 
 public class ContourUtils {
     @NonNull
@@ -89,10 +88,10 @@ public class ContourUtils {
         return potentialArrows;
     }
 
-    public static void filterCircleContours(Target target, List<Line> potentialArrows, float width) {
+    public static void filterCircleContours(List<TargetZone> target, List<Line> potentialArrows, float width) {
         float rad = width * 0.5f;
-        for (SelectableZone radius : target.getSelectableZoneList(0)) {
-            float radius2 = radius.zone.radius * width;
+        for (TargetZone radius : target) {
+            float radius2 = radius.model.zone.radius * width;
             Log.d("radius", String.valueOf(radius2));
             Line circle = new Line(new Point(0, 0), new Point(1, 0));
             for (int i = 0; i < 360; i++) {

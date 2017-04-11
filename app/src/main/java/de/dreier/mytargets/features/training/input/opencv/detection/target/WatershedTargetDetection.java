@@ -18,13 +18,14 @@ package de.dreier.mytargets.features.training.input.opencv.detection.target;
 
 import org.opencv.core.Mat;
 
-import de.dreier.mytargets.features.training.input.opencv.transformation.ITransformation;
+import java.util.List;
+
 import de.dreier.mytargets.shared.models.Target;
 
 public class WatershedTargetDetection implements ITargetDetectionStrategy {
 
     @Override
-    public ITransformation detectTargetFace(Mat mRgba, Target target) {
+    public List<TargetZone> detectTargetFace(Mat mRgba, Target target) {
         return null;
     }
 

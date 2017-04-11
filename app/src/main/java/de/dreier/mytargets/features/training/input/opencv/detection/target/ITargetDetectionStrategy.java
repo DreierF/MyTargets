@@ -17,7 +17,8 @@ package de.dreier.mytargets.features.training.input.opencv.detection.target;
 
 import org.opencv.core.Mat;
 
-import de.dreier.mytargets.features.training.input.opencv.transformation.ITransformation;
+import java.util.List;
+
 import de.dreier.mytargets.shared.models.Target;
 
 public interface ITargetDetectionStrategy {
@@ -27,5 +28,5 @@ public interface ITargetDetectionStrategy {
      * @param target
      * @return A transformation object.
      */
-    ITransformation detectTargetFace(Mat image, Target target);
+    List<TargetZone> detectTargetFace(Mat image, Target target);
 }

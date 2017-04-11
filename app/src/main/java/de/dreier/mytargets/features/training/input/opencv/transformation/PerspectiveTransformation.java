@@ -15,26 +15,62 @@
 
 package de.dreier.mytargets.features.training.input.opencv.transformation;
 
+import android.support.annotation.NonNull;
+
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.RotatedRect;
+import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
-public class PerspectiveTransformation implements ITransformation {
+import java.util.Collections;
+import java.util.List;
+
+
+/**
+ * Represents a perspective transformation that maps the given ellipse to a circle mapping the given point to its center.
+ */
+public class PerspectiveTransformation {
 
     private final Point center;
     private final Rect outerBounds;
 
     public PerspectiveTransformation(RotatedRect outerEllipse, Point center) {
         this.center = center;
-        outerBounds = ellipseBoundingRect(outerEllipse);
+        this.outerBounds = ellipseBoundingRect(outerEllipse);
     }
 
-    @Override
     public void transform(Mat src, Mat dst) {
+        double size = dst.size().width;
+        Mat transform = getTransformation(size);
+        Imgproc.warpPerspective(src, dst, transform, new Size(size, size));
+    }
+
+    public void drawTransformationToSource(Mat image) {
+        double size = image.size().width;
+        Mat transform = getTransformation(size);
+        Mat inverse = new Mat();
+        Core.invert(transform, inverse);
+        MatOfPoint2f srcPoints = new MatOfPoint2f(
+                new Point(0, 0),
+                new Point(0, size),
+                new Point(size, size),
+                new Point(size, 0));
+        MatOfPoint2f dstPoints = new MatOfPoint2f();
+        Core.perspectiveTransform(srcPoints, dstPoints, inverse);
+        MatOfPoint points = new MatOfPoint();
+        points.fromList(dstPoints.toList());
+        List<MatOfPoint> polys = Collections.singletonList(points);
+        Imgproc.polylines(image, polys, true, new Scalar(0, 0, 255));
+    }
+
+    @NonNull
+    private Mat getTransformation(double size) {
         MatOfPoint2f srcPoints = new MatOfPoint2f(
                 new Point(outerBounds.x, outerBounds.y + outerBounds.height * 0.5f),
                 new Point(center.x, outerBounds.y),
@@ -43,15 +79,13 @@ public class PerspectiveTransformation implements ITransformation {
                         outerBounds.x + outerBounds.width,
                         outerBounds.y + outerBounds.height * 0.5f));
 
-        double size = dst.size().width;
         MatOfPoint2f dstPoints = new MatOfPoint2f(
                 new Point(0, size / 2.0f),
                 new Point(size / 2.0f, 0),
                 new Point(size / 2.0, size),
                 new Point(size, size / 2.0));
 
-        Mat transform = Imgproc.getPerspectiveTransform(srcPoints, dstPoints);
-        Imgproc.warpPerspective(src, dst, transform, new Size(size, size));
+        return Imgproc.getPerspectiveTransform(srcPoints, dstPoints);
     }
 
     public boolean isFromLeftViewpoint() {
