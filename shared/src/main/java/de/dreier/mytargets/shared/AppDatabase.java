@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.shared;
 
-import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 
@@ -26,18 +25,11 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.FileUtils;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-
-import static android.database.sqlite.SQLiteDatabase.CONFLICT_IGNORE;
 
 @Database(name = AppDatabase.NAME, version = AppDatabase.VERSION, foreignKeysSupported = true)
 public class AppDatabase {
@@ -46,7 +38,7 @@ public class AppDatabase {
     public static final String DATABASE_FILE_NAME = "database.db";
     public static final String DATABASE_IMPORT_FILE_NAME = "database";
 
-    public static final int VERSION = 21;
+    public static final int VERSION = 22;
 
     @Migration(version = 0, database = AppDatabase.class)
     public static class Migration0 extends BaseMigration {
@@ -57,8 +49,8 @@ public class AppDatabase {
         }
     }
 
-    @Migration(version = 21, database = AppDatabase.class)
-    public static class Migration21 extends BaseMigration {
+    @Migration(version = 22, database = AppDatabase.class)
+    public static class Migration22 extends BaseMigration {
 
         @Override
         public void migrate(DatabaseWrapper database) {

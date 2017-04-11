@@ -22,6 +22,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.WorkerThread;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -53,11 +54,14 @@ public abstract class FragmentBase extends Fragment implements LoaderManager.Loa
     }
 
     protected void finish() {
-        if (Utils.isLollipop()) {
-            getActivity().finishAfterTransition();
-        } else {
-            getActivity().finish();
-            getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            if (Utils.isLollipop()) {
+                activity.finishAfterTransition();
+            } else {
+                activity.finish();
+                activity.overridePendingTransition(R.anim.left_in, R.anim.right_out);
+            }
         }
     }
 
