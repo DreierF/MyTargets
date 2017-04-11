@@ -69,9 +69,11 @@ android {
 
     buildTypes {
         debug {
+            debuggable true
             applicationIdSuffix '.debug'
             signingConfig signingConfigs.debug
             testCoverageEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), '../tools/rules-proguard-debug.pro'
         }
         release {
             signingConfig signingConfigs.release
