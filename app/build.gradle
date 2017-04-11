@@ -95,7 +95,7 @@ if (CROWDIN_API_KEY != null && !CROWDIN_API_KEY.isEmpty()) {
 
     if (new File('googlePlayAndroidDeveloper.json').exists()) {
         play {
-            track = 'beta'
+            track = 'rollout'
             jsonFile = file('../googlePlayAndroidDeveloper.json')
         }
     }
