@@ -659,49 +659,49 @@ public class StandardRoundFactory {
                 14, -1, -1, 14));
         rounds.add(build(WA, R.string.wa_field_unmarked_marked_red,
                 METER, CENTIMETER,
-                WAField.ID, 2, 3, -1, -1, 12, -1, -1, 12));
+                WAField.ID, 1, 3, -1, -1, 12, -1, -1, 12));
         rounds.add(build(WA, R.string.wa_field_marked_12_red,
                 METER, CENTIMETER,
-                WAField.ID, 2, 3, -1, -1, 12));
+                WAField.ID, 1, 3, -1, -1, 12));
         rounds.add(build(WA, R.string.wa_field_marked_24_red,
                 METER, CENTIMETER,
-                WAField.ID, 2, 3, -1, -1, 24));
+                WAField.ID, 1, 3, -1, -1, 24));
         rounds.add(build(WA, R.string.wa_field_unmarked_12_red,
                 METER, CENTIMETER,
-                WAField.ID, 2, 3, -1, -1, 12));
+                WAField.ID, 1, 3, -1, -1, 12));
         rounds.add(build(WA, R.string.wa_field_unmarked_24_red,
                 METER, CENTIMETER,
-                WAField.ID, 2, 3, -1, -1, 24));
+                WAField.ID, 1, 3, -1, -1, 24));
         rounds.add(build(WA, R.string.wa_field_unmarked_marked_blue,
                 METER, CENTIMETER,
-                WAField.ID, 2, 3, -1, -1, 12, -1, -1, 12));
+                WAField.ID, 1, 3, -1, -1, 12, -1, -1, 12));
         rounds.add(build(WA, R.string.wa_field_marked_12_blue,
                 METER, CENTIMETER,
-                WAField.ID, 2, 3, -1, -1, 12));
+                WAField.ID, 1, 3, -1, -1, 12));
         rounds.add(build(WA, R.string.wa_field_marked_24_blue,
                 METER, CENTIMETER,
-                WAField.ID, 2, 3, -1, -1, 24));
+                WAField.ID, 1, 3, -1, -1, 24));
         rounds.add(build(WA, R.string.wa_field_unmarked_12_blue,
                 METER, CENTIMETER,
-                WAField.ID, 2, 3, -1, -1, 12));
+                WAField.ID, 1, 3, -1, -1, 12));
         rounds.add(build(WA, R.string.wa_field_unmarked_24_blue,
                 METER, CENTIMETER,
-                WAField.ID, 2, 3, -1, -1, 24));
+                WAField.ID, 1, 3, -1, -1, 24));
         rounds.add(build(WA, R.string.wa_field_unmarked_marked_yellow,
                 METER, CENTIMETER,
-                WAField.ID, 2, 3, -1, -1, 12, -1, -1, 12));
+                WAField.ID, 1, 3, -1, -1, 12, -1, -1, 12));
         rounds.add(build(WA, R.string.wa_field_marked_12_yellow,
                 METER, CENTIMETER,
-                WAField.ID, 2, 3, -1, -1, 12));
+                WAField.ID, 1, 3, -1, -1, 12));
         rounds.add(build(WA, R.string.wa_field_marked_24_yellow,
                 METER, CENTIMETER,
-                WAField.ID, 2, 3, -1, -1, 24));
+                WAField.ID, 1, 3, -1, -1, 24));
         rounds.add(build(WA, R.string.wa_field_unmarked_12_yellow,
                 METER, CENTIMETER,
-                WAField.ID, 2, 3, -1, -1, 12));
+                WAField.ID, 1, 3, -1, -1, 12));
         rounds.add(build(WA, R.string.wa_field_unmarked_24_yellow,
                 METER, CENTIMETER,
-                WAField.ID, 2, 3, -1, -1, 24));
+                WAField.ID, 1, 3, -1, -1, 24));
         rounds.add(build(NFAS, R.string.big_game_36,
                 METER, CENTIMETER,
                 NFASField.ID, 0, 3, -1, -1, 24));
