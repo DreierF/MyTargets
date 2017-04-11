@@ -222,7 +222,11 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
     private void updateEndIndicesForRound() {
         // TODO very inefficient
         int i = 0;
-        for (End end : Round.get(roundId).getEnds()) {
+        Round round = Round.get(roundId);
+        if(round == null) {
+            return;
+        }
+        for (End end : round.getEnds()) {
             end.index = i;
             end.save();
             i++;

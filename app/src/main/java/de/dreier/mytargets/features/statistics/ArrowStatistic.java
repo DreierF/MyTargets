@@ -25,12 +25,15 @@ import org.parceler.Parcel;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.analysis.aggregation.average.Average;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
+
+import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 
 @Parcel
 public class ArrowStatistic implements Comparable<ArrowStatistic> {
@@ -41,7 +44,7 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
     public String arrowNumber;
     public Average average = new Average();
     public Target target;
-    public ArrayList<Shot> shots = new ArrayList<>();
+    public List<Shot> shots = new ArrayList<>();
     public Integer reachedScore;
     public Dimension arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
 
@@ -64,17 +67,18 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
 
     public static List<ArrowStatistic> getAll(Target target, List<Round> rounds) {
         return Stream.of(rounds)
-                .filter(r -> r.getTraining().arrowId != null)
-                .groupBy(r -> r.getTraining().arrowId)
+                .withoutNulls()
+                .groupBy(r -> r.getTraining().arrowId == null ? 0 : r.getTraining().arrowId)
                 .flatMap(t -> {
                     Arrow arrow = Arrow.get(t.getKey());
+                    String name = arrow == null ? get(R.string.unknown) : arrow.getName();
                     return Stream.of(t.getValue())
                             .flatMap(r -> Stream.of(r.getEnds())
                                     .flatMap(e -> Stream.of(e.getShots())))
                             .filter(s -> s.arrowNumber != null)
                             .groupBy(shot -> shot.arrowNumber)
                             .filter(entry -> entry.getValue().size() > 1)
-                            .map(stringListEntry -> new ArrowStatistic(arrow.getName(),
+                            .map(stringListEntry -> new ArrowStatistic(name,
                                     stringListEntry.getKey(), target, stringListEntry.getValue()));
                 }).collect(Collectors.toList());
     }
