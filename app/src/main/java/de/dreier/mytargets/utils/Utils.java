@@ -27,7 +27,7 @@ import android.text.Html;
 import android.text.Spanned;
 import android.view.View;
 
-import org.joda.time.LocalDate;
+import org.threeten.bp.LocalDate;
 
 import java.util.Locale;
 
@@ -36,7 +36,7 @@ import de.dreier.mytargets.features.main.MainActivity;
 public class Utils {
 
     public static long getMonthId(LocalDate date) {
-        return new LocalDate(date).withDayOfMonth(1).toDate().getTime();
+        return LocalDate.from(date).withDayOfMonth(1).toEpochDay();
     }
 
     public static void doRestart(Context context) {

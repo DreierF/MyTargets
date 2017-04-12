@@ -18,7 +18,7 @@ package de.dreier.mytargets.test.utils.rules;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 
-import org.joda.time.LocalDate;
+import org.threeten.bp.LocalDate;
 
 import java.util.Arrays;
 import java.util.List;
@@ -142,7 +142,7 @@ public class SimpleDbTestRule extends DbTestRuleBase {
 
         Training training = new Training();
         training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training);
-        training.date = new LocalDate(2016, 7, 15);
+        training.date = LocalDate.of(2016, 7, 15);
         training.weather = EWeather.SUNNY;
         training.windSpeed = 1;
         training.windDirection = 0;

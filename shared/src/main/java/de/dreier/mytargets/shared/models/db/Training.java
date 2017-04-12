@@ -28,8 +28,10 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.joda.time.LocalDate;
 import org.parceler.Parcel;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.FormatStyle;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -55,11 +57,11 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     public String title = "";
 
     @Column(typeConverter = LocalDateConverter.class)
-    public LocalDate date = new LocalDate();
+    public LocalDate date;
 
     @ForeignKey(tableClass = StandardRound.class, references = {
             @ForeignKeyReference(columnName = "standardRound", columnType = Long.class, foreignKeyColumnName = "_id")},
-            onDelete = ForeignKeyAction.SET_NULL) // FIXME old migrations still have NO ACTION in here
+            onDelete = ForeignKeyAction.SET_NULL)
     public Long standardRoundId;
 
     @ForeignKey(tableClass = Bow.class, references = {
@@ -163,7 +165,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     }
 
     public String getFormattedDate() {
-        return DateFormat.getDateInstance().format(date.toDate());
+        return date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
     }
 
     public Score getReachedScore() {

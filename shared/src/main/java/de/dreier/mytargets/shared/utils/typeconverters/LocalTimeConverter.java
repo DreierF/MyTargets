@@ -17,25 +17,24 @@ package de.dreier.mytargets.shared.utils.typeconverters;
 
 import com.raizlabs.android.dbflow.converter.TypeConverter;
 
-import org.joda.time.DateTime;
+import org.threeten.bp.LocalTime;
+import org.threeten.bp.format.DateTimeFormatter;
 
-public final class DateTimeConverter extends TypeConverter<Long, DateTime> {
+public final class LocalTimeConverter extends TypeConverter<String, LocalTime> {
 
     @Override
-    public Long getDBValue(DateTime model) {
+    public String getDBValue(LocalTime model) {
         if (model != null) {
-            return model.toDate().getTime();
+            return model.format(DateTimeFormatter.ISO_LOCAL_TIME);
         }
-
         return null;
     }
 
     @Override
-    public DateTime getModelValue(Long data) {
+    public LocalTime getModelValue(String data) {
         if (data != null) {
-            return new DateTime(data);
+            return LocalTime.parse(data);
         }
-
         return null;
     }
 

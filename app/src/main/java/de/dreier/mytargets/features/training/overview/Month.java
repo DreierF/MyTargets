@@ -16,15 +16,16 @@ package de.dreier.mytargets.features.training.overview;
 
 import android.support.annotation.NonNull;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.format.DateTimeFormatter;
+
 import java.util.Locale;
 
 import de.dreier.mytargets.shared.models.IIdProvider;
 
 public class Month implements IIdProvider, Comparable<Month> {
-    public static final String ID = "_id";
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM yyyy",
+
+    private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMMM yyyy",
             Locale.getDefault());
     private long id;
 
@@ -34,7 +35,7 @@ public class Month implements IIdProvider, Comparable<Month> {
 
     @Override
     public String toString() {
-        return dateFormat.format(new Date(getId()));
+        return LocalDate.ofEpochDay(getId()).format(dateFormat);
     }
 
     @Override

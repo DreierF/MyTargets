@@ -19,6 +19,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import org.threeten.bp.format.DateTimeFormatter;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -41,7 +43,6 @@ import de.dreier.mytargets.shared.utils.FileUtils;
 import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 
 public class CsvExporter {
-    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
     private static DateFormat timeInstance = new SimpleDateFormat("HH:mm:ss", Locale.US);
 
     public static Uri export(Context context, List<Long> roundIds) throws IOException {
@@ -96,7 +97,7 @@ public class CsvExporter {
         // Title
         csv.add(t.title);
         // Date
-        csv.add(dateFormat.format(t.date.toDate()));
+        csv.add(t.date.format(DateTimeFormatter.ISO_LOCAL_DATE));
         // StandardRound
         csv.add(t.standardRoundId == null ? get(R.string.practice) : t.getStandardRound()
                 .getName());
@@ -130,7 +131,7 @@ public class CsvExporter {
             // End
             csv.add(String.valueOf(e.index + 1));
             // Timestamp
-            csv.add(timeInstance.format(e.saveTime.toDate()));
+            csv.add(e.saveTime.format(DateTimeFormatter.ISO_LOCAL_TIME));
             for (Shot s : e.getShots()) {
                 csv.enterScope();
                 // Score

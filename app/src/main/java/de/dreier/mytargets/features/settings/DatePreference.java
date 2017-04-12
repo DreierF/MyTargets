@@ -20,7 +20,7 @@ import android.content.res.TypedArray;
 import android.support.v7.preference.DialogPreference;
 import android.util.AttributeSet;
 
-import org.joda.time.LocalDate;
+import org.threeten.bp.LocalDate;
 
 public class DatePreference extends DialogPreference {
     public LocalDate date = LocalDate.now();

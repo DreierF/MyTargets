@@ -56,7 +56,6 @@ ext {
             homage               : '0.2.0',
             iab                  : '1.0.38',
             icepick              : '3.2.0',
-            jodaTime             : '2.9.9',
             jUnit                : '4.12',
             materialDialogs      : '0.9.4.2',
             materialIntroScreen  : '0.0.5',
@@ -74,6 +73,7 @@ ext {
             support              : '25.3.1',
             supportWearable      : '2.0.1',
             testSupport          : '0.5',
+            threeTenABP          : '1.0.5',
             timber               : '4.5.1',
             truth                : '0.32',
             uiAutomator          : '2.1.2'

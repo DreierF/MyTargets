@@ -45,15 +45,16 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.renderer.LineChartRenderer;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.parceler.Parcels;
+import org.threeten.bp.Duration;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.FormatStyle;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -355,12 +356,12 @@ public class StatisticsFragment extends FragmentBase {
                 .map(Training::get)
                 .collect(Collectors.toMap(Training::getId));
 
-        List<Pair<Float, DateTime>> values = Stream.of(rounds)
+        List<Pair<Float, LocalDateTime>> values = Stream.of(rounds)
                 .map(r -> new Pair<>(trainingsMap.get(r.trainingId).date, r))
                 .flatMap(roundIdPair -> Stream.of(roundIdPair.second.getEnds())
                         .map(end -> new Pair<>(roundIdPair.first, end)))
                 .map(endPair -> getPairEndSummary(target, endPair.second, endPair.first))
-                .sortBy(pair -> pair.second.toDate().getTime())
+                .sortBy(pair -> pair.second)
                 .collect(Collectors.toList());
         if (values.isEmpty()) {
             return null;
@@ -383,53 +384,52 @@ public class StatisticsFragment extends FragmentBase {
     }
 
     @NonNull
-    private Evaluator getEntryEvaluator(final List<Pair<Float, DateTime>> values) {
+    private Evaluator getEntryEvaluator(final List<Pair<Float, LocalDateTime>> values) {
         boolean singleTraining = Stream.of(rounds)
                 .groupBy(r -> r.trainingId).count() == 1;
 
         Evaluator eval;
         if (singleTraining) {
             eval = new Evaluator() {
-                private DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+                private DateTimeFormatter dateFormat = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
 
                 @Override
-                public long getXValue(List<Pair<Float, DateTime>> values, int i) {
-                    return values.get(i).second.getMillis() - values.get(0).second.getMillis();
+                public long getXValue(List<Pair<Float, LocalDateTime>> values, int i) {
+                    return Duration.between(values.get(i).second, values.get(0).second).getSeconds();
                 }
 
                 @Override
                 public String getXValueFormatted(float value) {
                     final long diffToFirst = (long) value;
-                    return dateFormat
-                            .format(new Date(values.get(0).second.getMillis() + diffToFirst));
+                    return values.get(0).second.plusSeconds(diffToFirst).format(dateFormat);
                 }
             };
         } else {
             eval = new Evaluator() {
-                private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
+                private DateTimeFormatter dateFormat = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 
                 @Override
-                public long getXValue(List<Pair<Float, DateTime>> values, int i) {
+                public long getXValue(List<Pair<Float, LocalDateTime>> values, int i) {
                     return i;
                 }
 
                 @Override
                 public String getXValueFormatted(float value) {
-                    return dateFormat.format(values.get((int) value).second.toDate());
+                    return values.get((int) value).second.format(dateFormat);
                 }
             };
         }
         return eval;
     }
 
-    private Pair<Float, DateTime> getPairEndSummary(Target target, End end, LocalDate trainingDate) {
+    private Pair<Float, LocalDateTime> getPairEndSummary(Target target, End end, LocalDate trainingDate) {
         Score reachedScore = target.getReachedScore(end);
         return new Pair<>(reachedScore.getShotAverage(),
-                new DateTime(end.saveTime).withDate(trainingDate));
+                LocalDateTime.of(trainingDate, end.saveTime));
     }
 
     @NonNull
-    private LineDataSet convertToLineData(List<Pair<Float, DateTime>> values, Evaluator evaluator) {
+    private LineDataSet convertToLineData(List<Pair<Float, LocalDateTime>> values, Evaluator evaluator) {
         List<Entry> seriesEntries = new ArrayList<>();
         for (int i = 0; i < values.size(); i++) {
             seriesEntries.add(new Entry(evaluator.getXValue(values, i), values.get(i).first));
@@ -452,7 +452,7 @@ public class StatisticsFragment extends FragmentBase {
         return series;
     }
 
-    private ILineDataSet generateLinearRegressionLine(List<Pair<Float, DateTime>> values, Evaluator eval) {
+    private ILineDataSet generateLinearRegressionLine(List<Pair<Float, LocalDateTime>> values, Evaluator eval) {
         int dataSetSize = values.size();
         double[] x = new double[dataSetSize];
         double[] y = new double[dataSetSize];
@@ -505,7 +505,7 @@ public class StatisticsFragment extends FragmentBase {
     }
 
     private interface Evaluator {
-        long getXValue(List<Pair<Float, DateTime>> values, int i);
+        long getXValue(List<Pair<Float, LocalDateTime>> values, int i);
 
         String getXValueFormatted(float value);
     }

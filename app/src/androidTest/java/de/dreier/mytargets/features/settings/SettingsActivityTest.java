@@ -19,12 +19,13 @@ package de.dreier.mytargets.features.settings;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
+import org.threeten.bp.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.FormatStyle;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.app.ApplicationInstance;
@@ -112,7 +113,7 @@ public class SettingsActivityTest extends UITestBase {
 
         clickOnPreference(3);
         enterDate(1990, 2, 11);
-        matchPreferenceSummary(3, DateTimeFormat.mediumDate().print(new LocalDate(1990, 2, 11)));
+        matchPreferenceSummary(3, DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.of(1990, 2, 11)));
 
         clickOnPreference(4);
         enterText("Archery Club");

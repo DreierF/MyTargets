@@ -125,8 +125,6 @@ dependencies {
 
     compile "com.google.code.gson:gson:$libraryVersion.gson"
 
-    compile "joda-time:joda-time:$libraryVersion.jodaTime"
-
     compile "com.squareup.okhttp3:okhttp:$libraryVersion.okhttp"
     compile "com.squareup.okhttp3:okhttp-urlconnection:$libraryVersion.okhttp"
 
