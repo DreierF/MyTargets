@@ -26,7 +26,7 @@ buildscript {
 }
 
 crowdinUpload {
-    apiKey = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
+    apiKey = CROWDIN_API_KEY
     projectId = 'mytargets'
     sourceFiles = [
             ['strings.xml', 'app/src/main/res/values/strings.xml'],
@@ -57,7 +57,7 @@ crowdinDownload {
         file('app/src/regular/play/uk-UA').deleteDir()
         file('app/src/regular/play/vi-VN').deleteDir()
     }
-    apiKey = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
+    apiKey = CROWDIN_API_KEY
     projectId = 'mytargets'
     destination = "$projectDir"
     renameMapping = [
@@ -67,8 +67,7 @@ crowdinDownload {
 }.dependsOn crowdinUpload
 
 allprojects {
-    def CROWDIN_API_KEY = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
-    if (CROWDIN_API_KEY != null && !CROWDIN_API_KEY.isEmpty()) {
+    if (project.hasProperty('CROWDIN_API_KEY')) {
         tasks.whenTaskAdded { task ->
             if (task.name.matches('.*assemble.*Release')) {
                 task.dependsOn crowdinDownload
