@@ -80,13 +80,13 @@ public class SettingsManager {
     private static final String KEY_INDOOR = "indoor";
     private static final String KEY_END_COUNT = "rounds";
     private static final String KEY_INPUT_MODE = "target_mode";
-    private static final String KEY_SHOW_MODE = "show_mode";
+    public static final String KEY_SHOW_MODE = "show_mode";
     private static final SharedPreferences lastUsed = ApplicationInstance
             .getLastSharedPreferences();
     private static final SharedPreferences preferences = ApplicationInstance
             .getSharedPreferences();
     private static final String KEY_BACKUP_LOCATION = "backup_location";
-    private static final String KEY_AGGREGATION_STRATEGY = "aggregation_strategy";
+    public static final String KEY_AGGREGATION_STRATEGY = "aggregation_strategy";
     private static final String KEY_STANDARD_ROUNDS_LAST_USED = "standard_round_last_used";
     private static final String KEY_INTRO_SHOWED = "intro_showed";
     private static final String KEY_OVERVIEW_SHOW_REACHED_SCORE = "overview_show_reached_score";

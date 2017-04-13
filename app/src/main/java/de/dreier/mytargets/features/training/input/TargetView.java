@@ -197,7 +197,7 @@ public class TargetView extends TargetViewBase {
     @Override
     public void setEnd(End end) {
         EInputMethod inputMethod;
-        if (end.getId() != null) {
+        if (!end.isEmpty()) {
             inputMethod = end.exact ? PLOTTING : KEYBOARD;
         } else {
             inputMethod = SettingsManager.getInputMethod();
@@ -213,13 +213,7 @@ public class TargetView extends TargetViewBase {
     }
 
     public void setAggregationStrategy(EAggregationStrategy aggregationStrategy) {
-        SettingsManager.setAggregationStrategy(aggregationStrategy);
         this.aggregationStrategy = aggregationStrategy;
-        if (inputMethod == KEYBOARD) {
-            targetDrawable.setAggregationStrategy(EAggregationStrategy.NONE);
-        } else {
-            targetDrawable.setAggregationStrategy(aggregationStrategy);
-        }
     }
 
     @Override

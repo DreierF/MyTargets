@@ -19,6 +19,7 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.View;
 
@@ -88,6 +89,10 @@ public abstract class SettingsFragmentBase extends PreferenceFragmentCompat
         super.onPause();
         ApplicationInstance.getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    protected void setDefaultSummary(String key) {
+        setSummary(key, ((ListPreference) findPreference(key)).getEntry().toString());
     }
 
     protected void setSummary(String key, String value) {

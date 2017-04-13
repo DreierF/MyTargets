@@ -75,4 +75,24 @@
         <item>ROUND</item>
         <item>TRAINING</item>
     </string-array>
+    <string-array name="target_aggregation_strategy_entries">
+        <item>@string/show_none</item>
+        <item>@string/show_average</item>
+        <item>@string/show_clusters</item>
+    </string-array>
+    <string-array name="target_aggregation_strategy_values" translatable="false">
+        <item>NONE</item>
+        <item>AVERAGE</item>
+        <item>CLUSTER</item>
+    </string-array>
+    <string-array name="target_show_mode_entries">
+        <item>@string/show_shots_end</item>
+        <item>@string/show_shots_round</item>
+        <item>@string/show_shots_training</item>
+    </string-array>
+    <string-array name="target_show_mode_values" translatable="false">
+        <item>END</item>
+        <item>ROUND</item>
+        <item>TRAINING</item>
+    </string-array>
 </resources>
