@@ -40,7 +40,7 @@ public class Month implements IIdProvider, Comparable<Month> {
 
     @Override
     public int compareTo(@NonNull Month another) {
-        return (int) ((getId() - another.getId()) / 1000L);
+        return (int) (getId() - another.getId());
     }
 
     public Long getId() {
