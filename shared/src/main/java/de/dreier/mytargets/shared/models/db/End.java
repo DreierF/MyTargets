@@ -30,8 +30,8 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.joda.time.LocalTime;
 import org.parceler.Parcel;
+import org.threeten.bp.LocalTime;
 
 import java.util.ArrayList;
 import java.util.Collections;
