@@ -21,11 +21,11 @@ import android.support.test.InstrumentationRegistry;
 
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.LocalTime;
 
 import java.util.Collections;
 import java.util.Random;
@@ -86,8 +86,7 @@ public abstract class DbTestRuleBase implements TestRule {
                     .getZoneFromPoint(end.getShots().get(i).x,
                             end.getShots().get(i).y, 0.05f);
         }
-        end.saveTime = new DateTime().withDate(training.date)
-                .withTime(14, gen.nextInt(59), gen.nextInt(59), 0);
+        end.saveTime = LocalTime.of(14, gen.nextInt(59), gen.nextInt(59), 0);
         return end;
     }
 
@@ -132,7 +131,7 @@ public abstract class DbTestRuleBase implements TestRule {
     protected Training saveDefaultTraining(Long standardRoundId, Random generator) {
         Training training = new Training();
         training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training);
-        training.date = new LocalDate(2016, 4 + generator.nextInt(5), generator.nextInt(29));
+        training.date = LocalDate.of(2016, 4 + generator.nextInt(5), generator.nextInt(29));
         training.location = "";
         training.weather = EWeather.SUNNY;
         training.windSpeed = 1;

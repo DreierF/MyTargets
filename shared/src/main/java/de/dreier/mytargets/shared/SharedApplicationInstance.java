@@ -22,6 +22,8 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.annotation.StringRes;
 
+import com.jakewharton.threetenabp.AndroidThreeTen;
+
 import timber.log.Timber;
 
 public class SharedApplicationInstance extends Application {
@@ -51,6 +53,7 @@ public class SharedApplicationInstance extends Application {
             Timber.plant(new Timber.DebugTree());
         }
         super.onCreate();
+        AndroidThreeTen.init(this);
         context = getApplicationContext();
     }
 

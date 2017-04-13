@@ -30,8 +30,8 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.joda.time.DateTime;
 import org.parceler.Parcel;
+import org.threeten.bp.LocalTime;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,7 +43,7 @@ import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.utils.typeconverters.DateTimeConverter;
+import de.dreier.mytargets.shared.utils.typeconverters.LocalTimeConverter;
 
 @Parcel
 @Table(database = AppDatabase.class)
@@ -66,8 +66,8 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
     @Column
     public boolean exact;
 
-    @Column(typeConverter = DateTimeConverter.class)
-    public DateTime saveTime;
+    @Column(typeConverter = LocalTimeConverter.class)
+    public LocalTime saveTime;
 
     List<Shot> shots;
 
@@ -191,7 +191,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
     @Override
     public void save() {
         if (saveTime == null) {
-            saveTime = new DateTime();
+            saveTime = LocalTime.now();
         }
         super.save();
         if (shots != null) {

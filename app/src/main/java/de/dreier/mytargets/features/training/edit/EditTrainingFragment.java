@@ -30,10 +30,11 @@ import android.widget.DatePicker;
 import com.annimon.stream.Stream;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
-import org.joda.time.LocalDate;
 import org.parceler.Parcels;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.FormatStyle;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
@@ -73,7 +74,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
     private Long trainingId = null;
     private ETrainingType trainingType = FREE_TRAINING;
-    private LocalDate date = new LocalDate();
+    private LocalDate date = LocalDate.now();
     private FragmentEditTrainingBinding binding;
     private Target roundTarget;
 
@@ -230,12 +231,12 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        date = new LocalDate(year, monthOfYear + 1, dayOfMonth);
+        date = LocalDate.of(year, monthOfYear + 1, dayOfMonth);
         setTrainingDate();
     }
 
     private void setTrainingDate() {
-        binding.trainingDate.setText(SimpleDateFormat.getDateInstance().format(date.toDate()));
+        binding.trainingDate.setText(date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
     }
 
     @Override

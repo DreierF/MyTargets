@@ -10,12 +10,12 @@
       "license": "apache2"
     },
     {
-      "name": "Joda-Time",
-      "version": "2.9.9",
-      "year": "2016",
-      "owner": "Stephen Colebourne",
-      "description": "Joda-Time is the widely used replacement for the Java date and time classes prior to Java SE 8.",
-      "url": "http://www.joda.org/joda-time/",
+      "name": "ThreeTenABP",
+      "version": "1.0.5",
+      "year": "2015",
+      "owner": "Jake Wharton",
+      "description": "An adaptation of the JSR-310 backport for Android.",
+      "url": "https://github.com/JakeWharton/ThreeTenABP",
       "license": "apache2"
     },
     {

@@ -20,7 +20,7 @@ import com.annimon.stream.Stream;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
 
-import org.joda.time.LocalDate;
+import org.threeten.bp.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Collections;

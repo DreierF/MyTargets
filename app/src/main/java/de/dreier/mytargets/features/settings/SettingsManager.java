@@ -21,9 +21,10 @@ import android.support.annotation.Nullable;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
-import org.joda.time.LocalDate;
-import org.joda.time.Years;
-import org.joda.time.format.DateTimeFormat;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.Period;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.FormatStyle;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -353,7 +354,7 @@ public class SettingsManager {
         if (birthDay == null) {
             return null;
         }
-        return DateTimeFormat.mediumDate().print(birthDay);
+        return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(birthDay);
     }
 
     public static int getProfileAge() {
@@ -361,7 +362,7 @@ public class SettingsManager {
         if (birthDay == null) {
             return -1;
         }
-        return Years.yearsBetween(birthDay, LocalDate.now()).getYears();
+        return Period.between(birthDay, LocalDate.now()).getYears();
     }
 
     public static float getInputArrowDiameterScale() {
