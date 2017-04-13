@@ -42,47 +42,50 @@ public class Circle {
         textPaint.setTextAlign(Paint.Align.CENTER);
     }
 
-    public void draw(Canvas can, float x, float y, int zone, int rad, boolean comment, int arrow, String number) {
-        // Get color index and font size
-        int font_size = (int) (1.2323f * rad + 0.7953f);
-        final ZoneBase zone1 = target.getModel().getZone(zone);
+    public void draw(Canvas can, float x, float y, int zone, int rad, boolean comment, int arrow, String number, boolean ambientMode) {
+        ZoneBase zoneBase = target.getModel().getZone(zone);
 
-        // Draw the circles background
-        circleColorP.setStrokeWidth(2 * density);
-        circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
-        circleColorP.setColor(zone1.getFillColor());
-        can.drawCircle(x, y, rad * density, circleColorP);
+        if (!ambientMode) {
+            // Draw the circles background
+            circleColorP.setStrokeWidth(2 * density);
+            circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
+            circleColorP.setColor(zoneBase.getFillColor());
+            can.drawCircle(x, y, rad * density, circleColorP);
+        }
 
         // Draw the circles border
         circleColorP.setStyle(Paint.Style.STROKE);
-        circleColorP.setColor(Color.getStrokeColor(zone1.getFillColor()));
+        circleColorP.setColor(
+                ambientMode ? Color.WHITE : Color.getStrokeColor(zoneBase.getFillColor()));
         can.drawCircle(x, y, rad * density, circleColorP);
 
         // Draw the text inside the circle
-        textPaint.setTextSize(22 * density);
-        textPaint.setColor(target.getModel().getZone(zone).getTextColor());
+        textPaint.setColor(ambientMode ? Color.WHITE : zoneBase.getTextColor());
+        int font_size = (int) (1.2323f * rad + 0.7953f);
         textPaint.setTextSize(font_size * density);
         can.drawText(target.zoneToString(zone, arrow), x, y + font_size * 7 * density / 22.0f,
                 textPaint);
 
-        // Draw red circled + as indicator that this impact is commented
-        if (comment) {
-            circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
-            circleColorP.setColor(0xFFFF0000);
-            can.drawCircle(x + rad * 0.8f * density, y - rad * 0.8f * density, 8 * density,
-                    circleColorP);
-            textPaint.setColor(0xFFFFFFFF);
-            can.drawText("+", x + rad * 0.8f * density, y - rad * 0.4f * density, textPaint);
-        }
-        if (number != null) {
-            circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
-            circleColorP.setColor(0xFF333333);
-            can.drawCircle(x + rad * 0.8f * density, y + rad * 0.8f * density, 8 * density,
-                    circleColorP);
-            textPaint.setTextSize(font_size * density * 0.5f);
-            textPaint.setColor(0xFFFFFFFF);
-            can.drawText(number, x + rad * 0.8f * density, y + rad * 1.05f * density,
-                    textPaint);
+        if (!ambientMode) {
+            // Draw red circled + as indicator that this impact is commented
+            if (comment) {
+                circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
+                circleColorP.setColor(0xFFFF0000);
+                can.drawCircle(x + rad * 0.8f * density, y - rad * 0.8f * density, 8 * density,
+                        circleColorP);
+                textPaint.setColor(0xFFFFFFFF);
+                can.drawText("+", x + rad * 0.8f * density, y - rad * 0.4f * density, textPaint);
+            }
+            if (number != null) {
+                circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
+                circleColorP.setColor(0xFF333333);
+                can.drawCircle(x + rad * 0.8f * density, y + rad * 0.8f * density, 8 * density,
+                        circleColorP);
+                textPaint.setTextSize(font_size * density * 0.5f);
+                textPaint.setColor(0xFFFFFFFF);
+                can.drawText(number, x + rad * 0.8f * density, y + rad * 1.05f * density,
+                        textPaint);
+            }
         }
     }
 }

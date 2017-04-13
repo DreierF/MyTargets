@@ -15,18 +15,20 @@
 
 package de.dreier.mytargets;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.wearable.activity.ConfirmationActivity;
+import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.DelayedConfirmationView;
 import android.view.View;
 
 import org.parceler.Parcels;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 import de.dreier.mytargets.databinding.ActivityInputBinding;
@@ -35,7 +37,7 @@ import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 
-public class InputActivity extends Activity implements TargetViewBase.OnEndFinishedListener {
+public class InputActivity extends WearableActivity implements TargetViewBase.OnEndFinishedListener {
 
     public static final String EXTRA_ROUND = "round";
     private Round round;
@@ -45,6 +47,8 @@ public class InputActivity extends Activity implements TargetViewBase.OnEndFinis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_input);
+
+        setAmbientEnabled();
 
         Intent intent = getIntent();
         if (intent != null && intent.getExtras() != null) {
@@ -65,6 +69,28 @@ public class InputActivity extends Activity implements TargetViewBase.OnEndFinis
             binding.target.setChinHeight(chinHeight);
             return insets;
         });
+    }
+
+    @Override
+    public void onEnterAmbient(Bundle ambientDetails) {
+        super.onEnterAmbient(ambientDetails);
+        binding.target.setBackgroundResource(R.color.md_black_1000);
+        binding.target.setAmbientMode(true);
+        binding.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
+    }
+
+    @Override
+    public void onUpdateAmbient() {
+        super.onUpdateAmbient();
+        binding.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
+    }
+
+    @Override
+    public void onExitAmbient() {
+        super.onExitAmbient();
+        binding.target.setBackgroundResource(R.color.md_wear_green_lighter_background);
+        binding.target.setAmbientMode(false);
+        binding.time.setVisibility(View.GONE);
     }
 
     @Override
