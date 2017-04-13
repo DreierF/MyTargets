@@ -219,7 +219,6 @@ public class RoundActivity extends WearableActivity {
                 viewHolder.end.setTextColor(getResources().getColor(
                         isAmbient() ? R.color.md_white_1000 :
                                 R.color.md_wear_green_active_ui_element));
-                viewHolder.end.getPaint().setAntiAlias(!isAmbient());
                 viewHolder.shots.setAmbientMode(isAmbient());
                 viewHolder.itemView.setBackgroundColor(getResources().getColor(
                         isAmbient() ? R.color.md_black_1000 :

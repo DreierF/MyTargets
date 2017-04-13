@@ -45,13 +45,11 @@ public class Circle {
     public void draw(Canvas can, float x, float y, int zone, int rad, boolean comment, int arrow, String number, boolean ambientMode) {
         ZoneBase zoneBase = target.getModel().getZone(zone);
 
-        if (!ambientMode) {
-            // Draw the circles background
-            circleColorP.setStrokeWidth(2 * density);
-            circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
-            circleColorP.setColor(zoneBase.getFillColor());
-            can.drawCircle(x, y, rad * density, circleColorP);
-        }
+        // Draw the circles background
+        circleColorP.setStrokeWidth(2 * density);
+        circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
+        circleColorP.setColor(ambientMode ? Color.BLACK : zoneBase.getFillColor());
+        can.drawCircle(x, y, rad * density, circleColorP);
 
         // Draw the circles border
         circleColorP.setStyle(Paint.Style.STROKE);

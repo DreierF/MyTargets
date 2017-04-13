@@ -76,6 +76,7 @@ public class InputActivity extends WearableActivity implements TargetViewBase.On
         super.onEnterAmbient(ambientDetails);
         binding.target.setBackgroundResource(R.color.md_black_1000);
         binding.target.setAmbientMode(true);
+        binding.time.setVisibility(View.VISIBLE);
         binding.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
     }
 
