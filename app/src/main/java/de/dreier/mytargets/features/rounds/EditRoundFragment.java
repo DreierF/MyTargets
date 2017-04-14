@@ -97,12 +97,10 @@ public class EditRoundFragment extends EditFragmentBase {
         if (roundId == null) {
             ToolbarUtils.setTitle(this, R.string.new_round);
             loadRoundDefaultValues();
-            binding.comment.setText("");
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_round);
             Round round = Round.get(roundId);
             binding.distance.setItem(round.distance);
-            binding.comment.setText(round.comment);
             binding.target.setItem(round.getTarget());
             binding.target.setFixedType(TargetListFragment.EFixedType.TARGET);
             binding.notEditable.setVisibility(View.GONE);
@@ -152,7 +150,6 @@ public class EditRoundFragment extends EditFragmentBase {
         }
         round.distance = binding.distance.getSelectedItem();
         round.setTarget(binding.target.getSelectedItem());
-        round.comment = binding.comment.getText().toString();
         round.save();
         return round;
     }
