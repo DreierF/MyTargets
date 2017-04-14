@@ -23,7 +23,6 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
@@ -87,7 +86,7 @@ public class EndRenderer {
         } while (neededRows > maxRows);
         radius -= MIN_PADDING;
         int numRows = Math.max(neededRows, 1);
-        shotsPerRow = (int) Math.ceil(shotList.size() / (float)numRows);
+        shotsPerRow = (int) Math.ceil(shotList.size() / (float) numRows);
         rowHeight = rect.height() / numRows;
         columnWidth = rect.width() / shotsPerRow;
     }
@@ -125,7 +124,7 @@ public class EndRenderer {
 
                 // Draw circle
                 circle.draw(canvas, coordinate.x, coordinate.y, shot.scoringRing, radius,
-                        !TextUtils.isEmpty(shot.comment) && i != selected, shot.index,
+                        shot.index,
                         shot.arrowNumber);
             }
         }
@@ -222,7 +221,8 @@ public class EndRenderer {
             int col = (int) Math.floor((x - rect.left) / columnWidth);
             int row = (int) Math.floor((y - rect.top) / rowHeight);
             final int arrow = row * shotsPerRow + col;
-            if (arrow < shotList.size() && shotList.get(arrow).scoringRing != Shot.NOTHING_SELECTED) {
+            if (arrow < shotList.size() &&
+                    shotList.get(arrow).scoringRing != Shot.NOTHING_SELECTED) {
                 return shotList.get(arrow).index == selected ? -1 : shotList.get(arrow).index;
             }
         }
@@ -234,7 +234,9 @@ public class EndRenderer {
     }
 
     public void setPressed(int pressed) {
-        this.pressed = pressed;
-        parent.invalidate();
+        if (this.pressed != pressed) {
+            this.pressed = pressed;
+            parent.invalidate();
+        }
     }
 }

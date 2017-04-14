@@ -33,7 +33,6 @@ import org.threeten.bp.LocalDate;
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.FormatStyle;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,6 +90,9 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
 
     @Column
     public String location = "";
+
+    @Column
+    public String comment = "";
 
     public List<Round> rounds;
 

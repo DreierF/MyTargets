@@ -29,10 +29,12 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.InputType;
 import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Stream;
 
 import org.parceler.Parcel;
@@ -190,7 +192,8 @@ public class InputActivity extends ChildActivityBase
     private void setupTransitionListener() {
         final Transition sharedElementEnterTransition = getWindow()
                 .getSharedElementEnterTransition();
-        if (sharedElementEnterTransition != null && sharedElementEnterTransition instanceof FabTransform) {
+        if (sharedElementEnterTransition != null &&
+                sharedElementEnterTransition instanceof FabTransform) {
             transitionFinished = false;
             getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
                 @Override
@@ -237,10 +240,22 @@ public class InputActivity extends ChildActivityBase
                         .withContext(this)
                         .start();
                 return true;
+            case R.id.action_comment:
+                new MaterialDialog.Builder(this)
+                        .title(R.string.comment)
+                        .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE)
+                        .input("", data.getCurrentEnd().comment, (dialog, input) -> {
+                            data.getCurrentEnd().comment = input.toString();
+                            data.getCurrentEnd().save();
+                        })
+                        .negativeText(android.R.string.cancel)
+                        .show();
+                return true;
             case R.id.action_timer:
                 boolean timerEnabled = !SettingsManager.getTimerEnabled();
                 SettingsManager.setTimerEnabled(timerEnabled);
-                ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(SettingsManager.getTimerSettings());
+                ApplicationInstance.wearableClient
+                        .sendTimerSettingsFromLocal(SettingsManager.getTimerSettings());
                 openTimer();
                 item.setChecked(timerEnabled);
                 supportInvalidateOptionsMenu();

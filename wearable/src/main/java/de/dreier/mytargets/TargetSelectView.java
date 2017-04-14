@@ -71,7 +71,7 @@ public class TargetSelectView extends TargetViewBase {
             PointF coordinate = getCircularCoordinates(i);
             if(i != curZone) {
                 circle.draw(canvas, coordinate.x, coordinate.y, selectableZones.get(i).index,
-                        17, false, getCurrentShotIndex(), null);
+                        17, getCurrentShotIndex(), null);
             }
         }
 

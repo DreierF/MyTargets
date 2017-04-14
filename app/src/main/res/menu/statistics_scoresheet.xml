@@ -22,6 +22,11 @@
         android:title="@string/statistic"
         app:showAsAction="ifRoom"/>
     <item
+        android:id="@+id/action_comment"
+        android:icon="@drawable/ic_comment_white_24dp"
+        android:title="@string/comment"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/action_scoreboard"
         android:icon="@drawable/ic_description_white_24dp"
         android:title="@string/scoreboard"

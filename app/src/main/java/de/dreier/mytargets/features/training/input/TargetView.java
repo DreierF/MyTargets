@@ -27,10 +27,7 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Handler;
-import android.os.Vibrator;
 import android.support.annotation.NonNull;
-import android.text.InputType;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Property;
@@ -40,14 +37,11 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.features.settings.SettingsManager;
@@ -107,7 +101,8 @@ public class TargetView extends TargetViewBase {
     private static final int TARGET_PADDING_DP = 10;
     private static final int KEYBOARD_OUTER_PADDING_DP = 20;
     private static final int KEYBOARD_WIDTH_DP = 40;
-    private static final int KEYBOARD_TOTAL_WIDTH_DP = KEYBOARD_WIDTH_DP + KEYBOARD_OUTER_PADDING_DP;
+    private static final int KEYBOARD_TOTAL_WIDTH_DP =
+            KEYBOARD_WIDTH_DP + KEYBOARD_OUTER_PADDING_DP;
     private static final int POINTER_OFFSET_Y_DP = -60;
     private static final int MIN_END_RECT_HEIGHT_DP = 80;
     private static final int KEYBOARD_INNER_PADDING_DP = 40;
@@ -157,7 +152,6 @@ public class TargetView extends TargetViewBase {
      * Percentage of the keyboard that is currently supposed to be shown. (0..1).
      */
     private float keyboardVisibility = 0;
-    private Timer longPressTimer;
     private RectF keyboardRect;
     private RectF targetRect;
 
@@ -399,40 +393,13 @@ public class TargetView extends TargetViewBase {
     protected boolean selectPreviousShots(MotionEvent motionEvent, float x, float y) {
         // Handle selection of already saved shoots
         int shotIndex = endRenderer.getPressedPosition(x, y);
+        endRenderer.setPressed(shotIndex);
         if (shotIndex != EndRenderer.NO_SELECTION) {
             if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                if (longPressTimer != null) {
-                    endRenderer.setPressed(EndRenderer.NO_SELECTION);
-                    longPressTimer.cancel();
-                    longPressTimer = null;
-                    setCurrentShotIndex(shotIndex);
-                    animateToNewState();
-                }
-            } else if (endRenderer.getPressed() != shotIndex) {
-                // If new item gets selected cancel old timer and start new one
-                endRenderer.setPressed(shotIndex);
-                if (longPressTimer != null) {
-                    longPressTimer.cancel();
-                }
-                longPressTimer = new Timer();
-                final Handler h = new Handler();
-                longPressTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        h.post(TargetView.this::onLongPressArrow);
-                    }
-                }, 1500);
+                setCurrentShotIndex(shotIndex);
+                animateToNewState();
             }
-            invalidate();
             return true;
-        } else {
-            if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                if (longPressTimer != null) {
-                    longPressTimer.cancel();
-                    longPressTimer = null;
-                }
-            }
-            endRenderer.setPressed(EndRenderer.NO_SELECTION);
         }
         return false;
     }
@@ -538,40 +505,14 @@ public class TargetView extends TargetViewBase {
         rect.bottom = (int) (singleZoneHeight * (i + 1) - density);
         rect.left = (int) keyboardRect.left;
         rect.right = (int) keyboardRect.right;
-        final int visibilityXOffset = (int) (KEYBOARD_TOTAL_WIDTH_DP * (1 - keyboardVisibility) * density);
+        final int visibilityXOffset = (int) (KEYBOARD_TOTAL_WIDTH_DP * (1 - keyboardVisibility) *
+                density);
         if (keyboardType == LEFT) {
             rect.offset(-visibilityXOffset, 0);
         } else {
             rect.offset(visibilityXOffset, 0);
         }
         return rect;
-    }
-
-    private void onLongPressArrow() {
-        longPressTimer = null;
-        final int pressed = endRenderer.getPressed();
-        if (pressed == -1) {
-            return;
-        }
-        longPressTimer = null;
-        Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
-        v.vibrate(500);
-        onArrowChanged();
-
-        new MaterialDialog.Builder(getContext())
-                .title(R.string.comment)
-                .inputType(InputType.TYPE_CLASS_TEXT)
-                .input("", shots.get(pressed).comment, (dialog, input) -> {
-                    shots.get(pressed).comment = input.toString();
-                    notifyEndFinished();
-                    notifyTargetShotsChanged();
-                })
-                .negativeText(android.R.string.cancel)
-                .dismissListener(dialog -> {
-                    endRenderer.setPressed(-1);
-                    invalidate();
-                })
-                .show();
     }
 
     @Override

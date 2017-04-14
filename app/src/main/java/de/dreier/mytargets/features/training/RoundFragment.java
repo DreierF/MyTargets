@@ -23,12 +23,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.Collections;
 import java.util.List;
@@ -157,15 +160,26 @@ public class RoundFragment extends EditableListFragment<End> {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_scoreboard:
-                ScoreboardActivity
-                        .getIntent(round.trainingId, round.getId())
-                        .withContext(this)
-                        .start();
-                return true;
             case R.id.action_statistics:
                 StatisticsActivity
                         .getIntent(Collections.singletonList(round.getId()))
+                        .withContext(this)
+                        .start();
+                return true;
+            case R.id.action_comment:
+                new MaterialDialog.Builder(getContext())
+                        .title(R.string.comment)
+                        .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE)
+                        .input("", round.comment, (dialog, input) -> {
+                            round.comment = input.toString();
+                            round.save();
+                        })
+                        .negativeText(android.R.string.cancel)
+                        .show();
+                return true;
+            case R.id.action_scoreboard:
+                ScoreboardActivity
+                        .getIntent(round.trainingId, round.getId())
                         .withContext(this)
                         .start();
                 return true;
