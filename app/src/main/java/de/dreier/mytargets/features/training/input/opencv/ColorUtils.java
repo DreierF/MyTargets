@@ -59,7 +59,7 @@ public class ColorUtils {
                 Core.bitwise_or(mask, mask2, mask);
                 break;
             case LEMON_YELLOW:
-                Core.inRange(hsv, new Scalar(26, 102, 170), new Scalar(30, 255, 255), mask);
+                Core.inRange(hsv, new Scalar(26, 102, 170), new Scalar(35, 255, 255), mask);
                 break;
             case BLACK:
                 Core.inRange(hsv, new Scalar(0, 0, 0), new Scalar(180, 255, 120), mask);
