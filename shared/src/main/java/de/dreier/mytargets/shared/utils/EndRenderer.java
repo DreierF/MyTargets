@@ -230,15 +230,12 @@ public class EndRenderer {
         return -1;
     }
 
-    public int getPressed() {
-        return pressed;
-    }
-
     public void setPressed(int pressed) {
         if (this.pressed != pressed) {
             this.pressed = pressed;
             parent.invalidate();
         }
+    }
 
     public void setAmbientMode(boolean ambientMode) {
         this.ambientMode = ambientMode;
