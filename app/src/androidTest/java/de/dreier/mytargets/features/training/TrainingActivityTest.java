@@ -19,6 +19,7 @@ package de.dreier.mytargets.features.training;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -39,6 +40,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 import static org.hamcrest.Matchers.containsString;
 
+@Ignore
 @RunWith(AndroidJUnit4.class)
 public class TrainingActivityTest extends UITestBase {
 

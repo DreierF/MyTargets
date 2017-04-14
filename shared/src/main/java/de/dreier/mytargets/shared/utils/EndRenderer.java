@@ -61,6 +61,7 @@ public class EndRenderer {
     private transient int oldRadius;
     private transient int oldSelected;
     private transient int oldSelectedRadius;
+    private boolean ambientMode = false;
 
     public void init(View parent, float density, Target target) {
         this.parent = parent;
@@ -125,7 +126,7 @@ public class EndRenderer {
                 // Draw circle
                 circle.draw(canvas, coordinate.x, coordinate.y, shot.scoringRing, radius,
                         shot.index,
-                        shot.arrowNumber);
+                        shot.arrowNumber, ambientMode);
             }
         }
     }
@@ -238,5 +239,8 @@ public class EndRenderer {
             this.pressed = pressed;
             parent.invalidate();
         }
+
+    public void setAmbientMode(boolean ambientMode) {
+        this.ambientMode = ambientMode;
     }
 }

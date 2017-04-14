@@ -13,7 +13,7 @@
   ~ GNU General Public License for more details.
   -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
             android:id="@+id/target"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/md_wear_green_lighter_background" />
+            android:background="@color/md_wear_green_lighter_background"/>
 
         <android.support.wearable.view.DelayedConfirmationView
             android:id="@+id/delayedConfirm"
@@ -37,7 +37,17 @@
             app:circle_color="@color/md_wear_green_active_ui_element"
             app:circle_padding="@dimen/circle_padding"
             app:circle_radius="@dimen/circle_radius"
-            app:circle_radius_pressed="@dimen/circle_radius_pressed" />
+            app:circle_radius_pressed="@dimen/circle_radius_pressed"/>
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_gravity="bottom"
+            android:background="@color/md_black_1000"
+            android:gravity="center"
+            android:textColor="@color/md_white_1000"
+            android:visibility="gone"/>
 
     </FrameLayout>
 

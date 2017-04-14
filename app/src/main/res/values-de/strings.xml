@@ -323,6 +323,6 @@
   <string name="show_total_score">Maximal erreichbare Ringzahl anzeigen</string>
   <string name="show_percentage">Prozent anzeigen</string>
   <string name="show_arrow_average">Pfeildurchschnitt anzeigen</string>
-  <string name="image_deleted">Bild gelöscht</string>
-  <string name="delete_image">Bild löschen?</string>
+  <string name="image_deleted">Image deleted</string>
+  <string name="delete_image">Delete image?</string>
 </resources>

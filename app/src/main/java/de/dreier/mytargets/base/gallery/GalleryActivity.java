@@ -137,6 +137,14 @@ public class GalleryActivity extends ChildActivityBase {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.action_share).setVisible(!end.getImages().isEmpty());
+        menu.findItem(R.id.action_delete).setVisible(!end.getImages().isEmpty());
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
@@ -177,6 +185,7 @@ public class GalleryActivity extends ChildActivityBase {
                 .onPositive((dialog, which) -> {
                     end.getImages().remove(currentItem);
                     end.save();
+                    supportInvalidateOptionsMenu();
                     adapter.notifyDataSetChanged();
                     int nextItem = Math.min(end.getImages().size() - 1, currentItem);
                     previewAdapter.setSelectedItem(nextItem);
@@ -256,6 +265,7 @@ public class GalleryActivity extends ChildActivityBase {
                 super.onPostExecute(files);
                 end.getImages().addAll(files);
                 end.save();
+                supportInvalidateOptionsMenu();
                 previewAdapter.notifyDataSetChanged();
                 adapter.notifyDataSetChanged();
                 int currentPos = end.getImages().size() - 1;
