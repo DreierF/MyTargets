@@ -42,7 +42,7 @@ public class Circle {
         textPaint.setTextAlign(Paint.Align.CENTER);
     }
 
-    public void draw(Canvas can, float x, float y, int zone, int rad, boolean comment, int arrow, String number, boolean ambientMode) {
+    public void draw(Canvas can, float x, float y, int zone, int rad, int arrow, String number, boolean ambientMode) {
         ZoneBase zoneBase = target.getModel().getZone(zone);
 
         // Draw the circles background
@@ -64,26 +64,13 @@ public class Circle {
         can.drawText(target.zoneToString(zone, arrow), x, y + font_size * 7 * density / 22.0f,
                 textPaint);
 
-        if (!ambientMode) {
-            // Draw red circled + as indicator that this impact is commented
-            if (comment) {
-                circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
-                circleColorP.setColor(0xFFFF0000);
-                can.drawCircle(x + rad * 0.8f * density, y - rad * 0.8f * density, 8 * density,
-                        circleColorP);
-                textPaint.setColor(0xFFFFFFFF);
-                can.drawText("+", x + rad * 0.8f * density, y - rad * 0.4f * density, textPaint);
-            }
-            if (number != null) {
-                circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
-                circleColorP.setColor(0xFF333333);
-                can.drawCircle(x + rad * 0.8f * density, y + rad * 0.8f * density, 8 * density,
-                        circleColorP);
-                textPaint.setTextSize(font_size * density * 0.5f);
-                textPaint.setColor(0xFFFFFFFF);
-                can.drawText(number, x + rad * 0.8f * density, y + rad * 1.05f * density,
-                        textPaint);
-            }
+        if (!ambientMode && number != null) {
+            circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
+            circleColorP.setColor(0xFF333333);
+            can.drawCircle(x + rad * 0.8f * density, y + rad * 0.8f * density, 8 * density, circleColorP);
+            textPaint.setTextSize(font_size * density * 0.5f);
+            textPaint.setColor(0xFFFFFFFF);
+            can.drawText(number, x + rad * 0.8f * density, y + rad * 1.05f * density, textPaint);
         }
     }
 }

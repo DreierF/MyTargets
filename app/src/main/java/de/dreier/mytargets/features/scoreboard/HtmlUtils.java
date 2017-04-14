@@ -132,7 +132,7 @@ public class HtmlUtils {
 
     @NonNull
     private static String getPoints(ScoreboardConfiguration configuration, Shot shot, Target target) {
-        if(shot.scoringRing == Shot.NOTHING_SELECTED) {
+        if (shot.scoringRing == Shot.NOTHING_SELECTED) {
             return "";
         }
         final String points = target.zoneToString(shot.scoringRing, shot.index);
@@ -169,31 +169,22 @@ public class HtmlUtils {
                 "<table class=\"myTable\" style=\"margin-top:5px;\"><tr class=\"align_center\">" +
                         "<th>" + get(R.string.round) + "</th>" +
                         "<th>" + get(R.string.passe) + "</th>" +
-                        "<th>" + get(R.string.points) + "</th>" +
                         "<th>" + get(R.string.comment) + "</th></tr>";
         int commentsCount = 0;
 
-        int j = 0;
         for (Round round : rounds) {
-            int i = 1;
             List<End> ends = round.getEnds();
             for (End end : ends) {
-                for (int s = 0; s < end.getShots().size(); s++) {
-                    Shot shot = end.getShots().get(s);
-                    if (!TextUtils.isEmpty(shot.comment)) {
-                        comments += "<tr class=\"align_center\"><td>" + j + "</td>" +
-                                "<td>" + i + "</td>" +
-                                "<td>" + round.getTarget().zoneToString(shot.scoringRing, s) +
-                                "</td>" +
-                                "<td>" +
-                                TextUtils.htmlEncode(shot.comment).replace("\n", "<br />") +
-                                "</td></tr>";
-                        commentsCount++;
-                    }
+                if (!TextUtils.isEmpty(end.comment)) {
+                    comments += "<tr class=\"align_center\">" +
+                            "<td>" + (round.index + 1) + "</td>" +
+                            "<td>" + (end.index + 1) + "</td>" +
+                            "<td>" +
+                            TextUtils.htmlEncode(end.comment).replace("\n", "<br />") +
+                            "</td></tr>";
+                    commentsCount++;
                 }
-                i++;
             }
-            j++;
         }
 
         // If a minimum of one comment is present show comments table

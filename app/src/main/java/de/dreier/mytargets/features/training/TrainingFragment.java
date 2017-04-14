@@ -23,6 +23,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
@@ -184,6 +186,17 @@ public class TrainingFragment extends EditableListFragment<Round> {
                                 .collect(Collectors.toList()))
                         .withContext(this)
                         .start();
+                return true;
+            case R.id.action_comment:
+                new MaterialDialog.Builder(getContext())
+                        .title(R.string.comment)
+                        .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE)
+                        .input("", training.comment, (dialog, input) -> {
+                            training.comment = input.toString();
+                            training.save();
+                        })
+                        .negativeText(android.R.string.cancel)
+                        .show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

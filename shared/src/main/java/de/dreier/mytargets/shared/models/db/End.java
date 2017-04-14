@@ -69,6 +69,9 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
     @Column(typeConverter = LocalTimeConverter.class)
     public LocalTime saveTime;
 
+    @Column
+    public String comment = "";
+
     List<Shot> shots;
 
     public End() {

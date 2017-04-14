@@ -58,9 +58,6 @@ public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
     @Column
     public int scoringRing = NOTHING_SELECTED;
 
-    @Column
-    public String comment = "";
-
     // Is the actual number of the arrow not its index, arrow id or something else
     @Column
     public String arrowNumber = null;

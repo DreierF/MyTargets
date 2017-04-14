@@ -50,8 +50,8 @@ public class SharedApplicationInstance extends Application {
                     .detectLeakedClosableObjects()
                     .penaltyLog()
                     .build());
-            Timber.plant(new Timber.DebugTree());
         }
+        Timber.plant(new Timber.DebugTree());
         super.onCreate();
         AndroidThreeTen.init(this);
         context = getApplicationContext();

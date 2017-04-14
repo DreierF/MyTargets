@@ -95,21 +95,6 @@
 
                 </LinearLayout>
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/comment"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:hint="@string/comment"
-                        android:inputType="textMultiLine" />
-
-                </android.support.design.widget.TextInputLayout>
-
             </LinearLayout>
 
         </ScrollView>
