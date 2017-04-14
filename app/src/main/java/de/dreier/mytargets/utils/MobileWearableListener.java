@@ -105,7 +105,7 @@ public class MobileWearableListener extends WearableListenerService {
             } else {
                 training.initRoundsFromTemplate(lastTraining.get().getStandardRound());
             }
-            ApplicationInstance.wearableClient.sendTrainingTemplate(training);
+            ApplicationInstance.wearableClient.sendTrainingTemplate(training.ensureLoaded());
         }
     }
 

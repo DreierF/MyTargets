@@ -40,6 +40,7 @@ public class TargetSelectView extends TargetViewBase {
     private double circleRadius;
     private Circle circle;
     private float chinBound;
+    private boolean ambientMode = false;
 
     public TargetSelectView(Context context) {
         super(context);
@@ -71,7 +72,7 @@ public class TargetSelectView extends TargetViewBase {
             PointF coordinate = getCircularCoordinates(i);
             if(i != curZone) {
                 circle.draw(canvas, coordinate.x, coordinate.y, selectableZones.get(i).index,
-                        17, false, getCurrentShotIndex(), null);
+                        17, false, getCurrentShotIndex(), null, ambientMode);
             }
         }
 
@@ -167,5 +168,11 @@ public class TargetSelectView extends TargetViewBase {
     @Override
     protected int getSelectedShotCircleRadius() {
         return RADIUS_SELECTED;
+    }
+
+    public void setAmbientMode(boolean ambientMode) {
+        this.ambientMode = ambientMode;
+        endRenderer.setAmbientMode(ambientMode);
+        invalidate();
     }
 }

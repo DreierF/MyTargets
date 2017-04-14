@@ -32,6 +32,8 @@ import android.widget.TextView;
 
 import org.parceler.Parcels;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 import de.dreier.mytargets.databinding.ActivityRoundBinding;
@@ -63,7 +65,8 @@ public class RoundActivity extends WearableActivity {
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()) {
                 case BROADCAST_TRAINING_UPDATED:
-                    TrainingInfo info = Parcels.unwrap(intent.getParcelableExtra(WearWearableClient.EXTRA_INFO));
+                    TrainingInfo info = Parcels
+                            .unwrap(intent.getParcelableExtra(WearWearableClient.EXTRA_INFO));
                     round = info.round;
                     showRoundData();
                     break;
@@ -119,8 +122,34 @@ public class RoundActivity extends WearableActivity {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
+    @Override
+    public void onEnterAmbient(Bundle ambientDetails) {
+        super.onEnterAmbient(ambientDetails);
+        binding.drawerLayout.setBackgroundResource(R.color.md_black_1000);
+        binding.recyclerViewEnds.getAdapter().notifyDataSetChanged();
+        binding.wearableDrawerView.setVisibility(View.INVISIBLE);
+        binding.time.setVisibility(View.VISIBLE);
+        binding.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
+    }
+
+    @Override
+    public void onUpdateAmbient() {
+        super.onUpdateAmbient();
+        binding.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
+    }
+
+    @Override
+    public void onExitAmbient() {
+        super.onExitAmbient();
+        binding.drawerLayout.setBackgroundResource(R.color.md_wear_green_dark_background);
+        binding.recyclerViewEnds.getAdapter().notifyDataSetChanged();
+        binding.wearableDrawerView.setVisibility(View.VISIBLE);
+        binding.time.setVisibility(View.GONE);
+    }
+
     private void showRoundData() {
-        boolean showAddEnd = round.maxEndCount == null || round.maxEndCount > round.getEnds().size();
+        boolean showAddEnd =
+                round.maxEndCount == null || round.maxEndCount > round.getEnds().size();
         binding.recyclerViewEnds.setAdapter(new EndAdapter(round.getEnds(), showAddEnd));
         binding.recyclerViewEnds.scrollToPosition(round.getEnds().size());
     }
@@ -183,8 +212,19 @@ public class RoundActivity extends WearableActivity {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof ViewHolder) {
                 End end = ends.get(position);
-                ((ViewHolder) holder).end.setText(getString(R.string.end_n, end.index + 1));
-                ((ViewHolder) holder).shots.setShots(round.getTarget(), end.getShots());
+                ViewHolder viewHolder = (ViewHolder) holder;
+                viewHolder.end.setText(getString(R.string.end_n, end.index + 1));
+                viewHolder.shots.setShots(round.getTarget(), end.getShots());
+
+                viewHolder.end.setTextColor(getResources().getColor(
+                        isAmbient() ? R.color.md_white_1000 :
+                                R.color.md_wear_green_active_ui_element));
+                viewHolder.shots.setAmbientMode(isAmbient());
+                viewHolder.itemView.setBackgroundColor(getResources().getColor(
+                        isAmbient() ? R.color.md_black_1000 :
+                                R.color.md_wear_green_lighter_background));
+            } else if(holder instanceof InlineButtonViewHolder) {
+                holder.itemView.setVisibility(isAmbient() ? View.INVISIBLE : View.VISIBLE);
             }
         }
 
