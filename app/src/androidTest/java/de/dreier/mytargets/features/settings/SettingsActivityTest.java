@@ -83,16 +83,16 @@ public class SettingsActivityTest extends UITestBase {
 
         matchToolbarTitle(getActivity().getString(R.string.input));
 
-        matchPreferenceSummary(7, "3.0x");
-        clickOnPreference(7);
+        matchPreferenceSummary(9, "3.0x");
+        clickOnPreference(9);
         selectFromList("5.0x");
-        matchPreferenceSummary(7, "5.0x");
+        matchPreferenceSummary(9, "5.0x");
         assertEquals(SettingsManager.getInputTargetZoom(), 5.0f);
 
-        matchPreferenceSummary(8, "1.0x");
-        clickOnPreference(8);
+        matchPreferenceSummary(10, "1.0x");
+        clickOnPreference(10);
         selectFromList("3.5x");
-        matchPreferenceSummary(8, "3.5x");
+        matchPreferenceSummary(10, "3.5x");
         assertEquals(SettingsManager.getInputArrowDiameterScale(), 3.5f);
 
         pressBack();

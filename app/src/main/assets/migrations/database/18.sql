@@ -218,7 +218,7 @@ CREATE TABLE IF NOT EXISTS `Shot`(
     `scoringRing` INTEGER,
     `comment` TEXT,
     `arrowNumber` TEXT,
-    FOREIGN KEY(`end`) REFERENCES End(`id`) ON UPDATE NO ACTION ON DELETE CASCADE
+    FOREIGN KEY(`end`) REFERENCES End(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE
 );
 INSERT INTO `Shot`
     SELECT `_id`,`arrow_index`,`passe`,`x`,`y`,`points`,`comment`,`arrow`
