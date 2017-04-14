@@ -57,15 +57,15 @@
   <string name="stop">STOP</string>
   <string name="end_n">Passe %d</string>
   <plurals name="rounds">
-    <item quantity="one">%d Runde</item>
-    <item quantity="other">%d Runden</item>
+    <item quantity="one">%d round</item>
+    <item quantity="other">%d rounds</item>
   </plurals>
   <plurals name="ends_arrow">
-    <item quantity="one">%1$d \u00D7 %2$d Pfeil</item>
-    <item quantity="other">%1$d \u00D7 %2$d Pfeile</item>
+    <item quantity="one">%1$d \u00D7 %2$d arrow</item>
+    <item quantity="other">%1$d \u00D7 %2$d arrows</item>
   </plurals>
   <plurals name="arrows_per_end">
-    <item quantity="one">%d Pfeil pro Passe</item>
-    <item quantity="other">%d Pfeile pro Passe</item>
+    <item quantity="one">%d arrow per end</item>
+    <item quantity="other">%d arrows per end</item>
   </plurals>
 </resources>

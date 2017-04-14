@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,10 +22,14 @@ import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.wearable.activity.WearableActivity;
 import android.view.Gravity;
 import android.view.View;
 
 import org.parceler.Parcels;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 import de.dreier.mytargets.databinding.ActivityMainBinding;
 import de.dreier.mytargets.shared.models.TrainingInfo;
@@ -37,7 +40,7 @@ import de.dreier.mytargets.utils.WearWearableClient;
 import static de.dreier.mytargets.utils.WearWearableClient.BROADCAST_TRAINING_TEMPLATE;
 import static de.dreier.mytargets.utils.WearWearableClient.BROADCAST_TRAINING_UPDATED;
 
-public class MainActivity extends Activity {
+public class MainActivity extends WearableActivity {
 
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -75,11 +78,40 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
+        setAmbientEnabled();
+
         final IntentFilter filter = new IntentFilter();
         filter.addAction(BROADCAST_TRAINING_TEMPLATE);
         filter.addAction(BROADCAST_TRAINING_UPDATED);
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, filter);
         ApplicationInstance.wearableClient.requestNewTrainingTemplate();
+    }
+
+    @Override
+    public void onEnterAmbient(Bundle ambientDetails) {
+        super.onEnterAmbient(ambientDetails);
+        binding.drawerLayout.setBackgroundResource(R.color.md_black_1000);
+        binding.wearableDrawerView.setBackgroundResource(R.color.md_black_1000);
+        binding.date.setTextColor(getResources().getColor(R.color.md_white_1000));
+        binding.icon.setVisibility(View.INVISIBLE);
+        binding.time.setVisibility(View.VISIBLE);
+        binding.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
+    }
+
+    @Override
+    public void onUpdateAmbient() {
+        super.onUpdateAmbient();
+        binding.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
+    }
+
+    @Override
+    public void onExitAmbient() {
+        super.onExitAmbient();
+        binding.drawerLayout.setBackgroundResource(R.color.md_wear_green_dark_background);
+        binding.wearableDrawerView.setBackgroundResource(R.color.md_wear_green_lighter_ui_element);
+        binding.date.setTextColor(getResources().getColor(R.color.md_wear_green_lighter_ui_element));
+        binding.icon.setVisibility(View.VISIBLE);
+        binding.time.setVisibility(View.GONE);
     }
 
     public void setTrainingInfo(TrainingInfo info) {

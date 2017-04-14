@@ -13,8 +13,8 @@
   ~ GNU General Public License for more details.
   -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.wearable.view.drawer.WearableDrawerLayout
         android:id="@+id/drawer_layout"
@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingTop="48dp"
-            android:scrollbars="vertical" />
+            android:scrollbars="vertical"/>
 
         <android.support.wearable.view.drawer.WearableDrawerView
             android:id="@+id/wearableDrawerView"
@@ -52,11 +52,21 @@
                     android:id="@+id/primaryActionTimer"
                     android:layout_width="@dimen/peek_drawer_icon_size"
                     android:layout_height="@dimen/peek_drawer_icon_size"
-                    android:src="@drawable/ic_traffic_white_24dp" />
+                    android:src="@drawable/ic_traffic_white_24dp"/>
 
             </LinearLayout>
 
         </android.support.wearable.view.drawer.WearableDrawerView>
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_gravity="bottom"
+            android:background="@color/md_black_1000"
+            android:gravity="center"
+            android:textColor="@color/md_white_1000"
+            android:visibility="gone"/>
 
     </android.support.wearable.view.drawer.WearableDrawerLayout>
 

@@ -116,4 +116,9 @@ public class EndView extends View {
     public void onRestoreInstanceState(Parcelable state) {
         super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
     }
+
+    public void setAmbientMode(boolean ambient) {
+        endRenderer.setAmbientMode(ambient);
+        invalidate();
+    }
 }
