@@ -167,7 +167,6 @@ public class MainActivity extends Activity {
         // - add a second pass to the perspective detection, which also includes smaller areas at the expected areas
         // - exclude vertical edges at the target border
         // - make target (circle) detection more accurate
-        //
 
         ITargetDetectionStrategy targetDetection = new ColorTargetDetection();
         List<TargetZone> zones = targetDetection.detectTargetFace(temp, target);

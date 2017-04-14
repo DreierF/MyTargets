@@ -22,15 +22,13 @@ import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
-import org.opencv.core.Rect;
 import org.opencv.core.RotatedRect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.imgproc.Moments;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import timber.log.Timber;
 
 public class ColorSegmentationUtils {
 
@@ -45,51 +43,36 @@ public class ColorSegmentationUtils {
         return bin;
     }
 
-    public static RotatedRect findAndDrawCenteredContour(Mat bin1) {
+    public static RotatedRect findBiggestMatchingContour(Mat bin1, ContourMatcher contourMatcher) {
         //Find contours of blue region
         List<MatOfPoint> contours = new ArrayList<>();
         Mat hierarchy = new Mat();
         Imgproc.findContours(bin1, contours, hierarchy, Imgproc.RETR_TREE,
                 Imgproc.CHAIN_APPROX_SIMPLE, new Point(0, 0));
-        int i1 = bin1.width() / 6;
-        int i2 = bin1.height() / 6;
-        Rect rect = new Rect(i1, i2, i1*4, i2*4);
-        //Imgproc.rectangle(drawing, new Point(i1, i2), new Point(2 * i1, 2 * i2),
-        //        new Scalar(0, 255, 0));
 
-        ArrayList<Point> pointList = new ArrayList<>();
+        MatOfPoint biggestMatchingContour = null;
+        double biggestSize = Integer.MIN_VALUE;
         for (MatOfPoint contour : contours) {
             // Sort out contours that are too small
             double area = Imgproc.contourArea(contour);
-            Timber.d("findAndDrawCenteredContour: " + area);
-            if (area < 5000) { // TODO make this more intelligent
-                continue;
-            }
 
-            // Fit contour in a circle
-            Point center = new Point();
-            float[] radius = new float[1];
-            MatOfPoint2f matOfPoint2f = new MatOfPoint2f();
-            List<Point> points = contour.toList();
-            matOfPoint2f.fromList(points);
-            Imgproc.minEnclosingCircle(matOfPoint2f, center, radius);
-
-            Timber.d("findAndDrawCenteredContour: "+center);
+            Moments mu = Imgproc.moments(contour);
+            Point center = new Point(mu.get_m10() / mu.get_m00(), mu.get_m01() / mu.get_m00());
 
             // If center of the circle is more or less in the center of the image...
-            if (center.inside(rect)) {
-                pointList.addAll(points);
+            if (area > biggestSize && contourMatcher.matches(area, center)) {
+                biggestSize = area;
+                biggestMatchingContour = contour;
             }
         }
-        Timber.d("findAndDrawCenteredContour: pointList.size()="+pointList.size());
+
         // Calculate convex hull
-        if (pointList.isEmpty()) {
+        if (biggestMatchingContour == null) {
             return null;
         }
+        List<Point> pointList = biggestMatchingContour.toList();
         MatOfInt hullInt = new MatOfInt();
-        MatOfPoint pointMat = new MatOfPoint();
-        pointMat.fromList(pointList);
-        Imgproc.convexHull(pointMat, hullInt);
+        Imgproc.convexHull(biggestMatchingContour, hullInt);
         ArrayList<Point> hullPointList = new ArrayList<>();
         int[] hi = hullInt.toArray();
         for (int j : hi) {
