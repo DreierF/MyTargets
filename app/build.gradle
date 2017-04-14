@@ -50,6 +50,10 @@ android {
         enabled true
     }
 
+    lintOptions {
+        disable 'ExtraTranslation'
+    }
+
     signingConfigs {
         debug {
         }
