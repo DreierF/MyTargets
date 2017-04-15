@@ -155,6 +155,11 @@
                     android:inputType="textAutoComplete"
                     android:key="profile_club"
                     android:title="@string/club"/>
+                <EditTextPreference
+                    android:defaultValue=""
+                    android:inputType="textAutoComplete"
+                    android:key="profile_target_captain"
+                    android:title="@string/target_captain"/>
             </PreferenceCategory>
             <PreferenceCategory android:title="@string/display">
                 <CheckBoxPreference

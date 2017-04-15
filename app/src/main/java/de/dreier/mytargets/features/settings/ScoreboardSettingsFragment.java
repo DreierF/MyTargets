@@ -22,6 +22,7 @@ import static de.dreier.mytargets.features.settings.SettingsManager.KEY_PROFILE_
 import static de.dreier.mytargets.features.settings.SettingsManager.KEY_PROFILE_CLUB;
 import static de.dreier.mytargets.features.settings.SettingsManager.KEY_PROFILE_FIRST_NAME;
 import static de.dreier.mytargets.features.settings.SettingsManager.KEY_PROFILE_LAST_NAME;
+import static de.dreier.mytargets.features.settings.SettingsManager.KEY_PROFILE_TARGET_CAPTAIN;
 
 public class ScoreboardSettingsFragment extends SettingsFragmentBase {
 
@@ -33,6 +34,7 @@ public class ScoreboardSettingsFragment extends SettingsFragmentBase {
         setSummary(KEY_PROFILE_LAST_NAME, SettingsManager.getProfileLastName());
         setSummary(KEY_PROFILE_BIRTHDAY, SettingsManager.getProfileBirthDayFormatted());
         setSummary(KEY_PROFILE_CLUB, SettingsManager.getProfileClub());
+        setSummary(KEY_PROFILE_TARGET_CAPTAIN, SettingsManager.getProfileTargetCaptain());
     }
 
     @Override

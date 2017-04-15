@@ -265,7 +265,6 @@
     <string name="last_name">Last name</string>
     <string name="age">Age</string>
     <string name="show_signature">Signature</string>
-    <string name="witness">Witness</string>
     <string name="archer">Archer</string>
     <string name="hits">Hits</string>
     <string name="misses">Misses</string>
@@ -354,4 +353,5 @@
     <string name="keyboard_enabled">Keyboard enabled</string>
     <string name="sort_shots">Sort shots</string>
     <string name="sort_shots_for_spots">Sort shots for spot target faces</string>
+    <string name="target_captain">Target captain</string>
 </resources>
