@@ -114,7 +114,11 @@ public class HtmlUtils {
             html += "<tr class=\"align_center\">";
             html += "<td>" + (end.index + 1) + "</td>";
             int sum = 0;
-            for (Shot shot : end.getSortedShotList()) {
+            final List<Shot> shots = end.getShots();
+            if(SettingsManager.shouldSortTarget(round.getTarget())) {
+                Collections.sort(shots);
+            }
+            for (Shot shot : shots) {
                 html += "<td>";
                 html += getPoints(configuration, shot, round.getTarget());
                 html += "</td>";

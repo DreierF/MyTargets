@@ -28,8 +28,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 
 import org.parceler.Parcel;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.shared.models.Target;
@@ -94,9 +92,8 @@ public class EndRenderer {
 
     public void setShots(List<Shot> shots) {
         boolean calcLayout = rect != null && shotList == null;
-        shotList = new ArrayList<>(shots);
+        shotList = shots;
         oldCoordinate = new PointF[shotList.size()];
-        Collections.sort(shotList);
         if (calcLayout) {
             setRect(rect);
         }
@@ -182,7 +179,6 @@ public class EndRenderer {
         saveCoordinates();
         setRect(rect);
         setSelection(selectedShot, c, radius);
-        Collections.sort(shotList);
         return getAnimator();
     }
 

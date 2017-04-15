@@ -43,10 +43,12 @@ import de.dreier.mytargets.base.fragments.EditableListFragment;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemEndBinding;
 import de.dreier.mytargets.features.scoreboard.ScoreboardActivity;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.statistics.StatisticsActivity;
 import de.dreier.mytargets.features.training.input.InputActivity;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.MobileWearableClient;
@@ -223,7 +225,11 @@ public class RoundFragment extends EditableListFragment<End> {
 
         @Override
         public void bindItem() {
-            binding.shoots.setShots(round.getTarget(), item.getShots());
+            List<Shot> shots = item.getShots();
+            if(SettingsManager.shouldSortTarget(round.getTarget())) {
+                Collections.sort(shots);
+            }
+            binding.shoots.setShots(round.getTarget(), shots);
             binding.end.setText(getString(R.string.passe_n, (item.index + 1)));
         }
     }

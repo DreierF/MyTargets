@@ -25,9 +25,11 @@ import com.annimon.stream.Stream;
 
 import org.parceler.Parcels;
 
+import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.features.settings.SettingsManager;
+import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
@@ -99,9 +101,17 @@ public class MobileWearableClient extends WearableClientBase {
                 break;
             }
         }
+        Target target = round.getTarget();
         round.ends = Stream.of(round.getEnds())
                 .filter(end -> Stream.of(end.getShots())
                         .allMatch(s -> s.scoringRing != Shot.NOTHING_SELECTED))
+                .map(end -> {
+                    End newEnd = new End(end);
+                    if (SettingsManager.shouldSortTarget(target)) {
+                        Collections.sort(newEnd.getShots());
+                    }
+                    return newEnd;
+                })
                 .toList();
         TrainingInfo trainingInfo = new TrainingInfo(training, round);
         sendTrainingInfo(trainingInfo);

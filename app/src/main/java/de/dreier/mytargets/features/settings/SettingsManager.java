@@ -45,6 +45,11 @@ import de.dreier.mytargets.shared.views.TargetViewBase;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 
 public class SettingsManager {
+    private static final SharedPreferences lastUsed = ApplicationInstance
+            .getLastSharedPreferences();
+    private static final SharedPreferences preferences = ApplicationInstance
+            .getSharedPreferences();
+
     public static final String KEY_TIMER_WARN_TIME = "timer_warn_time";
     public static final String KEY_TIMER_WAIT_TIME = "timer_wait_time";
     public static final String KEY_TIMER_SHOOT_TIME = "timer_shoot_time";
@@ -81,10 +86,6 @@ public class SettingsManager {
     private static final String KEY_END_COUNT = "rounds";
     private static final String KEY_INPUT_MODE = "target_mode";
     public static final String KEY_SHOW_MODE = "show_mode";
-    private static final SharedPreferences lastUsed = ApplicationInstance
-            .getLastSharedPreferences();
-    private static final SharedPreferences preferences = ApplicationInstance
-            .getSharedPreferences();
     private static final String KEY_BACKUP_LOCATION = "backup_location";
     public static final String KEY_AGGREGATION_STRATEGY = "aggregation_strategy";
     private static final String KEY_STANDARD_ROUNDS_LAST_USED = "standard_round_last_used";
@@ -93,6 +94,8 @@ public class SettingsManager {
     private static final String KEY_OVERVIEW_SHOW_TOTAL_SCORE = "overview_show_total_score";
     private static final String KEY_OVERVIEW_SHOW_PERCENTAGE = "overview_show_percentage";
     private static final String KEY_OVERVIEW_SHOW_ARROW_AVERAGE = "overview_show_arrow_average";
+    private static final String KEY_OVERVIEW_SHOT_SORTING = "overview_shot_sorting";
+    private static final String KEY_OVERVIEW_SHOT_SORTING_SPOT = "overview_shot_sorting_spot";
 
     public static Long getStandardRound() {
         return (long) lastUsed.getInt(KEY_STANDARD_ROUND, 32);
@@ -499,5 +502,11 @@ public class SettingsManager {
                 .putBoolean(KEY_OVERVIEW_SHOW_PERCENTAGE, configuration.showPercentage)
                 .putBoolean(KEY_OVERVIEW_SHOW_ARROW_AVERAGE, configuration.showAverage)
                 .apply();
+    }
+
+    public static boolean shouldSortTarget(Target target) {
+        return preferences.getBoolean(KEY_OVERVIEW_SHOT_SORTING, true) &&
+                (target.getModel().getFaceCount() == 1 ||
+                        preferences.getBoolean(KEY_OVERVIEW_SHOT_SORTING_SPOT, false));
     }
 }

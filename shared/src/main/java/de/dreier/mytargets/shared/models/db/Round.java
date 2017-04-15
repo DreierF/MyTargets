@@ -30,6 +30,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 
