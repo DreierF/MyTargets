@@ -200,28 +200,21 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
             return true;
         }
 
-        Shot shot = getShotFromPos(x, y);
-        if (shot == null) {
+        if(getCurrentShotIndex() == EndRenderer.NO_SELECTION) {
             return true;
         }
 
-        // If a valid selection was made save it in the end
-        if (getCurrentShotIndex() != EndRenderer.NO_SELECTION
-                && (shots.get(getCurrentShotIndex()).scoringRing != shot.scoringRing
-                || inputMethod == EInputMethod.PLOTTING)) {
-            shots.get(getCurrentShotIndex()).scoringRing = shot.scoringRing;
-            shots.get(getCurrentShotIndex()).x = shot.x;
-            shots.get(getCurrentShotIndex()).y = shot.y;
+        Shot shot = shots.get(getCurrentShotIndex());
+        if(updateShotToPosition(shot, x, y)) {
             endRenderer.setSelection(
                     getCurrentShotIndex(), initAnimationPositions(getCurrentShotIndex()),
                     getSelectedShotCircleRadius());
             invalidate();
-        }
 
-        // If finger is released go to next shoot
-        if (motionEvent.getAction() == MotionEvent.ACTION_UP && isCurrentlySelecting()) {
-            onArrowChanged();
-            return true;
+            // If finger is released go to next shoot
+            if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                onShotSelectionFinished();
+            }
         }
         return true;
     }
@@ -233,7 +226,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
                 && shots.get(getCurrentShotIndex()).scoringRing != Shot.NOTHING_SELECTED;
     }
 
-    protected void onArrowChanged() {
+    protected void onShotSelectionFinished() {
         setCurrentShotIndex(getNextShotIndex(currentShotIndex));
         animateToNewState();
         notifyTargetShotsChanged();
@@ -269,16 +262,6 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         }
     }
 
-    protected Animator getCircleAnimation() {
-        PointF pos = null;
-        if (isCurrentlySelecting()) {
-            pos = initAnimationPositions(getCurrentShotIndex());
-        }
-        int initialSize = getSelectedShotCircleRadius();
-        return endRenderer
-                .getAnimationToSelection(getCurrentShotIndex(), pos, initialSize, endRect);
-    }
-
     protected abstract PointF initAnimationPositions(int i);
 
     protected void animateToNewState() {
@@ -296,6 +279,16 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         if (animation != null) {
             animations.add(animation);
         }
+    }
+
+    protected Animator getCircleAnimation() {
+        PointF pos = null;
+        if (isCurrentlySelecting()) {
+            pos = initAnimationPositions(getCurrentShotIndex());
+        }
+        int initialSize = getSelectedShotCircleRadius();
+        return endRenderer
+                .getAnimationToSelection(getCurrentShotIndex(), pos, initialSize, endRect);
     }
 
     protected void playAnimations(List<Animator> setList) {
@@ -329,13 +322,14 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     /**
-     * Creates a {@link Shot} object given a position
+     * Updates the given Shot to the given position.
      *
+     * @param shot Shot to update
      * @param x X-Coordinate
      * @param y Y-Coordinate
-     * @return Returns a fully populated {@link Shot} object or null if the position is not a valid shot
+     * @return Returns true if the update was successful and false if the position is invalid
      */
-    protected abstract Shot getShotFromPos(float x, float y);
+    protected abstract boolean updateShotToPosition(Shot shot, float x, float y);
 
     protected abstract boolean selectPreviousShots(MotionEvent motionEvent, float x, float y);
 

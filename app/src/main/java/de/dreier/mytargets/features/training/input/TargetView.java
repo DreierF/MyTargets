@@ -155,6 +155,8 @@ public class TargetView extends TargetViewBase {
     private RectF keyboardRect;
     private RectF targetRect;
 
+    private FingerSlipDetector slipDetector = new FingerSlipDetector();
+
     public TargetView(Context context) {
         super(context);
         init();
@@ -367,26 +369,25 @@ public class TargetView extends TargetViewBase {
      * {@inheritDoc}
      */
     @Override
-    protected Shot getShotFromPos(float x, float y) {
-        // Create Shot object
-        Shot s = new Shot();
+    protected boolean updateShotToPosition(Shot s, float x, float y) {
         if (inputMethod == KEYBOARD) {
             if (keyboardRect.contains(x, y)) {
                 int index = (int) (y * selectableZones.size() / keyboardRect.height());
                 index = Math.min(Math.max(0, index), selectableZones.size() - 1);
                 s.scoringRing = selectableZones.get(index).index;
             } else {
-                return null;
+                return false;
             }
-        } else { // Handle via target
+        } else {
             pt[0] = x;
             pt[1] = y;
             fullExtendedMatrixInverse.mapPoints(pt);
             s.x = pt[0];
             s.y = pt[1];
             s.scoringRing = targetDrawable.getZoneFromPoint(s.x, s.y);
+            slipDetector.addShot(s.x, s.y);
         }
-        return s;
+        return true;
     }
 
     @Override
@@ -437,9 +438,19 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    protected void onArrowChanged() {
+    protected void onShotSelectionFinished() {
+        // Replace shot position with final position from slip detector
+        PointF position = slipDetector.getFinalPosition();
+        Shot shot = shots.get(getCurrentShotIndex());
+        if (position != null) {
+            shot.x = position.x;
+            shot.y = position.y;
+            shot.scoringRing = targetDrawable.getZoneFromPoint(shot.x, shot.y);
+            slipDetector.reset();
+        }
+
         if (!arrowNumbering) {
-            super.onArrowChanged();
+            super.onShotSelectionFinished();
         } else {
 
             // Prepare grid view
@@ -458,13 +469,13 @@ public class TargetView extends TargetViewBase {
             gridView.setAdapter(
                     new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, numbers));
             gridView.setNumColumns(4);
-            gridView.setOnItemClickListener((parent, view, position, id) -> {
+            gridView.setOnItemClickListener((parent, view, pos, id) -> {
                 if (getCurrentShotIndex() < shots.size()) {
-                    shots.get(getCurrentShotIndex()).arrowNumber = numbers.get(position);
+                    shot.arrowNumber = numbers.get(pos);
                 }
                 dialog.dismiss();
                 setOnTouchListener(this);
-                super.onArrowChanged();
+                super.onShotSelectionFinished();
             });
             // Disable touch input while dialog is visible
             setOnTouchListener(null);
