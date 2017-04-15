@@ -76,14 +76,6 @@ public class Score {
         return reachedScore + "/" + totalScore;
     }
 
-    public String format(boolean appendPercent) {
-        if (appendPercent && totalScore > 0) {
-            return reachedScore + "/" + totalScore + " (" + getPercent() + ")";
-        } else {
-            return toString();
-        }
-    }
-
     public String format(Configuration config) {
         if (!config.showReachedScore) {
             return "";

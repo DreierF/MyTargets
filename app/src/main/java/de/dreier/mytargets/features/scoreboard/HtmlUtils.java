@@ -359,17 +359,25 @@ public class HtmlUtils {
             info.addLine(R.string.club, club);
         }
         if (rounds.size() > 1) {
-            info.addLine(R.string.points, training.getReachedScore().format(true));
+            info.addLine(R.string.points, training.getReachedScore().format(SettingsManager.getScoreConfiguration()));
         }
         info.addLine(R.string.date, training.getFormattedDate());
     }
 
     private static String getSignature() {
+        String archer = SettingsManager.getProfileFullName();
+        if(archer.trim().isEmpty()) {
+            archer = get(R.string.archer);
+        }
+        String targetCaptain = SettingsManager.getProfileTargetCaptain();
+        if(targetCaptain.trim().isEmpty()) {
+            targetCaptain = get(R.string.target_captain);
+        }
         return "<div style=\"border-top: 2px solid black; width: 30%;margin-right: 5%;margin-top: 100px;float:left;\">" +
-                get(R.string.witness)
+                targetCaptain
                 + "</div>" +
                 "<div style=\"border-top: 2px solid black; width: 30%;float:left; margin-top: 100px;\">" +
-                get(R.string.archer)
+                archer
                 + "</div>";
     }
 
