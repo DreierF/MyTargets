@@ -85,6 +85,11 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
         }
     }
 
+    public End(End end) {
+        this.index = end.index;
+        this.shots = new ArrayList<>(end.getShots());
+    }
+
     @NonNull
     @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "shots")
     public List<Shot> getShots() {
@@ -110,12 +115,6 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
 
     public void setShots(List<Shot> shots) {
         this.shots = shots;
-    }
-
-    public List<Shot> getSortedShotList() {
-        final List<Shot> shots = getShots();
-        Collections.sort(shots);
-        return shots;
     }
 
     @NonNull

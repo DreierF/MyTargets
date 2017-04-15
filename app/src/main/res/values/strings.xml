@@ -352,4 +352,6 @@
     <string name="delete_image">Delete image?</string>
     <string name="keyboard_type">Keyboard type</string>
     <string name="keyboard_enabled">Keyboard enabled</string>
+    <string name="sort_shots">Sort shots</string>
+    <string name="sort_shots_for_spots">Sort shots for spot target faces</string>
 </resources>

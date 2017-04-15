@@ -23,23 +23,38 @@
             <PreferenceCategory android:title="@string/score">
                 <CheckBoxPreference
                     android:defaultValue="true"
+                    android:icon="@drawable/ic_reached_score_grey600_24dp"
                     android:key="overview_show_reached_score"
                     android:title="@string/show_reached_score"/>
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:dependency="overview_show_reached_score"
+                    android:icon="@drawable/ic_maximum_score_grey600_24dp"
                     android:key="overview_show_total_score"
                     android:title="@string/show_total_score"/>
                 <CheckBoxPreference
                     android:defaultValue="false"
                     android:dependency="overview_show_reached_score"
+                    android:icon="@drawable/ic_percentage_grey600_24dp"
                     android:key="overview_show_percentage"
                     android:title="@string/show_percentage"/>
                 <CheckBoxPreference
                     android:defaultValue="false"
                     android:dependency="overview_show_reached_score"
+                    android:icon="@drawable/ic_arrow_diameter_grey600_24dp"
                     android:key="overview_show_arrow_average"
                     android:title="@string/show_arrow_average"/>
+                <SwitchPreference
+                    android:defaultValue="@bool/preference_true"
+                    android:icon="@drawable/ic_sorting_grey600_24dp"
+                    android:key="overview_shot_sorting"
+                    android:title="@string/sort_shots"/>
+                <SwitchPreference
+                    android:defaultValue="@bool/preference_false"
+                    android:dependency="overview_shot_sorting"
+                    android:icon="@drawable/ic_target_spot_face_grey600_24dp"
+                    android:key="overview_shot_sorting_spot"
+                    android:title="@string/sort_shots_for_spots"/>
             </PreferenceCategory>
         </PreferenceScreen>
         <PreferenceScreen
