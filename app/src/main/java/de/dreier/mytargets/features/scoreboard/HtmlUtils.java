@@ -205,7 +205,7 @@ public class HtmlUtils {
             info.addLine(R.string.distance, round.distance);
         }
         if (!equals[1]) {
-            info.addLine(R.string.target_face, round.getTarget());
+            info.addLine(R.string.target_face, round.getTarget().getName());
         }
         if (!round.comment.isEmpty()) {
             info.addLine(R.string.comment, round.comment);
@@ -329,7 +329,7 @@ public class HtmlUtils {
                 info.addLine(R.string.distance, round.distance);
             }
             if (equals[1]) {
-                info.addLine(R.string.target_face, round.getTarget());
+                info.addLine(R.string.target_face, round.getTarget().getName());
             }
         }
     }

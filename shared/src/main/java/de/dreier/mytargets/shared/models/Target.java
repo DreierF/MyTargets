@@ -81,7 +81,9 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
     public boolean equals(Object another) {
         return another instanceof Target &&
                 getClass().equals(another.getClass()) &&
-                id == ((Target) another).id;
+                id == ((Target) another).id &&
+                size.equals(((Target) another).size) &&
+                scoringStyle == ((Target) another).scoringStyle;
     }
 
     public TargetModelBase getModel() {
