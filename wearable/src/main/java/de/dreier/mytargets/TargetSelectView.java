@@ -70,7 +70,7 @@ public class TargetSelectView extends TargetViewBase {
         int curZone = getCurrentlySelectedZone();
         for (int i = 0; i < selectableZones.size(); i++) {
             PointF coordinate = getCircularCoordinates(i);
-            if(i != curZone) {
+            if (i != curZone) {
                 circle.draw(canvas, coordinate.x, coordinate.y, selectableZones.get(i).index,
                         17, getCurrentShotIndex(), null, ambientMode);
             }
@@ -135,9 +135,8 @@ public class TargetSelectView extends TargetViewBase {
     }
 
     @Override
-    protected Shot getShotFromPos(float x, float y) {
+    protected boolean updateShotToPosition(Shot shot, float x, float y) {
         int zones = selectableZones.size();
-        Shot s = new Shot(getCurrentShotIndex());
 
         double xDiff = x - radius;
         double yDiff = y - radius;
@@ -150,14 +149,11 @@ public class TargetSelectView extends TargetViewBase {
                 degree += 360.0;
             }
             int index = (int) (zones * ((360.0 - degree) / 360.0));
-            s.scoringRing = selectableZones.get(index).index;
+            shot.scoringRing = selectableZones.get(index).index;
+            return true;
         }
 
-        if (s.scoringRing == Shot.NOTHING_SELECTED) {
-            // When nothing is selected do nothing
-            return null;
-        }
-        return s;
+        return false;
     }
 
     @Override
