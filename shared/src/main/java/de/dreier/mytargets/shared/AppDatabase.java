@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.shared;
 
-import android.content.SharedPreferences;
 import android.database.Cursor;
 
 import com.raizlabs.android.dbflow.annotation.Database;
@@ -91,17 +90,18 @@ public class AppDatabase {
 
         @Override
         public void migrate(DatabaseWrapper database) {
+            database.execSQL(
+                    "CREATE TABLE IF NOT EXISTS VISIER ( _id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "bow REFERENCES BOW ON DELETE CASCADE," +
+                            "distance INTEGER," +
+                            "setting TEXT);");
             int[] valuesMetric = {10, 15, 18, 20, 25, 30, 40, 50, 60, 70, 90};
             for (String table : new String[]{"ROUND", "VISIER"}) {
                 for (int i = 10; i >= 0; i--) {
                     database.execSQL("UPDATE " + table + " SET distance=" +
-                            valuesMetric[i] + " WHERE distance=" +
-                            i);
+                            valuesMetric[i] + " WHERE distance=" + i);
                 }
             }
-            SharedPreferences prefs = SharedApplicationInstance.getSharedPreferences();
-            int defaultDist = valuesMetric[prefs.getInt("distance", 0)];
-            prefs.edit().putInt("distance", defaultDist).apply();
         }
     }
 
@@ -143,7 +143,6 @@ public class AppDatabase {
                 }
             }
             cur.close();
-                    }
-                    }
-
+        }
+    }
 }
