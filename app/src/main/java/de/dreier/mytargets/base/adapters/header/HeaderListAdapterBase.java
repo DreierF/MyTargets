@@ -145,6 +145,9 @@ public abstract class HeaderListAdapterBase<P extends IIdProvider, C extends IId
         }
         H header = headersList.get(headerIndex);
         header.remove(item);
+        if(header.children.isEmpty()) {
+            headersList.remove(header);
+        }
     }
 
     @Override
@@ -222,14 +225,9 @@ public abstract class HeaderListAdapterBase<P extends IIdProvider, C extends IId
 
         /**
          * Returns the number of items contained in this header including the header itself.
-         * This number is most of the time greater or equal 1.
-         * BUT CAUTION: during the deletion of an item (while the Snackbar is shown) it will get 0.
-         * @return
+         * This number is always greater or equal 1.
          */
         int getTotalItemCount() {
-            if (children.size() < 1) {
-                return 0;
-            }
             return 1 + children.size();
         }
     }
