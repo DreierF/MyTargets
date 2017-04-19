@@ -25,11 +25,6 @@ import android.view.View;
  * {@link #addFlags(int)}, all of which are package private. This is currently
  * the only way to automatically detect when a ViewHolder has been rebound
  * to a new item.
- * <p>
- * If you intend to subclass for the purpose of interfacing with
- * a {@link de.dreier.mytargets.utils.multiselector.MultiSelector},
- * use {@link de.dreier.mytargets.utils.multiselector.MultiSelectorBindingHolder}
- * instead.
  */
 public abstract class RebindReportingHolder extends RecyclerView.ViewHolder {
 
