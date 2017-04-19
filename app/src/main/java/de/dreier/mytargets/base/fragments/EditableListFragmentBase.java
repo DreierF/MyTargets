@@ -25,13 +25,13 @@ import android.view.MenuItem;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.raizlabs.android.dbflow.structure.Model;
 
 import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.ListAdapterBase;
 import de.dreier.mytargets.shared.models.IIdSettable;
+import de.dreier.mytargets.shared.models.IRecursiveModel;
 import de.dreier.mytargets.utils.MultiSelectorBundler;
 import de.dreier.mytargets.utils.multiselector.MultiSelector;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
@@ -40,7 +40,7 @@ import icepick.State;
 /**
  * @param <T> Model of the item which is managed within the fragment.
  */
-public abstract class EditableListFragmentBase<T extends IIdSettable & Model,
+public abstract class EditableListFragmentBase<T extends IIdSettable & IRecursiveModel,
         U extends ListAdapterBase<?, T>> extends ListFragmentBase<T, U> {
 
     public static final String ITEM_ID = "id";
@@ -132,6 +132,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model,
     private void remove(List<T> deleted) {
         FirebaseAnalytics.getInstance(getContext()).logEvent("delete", null);
         for (T item : deleted) {
+            item.delete();
             adapter.removeItem(item);
         }
         adapter.notifyDataSetChanged();
@@ -140,6 +141,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model,
         Snackbar.make(getView().findViewById(R.id.coordinatorLayout), message, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, v -> {
                     for (T item : deleted) {
+                        item.saveRecursively();
                         adapter.addItem(item);
                     }
                     deleted.clear();
