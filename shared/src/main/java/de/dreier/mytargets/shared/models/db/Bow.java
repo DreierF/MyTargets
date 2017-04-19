@@ -38,13 +38,14 @@ import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IImageProvider;
+import de.dreier.mytargets.shared.models.IRecursiveModel;
 import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.utils.typeconverters.EBowTypeConverter;
 import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter;
 
 @Parcel
 @Table(database = AppDatabase.class)
-public class Bow extends BaseModel implements IImageProvider, IIdSettable, Comparable<Bow> {
+public class Bow extends BaseModel implements IImageProvider, IIdSettable, Comparable<Bow>, IRecursiveModel {
 
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
@@ -134,7 +135,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
                 .querySingle();
     }
 
-    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "sightMarks")
+    @OneToMany(methods = {}, variableName = "sightMarks")
     public List<SightMark> getSightMarks() {
         if (sightMarks == null) {
             sightMarks = Stream.of(SQLite.select()
@@ -147,7 +148,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
         return sightMarks;
     }
 
-    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "images")
+    @OneToMany(methods = {}, variableName = "images")
     public List<BowImage> getImages() {
         if (images == null) {
             images = SQLite.select()
@@ -220,6 +221,13 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
     }
 
     @Override
+    public void delete() {
+        getSightMarks().forEach(BaseModel::delete);
+        getImages().forEach(BaseModel::delete);
+        super.delete();
+    }
+
+    @Override
     public int compareTo(@NonNull Bow another) {
         final int result = getName().compareTo(another.getName());
         return result == 0 ? (int) (id - another.id) : result;
@@ -245,5 +253,10 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
                 !TextUtils.isEmpty(string) &&
                 (!type.showButton() || !TextUtils.isEmpty(button)) &&
                 !TextUtils.isEmpty(description);
+    }
+
+    @Override
+    public void saveRecursively() {
+        save();
     }
 }

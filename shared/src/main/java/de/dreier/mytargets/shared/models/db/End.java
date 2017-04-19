@@ -41,13 +41,14 @@ import java.util.Map;
 
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.IIdSettable;
+import de.dreier.mytargets.shared.models.IRecursiveModel;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.typeconverters.DateTimeConverter;
 
 @Parcel
 @Table(database = AppDatabase.class)
-public class End extends BaseModel implements IIdSettable, Comparable<End> {
+public class End extends BaseModel implements IIdSettable, Comparable<End>, IRecursiveModel {
 
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
@@ -83,7 +84,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
     }
 
     @NonNull
-    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "shots")
+    @OneToMany(methods = {}, variableName = "shots")
     public List<Shot> getShots() {
         if (shots == null) {
             shots = SQLite.select()
@@ -94,7 +95,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
         return shots;
     }
 
-    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "images")
+    @OneToMany(methods = {}, variableName = "images")
     public List<EndImage> getImages() {
         if (images == null) {
             images = SQLite.select()
@@ -218,6 +219,8 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
 
     @Override
     public void delete() {
+        getShots().forEach(BaseModel::delete);
+        getImages().forEach(BaseModel::delete);
         super.delete();
         updateEndIndicesForRound();
     }
@@ -226,7 +229,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
         // FIXME very inefficient
         int i = 0;
         Round round = Round.get(roundId);
-        if(round == null) {
+        if (round == null) {
             return;
         }
         for (End end : round.getEnds()) {
@@ -253,4 +256,8 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
                 .anyMatch(s -> s.scoringRing == Shot.NOTHING_SELECTED) && getImages().isEmpty();
     }
 
+    @Override
+    public void saveRecursively() {
+        save();
+    }
 }

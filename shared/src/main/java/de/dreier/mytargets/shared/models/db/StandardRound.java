@@ -109,7 +109,7 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
         return desc;
     }
 
-    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "rounds")
+    @OneToMany(methods = {}, variableName = "rounds")
     public List<RoundTemplate> getRounds() {
         if (rounds == null) {
             rounds = SQLite.select()
@@ -183,5 +183,11 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
                 s.save(databaseWrapper);
             }
         }
+    }
+
+    @Override
+    public void delete() {
+        getRounds().forEach(BaseModel::delete);
+        super.delete();
     }
 }

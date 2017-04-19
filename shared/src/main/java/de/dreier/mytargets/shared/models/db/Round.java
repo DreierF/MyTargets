@@ -31,11 +31,11 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import org.parceler.Parcel;
 
 import java.util.List;
-import java.util.Timer;
 
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.IIdSettable;
+import de.dreier.mytargets.shared.models.IRecursiveModel;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.LongUtils;
@@ -43,7 +43,7 @@ import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter;
 
 @Parcel
 @Table(database = AppDatabase.class)
-public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
+public class Round extends BaseModel implements IIdSettable, Comparable<Round>, IRecursiveModel {
 
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
@@ -122,6 +122,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
 
     @Override
     public void delete() {
+        getEnds().forEach(End::delete);
         super.delete();
         updateRoundIndicesForTraining();
     }
@@ -130,7 +131,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
         // TODO very inefficient
         int i = 0;
         Training training = Training.get(trainingId);
-        if(training == null) {
+        if (training == null) {
             return; //FIXME This should not happen, but does for some users
         }
         for (Round r : training.getRounds()) {
@@ -165,7 +166,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
                 id.equals(((Round) another).id);
     }
 
-    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "ends")
+    @OneToMany(methods = {}, variableName = "ends")
     public List<End> getEnds() {
         if (ends == null) {
             ends = SQLite.select()
@@ -203,5 +204,14 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
 
     public Training getTraining() {
         return Training.get(trainingId);
+    }
+
+    @Override
+    public void saveRecursively() {
+        save();
+        for (End end : getEnds()) {
+            end.roundId = id;
+            end.save();
+        }
     }
 }

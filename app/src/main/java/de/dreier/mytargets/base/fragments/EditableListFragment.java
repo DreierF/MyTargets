@@ -15,14 +15,13 @@
 
 package de.dreier.mytargets.base.fragments;
 
-import com.raizlabs.android.dbflow.structure.Model;
-
 import org.parceler.Parcels;
 
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.shared.models.IIdSettable;
+import de.dreier.mytargets.shared.models.IRecursiveModel;
 
-public abstract class EditableListFragment<T extends IIdSettable & Model & Comparable<T>> extends EditableListFragmentBase<T, SimpleListAdapterBase<T>> {
+public abstract class EditableListFragment<T extends IIdSettable & IRecursiveModel & Comparable<T>> extends EditableListFragmentBase<T, SimpleListAdapterBase<T>> {
 
     protected final void onSelected(T item) {
         if (listener == null) {
