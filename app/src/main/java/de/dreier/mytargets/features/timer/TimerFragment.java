@@ -75,7 +75,7 @@ public class TimerFragment extends TimerFragmentBase {
     @Override
     protected void applyStatus(ETimerState status) {
         binding.getRoot().setBackgroundResource(status.color);
-        if (Utils.isLollipop()) {
+        if (Utils.isLollipop() && getActivity() != null) {
             Window window = getActivity().getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(status.color));
