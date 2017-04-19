@@ -22,6 +22,6 @@ import de.dreier.mytargets.shared.AppDatabase;
 
 class DbBackupHelper extends FileBackupHelper {
     public DbBackupHelper(Context ctx) {
-        super(ctx, ctx.getDatabasePath(AppDatabase.NAME).getAbsolutePath());
+        super(ctx, ctx.getDatabasePath(AppDatabase.DATABASE_FILE_NAME).getAbsolutePath());
     }
 }

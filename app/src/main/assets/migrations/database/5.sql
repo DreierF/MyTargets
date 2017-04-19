@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS ARROW;
 CREATE TABLE IF NOT EXISTS ARROW (
   _id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT,
@@ -5,7 +6,7 @@ CREATE TABLE IF NOT EXISTS ARROW (
   material TEXT,
   spine TEXT,
   weight TEXT,
-  tip_weight TEXT,
+  tip_wight TEXT,
   vanes TEXT,
   nock TEXT,
   comment TEXT,

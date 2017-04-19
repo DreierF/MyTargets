@@ -38,20 +38,21 @@ public class SharedApplicationInstance extends Application {
 
     @Override
     public void onCreate() {
-        if (BuildConfig.DEBUG) {
-            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                    .detectAll()
-                    .penaltyLog()
-                    .build());
-            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                    .detectLeakedSqlLiteObjects()
-                    .detectLeakedClosableObjects()
-                    .penaltyLog()
-                    .build());
-            Timber.plant(new Timber.DebugTree());
-        }
         super.onCreate();
         context = getApplicationContext();
+    }
+
+    protected void enableDebugLogging() {
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .detectLeakedSqlLiteObjects()
+                .detectLeakedClosableObjects()
+                .penaltyLog()
+                .build());
+        Timber.plant(new Timber.DebugTree());
     }
 
     public static SharedPreferences getSharedPreferences() {
