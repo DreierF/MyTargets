@@ -102,6 +102,7 @@ public class AppDatabase {
                             valuesMetric[i] + " WHERE distance=" + i);
                 }
             }
+            database.execSQL("ALTER TABLE BOW ADD COLUMN height TEXT DEFAULT '';");
         }
     }
 
