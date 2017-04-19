@@ -145,7 +145,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
         training = Training.get(trainingId);
-        List<Round> rounds = training.getRounds();
+        List<Round> rounds = training.getRounds(); //FIXME can be null!?
         return () -> {
             // Hide fab for standard rounds
             supportsDeletion = training.standardRoundId == null;
@@ -167,6 +167,13 @@ public class TrainingFragment extends EditableListFragment<Round> {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.statistics_scoresheet, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.action_scoreboard).setVisible(training != null);
+        menu.findItem(R.id.action_statistics).setVisible(training != null);
     }
 
     @Override
