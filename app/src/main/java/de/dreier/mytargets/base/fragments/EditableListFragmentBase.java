@@ -146,23 +146,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & IRecursiv
                     }
                     deleted.clear();
                 })
-                .addCallback(
-                        new Snackbar.Callback() {
-                            @Override
-                            public void onDismissed(Snackbar snackbar, int event) {
-                                // TODO delete directly on remove and restore item in case of undo
-                                for (T item : deleted) {
-                                    item.delete();
-                                }
-                                if (isAdded()) {
-                                    reloadData();
-                                }
-                            }
-
-                            @Override
-                            public void onShown(Snackbar snackbar) {
-                            }
-                        }).show();
+                .show();
     }
 
     private void updateTitle() {

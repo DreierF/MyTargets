@@ -39,13 +39,14 @@ import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.IIdSettable;
+import de.dreier.mytargets.shared.models.IRecursiveModel;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.utils.typeconverters.EWeatherConverter;
 import de.dreier.mytargets.shared.utils.typeconverters.LocalDateConverter;
 
 @Parcel
 @Table(database = AppDatabase.class)
-public class Training extends BaseModel implements IIdSettable, Comparable<Training> {
+public class Training extends BaseModel implements IIdSettable, Comparable<Training>, IRecursiveModel {
 
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
@@ -59,7 +60,8 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
 
     @ForeignKey(tableClass = StandardRound.class, references = {
             @ForeignKeyReference(columnName = "standardRound", columnType = Long.class, foreignKeyColumnName = "_id")},
-            onDelete = ForeignKeyAction.SET_NULL) // FIXME old migrations still have NO ACTION in here
+            onDelete = ForeignKeyAction.SET_NULL)
+    // FIXME old migrations still have NO ACTION in here
     public Long standardRoundId;
 
     @ForeignKey(tableClass = Bow.class, references = {
@@ -130,7 +132,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
         location = env.location;
     }
 
-    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "rounds")
+    @OneToMany(methods = {}, variableName = "rounds")
     public List<Round> getRounds() {
         if (rounds == null) {
             rounds = SQLite.select()
@@ -191,12 +193,16 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
         }
     }
 
+    @Override
+    public void delete() {
+        getRounds().forEach(Round::delete);
+        super.delete();
+    }
+
     public Training ensureLoaded() {
         List<Round> rounds = getRounds();
         for (Round round : rounds) {
-            for (End end : round.getEnds()) {
-                end.getShots();
-            }
+            round.getEnds().forEach(End::getShots);
         }
         return this;
     }
@@ -211,6 +217,15 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
             round.ends = new ArrayList<>();
             round.save();
             rounds.add(round);
+        }
+    }
+
+    @Override
+    public void saveRecursively() {
+        super.save();
+        for (Round s : getRounds()) {
+            s.trainingId = id;
+            s.saveRecursively();
         }
     }
 }

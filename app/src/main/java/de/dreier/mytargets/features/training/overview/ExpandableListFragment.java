@@ -18,20 +18,19 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.raizlabs.android.dbflow.structure.Model;
-
 import java.util.List;
 
 import de.dreier.mytargets.base.adapters.header.ExpandableListAdapter;
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase;
 import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.shared.models.IIdSettable;
+import de.dreier.mytargets.shared.models.IRecursiveModel;
 import de.dreier.mytargets.shared.utils.LongUtils;
 
 /**
  * Shows all rounds of one training day
  */
-public abstract class ExpandableListFragment<H extends IIdProvider, C extends IIdSettable & Model>
+public abstract class ExpandableListFragment<H extends IIdProvider, C extends IIdSettable & IRecursiveModel>
         extends EditableListFragmentBase<C, ExpandableListAdapter<H, C>> {
 
     private static final String KEY_EXPANDED = "expanded";
