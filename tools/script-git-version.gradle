@@ -31,4 +31,5 @@ ext {
             .replace("v", "")
             .replace("_b", "-Beta")
             .replace("_rc", "-RC")
+    gitBranchName = git.branch.getCurrent().name
 }

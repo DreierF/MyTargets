@@ -88,6 +88,6 @@ allprojects {
     }
 }
 
-apply from: "tools/script-crowdin.gradle"
 apply from: "tools/script-git-version.gradle"
+apply from: "tools/script-crowdin.gradle"
 apply from: "tools/script-dependency-updates.gradle"
