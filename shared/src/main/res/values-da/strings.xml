@@ -26,7 +26,7 @@
   <string name="cloudy">Skyet</string>
   <string name="light_rain">Let regn</string>
   <string name="rain">Rainy</string>
-  <string name="round_desc">%1$s: %2$d × %3$d pile (%4$s ansigt)</string>
+  <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
   <string name="mini">Mini</string>
   <string name="small">Lille</string>
   <string name="medium">Mellem</string>

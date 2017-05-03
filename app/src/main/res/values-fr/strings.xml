@@ -242,7 +242,7 @@
   <string name="last_name">Nom</string>
   <string name="age">Age</string>
   <string name="show_signature">Signature</string>
-  <string name="witness">Témoin</string>
+  <string name="witness">Witness</string>
   <string name="archer">Archer</string>
   <string name="hits">Marquées</string>
   <string name="misses">Manquées</string>
@@ -275,11 +275,11 @@
   <string name="backup_location">Emplacement de la sauvegarde</string>
   <string name="internal_storage">Disque dur interne</string>
   <string name="automatic_backup">Sauvegarde automatique</string>
-  <string name="restoring">Restauration de la sauvegarde&#8230;</string>
+  <string name="restoring">Restauration de la sauvegarde…</string>
   <string name="restore_failed">Echec de la restauration</string>
   <string name="delete_failed">Echec de la suppression</string>
   <string name="backup_restore_desc">Sauvegarde et restauration des données de l\'app</string>
-  <string name="exporting">Exportation&#8230;</string>
+  <string name="exporting">Exportation…</string>
   <string name="loading_backups_failed">Échec de chargement des sauvegardes !</string>
   <string name="external_storage">Disque dur externe</string>
   <string name="backup_interval">Intervalle de sauvegarde</string>
@@ -303,7 +303,7 @@
   <string name="intro_title_track_training_progress">Oublier la feuille de scores !</string>
   <string name="intro_description_track_training_progress">With exact arrow plotting,\nyou can get more useful insights\nout of your training data.</string>
   <string name="intro_title_everything_in_one_place">Tout ce qu\'il vous faut\nen un endroit</string>
-  <string name="intro_description_everything_in_one_place">Including bow-, arrow-\nand sightmark-management,\narchery timer, statistics \nand much more&#8230;</string>
+  <string name="intro_description_everything_in_one_place">Including bow-, arrow-\nand sightmark-management,\narchery timer, statistics \nand much more…</string>
   <string name="average_arrow_score_per_end">Average arrow score per end</string>
   <string name="show_end">Affichage sur la volée</string>
   <string name="show_round">Affichage sur la serie</string>

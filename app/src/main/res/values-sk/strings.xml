@@ -256,7 +256,7 @@
   <string name="last_name">Priezvisko</string>
   <string name="age">Vek</string>
   <string name="show_signature">Podpis</string>
-  <string name="witness">Svedok</string>
+  <string name="witness">Witness</string>
   <string name="archer">Lukostrelec</string>
   <string name="hits">Zásahov</string>
   <string name="misses">Minutí</string>
@@ -289,11 +289,11 @@
   <string name="backup_location">Umiestnenie zálohy</string>
   <string name="internal_storage">Vnútorné úložisko</string>
   <string name="automatic_backup">Automatické zálohovanie</string>
-  <string name="restoring">Obnova zo zálohy&#8230;</string>
+  <string name="restoring">Obnova zo zálohy…</string>
   <string name="restore_failed">Obnova zlyhala</string>
   <string name="delete_failed">Zmazanie zlyhalo</string>
   <string name="backup_restore_desc">Zálohovanie a obnovenie údajov aplikácie</string>
-  <string name="exporting">Exportuje&#8230;</string>
+  <string name="exporting">Exportuje…</string>
   <string name="loading_backups_failed">Načítanie záloh zlyhalo!</string>
   <string name="external_storage">Externé úložisko</string>
   <string name="backup_interval">Interval zálohovania</string>
@@ -317,7 +317,7 @@
   <string name="intro_title_track_training_progress">Zabudnite na papierové bodovačky!</string>
   <string name="intro_description_track_training_progress">S presným vykreslením polohy šípu,\nmôžete získať väčší prehľad\nz vašich tréningových údajov.</string>
   <string name="intro_title_everything_in_one_place">Všetko, čo potrebujete\nna jednom mieste</string>
-  <string name="intro_description_everything_in_one_place">Vrátane správy - luku\n - šípov a zameriavača,\nlukostreleckých hodín, štatistiky \na oveľa viac&#8230;</string>
+  <string name="intro_description_everything_in_one_place">Vrátane správy - luku\n - šípov a zameriavača,\nlukostreleckých hodín, štatistiky \na oveľa viac…</string>
   <string name="average_arrow_score_per_end">Priemerné skóre šípov za sadu</string>
   <string name="show_end">Zobraziť sadu</string>
   <string name="show_round">Zobraziť kolo</string>

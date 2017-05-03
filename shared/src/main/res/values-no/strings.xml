@@ -26,7 +26,7 @@
   <string name="cloudy">Overskyet</string>
   <string name="light_rain">Lett regn</string>
   <string name="rain">Regnfullt</string>
-  <string name="round_desc">%1$s: %2$d × %3$d piler (%4$s blink)</string>
+  <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
   <string name="mini">Mini</string>
   <string name="small">Liten</string>
   <string name="medium">Medium</string>

@@ -26,7 +26,7 @@
   <string name="cloudy">Bulutlu</string>
   <string name="light_rain">Hafif Yağmur</string>
   <string name="rain">Yağmurlu</string>
-  <string name="round_desc">%1$s: %2$d × %3$d ok (%4$s hedef yüzü)</string>
+  <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
   <string name="mini">Mini</string>
   <string name="small">Küçük</string>
   <string name="medium">Orta</string>

@@ -289,11 +289,11 @@
   <string name="backup_location">Umístění záloh</string>
   <string name="internal_storage">Vnitřní úložiště</string>
   <string name="automatic_backup">Automatická záloha</string>
-  <string name="restoring">Obnovení zálohy&#8230;</string>
+  <string name="restoring">Obnovení zálohy…</string>
   <string name="restore_failed">Obnovení selhalo</string>
   <string name="delete_failed">Odstranění selhalo</string>
   <string name="backup_restore_desc">Záloha a obnovení dat aplikace</string>
-  <string name="exporting">Exportování&#8230;</string>
+  <string name="exporting">Exportování…</string>
   <string name="loading_backups_failed">Načtení zálohy selhalo!</string>
   <string name="external_storage">Externí úložiště</string>
   <string name="backup_interval">Plán zálohování</string>
@@ -303,7 +303,7 @@
   <string name="connection_failed">Připojení selhalo!</string>
   <string name="shooting_indoor">Halové střílení</string>
   <string name="bow_rest_vertical_position">Svislá pozice</string>
-  <string name="bow_rest">Odpočívat</string>
+  <string name="bow_rest">Zakládka</string>
   <string name="bow_rest_horizontal_position">Vodorovná pozice</string>
   <string name="bow_cam_settings">Nastavení foťáku</string>
   <string name="bow_letoff_weight">Celková váha</string>
@@ -317,7 +317,7 @@
   <string name="intro_title_track_training_progress">Zapomeňte na papírovou výsledkovou listinu!</string>
   <string name="intro_description_track_training_progress">S přesným průměrem zásahů,\nzískáte více užitečných informací\nz vašeho tréninku.</string>
   <string name="intro_title_everything_in_one_place">Vše, co potřebujete\nna jednom místě</string>
-  <string name="intro_description_everything_in_one_place">Včetně nastavení luku,\nšípu a zaměřovače,\nlukostřelecké časomíry, statistiky \na mnoho dalšího&#8230;</string>
+  <string name="intro_description_everything_in_one_place">Včetně nastavení luku,\nšípu a zaměřovače,\nlukostřelecké časomíry, statistiky \na mnoho dalšího…</string>
   <string name="average_arrow_score_per_end">Průměr zásahů na sadu</string>
   <string name="show_end">Zobrazit sadu</string>
   <string name="show_round">Zobrazit kolo</string>
@@ -337,6 +337,6 @@
   <string name="show_total_score">Zobrazit celkové skóre</string>
   <string name="show_percentage">Zobrazit procenta</string>
   <string name="show_arrow_average">Zobrazit průměr na šíp</string>
-  <string name="image_deleted">Image deleted</string>
-  <string name="delete_image">Delete image?</string>
+  <string name="image_deleted">Obrázek smazán</string>
+  <string name="delete_image">Smazat obrázek?</string>
 </resources>

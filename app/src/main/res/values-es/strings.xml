@@ -242,7 +242,7 @@
   <string name="last_name">Apellido(s)</string>
   <string name="age">Edad</string>
   <string name="show_signature">Firma</string>
-  <string name="witness">Testigo</string>
+  <string name="witness">Witness</string>
   <string name="archer">Arquero</string>
   <string name="hits">Aciertos</string>
   <string name="misses">Fallos</string>
@@ -275,11 +275,11 @@
   <string name="backup_location">Ubicación de la copia de seguridad</string>
   <string name="internal_storage">Almacenamiento interno</string>
   <string name="automatic_backup">Copia de seguridad automática</string>
-  <string name="restoring">Restaurando Copia de Seguridad&#8230;</string>
+  <string name="restoring">Restaurando Copia de Seguridad…</string>
   <string name="restore_failed">Restauración fallida</string>
   <string name="delete_failed">Error al borrar</string>
   <string name="backup_restore_desc">Copiar y restaurar los datos de la aplicación</string>
-  <string name="exporting">Exportando&#8230;</string>
+  <string name="exporting">Exportando…</string>
   <string name="loading_backups_failed">Error al cargar copias de seguridad!</string>
   <string name="external_storage">Almacenamiento externo</string>
   <string name="backup_interval">Intervalo de copia de seguridad</string>
@@ -303,7 +303,7 @@
   <string name="intro_title_track_training_progress">¡Olvídate de las hojas de puntos de papel!</string>
   <string name="intro_description_track_training_progress">Con flecha exacta trazando, \n te puede ser más útil insights\nout de sus datos de entrenamiento.</string>
   <string name="intro_title_everything_in_one_place">Todo lo que necesitas \n en un lugar</string>
-  <string name="intro_description_everything_in_one_place">Incluyendo arco - flecha-\nand sightmark-gestión, \narchery timer, estadísticas \nand mucho más&#8230;</string>
+  <string name="intro_description_everything_in_one_place">Incluyendo arco - flecha-\nand sightmark-gestión, \narchery timer, estadísticas \nand mucho más…</string>
   <string name="average_arrow_score_per_end">Media de puntuaciones por entrada</string>
   <string name="show_end">Ver entrada</string>
   <string name="show_round">Ver Serie</string>

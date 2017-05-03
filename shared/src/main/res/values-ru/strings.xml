@@ -26,7 +26,7 @@
   <string name="cloudy">Пасмурно</string>
   <string name="light_rain">Небольшой дождь</string>
   <string name="rain">Дождливо</string>
-  <string name="round_desc">%1$s: %2$d × %3$d стрелы (%4$s)</string>
+  <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
   <string name="mini">Мини</string>
   <string name="small">Маленький</string>
   <string name="medium">Средний</string>

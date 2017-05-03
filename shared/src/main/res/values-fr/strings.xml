@@ -26,7 +26,7 @@
   <string name="cloudy">Nuageux</string>
   <string name="light_rain">Légère pluie</string>
   <string name="rain">Pluvieux</string>
-  <string name="round_desc">%1$s: %2$d × %3$d flèches (blason %4$s)</string>
+  <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
   <string name="mini">Mini</string>
   <string name="small">Petit</string>
   <string name="medium">Moyen</string>

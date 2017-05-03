@@ -228,7 +228,7 @@
   <string name="last_name">Nama belakang</string>
   <string name="age">Usia</string>
   <string name="show_signature">Tanda tangan</string>
-  <string name="witness">Saksi</string>
+  <string name="witness">Witness</string>
   <string name="archer">Archer</string>
   <string name="hits">Hits</string>
   <string name="misses">Misses</string>
@@ -261,11 +261,11 @@
   <string name="backup_location">Backup location</string>
   <string name="internal_storage">Internal storage</string>
   <string name="automatic_backup">Automatic backup</string>
-  <string name="restoring">Restoring backup&#8230;</string>
+  <string name="restoring">Restoring backup…</string>
   <string name="restore_failed">Restore failed</string>
   <string name="delete_failed">Deletion failed</string>
   <string name="backup_restore_desc">Backup and restore app data</string>
-  <string name="exporting">Exporting&#8230;</string>
+  <string name="exporting">Exporting…</string>
   <string name="loading_backups_failed">Loading backups failed!</string>
   <string name="external_storage">Penyimpanan eksternal</string>
   <string name="backup_interval">Backup interval</string>
@@ -289,7 +289,7 @@
   <string name="intro_title_track_training_progress">Forget paper scoresheets!</string>
   <string name="intro_description_track_training_progress">With exact arrow plotting,\nyou can get more useful insights\nout of your training data.</string>
   <string name="intro_title_everything_in_one_place">Everything you need\nin one place</string>
-  <string name="intro_description_everything_in_one_place">Including bow-, arrow-\nand sightmark-management,\narchery timer, statistics \nand much more&#8230;</string>
+  <string name="intro_description_everything_in_one_place">Including bow-, arrow-\nand sightmark-management,\narchery timer, statistics \nand much more…</string>
   <string name="average_arrow_score_per_end">Average arrow score per end</string>
   <string name="show_end">Show end</string>
   <string name="show_round">Show round</string>
