@@ -25,8 +25,10 @@ import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import org.joda.time.LocalDate;
 import org.parceler.Parcel;
@@ -185,7 +187,12 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
 
     @Override
     public void save() {
-        super.save();
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::save);
+    }
+
+    @Override
+    public void save(DatabaseWrapper databaseWrapper) {
+        super.save(databaseWrapper);
         // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
         for (Round s : getRounds()) {
             s.trainingId = id;
@@ -195,8 +202,13 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
 
     @Override
     public void delete() {
-        getRounds().forEach(Round::delete);
-        super.delete();
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::delete);
+    }
+
+    @Override
+    public void delete(DatabaseWrapper databaseWrapper) {
+        getRounds().forEach(r -> r.delete(databaseWrapper));
+        super.delete(databaseWrapper);
     }
 
     public Training ensureLoaded() {
@@ -222,10 +234,15 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
 
     @Override
     public void saveRecursively() {
-        super.save();
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::saveRecursively);
+    }
+
+    @Override
+    public void saveRecursively(DatabaseWrapper databaseWrapper) {
+        super.save(databaseWrapper);
         for (Round s : getRounds()) {
             s.trainingId = id;
-            s.saveRecursively();
+            s.saveRecursively(databaseWrapper);
         }
     }
 }

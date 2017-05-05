@@ -27,8 +27,10 @@ import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import org.joda.time.DateTime;
 import org.parceler.Parcel;
@@ -191,37 +193,47 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
 
     @Override
     public void save() {
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::save);
+    }
+
+    @Override
+    public void save(DatabaseWrapper databaseWrapper) {
         if (saveTime == null) {
             saveTime = new DateTime();
         }
-        super.save();
+        super.save(databaseWrapper);
         if (shots != null) {
             SQLite.delete(Shot.class)
                     .where(Shot_Table.end.eq(id))
-                    .execute();
+                    .execute(databaseWrapper);
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
             for (Shot s : shots) {
                 s.endId = id;
-                s.save();
+                s.save(databaseWrapper);
             }
         }
         if (images != null) {
             SQLite.delete(EndImage.class)
                     .where(EndImage_Table.end.eq(id))
-                    .execute();
+                    .execute(databaseWrapper);
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
             for (EndImage image : getImages()) {
                 image.endId = id;
-                image.save();
+                image.save(databaseWrapper);
             }
         }
     }
 
     @Override
     public void delete() {
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::delete);
+    }
+
+    @Override
+    public void delete(DatabaseWrapper databaseWrapper) {
         getShots().forEach(BaseModel::delete);
         getImages().forEach(BaseModel::delete);
-        super.delete();
+        super.delete(databaseWrapper);
         updateEndIndicesForRound();
     }
 
@@ -259,5 +271,10 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
     @Override
     public void saveRecursively() {
         save();
+    }
+
+    @Override
+    public void saveRecursively(DatabaseWrapper databaseWrapper) {
+        save(databaseWrapper);
     }
 }
