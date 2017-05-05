@@ -242,7 +242,7 @@
   <string name="last_name">Családnév</string>
   <string name="age">Életkor</string>
   <string name="show_signature">Aláírás</string>
-  <string name="witness">Tanú</string>
+  <string name="witness">Witness</string>
   <string name="archer">Íjász</string>
   <string name="hits">Találatok száma</string>
   <string name="misses">Mellé</string>
@@ -279,7 +279,7 @@
   <string name="restore_failed">A visszaállítás sikertelen!</string>
   <string name="delete_failed">Törlés sikertelen</string>
   <string name="backup_restore_desc">Alkalmazás adatainak mentése és visszaállítása</string>
-  <string name="exporting">Exportálás&#8230;</string>
+  <string name="exporting">Exportálás…</string>
   <string name="loading_backups_failed">Biztonsági mentések betöltése sikertelen!</string>
   <string name="external_storage">Külső tárhely</string>
   <string name="backup_interval">Biztonsági mentési időköz</string>
@@ -303,7 +303,7 @@
   <string name="intro_title_track_training_progress">Felejtsd el a papírt beírólapokat!</string>
   <string name="intro_description_track_training_progress">A találatok pontos bejelölése,\na lövészet adatainak részletesebb áttekintése.</string>
   <string name="intro_title_everything_in_one_place">Minden szükséges\n egy helyen</string>
-  <string name="intro_description_everything_in_one_place">Az íj, vessző, irányzék beállítások,\nidőzítő, statisztikák\nés még több&#8230;</string>
+  <string name="intro_description_everything_in_one_place">Az íj, vessző, irányzék beállítások,\nidőzítő, statisztikák\nés még több…</string>
   <string name="average_arrow_score_per_end">A vesszők átlagos pontszáma/forduló</string>
   <string name="show_end">Mutasd a sorozatot</string>
   <string name="show_round">Mutasd a fordulót</string>

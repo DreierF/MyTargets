@@ -50,6 +50,9 @@ wearable/wearable.iml
 ### Specific files ###
 ## Play store artifacts
 **/play/**
+!app/src/regular/play/en-US/listing/title.txt
+!app/src/regular/play/en-US/listing/short_description.txt
+!app/src/regular/play/en-US/listing/full_description.txt
 
 ## Secrets
 .dropbox_uploader

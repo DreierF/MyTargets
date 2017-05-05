@@ -26,7 +26,7 @@
   <string name="cloudy">阴天</string>
   <string name="light_rain">小雨</string>
   <string name="rain">雨</string>
-  <string name="round_desc">%1$s: %2$d × %3$d 箭支 (%4$s 脸)</string>
+  <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
   <string name="mini">迷你</string>
   <string name="small">小</string>
   <string name="medium">中</string>

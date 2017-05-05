@@ -26,7 +26,7 @@
   <string name="cloudy">Nublado</string>
   <string name="light_rain">Lluvia Suave</string>
   <string name="rain">Lluvioso</string>
-  <string name="round_desc">%1$s: %2$d × %3$d flechas (Tamaño%4$s)</string>
+  <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
   <string name="mini">Mini</string>
   <string name="small">Pequeño</string>
   <string name="medium">Mediano</string>

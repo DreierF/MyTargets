@@ -26,7 +26,7 @@
   <string name="cloudy">曇り</string>
   <string name="light_rain">時々雨</string>
   <string name="rain">雨</string>
-  <string name="round_desc">%1$s: %2$d × %3$d 本 (%4$s 標的面)</string>
+  <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
   <string name="mini">ミニ</string>
   <string name="small">スモール</string>
   <string name="medium">ミディアム</string>

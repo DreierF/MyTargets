@@ -17,7 +17,7 @@
 <resources>
   <string name="recurve_bow">Łuk klasyczny</string>
   <string name="compound_bow">Łuk bloczkowy</string>
-  <string name="bare_bow">Łuk klasyczny</string>
+  <string name="bare_bow">Łuk goły</string>
   <string name="long_bow">Łuk długi (angielski)</string>
   <string name="horse_bow">Łuk krótki</string>
   <string name="yumi">Yumi</string>
@@ -26,7 +26,7 @@
   <string name="cloudy">Pochmurnie</string>
   <string name="light_rain">Lekki deszcz</string>
   <string name="rain">Deszczowy</string>
-  <string name="round_desc">%1$s: %2$d × %3$d strzały (%4$s tarcza)</string>
+  <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
   <string name="mini">Mini</string>
   <string name="small">Mały</string>
   <string name="medium">Średnio</string>
@@ -57,18 +57,18 @@
   <string name="stop">STOP</string>
   <string name="end_n">Koniec %d</string>
   <plurals name="rounds">
-    <item quantity="one">%d round</item>
-    <item quantity="few">%d rounds</item>
-    <item quantity="other">%d rounds</item>
+    <item quantity="one">%d runda</item>
+    <item quantity="few">%d rundy</item>
+    <item quantity="other">%d rund</item>
   </plurals>
   <plurals name="ends_arrow">
-    <item quantity="one">%1$d \u00D7 %2$d arrow</item>
-    <item quantity="few">%1$d \u00D7 %2$d arrows</item>
-    <item quantity="other">%1$d \u00D7 %2$d arrows</item>
+    <item quantity="one">%1$d \u00D7 %2$d strzała</item>
+    <item quantity="few">%1$d \u00D7 %2$d strzał</item>
+    <item quantity="other">%1$d \u00D7 %2$d strzał</item>
   </plurals>
   <plurals name="arrows_per_end">
-    <item quantity="one">%d arrow per end</item>
-    <item quantity="few">%d arrows per end</item>
-    <item quantity="other">%d arrows per end</item>
+    <item quantity="one">%d strzała na koniec</item>
+    <item quantity="few">%d strzały na koniec</item>
+    <item quantity="other">%d strzał na koniec</item>
   </plurals>
 </resources>

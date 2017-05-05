@@ -275,11 +275,11 @@
   <string name="backup_location">Speicherort für Sicherung</string>
   <string name="internal_storage">Interner Speicher</string>
   <string name="automatic_backup">Automatische Sicherung</string>
-  <string name="restoring">Sicherung wiederherstellen&#8230;</string>
+  <string name="restoring">Sicherung wiederherstellen…</string>
   <string name="restore_failed">Wiederherstellen fehlgeschlagen</string>
   <string name="delete_failed">Löschen fehlgeschlagen</string>
   <string name="backup_restore_desc">Sicherungen erstellen und wiederherstellen</string>
-  <string name="exporting">Exportieren&#8230;</string>
+  <string name="exporting">Exportieren…</string>
   <string name="loading_backups_failed">Abrufen der Sicherungen fehlgeschlagen!</string>
   <string name="external_storage">Externe Speicherkarte</string>
   <string name="backup_interval">Sicherungsintervall</string>
@@ -303,7 +303,7 @@
   <string name="intro_title_track_training_progress">Vergiss Schießzettel aus Papier!</string>
   <string name="intro_description_track_training_progress">Durch exakte Pfeilaufnahme\nkannst du nützlichere Erkenntnisse\naus deinen Trainingsdaten gewinnen.</string>
   <string name="intro_title_everything_in_one_place">Alles was du brauchst\nan einem Ort</string>
-  <string name="intro_description_everything_in_one_place">Einschließlich Bogen-, Pfeil-\nund Visier-Verwaltung, \nSchießuhr, Statistiken \nund vieles mehr&#8230;</string>
+  <string name="intro_description_everything_in_one_place">Einschließlich Bogen-, Pfeil-\nund Visier-Verwaltung, \nSchießuhr, Statistiken \nund vieles mehr…</string>
   <string name="average_arrow_score_per_end">Ringdurchschnitt pro Passe</string>
   <string name="show_end">Passe anzeigen</string>
   <string name="show_round">Runde anzeigen</string>
@@ -323,6 +323,6 @@
   <string name="show_total_score">Maximal erreichbare Ringzahl anzeigen</string>
   <string name="show_percentage">Prozent anzeigen</string>
   <string name="show_arrow_average">Pfeildurchschnitt anzeigen</string>
-  <string name="image_deleted">Image deleted</string>
-  <string name="delete_image">Delete image?</string>
+  <string name="image_deleted">Bild gelöscht</string>
+  <string name="delete_image">Bild löschen?</string>
 </resources>

@@ -50,10 +50,6 @@ android {
         enabled true
     }
 
-    lintOptions {
-        disable 'ExtraTranslation'
-    }
-
     signingConfigs {
         debug {
         }
@@ -86,27 +82,8 @@ android {
     }
 }
 
-apply from: "../tools/script-codacy.gradle"
-
-if (project.hasProperty('CROWDIN_API_KEY')) {
-    tasks.whenTaskAdded { task ->
-        if (task.name == "generateRegularReleasePlayResources") {
-            task.dependsOn ':crowdinDownload'
-        }
-    }
-
-    task generateLocalizedScreenshots(type: Exec, group: 'play store', dependsOn: [':crowdinDownload', 'assembleScreengrabDebugAndroidTest', 'assembleScreengrabDebug']) {
-        commandLine '../make_screenshots.sh'
-    }
-
-    if (new File('googlePlayAndroidDeveloper.json').exists()) {
-        play {
-            track 'beta'
-            untrackOld true
-            // uploadImages true
-        }
-    }
-}
+apply from: '../tools/script-codacy.gradle'
+apply from: '../tools/script-play-store.gradle'
 
 dependencies {
     compile "com.android.support:support-compat:$libraryVersion.support"

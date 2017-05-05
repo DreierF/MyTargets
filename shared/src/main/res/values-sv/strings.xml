@@ -26,7 +26,7 @@
   <string name="cloudy">Molnigt</string>
   <string name="light_rain">Lätt regn</string>
   <string name="rain">Regnigt</string>
-  <string name="round_desc">%1$s: %2$d × %3$d pilar (%4$s tapet)</string>
+  <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
   <string name="mini">Mini</string>
   <string name="small">Liten</string>
   <string name="medium">Medium</string>
