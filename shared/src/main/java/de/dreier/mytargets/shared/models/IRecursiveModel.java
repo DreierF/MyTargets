@@ -16,7 +16,9 @@
 package de.dreier.mytargets.shared.models;
 
 import com.raizlabs.android.dbflow.structure.Model;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 public interface IRecursiveModel extends Model {
     void saveRecursively();
+    void saveRecursively(DatabaseWrapper databaseWrapper);
 }

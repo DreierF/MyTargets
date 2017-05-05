@@ -25,8 +25,10 @@ import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import org.parceler.Parcel;
 
@@ -122,8 +124,13 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round>, 
 
     @Override
     public void delete() {
-        getEnds().forEach(End::delete);
-        super.delete();
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::delete);
+    }
+
+    @Override
+    public void delete(DatabaseWrapper databaseWrapper) {
+        getEnds().forEach(e -> e.delete(databaseWrapper));
+        super.delete(databaseWrapper);
         updateRoundIndicesForTraining();
     }
 
@@ -208,10 +215,15 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round>, 
 
     @Override
     public void saveRecursively() {
-        save();
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::saveRecursively);
+    }
+
+    @Override
+    public void saveRecursively(DatabaseWrapper databaseWrapper) {
+        save(databaseWrapper);
         for (End end : getEnds()) {
             end.roundId = id;
-            end.save();
+            end.save(databaseWrapper);
         }
     }
 }
