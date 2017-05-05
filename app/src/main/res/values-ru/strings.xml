@@ -256,7 +256,7 @@
   <string name="last_name">Фамилия</string>
   <string name="age">Возраст</string>
   <string name="show_signature">Подпись</string>
-  <string name="witness">Свидетель</string>
+  <string name="witness">Witness</string>
   <string name="archer">Стрелок</string>
   <string name="hits">Попадания</string>
   <string name="misses">Промахи</string>
@@ -289,11 +289,11 @@
   <string name="backup_location">Расположение резервной копии</string>
   <string name="internal_storage">Внутреннее хранилище</string>
   <string name="automatic_backup">Автоматическое резервное копирование</string>
-  <string name="restoring">Восстановление из резервной копии&#8230;</string>
+  <string name="restoring">Восстановление из резервной копии…</string>
   <string name="restore_failed">Не удалось восстановить</string>
   <string name="delete_failed">Удаление не удалось</string>
   <string name="backup_restore_desc">Резервное копирование и восстановление данных</string>
-  <string name="exporting">Экспортируется&#8230;</string>
+  <string name="exporting">Экспортируется…</string>
   <string name="loading_backups_failed">Загрузка резервной копии не удалась!</string>
   <string name="external_storage">Внешний накопитель</string>
   <string name="backup_interval">Интервал резервного копирования</string>
@@ -317,7 +317,7 @@
   <string name="intro_title_track_training_progress">Забудьте бумажные бланки!</string>
   <string name="intro_description_track_training_progress">Правильное указание положения стрелы в мишени даст более точный анализ результатов тренировки</string>
   <string name="intro_title_everything_in_one_place">Все, что вам нужно в одном месте</string>
-  <string name="intro_description_everything_in_one_place">Включая лук, стрелы, настроцки прицела, стрелковый таймер, статистика и многое другое&#8230;</string>
+  <string name="intro_description_everything_in_one_place">Включая лук, стрелы, настроцки прицела, стрелковый таймер, статистика и многое другое…</string>
   <string name="average_arrow_score_per_end">Средний результат одного выстрела за серию</string>
   <string name="show_end">Показать серию</string>
   <string name="show_round">Показать раунд</string>

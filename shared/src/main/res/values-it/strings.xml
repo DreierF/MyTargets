@@ -26,7 +26,7 @@
   <string name="cloudy">Nuvoloso</string>
   <string name="light_rain">Pioggia leggera</string>
   <string name="rain">Piovoso</string>
-  <string name="round_desc">%1$s: %2$d × %3$d arrows (%4$s face)</string>
+  <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
   <string name="mini">Mini</string>
   <string name="small">Piccolo</string>
   <string name="medium">Medio</string>

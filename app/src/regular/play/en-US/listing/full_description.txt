@@ -1,0 +1,30 @@
+MyTargets is a free and even open source archery app, which helps you manage your archery scores.
+
+<b>Features</b>
+* Intuitive and easy to use
+* Beautiful Material Design
+* Manage equipment (bows, arrows)
+* Scoresheet (with print functionality for Android 4.4 and above)
+* Android Wear support
+* 25 Target Faces (including Field and 3D)
+* Support for several scoring styles
+* Statistics
+* Saved Sight Marks
+* Supports standard rounds
+
+<b>For Experts</b>
+* Track the performance of individual arrows
+* Track weather conditions like wind speed and direction
+* You can even create your own custom standard rounds
+
+<b>Translations</b>
+The app is already available in over 20 languages. If your language is not yet supported or you spotted some mistakes in your translation, you can easily translate the app yourself on the following website
+https://crowdin.com/project/mytargets
+
+<b>Community and Beta Test</b>
+If you want to participate in discussions regarding the future development of the app, you can join our G+ Community.
+Members of the group also have the option to try out the latest beta versions of the app. Therefore if you can't wait to try out new features this is the place for you :)
+https://plus.google.com/communities/102686119334423317437
+
+<b>Problems</b>
+If you find any bugs or you have ideas for new features you can either contact me directly via Mail or use the following ticket tracking system https://github.com/DreierF/MyTargets/issues

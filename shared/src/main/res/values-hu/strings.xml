@@ -26,7 +26,7 @@
   <string name="cloudy">Felhős</string>
   <string name="light_rain">Enyhe szitáló eső</string>
   <string name="rain">Esős</string>
-  <string name="round_desc">%1$s: %2$d × %3$d vessző (%4$s lőlap)</string>
+  <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
   <string name="mini">Mini</string>
   <string name="small">Kicsi</string>
   <string name="medium">Közepes</string>

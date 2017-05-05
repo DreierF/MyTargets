@@ -13,8 +13,6 @@
  * GNU General Public License for more details.
  */
 
-import org.apache.commons.io.FileUtils
-
 buildscript {
     repositories {
         jcenter()
@@ -25,23 +23,77 @@ buildscript {
     }
 }
 
+import org.apache.commons.io.FileUtils
+
 crowdinUpload {
-    apiKey = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
+    apiKey = CROWDIN_API_KEY
     projectId = 'mytargets'
-    sourceFiles = [
-            ['strings.xml', 'app/src/main/res/values/strings.xml'],
-            ['strings-shared.xml', 'shared/src/main/res/values/strings.xml'],
-            ['rounds.xml', 'shared/src/main/res/values/rounds.xml'],
-            ['target_faces.xml', 'shared/src/main/res/values/target_faces.xml'],
-            ['strings-wearable.xml', 'wearable/src/main/res/values/strings.xml']
+    branch = gitBranchName
+    files = [
+            [
+                    title      : 'App',
+                    name       : 'strings.xml',
+                    source     : 'app/src/main/res/values/strings.xml',
+                    translation: 'app/src/main/res/values-%android_code%/strings.xml'
+            ],
+            [
+                    title      : 'Shared',
+                    name       : 'strings-shared.xml',
+                    source     : 'shared/src/main/res/values/strings.xml',
+                    translation: 'shared/src/main/res/values-%android_code%/strings.xml'
+            ],
+            [
+                    title      : 'Standard rounds',
+                    name       : 'rounds.xml',
+                    source     : 'shared/src/main/res/values/rounds.xml',
+                    translation: 'shared/src/main/res/values-%android_code%/rounds.xml'
+            ],
+            [
+                    title      : 'Target faces',
+                    name       : 'target_faces.xml',
+                    source     : 'shared/src/main/res/values/target_faces.xml',
+                    translation: 'shared/src/main/res/values-%android_code%/target_faces.xml'
+            ],
+            [
+                    title      : 'Wearable',
+                    name       : 'strings-wearable.xml',
+                    source     : 'wearable/src/main/res/values/strings.xml',
+                    translation: 'wearable/src/main/res/values-%android_code%/strings.xml'
+            ],
+            [
+                    title      : 'Play Store Title',
+                    name       : 'title.txt',
+                    source     : 'app/src/regular/play/en-US/listing/title.txt',
+                    translation: 'app/src/regular/play/%locale%/listing/title'
+            ],
+            [
+                    title      : 'Play Store Short Description',
+                    name       : 'short_description.txt',
+                    source     : 'app/src/regular/play/en-US/listing/short_description.txt',
+                    translation: 'app/src/regular/play/%locale%/listing/shortdescription'
+            ],
+            [
+                    title      : 'Play Store Full Description',
+                    name       : 'full_description.txt',
+                    source     : 'app/src/regular/play/en-US/listing/full_description.txt',
+                    translation: 'app/src/regular/play/%locale%/listing/fulldescription'
+            ]
     ]
 }
 
 crowdinDownload {
+    apiKey = CROWDIN_API_KEY
+    projectId = 'mytargets'
+    branch = gitBranchName
+    destination = "$projectDir"
+    renameMapping = [
+            from: '^((?:(?!values).)*)(?:(values-)((?!(pt|zh))(.*)-r(.*)|((pt|zh).*)))?(/(?:(?!values).)*)$',
+            to  : /\1\2\5\7\9/
+    ]
     doLast {
         FileUtils.copyDirectory(file('app/src/regular/play/ca-ES'), file('app/src/regular/play/ca'))
-        FileUtils.copyDirectory(new File('app/src/regular/play/sk-SK'), new File('app/src/regular/play/sk'))
-        FileUtils.copyDirectory(new File('app/src/regular/play/sl-SI'), new File('app/src/regular/play/sl'))
+        FileUtils.copyDirectory(file('app/src/regular/play/sk-SK'), file('app/src/regular/play/sk'))
+        FileUtils.copyDirectory(file('app/src/regular/play/sl-SI'), file('app/src/regular/play/sl'))
         file('app/src/regular/play/af-ZA').deleteDir()
         file('app/src/regular/play/ar-SA').deleteDir()
         file('app/src/regular/play/ca-ES').deleteDir()
@@ -57,17 +109,9 @@ crowdinDownload {
         file('app/src/regular/play/uk-UA').deleteDir()
         file('app/src/regular/play/vi-VN').deleteDir()
     }
-    apiKey = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
-    projectId = 'mytargets'
-    destination = "$projectDir"
-    renameMapping = [
-            from: '^((?:(?!values).)*)(?:(values-)((?!(pt|zh))(.*)-r(.*)|((pt|zh).*)))?(/(?:(?!values).)*)$',
-            to  : /\1\2\5\7\9/
-    ]
 }.dependsOn crowdinUpload
 
 allprojects {
-    def CROWDIN_API_KEY = project.hasProperty('CROWDIN_API_KEY') ? CROWDIN_API_KEY : System.getenv('CROWDIN_API_KEY')
     if (CROWDIN_API_KEY != null && !CROWDIN_API_KEY.isEmpty()) {
         tasks.whenTaskAdded { task ->
             if (task.name.matches('.*assemble.*Release')) {

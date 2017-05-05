@@ -289,11 +289,11 @@
   <string name="backup_location">Lokalizacja kopii zapasowej</string>
   <string name="internal_storage">Pamięć wewnętrzna</string>
   <string name="automatic_backup">Automatyczna kopia zapasowa</string>
-  <string name="restoring">Przywracanie kopii zapasowej&#8230;</string>
+  <string name="restoring">Przywracanie kopii zapasowej…</string>
   <string name="restore_failed">Przywracanie nieudane</string>
   <string name="delete_failed">Usuwanie nieudane</string>
   <string name="backup_restore_desc">Kopia zapasowa i przywracanie danych</string>
-  <string name="exporting">Eksportowanie&#8230;</string>
+  <string name="exporting">Eksportowanie…</string>
   <string name="loading_backups_failed">Odczytanie kopii zapasowej nie powiodło się!</string>
   <string name="external_storage">Pamięć zewnętrzna</string>
   <string name="backup_interval">Harmonogram kopii zapasowych</string>
@@ -317,7 +317,7 @@
   <string name="intro_title_track_training_progress">Zapomnij o papierowych tabelkach!</string>
   <string name="intro_description_track_training_progress">Dzięki dokładnym wykresom trafień\nmożesz uzyskać więcej przydatnych spostrzeżeń\nz wyników Twojego treningu.</string>
   <string name="intro_title_everything_in_one_place">Wszystko czego potrzebujesz\nw jednym miejscu</string>
-  <string name="intro_description_everything_in_one_place">Włącznie z zarządzaniem\nłukami, strzałami i celownikiem,\nczasomierzem łuczniczym, statystykami i\n wiele wiele więcej&#8230;</string>
+  <string name="intro_description_everything_in_one_place">Włącznie z zarządzaniem\nłukami, strzałami i celownikiem,\nczasomierzem łuczniczym, statystykami i\n wiele wiele więcej…</string>
   <string name="average_arrow_score_per_end">Średnia punktacja strzały na koniec</string>
   <string name="show_end">Pokaż koniec</string>
   <string name="show_round">Pokaż rundę</string>
@@ -337,6 +337,6 @@
   <string name="show_total_score">Pokaż całkowity wynik</string>
   <string name="show_percentage">Pokaż procenty</string>
   <string name="show_arrow_average">Pokaż średnią strzały</string>
-  <string name="image_deleted">Image deleted</string>
-  <string name="delete_image">Delete image?</string>
+  <string name="image_deleted">Obraz usunięty</string>
+  <string name="delete_image">Usunąć obraz?</string>
 </resources>
