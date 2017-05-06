@@ -31,5 +31,9 @@ ext {
             .replace("v", "")
             .replace("_b", "-Beta")
             .replace("_rc", "-RC")
-    gitBranchName = git.branch.getCurrent().name
+    if(System.getenv('TRAVIS') == 'true') {
+        gitBranchName = System.getenv('TRAVIS_BRANCH')
+    } else {
+        gitBranchName = git.branch.getCurrent().name
+    }
 }
