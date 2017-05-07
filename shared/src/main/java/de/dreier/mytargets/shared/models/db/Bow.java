@@ -26,8 +26,10 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import org.parceler.Parcel;
 
@@ -197,25 +199,30 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
 
     @Override
     public void save() {
-        super.save();
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::save);
+    }
+
+    @Override
+    public void save(DatabaseWrapper databaseWrapper) {
+        super.save(databaseWrapper);
         if (images != null) {
             SQLite.delete(BowImage.class)
                     .where(BowImage_Table.bow.eq(id))
-                    .execute();
+                    .execute(databaseWrapper);
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
             for (BowImage image : images) {
                 image.bowId = id;
-                image.save();
+                image.save(databaseWrapper);
             }
         }
         if (sightMarks != null) {
             SQLite.delete(SightMark.class)
                     .where(SightMark_Table.bow.eq(id))
-                    .execute();
+                    .execute(databaseWrapper);
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
             for (SightMark sightMark : sightMarks) {
                 sightMark.bowId = id;
-                sightMark.save();
+                sightMark.save(databaseWrapper);
             }
         }
     }
@@ -258,5 +265,10 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
     @Override
     public void saveRecursively() {
         save();
+    }
+
+    @Override
+    public void saveRecursively(DatabaseWrapper databaseWrapper) {
+        save(databaseWrapper);
     }
 }

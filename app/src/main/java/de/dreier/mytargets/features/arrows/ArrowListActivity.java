@@ -19,7 +19,7 @@ import android.support.v4.app.Fragment;
 
 import de.dreier.mytargets.base.activities.ItemSelectActivity;
 
-public class ArrowActivity extends ItemSelectActivity {
+public class ArrowListActivity extends ItemSelectActivity {
 
     @Override
     public Fragment instantiateFragment() {

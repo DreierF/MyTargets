@@ -22,7 +22,7 @@ import android.util.AttributeSet;
 
 import java.util.List;
 
-import de.dreier.mytargets.features.arrows.ArrowActivity;
+import de.dreier.mytargets.features.arrows.ArrowListActivity;
 import de.dreier.mytargets.features.arrows.EditArrowFragment;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.utils.IntentWrapper;
@@ -38,7 +38,7 @@ public class ArrowSelector extends ImageSelectorBase<Arrow> {
 
     public ArrowSelector(Context context, AttributeSet attrs) {
         super(context, attrs);
-        defaultActivity = ArrowActivity.class;
+        defaultActivity = ArrowListActivity.class;
         requestCode = ARROW_REQUEST_CODE;
     }
 

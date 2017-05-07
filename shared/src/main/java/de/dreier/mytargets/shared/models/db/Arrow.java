@@ -24,8 +24,10 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import org.parceler.Parcel;
 
@@ -136,23 +138,33 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
 
     @Override
     public void save() {
-        super.save();
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::save);
+    }
+
+    @Override
+    public void save(DatabaseWrapper databaseWrapper) {
+        super.save(databaseWrapper);
         if (images != null) {
             SQLite.delete(ArrowImage.class)
                     .where(ArrowImage_Table.arrow.eq(id))
-                    .execute();
+                    .execute(databaseWrapper);
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
             for (ArrowImage image : images) {
                 image.arrowId = id;
-                image.save();
+                image.save(databaseWrapper);
             }
         }
     }
 
     @Override
     public void delete() {
-        getImages().forEach(ArrowImage::delete);
-        super.delete();
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::delete);
+    }
+
+    @Override
+    public void delete(DatabaseWrapper databaseWrapper) {
+        getImages().forEach(a -> a.delete(databaseWrapper));
+        super.delete(databaseWrapper);
     }
 
     @Override
@@ -175,5 +187,10 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
     @Override
     public void saveRecursively() {
         save();
+    }
+
+    @Override
+    public void saveRecursively(DatabaseWrapper databaseWrapper) {
+        save(databaseWrapper);
     }
 }

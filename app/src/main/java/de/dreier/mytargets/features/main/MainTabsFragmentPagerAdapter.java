@@ -22,8 +22,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase;
-import de.dreier.mytargets.features.arrows.ArrowListFragment;
-import de.dreier.mytargets.features.bows.BowListFragment;
+import de.dreier.mytargets.features.arrows.EditArrowListFragment;
+import de.dreier.mytargets.features.bows.EditBowListFragment;
 import de.dreier.mytargets.features.training.overview.TrainingsFragment;
 
 public class MainTabsFragmentPagerAdapter extends FragmentPagerAdapter {
@@ -34,8 +34,8 @@ public class MainTabsFragmentPagerAdapter extends FragmentPagerAdapter {
         super(fragmentManager);
         this.context = context;
         fragments[0] = new TrainingsFragment();
-        fragments[1] = new BowListFragment();
-        fragments[2] = new ArrowListFragment();
+        fragments[1] = new EditBowListFragment();
+        fragments[2] = new EditArrowListFragment();
     }
 
     @Override
