@@ -191,7 +191,7 @@
             android:label="@string/statistic"
             android:theme="@style/AppTheme.CustomToolbar" />
         <activity
-            android:name=".features.arrows.ArrowActivity"
+            android:name=".features.arrows.ArrowListActivity"
             android:label="@string/arrow"
             android:launchMode="singleTop"
             android:parentActivityName=".features.training.standardround.EditStandardRoundActivity">
@@ -200,7 +200,7 @@
                 android:value=".features.training.standardround.EditStandardRoundActivity" />
         </activity>
         <activity
-            android:name=".features.bows.BowActivity"
+            android:name=".features.bows.BowListActivity"
             android:label="@string/bow"
             android:launchMode="singleTop"
             android:parentActivityName=".features.training.standardround.EditStandardRoundActivity">

@@ -22,7 +22,7 @@ import android.util.AttributeSet;
 
 import java.util.List;
 
-import de.dreier.mytargets.features.bows.BowActivity;
+import de.dreier.mytargets.features.bows.BowListActivity;
 import de.dreier.mytargets.features.bows.EditBowFragment;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.db.Bow;
@@ -39,7 +39,7 @@ public class BowSelector extends ImageSelectorBase<Bow> {
 
     public BowSelector(Context context, AttributeSet attrs) {
         super(context, attrs);
-        defaultActivity = BowActivity.class;
+        defaultActivity = BowListActivity.class;
         requestCode = BOW_REQUEST_CODE;
     }
 

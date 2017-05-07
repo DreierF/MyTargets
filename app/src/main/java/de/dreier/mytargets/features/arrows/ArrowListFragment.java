@@ -15,103 +15,28 @@
 
 package de.dreier.mytargets.features.arrows;
 
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
-import de.dreier.mytargets.base.fragments.EditableListFragment;
-import de.dreier.mytargets.databinding.FragmentListBinding;
-import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
+import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase;
 import de.dreier.mytargets.shared.models.db.Arrow;
-import de.dreier.mytargets.utils.DividerItemDecoration;
-import de.dreier.mytargets.utils.SlideInItemAnimator;
-import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
-public class ArrowListFragment extends EditableListFragment<Arrow> {
+import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
 
-    protected FragmentListBinding binding;
-
-    public ArrowListFragment() {
-        itemTypeSelRes = R.plurals.arrow_selected;
-        itemTypeDelRes = R.plurals.arrow_deleted;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        binding.fab.setOnClickListener(
-                view1 -> EditArrowFragment.createIntent()
-                        .withContext(this)
-                        .fromFab(binding.fab)
-                        .start());
-    }
-
-    @Override
-    @CallSuper
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
-        binding.recyclerView.setHasFixedSize(true);
-        binding.recyclerView.addItemDecoration(
-                new DividerItemDecoration(getContext(), R.drawable.full_divider));
-        adapter = new ArrowAdapter();
-        binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
-        binding.recyclerView.setAdapter(adapter);
-        return binding.getRoot();
-    }
+public class ArrowListFragment extends SelectPureListItemFragmentBase<Arrow> {
 
     @NonNull
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
         List<Arrow> arrows = Arrow.getAll();
-        return () -> adapter.setList(arrows);
-    }
-
-    @Override
-    protected void onEdit(Arrow item) {
-        EditArrowFragment.editIntent(item)
-                .withContext(this)
-                .start();
-    }
-
-    @Override
-    protected void onItemSelected(Arrow item) {
-        EditArrowFragment.editIntent(item)
-                .withContext(this)
-                .start();
-    }
-
-    private class ArrowAdapter extends SimpleListAdapterBase<Arrow> {
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent) {
-            View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_image_details, parent, false);
-            return new ViewHolder(itemView);
-        }
-    }
-
-    class ViewHolder extends SelectableViewHolder<Arrow> {
-        private final ItemImageDetailsBinding binding;
-
-        public ViewHolder(View itemView) {
-            super(itemView, selector, ArrowListFragment.this);
-            binding = DataBindingUtil.bind(itemView);
-        }
-
-        @Override
-        public void bindItem() {
-            binding.name.setText(item.name);
-            binding.image.setImageDrawable(item.getDrawable());
-        }
+        return () -> {
+            adapter.setList(arrows);
+            Arrow arrow = Parcels.unwrap(getArguments().getParcelable(ITEM));
+            selectItem(binding.recyclerView, arrow);
+        };
     }
 }
-
