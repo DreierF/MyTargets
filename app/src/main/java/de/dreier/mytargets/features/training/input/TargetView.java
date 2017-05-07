@@ -477,6 +477,7 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected void onArrowChanged() {
+        Shot shot = shots.get(getCurrentShotIndex());
         if (!arrowNumbering) {
             super.onArrowChanged();
         } else {
@@ -499,7 +500,7 @@ public class TargetView extends TargetViewBase {
             gridView.setNumColumns(4);
             gridView.setOnItemClickListener((parent, view, position, id) -> {
                 if (getCurrentShotIndex() < shots.size()) {
-                    shots.get(getCurrentShotIndex()).arrowNumber = numbers.get(position);
+                    shot.arrowNumber = numbers.get(position);
                 }
                 dialog.dismiss();
                 setOnTouchListener(this);
