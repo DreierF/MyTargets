@@ -25,9 +25,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.github.chrisbanes.photoview.PhotoView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -38,7 +38,6 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.models.db.Image;
 import de.dreier.mytargets.shared.utils.SharedUtils;
 import de.dreier.mytargets.utils.Utils;
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ViewPagerAdapter extends PagerAdapter {
 
@@ -51,7 +50,8 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     public ViewPagerAdapter(Activity activity, List<? extends Image> images, Toolbar toolbar, RecyclerView imagesHorizontalList) {
         this.activity = activity;
-        this.layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.layoutInflater = (LayoutInflater) activity
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.images = images;
         this.toolbar = toolbar;
         this.imagesHorizontalList = imagesHorizontalList;
@@ -76,7 +76,7 @@ public class ViewPagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         View itemView = layoutInflater.inflate(R.layout.pager_item, container, false);
 
-        final ImageView imageView = (ImageView) itemView.findViewById(R.id.iv);
+        final PhotoView imageView = (PhotoView) itemView.findViewById(R.id.iv);
         Image image = images.get(position);
         Picasso.with(activity)
                 .load(new File(image.getFileName()))
@@ -85,18 +85,7 @@ public class ViewPagerAdapter extends PagerAdapter {
                 .into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {
-                        new PhotoViewAttacher(imageView)
-                                .setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-                                    @Override
-                                    public void onPhotoTap(View view, float x, float y) {
-                                        toggleToolbar();
-                                    }
-
-                                    @Override
-                                    public void onOutsidePhotoTap() {
-
-                                    }
-                                });
+                        imageView.setOnPhotoTapListener((view, x, y) -> toggleToolbar());
                     }
 
                     @Override
