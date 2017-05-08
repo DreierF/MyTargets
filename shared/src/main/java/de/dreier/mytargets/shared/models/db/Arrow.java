@@ -163,7 +163,9 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
 
     @Override
     public void delete(DatabaseWrapper databaseWrapper) {
-        getImages().forEach(a -> a.delete(databaseWrapper));
+        for (ArrowImage arrowImage : getImages()) {
+            arrowImage.delete(databaseWrapper);
+        }
         super.delete(databaseWrapper);
     }
 

@@ -231,8 +231,12 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
 
     @Override
     public void delete(DatabaseWrapper databaseWrapper) {
-        getShots().forEach(BaseModel::delete);
-        getImages().forEach(BaseModel::delete);
+        for (Shot shot : getShots()) {
+            shot.delete(databaseWrapper);
+        }
+        for (EndImage endImage : getImages()) {
+            endImage.delete(databaseWrapper);
+        }
         super.delete(databaseWrapper);
         updateEndIndicesForRound();
     }

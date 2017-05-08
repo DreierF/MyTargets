@@ -229,9 +229,18 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
 
     @Override
     public void delete() {
-        getSightMarks().forEach(BaseModel::delete);
-        getImages().forEach(BaseModel::delete);
-        super.delete();
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::delete);
+    }
+
+    @Override
+    public void delete(DatabaseWrapper databaseWrapper) {
+        for (SightMark sightMark : getSightMarks()) {
+            sightMark.delete(databaseWrapper);
+        }
+        for (BowImage bowImage : getImages()) {
+            bowImage.delete(databaseWrapper);
+        }
+        super.delete(databaseWrapper);
     }
 
     @Override

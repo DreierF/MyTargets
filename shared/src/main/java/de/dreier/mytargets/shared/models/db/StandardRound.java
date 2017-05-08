@@ -183,7 +183,9 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
 
     @Override
     public void delete(DatabaseWrapper databaseWrapper) {
-        getRounds().forEach(r -> r.delete(databaseWrapper));
+        for (RoundTemplate roundTemplate : getRounds()) {
+            roundTemplate.delete(databaseWrapper);
+        }
         super.delete(databaseWrapper);
     }
 }
