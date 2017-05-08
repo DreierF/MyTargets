@@ -16,6 +16,7 @@
 package de.dreier.mytargets.shared.models.db;
 
 import android.support.annotation.NonNull;
+import android.transition.TransitionManager;
 
 import com.annimon.stream.Stream;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -25,6 +26,7 @@ import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.config.DatabaseConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
@@ -129,12 +131,14 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round>, 
 
     @Override
     public void delete(DatabaseWrapper databaseWrapper) {
-        getEnds().forEach(e -> e.delete(databaseWrapper));
+        for (End end : getEnds()) {
+            end.delete(databaseWrapper);
+        }
         super.delete(databaseWrapper);
-        updateRoundIndicesForTraining();
+        updateRoundIndicesForTraining(databaseWrapper);
     }
 
-    private void updateRoundIndicesForTraining() {
+    private void updateRoundIndicesForTraining(DatabaseWrapper databaseWrapper) {
         // TODO very inefficient
         int i = 0;
         Training training = Training.get(trainingId);
@@ -143,7 +147,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round>, 
         }
         for (Round r : training.getRounds()) {
             r.index = i;
-            r.save();
+            r.save(databaseWrapper);
             i++;
         }
     }

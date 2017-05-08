@@ -196,7 +196,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
         // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
         for (Round s : getRounds()) {
             s.trainingId = id;
-            s.save();
+            s.save(databaseWrapper);
         }
     }
 
@@ -207,14 +207,17 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
 
     @Override
     public void delete(DatabaseWrapper databaseWrapper) {
-        getRounds().forEach(r -> r.delete(databaseWrapper));
+        for (Round round : getRounds()) {
+            round.delete(databaseWrapper);
+        }
         super.delete(databaseWrapper);
     }
 
     public Training ensureLoaded() {
-        List<Round> rounds = getRounds();
-        for (Round round : rounds) {
-            round.getEnds().forEach(End::getShots);
+        for (Round round : getRounds()) {
+            for (End end : round.getEnds()) {
+                end.getShots();
+            }
         }
         return this;
     }

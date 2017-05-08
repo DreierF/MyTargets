@@ -84,6 +84,8 @@ public class DeleteTest extends UITestBase {
 
         // Open training
         onView(allOf(withId(R.id.recyclerView), isDisplayed())).perform(
+                actionOnItemAtPosition(0, click()));
+        onView(allOf(withId(R.id.recyclerView), isDisplayed())).perform(
                 actionOnItemAtPosition(1, click()));
         onView(withText("Aug 22, 2016")).check(matches(isDisplayed()));
 

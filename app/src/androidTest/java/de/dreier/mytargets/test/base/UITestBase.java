@@ -32,15 +32,17 @@ import de.dreier.mytargets.test.utils.matchers.ViewMatcher;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
-import static android.support.test.espresso.Espresso.openContextualActionModeOverflowMenu;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.pressBack;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isNestedChildOfView;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anyOf;
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.equalTo;
 
 public abstract class UITestBase extends InstrumentedTestBase {
@@ -72,6 +74,14 @@ public abstract class UITestBase extends InstrumentedTestBase {
                     openContextualActionModeOverflowMenu();
                     onView(withText(title)).perform(click());
                 }).perform(click());
+    }
+
+    private static void openContextualActionModeOverflowMenu() {
+        onView(allOf(anyOf(
+                allOf(isDisplayed(), withContentDescription("More options")),
+                allOf(isDisplayed(), withClassName(endsWith("OverflowMenuButton")))),
+                isNestedChildOfView(withId(R.id.action_mode_bar))))
+                .perform(click(pressBack()));
     }
 
     protected void enterDate(int year, int monthOfYear, int dayOfMonth) {
