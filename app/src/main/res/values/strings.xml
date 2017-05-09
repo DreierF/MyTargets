@@ -135,7 +135,7 @@
     <string name="donate_10">Donate me a large pizza</string>
     <string name="donate_20">Donate me some fuel</string>
     <string name="donation_thank">Thank you for your support!</string>
-    <string name="donate_text">The amounts are incl. VAT and 30% fees for Google. Alternatively you may gladly donate on the PayPal account dreier.florian@gmail.com.</string>
+    <string name="donate_text" formatted="false">The amounts are incl. VAT and 30% fees for Google. Alternatively you may gladly donate on the PayPal account dreier.florian@gmail.com.</string>
 
     <!-- Timer -->
     <string name="timer">Timer</string>

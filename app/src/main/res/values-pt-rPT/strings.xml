@@ -34,19 +34,19 @@
   <string name="new_arrow">Nova flecha</string>
   <string name="new_round">Novo round</string>
   <plurals name="training_selected">
-    <item quantity="one">Um treino selecionado</item>
+    <item quantity="one">%d treino selecionado</item>
     <item quantity="other">%d treinos selecionados</item>
   </plurals>
   <plurals name="bow_selected">
-    <item quantity="one">Um arco selecionado</item>
+    <item quantity="one">%d arco selecionado</item>
     <item quantity="other">%d arcos selecionados</item>
   </plurals>
   <plurals name="arrow_selected">
-    <item quantity="one">Uma flecha selecionada</item>
+    <item quantity="one">%d flecha selecionada</item>
     <item quantity="other">%d flechas selecionadas</item>
   </plurals>
   <plurals name="passe_selected">
-    <item quantity="one">Uma série selecionada</item>
+    <item quantity="one">%d série selecionada</item>
     <item quantity="other">%d séries selecionadas</item>
   </plurals>
   <string name="edit">Editar</string>
@@ -89,12 +89,12 @@
   <string name="format">Formato</string>
   <!-- x ends of y arrows -->
   <plurals name="passe">
-    <item quantity="one">1 série</item>
+    <item quantity="one">%d série</item>
     <item quantity="other">%d séries</item>
   </plurals>
   <string name="with">de</string>
   <plurals name="arrow">
-    <item quantity="one">1 flecha</item>
+    <item quantity="one">%d flecha</item>
     <item quantity="other">%d flechas</item>
   </plurals>
   <string name="target_face">Target face</string>
@@ -120,7 +120,7 @@
   <string name="donate_10">Doe-me uma pizza grande</string>
   <string name="donate_20">Doe-me combustível</string>
   <string name="donation_thank">Obrigado por seu apoio!</string>
-  <string name="donate_text">Os valores incluem VAT e 30% de fees para o Google. Como alternativa, você pode doar livremente na conta PayPal dreier.florian@gmail.com.</string>
+  <string name="donate_text" formatted="false">Os valores incluem VAT e 30% de fees para o Google. Como alternativa, você pode doar livremente na conta PayPal dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Cronômetro</string>
   <string name="touch_to_start">Toque para começar</string>
@@ -140,7 +140,7 @@
   <string name="licences_summary">Notas legais de Licenças</string>
   <string name="version">Versão %s</string>
   <plurals name="second">
-    <item quantity="one">1 segundo</item>
+    <item quantity="one">%d segundo</item>
     <item quantity="other">%d segundos</item>
   </plurals>
   <string name="info">Informação</string>

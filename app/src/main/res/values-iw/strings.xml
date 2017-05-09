@@ -132,7 +132,7 @@
   <string name="donate_10">רום לי מגש פיצה גדול</string>
   <string name="donate_20">תרום לי קצת דלק</string>
   <string name="donation_thank">תודה לך על תמיכתך!</string>
-  <string name="donate_text">המחירים כוללים מע\"מ ומס בשווי 30% לגוגל. לחילופין, נשמח אם תוכל לתרום לחשבון ה-PayPal של dreier.florian@gmail.com.</string>
+  <string name="donate_text" formatted="false">המחירים כוללים מע\"מ ומס בשווי 30% לגוגל. לחילופין, נשמח אם תוכל לתרום לחשבון ה-PayPal של dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">טיימר</string>
   <string name="touch_to_start">גע כדי להתחיל</string>

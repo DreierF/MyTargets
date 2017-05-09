@@ -114,7 +114,7 @@
   <string name="donate_10">送我一份薄餅</string>
   <string name="donate_20">送我一些汽油</string>
   <string name="donation_thank">謝謝您的支持!</string>
-  <string name="donate_text">以上金額包含商品及服務稅, 三成金額將會繳交給谷歌(Google). 另外, 歡迎捐贈到 PayPal 帳號 dreier.florian@gmail.com.</string>
+  <string name="donate_text" formatted="false">以上金額包含商品及服務稅, 三成金額將會繳交給谷歌(Google). 另外, 歡迎捐贈到 PayPal 帳號 dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">計時器</string>
   <string name="touch_to_start">觸碰螢幕開始</string>

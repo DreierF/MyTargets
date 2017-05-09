@@ -120,7 +120,7 @@
   <string name="donate_10">Doname para una Gran pizza</string>
   <string name="donate_20">Doname para Gasolina</string>
   <string name="donation_thank">Gracias por tu ayuda!</string>
-  <string name="donate_text">Los impuestos están incluidos. IVA y el 30% de tasas para Google. Como alternativa, puedes gustosamente, donar en mi cuenta de PayPal (dreier.florian@gmail.com.)</string>
+  <string name="donate_text" formatted="false">Los impuestos están incluidos. IVA y el 30% de tasas para Google. Como alternativa, puedes gustosamente, donar en mi cuenta de PayPal (dreier.florian@gmail.com.)</string>
   <!-- Timer -->
   <string name="timer">Cronómetro</string>
   <string name="touch_to_start">Pulsa para empezar</string>

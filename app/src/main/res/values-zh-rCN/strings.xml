@@ -114,7 +114,7 @@
   <string name="donate_10">捐助我一个大披萨</string>
   <string name="donate_20">捐助我一些燃料</string>
   <string name="donation_thank">谢谢您的支持 ！</string>
-  <string name="donate_text">款项含有增值税和给谷歌的30%费用。你可能乐意直接捐助到PayPal帐户 dreier.florian@gmail.com。</string>
+  <string name="donate_text" formatted="false">款项含有增值税和给谷歌的30%费用。你可能乐意直接捐助到PayPal帐户 dreier.florian@gmail.com。</string>
   <!-- Timer -->
   <string name="timer">定时器</string>
   <string name="touch_to_start">触摸启动</string>

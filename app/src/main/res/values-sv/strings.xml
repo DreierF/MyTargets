@@ -120,7 +120,7 @@
   <string name="donate_10">Donera till en stor pizza</string>
   <string name="donate_20">Donera till bränsle</string>
   <string name="donation_thank">Tack för ditt stöd!</string>
-  <string name="donate_text">Beloppen är inkl moms och 30% avgifter för Google. Alternativt kan du gärna donera till PayPal kontot dreier.florian@gmail.com.</string>
+  <string name="donate_text" formatted="false">Beloppen är inkl moms och 30% avgifter för Google. Alternativt kan du gärna donera till PayPal kontot dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Timer</string>
   <string name="touch_to_start">Tryck för att starta</string>

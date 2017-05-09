@@ -126,7 +126,7 @@
   <string name="donate_10">Duża pizza dla autora</string>
   <string name="donate_20">Galonik paliwa dla autora</string>
   <string name="donation_thank">Dziękuję za wsparcie!</string>
-  <string name="donate_text">Kwoty zawierają podatek VAT oraz 30% opłatę Gooogle.  Alternatywnie datki można przekazywać na konto PayPal dreier.florian@gmail.com .</string>
+  <string name="donate_text" formatted="false">Kwoty zawierają podatek VAT oraz 30% opłatę Gooogle.  Alternatywnie datki można przekazywać na konto PayPal dreier.florian@gmail.com .</string>
   <!-- Timer -->
   <string name="timer">Zegar</string>
   <string name="touch_to_start">Dotknij, aby rozpocząć</string>

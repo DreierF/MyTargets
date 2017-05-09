@@ -132,7 +132,7 @@
   <string name="donate_10">Doniraj mi veliko pico</string>
   <string name="donate_20">Doniraj mi nekaj goriva</string>
   <string name="donation_thank">Hvala za vašo podporo!</string>
-  <string name="donate_text"> V donacijo je vkljuèen DDV in 30% pristojbine za Google. Zaželjena alternativa je donacija preko PayPal na raèun dreier.florian@gmail.com.</string>
+  <string name="donate_text" formatted="false"> V donacijo je vkljuèen DDV in 30% pristojbine za Google. Zaželjena alternativa je donacija preko PayPal na raèun dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Odštevalnik</string>
   <string name="touch_to_start">Za zaèetek se dotakni zaslona</string>
