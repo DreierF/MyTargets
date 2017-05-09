@@ -25,6 +25,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.wearable.activity.WearableActivity;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import org.parceler.Parcels;
 
@@ -51,7 +53,11 @@ public class MainActivity extends WearableActivity {
                     setTraining(training);
                     binding.root.setClickable(false);
                     binding.wearableDrawerView.setVisibility(View.VISIBLE);
-                    binding.primaryActionAdd.setOnClickListener(view -> ApplicationInstance.wearableClient.sendCreateTraining(training));
+
+                    // Replaces the on click behaviour that open the (empty) drawer
+                    LinearLayout peekView = ((LinearLayout) binding.primaryActionAdd.getParent());
+                    ViewGroup peekContainer = ((ViewGroup) peekView.getParent());
+                    peekContainer.setOnClickListener(view -> ApplicationInstance.wearableClient.sendCreateTraining(training));
                     binding.drawerLayout.peekDrawer(Gravity.BOTTOM);
                     break;
                 case BROADCAST_TRAINING_UPDATED:
