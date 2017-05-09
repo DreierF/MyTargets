@@ -214,7 +214,7 @@ public class SettingsManager {
     }
 
     public static boolean getArrowNumbersEnabled() {
-        return lastUsed.getBoolean(KEY_NUMBERING_ENABLED, true);
+        return lastUsed.getBoolean(KEY_NUMBERING_ENABLED, false);
     }
 
     public static void setArrowNumbersEnabled(boolean enabled) {
