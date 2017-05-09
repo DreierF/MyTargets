@@ -16,7 +16,6 @@
 package de.dreier.mytargets.shared.models.db;
 
 import android.support.annotation.NonNull;
-import android.transition.TransitionManager;
 
 import com.annimon.stream.Stream;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -26,7 +25,6 @@ import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.config.DatabaseConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
