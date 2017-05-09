@@ -132,8 +132,8 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & IRecursiv
     private void remove(List<T> deleted) {
         FirebaseAnalytics.getInstance(getContext()).logEvent("delete", null);
         for (T item : deleted) {
-            item.delete();
             adapter.removeItem(item);
+            item.delete();
         }
         adapter.notifyDataSetChanged();
         String message = getResources()
