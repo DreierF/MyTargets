@@ -126,7 +126,7 @@
   <string name="donate_10">Угостите меня большой пиццей</string>
   <string name="donate_20">Заправьте мою машину</string>
   <string name="donation_thank">Спасибо за вашу поддержку!</string>
-  <string name="donate_text">Сумма включает НДС и 30% платежи для Google. Вместо этого можете воспользоваться PayPal. Мой аккаунт dreier.florian@gmail.com.</string>
+  <string name="donate_text" formatted="false">Сумма включает НДС и 30% платежи для Google. Вместо этого можете воспользоваться PayPal. Мой аккаунт dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Таймер</string>
   <string name="touch_to_start">Коснитесь экрана для старта</string>
@@ -176,22 +176,22 @@
   <string name="edit_training">Изменить тренировку</string>
   <string name="edit_standard_round">Изменить стандартный раунд</string>
   <plurals name="arrow_deleted">
-    <item quantity="one">Одна стрела удалена</item>
+    <item quantity="one">%d стрела удалена</item>
     <item quantity="few">%d стрелы удалены</item>
     <item quantity="other">%d стрелы удалены</item>
   </plurals>
   <plurals name="bow_deleted">
-    <item quantity="one">Один лук удален</item>
+    <item quantity="one">%d лук удален</item>
     <item quantity="few">%d лука удалены</item>
     <item quantity="other">%d лука удалены</item>
   </plurals>
   <plurals name="training_deleted">
-    <item quantity="one">Одна тренировка удалена</item>
+    <item quantity="one">%d тренировка удалена</item>
     <item quantity="few">%d тренировки удалены</item>
     <item quantity="other">%d тренировки удалены</item>
   </plurals>
   <plurals name="passe_deleted">
-    <item quantity="one">Одна серия удалена</item>
+    <item quantity="one">%d серия удалена</item>
     <item quantity="few">%d серии удалены</item>
     <item quantity="other">%d серии удалены</item>
   </plurals>
@@ -201,12 +201,12 @@
     <item quantity="other">Раунд %d</item>
   </plurals>
   <plurals name="round_selected">
-    <item quantity="one">Один раунд выбран</item>
+    <item quantity="one">%d раунд выбран</item>
     <item quantity="few">%d раунда выбраны</item>
     <item quantity="other">%d раунда выбраны</item>
   </plurals>
   <plurals name="round_deleted">
-    <item quantity="one">Один раунд удален</item>
+    <item quantity="one">%d раунд удален</item>
     <item quantity="few">%d раунда удалены</item>
     <item quantity="other">%d раунда удалены</item>
   </plurals>

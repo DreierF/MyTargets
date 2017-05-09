@@ -16,6 +16,5 @@
 
 <resources>
     <string name="my_targets" translatable="false">MyTargets</string>
-    <string name="application_id" translatable="false">de.dreier.mytargets</string>
     <string name="content_authority" translatable="false">de.dreier.mytargets.provider</string>
 </resources>

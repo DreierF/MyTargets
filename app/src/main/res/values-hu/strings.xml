@@ -120,7 +120,7 @@
   <string name="donate_10">Adomány egy nagy pizzára</string>
   <string name="donate_20">Adomány egy kis üzemanyagra</string>
   <string name="donation_thank">Köszönöm a támogatást!</string>
-  <string name="donate_text">Az összegek tartalmazzák az ÁFA-t és a Google 30%-os díját. Esetleg, szíves adományként a PayPal-on a dreier.florian@gmail.com számlára.</string>
+  <string name="donate_text" formatted="false">Az összegek tartalmazzák az ÁFA-t és a Google 30%-os díját. Esetleg, szíves adományként a PayPal-on a dreier.florian@gmail.com számlára.</string>
   <!-- Timer -->
   <string name="timer">Stopper</string>
   <string name="touch_to_start">Érintésre índít</string>

@@ -69,10 +69,10 @@ android {
 }
 
 dependencies {
-    provided "com.google.android.wearable:wearable:$libraryVersion.supportWearable"
-
     compile "com.google.android.support:wearable:$libraryVersion.supportWearable"
     provided "com.google.android.wearable:wearable:$libraryVersion.supportWearable"
+    compile "com.android.support:percent:$libraryVersion.support"
+    compile "com.android.support:recyclerview-v7:$libraryVersion.support"
 
     compile "org.parceler:parceler-api:$libraryVersion.parceler"
     annotationProcessor "org.parceler:parceler:$libraryVersion.parceler"

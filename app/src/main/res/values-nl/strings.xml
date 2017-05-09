@@ -120,7 +120,7 @@
   <string name="donate_10">Doneer mij een grote pizza</string>
   <string name="donate_20">Doneer mij wat benzine</string>
   <string name="donation_thank">Bedankt voor uw donatie!</string>
-  <string name="donate_text"> De bedragen zijn inclusief BTW en 30% kosten voor Google. Als alternatief mag u ook doneren via PayPal, op account dreier.florian@gmail.com.</string>
+  <string name="donate_text" formatted="false"> De bedragen zijn inclusief BTW en 30% kosten voor Google. Als alternatief mag u ook doneren via PayPal, op account dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Schietklok</string>
   <string name="touch_to_start">Starten</string>

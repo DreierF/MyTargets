@@ -120,7 +120,7 @@
   <string name="donate_10">Donam per una pizza</string>
   <string name="donate_20">Donam per betzina</string>
   <string name="donation_thank">Gràcies pel teu suport!</string>
-  <string name="donate_text">Les quantitats incloeixen VAT. i el 30%d´honoraris per  Google. Alternativament, estaria molt agrait de rebre una donació en la compte de PayPal dreier.florian@gmail.com.</string>
+  <string name="donate_text" formatted="false">Les quantitats incloeixen VAT. i el 30%d´honoraris per  Google. Alternativament, estaria molt agrait de rebre una donació en la compte de PayPal dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Temporitzador</string>
   <string name="touch_to_start">Toca per començar</string>

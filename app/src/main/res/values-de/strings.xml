@@ -120,7 +120,7 @@
   <string name="donate_10">Spende mir eine große Pizza</string>
   <string name="donate_20">Spende mir ein bisschen Benzin</string>
   <string name="donation_thank">Vielen Dank für Ihre Unterstützung!</string>
-  <string name="donate_text">Die Beträge sind inkl. Mehrwertsteuer und 30% Gebühren für Google. Alternativ kannst du mir auch gerne auf das PayPal Konto dreier.florian@gmail.com spenden.</string>
+  <string name="donate_text" formatted="false">Die Beträge sind inkl. Mehrwertsteuer und 30% Gebühren für Google. Alternativ kannst du mir auch gerne auf das PayPal Konto dreier.florian@gmail.com spenden.</string>
   <!-- Timer -->
   <string name="timer">Schießuhr</string>
   <string name="touch_to_start">Berühren zum starten</string>

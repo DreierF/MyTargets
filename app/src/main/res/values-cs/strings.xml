@@ -126,7 +126,7 @@
   <string name="donate_10">Přispět na velkou pizzu</string>
   <string name="donate_20">Přispět na nějaké palivo</string>
   <string name="donation_thank">Děkuji vám za vaši podporu!</string>
-  <string name="donate_text">Částky jsou včetně DPH a 30% poplatku Googlu. Také můžete přispět na PayPal účet dreier.florian@gmail.com.</string>
+  <string name="donate_text" formatted="false">Částky jsou včetně DPH a 30% poplatku Googlu. Také můžete přispět na PayPal účet dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Časomíra</string>
   <string name="touch_to_start">Stiskem spustit</string>

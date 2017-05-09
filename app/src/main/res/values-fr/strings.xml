@@ -120,7 +120,7 @@
   <string name="donate_10">Donner une grande pizza</string>
   <string name="donate_20">Donner de l\'essence</string>
   <string name="donation_thank">Merci pour votre soutient!</string>
-  <string name="donate_text">Les montants inclus la TVA et 30% de commission pour Google. Si vous préférez, vous pouvez également faire un don PayPal sur le compte dreier.florian@gmail.com.</string>
+  <string name="donate_text" formatted="false">Les montants inclus la TVA et 30% de commission pour Google. Si vous préférez, vous pouvez également faire un don PayPal sur le compte dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Chronomètre</string>
   <string name="touch_to_start">Appuyer pour démarrer</string>
@@ -169,11 +169,11 @@
   <string name="edit_training">Modifier la séance</string>
   <string name="edit_standard_round">Modifier l\'épreuve standard</string>
   <plurals name="arrow_deleted">
-    <item quantity="one">Une flèche effacée</item>
+    <item quantity="one">%d flèche effacée</item>
     <item quantity="other">%d flèches supprimés</item>
   </plurals>
   <plurals name="bow_deleted">
-    <item quantity="one">Un arc effacé</item>
+    <item quantity="one">%d arc effacé</item>
     <item quantity="other">%d arcs supprimés</item>
   </plurals>
   <plurals name="training_deleted">
@@ -181,7 +181,7 @@
     <item quantity="other">%d séances effacées</item>
   </plurals>
   <plurals name="passe_deleted">
-    <item quantity="one">Une extrémité supprimée</item>
+    <item quantity="one">%d extrémité supprimée</item>
     <item quantity="other">extrémités %d supprimées</item>
   </plurals>
   <plurals name="rounds">

@@ -50,7 +50,7 @@ public interface SelectableHolder {
     /**
      * <p>Returns the adapter position this item is currently bound to.
      * This can (and often will) change; if attached to a {@link MultiSelector},
-     * {@link #bindHolder(SelectableHolder, long)}
+     * {@link MultiSelector#bindHolder(SelectableHolder, long)}
      * should be called whenever this value changes.</p>
      *
      * @return Position this holder is currently bound to.
@@ -60,7 +60,7 @@ public interface SelectableHolder {
     /**
      * <p>Return the item id this item is currently bound to.
      * This can (and often will) change; if attached to a {@link MultiSelector},
-     * {@link #bindHolder(SelectableHolder, long)}
+     * {@link MultiSelector#bindHolder(SelectableHolder, long)}
      * should be called whenever this value changes.</p>
      *
      * @return Item id this holder is currently bound to.

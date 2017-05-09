@@ -120,7 +120,7 @@
   <string name="donate_10">Donami una pizza farcita</string>
   <string name="donate_20">Donami un po\' di benzina</string>
   <string name="donation_thank">Grazie per il tuo supporto!</string>
-  <string name="donate_text">Gli importi sono comprensivi di IVA e 30% di commissioni Google. In alternativa si può donare sul conto PayPal dreier.florian@gmail.com.</string>
+  <string name="donate_text" formatted="false">Gli importi sono comprensivi di IVA e 30% di commissioni Google. In alternativa si può donare sul conto PayPal dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Timer</string>
   <string name="touch_to_start">Tocca per avviare</string>
