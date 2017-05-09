@@ -417,7 +417,7 @@ public class StatisticsFragment extends FragmentBase {
                 @Override
                 public String getXValueFormatted(float value) {
                     int index = Math.max(Math.min((int) value, values.size() - 1), 0);
-                    return dateFormat.format(values.get(index).second.toDate());
+                    return dateFormat.format(values.get(index).second);
                 }
             };
         }
