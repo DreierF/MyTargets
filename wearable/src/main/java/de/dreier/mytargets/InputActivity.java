@@ -76,14 +76,14 @@ public class InputActivity extends WearableActivity implements TargetViewBase.On
         super.onEnterAmbient(ambientDetails);
         binding.target.setBackgroundResource(R.color.md_black_1000);
         binding.target.setAmbientMode(true);
-        binding.time.setVisibility(View.VISIBLE);
-        binding.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
+        binding.clock.time.setVisibility(View.VISIBLE);
+        binding.clock.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
     }
 
     @Override
     public void onUpdateAmbient() {
         super.onUpdateAmbient();
-        binding.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
+        binding.clock.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
     }
 
     @Override
@@ -91,7 +91,7 @@ public class InputActivity extends WearableActivity implements TargetViewBase.On
         super.onExitAmbient();
         binding.target.setBackgroundResource(R.color.md_wear_green_lighter_background);
         binding.target.setAmbientMode(false);
-        binding.time.setVisibility(View.GONE);
+        binding.clock.time.setVisibility(View.GONE);
     }
 
     @Override

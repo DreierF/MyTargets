@@ -39,15 +39,9 @@
             app:circle_radius="@dimen/circle_radius"
             app:circle_radius_pressed="@dimen/circle_radius_pressed"/>
 
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_gravity="bottom"
-            android:background="@color/md_black_1000"
-            android:gravity="center"
-            android:textColor="@color/md_white_1000"
-            android:visibility="gone"/>
+        <include
+            android:id="@+id/clock"
+            layout="@layout/layout_clock"/>
 
     </FrameLayout>
 

@@ -94,14 +94,14 @@ public class MainActivity extends WearableActivity {
         binding.wearableDrawerView.setBackgroundResource(R.color.md_black_1000);
         binding.date.setTextColor(getResources().getColor(R.color.md_white_1000));
         binding.icon.setVisibility(View.INVISIBLE);
-        binding.time.setVisibility(View.VISIBLE);
-        binding.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
+        binding.clock.time.setVisibility(View.VISIBLE);
+        binding.clock.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
     }
 
     @Override
     public void onUpdateAmbient() {
         super.onUpdateAmbient();
-        binding.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
+        binding.clock.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
     }
 
     @Override
@@ -111,7 +111,7 @@ public class MainActivity extends WearableActivity {
         binding.wearableDrawerView.setBackgroundResource(R.color.md_wear_green_lighter_ui_element);
         binding.date.setTextColor(getResources().getColor(R.color.md_wear_green_lighter_ui_element));
         binding.icon.setVisibility(View.VISIBLE);
-        binding.time.setVisibility(View.GONE);
+        binding.clock.time.setVisibility(View.GONE);
     }
 
     public void setTrainingInfo(TrainingInfo info) {
