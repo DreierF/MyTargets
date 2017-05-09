@@ -94,7 +94,7 @@ public class MobileWearableClient extends WearableClientBase {
         }
         Round round = new Round(rounds.get(roundCount - 1));
         for (Round r : rounds) {
-            if (r.getEnds().isEmpty()) {
+            if (r.maxEndCount != null && r.getEnds().size() < r.maxEndCount) {
                 round = new Round(r);
                 break;
             }
