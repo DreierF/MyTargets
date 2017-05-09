@@ -24,8 +24,10 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import org.parceler.Parcel;
 
@@ -35,13 +37,14 @@ import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IImageProvider;
+import de.dreier.mytargets.shared.models.IRecursiveModel;
 import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter;
 import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter;
 
 @Parcel
 @Table(database = AppDatabase.class)
-public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Comparable<Arrow> {
+public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Comparable<Arrow>, IRecursiveModel {
 
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
@@ -93,7 +96,7 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
                 .querySingle();
     }
 
-    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "images")
+    @OneToMany(methods = {}, variableName = "images")
     public List<ArrowImage> getImages() {
         if (images == null) {
             images = SQLite.select()
@@ -135,17 +138,35 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
 
     @Override
     public void save() {
-        super.save();
-        if(images != null) {
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::save);
+    }
+
+    @Override
+    public void save(DatabaseWrapper databaseWrapper) {
+        super.save(databaseWrapper);
+        if (images != null) {
             SQLite.delete(ArrowImage.class)
                     .where(ArrowImage_Table.arrow.eq(id))
-                    .execute();
+                    .execute(databaseWrapper);
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
             for (ArrowImage image : images) {
                 image.arrowId = id;
-                image.save();
+                image.save(databaseWrapper);
             }
         }
+    }
+
+    @Override
+    public void delete() {
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::delete);
+    }
+
+    @Override
+    public void delete(DatabaseWrapper databaseWrapper) {
+        for (ArrowImage arrowImage : getImages()) {
+            arrowImage.delete(databaseWrapper);
+        }
+        super.delete(databaseWrapper);
     }
 
     @Override
@@ -163,5 +184,15 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
                 !TextUtils.isEmpty(vanes) &&
                 !TextUtils.isEmpty(nock) &&
                 !TextUtils.isEmpty(comment);
+    }
+
+    @Override
+    public void saveRecursively() {
+        save();
+    }
+
+    @Override
+    public void saveRecursively(DatabaseWrapper databaseWrapper) {
+        save(databaseWrapper);
     }
 }

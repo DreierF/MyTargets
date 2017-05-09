@@ -142,7 +142,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         binding.environment.setOnActivityResultContext(this);
         binding.trainingDate.setOnClickListener(view -> onDateClick());
 
-
         if (trainingId == null) {
             ToolbarUtils.setTitle(this, R.string.new_training);
             binding.training.setText(getString(
@@ -165,7 +164,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             date = train.date;
             binding.bow.setItemId(train.bowId);
             binding.arrow.setItemId(train.arrowId);
-            binding.standardRound.setItemId(train.standardRoundId);
             binding.environment.setItem(train.getEnvironment());
             setTrainingDate();
             binding.notEditable.setVisibility(GONE);

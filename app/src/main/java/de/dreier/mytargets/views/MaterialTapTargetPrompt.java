@@ -86,22 +86,19 @@ public class MaterialTapTargetPrompt {
     private ViewGroup mClipToView;
     private boolean mAutoDismiss, mAutoFinish;
 
-    MaterialTapTargetPrompt(final Activity activity) {
+    private MaterialTapTargetPrompt(final Activity activity) {
         mActivity = activity;
         mView = new PromptView(activity);
-        mView.mOnPromptTouchedListener = new PromptView.OnPromptTouchedListener() {
-            @Override
-            public void onPromptTouched(MotionEvent event, boolean tappedTarget) {
-                if (!mDismissing) {
-                    MaterialTapTargetPrompt.this.onHidePrompt(event, tappedTarget);
-                    if (tappedTarget) {
-                        if (mAutoFinish) {
-                            finish();
-                        }
-                    } else {
-                        if (mAutoDismiss) {
-                            dismiss();
-                        }
+        mView.mOnPromptTouchedListener = (event, tappedTarget) -> {
+            if (!mDismissing) {
+                MaterialTapTargetPrompt.this.onHidePrompt(event, tappedTarget);
+                if (tappedTarget) {
+                    if (mAutoFinish) {
+                        finish();
+                    }
+                } else {
+                    if (mAutoDismiss) {
+                        dismiss();
                     }
                 }
             }
@@ -115,12 +112,7 @@ public class MaterialTapTargetPrompt {
             mStatusBarHeight = 0;
         }
 
-        mGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                updateFocalCentrePosition();
-            }
-        };
+        mGlobalLayoutListener = this::updateFocalCentrePosition;
     }
 
     /**
@@ -167,16 +159,7 @@ public class MaterialTapTargetPrompt {
 
         updateFocalCentrePosition();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            startRevealAnimation();
-        } else {
-            mView.mBackgroundRadius = mBaseBackgroundRadius;
-            mView.mFocalRadius = mBaseFocalRadius;
-            mView.mPaintFocal.setAlpha(255);
-            mView.mPaintBackground.setAlpha(244);
-            mPaintSecondaryText.setAlpha(mSecondaryTextColourAlpha);
-            mPaintPrimaryText.setAlpha(mPrimaryTextColourAlpha);
-        }
+        startRevealAnimation();
     }
 
     /**
@@ -210,69 +193,58 @@ public class MaterialTapTargetPrompt {
      * This is treated as if the user has touched the target focal point.
      */
     public void finish() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            if (mDismissing) {
-                return;
-            }
-            mDismissing = true;
-            if (mAnimationCurrent != null) {
-                mAnimationCurrent.removeAllListeners();
-                mAnimationCurrent.cancel();
-                mAnimationCurrent = null;
-            }
-            mAnimationCurrent = ValueAnimator.ofFloat(1f, 0f);
-            mAnimationCurrent.setDuration(225);
-            mAnimationCurrent.setInterpolator(mAnimationInterpolator);
-            mAnimationCurrent.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    final float value = (float) animation.getAnimatedValue();
-                    mRevealedAmount = 1f + ((1f - value) / 4);
-                    mView.mBackgroundRadius = mBaseBackgroundRadius * mRevealedAmount;
-                    mView.mFocalRadius = mBaseFocalRadius * mRevealedAmount;
-                    mView.mPaintFocal.setAlpha((int) (255 * value));
-                    mView.mPaintBackground.setAlpha((int) (244 * value));
-                    mPaintSecondaryText.setAlpha((int) (mSecondaryTextColourAlpha * value));
-                    mPaintPrimaryText.setAlpha((int) (mPrimaryTextColourAlpha * value));
-                    if (mView.mIconDrawable != null) {
-                        mView.mIconDrawable.setAlpha(mView.mPaintBackground.getAlpha());
-                    }
-                    mView.invalidate();
-                }
-            });
-            mAnimationCurrent.addListener(new AnimatorListener() {
-                @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    removeGlobalLayoutListener();
-                    getParentView().removeView(mView);
-                    mAnimationCurrent.removeAllListeners();
-                    mAnimationCurrent = null;
-                    mDismissing = false;
-                    onHidePromptComplete();
-                    mParentView = null;
-                }
-
-                @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-                @Override
-                public void onAnimationCancel(Animator animation) {
-                    removeGlobalLayoutListener();
-                    getParentView().removeView(mView);
-                    mAnimationCurrent.removeAllListeners();
-                    mAnimationCurrent = null;
-                    mDismissing = false;
-                    onHidePromptComplete();
-                    mParentView = null;
-                }
-            });
-            mAnimationCurrent.start();
-        } else {
-            removeGlobalLayoutListener();
-            getParentView().removeView(mView);
-            onHidePromptComplete();
-            mParentView = null;
+        if (mDismissing) {
+            return;
         }
+        mDismissing = true;
+        if (mAnimationCurrent != null) {
+            mAnimationCurrent.removeAllListeners();
+            mAnimationCurrent.cancel();
+            mAnimationCurrent = null;
+        }
+        mAnimationCurrent = ValueAnimator.ofFloat(1f, 0f);
+        mAnimationCurrent.setDuration(225);
+        mAnimationCurrent.setInterpolator(mAnimationInterpolator);
+        mAnimationCurrent.addUpdateListener(animation -> {
+            final float value = (float) animation.getAnimatedValue();
+            mRevealedAmount = 1f + ((1f - value) / 4);
+            mView.mBackgroundRadius = mBaseBackgroundRadius * mRevealedAmount;
+            mView.mFocalRadius = mBaseFocalRadius * mRevealedAmount;
+            mView.mPaintFocal.setAlpha((int) (255 * value));
+            mView.mPaintBackground.setAlpha((int) (244 * value));
+            mPaintSecondaryText.setAlpha((int) (mSecondaryTextColourAlpha * value));
+            mPaintPrimaryText.setAlpha((int) (mPrimaryTextColourAlpha * value));
+            if (mView.mIconDrawable != null) {
+                mView.mIconDrawable.setAlpha(mView.mPaintBackground.getAlpha());
+            }
+            mView.invalidate();
+        });
+        mAnimationCurrent.addListener(new AnimatorListener() {
+            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                removeGlobalLayoutListener();
+                getParentView().removeView(mView);
+                mAnimationCurrent.removeAllListeners();
+                mAnimationCurrent = null;
+                mDismissing = false;
+                onHidePromptComplete();
+                mParentView = null;
+            }
+
+            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                removeGlobalLayoutListener();
+                getParentView().removeView(mView);
+                mAnimationCurrent.removeAllListeners();
+                mAnimationCurrent = null;
+                mDismissing = false;
+                onHidePromptComplete();
+                mParentView = null;
+            }
+        });
+        mAnimationCurrent.start();
     }
 
     /**
@@ -280,69 +252,56 @@ public class MaterialTapTargetPrompt {
      * <p>
      * This is treated as if the user has touched outside the target focal point.
      */
-    public void dismiss() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            if (mDismissing) {
-                return;
-            }
-            mDismissing = true;
-            if (mAnimationCurrent != null) {
-                mAnimationCurrent.removeAllListeners();
-                mAnimationCurrent.cancel();
-                mAnimationCurrent = null;
-            }
-            mAnimationCurrent = ValueAnimator.ofFloat(1f, 0f);
-            mAnimationCurrent.setDuration(225);
-            mAnimationCurrent.setInterpolator(mAnimationInterpolator);
-            mAnimationCurrent.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    mRevealedAmount = (float) animation.getAnimatedValue();
-                    mView.mBackgroundRadius = mBaseBackgroundRadius * mRevealedAmount;
-                    mView.mFocalRadius = mBaseFocalRadius * mRevealedAmount;
-                    mView.mPaintBackground.setAlpha((int) (244 * mRevealedAmount));
-                    mPaintSecondaryText
-                            .setAlpha((int) (mSecondaryTextColourAlpha * mRevealedAmount));
-                    mPaintPrimaryText.setAlpha((int) (mPrimaryTextColourAlpha * mRevealedAmount));
-                    if (mView.mIconDrawable != null) {
-                        mView.mIconDrawable.setAlpha(mView.mPaintBackground.getAlpha());
-                    }
-                    mView.invalidate();
-                }
-            });
-            mAnimationCurrent.addListener(new AnimatorListener() {
-                @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    removeGlobalLayoutListener();
-                    getParentView().removeView(mView);
-                    mAnimationCurrent.removeAllListeners();
-                    mAnimationCurrent = null;
-                    mDismissing = false;
-                    onHidePromptComplete();
-                    mParentView = null;
-                }
-
-                @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-                @Override
-                public void onAnimationCancel(Animator animation) {
-                    removeGlobalLayoutListener();
-                    getParentView().removeView(mView);
-                    mAnimationCurrent.removeAllListeners();
-                    mAnimationCurrent = null;
-                    mDismissing = false;
-                    onHidePromptComplete();
-                    mParentView = null;
-                }
-            });
-            mAnimationCurrent.start();
-        } else {
-            removeGlobalLayoutListener();
-            getParentView().removeView(mView);
-            onHidePromptComplete();
-            mParentView = null;
+    private void dismiss() {
+        if (mDismissing) {
+            return;
         }
+        mDismissing = true;
+        if (mAnimationCurrent != null) {
+            mAnimationCurrent.removeAllListeners();
+            mAnimationCurrent.cancel();
+            mAnimationCurrent = null;
+        }
+        mAnimationCurrent = ValueAnimator.ofFloat(1f, 0f);
+        mAnimationCurrent.setDuration(225);
+        mAnimationCurrent.setInterpolator(mAnimationInterpolator);
+        mAnimationCurrent.addUpdateListener(animation -> {
+            mRevealedAmount = (float) animation.getAnimatedValue();
+            mView.mBackgroundRadius = mBaseBackgroundRadius * mRevealedAmount;
+            mView.mFocalRadius = mBaseFocalRadius * mRevealedAmount;
+            mView.mPaintBackground.setAlpha((int) (244 * mRevealedAmount));
+            mPaintSecondaryText
+                    .setAlpha((int) (mSecondaryTextColourAlpha * mRevealedAmount));
+            mPaintPrimaryText.setAlpha((int) (mPrimaryTextColourAlpha * mRevealedAmount));
+            if (mView.mIconDrawable != null) {
+                mView.mIconDrawable.setAlpha(mView.mPaintBackground.getAlpha());
+            }
+            mView.invalidate();
+        });
+        mAnimationCurrent.addListener(new AnimatorListener() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                removeGlobalLayoutListener();
+                getParentView().removeView(mView);
+                mAnimationCurrent.removeAllListeners();
+                mAnimationCurrent = null;
+                mDismissing = false;
+                onHidePromptComplete();
+                mParentView = null;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                removeGlobalLayoutListener();
+                getParentView().removeView(mView);
+                mAnimationCurrent.removeAllListeners();
+                mAnimationCurrent = null;
+                mDismissing = false;
+                onHidePromptComplete();
+                mParentView = null;
+            }
+        });
+        mAnimationCurrent.start();
     }
 
     @TargetApi(11)
@@ -360,22 +319,18 @@ public class MaterialTapTargetPrompt {
         mAnimationCurrent = ValueAnimator.ofFloat(0f, 1f);
         mAnimationCurrent.setInterpolator(mAnimationInterpolator);
         mAnimationCurrent.setDuration(225);
-        mAnimationCurrent.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                mRevealedAmount = (float) animation.getAnimatedValue();
-                mView.mBackgroundRadius = mBaseBackgroundRadius * mRevealedAmount;
-                mView.mFocalRadius = mBaseFocalRadius * mRevealedAmount;
-                mView.mPaintFocal.setAlpha((int) (255 * mRevealedAmount));
-                mView.mPaintBackground.setAlpha((int) (244 * mRevealedAmount));
-                mPaintSecondaryText.setAlpha((int) (mSecondaryTextColourAlpha * mRevealedAmount));
-                mPaintPrimaryText.setAlpha((int) (mPrimaryTextColourAlpha * mRevealedAmount));
-                if (mView.mIconDrawable != null) {
-                    mView.mIconDrawable.setAlpha(mView.mPaintBackground.getAlpha());
-                }
-                mView.invalidate();
+        mAnimationCurrent.addUpdateListener(animation -> {
+            mRevealedAmount = (float) animation.getAnimatedValue();
+            mView.mBackgroundRadius = mBaseBackgroundRadius * mRevealedAmount;
+            mView.mFocalRadius = mBaseFocalRadius * mRevealedAmount;
+            mView.mPaintFocal.setAlpha((int) (255 * mRevealedAmount));
+            mView.mPaintBackground.setAlpha((int) (244 * mRevealedAmount));
+            mPaintSecondaryText.setAlpha((int) (mSecondaryTextColourAlpha * mRevealedAmount));
+            mPaintPrimaryText.setAlpha((int) (mPrimaryTextColourAlpha * mRevealedAmount));
+            if (mView.mIconDrawable != null) {
+                mView.mIconDrawable.setAlpha(mView.mPaintBackground.getAlpha());
             }
+            mView.invalidate();
         });
         mAnimationCurrent.addListener(new AnimatorListener() {
             @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -443,19 +398,11 @@ public class MaterialTapTargetPrompt {
                 .ofFloat(baseRadius, baseRadius + (mFocalRadius10Percent * 6));
         mAnimationFocalRipple.setInterpolator(mAnimationInterpolator);
         mAnimationFocalRipple.setDuration(500);
-        mAnimationFocalRipple.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                mView.mFocalRippleSize = (float) animation.getAnimatedValue();
-                final float fraction;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-                    fraction = animation.getAnimatedFraction();
-                } else {
-                    fraction = (mFocalRadius10Percent * 6) / (mView.mFocalRippleSize - mBaseFocalRadius - mFocalRadius10Percent);
-                }
-                mView.mFocalRippleAlpha = (int) (mBaseFocalRippleAlpha * (1f - fraction));
-            }
+        mAnimationFocalRipple.addUpdateListener(animation -> {
+            mView.mFocalRippleSize = (float) animation.getAnimatedValue();
+            final float fraction;
+            fraction = animation.getAnimatedFraction();
+            mView.mFocalRippleAlpha = (int) (mBaseFocalRippleAlpha * (1f - fraction));
         });
     }
 
@@ -603,13 +550,13 @@ public class MaterialTapTargetPrompt {
         }
     }
 
-    protected void onHidePrompt(final MotionEvent event, final boolean targetTapped) {
+    private void onHidePrompt(final MotionEvent event, final boolean targetTapped) {
         if (mOnHidePromptListener != null) {
             mOnHidePromptListener.onHidePrompt(event, targetTapped);
         }
     }
 
-    protected void onHidePromptComplete() {
+    private void onHidePromptComplete() {
         if (mOnHidePromptListener != null) {
             mOnHidePromptListener.onHidePromptComplete();
         }
@@ -651,7 +598,7 @@ public class MaterialTapTargetPrompt {
         private float mSecondaryTextOffsetTop;
         private Layout mPrimaryTextLayout;
         private Layout mSecondaryTextLayout;
-        private boolean mDrawRipple = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+        private boolean mDrawRipple = true;
         private OnPromptTouchedListener mOnPromptTouchedListener;
         private boolean mCaptureTouchEventOnFocal;
         private float mClipBoundsTop, mClipBoundsLeft, mClipBoundsBottom, mClipBoundsRight;

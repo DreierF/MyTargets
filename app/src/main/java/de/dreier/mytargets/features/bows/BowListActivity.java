@@ -13,15 +13,16 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils.backup;
+package de.dreier.mytargets.features.bows;
 
-import android.app.backup.FileBackupHelper;
-import android.content.Context;
+import android.support.v4.app.Fragment;
 
-import de.dreier.mytargets.shared.AppDatabase;
+import de.dreier.mytargets.base.activities.ItemSelectActivity;
 
-class DbBackupHelper extends FileBackupHelper {
-    public DbBackupHelper(Context ctx) {
-        super(ctx, ctx.getDatabasePath(AppDatabase.DATABASE_FILE_NAME).getAbsolutePath());
+public class BowListActivity extends ItemSelectActivity {
+
+    @Override
+    public Fragment instantiateFragment() {
+        return new BowListFragment();
     }
 }

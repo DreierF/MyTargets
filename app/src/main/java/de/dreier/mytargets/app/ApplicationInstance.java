@@ -96,7 +96,9 @@ public class ApplicationInstance extends SharedApplicationInstance {
 
     @Override
     public void onCreate() {
-        if (!BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
+            enableDebugLogging();
+        } else {
             Timber.plant(new CrashReportingTree());
         }
         super.onCreate();

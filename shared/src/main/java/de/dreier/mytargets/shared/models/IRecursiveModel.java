@@ -13,16 +13,12 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.arrows;
+package de.dreier.mytargets.shared.models;
 
-import android.support.v4.app.Fragment;
+import com.raizlabs.android.dbflow.structure.Model;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
-import de.dreier.mytargets.base.activities.ItemSelectActivity;
-
-public class ArrowActivity extends ItemSelectActivity {
-
-    @Override
-    public Fragment instantiateFragment() {
-        return new ArrowListFragment();
-    }
+public interface IRecursiveModel extends Model {
+    void saveRecursively();
+    void saveRecursively(DatabaseWrapper databaseWrapper);
 }

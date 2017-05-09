@@ -163,6 +163,7 @@ public class StatisticsFragment extends FragmentBase {
     protected LoaderUICallback onLoad(Bundle args) {
         rounds = Stream.of(LongUtils.toList(roundIds))
                 .map(Round::get)
+                .withoutNulls()
                 .collect(Collectors.toList());
 
         List<ArrowStatistic> data = ArrowStatistic.getAll(target, rounds);
@@ -415,7 +416,8 @@ public class StatisticsFragment extends FragmentBase {
 
                 @Override
                 public String getXValueFormatted(float value) {
-                    return values.get((int) value).second.format(dateFormat);
+                    int index = Math.max(Math.min((int) value, values.size() - 1), 0);
+                    return dateFormat.format(values.get(index).second.toDate());
                 }
             };
         }

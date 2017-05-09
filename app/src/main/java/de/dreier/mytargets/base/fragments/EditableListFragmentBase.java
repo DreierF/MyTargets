@@ -25,13 +25,13 @@ import android.view.MenuItem;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.raizlabs.android.dbflow.structure.Model;
 
 import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.ListAdapterBase;
 import de.dreier.mytargets.shared.models.IIdSettable;
+import de.dreier.mytargets.shared.models.IRecursiveModel;
 import de.dreier.mytargets.utils.MultiSelectorBundler;
 import de.dreier.mytargets.utils.multiselector.MultiSelector;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
@@ -40,7 +40,7 @@ import icepick.State;
 /**
  * @param <T> Model of the item which is managed within the fragment.
  */
-public abstract class EditableListFragmentBase<T extends IIdSettable & Model,
+public abstract class EditableListFragmentBase<T extends IIdSettable & IRecursiveModel,
         U extends ListAdapterBase<?, T>> extends ListFragmentBase<T, U> {
 
     public static final String ITEM_ID = "id";
@@ -133,6 +133,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model,
         FirebaseAnalytics.getInstance(getContext()).logEvent("delete", null);
         for (T item : deleted) {
             adapter.removeItem(item);
+            item.delete();
         }
         adapter.notifyDataSetChanged();
         String message = getResources()
@@ -140,27 +141,12 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & Model,
         Snackbar.make(getView().findViewById(R.id.coordinatorLayout), message, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, v -> {
                     for (T item : deleted) {
+                        item.saveRecursively();
                         adapter.addItem(item);
                     }
                     deleted.clear();
                 })
-                .addCallback(
-                        new Snackbar.Callback() {
-                            @Override
-                            public void onDismissed(Snackbar snackbar, int event) {
-                                // TODO delete directly on remove and restore item in case of undo
-                                for (T item : deleted) {
-                                    item.delete();
-                                }
-                                if (isAdded()) {
-                                    reloadData();
-                                }
-                            }
-
-                            @Override
-                            public void onShown(Snackbar snackbar) {
-                            }
-                        }).show();
+                .show();
     }
 
     private void updateTitle() {

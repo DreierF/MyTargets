@@ -25,8 +25,10 @@ import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import org.parceler.Parcel;
 import org.threeten.bp.LocalDate;
@@ -40,13 +42,14 @@ import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.IIdSettable;
+import de.dreier.mytargets.shared.models.IRecursiveModel;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.utils.typeconverters.EWeatherConverter;
 import de.dreier.mytargets.shared.utils.typeconverters.LocalDateConverter;
 
 @Parcel
 @Table(database = AppDatabase.class)
-public class Training extends BaseModel implements IIdSettable, Comparable<Training> {
+public class Training extends BaseModel implements IIdSettable, Comparable<Training>, IRecursiveModel {
 
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
@@ -134,7 +137,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
         location = env.location;
     }
 
-    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "rounds")
+    @OneToMany(methods = {}, variableName = "rounds")
     public List<Round> getRounds() {
         if (rounds == null) {
             rounds = SQLite.select()
@@ -187,17 +190,34 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
 
     @Override
     public void save() {
-        super.save();
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::save);
+    }
+
+    @Override
+    public void save(DatabaseWrapper databaseWrapper) {
+        super.save(databaseWrapper);
         // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
         for (Round s : getRounds()) {
             s.trainingId = id;
-            s.save();
+            s.save(databaseWrapper);
         }
     }
 
+    @Override
+    public void delete() {
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::delete);
+    }
+
+    @Override
+    public void delete(DatabaseWrapper databaseWrapper) {
+        for (Round round : getRounds()) {
+            round.delete(databaseWrapper);
+        }
+        super.delete(databaseWrapper);
+    }
+
     public Training ensureLoaded() {
-        List<Round> rounds = getRounds();
-        for (Round round : rounds) {
+        for (Round round : getRounds()) {
             for (End end : round.getEnds()) {
                 end.getShots();
             }
@@ -215,6 +235,20 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
             round.ends = new ArrayList<>();
             round.save();
             rounds.add(round);
+        }
+    }
+
+    @Override
+    public void saveRecursively() {
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::saveRecursively);
+    }
+
+    @Override
+    public void saveRecursively(DatabaseWrapper databaseWrapper) {
+        super.save(databaseWrapper);
+        for (Round s : getRounds()) {
+            s.trainingId = id;
+            s.saveRecursively(databaseWrapper);
         }
     }
 }

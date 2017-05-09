@@ -16,6 +16,5 @@
 
 <resources>
     <string name="my_targets" translatable="false">MT Debug</string>
-    <string name="application_id" translatable="false">de.dreier.mytargets.debug</string>
     <string name="content_authority" translatable="false">de.dreier.mytargets.debug.provider</string>
 </resources>

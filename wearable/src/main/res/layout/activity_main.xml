@@ -13,8 +13,8 @@
   ~ GNU General Public License for more details.
   -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.wearable.view.drawer.WearableDrawerLayout
         android:id="@+id/drawer_layout"
@@ -37,7 +37,7 @@
                 android:id="@+id/icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@mipmap/ic_launcher"/>
 
             <TextView
                 android:id="@+id/date"
@@ -46,7 +46,7 @@
                 android:padding="2dp"
                 android:textColor="@color/md_wear_green_lighter_ui_element"
                 android:textSize="14sp"
-                tools:text="today" />
+                tools:text="today"/>
 
             <TextView
                 android:id="@+id/title"
@@ -55,16 +55,18 @@
                 android:padding="2dp"
                 android:textColor="@color/md_white_1000"
                 android:textSize="18sp"
-                tools:text="Training" />
+                tools:text="Training"/>
 
             <TextView
                 android:id="@+id/rounds"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:padding="2dp"
+                android:text="@string/start_phone_app"
                 android:textColor="@color/md_white_1000"
                 android:textSize="12sp"
-                tools:text="5 rounds" />
+                tools:text="5 rounds"/>
 
             <TextView
                 android:id="@+id/ends"
@@ -73,7 +75,7 @@
                 android:padding="2dp"
                 android:textColor="@color/md_white_1000"
                 android:textSize="12sp"
-                tools:text="10 \u00D7 3 arrows" />
+                tools:text="10 \u00D7 3 arrows"/>
 
             <TextView
                 android:id="@+id/distance"
@@ -82,7 +84,7 @@
                 android:padding="2dp"
                 android:textColor="@color/md_white_1000"
                 android:textSize="12sp"
-                tools:text="10m" />
+                tools:text="10m"/>
 
         </LinearLayout>
 
@@ -107,21 +109,15 @@
                     android:id="@+id/primaryActionAdd"
                     android:layout_width="@dimen/peek_drawer_icon_size"
                     android:layout_height="@dimen/peek_drawer_icon_size"
-                    android:src="@drawable/ic_add_white_24dp" />
+                    android:src="@drawable/ic_add_white_24dp"/>
 
             </LinearLayout>
 
         </android.support.wearable.view.drawer.WearableDrawerView>
 
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_gravity="bottom"
-            android:background="@color/md_black_1000"
-            android:gravity="center"
-            android:textColor="@color/md_white_1000"
-            android:visibility="gone"/>
+        <include
+            android:id="@+id/clock"
+            layout="@layout/layout_clock"/>
 
     </android.support.wearable.view.drawer.WearableDrawerLayout>
 

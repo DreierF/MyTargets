@@ -120,7 +120,7 @@
   <string name="donate_10">Donate me a large pizza</string>
   <string name="donate_20">Donate me some fuel</string>
   <string name="donation_thank">Desteğiniz için teşekkürler!</string>
-  <string name="donate_text">Ücretler vergi ve %30 Google giderleridir. Alternatif olarak PayPal üzerinden  dreier.florian@gmail.com hesabına bağışta bulunabilirsiniz.</string>
+  <string name="donate_text" formatted="false">Ücretler vergi ve %30 Google giderleridir. Alternatif olarak PayPal üzerinden  dreier.florian@gmail.com hesabına bağışta bulunabilirsiniz.</string>
   <!-- Timer -->
   <string name="timer">kronometre</string>
   <string name="touch_to_start">Başlat</string>

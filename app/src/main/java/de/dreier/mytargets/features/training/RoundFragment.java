@@ -140,7 +140,7 @@ public class RoundFragment extends EditableListFragment<End> {
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
         round = Round.get(roundId);
-        final List<End> ends = round.getEnds();
+        final List<End> ends = round.getEnds(); //FIXME how!?
         final boolean showFab = round.maxEndCount == null || ends.size() < round.maxEndCount;
 
         return () -> {

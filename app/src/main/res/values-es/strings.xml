@@ -21,7 +21,7 @@
   <string name="next">Siguiente</string>
   <string name="save">Guardar</string>
   <string name="custom">A medida</string>
-  <string name="training">Entrenamiento</string>
+  <string name="training">Entreno</string>
   <string name="bow">Arco</string>
   <string name="arrow">Flecha</string>
   <string name="round">Serie</string>
@@ -29,7 +29,7 @@
   <string name="passe">Tanda</string>
   <string name="passe_n">Tanda %d</string>
   <!-- Overview -->
-  <string name="new_training">Nuevo Entrenamiento</string>
+  <string name="new_training">Nuevo Entreno</string>
   <string name="new_bow">Nuevo Arco</string>
   <string name="new_arrow">Nueva flecha</string>
   <string name="new_round">Nueva Serie</string>
@@ -120,7 +120,7 @@
   <string name="donate_10">Doname para una Gran pizza</string>
   <string name="donate_20">Doname para Gasolina</string>
   <string name="donation_thank">Gracias por tu ayuda!</string>
-  <string name="donate_text">Los impuestos están incluidos. IVA y el 30% de tasas para Google. Como alternativa, puedes gustosamente, donar en mi cuenta de PayPal (dreier.florian@gmail.com.)</string>
+  <string name="donate_text" formatted="false">Los impuestos están incluidos. IVA y el 30% de tasas para Google. Como alternativa, puedes gustosamente, donar en mi cuenta de PayPal (dreier.florian@gmail.com.)</string>
   <!-- Timer -->
   <string name="timer">Cronómetro</string>
   <string name="touch_to_start">Pulsa para empezar</string>
@@ -166,7 +166,7 @@
   <string name="use_as_template">¿Utilizar como plantilla?</string>
   <string name="create_copy">Esto es una Serie estándar! \nDo ¿desea crear una copia para poder editarlo?</string>
   <string name="practice">Practicar</string>
-  <string name="edit_training">Editar Entrenamiento</string>
+  <string name="edit_training">Editar Entreno</string>
   <string name="edit_standard_round">Editar Serie Estandar</string>
   <plurals name="arrow_deleted">
     <item quantity="one">Una flecha eliminada</item>
@@ -214,8 +214,8 @@
   <string name="stabilizer">Estabilizador</string>
   <string name="clicker">Clicker</string>
   <string name="arrow_number_x">%s número de flecha</string>
-  <string name="training_with_standard_round">Entrenamiento Serie Estándar</string>
-  <string name="free_training">Entrenamiento Libre</string>
+  <string name="training_with_standard_round">Entreno Serie Estándar</string>
+  <string name="free_training">Entreno Libre</string>
   <string name="competition">Competición</string>
   <string name="about">Acerca (Nº versión)</string>
   <string name="general">General</string>
@@ -233,7 +233,7 @@
   <string name="network_linkedin">Red de LinkedIn</string>
   <string name="search">Búscar</string>
   <string name="us">Estados Unidos</string>
-  <string name="show_shots_training">Totalidad del entrenamiento</string>
+  <string name="show_shots_training">Totalidad del entreno</string>
   <string name="show_shots_round">Serie Actual</string>
   <string name="show_shots_end">Entrada Actual</string>
   <string name="profile">Perfil</string>

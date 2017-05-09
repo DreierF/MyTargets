@@ -27,8 +27,10 @@ import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import org.parceler.Parcel;
 import org.threeten.bp.LocalTime;
@@ -41,13 +43,14 @@ import java.util.Map;
 
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.IIdSettable;
+import de.dreier.mytargets.shared.models.IRecursiveModel;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.typeconverters.LocalTimeConverter;
 
 @Parcel
 @Table(database = AppDatabase.class)
-public class End extends BaseModel implements IIdSettable, Comparable<End> {
+public class End extends BaseModel implements IIdSettable, Comparable<End>, IRecursiveModel {
 
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
@@ -91,7 +94,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
     }
 
     @NonNull
-    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "shots")
+    @OneToMany(methods = {}, variableName = "shots")
     public List<Shot> getShots() {
         if (shots == null) {
             shots = SQLite.select()
@@ -102,7 +105,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
         return shots;
     }
 
-    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "images")
+    @OneToMany(methods = {}, variableName = "images")
     public List<EndImage> getImages() {
         if (images == null) {
             images = SQLite.select()
@@ -192,35 +195,51 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
 
     @Override
     public void save() {
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::save);
+    }
+
+    @Override
+    public void save(DatabaseWrapper databaseWrapper) {
         if (saveTime == null) {
             saveTime = LocalTime.now();
         }
-        super.save();
+        super.save(databaseWrapper);
         if (shots != null) {
             SQLite.delete(Shot.class)
                     .where(Shot_Table.end.eq(id))
-                    .execute();
+                    .execute(databaseWrapper);
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
             for (Shot s : shots) {
                 s.endId = id;
-                s.save();
+                s.save(databaseWrapper);
             }
         }
         if (images != null) {
             SQLite.delete(EndImage.class)
                     .where(EndImage_Table.end.eq(id))
-                    .execute();
+                    .execute(databaseWrapper);
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
             for (EndImage image : getImages()) {
                 image.endId = id;
-                image.save();
+                image.save(databaseWrapper);
             }
         }
     }
 
     @Override
     public void delete() {
-        super.delete();
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::delete);
+    }
+
+    @Override
+    public void delete(DatabaseWrapper databaseWrapper) {
+        for (Shot shot : getShots()) {
+            shot.delete(databaseWrapper);
+        }
+        for (EndImage endImage : getImages()) {
+            endImage.delete(databaseWrapper);
+        }
+        super.delete(databaseWrapper);
         updateEndIndicesForRound();
     }
 
@@ -228,7 +247,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
         // FIXME very inefficient
         int i = 0;
         Round round = Round.get(roundId);
-        if(round == null) {
+        if (round == null) {
             return;
         }
         for (End end : round.getEnds()) {
@@ -255,4 +274,13 @@ public class End extends BaseModel implements IIdSettable, Comparable<End> {
                 .anyMatch(s -> s.scoringRing == Shot.NOTHING_SELECTED) && getImages().isEmpty();
     }
 
+    @Override
+    public void saveRecursively() {
+        save();
+    }
+
+    @Override
+    public void saveRecursively(DatabaseWrapper databaseWrapper) {
+        save(databaseWrapper);
+    }
 }

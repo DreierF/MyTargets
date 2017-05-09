@@ -22,6 +22,7 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
@@ -109,7 +110,7 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
         return desc;
     }
 
-    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "rounds")
+    @OneToMany(methods = {}, variableName = "rounds")
     public List<RoundTemplate> getRounds() {
         if (rounds == null) {
             rounds = SQLite.select()
@@ -157,17 +158,7 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
 
     @Override
     public void save() {
-        super.save();
-        if (rounds != null) {
-            SQLite.delete(RoundTemplate.class)
-                    .where(RoundTemplate_Table.standardRound.eq(id))
-                    .execute();
-            // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-            for (RoundTemplate s : rounds) {
-                s.standardRound = id;
-                s.save();
-            }
-        }
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::save);
     }
 
     @Override
@@ -183,5 +174,18 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
                 s.save(databaseWrapper);
             }
         }
+    }
+
+    @Override
+    public void delete() {
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::delete);
+    }
+
+    @Override
+    public void delete(DatabaseWrapper databaseWrapper) {
+        for (RoundTemplate roundTemplate : getRounds()) {
+            roundTemplate.delete(databaseWrapper);
+        }
+        super.delete(databaseWrapper);
     }
 }

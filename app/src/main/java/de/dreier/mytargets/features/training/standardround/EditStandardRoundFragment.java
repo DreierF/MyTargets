@@ -160,7 +160,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         standardRound.name = binding.name.getText().toString();
         standardRound.save();
 
-        RoundTemplate round = standardRound.getRounds().get(0);
+        RoundTemplate round = standardRound.getRounds().get(0); //FIXME how is this possible?
         SettingsManager.setShotsPerEnd(round.shotsPerEnd);
         SettingsManager.setEndCount(round.endCount);
         SettingsManager.setTarget(round.getTargetTemplate());

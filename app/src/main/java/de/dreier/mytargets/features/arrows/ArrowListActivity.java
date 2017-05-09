@@ -13,16 +13,16 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.bows;
+package de.dreier.mytargets.features.arrows;
 
 import android.support.v4.app.Fragment;
 
 import de.dreier.mytargets.base.activities.ItemSelectActivity;
 
-public class BowActivity extends ItemSelectActivity {
+public class ArrowListActivity extends ItemSelectActivity {
 
     @Override
     public Fragment instantiateFragment() {
-        return new BowListFragment();
+        return new ArrowListFragment();
     }
 }
