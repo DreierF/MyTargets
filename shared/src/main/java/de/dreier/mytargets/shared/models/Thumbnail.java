@@ -61,8 +61,14 @@ public class Thumbnail {
         Bitmap thumbnail = ThumbnailUtils
                 .extractThumbnail(BitmapFactory.decodeFile(imageFile.getPath()),
                         TARGET_SIZE_MICRO_THUMBNAIL, TARGET_SIZE_MICRO_THUMBNAIL);
-        data = BitmapUtils.getBitmapAsByteArray(thumbnail);
-        image = new RoundedAvatarDrawable(thumbnail);
+        if (thumbnail != null) {
+            data = BitmapUtils.getBitmapAsByteArray(thumbnail);
+            image = new RoundedAvatarDrawable(thumbnail);
+        } else {
+            data = new byte[0];
+            image = new RoundedAvatarDrawable(Bitmap
+                    .createBitmap(TARGET_SIZE_MICRO_THUMBNAIL, TARGET_SIZE_MICRO_THUMBNAIL, Bitmap.Config.RGB_565));
+        }
     }
 
     public Thumbnail(Context context, @DrawableRes int resId) {
