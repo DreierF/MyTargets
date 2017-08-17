@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 Florian Dreier
+  ~
+  ~ This file is part of MyTargets.
+  ~
+  ~ MyTargets is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License version 2
+  ~ as published by the Free Software Foundation.
+  ~
+  ~ MyTargets is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="108dp"
+        android:height="108dp"
+        android:viewportHeight="108"
+        android:viewportWidth="108">
+
+    <path
+        android:fillColor="#000000"
+        android:pathData="M54,25.28 C69.8561,25.28,82.71,38.1339,82.71,53.99
+C82.71,69.8461,69.8561,82.7,54,82.7 C38.1439,82.7,25.29,69.8461,25.29,53.99
+C25.29,38.1339,38.1439,25.28,54,25.28 Z"/>
+
+    <path
+        android:fillColor="#1d71b8"
+        android:pathData="M75.64,54 A21.62,21.62,0,1,1,54,32.4 A21.62,21.62,0,0,1,75.64,54 Z"/>
+
+    <path
+        android:fillColor="#e30613"
+        android:pathData="M54.02,39.64 C61.9453,39.64,68.37,46.0647,68.37,53.99
+C68.37,61.9153,61.9453,68.34,54.02,68.34
+C46.0947,68.34,39.67,61.9153,39.67,53.99
+C39.67,46.0647,46.0947,39.64,54.02,39.64 Z"/>
+
+    <path
+        android:fillColor="#fcea10"
+        android:pathData="M54,46.86 C57.9378,46.86,61.13,50.0522,61.13,53.99
+C61.13,57.9278,57.9378,61.12,54,61.12 C50.0622,61.12,46.87,57.9278,46.87,53.99
+C46.87,50.0522,50.0622,46.86,54,46.86 Z"/>
+
+    <path
+        android:fillColor="@color/gradient_launcher_finish"
+        android:pathData="M0,0 L108,0 L108,108 L0,108 L0,0 Z"/>
+
+</vector>
