@@ -49,6 +49,7 @@ script:
 - adb shell settings put global animator_duration_scale 0
 - adb shell input keyevent 82 &
 - adb logcat -c
+- ./gradlew testRelease jacocoTestReport -PdisablePreDex
 - travis_wait ./gradlew createRegularDebugCoverageReport -PdisablePreDex
 after_success:
 - |

@@ -38,6 +38,7 @@ import com.annimon.stream.Stream;
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
 
+import java.io.File;
 import java.util.List;
 
 import de.dreier.mytargets.R;
@@ -60,6 +61,7 @@ import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.utils.ImageList;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.SharedUtils;
 import de.dreier.mytargets.shared.views.TargetViewBase;
@@ -86,6 +88,7 @@ public class InputActivity extends ChildActivityBase
     static final String TRAINING_ID = "training_id";
     static final String ROUND_ID = "round_id";
     static final String END_INDEX = "end_ind";
+    private static final int GALLERY_REQUEST_CODE = 1;
 
     @State(ParcelsBundler.class)
     LoaderResult data;
@@ -167,6 +170,21 @@ public class InputActivity extends ChildActivityBase
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
+            ImageList imageList = GalleryActivity.getResult(data);
+            this.data.getCurrentEnd().images = imageList.toEndImageList();
+            for (File image : imageList.getRemovedImages()) {
+                image.delete();
+            }
+            this.data.getCurrentEnd().save();
+            updateEnd();
+            supportInvalidateOptionsMenu();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(updateReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(timerReceiver);
@@ -186,7 +204,8 @@ public class InputActivity extends ChildActivityBase
     private void setupTransitionListener() {
         final Transition sharedElementEnterTransition = getWindow()
                 .getSharedElementEnterTransition();
-        if (sharedElementEnterTransition != null && sharedElementEnterTransition instanceof FabTransform) {
+        if (sharedElementEnterTransition != null &&
+                sharedElementEnterTransition instanceof FabTransform) {
             transitionFinished = false;
             getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
                 @Override
@@ -235,6 +254,8 @@ public class InputActivity extends ChildActivityBase
             timer.setChecked(SettingsManager.getTimerEnabled());
             newRound.setVisible(data.training.standardRoundId == null);
             takePicture.setVisible(Utils.hasCameraHardware(this));
+            takePicture.setIcon(data.getCurrentEnd().getImages().isEmpty() ?
+                    R.drawable.ic_photo_camera_white_24dp : R.drawable.ic_image_white_24dp);
         }
 
         switch (SettingsManager.getShowMode()) {
@@ -301,7 +322,8 @@ public class InputActivity extends ChildActivityBase
             case R.id.action_timer:
                 boolean timerEnabled = !SettingsManager.getTimerEnabled();
                 SettingsManager.setTimerEnabled(timerEnabled);
-                ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(SettingsManager.getTimerSettings());
+                ApplicationInstance.wearableClient
+                        .sendTimerSettingsFromLocal(SettingsManager.getTimerSettings());
                 openTimer();
                 item.setChecked(timerEnabled);
                 supportInvalidateOptionsMenu();
@@ -312,8 +334,9 @@ public class InputActivity extends ChildActivityBase
                         .start();
                 return true;
             case R.id.action_photo:
-                GalleryActivity.getIntent(data.getCurrentEnd())
+                GalleryActivity.getIntent(new ImageList(data.getCurrentEnd().getImages()), getString(R.string.end_n, data.endIndex + 1))
                         .withContext(this)
+                        .forResult(GALLERY_REQUEST_CODE)
                         .start();
                 return true;
             default:
