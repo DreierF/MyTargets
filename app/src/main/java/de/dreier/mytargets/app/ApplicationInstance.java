@@ -53,6 +53,7 @@ import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.EndRenderer;
+import de.dreier.mytargets.shared.utils.ImageList;
 import de.dreier.mytargets.utils.MobileWearableClient;
 import de.dreier.mytargets.utils.backup.MyBackupAgent;
 import timber.log.Timber;
@@ -73,6 +74,7 @@ import timber.log.Timber;
         @ParcelClass(End.class),
         @ParcelClass(EndImage.class),
         @ParcelClass(EndRenderer.class),
+        @ParcelClass(ImageList.class),
         @ParcelClass(Round.class),
         @ParcelClass(RoundTemplate.class),
         @ParcelClass(Shot.class),

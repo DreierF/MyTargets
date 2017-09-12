@@ -13,7 +13,8 @@
   ~ GNU General Public License for more details.
   -->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         style="@style/MaterialItem"
@@ -30,14 +31,23 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_margin="5dp"
-            android:clickable="false" />
+            android:clickable="false"/>
+
+        <ImageView
+            android:id="@+id/imageIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:clickable="false"
+            android:padding="4dp"
+            app:srcCompat="@drawable/ic_image_grey600_24dp"/>
 
         <de.dreier.mytargets.shared.views.EndView
             android:id="@+id/shoots"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:clickable="false" />
+            android:clickable="false"/>
 
     </LinearLayout>
 

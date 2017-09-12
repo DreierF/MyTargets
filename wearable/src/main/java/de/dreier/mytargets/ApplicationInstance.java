@@ -41,6 +41,7 @@ import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.EndRenderer;
+import de.dreier.mytargets.shared.utils.ImageList;
 import de.dreier.mytargets.utils.WearWearableClient;
 
 /**
@@ -59,6 +60,7 @@ import de.dreier.mytargets.utils.WearWearableClient;
         @ParcelClass(End.class),
         @ParcelClass(EndImage.class),
         @ParcelClass(EndRenderer.class),
+        @ParcelClass(ImageList.class),
         @ParcelClass(Round.class),
         @ParcelClass(RoundTemplate.class),
         @ParcelClass(Shot.class),

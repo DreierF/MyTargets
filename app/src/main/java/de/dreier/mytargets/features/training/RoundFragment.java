@@ -209,6 +209,7 @@ public class RoundFragment extends EditableListFragment<End> {
 
         @Override
         public void bindItem() {
+            binding.imageIndicator.setVisibility(item.getImages().isEmpty() ? View.INVISIBLE : View.VISIBLE);
             binding.shoots.setShots(round.getTarget(), item.getShots());
             binding.end.setText(getString(R.string.passe_n, (item.index + 1)));
         }
