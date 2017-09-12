@@ -14,33 +14,42 @@
   -->
 
 <shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    
     <shortcut
         android:shortcutId="free_training"
         android:enabled="true"
-        android:icon="@drawable/ic_app_shortcut_trending_up_blue_24px"
+        android:icon="@drawable/ic_shortcut_trending_up_green_48dp"
         android:shortcutShortLabel="@string/free_training">
+        
         <intent
             android:action="android.intent.action.MAIN"
             android:targetPackage="de.dreier.mytargets"
             android:targetClass="de.dreier.mytargets.features.main.MainActivity" />
+        
         <intent
             android:action="de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_FREE_TRAINING_ACTION"
             android:targetPackage="de.dreier.mytargets"
             android:targetClass="de.dreier.mytargets.features.training.edit.EditTrainingActivity" />
+        
     </shortcut>
+    
     <shortcut
         android:shortcutId="standard_round"
         android:enabled="true"
-        android:icon="@drawable/ic_app_shortcut_album_blue_24px"
+        android:icon="@drawable/ic_shortcut_album_green_48dp"
         android:shortcutShortLabel="@string/training_with_standard_round">
+        
         <intent
             android:action="android.intent.action.MAIN"
             android:targetPackage="de.dreier.mytargets"
             android:targetClass="de.dreier.mytargets.features.main.MainActivity" />
+        
         <intent
             android:action="de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION"
             android:targetPackage="de.dreier.mytargets"
             android:targetClass="de.dreier.mytargets.features.training.edit.EditTrainingActivity" />
+        
     </shortcut>
+    
 </shortcuts>
 
