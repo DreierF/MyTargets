@@ -166,10 +166,10 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
         MenuItem searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
-        ImageView closeButton = (ImageView) searchView.findViewById(R.id.search_close_btn);
+        ImageView closeButton = searchView.findViewById(R.id.search_close_btn);
         // Set on click listener
         closeButton.setOnClickListener(v -> {
-            EditText et = (EditText) searchView.findViewById(R.id.search_src_text);
+            EditText et = searchView.findViewById(R.id.search_src_text);
             et.setText("");
             searchView.setQuery("", false);
             searchView.onActionViewCollapsed();

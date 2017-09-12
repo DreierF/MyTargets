@@ -241,8 +241,8 @@ public class RoundActivity extends WearableActivity {
 
         public ViewHolder(View itemView) {
             super(itemView);
-            end = (TextView) itemView.findViewById(R.id.end);
-            shots = (EndView) itemView.findViewById(R.id.shoots);
+            end = itemView.findViewById(R.id.end);
+            shots = itemView.findViewById(R.id.shoots);
         }
     }
 
