@@ -38,5 +38,6 @@
     <color name="introBackground">#037205</color>
 
     <color name="launcherBackground">#FFFFFF</color>
+    <color name="shortcut_background">#F5F5F5</color>
 
 </resources>
