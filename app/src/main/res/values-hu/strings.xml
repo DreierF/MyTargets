@@ -34,19 +34,19 @@
   <string name="new_arrow">Új nyílvesszõ</string>
   <string name="new_round">Új forduló</string>
   <plurals name="training_selected">
-    <item quantity="one">%d lövészet kiválasztása</item>
+    <item quantity="one">%d lövészet kiválasztva</item>
     <item quantity="other">%d edzések kiválasztása</item>
   </plurals>
   <plurals name="bow_selected">
-    <item quantity="one">%d íj kiválasztása</item>
+    <item quantity="one">%d íj kiválasztva</item>
     <item quantity="other">%d íjak kiválasztása</item>
   </plurals>
   <plurals name="arrow_selected">
-    <item quantity="one">%d nyílvesszõ kiválasztása</item>
-    <item quantity="other">%d nyílvesszõk kiválasztása</item>
+    <item quantity="one">%d nyílvesszõ kiválasztva</item>
+    <item quantity="other">%d vesszõ kiválasztva</item>
   </plurals>
   <plurals name="passe_selected">
-    <item quantity="one">%d sorozat kiválasztása</item>
+    <item quantity="one">%d sorozat kiválasztva</item>
     <item quantity="other">%d sorozatok kiválasztása</item>
   </plurals>
   <string name="edit">Szerkesztés</string>
@@ -54,10 +54,10 @@
   <string name="statistic">Statisztika</string>
   <!-- Share -->
   <string name="share">Megosztás</string>
-  <string name="dispersion_pattern">Szórás kép</string>
+  <string name="dispersion_pattern">Szórás minta</string>
   <string name="sharing_failed">Megosztás nem sikerült!</string>
   <!-- Export -->
-  <string name="send_exported">Küldött adat</string>
+  <string name="send_exported">Mentett adatok küldése</string>
   <string name="exporting_failed">Küldés sikertelen!</string>
   <!-- New bow -->
   <string name="add_bow">Íj hozzáadása</string>
@@ -89,18 +89,18 @@
   <string name="format">Formátum</string>
   <!-- x ends of y arrows -->
   <plurals name="passe">
-    <item quantity="one">%d sorozat</item>
+    <item quantity="one">%d. sorozat</item>
     <item quantity="other">%d sorozatok</item>
   </plurals>
   <string name="with">a</string>
   <plurals name="arrow">
-    <item quantity="one">%d nyílvesszõ</item>
+    <item quantity="one">%d. vesszõ</item>
     <item quantity="other">%d nyílvesszõk</item>
   </plurals>
   <string name="target_face">A lőlap tipusa</string>
   <!-- Scoreboard -->
   <string name="scoreboard">Beírólap</string>
-  <string name="arrows">Nyílvessző</string>
+  <string name="arrows">Nyílvesszők</string>
   <string name="sum">Pontszám</string>
   <string name="carry">Forduló összesítő</string>
   <string name="action_print">Nyomtatás</string>
@@ -164,12 +164,12 @@
   <string name="target">Lőlap</string>
   <string name="standard_round">Szabványos forduló</string>
   <string name="use_as_template">Használja sablonként?</string>
-  <string name="create_copy">Ez a szabványos forduló! \nMásolat létrehozása és szerkeztése?</string>
+  <string name="create_copy">Ez egy szabványos forduló! \nLétrehozol egy másolatot a szerkeztéshez?</string>
   <string name="practice">Gyakorlás</string>
   <string name="edit_training">Lövészet szerkesztése</string>
   <string name="edit_standard_round">Szabványos forduló szerkesztése</string>
   <plurals name="arrow_deleted">
-    <item quantity="one">%d vessző törölve</item>
+    <item quantity="one">%d. vessző törölve</item>
     <item quantity="other">%d vesszők törölve</item>
   </plurals>
   <plurals name="bow_deleted">
@@ -185,15 +185,15 @@
     <item quantity="other">% sorozatok törölve</item>
   </plurals>
   <plurals name="rounds">
-    <item quantity="one">%d forduló</item>
+    <item quantity="one">%d. forduló</item>
     <item quantity="other">%d fordulók</item>
   </plurals>
   <plurals name="round_selected">
-    <item quantity="one">%d forduló kiválasztása</item>
+    <item quantity="one">%d. forduló kiválasztása</item>
     <item quantity="other">%d fordulók kiválasztása</item>
   </plurals>
   <plurals name="round_deleted">
-    <item quantity="one">%d forduló törölve</item>
+    <item quantity="one">%d. forduló törölve</item>
     <item quantity="other">%d fordulók törölve</item>
   </plurals>
   <string name="date">Dátum</string>
@@ -205,7 +205,7 @@
   <string name="my_arrow">Vesszőim</string>
   <string name="tip_weight">a hegy súlya</string>
   <string name="arrow_ranking">Vessző rangsor</string>
-  <string name="arrow_x_of_set_of_arrows">%2$s nyíl a %1$s-ból</string>
+  <string name="arrow_x_of_set_of_arrows">%2$s. nyíl a %1$s-ból</string>
   <string name="display">Megjelenítés</string>
   <string name="print">Nyomtatás</string>
   <string name="table">Táblázat</string>
@@ -213,8 +213,8 @@
   <string name="show_points_colored">Találatok színes megjelenítése</string>
   <string name="stabilizer">Stabilizátor</string>
   <string name="clicker">Kattintó</string>
-  <string name="arrow_number_x">Vessző száma %s</string>
-  <string name="training_with_standard_round">A Standard fordulós lövészet</string>
+  <string name="arrow_number_x">%s számú vessző</string>
+  <string name="training_with_standard_round">A Standard fordulós gyakorlás</string>
   <string name="free_training">Szabad lövészet</string>
   <string name="competition">Verseny</string>
   <string name="about">Leírás</string>
@@ -223,7 +223,7 @@
   <string name="connect">Kapcsolódás</string>
   <string name="special_thanks_to">Külön köszönet:</string>
   <string name="all_translators">Akik segített fordításban!</string>
-  <string name="all_beta_testers">Akik csatlakozotak a béta tesztelőkhőz, és így hozzájárult finomításhoz.</string>
+  <string name="all_beta_testers">Akik csatlakozotak a béta tesztelőkhőz, és ezzel hozzájárultak a fejlesztéshez.</string>
   <string name="test_beta">Frissítések keresése a béta verziók között is</string>
   <string name="join_on_google_plus">Csatlakozzon hozzánk Google+-on</string>
   <string name="share_with_friends">Ossza meg barátaival!</string>
@@ -242,9 +242,9 @@
   <string name="last_name">Családnév</string>
   <string name="age">Életkor</string>
   <string name="show_signature">Aláírás</string>
-  <string name="witness">Witness</string>
+  <string name="witness">Tanú</string>
   <string name="archer">Íjász</string>
-  <string name="hits">Találatok száma</string>
+  <string name="hits">Találatok</string>
   <string name="misses">Mellé</string>
   <string name="new_end">Új sorozat</string>
   <string name="distribution">Találatok eloszlása</string>
@@ -257,8 +257,8 @@
   <string name="change_target_face">Lőlap váltása</string>
   <string name="your_first_training">Az első lövészet</string>
   <string name="grouping">Csoportosítás</string>
-  <string name="show_clusters">Klaszterek</string>
-  <string name="first_training_description">Érintse meg a plusz-t az új lövészet megkezdéséhez</string>
+  <string name="show_clusters">találatok csoportosítása</string>
+  <string name="first_training_description">Érintse meg a + az új lövészet megkezdéséhez</string>
   <string name="show_average">Átlag</string>
   <string name="show_none">Semmi</string>
   <string name="left_handed">Balkezes</string>
@@ -292,7 +292,7 @@
   <string name="bow_rest">Kifutó</string>
   <string name="bow_rest_horizontal_position">Vízszintes helyzet</string>
   <string name="bow_cam_settings">Kamera beállítások</string>
-  <string name="bow_letoff_weight">Teljes súlya</string>
+  <string name="bow_letoff_weight">A kiengedés ereje</string>
   <string name="bow_nocking_point">Göb magasság</string>
   <string name="bow_string">Ideg</string>
   <string name="bow_scope_magnification">A lencse nagyító értéke</string>
@@ -304,7 +304,7 @@
   <string name="intro_description_track_training_progress">A találatok pontos bejelölése,\na lövészet adatainak részletesebb áttekintése.</string>
   <string name="intro_title_everything_in_one_place">Minden szükséges\n egy helyen</string>
   <string name="intro_description_everything_in_one_place">Az íj, vessző, irányzék beállítások,\nidőzítő, statisztikák\nés még több…</string>
-  <string name="average_arrow_score_per_end">A vesszők átlagos pontszáma/forduló</string>
+  <string name="average_arrow_score_per_end">A vesszők átlagos pontszáma sorozatonkként</string>
   <string name="show_end">Mutasd a sorozatot</string>
   <string name="show_round">Mutasd a fordulót</string>
   <string name="show_training">Mutasd az edzést</string>
@@ -312,17 +312,17 @@
   <string name="end">Sorozat</string>
   <string name="average_of">Átlag</string>
   <string name="displayed_shots">Megjelenített találatok</string>
-  <string name="invalid_decimal_number">Érvénytelen decimális szám</string>
+  <string name="invalid_decimal_number">Érvénytelen tizedes</string>
   <string name="not_within_expected_range_mm">Nem a várt tartományban 1-20 mm</string>
   <string name="not_within_expected_range_inch">Nem a várt tartományban 0-1 hüvelyk</string>
   <string name="next_round">Következő forduló</string>
-  <string name="previous_round">Előző körben</string>
+  <string name="previous_round">Előző forduló</string>
   <string name="overview">Áttekintő</string>
   <string name="score">Pontszám</string>
   <string name="show_reached_score">Mutasd az elért pontszámokat</string>
   <string name="show_total_score">A teljes pontszám</string>
   <string name="show_percentage">Százalékos megjelenítés</string>
   <string name="show_arrow_average">Mutasd a vesszők pontátlagát</string>
-  <string name="image_deleted">Image deleted</string>
-  <string name="delete_image">Delete image?</string>
+  <string name="image_deleted">A kép törölve</string>
+  <string name="delete_image">Törlöd a képet?</string>
 </resources>
