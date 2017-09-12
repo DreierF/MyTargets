@@ -19,7 +19,7 @@
         android:viewportHeight="96.0"
         android:viewportWidth="96.0">
     <path
-        android:fillColor="#F5F5F5"
+        android:fillColor="@color/shortcut_background"
         android:pathData="M48,48m-44,0a44,44 0,1 1,88 0a44,44 0,1 1,-88 0"/>
     <path
         android:fillColor="@color/colorPrimary"

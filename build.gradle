@@ -20,14 +20,14 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.1'
+        classpath 'com.android.tools.build:gradle:2.3.3'
         classpath 'me.tatarka:gradle-retrolambda:3.6.1'
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
         classpath 'com.github.triplet.gradle:play-publisher:1.2.0'
-        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
+        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.2'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.4'
         classpath 'com.google.gms:google-services:3.0.0'
-        classpath 'com.google.firebase:firebase-plugins:1.0.5'
+        classpath 'com.google.firebase:firebase-plugins:1.1.1'
     }
 
     configurations.classpath.exclude group: 'com.android.tools.external.lombok'
@@ -39,8 +39,8 @@ plugins {
 }
 
 ext {
-    compileSdkVersionCode = 25
-    buildToolsVersionCode = '25.0.2'
+    compileSdkVersionCode = 26
+    buildToolsVersionCode = '26.0.1'
 
     libraryVersion = [
             aboutPage            : '1.2',
@@ -66,12 +66,12 @@ ext {
             permissionsdispatcher: '2.4.0',
             photoView            : '2.0.0',
             picasso              : '2.5.2',
-            playService          : '10.2.4',
+            playService          : '11.2.2',
             screengrab           : '1.0.2',
             retrofit             : '2.2.0',
             roundedImageView     : '2.2.1',
-            support              : '25.3.1',
-            supportWearable      : '2.0.1',
+            support              : '26.0.2',
+            supportWearable      : '2.0.4',
             testSupport          : '0.5',
             threeTenABP          : '1.0.5',
             timber               : '4.5.1',
@@ -85,6 +85,7 @@ allprojects {
         jcenter()
         maven { url 'https://jitpack.io' }
         maven { url 'https://clojars.org/repo/' }
+        maven { url 'https://maven.google.com' }
     }
 }
 
