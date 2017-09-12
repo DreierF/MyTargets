@@ -16,12 +16,11 @@
   -->
 <resources>
   <string name="saved">Salvo</string>
-  <string name="start_training_on_phone">Inicie um treinamento em seu telefone para continuar…</string>
-  <string name="add_end">Add end</string>
-  <string name="toggle_timer">Toggle timer</string>
-  <string name="start_timer">Start timer</string>
-  <string name="vibration">Vibration</string>
-  <string name="sound">Sound</string>
-  <string name="new_end">New End</string>
-  <string name="today">today</string>
+  <string name="start_phone_app">Inicie o aplicativo em seu telefone para continuar…</string>
+  <string name="add_end">Adicionar série</string>
+  <string name="toggle_timer">Alternar cronômetro</string>
+  <string name="start_timer">Iniciar cronômetro</string>
+  <string name="vibration">Vibração</string>
+  <string name="sound">Som</string>
+  <string name="today">hoje</string>
 </resources>

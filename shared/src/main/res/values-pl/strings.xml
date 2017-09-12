@@ -26,7 +26,7 @@
   <string name="cloudy">Pochmurnie</string>
   <string name="light_rain">Lekki deszcz</string>
   <string name="rain">Deszczowy</string>
-  <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
+  <string name="round_desc">%1$s: %2$d &#215; %3$d strzały (%4$s tarcza)</string>
   <string name="mini">Mini</string>
   <string name="small">Mały</string>
   <string name="medium">Średnio</string>

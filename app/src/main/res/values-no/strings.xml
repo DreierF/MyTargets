@@ -242,7 +242,7 @@
   <string name="last_name">Etternavn</string>
   <string name="age">Alder</string>
   <string name="show_signature">Signatur</string>
-  <string name="witness">Witness</string>
+  <string name="witness">Norwegian</string>
   <string name="archer">Skytter</string>
   <string name="hits">Treff</string>
   <string name="misses">Bom</string>
@@ -323,6 +323,6 @@
   <string name="show_total_score">Vis total poengsum</string>
   <string name="show_percentage">Vis prosent</string>
   <string name="show_arrow_average">Vis pil gjennomsnitt</string>
-  <string name="image_deleted">Image deleted</string>
-  <string name="delete_image">Delete image?</string>
+  <string name="image_deleted">Norwegian</string>
+  <string name="delete_image">Norwegian</string>
 </resources>

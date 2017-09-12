@@ -16,7 +16,7 @@
   -->
 <resources>
   <!-- Target groups -->
-  <string name="target_type_target_archery">Rendszeres</string>
+  <string name="target_type_target_archery">Szokásos</string>
   <string name="target_type_field_archery">Terep</string>
   <string name="target_type_3d_archery">3D</string>
   <!-- Target names -->
