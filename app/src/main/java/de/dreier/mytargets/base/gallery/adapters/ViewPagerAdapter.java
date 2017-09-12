@@ -76,7 +76,7 @@ public class ViewPagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         View itemView = layoutInflater.inflate(R.layout.pager_item, container, false);
 
-        final PhotoView imageView = (PhotoView) itemView.findViewById(R.id.iv);
+        final PhotoView imageView = itemView.findViewById(R.id.iv);
         Image image = images.get(position);
         Picasso.with(activity)
                 .load(new File(image.getFileName()))
