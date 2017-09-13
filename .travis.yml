@@ -1,6 +1,4 @@
 language: android
-# Needed to get java 8u51, because 8u31, which is available from sudo: false causes compile errors
-sudo: required
 jdk:
 - oraclejdk8
 env:
