@@ -104,7 +104,7 @@ public class EnvironmentFragment extends FragmentBase {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.environment_switch, menu);
         MenuItem item = menu.findItem(R.id.action_switch);
-        switchView = (SwitchCompat) item.getActionView().findViewById(R.id.action_switch_control);
+        switchView = item.getActionView().findViewById(R.id.action_switch_control);
         switchView.setOnCheckedChangeListener((compoundButton, checked) -> setOutdoor(checked));
         setOutdoor(!environment.indoor);
         switchView.setChecked(!environment.indoor);

@@ -42,9 +42,9 @@ import de.dreier.mytargets.base.activities.ChildActivityBase;
 import de.dreier.mytargets.base.gallery.adapters.HorizontalListAdapters;
 import de.dreier.mytargets.base.gallery.adapters.ViewPagerAdapter;
 import de.dreier.mytargets.databinding.ActivityGalleryBinding;
-import de.dreier.mytargets.shared.models.db.End;
-import de.dreier.mytargets.shared.models.db.EndImage;
+import de.dreier.mytargets.shared.models.db.Image;
 import de.dreier.mytargets.shared.utils.FileUtils;
+import de.dreier.mytargets.shared.utils.ImageList;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -61,20 +61,27 @@ import static de.dreier.mytargets.base.gallery.GalleryActivityPermissionsDispatc
 
 @RuntimePermissions
 public class GalleryActivity extends ChildActivityBase {
-    public static final String EXTRA_END = "end";
+    private static final String RESULT_IMAGES = "images";
+    private static final String EXTRA_IMAGES = "images";
+    private static final String EXTRA_TITLE = "title";
 
     ViewPagerAdapter adapter;
     LinearLayoutManager layoutManager;
     HorizontalListAdapters previewAdapter;
 
     @State(ParcelsBundler.class)
-    End end;
+    ImageList imageList;
 
     private ActivityGalleryBinding binding;
 
-    public static IntentWrapper getIntent(End end) {
+    public static IntentWrapper getIntent(ImageList images, String title) {
         return new IntentWrapper(GalleryActivity.class)
-                .with(EXTRA_END, Parcels.wrap(end));
+                .with(EXTRA_TITLE, title)
+                .with(EXTRA_IMAGES, Parcels.wrap(images));
+    }
+
+    public static ImageList getResult(Intent data) {
+        return Parcels.unwrap(data.getParcelableExtra(RESULT_IMAGES));
     }
 
     @Override
@@ -82,8 +89,9 @@ public class GalleryActivity extends ChildActivityBase {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_gallery);
 
+        String title = getIntent().getStringExtra(EXTRA_TITLE);
         if (savedInstanceState == null) {
-            end = Parcels.unwrap(getIntent().getParcelableExtra(EXTRA_END));
+            imageList = Parcels.unwrap(getIntent().getParcelableExtra(EXTRA_IMAGES));
         } else {
             Icepick.restoreInstanceState(this, savedInstanceState);
         }
@@ -91,16 +99,16 @@ public class GalleryActivity extends ChildActivityBase {
         setSupportActionBar(binding.toolbar);
 
         ToolbarUtils.showHomeAsUp(this);
-        ToolbarUtils.setTitle(this, getString(R.string.end_n, end.index + 1));
+        ToolbarUtils.setTitle(this, title);
         Utils.showSystemUI(this);
 
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         binding.imagesHorizontalList.setLayoutManager(layoutManager);
 
-        adapter = new ViewPagerAdapter(this, end.getImages(), binding.toolbar, binding.imagesHorizontalList);
+        adapter = new ViewPagerAdapter(this, imageList, binding.toolbar, binding.imagesHorizontalList);
         binding.pager.setAdapter(adapter);
 
-        previewAdapter = new HorizontalListAdapters(this, end.getImages(), this::goToImage);
+        previewAdapter = new HorizontalListAdapters(this, imageList, this::goToImage);
         binding.imagesHorizontalList.setAdapter(previewAdapter);
         previewAdapter.notifyDataSetChanged();
 
@@ -125,7 +133,7 @@ public class GalleryActivity extends ChildActivityBase {
         previewAdapter.setSelectedItem(currentPos);
         binding.pager.setCurrentItem(currentPos);
 
-        if (end.getImages().size() == 0 && savedInstanceState == null) {
+        if (imageList.size() == 0 && savedInstanceState == null) {
             onTakePictureWithCheck(this);
         }
     }
@@ -139,8 +147,8 @@ public class GalleryActivity extends ChildActivityBase {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.action_share).setVisible(!end.getImages().isEmpty());
-        menu.findItem(R.id.action_delete).setVisible(!end.getImages().isEmpty());
+        menu.findItem(R.id.action_share).setVisible(!imageList.isEmpty());
+        menu.findItem(R.id.action_delete).setVisible(!imageList.isEmpty());
         return true;
     }
 
@@ -166,8 +174,8 @@ public class GalleryActivity extends ChildActivityBase {
     private void shareImage(int currentItem) {
         String packageName = getApplicationContext().getPackageName();
         String authority = packageName + ".easyphotopicker.fileprovider";
-        EndImage currentEndImage = end.getImages().get(currentItem);
-        File file = new File(currentEndImage.getFileName());
+        Image currentImage = imageList.get(currentItem);
+        File file = new File(currentImage.getFileName());
         Uri uri = getUriForFile(this, authority, file);
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("*/*");
@@ -183,15 +191,25 @@ public class GalleryActivity extends ChildActivityBase {
                 .positiveText(R.string.delete)
                 .positiveColorRes(R.color.md_red_500)
                 .onPositive((dialog, which) -> {
-                    end.getImages().remove(currentItem);
-                    end.save();
+                    imageList.remove(currentItem);
+                    updateResult();
                     supportInvalidateOptionsMenu();
                     adapter.notifyDataSetChanged();
-                    int nextItem = Math.min(end.getImages().size() - 1, currentItem);
+                    int nextItem = Math.min(imageList.size() - 1, currentItem);
                     previewAdapter.setSelectedItem(nextItem);
                     binding.pager.setCurrentItem(nextItem);
                 })
                 .show();
+    }
+
+    private void updateResult() {
+        setResult(RESULT_OK, wrap(imageList));
+    }
+
+    private Intent wrap(ImageList imageList) {
+        Intent i = new Intent();
+        i.putExtra(RESULT_IMAGES, Parcels.wrap(imageList));
+        return i;
     }
 
     @Override
@@ -242,16 +260,16 @@ public class GalleryActivity extends ChildActivityBase {
     }
 
     protected void loadImages(final List<File> imageFile) {
-        new AsyncTask<Void, Void, List<EndImage>>() {
+        new AsyncTask<Void, Void, List<File>>() {
 
             @Override
-            protected List<EndImage> doInBackground(Void... params) {
-                List<EndImage> internalFiles = new ArrayList<>();
+            protected List<File> doInBackground(Void... params) {
+                List<File> internalFiles = new ArrayList<>();
                 for (File file : imageFile) {
                     try {
                         File internal = File
                                 .createTempFile("img", file.getName(), getFilesDir());
-                        internalFiles.add(new EndImage(file.getPath()));
+                        internalFiles.add(file);
                         FileUtils.copy(file, internal);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -261,14 +279,14 @@ public class GalleryActivity extends ChildActivityBase {
             }
 
             @Override
-            protected void onPostExecute(List<EndImage> files) {
+            protected void onPostExecute(List<File> files) {
                 super.onPostExecute(files);
-                end.getImages().addAll(files);
-                end.save();
+                imageList.addAll(files);
+                updateResult();
                 supportInvalidateOptionsMenu();
                 previewAdapter.notifyDataSetChanged();
                 adapter.notifyDataSetChanged();
-                int currentPos = end.getImages().size() - 1;
+                int currentPos = imageList.size() - 1;
                 previewAdapter.setSelectedItem(currentPos);
                 binding.pager.setCurrentItem(currentPos);
             }
@@ -276,7 +294,7 @@ public class GalleryActivity extends ChildActivityBase {
     }
 
     private void goToImage(int pos) {
-        if (end.images.size() == pos) {
+        if (imageList.size() == pos) {
             onTakePictureWithCheck(this);
         } else {
             binding.pager.setCurrentItem(pos, true);

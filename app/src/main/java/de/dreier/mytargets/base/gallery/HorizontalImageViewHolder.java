@@ -27,7 +27,7 @@ public class HorizontalImageViewHolder extends RecyclerView.ViewHolder {
 
     public HorizontalImageViewHolder(View itemView) {
         super(itemView);
-        image = (ImageView) itemView.findViewById(R.id.iv);
-        camera = (ImageView) itemView.findViewById(R.id.camera);
+        image = itemView.findViewById(R.id.iv);
+        camera = itemView.findViewById(R.id.camera);
     }
 }

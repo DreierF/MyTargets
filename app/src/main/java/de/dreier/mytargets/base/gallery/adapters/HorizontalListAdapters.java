@@ -26,19 +26,18 @@ import android.view.ViewGroup;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.gallery.HorizontalImageViewHolder;
-import de.dreier.mytargets.shared.models.db.Image;
+import de.dreier.mytargets.shared.utils.ImageList;
 
 public class HorizontalListAdapters extends RecyclerView.Adapter<HorizontalImageViewHolder> {
-    private List<? extends Image> images;
+    private ImageList images;
     private Activity activity;
     private int selectedItem = -1;
     private OnItemClickListener clickListener;
 
-    public HorizontalListAdapters(Activity activity, List<? extends Image> images, OnItemClickListener clickListener) {
+    public HorizontalListAdapters(Activity activity, ImageList images, OnItemClickListener clickListener) {
         this.activity = activity;
         this.images = images;
         this.clickListener = clickListener;

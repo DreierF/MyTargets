@@ -32,10 +32,10 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.models.db.Image;
+import de.dreier.mytargets.shared.utils.ImageList;
 import de.dreier.mytargets.shared.utils.SharedUtils;
 import de.dreier.mytargets.utils.Utils;
 
@@ -43,12 +43,12 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     private Activity activity;
     private LayoutInflater layoutInflater;
-    private List<? extends Image> images;
+    private ImageList images;
     private boolean isShowing = true;
     private Toolbar toolbar;
     private RecyclerView imagesHorizontalList;
 
-    public ViewPagerAdapter(Activity activity, List<? extends Image> images, Toolbar toolbar, RecyclerView imagesHorizontalList) {
+    public ViewPagerAdapter(Activity activity, ImageList images, Toolbar toolbar, RecyclerView imagesHorizontalList) {
         this.activity = activity;
         this.layoutInflater = (LayoutInflater) activity
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -76,7 +76,7 @@ public class ViewPagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         View itemView = layoutInflater.inflate(R.layout.pager_item, container, false);
 
-        final PhotoView imageView = (PhotoView) itemView.findViewById(R.id.iv);
+        final PhotoView imageView = itemView.findViewById(R.id.iv);
         Image image = images.get(position);
         Picasso.with(activity)
                 .load(new File(image.getFileName()))

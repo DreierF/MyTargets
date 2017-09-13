@@ -230,6 +230,7 @@ public class RoundFragment extends EditableListFragment<End> {
                 Collections.sort(shots);
             }
             binding.shoots.setShots(round.getTarget(), shots);
+            binding.imageIndicator.setVisibility(item.getImages().isEmpty() ? View.INVISIBLE : View.VISIBLE);
             binding.end.setText(getString(R.string.passe_n, (item.index + 1)));
         }
     }

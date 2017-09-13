@@ -1,6 +1,4 @@
 language: android
-# Needed to get java 8u51, because 8u31, which is available from sudo: false causes compile errors
-sudo: required
 jdk:
 - oraclejdk8
 env:
@@ -36,13 +34,23 @@ before_install:
 - tar xvf services.tar
 - wget https://raw.githubusercontent.com/JakeWharton/pidcat/master/pidcat.py
 install:
+# Converts the shallow clone to a full clone
+# This is necessary in order to determine the current app version code
 - git fetch --unshallow --tags
 before_script:
 - echo no | android create avd -f -n test -t "android-"$EMULATOR_API_LEVEL --abi $ANDROID_ABI -s WVGA800 -c 128M
 - emulator -avd test -no-audio -no-window &
 - ./gradlew clean
 script:
+- echo -e '\033[0;33mBuilding...\033[0m' && echo -en 'travis_fold:start:script.build\\r'
 - ./gradlew assembleRegularRelease -PdisablePreDex
+- echo -en 'travis_fold:end:script.build\\r'
+
+- echo -e '\033[0;33mUnit tests...\033[0m' && echo -en 'travis_fold:start:script.unittest\\r'
+- ./gradlew testRelease jacocoTestReport -PdisablePreDex
+- echo -en 'travis_fold:end:script.unittest\\r'
+
+- echo -e '\033[0;33mUI tests...\033[0m' && echo -en 'travis_fold:start:script.uitest\\r'
 - android-wait-for-emulator
 - adb shell settings put global window_animation_scale 0
 - adb shell settings put global transition_animation_scale 0
@@ -50,6 +58,8 @@ script:
 - adb shell input keyevent 82 &
 - adb logcat -c
 - travis_wait ./gradlew createRegularDebugCoverageReport -PdisablePreDex
+- echo -en 'travis_fold:end:script.uitest\\r'
+
 after_success:
 - |
   if [[ "$TRAVIS_TAG" ]]; then

@@ -16,12 +16,11 @@
   -->
 <resources>
   <string name="saved">Lagret</string>
-  <string name="start_training_on_phone">Start en trening på mobilen din for å fortsette…</string>
+  <string name="start_phone_app">Start the app on your phone to continue…</string>
   <string name="add_end">Add end</string>
   <string name="toggle_timer">Toggle timer</string>
   <string name="start_timer">Start timer</string>
   <string name="vibration">Vibration</string>
   <string name="sound">Sound</string>
-  <string name="new_end">New End</string>
   <string name="today">today</string>
 </resources>
