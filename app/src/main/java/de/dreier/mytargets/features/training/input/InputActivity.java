@@ -250,35 +250,6 @@ public class InputActivity extends ChildActivityBase
             takePicture.setIcon(data.getCurrentEnd().getImages().isEmpty() ?
                     R.drawable.ic_photo_camera_white_24dp : R.drawable.ic_image_white_24dp);
         }
-
-        switch (SettingsManager.getShowMode()) {
-            case END:
-                menu.findItem(R.id.action_show_end).setChecked(true);
-                break;
-            case ROUND:
-                menu.findItem(R.id.action_show_round).setChecked(true);
-                break;
-            case TRAINING:
-                menu.findItem(R.id.action_show_training).setChecked(true);
-                break;
-            default:
-                // Never called: All enum values are checked
-                break;
-        }
-        switch (SettingsManager.getAggregationStrategy()) {
-            case NONE:
-                menu.findItem(R.id.action_grouping_none).setChecked(true);
-                break;
-            case AVERAGE:
-                menu.findItem(R.id.action_grouping_average).setChecked(true);
-                break;
-            case CLUSTER:
-                menu.findItem(R.id.action_grouping_cluster).setChecked(true);
-                break;
-            default:
-                // Never called: All enum values are checked
-                break;
-        }
         return true;
     }
 
@@ -286,8 +257,9 @@ public class InputActivity extends ChildActivityBase
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_photo:
-                GalleryActivity.getIntent(data.getCurrentEnd())
+                GalleryActivity.getIntent(new ImageList(data.getCurrentEnd().getImages()), getString(R.string.end_n, data.endIndex + 1))
                         .withContext(this)
+                        .forResult(GALLERY_REQUEST_CODE)
                         .start();
                 return true;
             case R.id.action_comment:
@@ -316,12 +288,7 @@ public class InputActivity extends ChildActivityBase
                         .start();
                 return true;
             case R.id.action_new_round:
-                EditRoundFragment.createIntent(data.training)
-            case R.id.action_photo:
-                GalleryActivity.getIntent(new ImageList(data.getCurrentEnd().getImages()), getString(R.string.end_n, data.endIndex + 1))
-                        .withContext(this)
-                        .forResult(GALLERY_REQUEST_CODE)
-                        .start();
+                EditRoundFragment.createIntent(data.training);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
