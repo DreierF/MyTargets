@@ -53,10 +53,11 @@ android {
     signingConfigs {
         debug {
         }
+
         release {
-            storeFile file('../keystore.jks')
+            storeFile file(KEYSTORE_NAME)
             storePassword KEYSTORE_PASSWORD
-            keyAlias 'mytargets'
+            keyAlias KEY_ALIAS
             keyPassword KEY_PASSWORD
         }
     }
@@ -175,4 +176,6 @@ dependencies {
 }
 
 // Must be at the bottom
-apply plugin: 'com.google.gms.google-services'
+if (HAS_GMS_SECRET) {
+    apply plugin: 'com.google.gms.google-services'
+}
