@@ -72,7 +72,7 @@ ext {
             retrofit             : '2.2.0',
             roundedImageView     : '2.2.1',
             support              : '26.0.2',
-            supportWearable      : '2.0.4',
+            supportWearable      : '2.0.5',
             testSupport          : '0.5',
             timber               : '4.5.1',
             truth                : '0.32',
