@@ -56,7 +56,6 @@ import permissions.dispatcher.RuntimePermissions;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
-import static android.support.v4.content.FileProvider.getUriForFile;
 import static de.dreier.mytargets.base.gallery.GalleryActivityPermissionsDispatcher.onTakePictureWithCheck;
 
 @RuntimePermissions
@@ -172,11 +171,9 @@ public class GalleryActivity extends ChildActivityBase {
     }
 
     private void shareImage(int currentItem) {
-        String packageName = getApplicationContext().getPackageName();
-        String authority = packageName + ".easyphotopicker.fileprovider";
         Image currentImage = imageList.get(currentItem);
         File file = new File(currentImage.getFileName());
-        Uri uri = getUriForFile(this, authority, file);
+        Uri uri = FileUtils.getUriForFile(this, file);
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("*/*");
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
