@@ -30,9 +30,13 @@ import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.base.fragments.EditableListFragmentBase;
 import de.dreier.mytargets.databinding.FragmentMainBinding;
+import de.dreier.mytargets.features.arrows.EditArrowListFragment;
+import de.dreier.mytargets.features.bows.EditBowListFragment;
 import de.dreier.mytargets.features.settings.SettingsActivity;
 import de.dreier.mytargets.features.statistics.StatisticsActivity;
+import de.dreier.mytargets.features.training.overview.TrainingsFragment;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
 
@@ -49,10 +53,24 @@ public class MainFragment extends Fragment {
         setSupportActionBar(this, binding.toolbar);
         setHasOptionsMenu(true);
 
-        MainTabsFragmentPagerAdapter adapter =
-                new MainTabsFragmentPagerAdapter(getContext(), getChildFragmentManager());
-        binding.viewPager.setAdapter(adapter);
-        binding.slidingTabs.setupWithViewPager(binding.viewPager);
+        binding.bottomNavigation.setOnNavigationItemSelectedListener(item -> {
+            EditableListFragmentBase fragment = null;
+            switch (item.getItemId()) {
+                case R.id.action_arrows:
+                    fragment = new EditArrowListFragment();
+                    break;
+                case R.id.action_bows:
+                    fragment = new EditBowListFragment();
+                    break;
+                case R.id.action_trainings:
+                    fragment = new TrainingsFragment();
+                    break;
+            }
+            getChildFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
+            return true;
+        });
+
+        getChildFragmentManager().beginTransaction().add(R.id.content, new TrainingsFragment()).commit();
 
         return binding.getRoot();
     }
@@ -82,7 +100,6 @@ public class MainFragment extends Fragment {
                         .getIntent(Stream.of(Training.getAll())
                                 .flatMap((training) -> Stream.of(training.getRounds()))
                                 .map(Round::getId)
-
                                 .collect(Collectors.toList())).withContext(this)
                         .start();
                 return true;

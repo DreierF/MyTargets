@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 Florian Dreier
+  ~
+  ~ This file is part of MyTargets.
+  ~
+  ~ MyTargets is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License version 2
+  ~ as published by the Free Software Foundation.
+  ~
+  ~ MyTargets is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_trainings"
+        android:enabled="true"
+        android:icon="@drawable/ic_archery_white_24dp"
+        android:title="@string/training"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_bows"
+        android:enabled="true"
+        android:icon="@drawable/ic_bow_white_24dp"
+        android:title="@string/bow"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_arrows"
+        android:enabled="true"
+        android:icon="@drawable/ic_arrow_white_24dp"
+        android:title="@string/arrow"
+        app:showAsAction="ifRoom"/>
+
+</menu>
+
