@@ -13,7 +13,12 @@
  * GNU General Public License for more details.
  */
 
-if (CROWDIN_API_KEY != null && !CROWDIN_API_KEY.isEmpty()) {
+ext {
+    HAS_PLAY_STORE_SECRET = new File('googlePlayAndroidDeveloper.json').exists()
+    HAS_GMS_SECRET = new File('google-services.json').exists()
+}
+
+if (hasProperty('CROWDIN_API_KEY')) {
     tasks.whenTaskAdded { task ->
         if (task.name == "generateRegularReleasePlayResources") {
             task.dependsOn ':crowdinDownload'
@@ -24,7 +29,7 @@ if (CROWDIN_API_KEY != null && !CROWDIN_API_KEY.isEmpty()) {
         commandLine '../make_screenshots.sh'
     }
 
-    if (new File('googlePlayAndroidDeveloper.json').exists()) {
+    if (HAS_PLAY_STORE_SECRET) {
         play {
             track 'beta'
             untrackOld true

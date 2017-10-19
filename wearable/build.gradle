@@ -41,9 +41,9 @@ android {
         debug {
         }
         release {
-            storeFile file('../keystore.jks')
+            storeFile file(KEYSTORE_NAME)
             storePassword KEYSTORE_PASSWORD
-            keyAlias 'mytargets'
+            keyAlias KEY_ALIAS
             keyPassword KEY_PASSWORD
         }
     }
