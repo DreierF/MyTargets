@@ -52,8 +52,8 @@ import permissions.dispatcher.RuntimePermissions;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
-import static de.dreier.mytargets.base.fragments.EditWithImageFragmentBasePermissionsDispatcher.onSelectImageWithCheck;
-import static de.dreier.mytargets.base.fragments.EditWithImageFragmentBasePermissionsDispatcher.onTakePictureWithCheck;
+import static de.dreier.mytargets.base.fragments.EditWithImageFragmentBasePermissionsDispatcher.onSelectImageWithPermissionCheck;
+import static de.dreier.mytargets.base.fragments.EditWithImageFragmentBasePermissionsDispatcher.onTakePictureWithPermissionCheck;
 
 @RuntimePermissions
 public abstract class EditWithImageFragmentBase<T extends Image> extends EditFragmentBase implements View.OnFocusChangeListener {
@@ -121,10 +121,10 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
         popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.action_from_gallery:
-                    onSelectImageWithCheck(this);
+                    onSelectImageWithPermissionCheck(this);
                     return true;
                 case R.id.action_take_picture:
-                    onTakePictureWithCheck(this);
+                    onTakePictureWithPermissionCheck(this);
                     return true;
                 default:
                     return false;

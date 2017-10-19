@@ -56,7 +56,7 @@ import permissions.dispatcher.RuntimePermissions;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
-import static de.dreier.mytargets.base.gallery.GalleryActivityPermissionsDispatcher.onTakePictureWithCheck;
+import static de.dreier.mytargets.base.gallery.GalleryActivityPermissionsDispatcher.onTakePictureWithPermissionCheck;
 
 @RuntimePermissions
 public class GalleryActivity extends ChildActivityBase {
@@ -133,7 +133,7 @@ public class GalleryActivity extends ChildActivityBase {
         binding.pager.setCurrentItem(currentPos);
 
         if (imageList.size() == 0 && savedInstanceState == null) {
-            onTakePictureWithCheck(this);
+            onTakePictureWithPermissionCheck(this);
         }
     }
 
@@ -292,7 +292,7 @@ public class GalleryActivity extends ChildActivityBase {
 
     private void goToImage(int pos) {
         if (imageList.size() == pos) {
-            onTakePictureWithCheck(this);
+            onTakePictureWithPermissionCheck(this);
         } else {
             binding.pager.setCurrentItem(pos, true);
         }

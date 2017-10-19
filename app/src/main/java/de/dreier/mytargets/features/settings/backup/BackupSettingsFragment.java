@@ -70,7 +70,7 @@ import static android.content.ContentResolver.SYNC_OBSERVER_TYPE_PENDING;
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static de.dreier.mytargets.features.settings.backup.BackupSettingsFragmentPermissionsDispatcher.showFilePickerWithCheck;
+import static de.dreier.mytargets.features.settings.backup.BackupSettingsFragmentPermissionsDispatcher.showFilePickerWithPermissionCheck;
 import static de.dreier.mytargets.features.settings.backup.provider.GoogleDriveBackup.AsyncRestore.REQUEST_CODE_RESOLUTION;
 
 @RuntimePermissions
@@ -166,7 +166,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
 
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_import) {
-            showFilePickerWithCheck(this);
+            showFilePickerWithPermissionCheck(this);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -175,7 +175,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
     @Override
     public void onResume() {
         super.onResume();
-        applyBackupLocationWithCheck(SettingsManager.getBackupLocation());
+        applyBackupLocationWithPermissionCheck(SettingsManager.getBackupLocation());
         updateAutomaticBackupSwitch();
 
         syncStatusObserver.onStatusChanged(0);
@@ -253,7 +253,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
                             if (backup != null) {
                                 backup.stop();
                             }
-                            applyBackupLocationWithCheck(location);
+                            applyBackupLocationWithPermissionCheck(location);
                             return true;
                         })
                 .show();
@@ -266,9 +266,9 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         binding.backupLocation.summary.setText(backupLocation.toString());
     }
 
-    private void applyBackupLocationWithCheck(EBackupLocation item) {
+    private void applyBackupLocationWithPermissionCheck(EBackupLocation item) {
         if (item.needsStoragePermissions()) {
-            BackupSettingsFragmentPermissionsDispatcher.applyBackupLocationWithCheck(this, item);
+            BackupSettingsFragmentPermissionsDispatcher.applyBackupLocationWithPermissionCheck(this, item);
         } else {
             applyBackupLocation(item);
         }
