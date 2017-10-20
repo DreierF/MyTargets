@@ -126,6 +126,7 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
                 .fromFab(binding.fab2, R.color.fabTrainingWithStandardRound,
                         R.drawable.fab_album_24dp)
                 .start());
+        setHasOptionsMenu(true);
         return binding.getRoot();
     }
 
