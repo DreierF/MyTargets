@@ -32,6 +32,7 @@ import de.dreier.mytargets.features.arrows.EditArrowListFragment;
 import de.dreier.mytargets.features.bows.EditBowListFragment;
 import de.dreier.mytargets.features.settings.SettingsActivity;
 import de.dreier.mytargets.features.settings.SettingsManager;
+import de.dreier.mytargets.features.timer.TimerFragment;
 import de.dreier.mytargets.features.training.overview.TrainingsFragment;
 
 /**
@@ -95,7 +96,9 @@ public class MainActivity extends AppCompatActivity {
                     binding.drawerLayout.closeDrawers();
                     switch (menuItem.getItemId()) {
                         case R.id.nav_timer:
-                            //TODO
+                            TimerFragment.getIntent(false)
+                                    .withContext(this)
+                                    .start();
                             break;
                         case R.id.nav_settings:
                             startActivity(new Intent(this, SettingsActivity.class));
