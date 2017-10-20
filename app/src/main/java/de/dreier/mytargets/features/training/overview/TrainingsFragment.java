@@ -25,6 +25,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,6 +67,8 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
 
     protected FragmentTrainingsBinding binding;
 
+    private boolean showStatistics = false;
+
     public TrainingsFragment() {
         itemTypeSelRes = R.plurals.training_selected;
         itemTypeDelRes = R.plurals.training_deleted;
@@ -74,6 +79,7 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
     public void onResume() {
         super.onResume();
         binding.fab.close(false);
+        showStatistics = !Training.getAll().isEmpty();
     }
 
     private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
@@ -121,6 +127,33 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
                         R.drawable.fab_album_24dp)
                 .start());
         return binding.getRoot();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.statistics, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.action_statistics).setVisible(showStatistics);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_statistics:
+                StatisticsActivity
+                        .getIntent(Stream.of(Training.getAll())
+                                .flatMap((training) -> Stream.of(training.getRounds()))
+                                .map(Round::getId)
+                                .collect(Collectors.toList())).withContext(this)
+                        .start();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

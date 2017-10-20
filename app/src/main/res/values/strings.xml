@@ -18,6 +18,7 @@
 
     <!-- General -->
     <string name="preferences">Options</string>
+    <string name="settings">Settings</string>
     <string name="prev">Previous</string>
     <string name="next">Next</string>
     <string name="save">Save</string>
@@ -355,4 +356,8 @@
     <string name="sort_shots_for_spots">Sort shots for spot target faces</string>
     <string name="target_captain">Target captain</string>
     <string name="warning_backup_experimental">Warning: This feature is still experimental! Please check in regular intervals if the backup was really successful!</string>
+    <string name="drawer_open">Open drawer</string>
+    <string name="drawer_close">Close drawer</string>
+    <string name="help_and_feedback"><![CDATA[Help & Feedback]]></string>
+    <string name="home">Home</string>
 </resources>
