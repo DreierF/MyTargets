@@ -21,7 +21,9 @@
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:openDrawer="start">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -32,10 +34,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/colorPrimary"
-                android:fitsSystemWindows="true"
                 android:minHeight="?attr/actionBarSize"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+            <FrameLayout
+                android:id="@+id/content_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/bottom_navigation"
+                android:layout_below="@+id/toolbar"/>
 
             <android.support.design.widget.BottomNavigationView
                 android:id="@+id/bottom_navigation"
@@ -47,13 +55,6 @@
                 app:itemTextColor="@color/md_white_1000"
                 app:menu="@menu/bottom_navigation_main"/>
 
-            <FrameLayout
-                android:id="@+id/content_frame"
-                android:layout_width="match_parent"
-                android:layout_height="439dp"
-                android:layout_above="@id/bottom_navigation"
-                android:layout_below="@+id/toolbar"/>
-
         </RelativeLayout>
 
         <android.support.design.widget.NavigationView
@@ -62,6 +63,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:background="@android:color/white"
+            android:fitsSystemWindows="true"
             app:headerLayout="@layout/navigation_drawer_header"
             app:menu="@menu/navigation_drawer_main"/>
 

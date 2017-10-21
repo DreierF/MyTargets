@@ -50,9 +50,11 @@ import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
+import de.dreier.mytargets.utils.SpeedDialUtils;
 import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import de.dreier.mytargets.views.MaterialTapTargetPrompt;
+import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
 
 import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_FREE_TRAINING_ACTION;
 import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION;
@@ -78,7 +80,7 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
     @Override
     public void onResume() {
         super.onResume();
-        binding.fab.close(false);
+        binding.fabSpeedDial.closeMenu();
         showStatistics = !Training.getAll().isEmpty();
     }
 
@@ -114,18 +116,30 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.addItemDecoration(
                 new DividerItemDecoration(getContext(), R.drawable.full_divider));
-        binding.fab1.setOnClickListener(view -> EditTrainingFragment
-                .createIntent(CREATE_FREE_TRAINING_ACTION)
-                .withContext(this)
-                .fromFab(binding.fab1, R.color.fabFreeTraining,
-                        R.drawable.fab_trending_up_white_24dp)
-                .start());
-        binding.fab2.setOnClickListener(view -> EditTrainingFragment
-                .createIntent(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)
-                .withContext(this)
-                .fromFab(binding.fab2, R.color.fabTrainingWithStandardRound,
-                        R.drawable.fab_album_24dp)
-                .start());
+        binding.fabSpeedDial.setMenuListener(new SimpleMenuListenerAdapter() {
+            @Override
+            public boolean onMenuItemSelected(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.fab1:
+                        EditTrainingFragment
+                                .createIntent(CREATE_FREE_TRAINING_ACTION)
+                                .withContext(TrainingsFragment.this)
+                                .fromFab(SpeedDialUtils.getFabFromMenuId(binding.fabSpeedDial, R.id.fab1), R.color.fabFreeTraining,
+                                        R.drawable.fab_trending_up_white_24dp)
+                                .start();
+                        break;
+                    case R.id.fab2:
+                        EditTrainingFragment
+                                .createIntent(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)
+                                .withContext(TrainingsFragment.this)
+                                .fromFab(SpeedDialUtils.getFabFromMenuId(binding.fabSpeedDial, R.id.fab2), R.color.fabTrainingWithStandardRound,
+                                        R.drawable.fab_album_24dp)
+                                .start();
+                        break;
+                }
+                return false;
+            }
+        });
         setHasOptionsMenu(true);
         return binding.getRoot();
     }
@@ -189,8 +203,8 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
             TrainingsFragment.this.setList(trainings, false);
             if (trainings.isEmpty() && !SettingsManager.isFirstTrainingShown()) {
                 new MaterialTapTargetPrompt.Builder(TrainingsFragment.this.getActivity())
-                        .setDrawView(binding.fab)
-                        .setTarget(binding.fab.getChildAt(2))
+                        .setDrawView(binding.fabSpeedDial)
+                        .setTarget(binding.fabSpeedDial.getChildAt(1))
                         .setBackgroundColourFromRes(R.color.colorPrimary)
                         .setPrimaryText(R.string.your_first_training)
                         .setSecondaryText(R.string.first_training_description)
@@ -241,7 +255,8 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
         public void bindItem() {
             binding.training.setText(item.title);
             binding.trainingDate.setText(item.getFormattedDate());
-            binding.gesTraining.setText(item.getReachedScore().format(SettingsManager.getScoreConfiguration()));
+            binding.gesTraining.setText(item.getReachedScore()
+                    .format(SettingsManager.getScoreConfiguration()));
         }
     }
 }

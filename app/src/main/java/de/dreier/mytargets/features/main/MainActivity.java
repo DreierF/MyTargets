@@ -24,16 +24,20 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase;
 import de.dreier.mytargets.databinding.ActivityMainBinding;
 import de.dreier.mytargets.features.arrows.EditArrowListFragment;
 import de.dreier.mytargets.features.bows.EditBowListFragment;
+import de.dreier.mytargets.features.settings.ESettingsScreens;
 import de.dreier.mytargets.features.settings.SettingsActivity;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.timer.TimerFragment;
 import de.dreier.mytargets.features.training.overview.TrainingsFragment;
+import de.dreier.mytargets.utils.IntentWrapper;
 
 /**
  * Shows the apps main screen, which contains a bottom navigation for switching between trainings,
@@ -43,8 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     /*
      * TODO:
-     * - FAB appearance
-     * - Statistics does not refresh all trainings are deleted
+     * - Statistics does not refresh if all trainings are deleted
      * - First use overlay looks ugly
      * - Empty state image
      * - Help and feedback page
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
     private ActionBarDrawerToggle drawerToggle;
+    private IntentWrapper onDrawerClosePendingIntent = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         setSupportActionBar(binding.toolbar);
+
         setupBottomNavigation();
         setupNavigationDrawer();
         getSupportFragmentManager()
@@ -102,17 +107,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupNavigationDrawer() {
+        View headerLayout = binding.navigationView.getHeaderView(0);
+        TextView userName = headerLayout.findViewById(R.id.username);
+        TextView userDetails = headerLayout.findViewById(R.id.user_details);
+        userName.setText(SettingsManager.getProfileFullName());
+        userDetails.setText(SettingsManager.getProfileClub());
+
+        if (Utils.isLollipop()) {
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
+
         binding.navigationView.setNavigationItemSelectedListener(
                 menuItem -> {
                     binding.drawerLayout.closeDrawers();
                     switch (menuItem.getItemId()) {
                         case R.id.nav_timer:
-                            TimerFragment.getIntent(false)
-                                    .withContext(this)
-                                    .start();
+                            onDrawerClosePendingIntent = TimerFragment.getIntent(false);
                             break;
                         case R.id.nav_settings:
-                            startActivity(new Intent(this, SettingsActivity.class));
+                            onDrawerClosePendingIntent = SettingsActivity
+                                    .getIntent(ESettingsScreens.MAIN);
                             break;
                         case R.id.nav_help_and_feedback:
                             //TODO
@@ -121,7 +135,16 @@ public class MainActivity extends AppCompatActivity {
                     return false;
                 });
 
-        drawerToggle = new ActionBarDrawerToggle(this, binding.drawerLayout, binding.toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawerToggle = new ActionBarDrawerToggle(this, binding.drawerLayout, binding.toolbar, R.string.drawer_open, R.string.drawer_close) {
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                if (onDrawerClosePendingIntent != null) {
+                    onDrawerClosePendingIntent.withContext(MainActivity.this).start();
+                    onDrawerClosePendingIntent = null;
+                }
+            }
+        };
         binding.drawerLayout.addDrawerListener(drawerToggle);
     }
 

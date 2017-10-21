@@ -18,7 +18,6 @@ package de.dreier.mytargets.features.training.edit;
 import android.support.v4.app.Fragment;
 
 import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
-import de.dreier.mytargets.utils.Utils;
 
 public class EditTrainingActivity extends SimpleFragmentActivityBase {
 
@@ -27,14 +26,4 @@ public class EditTrainingActivity extends SimpleFragmentActivityBase {
         return new EditTrainingFragment();
     }
 
-    @Override
-    public void onBackPressed() {
-        // Workaround: When cancelling a new training don't animate
-        // back to the fab, because clans FAB breaks the transition
-        if (Utils.isLollipop()) {
-            getWindow().setSharedElementReturnTransition(null);
-            getWindow().setSharedElementReenterTransition(null);
-        }
-        finish();
-    }
 }

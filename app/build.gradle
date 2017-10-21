@@ -133,7 +133,7 @@ dependencies {
 
     implementation "com.github.PhilJay:MPAndroidChart:$libraryVersion.mpAndroidChart"
 
-    implementation "com.github.clans:fab:$libraryVersion.clansFab"
+    implementation "io.github.yavski:fab-speed-dial:$libraryVersion.fabSpeedDial"
 
     implementation "org.adw.library:discrete-seekbar:$libraryVersion.discreteSeekbar"
 
