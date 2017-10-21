@@ -41,6 +41,17 @@ import de.dreier.mytargets.features.training.overview.TrainingsFragment;
  */
 public class MainActivity extends AppCompatActivity {
 
+    /*
+     * TODO:
+     * - FAB appearance
+     * - Statistics does not refresh all trainings are deleted
+     * - First use overlay looks ugly
+     * - Empty state image
+     * - Help and feedback page
+     * - Fix Header layout
+     * - Fix UI tests
+     * */
+
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
