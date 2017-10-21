@@ -18,6 +18,7 @@ package de.dreier.mytargets.features.main;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -38,6 +39,7 @@ import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.timer.TimerFragment;
 import de.dreier.mytargets.features.training.overview.TrainingsFragment;
 import de.dreier.mytargets.utils.IntentWrapper;
+import de.dreier.mytargets.utils.Utils;
 
 /**
  * Shows the apps main screen, which contains a bottom navigation for switching between trainings,

@@ -19,22 +19,19 @@
 
     <item
         android:id="@+id/action_trainings"
-        android:enabled="true"
-        android:icon="@drawable/ic_archery_white_24dp"
+        android:icon="@drawable/ic_archery_24dp"
         android:title="@string/training"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_bows"
-        android:enabled="true"
-        android:icon="@drawable/ic_bow_white_24dp"
+        android:icon="@drawable/ic_bow_24dp"
         android:title="@string/bow"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_arrows"
-        android:enabled="true"
-        android:icon="@drawable/ic_arrow_white_24dp"
+        android:icon="@drawable/ic_arrow_24dp"
         android:title="@string/arrow"
         app:showAsAction="ifRoom"/>
 

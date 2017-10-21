@@ -50,7 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                app:itemBackground="@color/colorPrimary"
+                android:background="@color/colorPrimary"
                 app:itemIconTint="@color/md_white_1000"
                 app:itemTextColor="@color/md_white_1000"
                 app:menu="@menu/bottom_navigation_main"/>
