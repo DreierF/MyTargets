@@ -69,8 +69,6 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
 
     protected FragmentTrainingsBinding binding;
 
-    private boolean showStatistics = false;
-
     public TrainingsFragment() {
         itemTypeSelRes = R.plurals.training_selected;
         itemTypeDelRes = R.plurals.training_deleted;
@@ -81,7 +79,6 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
     public void onResume() {
         super.onResume();
         binding.fabSpeedDial.closeMenu();
-        showStatistics = !Training.getAll().isEmpty();
     }
 
     private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
@@ -152,6 +149,7 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+        boolean showStatistics = !Training.getAll().isEmpty();
         menu.findItem(R.id.action_statistics).setVisible(showStatistics);
     }
 

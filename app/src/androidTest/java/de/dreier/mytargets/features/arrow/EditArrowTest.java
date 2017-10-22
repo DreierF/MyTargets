@@ -40,7 +40,6 @@ import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -71,8 +70,7 @@ public class EditArrowTest extends UITestBase {
         onView(allOf(withText(R.string.arrow), isDisplayed())).perform(click());
 
         // Add new arrow and change some properties
-        onView(supportFab())
-                .perform(click());
+        onView(supportFab()).perform(click());
         onView(withId(R.id.name))
                 .perform(nestedScrollTo(), replaceText("Arrow"), closeSoftKeyboard());
         onView(withText(R.string.more_fields))

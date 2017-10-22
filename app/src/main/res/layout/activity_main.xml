@@ -38,13 +38,6 @@
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-            <FrameLayout
-                android:id="@+id/content_frame"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/bottom_navigation"
-                android:layout_below="@+id/toolbar"/>
-
             <android.support.design.widget.BottomNavigationView
                 android:id="@+id/bottom_navigation"
                 android:layout_width="match_parent"
@@ -54,6 +47,13 @@
                 app:itemIconTint="@color/md_white_1000"
                 app:itemTextColor="@color/md_white_1000"
                 app:menu="@menu/bottom_navigation_main"/>
+
+            <FrameLayout
+                android:id="@+id/content_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/bottom_navigation"
+                android:layout_below="@id/toolbar"/>
 
         </RelativeLayout>
 

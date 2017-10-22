@@ -27,9 +27,9 @@ import org.junit.runner.RunWith;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.test.base.UITestBase;
+import de.dreier.mytargets.test.utils.matchers.ViewMatcher;
 import de.dreier.mytargets.test.utils.rules.EmptyDbTestRule;
 
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -37,8 +37,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static de.dreier.mytargets.test.utils.PermissionGranter.allowPermissionsIfNeeded;
-import static de.dreier.mytargets.test.utils.matchers.ViewMatcher.matchFabMenu;
 import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
@@ -67,7 +65,7 @@ public class IntroActivityTest extends UITestBase {
 
         onView(withId(R.id.toolbar)).check(matches(hasDescendant(withText(R.string.my_targets))));
 
-        onView(matchFabMenu()).perform(click());
+        onView(ViewMatcher.supportFab()).perform(click());
         //allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
     }
 }

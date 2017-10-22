@@ -98,6 +98,7 @@ public class IntentWrapper {
 
     public IntentWrapper fromFab(View fab, @ColorRes int color, int icon) {
         if (Utils.isLollipop()) {
+            fab.setTransitionName(fab.getContext().getString(R.string.transition_root_view));
             FabTransform.addExtras(intent, color, icon);
             ActivityOptions options = ActivityOptions
                     .makeSceneTransitionAnimation(getActivity(fab), fab,

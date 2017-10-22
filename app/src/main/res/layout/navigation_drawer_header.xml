@@ -19,35 +19,34 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="190dp"
-                android:background="@color/md_blue_500"
-                android:orientation="vertical">
+                android:background="@drawable/md_background_centered"
+                android:clickable="true"
+                android:orientation="vertical"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp">
 
-    <com.makeramen.roundedimageview.RoundedImageView
+    <ImageView
         android:id="@+id/profile_image"
         android:layout_width="76dp"
         android:layout_height="76dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="24dp"
-        android:layout_marginStart="24dp"
+        android:clickable="false"
+        android:focusable="false"
         android:scaleType="centerCrop"
-        android:src="@drawable/arrows"
-        app:riv_border_color="#FF000000"
-        app:riv_border_width="2dip"
-        app:riv_corner_radius="38dip"
-        app:riv_mutate_background="true"
-        app:riv_oval="false"/>
+        app:srcCompat="@drawable/ic_account_circle_white_24dp"/>
 
     <TextView
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/user_details"
-        android:layout_alignLeft="@+id/profile_image"
-        android:layout_alignStart="@+id/profile_image"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:clickable="false"
+        android:focusable="false"
         android:gravity="start"
-        android:paddingBottom="4dp"
         android:textColor="#FFF"
         android:textSize="14sp"
         android:textStyle="bold"
@@ -61,6 +60,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/username"
         android:layout_marginBottom="8dp"
+        android:clickable="false"
+        android:focusable="false"
         android:gravity="start"
         android:textColor="#fff"
         android:textSize="14sp"

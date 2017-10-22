@@ -35,7 +35,7 @@ public class SpeedDialUtils {
                     .get(speedDial);
             return Stream.of(floatingActionButtonMenuItemMap.entrySet())
                     .filter(entry -> entry.getValue().getItemId() == id)
-                    .map(Map.Entry::getKey).findFirst().get();
+                    .map(Map.Entry::getKey).findFirst().orElse(null);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (NoSuchFieldException e) {
