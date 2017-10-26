@@ -43,14 +43,20 @@ public class EndImage extends BaseModel implements Image {
     public EndImage() {
     }
 
-    public EndImage(String imageFilePath) {
-        fileName = imageFilePath;
+    public EndImage(String imageFile) {
+        fileName = imageFile;
     }
 
+    /**
+     * @return The name of the image file, which is placed inside the files directory of the app
+     */
     public String getFileName() {
         return fileName;
     }
 
+    /**
+     * @param fileName The name of the image file, which is placed inside the files directory of the app
+     */
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }

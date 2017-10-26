@@ -79,7 +79,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         final PhotoView imageView = itemView.findViewById(R.id.iv);
         Image image = images.get(position);
         Picasso.with(activity)
-                .load(new File(image.getFileName()))
+                .load(new File(activity.getFilesDir(), image.getFileName()))
                 .fit()
                 .centerInside()
                 .into(imageView, new Callback() {

@@ -89,6 +89,9 @@ public class BackupUtils {
         FileUtils.copy(file, db_file);
     }
 
+    /**
+     * Returns a list of file names, which are implicitly placed in the ../files/ folder of the app.
+     * */
     public static String[] getImages() {
         ArrayList<String> list = new ArrayList<>();
         list.addAll(Stream.of(SQLite.select()
@@ -108,7 +111,6 @@ public class BackupUtils {
                 .collect(Collectors.toList()));
         return list.toArray(new String[list.size()]);
     }
-
 
     public static void zip(Context context, OutputStream dest) throws IOException {
         ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));

@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.app;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.test.filters.SmallTest;
@@ -79,6 +80,11 @@ public final class MigrationTest extends InstrumentedTestBase {
     public void setUp() throws IOException {
         ApplicationInstance.initFlowManager(getTargetContext());
 
+        // Create artificial image file to ensure the according database entry is not deleted (Migration23)
+        getTargetContext()
+                .openFileOutput("img175420839671886584-0f61-43a6-bc1e-dbcd8526056c794370927.jpg", Context.MODE_PRIVATE)
+                .close();
+
         File tmpDb = getTargetContext().getDatabasePath(DatabaseHelperDelegate
                 .getTempDbFileName(FlowManager.getDatabase(AppDatabase.NAME)));
 
@@ -95,7 +101,7 @@ public final class MigrationTest extends InstrumentedTestBase {
     }
 
     @Test
-    public void upgradeShouldKeepData() {
+    public void upgradeShouldKeepData() throws IOException {
         List<Training> trainings = Training.getAll();
         assertTraining1(trainings.get(0));
         assertTraining2(trainings.get(1));

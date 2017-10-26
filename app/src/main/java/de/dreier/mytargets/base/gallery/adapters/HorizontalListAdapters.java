@@ -57,7 +57,7 @@ public class HorizontalListAdapters extends RecyclerView.Adapter<HorizontalImage
             holder.camera.setVisibility(View.GONE);
             holder.image.setVisibility(View.VISIBLE);
             Picasso.with(activity)
-                    .load(new File(images.get(position).getFileName()))
+                    .load(new File(activity.getFilesDir(), images.get(position).getFileName()))
                     .fit()
                     .into(holder.image);
             ColorMatrix matrix = new ColorMatrix();

@@ -175,7 +175,7 @@ public class GalleryActivity extends ChildActivityBase {
         String packageName = getApplicationContext().getPackageName();
         String authority = packageName + ".easyphotopicker.fileprovider";
         Image currentImage = imageList.get(currentItem);
-        File file = new File(currentImage.getFileName());
+        File file = new File(getFilesDir(), currentImage.getFileName());
         Uri uri = getUriForFile(this, authority, file);
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("*/*");
@@ -269,7 +269,7 @@ public class GalleryActivity extends ChildActivityBase {
                     try {
                         File internal = File
                                 .createTempFile("img", file.getName(), getFilesDir());
-                        internalFiles.add(file);
+                        internalFiles.add(internal);
                         FileUtils.copy(file, internal);
                     } catch (IOException e) {
                         e.printStackTrace();

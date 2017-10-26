@@ -13,7 +13,8 @@
   ~ GNU General Public License for more details.
   -->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         style="@style/MaterialItem"
@@ -25,14 +26,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:padding="16dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="false"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/title"
@@ -40,26 +41,29 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="false"
-                    android:text="@string/training" />
+                    tools:text="Round 1"/>
 
                 <TextView
-                    android:id="@+id/subtitle"
+                    android:id="@+id/points"
                     style="@style/secondaryText"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_gravity="bottom"
                     android:clickable="false"
-                    android:text="@string/data" />
+                    android:gravity="end"
+                    tools:text="28/30"/>
+
             </LinearLayout>
 
             <TextView
-                android:id="@+id/points"
+                android:id="@+id/subtitle"
                 style="@style/secondaryText"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="4dp"
                 android:clickable="false"
-                android:layout_gravity="bottom"
-                android:gravity="end" />
+                tools:text="Some really really long description that does no longer break points"/>
 
         </LinearLayout>
 
