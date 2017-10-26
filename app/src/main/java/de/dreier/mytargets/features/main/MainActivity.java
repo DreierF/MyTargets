@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     /*
      * TODO:
      * - Statistics does not refresh if all trainings are deleted
-     * - First use overlay looks ugly
+     * - FAB does not return after snackbar gets shown
      * - Help and feedback page
      * */
 
