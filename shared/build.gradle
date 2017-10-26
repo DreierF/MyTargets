@@ -40,7 +40,7 @@ dependencies {
     api "com.annimon:stream:$libraryVersion.annimonStream"
     api "joda-time:joda-time:$libraryVersion.jodaTime"
 
-    api "org.parceler:parceler-api:$libraryVersion.parceler"
+    implementation "org.parceler:parceler-api:$libraryVersion.parceler"
 
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$libraryVersion.dbFlow"
     implementation "com.github.Raizlabs.DBFlow:dbflow-core:$libraryVersion.dbFlow"
