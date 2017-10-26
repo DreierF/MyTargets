@@ -62,7 +62,8 @@ public class EndRenderer {
     private transient int oldRadius;
     private transient int oldSelected;
     private transient int oldSelectedRadius;
-    private boolean ambientMode = false;
+    @SuppressWarnings("WeakerAccess")
+    boolean ambientMode = false;
 
     public void init(View parent, float density, Target target) {
         this.parent = parent;

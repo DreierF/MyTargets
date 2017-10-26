@@ -14,7 +14,6 @@
  */
 
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileOptions {
@@ -23,7 +22,6 @@ android {
     }
 
     compileSdkVersion compileSdkVersionCode
-    buildToolsVersion buildToolsVersionCode
 
     defaultConfig {
         applicationId 'de.dreier.mytargets'
@@ -65,13 +63,15 @@ android {
 }
 
 dependencies {
-    compile "com.google.android.support:wearable:$libraryVersion.supportWearable"
-    provided "com.google.android.wearable:wearable:$libraryVersion.supportWearable"
-    compile "com.android.support:percent:$libraryVersion.support"
-    compile "com.android.support:recyclerview-v7:$libraryVersion.support"
+    implementation "com.google.android.support:wearable:$libraryVersion.supportWearable"
+    compileOnly "com.google.android.wearable:wearable:$libraryVersion.supportWearable"
+    implementation "com.android.support:percent:$libraryVersion.support"
+    implementation "com.android.support:recyclerview-v7:$libraryVersion.support"
+    implementation "com.android.support:support-v4:$libraryVersion.support"
 
-    compile "org.parceler:parceler-api:$libraryVersion.parceler"
+
+    implementation "org.parceler:parceler-api:$libraryVersion.parceler"
     annotationProcessor "org.parceler:parceler:$libraryVersion.parceler"
 
-    compile project(':shared')
+    implementation project(':shared')
 }
