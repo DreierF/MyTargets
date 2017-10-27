@@ -14,31 +14,35 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             style="@style/card_list"
-            app:layoutManager="LinearLayoutManager"/>
+            app:layoutManager="LinearLayoutManager" />
 
         <include
             android:id="@+id/emptyState"
             layout="@layout/partial_empty_state"
-            app:image="@{de.dreier.mytargets.R.drawable.ic_archery_24dp}"
-            app:text="@{de.dreier.mytargets.R.string.no_trainings}"/>
+            app:image="@{de.dreier.mytargets.R.drawable.ic_arrow_24dp}"
+            app:text="@{de.dreier.mytargets.R.string.no_arrows}"/>
 
-        <io.github.yavski.fabspeeddial.FabSpeedDial
-            android:id="@+id/fabSpeedDial"
-            style="@style/fabSpeedDial"
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:fabMenu="@menu/fab_trainings"
-            app:miniFabBackgroundTintList="@array/fab_menu_trainings_colors"/>
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:src="@drawable/fab_add_white_24dp"
+            android:transitionName="@string/transition_root_view"
+            tools:targetApi="lollipop" />
 
     </android.support.design.widget.CoordinatorLayout>
 

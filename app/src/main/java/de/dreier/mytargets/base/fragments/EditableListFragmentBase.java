@@ -136,6 +136,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & IRecursiv
             item.delete();
         }
         adapter.notifyDataSetChanged();
+        reloadData();
         String message = getResources()
                 .getQuantityString(itemTypeDelRes, deleted.size(), deleted.size());
         Snackbar.make(getView().findViewById(R.id.coordinatorLayout), message, Snackbar.LENGTH_LONG)
@@ -144,6 +145,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & IRecursiv
                         item.saveRecursively();
                         adapter.addItem(item);
                     }
+                    reloadData();
                     deleted.clear();
                 })
                 .show();
@@ -194,5 +196,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & IRecursiv
      * @param items Items that have been selected
      */
     protected void onStatistics(List<T> items) {
+
     }
+
 }

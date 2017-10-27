@@ -22,13 +22,12 @@ import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v13.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -53,14 +52,12 @@ import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.SpeedDialUtils;
 import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
-import de.dreier.mytargets.views.MaterialTapTargetPrompt;
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
 
 import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_FREE_TRAINING_ACTION;
 import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION;
 import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_CREATE_TRAINING_FROM_REMOTE;
 import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE;
-
 
 /**
  * Shows an overview over all training days
@@ -121,7 +118,8 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
                         EditTrainingFragment
                                 .createIntent(CREATE_FREE_TRAINING_ACTION)
                                 .withContext(TrainingsFragment.this)
-                                .fromFab(SpeedDialUtils.getFabFromMenuId(binding.fabSpeedDial, R.id.fab1), R.color.fabFreeTraining,
+                                .fromFab(SpeedDialUtils
+                                                .getFabFromMenuId(binding.fabSpeedDial, R.id.fab1), R.color.fabFreeTraining,
                                         R.drawable.fab_trending_up_white_24dp)
                                 .start();
                         break;
@@ -129,7 +127,8 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
                         EditTrainingFragment
                                 .createIntent(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)
                                 .withContext(TrainingsFragment.this)
-                                .fromFab(SpeedDialUtils.getFabFromMenuId(binding.fabSpeedDial, R.id.fab2), R.color.fabTrainingWithStandardRound,
+                                .fromFab(SpeedDialUtils
+                                                .getFabFromMenuId(binding.fabSpeedDial, R.id.fab2), R.color.fabTrainingWithStandardRound,
                                         R.drawable.fab_album_24dp)
                                 .start();
                         break;
@@ -149,7 +148,7 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        boolean showStatistics = !Training.getAll().isEmpty();
+        boolean showStatistics = adapter != null && adapter.getItemCount() > 0;
         menu.findItem(R.id.action_statistics).setVisible(showStatistics);
     }
 
@@ -199,29 +198,8 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
         final List<Training> trainings = Training.getAll();
         return () -> {
             TrainingsFragment.this.setList(trainings, false);
-            if (trainings.isEmpty() && !SettingsManager.isFirstTrainingShown()) {
-                new MaterialTapTargetPrompt.Builder(TrainingsFragment.this.getActivity())
-                        .setDrawView(binding.fabSpeedDial)
-                        .setTarget(binding.fabSpeedDial.getChildAt(1))
-                        .setBackgroundColourFromRes(R.color.colorPrimary)
-                        .setPrimaryText(R.string.your_first_training)
-                        .setSecondaryText(R.string.first_training_description)
-                        .setAnimationInterpolator(new FastOutSlowInInterpolator())
-                        .setOnHidePromptListener(
-                                new MaterialTapTargetPrompt.OnHidePromptListener() {
-                                    @Override
-                                    public void onHidePrompt(MotionEvent event, boolean tappedTarget) {
-                                        //Do something such as storing a value so that this prompt is never shown again
-                                        SettingsManager.setFirstTrainingShown(true);
-                                    }
-
-                                    @Override
-                                    public void onHidePromptComplete() {
-
-                                    }
-                                })
-                        .show();
-            }
+            ActivityCompat.invalidateOptionsMenu(getActivity());
+            binding.emptyState.getRoot().setVisibility(trainings.isEmpty() ? View.VISIBLE : View.GONE);
         };
     }
 

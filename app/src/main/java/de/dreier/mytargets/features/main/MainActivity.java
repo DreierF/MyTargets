@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         setupNavigationDrawer();
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.content_frame, new TrainingsFragment())
+                .replace(R.id.content_frame, new TrainingsFragment())
                 .commit();
     }
 

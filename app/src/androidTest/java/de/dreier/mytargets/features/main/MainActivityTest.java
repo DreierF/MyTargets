@@ -97,7 +97,6 @@ public class MainActivityTest extends UITestBase {
         SettingsManager.setInputMethod(EInputMethod.PLOTTING);
         SettingsManager.setTimerEnabled(false);
         SettingsManager.setShotsPerEnd(3);
-        SettingsManager.setFirstTrainingShown(true);
 
         intending(isInternal())
                 .respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));

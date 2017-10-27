@@ -29,7 +29,7 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.base.fragments.EditableListFragment;
-import de.dreier.mytargets.databinding.FragmentListBinding;
+import de.dreier.mytargets.databinding.FragmentArrowsBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.utils.DividerItemDecoration;
@@ -38,7 +38,7 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 public class EditArrowListFragment extends EditableListFragment<Arrow> {
 
-    protected FragmentListBinding binding;
+    protected FragmentArrowsBinding binding;
 
     public EditArrowListFragment() {
         itemTypeSelRes = R.plurals.arrow_selected;
@@ -58,7 +58,7 @@ public class EditArrowListFragment extends EditableListFragment<Arrow> {
     @Override
     @CallSuper
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_arrows, container, false);
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.addItemDecoration(
                 new DividerItemDecoration(getContext(), R.drawable.full_divider));
@@ -72,7 +72,10 @@ public class EditArrowListFragment extends EditableListFragment<Arrow> {
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
         List<Arrow> arrows = Arrow.getAll();
-        return () -> adapter.setList(arrows);
+        return () -> {
+            adapter.setList(arrows);
+            binding.emptyState.getRoot().setVisibility(arrows.isEmpty() ? View.VISIBLE : View.GONE);
+        };
     }
 
     @Override
