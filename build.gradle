@@ -16,21 +16,19 @@
 buildscript {
     repositories {
         jcenter()
+        google()
         maven { url "https://jitpack.io" }
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.0'
         classpath 'me.tatarka:gradle-retrolambda:3.6.1'
-        classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
         classpath 'com.github.triplet.gradle:play-publisher:1.2.0'
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.2'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.4'
-        classpath 'com.google.gms:google-services:3.0.0'
-        classpath 'com.google.firebase:firebase-plugins:1.1.1'
+        classpath 'com.google.gms:google-services:3.1.1'
+        classpath 'com.google.firebase:firebase-plugins:1.1.0-alpha1'
     }
-
-    configurations.classpath.exclude group: 'com.android.tools.external.lombok'
 }
 
 plugins {
@@ -40,7 +38,6 @@ plugins {
 
 ext {
     compileSdkVersionCode = 26
-    buildToolsVersionCode = '26.0.1'
 
     libraryVersion = [
             aboutPage            : '1.2',
@@ -50,7 +47,7 @@ ext {
             dexmaker             : '2.2.0',
             discreteSeekbar      : '1.0.1',
             easyImage            : '1.4.2',
-            espresso             : '2.2.2',
+            espresso             : '3.0.1',
             findbugs             : '3.0.2',
             gson                 : '2.8.0',
             homage               : '0.2.0',
@@ -73,7 +70,7 @@ ext {
             roundedImageView     : '2.2.1',
             support              : '26.0.2',
             supportWearable      : '2.0.5',
-            testSupport          : '0.5',
+            testSupport          : '1.0.1',
             timber               : '4.5.1',
             truth                : '0.32',
             uiAutomator          : '2.1.2'
@@ -83,9 +80,9 @@ ext {
 allprojects {
     repositories {
         jcenter()
+        google()
         maven { url 'https://jitpack.io' }
         maven { url 'https://clojars.org/repo/' }
-        maven { url 'https://maven.google.com' }
     }
 }
 

@@ -24,7 +24,6 @@ android {
     }
 
     compileSdkVersion compileSdkVersionCode
-    buildToolsVersion buildToolsVersionCode
 
     defaultConfig {
         minSdkVersion 14
@@ -34,26 +33,26 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:support-v4:$libraryVersion.support"
-    compile "com.android.support:support-core-ui:$libraryVersion.support"
-    compile "com.android.support:support-core-utils:$libraryVersion.support"
-    compile "com.android.support:support-annotations:$libraryVersion.support"
-    compile "com.annimon:stream:$libraryVersion.annimonStream"
-    compile "joda-time:joda-time:$libraryVersion.jodaTime"
+    api "com.android.support:support-v4:$libraryVersion.support"
+    api "com.android.support:support-core-ui:$libraryVersion.support"
+    api "com.android.support:support-core-utils:$libraryVersion.support"
+    api "com.android.support:support-annotations:$libraryVersion.support"
+    api "com.annimon:stream:$libraryVersion.annimonStream"
+    api "joda-time:joda-time:$libraryVersion.jodaTime"
 
-    compile "org.parceler:parceler-api:$libraryVersion.parceler"
+    implementation "org.parceler:parceler-api:$libraryVersion.parceler"
 
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$libraryVersion.dbFlow"
-    compile "com.github.Raizlabs.DBFlow:dbflow-core:$libraryVersion.dbFlow"
-    compile "com.github.Raizlabs.DBFlow:dbflow:$libraryVersion.dbFlow"
+    implementation "com.github.Raizlabs.DBFlow:dbflow-core:$libraryVersion.dbFlow"
+    implementation "com.github.Raizlabs.DBFlow:dbflow:$libraryVersion.dbFlow"
 
-    compile "frankiesardo:icepick:$libraryVersion.icepick"
-    provided "frankiesardo:icepick-processor:$libraryVersion.icepick"
+    implementation "frankiesardo:icepick:$libraryVersion.icepick"
+    annotationProcessor "frankiesardo:icepick-processor:$libraryVersion.icepick"
 
-    compile "com.google.android.gms:play-services-wearable:$libraryVersion.playService"
-    compile "com.jakewharton.timber:timber:$libraryVersion.timber"
+    api "com.google.android.gms:play-services-wearable:$libraryVersion.playService"
+    api "com.jakewharton.timber:timber:$libraryVersion.timber"
 
-    testCompile "junit:junit:$libraryVersion.jUnit"
-    testCompile "org.mockito:mockito-core:$libraryVersion.mockito"
-    androidTestCompile "com.android.support.test:runner:$libraryVersion.testSupport"
+    testImplementation "junit:junit:$libraryVersion.jUnit"
+    testImplementation "org.mockito:mockito-core:$libraryVersion.mockito"
+    androidTestImplementation "com.android.support.test:runner:$libraryVersion.testSupport"
 }
