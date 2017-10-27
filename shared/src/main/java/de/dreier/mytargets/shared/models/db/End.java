@@ -127,14 +127,16 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
         for (Round round : rounds) {
             for (End end : round.getEnds()) {
                 for (Shot s : end.getShots()) {
-                    SelectableZone tuple = new SelectableZone(s.scoringRing,
-                            t.getModel().getZone(s.scoringRing),
-                            t.zoneToString(s.scoringRing, s.index),
-                            t.getScoreByZone(s.scoringRing, s.index));
-                    final Integer integer = scoreCount.get(tuple);
-                    if (integer != null) {
-                        int count = integer + 1;
-                        scoreCount.put(tuple, count);
+                    if (s.scoringRing != Shot.NOTHING_SELECTED) {
+                        SelectableZone tuple = new SelectableZone(s.scoringRing,
+                                t.getModel().getZone(s.scoringRing),
+                                t.zoneToString(s.scoringRing, s.index),
+                                t.getScoreByZone(s.scoringRing, s.index));
+                        final Integer integer = scoreCount.get(tuple);
+                        if (integer != null) {
+                            int count = integer + 1;
+                            scoreCount.put(tuple, count);
+                        }
                     }
                 }
             }

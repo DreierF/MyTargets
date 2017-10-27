@@ -27,7 +27,6 @@ android {
     }
 
     compileSdkVersion compileSdkVersionCode
-    buildToolsVersion buildToolsVersionCode
 
     playAccountConfigs {
         defaultAccountConfig {
@@ -77,9 +76,15 @@ android {
         }
     }
 
+    flavorDimensions "mode"
+
     productFlavors {
-        regular {}
-        screengrab {}
+        regular {
+            dimension "mode"
+        }
+        screengrab {
+            dimension "mode"
+        }
     }
 }
 
@@ -87,91 +92,91 @@ apply from: '../tools/script-codacy.gradle'
 apply from: '../tools/script-play-store.gradle'
 
 dependencies {
-    compile "com.android.support:support-compat:$libraryVersion.support"
-    compile "com.android.support:support-core-utils:$libraryVersion.support"
-    compile "com.android.support:support-core-ui:$libraryVersion.support"
-    compile "com.android.support:support-fragment:$libraryVersion.support"
-    compile "com.android.support:support-v13:$libraryVersion.support"
-    compile "com.android.support:appcompat-v7:$libraryVersion.support"
-    compile "com.android.support:design:$libraryVersion.support"
-    compile "com.android.support:support-annotations:$libraryVersion.support"
-    compile "com.android.support:preference-v7:$libraryVersion.support"
-    compile "com.android.support:preference-v14:$libraryVersion.support"
-    compile "com.android.support:recyclerview-v7:$libraryVersion.support"
-    compile "com.android.support:cardview-v7:$libraryVersion.support"
-    compile "com.android.support:preference-v14:$libraryVersion.support"
+    implementation "com.android.support:support-compat:$libraryVersion.support"
+    implementation "com.android.support:support-core-utils:$libraryVersion.support"
+    implementation "com.android.support:support-core-ui:$libraryVersion.support"
+    implementation "com.android.support:support-fragment:$libraryVersion.support"
+    implementation "com.android.support:support-v13:$libraryVersion.support"
+    implementation "com.android.support:appcompat-v7:$libraryVersion.support"
+    implementation "com.android.support:design:$libraryVersion.support"
+    implementation "com.android.support:support-annotations:$libraryVersion.support"
+    implementation "com.android.support:preference-v7:$libraryVersion.support"
+    implementation "com.android.support:preference-v14:$libraryVersion.support"
+    implementation "com.android.support:recyclerview-v7:$libraryVersion.support"
+    implementation "com.android.support:cardview-v7:$libraryVersion.support"
+    implementation "com.android.support:preference-v14:$libraryVersion.support"
 
-    compile "com.google.android.gms:play-services-drive:$libraryVersion.playService"
-    compile "com.google.firebase:firebase-core:$libraryVersion.playService"
-    compile "com.google.firebase:firebase-crash:$libraryVersion.playService"
+    implementation "com.google.android.gms:play-services-drive:$libraryVersion.playService"
+    implementation "com.google.firebase:firebase-core:$libraryVersion.playService"
+    implementation "com.google.firebase:firebase-crash:$libraryVersion.playService"
 
-    compile "com.google.code.gson:gson:$libraryVersion.gson"
+    implementation "com.google.code.gson:gson:$libraryVersion.gson"
 
-    compile "com.squareup.okhttp3:okhttp:$libraryVersion.okhttp"
-    compile "com.squareup.okhttp3:okhttp-urlconnection:$libraryVersion.okhttp"
+    implementation "com.squareup.okhttp3:okhttp:$libraryVersion.okhttp"
+    implementation "com.squareup.okhttp3:okhttp-urlconnection:$libraryVersion.okhttp"
 
-    compile "com.squareup.retrofit2:retrofit:$libraryVersion.retrofit"
-    compile "com.squareup.retrofit2:converter-gson:$libraryVersion.retrofit"
+    implementation "com.squareup.retrofit2:retrofit:$libraryVersion.retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$libraryVersion.retrofit"
 
-    compile "com.squareup.picasso:picasso:$libraryVersion.picasso"
+    implementation "com.squareup.picasso:picasso:$libraryVersion.picasso"
 
-    compile "frankiesardo:icepick:$libraryVersion.icepick"
-    provided "frankiesardo:icepick-processor:$libraryVersion.icepick"
+    implementation "frankiesardo:icepick:$libraryVersion.icepick"
+    annotationProcessor "frankiesardo:icepick-processor:$libraryVersion.icepick"
 
-    compile "com.github.hotchemi:permissionsdispatcher:$libraryVersion.permissionsdispatcher"
+    implementation "com.github.hotchemi:permissionsdispatcher:$libraryVersion.permissionsdispatcher"
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$libraryVersion.permissionsdispatcher"
 
-    compile "org.parceler:parceler-api:$libraryVersion.parceler"
+    implementation "org.parceler:parceler-api:$libraryVersion.parceler"
     annotationProcessor "org.parceler:parceler:$libraryVersion.parceler"
 
-    compile "com.anjlab.android.iab.v3:library:$libraryVersion.iab"
+    implementation "com.anjlab.android.iab.v3:library:$libraryVersion.iab"
 
-    compile "com.github.PhilJay:MPAndroidChart:$libraryVersion.mpAndroidChart"
+    implementation "com.github.PhilJay:MPAndroidChart:$libraryVersion.mpAndroidChart"
 
-    compile "com.github.clans:fab:$libraryVersion.clansFab"
+    implementation "com.github.clans:fab:$libraryVersion.clansFab"
 
-    compile "org.adw.library:discrete-seekbar:$libraryVersion.discreteSeekbar"
+    implementation "org.adw.library:discrete-seekbar:$libraryVersion.discreteSeekbar"
 
-    compile "com.github.jkwiecien:EasyImage:$libraryVersion.easyImage"
+    implementation "com.github.jkwiecien:EasyImage:$libraryVersion.easyImage"
 
-    compile "com.afollestad.material-dialogs:core:$libraryVersion.materialDialogs"
+    implementation "com.afollestad.material-dialogs:core:$libraryVersion.materialDialogs"
 
-    compile "com.github.medyo:android-about-page:$libraryVersion.aboutPage"
+    implementation "com.github.medyo:android-about-page:$libraryVersion.aboutPage"
 
-    compile "com.github.oriley-me.homage:homage-core:$libraryVersion.homage"
-    compile "com.github.oriley-me.homage:homage-recyclerview:$libraryVersion.homage"
+    implementation "com.github.oriley-me.homage:homage-core:$libraryVersion.homage"
+    implementation "com.github.oriley-me.homage:homage-recyclerview:$libraryVersion.homage"
 
-    compile "com.makeramen:roundedimageview:$libraryVersion.roundedImageView"
+    implementation "com.makeramen:roundedimageview:$libraryVersion.roundedImageView"
 
-    compile "agency.tango.android:material-intro-screen:$libraryVersion.materialIntroScreen"
+    implementation "agency.tango.android:material-intro-screen:$libraryVersion.materialIntroScreen"
 
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$libraryVersion.dbFlow"
-    compile "com.github.Raizlabs.DBFlow:dbflow-core:$libraryVersion.dbFlow"
-    compile "com.github.Raizlabs.DBFlow:dbflow:$libraryVersion.dbFlow"
+    implementation "com.github.Raizlabs.DBFlow:dbflow-core:$libraryVersion.dbFlow"
+    implementation "com.github.Raizlabs.DBFlow:dbflow:$libraryVersion.dbFlow"
 
-    compile "com.github.chrisbanes:PhotoView:$libraryVersion.photoView"
+    implementation "com.github.chrisbanes:PhotoView:$libraryVersion.photoView"
 
-    compile project(':shared')
+    implementation project(':shared')
     wearApp project(':wearable')
 
-    androidTestCompile "com.google.truth:truth:$libraryVersion.truth"
-    androidTestCompile "com.google.code.findbugs:jsr305:$libraryVersion.findbugs"
-    androidTestCompile "com.android.support:support-annotations:$libraryVersion.support"
-    androidTestCompile "com.android.support.test:runner:$libraryVersion.testSupport"
-    androidTestCompile "com.android.support.test:rules:$libraryVersion.testSupport"
-    androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:$libraryVersion.uiAutomator"
-    androidTestCompile("com.android.support.test.espresso:espresso-core:$libraryVersion.espresso", {
+    androidTestImplementation "com.google.truth:truth:$libraryVersion.truth"
+    androidTestImplementation "com.google.code.findbugs:jsr305:$libraryVersion.findbugs"
+    androidTestImplementation "com.android.support:support-annotations:$libraryVersion.support"
+    androidTestImplementation "com.android.support.test:runner:$libraryVersion.testSupport"
+    androidTestImplementation "com.android.support.test:rules:$libraryVersion.testSupport"
+    androidTestImplementation "com.android.support.test.uiautomator:uiautomator-v18:$libraryVersion.uiAutomator"
+    androidTestImplementation("com.android.support.test.espresso:espresso-core:$libraryVersion.espresso", {
         exclude group: 'com.android.support'
     })
-    androidTestCompile("com.android.support.test.espresso:espresso-contrib:$libraryVersion.espresso", {
+    androidTestImplementation("com.android.support.test.espresso:espresso-contrib:$libraryVersion.espresso", {
         exclude group: 'com.android.support'
     })
-    androidTestCompile("com.android.support.test.espresso:espresso-intents:$libraryVersion.espresso", {
+    androidTestImplementation("com.android.support.test.espresso:espresso-intents:$libraryVersion.espresso", {
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
     })
-    androidTestScreengrabCompile "tools.fastlane:screengrab:$libraryVersion.screengrab"
+    androidTestScreengrabImplementation "tools.fastlane:screengrab:$libraryVersion.screengrab"
 }
 
 // Must be at the bottom

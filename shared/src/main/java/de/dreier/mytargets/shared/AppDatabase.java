@@ -19,13 +19,19 @@ import android.database.Cursor;
 
 import com.raizlabs.android.dbflow.annotation.Database;
 import com.raizlabs.android.dbflow.annotation.Migration;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import de.dreier.mytargets.shared.models.db.ArrowImage;
+import de.dreier.mytargets.shared.models.db.BowImage;
+import de.dreier.mytargets.shared.models.db.EndImage;
+import de.dreier.mytargets.shared.models.db.Image;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.FileUtils;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
@@ -54,6 +60,54 @@ public class AppDatabase {
         @Override
         public void migrate(DatabaseWrapper database) {
             fillStandardRound(database);
+        }
+    }
+
+    @Migration(version = 23, database = AppDatabase.class)
+    public static class Migration23 extends BaseMigration {
+
+        @Override
+        public void migrate(DatabaseWrapper database) {
+            removeFilePath(database, EndImage.class);
+            removeFilePath(database, BowImage.class);
+            removeFilePath(database, ArrowImage.class);
+        }
+
+        private <T extends BaseModel & Image> void removeFilePath(DatabaseWrapper database, Class<? extends T> clazz) {
+            List<? extends T> images = SQLite.select().from(clazz).queryList(database);
+            for(T image : images) {
+                File filesDir = SharedApplicationInstance.getContext().getFilesDir();
+                File imageFile = new File(filesDir, image.getFileName());
+
+                // If imagePath is just the name and is placed inside files directory
+                if (imageFile.exists()) {
+                    continue;
+                }
+
+                // In case the image was already copied to the files, but does still contain the wrong path
+                File imageFromSomewhere = new File(image.getFileName());
+                imageFile = new File(filesDir, imageFromSomewhere.getName());
+                if (imageFile.exists()) {
+                    image.setFileName(imageFile.getName());
+                    image.save(database);
+                    continue;
+                }
+
+                // In case the image is placed somewhere else, but still exists
+                if (imageFromSomewhere.exists()) {
+                    try {
+                        imageFile = File.createTempFile("img", imageFromSomewhere.getName(), filesDir);
+                        FileUtils.copy(imageFromSomewhere, imageFile);
+                        imageFromSomewhere.delete();
+                        image.setFileName(imageFile.getName());
+                        image.save(database);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    image.delete(database);
+                }
+            }
         }
     }
 

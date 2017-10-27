@@ -186,6 +186,7 @@ public class StatisticsFragment extends FragmentBase {
                 .flatMap(r -> Stream.of(r.getEnds()))
                 .filter(p -> p.exact)
                 .flatMap(p -> Stream.of(p.getShots()))
+                .filter(p -> p.scoringRing != Shot.NOTHING_SELECTED)
                 .collect(Collectors.toList());
         if (exactShots.isEmpty()) {
             binding.dispersionPatternLayout.setVisibility(View.GONE);
@@ -335,6 +336,8 @@ public class StatisticsFragment extends FragmentBase {
         final List<Shot> shots = Stream.of(rounds)
                 .flatMap(r -> Stream.of(r.getEnds()))
                 .flatMap(p -> Stream.of(p.getShots()))
+                .filter(p -> p.scoringRing !=
+                        Shot.NOTHING_SELECTED) //TODO: Refactor to not save NOTHING_SELECTED at all
                 .collect(Collectors.toList());
         long missCount = Stream.of(shots).filter(s -> s.scoringRing == Shot.MISS).count();
         long hitCount = shots.size() - missCount;

@@ -172,7 +172,7 @@ public class GalleryActivity extends ChildActivityBase {
 
     private void shareImage(int currentItem) {
         Image currentImage = imageList.get(currentItem);
-        File file = new File(currentImage.getFileName());
+        File file = new File(getFilesDir(), currentImage.getFileName());
         Uri uri = FileUtils.getUriForFile(this, file);
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("*/*");
@@ -266,7 +266,7 @@ public class GalleryActivity extends ChildActivityBase {
                     try {
                         File internal = File
                                 .createTempFile("img", file.getName(), getFilesDir());
-                        internalFiles.add(file);
+                        internalFiles.add(internal);
                         FileUtils.copy(file, internal);
                     } catch (IOException e) {
                         e.printStackTrace();

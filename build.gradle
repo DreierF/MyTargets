@@ -16,21 +16,20 @@
 buildscript {
     repositories {
         jcenter()
+        google()
         maven { url "https://jitpack.io" }
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.0'
         classpath 'me.tatarka:gradle-retrolambda:3.7.0'
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
         classpath 'com.github.triplet.gradle:play-publisher:1.2.0'
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.2'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.1'
-        classpath 'com.google.gms:google-services:3.0.0'
-        classpath 'com.google.firebase:firebase-plugins:1.1.1'
+        classpath 'com.google.gms:google-services:3.1.1'
+        classpath 'com.google.firebase:firebase-plugins:1.1.0-alpha1'
     }
-
-    configurations.classpath.exclude group: 'com.android.tools.external.lombok'
 }
 
 plugins {
@@ -40,7 +39,6 @@ plugins {
 
 ext {
     compileSdkVersionCode = 26
-    buildToolsVersionCode = '26.0.1'
 
     libraryVersion = [
             aboutPage            : '1.2.1',
@@ -83,9 +81,9 @@ ext {
 allprojects {
     repositories {
         jcenter()
+        google()
         maven { url 'https://jitpack.io' }
         maven { url 'https://clojars.org/repo/' }
-        maven { url 'https://maven.google.com' }
     }
 }
 
