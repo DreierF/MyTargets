@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
      * - Statistics does not refresh if all trainings are deleted
      * - FAB does not return after snackbar gets shown
      * - Help and feedback page
+     * - Save current page and restore when returning to the app
      * */
 
     static {
@@ -198,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * @return MainActvity's idling resource for Espresso testing
+     * Ensures that espresso is waiting until the launched intent is sent from the navigation drawer.
      */
     public CountingIdlingResource getEspressoIdlingResourceForMainActivity() {
         return espressoTestIdlingResource;

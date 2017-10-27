@@ -32,7 +32,7 @@
             app:image="@{de.dreier.mytargets.R.drawable.ic_archery_24dp}"
             app:text="@{de.dreier.mytargets.R.string.no_trainings}"/>
 
-        <io.github.yavski.fabspeeddial.FabSpeedDial
+        <de.dreier.mytargets.views.speeddial.FabSpeedDial
             android:id="@+id/fabSpeedDial"
             style="@style/fabSpeedDial"
             android:layout_width="wrap_content"

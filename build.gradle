@@ -48,7 +48,6 @@ ext {
             discreteSeekbar      : '1.0.1',
             easyImage            : '2.0.3',
             espresso             : '3.0.1',
-            fabSpeedDial         : '1.0.6',
             findbugs             : '3.0.2',
             gson                 : '2.8.2',
             homage               : '0.2.0',

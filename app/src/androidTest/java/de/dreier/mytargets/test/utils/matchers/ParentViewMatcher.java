@@ -25,8 +25,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
-import de.dreier.mytargets.utils.SpeedDialUtils;
-import io.github.yavski.fabspeeddial.FabSpeedDial;
+import de.dreier.mytargets.views.speeddial.FabSpeedDial;
 
 public class ParentViewMatcher {
     public static Matcher<View> isNestedChildOfView(Matcher<View> parentViewMatcher) {
@@ -72,8 +71,8 @@ public class ParentViewMatcher {
             public boolean matchesSafely(View view) {
                 View speedDialView = MatcherUtils.getMatchingParent(view, speedDialViewMatcher);
                 if (speedDialView != null && speedDialView instanceof FabSpeedDial) {
-                    FloatingActionButton fabFromMenuId = SpeedDialUtils
-                            .getFabFromMenuId((FabSpeedDial) speedDialView, id);
+                    FloatingActionButton fabFromMenuId = ((FabSpeedDial) speedDialView)
+                            .getFabFromMenuId(id);
                     ViewParent parent = fabFromMenuId.getParent();
                     if (parent != null && parent instanceof ViewGroup &&
                             ((ViewGroup) parent).getChildAt(0) == view) {

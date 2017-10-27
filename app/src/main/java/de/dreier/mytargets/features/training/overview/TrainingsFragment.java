@@ -49,10 +49,9 @@ import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
-import de.dreier.mytargets.utils.SpeedDialUtils;
 import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
-import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
+import de.dreier.mytargets.views.speeddial.FabSpeedDial;
 
 import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_FREE_TRAINING_ACTION;
 import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION;
@@ -110,31 +109,28 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.addItemDecoration(
                 new DividerItemDecoration(getContext(), R.drawable.full_divider));
-        binding.fabSpeedDial.setMenuListener(new SimpleMenuListenerAdapter() {
-            @Override
-            public boolean onMenuItemSelected(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.fab1:
-                        EditTrainingFragment
-                                .createIntent(CREATE_FREE_TRAINING_ACTION)
-                                .withContext(TrainingsFragment.this)
-                                .fromFab(SpeedDialUtils
-                                                .getFabFromMenuId(binding.fabSpeedDial, R.id.fab1), R.color.fabFreeTraining,
-                                        R.drawable.fab_trending_up_white_24dp)
-                                .start();
-                        break;
-                    case R.id.fab2:
-                        EditTrainingFragment
-                                .createIntent(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)
-                                .withContext(TrainingsFragment.this)
-                                .fromFab(SpeedDialUtils
-                                                .getFabFromMenuId(binding.fabSpeedDial, R.id.fab2), R.color.fabTrainingWithStandardRound,
-                                        R.drawable.fab_album_24dp)
-                                .start();
-                        break;
-                }
-                return false;
+        binding.fabSpeedDial.setMenuListener(menuItem -> {
+            switch (menuItem.getItemId()) {
+                case R.id.fab1:
+                    EditTrainingFragment
+                            .createIntent(CREATE_FREE_TRAINING_ACTION)
+                            .withContext(TrainingsFragment.this)
+                            .fromFab(binding.fabSpeedDial
+                                            .getFabFromMenuId(R.id.fab1), R.color.fabFreeTraining,
+                                    R.drawable.fab_trending_up_white_24dp)
+                            .start();
+                    break;
+                case R.id.fab2:
+                    EditTrainingFragment
+                            .createIntent(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)
+                            .withContext(TrainingsFragment.this)
+                            .fromFab(binding.fabSpeedDial
+                                            .getFabFromMenuId(R.id.fab2), R.color.fabTrainingWithStandardRound,
+                                    R.drawable.fab_album_24dp)
+                            .start();
+                    break;
             }
+            return false;
         });
         setHasOptionsMenu(true);
         return binding.getRoot();
@@ -199,7 +195,8 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
         return () -> {
             TrainingsFragment.this.setList(trainings, false);
             ActivityCompat.invalidateOptionsMenu(getActivity());
-            binding.emptyState.getRoot().setVisibility(trainings.isEmpty() ? View.VISIBLE : View.GONE);
+            binding.emptyState.getRoot()
+                    .setVisibility(trainings.isEmpty() ? View.VISIBLE : View.GONE);
         };
     }
 

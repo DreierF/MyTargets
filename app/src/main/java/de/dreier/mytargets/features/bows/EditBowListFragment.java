@@ -22,7 +22,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -35,8 +34,6 @@ import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
-import de.dreier.mytargets.utils.SpeedDialUtils;
-import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
 
 import static de.dreier.mytargets.shared.models.EBowType.BARE_BOW;
 import static de.dreier.mytargets.shared.models.EBowType.COMPOUND_BOW;
@@ -82,20 +79,16 @@ public class EditBowListFragment extends EditableListFragment<Bow> {
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(adapter);
 
-        binding.fabSpeedDial.setMenuListener(new SimpleMenuListenerAdapter() {
-            @Override
-            public boolean onMenuItemSelected(MenuItem menuItem) {
-                int itemId = menuItem.getItemId();
-                EBowType bowType = bowTypeMap.get(itemId);
-                FloatingActionButton fab = SpeedDialUtils
-                        .getFabFromMenuId(binding.fabSpeedDial, itemId);
-                EditBowFragment
-                        .createIntent(bowType)
-                        .withContext(EditBowListFragment.this)
-                        .fromFab(fab, R.color.fabBow, bowType.getDrawable())
-                        .start();
-                return false;
-            }
+        binding.fabSpeedDial.setMenuListener(menuItem -> {
+            int itemId = menuItem.getItemId();
+            EBowType bowType = bowTypeMap.get(itemId);
+            FloatingActionButton fab = binding.fabSpeedDial.getFabFromMenuId(itemId);
+            EditBowFragment
+                    .createIntent(bowType)
+                    .withContext(EditBowListFragment.this)
+                    .fromFab(fab, R.color.fabBow, bowType.getDrawable())
+                    .start();
+            return false;
         });
 
         return binding.getRoot();
