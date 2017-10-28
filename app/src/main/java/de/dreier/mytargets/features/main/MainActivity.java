@@ -52,10 +52,8 @@ public class MainActivity extends AppCompatActivity {
 
     /*
      * TODO:
-     * - Statistics does not refresh if all trainings are deleted
      * - FAB does not return after snackbar gets shown
      * - Help and feedback page
-     * - Save current page and restore when returning to the app
      * */
 
     static {
@@ -82,10 +80,12 @@ public class MainActivity extends AppCompatActivity {
 
         setupBottomNavigation();
         setupNavigationDrawer();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.content_frame, new TrainingsFragment())
-                .commit();
+        if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.content_frame, new TrainingsFragment())
+                    .commit();
+        }
     }
 
     @Override
