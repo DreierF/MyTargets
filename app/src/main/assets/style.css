@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+body {
+    font-family: "Roboto", Arial;
+    line-height: 20px;
+    font-size: 14px;
+    padding: 8px;
+}
+
+main {
+    margin-top: -16px;
+}
+
+a {
+    text-decoration: none;
+    color: #4285f4;
+}
+
+a:visited {
+    color: #7759ae;
+}
+
+h1,
+h2 {
+    line-height: 32px;
+    font-weight: normal;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+h2 {
+    font-size: 20px;
+    margin: 32px 0 8px;
+}
+
+p {
+    display: block;
+    margin: 4px 0px 12px 0px;
+}
+
+/*ul {
+    margin-left: -20px;
+}*/
+
+details {
+    margin: 0px -20px;
+    position: relative;
+}
+
+details :last-child {
+    padding-bottom: 5px;
+}
+
+/*details > :not(summary) {
+    border-left-color: #e0e0e0;
+    border-left-style: solid;
+    border-left-width: 2px;
+    padding: 0px 12px;
+}*/
+
+details[open]:before {
+    background-color: #e0e0e0;
+    content: '';
+    left: 30px;
+    position: absolute;
+    top: 50px;
+    bottom: 0px;
+    width: 2px;
+}
+
+details > * {
+    padding-left: 50px;
+    padding-right: 20px;
+}
+
+details > ul {
+    padding-left: 70px;
+}
+
+summary {
+    cursor: pointer;
+    padding: 16px 20px;
+    border-bottom: 1px solid #CCC;
+    border-top: 1px solid #CCC;
+    color: #4285f4;
+    margin-bottom: -1px;
+}
+
+summary:focus {
+    outline-style: none;
+}
+
+summary::-webkit-details-marker {
+    display: none;
+}
+
+summary:before {
+    vertical-align: middle;
+    content: '';
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    position: absolute;
+    right: 18px;
+    background-position: right;
+    background-repeat: no-repeat;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#3e82f7" d="M7.41,7.84,12,12.42l4.59-4.58L18,9.25l-6,6-6-6Z"/></svg>');
+}
+
+details[open] summary {
+    border-bottom: 1px none;
+}
+
+details[open] summary:before {
+    transform: rotate(180deg);
+}
+
+/* For screens with more than 1000 px width */
+@media screen and (min-width: 1000px) {
+    body {
+        background: #EEE;
+    }
+    main {
+        background: #FFF;
+        padding: 40px;
+        position: relative;
+        margin: 20px auto;
+        width: 600px;
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+    }
+    details {
+        margin-left: -40px;
+        margin-right: -40px;
+    }
+    details > * {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+}

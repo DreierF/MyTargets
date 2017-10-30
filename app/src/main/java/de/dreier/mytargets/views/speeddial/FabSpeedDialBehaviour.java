@@ -34,7 +34,7 @@ import java.util.List;
 public class FabSpeedDialBehaviour extends CoordinatorLayout.Behavior<FabSpeedDial> {
 
 
-    public static final FastOutSlowInInterpolator FAST_OUT_SLOW_IN_INTERPOLATOR =
+    private static final FastOutSlowInInterpolator FAST_OUT_SLOW_IN_INTERPOLATOR =
             new FastOutSlowInInterpolator();
 
     private ViewPropertyAnimatorCompat mFabTranslationYAnimator;
@@ -53,6 +53,19 @@ public class FabSpeedDialBehaviour extends CoordinatorLayout.Behavior<FabSpeedDi
     public boolean layoutDependsOn(CoordinatorLayout parent, FabSpeedDial child, View dependency) {
         // We're dependent on all SnackbarLayouts
         return dependency instanceof Snackbar.SnackbarLayout;
+    }
+
+    @Override
+    public void onDependentViewRemoved(CoordinatorLayout parent, FabSpeedDial fab, View dependency) {
+        super.onDependentViewRemoved(parent, fab, dependency);
+
+        // Make sure that any current animation is cancelled
+        if (mFabTranslationYAnimator != null) {
+            mFabTranslationYAnimator.cancel();
+        }
+
+        fab.setTranslationY(0);
+        mFabTranslationY = 0;
     }
 
     @Override

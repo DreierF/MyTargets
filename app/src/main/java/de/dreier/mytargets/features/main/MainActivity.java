@@ -34,6 +34,7 @@ import de.dreier.mytargets.base.fragments.EditableListFragmentBase;
 import de.dreier.mytargets.databinding.ActivityMainBinding;
 import de.dreier.mytargets.features.arrows.EditArrowListFragment;
 import de.dreier.mytargets.features.bows.EditBowListFragment;
+import de.dreier.mytargets.features.help.HelpFragment;
 import de.dreier.mytargets.features.settings.ESettingsScreens;
 import de.dreier.mytargets.features.settings.SettingsActivity;
 import de.dreier.mytargets.features.settings.SettingsManager;
@@ -52,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
 
     /*
      * TODO:
-     * - FAB does not return after snackbar gets shown
      * - Help and feedback page
      * */
 
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                             closeDrawerAndStart(SettingsActivity.getIntent(ESettingsScreens.MAIN));
                             break;
                         case R.id.nav_help_and_feedback:
-                            //TODO
+                            closeDrawerAndStart(HelpFragment.getIntent());
                             break;
                     }
                     return false;

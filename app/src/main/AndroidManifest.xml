@@ -295,6 +295,10 @@
         </activity>
         <activity android:name=".features.statistics.DispersionPatternActivity"/>
 
+        <activity
+            android:name=".features.help.HelpActivity"
+            android:label="@string/help_and_feedback"/>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
