@@ -297,7 +297,7 @@
 
         <activity
             android:name=".features.help.HelpActivity"
-            android:label="@string/help_and_feedback"/>
+            android:label="@string/help"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

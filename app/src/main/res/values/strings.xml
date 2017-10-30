@@ -358,7 +358,7 @@
     <string name="warning_backup_experimental">Warning: This feature is still experimental! Please check in regular intervals if the backup was really successful!</string>
     <string name="drawer_open">Open drawer</string>
     <string name="drawer_close">Close drawer</string>
-    <string name="help_and_feedback"><![CDATA[Help & Feedback]]></string>
+    <string name="help">Help</string>
     <string name="home">Home</string>
     <string name="click_to_enter_profile">Click to enter profile information</string>
     <string name="no_trainings">You don\'t have any trainings, yet!</string>
