@@ -17,7 +17,7 @@
                     <p>To create a new training tap the orange circle at the bottom of the trainings page. Now you can select out of:</p>
                     <ul>
                         <li><strong>Free Training</strong>: Allows you to freely set distance, target face type and diameter as well as the number of arrows you want to shot per end.</li>
-                        <li><strong>Training with standard round</strong>: Allows you to select from a huge number of common standard rounds. You can also define your own if none of the predefined ones fits your needs.</li>
+                        <li><strong>Training with Standard Round</strong>: Allows you to select from a huge number of common standard rounds. You can also define your own if none of the predefined ones fits your needs.</li>
                     </ul>
                 </details>
                 <details>
@@ -32,7 +32,7 @@
                     <ul>
                         <li><strong>Recurve style (X-1)</strong>: The innermost golden ring scores 10 points, but is marked as X. The outer golden rings score 10 and 9 accordingly. The score decreases with every ring by 1.</li>
                         <li><strong>Recurve style (10-1)</strong>: Same as previous, but the inner two golden rings are shown as one ring, rewarded with 10 points (no X).</li>
-                        <li><strong>Compound style</strong>: Only the innermost golden ring scores 10 points. The outermost two golden rings are shown as one.</li>
+                        <li><strong>Compound style</strong>: Only the innermost golden ring scores 10 points. The outermost two golden rings are shown as one and score 9 points.</li>
                         <li><strong>11, 10, 9, ..., 1</strong>: The innermost ring scores 11. The score decreases with every ring by 1.</li>
                         <li><strong>X, 5, 4, 3, 2, 1</strong>: Gold scores 5, red 4, blue 3, black 2 and white 1 points. The innermost golden ring is recorded as X.</li>
                         <li><strong>9, 7, 5, 3, 1</strong>: Gold scores 9, red 7, blue 5, black 3 and white 1 points.</li>
@@ -43,6 +43,37 @@
                     <summary>Arrow numbering</summary>
                     <p>Besides documenting the arrows used in a particular training, you may also annotate individual shots with the number of the arrow. You can enable the behaviour on a per-training basis. When you create the training you have to set the option accordinly:</p>
                     <img src="images/arrow_numbers.png" />
+                </details>
+                <details>
+                    <summary>What is a Standard Round?</summary>
+                    <p>A standard round is a predefined training template, which specified the exact number of rounds, ends and arrows shot per end. Additionally the distances and target faces are fixed.</p>
+                    <p>The app provides you with a variety of standard rounds that are commonly used. </p>
+                </details>
+            </section>
+            <section> 
+                <h2>Statistics</h2>
+                <p>The statistics allow you to get an aggregated view on your training data.</p>
+                <details>
+                    <summary>Statistics elements</summary>
+                    <p>In the following the main UI components are described:</p>
+                    <ul>
+                        <li><strong>Line chart</strong>: Shows the average score per arrow per end. The orange linear regression line shows the overall trend. The chart can be zoomed by pinching two fingers horizontally.</li>
+                        <li><strong>Distribution chart</strong>: Shows the distribution of arrows amonst the available rings. If no segment is selected, the overall coutn of hits and misses is shown. By tapping on a segment the exact number of shots in this category is shown.</li>
+                        <li><strong>Dispersion pattern</strong>: Shows all shots on a single target face including the selected grouping method (can be chnaged in the app's settings). If you tap on the dispersion pattern you get a bigger version of the dispersion pattern. From the details screen you can also share the dispersion pattern image or print it.</li>
+                        <li><strong>Arrow ranking</strong>: If you have used the arrow numbering feature in one of the selected trainings, the arrow rankings are shown below. The arrows with the best grouping are placed at the top of the list. Tapping on an arrow number takes you to a dispersion pattern, which only shows the shots of the selected arrow.</li>
+                    </ul>
+                </details>
+                <details>
+                    <summary>Analysis scope</summary>
+                    <p>The scope being analyzed in the statistics depends on the screen from which you open it. Invoked from the main screen all available training data is considered. In the training and round detail views the whole training or round is considered accoridingly.</p>
+                    <img src="images/statistics_icon.png" style="width:10%;"/>
+                    <p>You can also use multi-selection to e.g. select two or more trainings.</p>
+                    <img src="images/statistics_multiselect.png"/>
+                </details>
+                <details>
+                    <summary>Applying filters</summary>
+                    <p>You can also apply filters to your selected training data. Filtering is possible by bow, arrow, distance and target diameter.</p>
+                    <img src="images/statistics_filter.png" style="width:10%;"/>
                 </details>
             </section>
             <section> 
@@ -57,10 +88,11 @@
                 <h2>Manage arrows</h2>
                 <p></p>
                 <details>
-                    <summary></summary>
+                    <summary>Why are my arrows drawn so small?</summary>
                     <p></p>
                 </details>
             </section>
+            Where are my backups saved in Google drive?
         </main>
     </body>
 </html>

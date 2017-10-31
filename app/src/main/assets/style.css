@@ -45,10 +45,6 @@ img {
     width: 80%;
 }
 
-/*ul {
-    margin-left: -20px;
-}*/
-
 details {
     margin: 0px -20px;
     position: relative;
@@ -57,13 +53,6 @@ details {
 details :last-child {
     padding-bottom: 5px;
 }
-
-/*details > :not(summary) {
-    border-left-color: #e0e0e0;
-    border-left-style: solid;
-    border-left-width: 2px;
-    padding: 0px 12px;
-}*/
 
 details[open]:before {
     background-color: #e0e0e0;
