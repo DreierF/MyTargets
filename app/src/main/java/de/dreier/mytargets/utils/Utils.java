@@ -60,6 +60,10 @@ public class Utils {
         return android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP;
     }
 
+    public static boolean supportsFabTransform() {
+        return isLollipop() && android.os.Build.VERSION.SDK_INT < 27;
+    }
+
     public static String humanReadableByteCount(long bytes, boolean si) {
         int unit = si ? 1000 : 1024;
         if (bytes < unit) {
