@@ -154,6 +154,8 @@ dependencies {
 
     implementation "com.github.chrisbanes:PhotoView:$libraryVersion.photoView"
 
+    implementation "com.github.delight-im:Android-Languages:$libraryVersion.androidLanguages"
+
     implementation project(':shared')
     wearApp project(':wearable')
 

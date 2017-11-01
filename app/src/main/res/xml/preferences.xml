@@ -298,6 +298,11 @@
         </PreferenceScreen>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/info">
+        <im.delight.android.languages.LanguagePreference
+            android:key="language"
+            android:title="@string/language"
+            android:enabled="true"
+            android:selectable="true" />
         <Preference
             android:key="pref_about"
             android:title="@string/about"/>

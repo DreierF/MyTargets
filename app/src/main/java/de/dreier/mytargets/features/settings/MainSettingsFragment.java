@@ -21,6 +21,7 @@ import android.support.v7.preference.Preference;
 
 import de.dreier.mytargets.features.settings.about.AboutFragment;
 import de.dreier.mytargets.features.settings.licences.LicencesActivity;
+import im.delight.android.languages.Language;
 
 public class MainSettingsFragment extends SettingsFragmentBase {
 
@@ -37,5 +38,11 @@ public class MainSettingsFragment extends SettingsFragmentBase {
             default:
                 return super.onPreferenceTreeClick(preference);
         }
+    }
+
+    @Override
+    public void onPause() {
+        Language.setFromPreference(getActivity(), SettingsManager.KEY_LANGUAGE, true);
+        super.onPause();
     }
 }
