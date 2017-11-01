@@ -51,6 +51,16 @@
                 </details>
             </section>
             <section> 
+                <h2>Input</h2>
+                <p></p>
+                <details>
+                    <summary>Keyboard mode</summary>
+                    <p>MyTargets supports a keyboard mode as an alternative to the default detailed shot entry. In the keyboard mode you only enter the ring hit by the arrow and not its exact location.</p>
+                    <img src="images/input_keyboard.png"/>
+                    <p>The lefthanded setting brings the keyboard to the left side to make selection with a single hand possible.</p>
+                </details>
+            </section>
+            <section> 
                 <h2>Statistics</h2>
                 <p>The statistics allow you to get an aggregated view on your training data.</p>
                 <details>
@@ -75,24 +85,25 @@
                     <p>You can also apply filters to your selected training data. Filtering is possible by bow, arrow, distance and target diameter.</p>
                     <img src="images/statistics_filter.png" style="width:10%;"/>
                 </details>
-            </section>
-            <section> 
-                <h2>Manage bows</h2>
-                <p></p>
                 <details>
-                    <summary></summary>
-                    <p></p>
+                    <summary>Exporting data</summary>
+                    <p>You can export the selected data to a *.csv file, which can be opened in a spreadsheet application like Excel. The x and y columns describe the coordinates of the shots whereby the origin 0, 0 is the center of the target and the outer border of the target is 1 unit away.</p>
+                    <img src="images/statistics_export.png" style="width:10%;"/>
+                    <p><strong>Note</strong>: You can <strong>not</strong> import training data into the app. To create a backup of your data you have to use the backup and restore functionality in the settings.</p>
                 </details>
             </section>
             <section> 
-                <h2>Manage arrows</h2>
+                <h2>Miscellaneous</h2>
                 <p></p>
                 <details>
                     <summary>Why are my arrows drawn so small?</summary>
-                    <p></p>
+                    <p>The size of the arrows is determined by the diameter specified in the arrow properties and the diameter of the selected target face. The arrow size is drawn in "real" size. If you do not want the arrows to be drawn in realistic sizes, you can scale the arrows artificially. Go to Settings > Input > Arrow diameter scale and adjust the scaling. In case you just want to have the arrow bigger, while placing the arrow on the target you can adjust the Target zoom level.</p>
+                </details>
+                <details>
+                    <summary>Where are my backups saved in Google drive?</summary>
+                    <p>Backups made on Google drive are stored in the Application data folder. Files stored there can only be accessed by the app, which created them. So you can only see the backups from inside the MyTargets app. The webapp of Google drive futhermore allows you to delete all your backuped data (Settings > Manage Apps). When you install the app on another phone and log in with the your Google account you get access to all your backups again.</p>
                 </details>
             </section>
-            Where are my backups saved in Google drive?
         </main>
     </body>
 </html>
