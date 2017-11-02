@@ -298,7 +298,7 @@
         </PreferenceScreen>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/info">
-        <im.delight.android.languages.LanguagePreference
+        <de.dreier.mytargets.features.settings.LanguagePreference
             android:key="language"
             android:title="@string/language"
             android:enabled="true"
