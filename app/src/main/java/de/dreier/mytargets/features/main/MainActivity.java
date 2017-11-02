@@ -51,11 +51,6 @@ import static de.dreier.mytargets.features.settings.ESettingsScreens.SCOREBOARD;
  */
 public class MainActivity extends AppCompatActivity {
 
-    /*
-     * TODO:
-     * - Help and feedback page
-     * */
-
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
@@ -107,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.action_trainings:
                     fragment = new TrainingsFragment();
                     break;
+                default:
+                    break;
             }
             getSupportFragmentManager()
                     .beginTransaction()
@@ -132,6 +129,8 @@ public class MainActivity extends AppCompatActivity {
                             break;
                         case R.id.nav_help_and_feedback:
                             closeDrawerAndStart(HelpFragment.getIntent());
+                            break;
+                        default:
                             break;
                     }
                     return false;
