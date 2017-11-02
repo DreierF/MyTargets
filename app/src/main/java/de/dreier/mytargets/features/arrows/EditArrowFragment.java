@@ -54,9 +54,9 @@ public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
     }
 
     @NonNull
-    public static IntentWrapper editIntent(Arrow arrow) {
+    public static IntentWrapper editIntent(long arrowId) {
         return new IntentWrapper(EditArrowActivity.class)
-                .with(ARROW_ID, arrow.getId());
+                .with(ARROW_ID, arrowId);
     }
 
     @Override

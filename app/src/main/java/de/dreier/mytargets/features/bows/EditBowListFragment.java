@@ -29,6 +29,7 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.fragments.EditableListFragment;
+import de.dreier.mytargets.base.fragments.ItemActionModeCallback;
 import de.dreier.mytargets.databinding.FragmentBowsBinding;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.db.Bow;
@@ -58,8 +59,11 @@ public class EditBowListFragment extends EditableListFragment<Bow> {
     }
 
     public EditBowListFragment() {
-        itemTypeSelRes = R.plurals.bow_selected;
         itemTypeDelRes = R.plurals.bow_deleted;
+        actionModeCallback = new ItemActionModeCallback(this, selector,
+                R.plurals.bow_selected);
+        actionModeCallback.setEditCallback(this::onEdit);
+        actionModeCallback.setDeleteCallback(this::onDelete);
     }
 
     @Override
@@ -104,13 +108,14 @@ public class EditBowListFragment extends EditableListFragment<Bow> {
         };
     }
 
-    @Override
-    protected void onEdit(Bow item) {
-        EditBowFragment.editIntent(item).withContext(this).start();
+    protected void onEdit(long itemId) {
+        EditBowFragment.editIntent(itemId)
+                .withContext(this)
+                .start();
     }
 
     @Override
     protected void onItemSelected(Bow item) {
-        EditBowFragment.editIntent(item).withContext(this).start();
+        EditBowFragment.editIntent(item.getId()).withContext(this).start();
     }
 }

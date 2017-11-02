@@ -39,6 +39,7 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.header.ExpandableListAdapter;
+import de.dreier.mytargets.base.fragments.ItemActionModeCallback;
 import de.dreier.mytargets.databinding.FragmentTrainingsBinding;
 import de.dreier.mytargets.databinding.ItemTrainingBinding;
 import de.dreier.mytargets.features.settings.SettingsManager;
@@ -51,7 +52,6 @@ import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
-import de.dreier.mytargets.views.speeddial.FabSpeedDial;
 
 import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_FREE_TRAINING_ACTION;
 import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION;
@@ -66,9 +66,12 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
     protected FragmentTrainingsBinding binding;
 
     public TrainingsFragment() {
-        itemTypeSelRes = R.plurals.training_selected;
         itemTypeDelRes = R.plurals.training_deleted;
-        supportsStatistics = true;
+        actionModeCallback = new ItemActionModeCallback(this, selector,
+                R.plurals.training_selected);
+        actionModeCallback.setEditCallback(this::onEdit);
+        actionModeCallback.setDeleteCallback(this::onDelete);
+        actionModeCallback.setStatisticsCallback(this::onStatistics);
     }
 
     @Override
@@ -171,9 +174,9 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
                 .start();
     }
 
-    @Override
-    protected void onStatistics(List<Training> trainings) {
-        StatisticsActivity.getIntent(Stream.of(trainings)
+    public void onStatistics(List<Long> ids) {
+        StatisticsActivity.getIntent(Stream.of(ids)
+                .map(Training::get)
                 .flatMap(t -> Stream.of(t.getRounds()))
                 .map(Round::getId)
                 .collect(Collectors.toList()))
@@ -181,9 +184,8 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
                 .start();
     }
 
-    @Override
-    protected void onEdit(final Training item) {
-        EditTrainingFragment.editIntent(item)
+    protected void onEdit(Long itemId) {
+        EditTrainingFragment.editIntent(itemId)
                 .withContext(this)
                 .start();
     }

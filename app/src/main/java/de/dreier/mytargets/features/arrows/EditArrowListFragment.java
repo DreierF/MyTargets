@@ -29,6 +29,7 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.base.fragments.EditableListFragment;
+import de.dreier.mytargets.base.fragments.ItemActionModeCallback;
 import de.dreier.mytargets.databinding.FragmentArrowsBinding;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
 import de.dreier.mytargets.shared.models.db.Arrow;
@@ -41,8 +42,10 @@ public class EditArrowListFragment extends EditableListFragment<Arrow> {
     protected FragmentArrowsBinding binding;
 
     public EditArrowListFragment() {
-        itemTypeSelRes = R.plurals.arrow_selected;
         itemTypeDelRes = R.plurals.arrow_deleted;
+        actionModeCallback = new ItemActionModeCallback(this, selector, R.plurals.arrow_selected);
+        actionModeCallback.setEditCallback(this::onEdit);
+        actionModeCallback.setDeleteCallback(this::onDelete);
     }
 
     @Override
@@ -78,16 +81,15 @@ public class EditArrowListFragment extends EditableListFragment<Arrow> {
         };
     }
 
-    @Override
-    protected void onEdit(Arrow item) {
-        EditArrowFragment.editIntent(item)
+    protected void onEdit(long itemId) {
+        EditArrowFragment.editIntent(itemId)
                 .withContext(this)
                 .start();
     }
 
     @Override
     protected void onItemSelected(Arrow item) {
-        EditArrowFragment.editIntent(item)
+        EditArrowFragment.editIntent(item.getId())
                 .withContext(this)
                 .start();
     }

@@ -73,9 +73,9 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
     }
 
     @NonNull
-    public static IntentWrapper editIntent(Bow bow) {
+    public static IntentWrapper editIntent(long bowId) {
         return new IntentWrapper(EditBowActivity.class)
-                .with(BOW_ID, bow.getId());
+                .with(BOW_ID, bowId);
     }
 
     @Override

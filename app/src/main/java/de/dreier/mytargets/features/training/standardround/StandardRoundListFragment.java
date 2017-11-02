@@ -164,7 +164,7 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.search, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView = (SearchView) searchItem.getActionView();
         searchView.setOnQueryTextListener(this);
         ImageView closeButton = searchView.findViewById(R.id.search_close_btn);
         // Set on click listener
