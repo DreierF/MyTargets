@@ -20,6 +20,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
+import de.dreier.mytargets.features.settings.SettingsManager;
+import im.delight.android.languages.Language;
+
 public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
 
     private static final String FRAGMENT_TAG = "fragment";

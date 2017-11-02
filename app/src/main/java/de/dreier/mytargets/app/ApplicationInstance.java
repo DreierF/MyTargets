@@ -101,6 +101,7 @@ public class ApplicationInstance extends SharedApplicationInstance {
 
     @Override
     public void onCreate() {
+        Language.setFromPreference(this, SettingsManager.KEY_LANGUAGE);
         if (BuildConfig.DEBUG) {
             enableDebugLogging();
         } else {
@@ -110,7 +111,6 @@ public class ApplicationInstance extends SharedApplicationInstance {
         handleDatabaseImport();
         initFlowManager(this);
         wearableClient = new MobileWearableClient(this);
-        Language.setFromPreference(this, SettingsManager.KEY_LANGUAGE);
     }
 
     private void handleDatabaseImport() {
