@@ -60,27 +60,12 @@ import java.util.Map;
 import de.dreier.mytargets.R;
 import timber.log.Timber;
 
+/**
+ * Adopted from https://github.com/yavski/fab-speed-dial
+ * */
 @SuppressLint("RestrictedApi")
 @CoordinatorLayout.DefaultBehavior(FabSpeedDialBehaviour.class)
 public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
-
-    /**
-     * Called to notify of close and selection changes.
-     */
-    public interface MenuListener {
-
-        /**
-         * Called when a menu item is selected.
-         *
-         * @param menuItem The menu item that is selected
-         * @return whether the menu item selection was handled
-         */
-        boolean onMenuItemSelected(MenuItem menuItem);
-    }
-
-    public interface CloseListener {
-        void onMenuClosed();
-    }
 
     private static final int VSYNC_RHYTHM = 16;
 
@@ -618,4 +603,21 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
 
     }
 
+    /**
+     * Called to notify of close and selection changes.
+     */
+    public interface MenuListener {
+
+        /**
+         * Called when a menu item is selected.
+         *
+         * @param menuItem The menu item that is selected
+         * @return whether the menu item selection was handled
+         */
+        boolean onMenuItemSelected(MenuItem menuItem);
+    }
+
+    public interface CloseListener {
+        void onMenuClosed();
+    }
 }

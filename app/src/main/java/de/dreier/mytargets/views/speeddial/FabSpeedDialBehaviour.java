@@ -61,8 +61,7 @@ public class FabSpeedDialBehaviour extends CoordinatorLayout.Behavior<FabSpeedDi
     }
 
     @Override
-    public boolean onDependentViewChanged(CoordinatorLayout parent, FabSpeedDial child,
-                                          View dependency) {
+    public boolean onDependentViewChanged(CoordinatorLayout parent, FabSpeedDial child, View dependency) {
         if (dependency instanceof Snackbar.SnackbarLayout) {
             updateFabTranslationForSnackbar(parent, child, dependency);
         }
@@ -102,14 +101,13 @@ public class FabSpeedDialBehaviour extends CoordinatorLayout.Behavior<FabSpeedDi
     private float getFabTranslationYForSnackbar(CoordinatorLayout parent, FabSpeedDial fab) {
         float minOffset = 0;
         final List<View> dependencies = parent.getDependencies(fab);
-        for (int i = 0, z = dependencies.size(); i < z; i++) {
+        for (int i = 0; i < dependencies.size(); i++) {
             final View view = dependencies.get(i);
             if (view instanceof Snackbar.SnackbarLayout && parent.doViewsOverlap(fab, view)) {
                 minOffset = Math.min(minOffset,
                         view.getTranslationY() - view.getHeight());
             }
         }
-
         return minOffset;
     }
 }

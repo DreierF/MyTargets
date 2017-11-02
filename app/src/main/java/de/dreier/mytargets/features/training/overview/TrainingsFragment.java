@@ -132,6 +132,8 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
                                     R.drawable.fab_album_24dp)
                             .start();
                     break;
+                default:
+                    break;
             }
             return false;
         });
