@@ -43,6 +43,7 @@ import java.util.Locale;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.base.fragments.EditableListFragment;
+import de.dreier.mytargets.base.fragments.ItemActionModeCallback;
 import de.dreier.mytargets.databinding.FragmentTrainingBinding;
 import de.dreier.mytargets.databinding.ItemRoundBinding;
 import de.dreier.mytargets.features.rounds.EditRoundFragment;
@@ -74,9 +75,11 @@ public class TrainingFragment extends EditableListFragment<Round> {
     private Training training;
 
     public TrainingFragment() {
-        itemTypeSelRes = R.plurals.round_selected;
         itemTypeDelRes = R.plurals.round_deleted;
-        supportsStatistics = true;
+        actionModeCallback = new ItemActionModeCallback(this, selector,
+                R.plurals.round_selected);
+        actionModeCallback.setEditCallback(this::onEdit);
+        actionModeCallback.setStatisticsCallback(this::onStatistics);
     }
 
     @NonNull
@@ -150,7 +153,12 @@ public class TrainingFragment extends EditableListFragment<Round> {
         List<Round> rounds = training.getRounds(); //FIXME can be null!?
         return () -> {
             // Hide fab for standard rounds
-            supportsDeletion = training.standardRoundId == null;
+            boolean supportsDeletion = training.standardRoundId == null;
+            if (supportsDeletion) {
+                actionModeCallback.setDeleteCallback(this::onDelete);
+            } else {
+                actionModeCallback.setDeleteCallback(null);
+            }
             binding.fab.setVisibility(supportsDeletion ? View.VISIBLE : View.GONE);
 
             // Set round info
@@ -217,17 +225,15 @@ public class TrainingFragment extends EditableListFragment<Round> {
                 .start();
     }
 
-    @Override
-    protected void onEdit(Round item) {
-        EditRoundFragment.editIntent(training, item)
+    protected void onEdit(long itemId) {
+        EditRoundFragment.editIntent(training, itemId)
                 .withContext(this)
                 .start();
     }
 
-    @Override
-    protected void onStatistics(List<Round> rounds) {
+    public void onStatistics(List<Long> ids) {
         StatisticsActivity
-                .getIntent(Stream.of(rounds).map(Round::getId).collect(Collectors.toList()))
+                .getIntent(ids)
                 .withContext(this)
                 .start();
     }

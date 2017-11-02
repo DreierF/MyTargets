@@ -81,7 +81,8 @@ public abstract class SimpleListAdapterBase<T extends IIdProvider & Comparable<T
             list.add(-pos - 1, item);
             notifyItemInserted(-pos - 1);
         } else {
-            throw new IllegalArgumentException("Item must not be inserted twice!");
+            list.add(pos, item);
+            notifyItemInserted(pos);
         }
     }
 

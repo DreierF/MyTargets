@@ -30,19 +30,28 @@ import org.parceler.Parcels;
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.TimerSettings;
 
+import static de.dreier.mytargets.shared.base.fragment.ETimerState.COUNTDOWN;
+import static de.dreier.mytargets.shared.base.fragment.ETimerState.FINISHED;
+import static de.dreier.mytargets.shared.base.fragment.ETimerState.PREPARATION;
+import static de.dreier.mytargets.shared.base.fragment.ETimerState.SHOOTING;
+import static de.dreier.mytargets.shared.base.fragment.ETimerState.WAIT_FOR_START;
+
 public abstract class TimerFragmentBase extends Fragment implements View.OnClickListener {
     public static final String ARG_TIMER_SETTINGS = "timer_settings";
+    public static final String ARG_EXIT_AFTER_STOP = "exit_after_stop";
 
-    private ETimerState currentStatus = ETimerState.WAIT_FOR_START;
+    private ETimerState currentStatus = WAIT_FOR_START;
     private CountDownTimer countdown;
     private MediaPlayer horn;
     private PowerManager.WakeLock wakeLock;
     public TimerSettings settings;
+    private boolean exitAfterStop = true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         settings = Parcels.unwrap(getArguments().getParcelable(ARG_TIMER_SETTINGS));
+        exitAfterStop = getArguments().getBoolean(ARG_EXIT_AFTER_STOP);
     }
 
     @Override
@@ -86,37 +95,45 @@ public abstract class TimerFragmentBase extends Fragment implements View.OnClick
             countdown.cancel();
         }
         if (status == ETimerState.EXIT) {
-            getActivity().finish();
-            return;
+            if (exitAfterStop) {
+                getActivity().finish();
+                return;
+            } else {
+                status = WAIT_FOR_START;
+            }
         }
+        ETimerState finalStatus = status;
         currentStatus = status;
         applyStatus(status);
         playSignal(status.signalCount);
 
-        if (status == ETimerState.FINISHED) {
+        if (status == FINISHED) {
             applyTime(getString(R.string.stop));
             countdown = new CountDownTimer(6000, 100) {
                 public void onTick(long millisUntilFinished) {
                 }
 
                 public void onFinish() {
-                    changeStatus(status.getNext());
+                    changeStatus(finalStatus.getNext());
                 }
             }.start();
-        } else if (status != ETimerState.PREPARATION && status != ETimerState.SHOOTING && status != ETimerState.COUNTDOWN) {
-            applyTime("");
         } else {
-            final int offset = getOffset(status);
-            countdown = new CountDownTimer(getDuration(status) * 1000, 100) {
-                public void onTick(long millisUntilFinished) {
-                    final String text = String.valueOf((millisUntilFinished / 1000) + offset);
-                    applyTime(text);
-                }
+            if (status != PREPARATION && status != SHOOTING && status != COUNTDOWN) {
+                applyTime("");
+            } else {
+                final int offset = getOffset(status);
+                countdown = new CountDownTimer(getDuration(status) * 1000, 100) {
+                    public void onTick(long millisUntilFinished) {
+                        final String text = String
+                                .valueOf((millisUntilFinished / 1000) + offset);
+                        applyTime(text);
+                    }
 
-                public void onFinish() {
-                    changeStatus(status.getNext());
-                }
-            }.start();
+                    public void onFinish() {
+                        changeStatus(finalStatus.getNext());
+                    }
+                }.start();
+            }
         }
     }
 
@@ -138,7 +155,7 @@ public abstract class TimerFragmentBase extends Fragment implements View.OnClick
     }
 
     protected int getOffset(ETimerState status) {
-        if (status == ETimerState.SHOOTING) {
+        if (status == SHOOTING) {
             return settings.warnTime;
         } else {
             return 0;

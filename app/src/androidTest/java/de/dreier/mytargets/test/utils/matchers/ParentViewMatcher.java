@@ -15,12 +15,17 @@
 
 package de.dreier.mytargets.test.utils.matchers;
 
+import android.support.annotation.IdRes;
+import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+
+import de.dreier.mytargets.views.speeddial.FabSpeedDial;
 
 public class ParentViewMatcher {
     public static Matcher<View> isNestedChildOfView(Matcher<View> parentViewMatcher) {
@@ -53,7 +58,29 @@ public class ParentViewMatcher {
                 }
                 return false;
             }
+        };
+    }
 
+    public static Matcher<View> withSpeedDialItem(Matcher<View> speedDialViewMatcher, @IdRes int id) {
+        return new TypeSafeMatcher<View>() {
+            public void describeTo(Description description) {
+                description.appendText("with id " + id + " on speed dial ");
+                speedDialViewMatcher.describeTo(description);
+            }
+
+            public boolean matchesSafely(View view) {
+                View speedDialView = MatcherUtils.getMatchingParent(view, speedDialViewMatcher);
+                if (speedDialView != null && speedDialView instanceof FabSpeedDial) {
+                    FloatingActionButton fabFromMenuId = ((FabSpeedDial) speedDialView)
+                            .getFabFromMenuId(id);
+                    ViewParent parent = fabFromMenuId.getParent();
+                    if (parent != null && parent instanceof ViewGroup &&
+                            ((ViewGroup) parent).getChildAt(0) == view) {
+                        return true;
+                    }
+                }
+                return false;
+            }
         };
     }
 }

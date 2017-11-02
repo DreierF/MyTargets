@@ -19,16 +19,17 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.github.clans.fab.FloatingActionButton;
 
 import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.fragments.EditableListFragment;
+import de.dreier.mytargets.base.fragments.ItemActionModeCallback;
 import de.dreier.mytargets.databinding.FragmentBowsBinding;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.db.Bow;
@@ -46,15 +47,29 @@ public class EditBowListFragment extends EditableListFragment<Bow> {
 
     protected FragmentBowsBinding binding;
 
+    static SparseArray<EBowType> bowTypeMap = new SparseArray<>();
+
+    static {
+        bowTypeMap.put(R.id.fabBowRecurve, RECURVE_BOW);
+        bowTypeMap.put(R.id.fabBowCompound, COMPOUND_BOW);
+        bowTypeMap.put(R.id.fabBowBare, BARE_BOW);
+        bowTypeMap.put(R.id.fabBowLong, LONG_BOW);
+        bowTypeMap.put(R.id.fabBowHorse, HORSE_BOW);
+        bowTypeMap.put(R.id.fabBowYumi, YUMI);
+    }
+
     public EditBowListFragment() {
-        itemTypeSelRes = R.plurals.bow_selected;
         itemTypeDelRes = R.plurals.bow_deleted;
+        actionModeCallback = new ItemActionModeCallback(this, selector,
+                R.plurals.bow_selected);
+        actionModeCallback.setEditCallback(this::onEdit);
+        actionModeCallback.setDeleteCallback(this::onDelete);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        binding.fab.close(false);
+        binding.fabSpeedDial.closeMenu();
     }
 
     @Override
@@ -68,38 +83,39 @@ public class EditBowListFragment extends EditableListFragment<Bow> {
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(adapter);
 
-        setFabClickListener(binding.fabBowRecurve, RECURVE_BOW);
-        setFabClickListener(binding.fabBowCompound, COMPOUND_BOW);
-        setFabClickListener(binding.fabBowBare, BARE_BOW);
-        setFabClickListener(binding.fabBowLong, LONG_BOW);
-        setFabClickListener(binding.fabBowHorse, HORSE_BOW);
-        setFabClickListener(binding.fabBowYumi, YUMI);
+        binding.fabSpeedDial.setMenuListener(menuItem -> {
+            int itemId = menuItem.getItemId();
+            EBowType bowType = bowTypeMap.get(itemId);
+            FloatingActionButton fab = binding.fabSpeedDial.getFabFromMenuId(itemId);
+            EditBowFragment
+                    .createIntent(bowType)
+                    .withContext(EditBowListFragment.this)
+                    .fromFab(fab, R.color.fabBow, bowType.getDrawable())
+                    .start();
+            return false;
+        });
 
         return binding.getRoot();
-    }
-
-    public void setFabClickListener(FloatingActionButton fab, EBowType bowType) {
-        fab.setOnClickListener(view -> EditBowFragment
-                .createIntent(bowType)
-                .withContext(this)
-                .fromFab(fab, R.color.fabBow, bowType.getDrawable())
-                .start());
     }
 
     @NonNull
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
         List<Bow> bows = Bow.getAll();
-        return () -> adapter.setList(bows);
+        return () -> {
+            adapter.setList(bows);
+            binding.emptyState.getRoot().setVisibility(bows.isEmpty() ? View.VISIBLE : View.GONE);
+        };
     }
 
-    @Override
-    protected void onEdit(Bow item) {
-        EditBowFragment.editIntent(item).withContext(this).start();
+    protected void onEdit(long itemId) {
+        EditBowFragment.editIntent(itemId)
+                .withContext(this)
+                .start();
     }
 
     @Override
     protected void onItemSelected(Bow item) {
-        EditBowFragment.editIntent(item).withContext(this).start();
+        EditBowFragment.editIntent(item.getId()).withContext(this).start();
     }
 }

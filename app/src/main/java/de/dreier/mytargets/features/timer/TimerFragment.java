@@ -47,8 +47,9 @@ public class TimerFragment extends TimerFragmentBase {
     private FragmentTimerBinding binding;
 
     @NonNull
-    public static IntentWrapper getIntent() {
+    public static IntentWrapper getIntent(boolean exitAfterStop) {
         return new IntentWrapper(TimerActivity.class)
+                .with(TimerFragmentBase.ARG_EXIT_AFTER_STOP, exitAfterStop)
                 .with(TimerFragmentBase.ARG_TIMER_SETTINGS,
                         Parcels.wrap(SettingsManager.getTimerSettings()));
     }

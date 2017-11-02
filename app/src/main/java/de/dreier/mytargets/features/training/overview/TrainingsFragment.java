@@ -22,10 +22,12 @@ import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v13.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -37,6 +39,7 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.header.ExpandableListAdapter;
+import de.dreier.mytargets.base.fragments.ItemActionModeCallback;
 import de.dreier.mytargets.databinding.FragmentTrainingsBinding;
 import de.dreier.mytargets.databinding.ItemTrainingBinding;
 import de.dreier.mytargets.features.settings.SettingsManager;
@@ -49,13 +52,11 @@ import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
-import de.dreier.mytargets.views.MaterialTapTargetPrompt;
 
 import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_FREE_TRAINING_ACTION;
 import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION;
 import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_CREATE_TRAINING_FROM_REMOTE;
 import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE;
-
 
 /**
  * Shows an overview over all training days
@@ -65,15 +66,18 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
     protected FragmentTrainingsBinding binding;
 
     public TrainingsFragment() {
-        itemTypeSelRes = R.plurals.training_selected;
         itemTypeDelRes = R.plurals.training_deleted;
-        supportsStatistics = true;
+        actionModeCallback = new ItemActionModeCallback(this, selector,
+                R.plurals.training_selected);
+        actionModeCallback.setEditCallback(this::onEdit);
+        actionModeCallback.setDeleteCallback(this::onDelete);
+        actionModeCallback.setStatisticsCallback(this::onStatistics);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        binding.fab.close(false);
+        binding.fabSpeedDial.closeMenu();
     }
 
     private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
@@ -108,19 +112,61 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.addItemDecoration(
                 new DividerItemDecoration(getContext(), R.drawable.full_divider));
-        binding.fab1.setOnClickListener(view -> EditTrainingFragment
-                .createIntent(CREATE_FREE_TRAINING_ACTION)
-                .withContext(this)
-                .fromFab(binding.fab1, R.color.fabFreeTraining,
-                        R.drawable.fab_trending_up_white_24dp)
-                .start());
-        binding.fab2.setOnClickListener(view -> EditTrainingFragment
-                .createIntent(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)
-                .withContext(this)
-                .fromFab(binding.fab2, R.color.fabTrainingWithStandardRound,
-                        R.drawable.fab_album_24dp)
-                .start());
+        binding.fabSpeedDial.setMenuListener(menuItem -> {
+            switch (menuItem.getItemId()) {
+                case R.id.fab1:
+                    EditTrainingFragment
+                            .createIntent(CREATE_FREE_TRAINING_ACTION)
+                            .withContext(TrainingsFragment.this)
+                            .fromFab(binding.fabSpeedDial
+                                            .getFabFromMenuId(R.id.fab1), R.color.fabFreeTraining,
+                                    R.drawable.fab_trending_up_white_24dp)
+                            .start();
+                    break;
+                case R.id.fab2:
+                    EditTrainingFragment
+                            .createIntent(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)
+                            .withContext(TrainingsFragment.this)
+                            .fromFab(binding.fabSpeedDial
+                                            .getFabFromMenuId(R.id.fab2), R.color.fabTrainingWithStandardRound,
+                                    R.drawable.fab_album_24dp)
+                            .start();
+                    break;
+                default:
+                    break;
+            }
+            return false;
+        });
+        setHasOptionsMenu(true);
         return binding.getRoot();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.statistics, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        boolean showStatistics = adapter != null && adapter.getItemCount() > 0;
+        menu.findItem(R.id.action_statistics).setVisible(showStatistics);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_statistics:
+                StatisticsActivity
+                        .getIntent(Stream.of(Training.getAll())
+                                .flatMap((training) -> Stream.of(training.getRounds()))
+                                .map(Round::getId)
+                                .collect(Collectors.toList())).withContext(this)
+                        .start();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -130,9 +176,9 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
                 .start();
     }
 
-    @Override
-    protected void onStatistics(List<Training> trainings) {
-        StatisticsActivity.getIntent(Stream.of(trainings)
+    public void onStatistics(List<Long> ids) {
+        StatisticsActivity.getIntent(Stream.of(ids)
+                .map(Training::get)
                 .flatMap(t -> Stream.of(t.getRounds()))
                 .map(Round::getId)
                 .collect(Collectors.toList()))
@@ -140,9 +186,8 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
                 .start();
     }
 
-    @Override
-    protected void onEdit(final Training item) {
-        EditTrainingFragment.editIntent(item)
+    protected void onEdit(Long itemId) {
+        EditTrainingFragment.editIntent(itemId)
                 .withContext(this)
                 .start();
     }
@@ -153,29 +198,9 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
         final List<Training> trainings = Training.getAll();
         return () -> {
             TrainingsFragment.this.setList(trainings, false);
-            if (trainings.isEmpty() && !SettingsManager.isFirstTrainingShown()) {
-                new MaterialTapTargetPrompt.Builder(TrainingsFragment.this.getActivity())
-                        .setDrawView(binding.fab)
-                        .setTarget(binding.fab.getChildAt(2))
-                        .setBackgroundColourFromRes(R.color.colorPrimary)
-                        .setPrimaryText(R.string.your_first_training)
-                        .setSecondaryText(R.string.first_training_description)
-                        .setAnimationInterpolator(new FastOutSlowInInterpolator())
-                        .setOnHidePromptListener(
-                                new MaterialTapTargetPrompt.OnHidePromptListener() {
-                                    @Override
-                                    public void onHidePrompt(MotionEvent event, boolean tappedTarget) {
-                                        //Do something such as storing a value so that this prompt is never shown again
-                                        SettingsManager.setFirstTrainingShown(true);
-                                    }
-
-                                    @Override
-                                    public void onHidePromptComplete() {
-
-                                    }
-                                })
-                        .show();
-            }
+            ActivityCompat.invalidateOptionsMenu(getActivity());
+            binding.emptyState.getRoot()
+                    .setVisibility(trainings.isEmpty() ? View.VISIBLE : View.GONE);
         };
     }
 
@@ -207,7 +232,8 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
         public void bindItem() {
             binding.training.setText(item.title);
             binding.trainingDate.setText(item.getFormattedDate());
-            binding.gesTraining.setText(item.getReachedScore().format(SettingsManager.getScoreConfiguration()));
+            binding.gesTraining.setText(item.getReachedScore()
+                    .format(SettingsManager.getScoreConfiguration()));
         }
     }
 }

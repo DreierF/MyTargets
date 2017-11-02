@@ -399,7 +399,7 @@ public class StatisticsFragment extends FragmentBase {
 
                 @Override
                 public long getXValue(List<Pair<Float, LocalDateTime>> values, int i) {
-                    return Duration.between(values.get(i).second, values.get(0).second).getSeconds();
+                    return Duration.between(values.get(0).second, values.get(i).second).getSeconds();
                 }
 
                 @Override
@@ -473,10 +473,10 @@ public class StatisticsFragment extends FragmentBase {
             sumX += x[n];
             sumY += y[n];
             if (x[n] < minX) {
-                minX = eval.getXValue(values, i);
+                minX = (long) x[n];
             }
             if (x[n] > maxX) {
-                maxX = eval.getXValue(values, i);
+                maxX = (long) x[n];
             }
             n++;
         }

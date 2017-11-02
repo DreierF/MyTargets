@@ -40,6 +40,7 @@ import java.util.Locale;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.base.fragments.EditableListFragment;
+import de.dreier.mytargets.base.fragments.ItemActionModeCallback;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemEndBinding;
 import de.dreier.mytargets.features.scoreboard.ScoreboardActivity;
@@ -71,8 +72,11 @@ public class RoundFragment extends EditableListFragment<End> {
     private Round round;
 
     public RoundFragment() {
-        itemTypeSelRes = R.plurals.passe_selected;
         itemTypeDelRes = R.plurals.passe_deleted;
+        actionModeCallback = new ItemActionModeCallback(this, selector,
+                R.plurals.passe_selected);
+        actionModeCallback.setEditCallback(this::onEdit);
+        actionModeCallback.setDeleteCallback(this::onDelete);
     }
 
     @NonNull
@@ -140,7 +144,7 @@ public class RoundFragment extends EditableListFragment<End> {
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
         round = Round.get(roundId);
-        final List<End> ends = round.getEnds(); //FIXME how!?
+        final List<End> ends = round.getEnds();
         final boolean showFab = round.maxEndCount == null || ends.size() < round.maxEndCount;
 
         return () -> {
@@ -197,9 +201,8 @@ public class RoundFragment extends EditableListFragment<End> {
                 .start();
     }
 
-    @Override
-    protected void onEdit(End item) {
-        InputActivity.getIntent(round, item.index)
+    protected void onEdit(Long itemId) {
+        InputActivity.getIntent(round, adapter.getItemById(itemId).index)
                 .withContext(this)
                 .start();
     }

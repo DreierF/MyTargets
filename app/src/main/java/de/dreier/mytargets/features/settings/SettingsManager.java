@@ -66,7 +66,6 @@ public class SettingsManager {
     private static final String KEY_INPUT_SUMMARY_SHOW_ROUND = "input_summary_show_round";
     private static final String KEY_INPUT_SUMMARY_SHOW_TRAINING = "input_summary_show_training";
     private static final String KEY_INPUT_SUMMARY_SHOW_AVERAGE = "input_summary_show_average";
-    private static final String KEY_FIRST_TRAINING_SHOWN = "first_training_shown";
     private static final String KEY_BACKUP_INTERVAL = "backup_interval";
     private static final String KEY_DONATED = "donated";
     private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
@@ -412,18 +411,6 @@ public class SettingsManager {
         preferences
                 .edit()
                 .putString(KEY_INPUT_KEYBOARD_TYPE, type.name())
-                .apply();
-    }
-
-    public static boolean isFirstTrainingShown() {
-        return ApplicationInstance.getSharedPreferences()
-                .getBoolean(KEY_FIRST_TRAINING_SHOWN, false);
-    }
-
-    public static void setFirstTrainingShown(boolean shown) {
-        ApplicationInstance.getSharedPreferences()
-                .edit()
-                .putBoolean(KEY_FIRST_TRAINING_SHOWN, shown)
                 .apply();
     }
 

@@ -54,10 +54,10 @@ public class EditRoundFragment extends EditFragmentBase {
     }
 
     @NonNull
-    public static IntentWrapper editIntent(Training training, Round round) {
+    public static IntentWrapper editIntent(Training training, long roundId) {
         return new IntentWrapper(EditRoundActivity.class)
                 .with(ITEM_ID, training.getId())
-                .with(ROUND_ID, round.getId());
+                .with(ROUND_ID, roundId);
     }
 
     @Nullable

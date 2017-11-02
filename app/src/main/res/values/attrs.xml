@@ -16,48 +16,27 @@
 
 <resources>
 
-    <declare-styleable name="FabTransform">
-        <attr name="fabColor" format="color" />
-        <attr name="fabIcon" format="reference" />
+    <declare-styleable name="FabSpeedDial">
+        <!-- Compulsory attributes -->
+        <attr name="fabMenu" format="reference" />
+
+        <!-- Optional attributes -->
+        <attr name="fabDrawable" format="color|reference" />
+        <attr name="fabDrawableTint" format="color|reference" />
+        <attr name="fabBackgroundTint" format="color|reference" />
+
+        <attr name="miniFabBackgroundTint" format="color|reference" />
+        <attr name="miniFabBackgroundTintList" format="reference" />
+        <attr name="miniFabDrawableTint" format="color|reference" />
+        <attr name="miniFabTitleTextColor" format="color|reference" />
+        <attr name="miniFabTitleTextColorList" format="reference" />
+
+        <attr name="touchGuard" format="boolean" />
+        <attr name="touchGuardDrawable" format="color|reference" />
+
+        <attr name="miniFabTitleBackgroundTint" format="color|reference"/>
+        <attr name="miniFabTitlesEnabled" format="boolean"/>
+
     </declare-styleable>
 
-    <attr name="MaterialTapTargetPromptTheme" format="reference"/>
-    <attr name="target" format="reference"/>
-    <attr name="primaryText" format="string"/>
-    <attr name="secondaryText" format="string"/>
-    <attr name="primaryTextColour" format="color"/>
-    <attr name="secondaryTextColour" format="color"/>
-    <attr name="backgroundColour" format="color"/>
-    <attr name="focalColour" format="color"/>
-    <attr name="focalRadius" format="dimension"/>
-    <attr name="primaryTextSize" format="dimension"/>
-    <attr name="secondaryTextSize" format="dimension"/>
-    <attr name="maxTextWidth" format="dimension"/>
-    <attr name="textPadding" format="dimension"/>
-    <attr name="focalToTextPadding" format="dimension"/>
-    <attr name="textSeparation" format="dimension"/>
-    <attr name="autoDismiss" format="boolean"/>
-    <attr name="autoFinish" format="boolean"/>
-    <attr name="captureTouchEventOutsidePrompt" format="boolean"/>
-    <attr name="captureTouchEventOnFocal" format="boolean"/>
-    <declare-styleable name="PromptView">
-        <attr name="target"/>
-        <attr name="primaryText"/>
-        <attr name="secondaryText"/>
-        <attr name="primaryTextColour"/>
-        <attr name="secondaryTextColour"/>
-        <attr name="backgroundColour"/>
-        <attr name="focalColour"/>
-        <attr name="focalRadius"/>
-        <attr name="primaryTextSize"/>
-        <attr name="secondaryTextSize"/>
-        <attr name="maxTextWidth"/>
-        <attr name="textPadding"/>
-        <attr name="focalToTextPadding"/>
-        <attr name="textSeparation"/>
-        <attr name="autoDismiss"/>
-        <attr name="autoFinish"/>
-        <attr name="captureTouchEventOutsidePrompt"/>
-        <attr name="captureTouchEventOnFocal"/>
-    </declare-styleable>
 </resources>

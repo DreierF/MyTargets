@@ -95,4 +95,8 @@
         <item>ROUND</item>
         <item>TRAINING</item>
     </string-array>
+    <integer-array name="fab_menu_trainings_colors">
+        <item>@color/fabTrainingWithStandardRound</item>
+        <item>@color/fabFreeTraining</item>
+    </integer-array>
 </resources>

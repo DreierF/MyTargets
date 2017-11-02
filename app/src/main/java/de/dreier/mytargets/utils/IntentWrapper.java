@@ -97,7 +97,8 @@ public class IntentWrapper {
     }
 
     public IntentWrapper fromFab(View fab, @ColorRes int color, int icon) {
-        if (Utils.isLollipop()) {
+        if (Utils.supportsFabTransform()) {
+            fab.setTransitionName(fab.getContext().getString(R.string.transition_root_view));
             FabTransform.addExtras(intent, color, icon);
             ActivityOptions options = ActivityOptions
                     .makeSceneTransitionAnimation(getActivity(fab), fab,
@@ -130,7 +131,8 @@ public class IntentWrapper {
     }
 
     public IntentWrapper clearTopSingleTop() {
-        intent.addFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.addFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                Intent.FLAG_ACTIVITY_SINGLE_TOP);
         return this;
     }
 

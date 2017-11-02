@@ -14,7 +14,9 @@
   ~ GNU General Public License for more details.
   -->
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:key="main"
+                  android:title="@string/preferences">
     <PreferenceCategory android:title="@string/general">
         <PreferenceScreen
             android:icon="@drawable/ic_view_list_grey600_24dp"

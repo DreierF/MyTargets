@@ -90,6 +90,12 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                 .with(ITEM_ID, training.getId());
     }
 
+    @NonNull
+    public static IntentWrapper editIntent(long trainingId) {
+        return new IntentWrapper(EditTrainingActivity.class)
+                .with(ITEM_ID, trainingId);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

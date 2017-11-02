@@ -36,7 +36,6 @@
             android:layout_margin="16dp"
             android:src="@drawable/fab_add_white_24dp"
             android:transitionName="@string/transition_root_view"
-            app:fab_colorNormal="@color/colorAccent"
             tools:targetApi="lollipop" />
 
     </android.support.design.widget.CoordinatorLayout>

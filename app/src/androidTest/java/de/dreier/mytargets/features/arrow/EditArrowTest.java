@@ -16,11 +16,9 @@
 package de.dreier.mytargets.features.arrow;
 
 
-import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -28,7 +26,6 @@ import org.junit.runner.RunWith;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.features.main.MainActivity;
-import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.test.base.UITestBase;
 import de.dreier.mytargets.test.utils.rules.EmptyDbTestRule;
 
@@ -40,7 +37,6 @@ import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -54,25 +50,18 @@ import static org.hamcrest.Matchers.allOf;
 public class EditArrowTest extends UITestBase {
 
     private ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(
-            MainActivity.class, true, false);
+            MainActivity.class);
 
     @Rule
     public final RuleChain rule = RuleChain.outerRule(new EmptyDbTestRule())
             .around(activityTestRule);
 
-    @Before
-    public void setUp() {
-        SettingsManager.setFirstTrainingShown(true);
-    }
-
     @Test
     public void editArrowTest() {
-        activityTestRule.launchActivity(new Intent());
-        onView(allOf(withText(R.string.arrow), isDisplayed())).perform(click());
+        onView(withId(R.id.action_arrows)).perform(click());
 
         // Add new arrow and change some properties
-        onView(supportFab())
-                .perform(click());
+        onView(supportFab()).perform(click());
         onView(withId(R.id.name))
                 .perform(nestedScrollTo(), replaceText("Arrow"), closeSoftKeyboard());
         onView(withText(R.string.more_fields))
