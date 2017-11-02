@@ -32,7 +32,7 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import org.parceler.Parcel;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.shared.AppDatabase;
@@ -182,9 +182,18 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round>, 
             ends = SQLite.select()
                     .from(End.class)
                     .where(End_Table.round.eq(id))
+                    .orderBy(End_Table.index, true)
                     .queryList();
         }
         return ends;
+    }
+
+    public List<End> getEnds(DatabaseWrapper databaseWrapper) {
+        return SQLite.select()
+                .from(End.class)
+                .where(End_Table.round.eq(id))
+                .orderBy(End_Table.index, true)
+                .queryList(databaseWrapper);
     }
 
     public Score getReachedScore() {
@@ -221,10 +230,30 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round>, 
         FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::saveRecursively);
     }
 
+    /**
+     * Saves this round and all of its ends and updates all sibling round indices.
+     * Gets called when deletion of a round has been canceled by the user via undo
+     * or when deleting a training has been canceled.
+     */
     @Override
     public void saveRecursively(DatabaseWrapper databaseWrapper) {
-        save(databaseWrapper);
-        for (End end : getEnds()) {
+        Training training = Training.get(trainingId);
+        List<Round> rounds = training.getRounds(databaseWrapper);
+
+        int pos = Collections.binarySearch(rounds, this);
+        if (pos < 0) {
+            rounds.add(-pos - 1, this);
+        } else {
+            rounds.add(pos, this);
+        }
+
+        int i = 0;
+        for (Round round : rounds) {
+            round.index = i;
+            round.save(databaseWrapper);
+            i++;
+        }
+        for (End end : ends) {
             end.roundId = id;
             end.save(databaseWrapper);
         }

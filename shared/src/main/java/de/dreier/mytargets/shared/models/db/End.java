@@ -242,19 +242,20 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
             endImage.delete(databaseWrapper);
         }
         super.delete(databaseWrapper);
-        updateEndIndicesForRound();
+        updateEndIndicesForRound(databaseWrapper);
     }
 
-    private void updateEndIndicesForRound() {
+    private void updateEndIndicesForRound(DatabaseWrapper databaseWrapper) {
         // FIXME very inefficient
-        int i = 0;
         Round round = Round.get(roundId);
         if (round == null) {
             return;
         }
-        for (End end : round.getEnds()) {
+
+        int i = 0;
+        for (End end : round.getEnds(databaseWrapper)) {
             end.index = i;
-            end.save();
+            end.save(databaseWrapper);
             i++;
         }
     }
@@ -278,11 +279,26 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
 
     @Override
     public void saveRecursively() {
-        save();
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::saveRecursively);
     }
 
     @Override
     public void saveRecursively(DatabaseWrapper databaseWrapper) {
-        save(databaseWrapper);
+        Round round = Round.get(roundId);
+        List<End> ends = round.getEnds(databaseWrapper);
+
+        int pos = Collections.binarySearch(ends, this);
+        if (pos < 0) {
+            ends.add(-pos - 1, this);
+        } else {
+            ends.add(pos, this);
+        }
+
+        int i = 0;
+        for (End end : ends) {
+            end.index = i;
+            end.save(databaseWrapper);
+            i++;
+        }
     }
 }

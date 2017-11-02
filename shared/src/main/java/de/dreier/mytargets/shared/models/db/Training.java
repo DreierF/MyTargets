@@ -143,6 +143,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
             rounds = SQLite.select()
                     .from(Round.class)
                     .where(Round_Table.training.eq(id))
+                    .orderBy(Round_Table.index, true)
                     .queryList();
         }
         return rounds;
@@ -250,5 +251,13 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
             s.trainingId = id;
             s.saveRecursively(databaseWrapper);
         }
+    }
+
+    public List<Round> getRounds(DatabaseWrapper databaseWrapper) {
+        return SQLite.select()
+                .from(Round.class)
+                .where(Round_Table.training.eq(id))
+                .orderBy(Round_Table.index, true)
+                .queryList(databaseWrapper);
     }
 }
