@@ -71,19 +71,19 @@ if (hasProperty('CROWDIN_API_KEY')) {
                 [
                         title      : 'Play Store Title',
                         name       : 'title.txt',
-                        source     : 'app/src/regular/play/en-US/listing/title.txt',
+                        source     : 'app/src/regular/play/en-US/listing/title',
                         translation: 'app/src/regular/play/%locale%/listing/title'
                 ],
                 [
                         title      : 'Play Store Short Description',
                         name       : 'short_description.txt',
-                        source     : 'app/src/regular/play/en-US/listing/short_description.txt',
+                        source     : 'app/src/regular/play/en-US/listing/shortdescription',
                         translation: 'app/src/regular/play/%locale%/listing/shortdescription'
                 ],
                 [
                         title      : 'Play Store Full Description',
                         name       : 'full_description.txt',
-                        source     : 'app/src/regular/play/en-US/listing/full_description.txt',
+                        source     : 'app/src/regular/play/en-US/listing/fulldescription',
                         translation: 'app/src/regular/play/%locale%/listing/fulldescription'
                 ]
         ]
@@ -100,12 +100,15 @@ if (hasProperty('CROWDIN_API_KEY')) {
         ]
         doLast {
             FileUtils.copyDirectory(file('app/src/regular/play/ca-ES'), file('app/src/regular/play/ca'))
+            FileUtils.copyDirectory(file('app/src/regular/play/et-EE'), file('app/src/regular/play/et'))
             FileUtils.copyDirectory(file('app/src/regular/play/sk-SK'), file('app/src/regular/play/sk'))
             FileUtils.copyDirectory(file('app/src/regular/play/sl-SI'), file('app/src/regular/play/sl'))
             file('app/src/regular/play/af-ZA').deleteDir()
             file('app/src/regular/play/ar-SA').deleteDir()
             file('app/src/regular/play/ca-ES').deleteDir()
             file('app/src/regular/play/el-GR').deleteDir()
+            file('app/src/regular/play/es-AR').deleteDir()
+            file('app/src/regular/play/et-EE').deleteDir()
             file('app/src/regular/play/fi-FI').deleteDir()
             file('app/src/regular/play/he-IL').deleteDir()
             file('app/src/regular/play/id-ID').deleteDir()
