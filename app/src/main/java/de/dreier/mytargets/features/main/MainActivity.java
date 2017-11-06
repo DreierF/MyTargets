@@ -42,14 +42,18 @@ import de.dreier.mytargets.features.timer.TimerFragment;
 import de.dreier.mytargets.features.training.overview.TrainingsFragment;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.Utils;
+import im.delight.android.languages.Language;
 
 import static de.dreier.mytargets.features.settings.ESettingsScreens.SCOREBOARD;
+import static de.dreier.mytargets.utils.Utils.getCurrentLocale;
 
 /**
  * Shows the apps main screen, which contains a bottom navigation for switching between trainings,
  * bows and arrows, as well as an navigation drawer for hosting settings and the timer quick access.
  */
 public class MainActivity extends AppCompatActivity {
+
+    public static final String KEY_LANGUAGE = "language";
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -58,11 +62,14 @@ public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     private ActionBarDrawerToggle drawerToggle;
     private IntentWrapper onDrawerClosePendingIntent = null;
-    CountingIdlingResource espressoTestIdlingResource = new CountingIdlingResource("delayed_activity");
+    private CountingIdlingResource espressoTestIdlingResource = new CountingIdlingResource("delayed_activity");
+    private String countryCode;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme_CustomToolbar);
+        Language.setFromPreference(this, SettingsManager.KEY_LANGUAGE);
+        countryCode = getCountryCode();
         super.onCreate(savedInstanceState);
         if (SettingsManager.shouldShowIntroActivity()) {
             SettingsManager.setShouldShowIntroActivity(false);
@@ -84,8 +91,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_LANGUAGE, countryCode);
+    }
+
+    private String getCountryCode() {
+        return getCurrentLocale(this).toString();
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        countryCode = savedInstanceState.getString(KEY_LANGUAGE);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        if (countryCode != null && !getCountryCode().equals(countryCode)) {
+            countryCode = getCountryCode();
+            recreate();
+        }
         setupNavigationHeaderView();
     }
 

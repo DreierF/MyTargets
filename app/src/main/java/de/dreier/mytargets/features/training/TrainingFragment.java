@@ -92,7 +92,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
 
         @Override
         protected void onUpdate(Long training, Long roundId, End end) {
-            if(trainingId == training) {
+            if (trainingId == training) {
                 reloadData();
             }
         }
@@ -164,7 +164,8 @@ public class TrainingFragment extends EditableListFragment<Round> {
             // Set round info
             binding.weatherIcon.setImageResource(training.getEnvironment().getColorDrawable());
             binding.detailRoundInfo.setText(Utils
-                    .fromHtml(HtmlUtils.getTrainingInfoHTML(training, rounds, equals, false)));
+                    .fromHtml(HtmlUtils.getTrainingInfoHTML(Utils
+                            .getCurrentLocale(getContext()), training, rounds, equals, false)));
             adapter.setList(rounds);
 
             getActivity().supportInvalidateOptionsMenu();
@@ -268,7 +269,9 @@ public class TrainingFragment extends EditableListFragment<Round> {
                 binding.subtitle.setVisibility(View.VISIBLE);
             }
             binding.points.setText(
-                    item.getReachedScore().format(SettingsManager.getScoreConfiguration()));
+                    item.getReachedScore()
+                            .format(Utils.getCurrentLocale(getContext()), SettingsManager
+                                    .getScoreConfiguration()));
         }
     }
 }

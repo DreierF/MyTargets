@@ -50,6 +50,7 @@ import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.MobileWearableClient;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.Utils;
 
 import static de.dreier.mytargets.shared.utils.FileUtils.getUriForFile;
 import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE;
@@ -132,7 +133,7 @@ public class ScoreboardActivity extends ChildActivityBase {
 
             @Override
             protected String doInBackground(Void... params) {
-                return HtmlUtils.getScoreboard(trainingId, roundId,
+                return HtmlUtils.getScoreboard(Utils.getCurrentLocale(ScoreboardActivity.this), trainingId, roundId,
                         ScoreboardConfiguration.fromDisplaySettings());
             }
 
@@ -224,7 +225,7 @@ public class ScoreboardActivity extends ChildActivityBase {
 
             @Override
             protected String doInBackground(Void... params) {
-                return HtmlUtils.getScoreboard(trainingId, roundId,
+                return HtmlUtils.getScoreboard(Utils.getCurrentLocale(ScoreboardActivity.this), trainingId, roundId,
                         ScoreboardConfiguration.fromPrintSettings());
             }
 

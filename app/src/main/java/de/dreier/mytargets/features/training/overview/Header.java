@@ -16,30 +16,25 @@ package de.dreier.mytargets.features.training.overview;
 
 import android.support.annotation.NonNull;
 
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.format.DateTimeFormatter;
-
-import java.util.Locale;
-
 import de.dreier.mytargets.shared.models.IIdProvider;
 
-public class Month implements IIdProvider, Comparable<Month> {
+public class Header implements IIdProvider, Comparable<Header> {
 
-    private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMMM yyyy",
-            Locale.getDefault());
-    private long id;
+    private final long id;
+    private final String title;
 
-    public Month(long id) {
-        this.setId(id);
+    public Header(long id, String title) {
+        this.id = id;
+        this.title = title;
     }
 
     @Override
     public String toString() {
-        return LocalDate.ofEpochDay(getId()).format(dateFormat);
+        return title;
     }
 
     @Override
-    public int compareTo(@NonNull Month another) {
+    public int compareTo(@NonNull Header another) {
         return (int) (getId() - another.getId());
     }
 
@@ -47,14 +42,14 @@ public class Month implements IIdProvider, Comparable<Month> {
         return id;
     }
 
-    private void setId(long id) {
-        this.id = id;
+    public String getTitle() {
+        return title;
     }
 
     @Override
     public boolean equals(Object another) {
-        return another instanceof Month &&
+        return another instanceof Header &&
                 getClass().equals(another.getClass()) &&
-                id == ((Month) another).id;
+                id == ((Header) another).id;
     }
 }

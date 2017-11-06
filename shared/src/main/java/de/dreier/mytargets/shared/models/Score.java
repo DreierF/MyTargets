@@ -76,7 +76,7 @@ public class Score {
         return reachedScore + "/" + totalScore;
     }
 
-    public String format(Configuration config) {
+    public String format(Locale locale, Configuration config) {
         if (!config.showReachedScore) {
             return "";
         }
@@ -93,7 +93,7 @@ public class Score {
                 }
             }
             if (config.showAverage) {
-                score += getShotAverageFormatted() + "∅";
+                score += getShotAverageFormatted(locale) + "∅";
             }
             score += ")";
         }
@@ -107,11 +107,11 @@ public class Score {
         return reachedScore / (float) shotCount;
     }
 
-    public String getShotAverageFormatted() {
+    public String getShotAverageFormatted(Locale locale) {
         if (shotCount == 0) {
             return "-";
         }
-        return String.format(Locale.getDefault(), "%.2f", getShotAverage());
+        return String.format(locale, "%.2f", getShotAverage());
     }
 
     private String getPercent() {

@@ -22,7 +22,7 @@ import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v13.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -61,7 +61,7 @@ import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TR
 /**
  * Shows an overview over all training days
  */
-public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
+public class TrainingsFragment extends ExpandableListFragment<Header, Training> {
 
     protected FragmentTrainingsBinding binding;
 
@@ -104,10 +104,10 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_trainings, container, false);
         binding.recyclerView.setHasFixedSize(true);
-        adapter = new TrainingAdapter();
+        adapter = new TrainingAdapter(getContext());
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.addItemDecoration(
@@ -198,16 +198,19 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
         final List<Training> trainings = Training.getAll();
         return () -> {
             TrainingsFragment.this.setList(trainings, false);
-            ActivityCompat.invalidateOptionsMenu(getActivity());
+            FragmentActivity activity = getActivity();
+            if (activity != null) {
+                activity.invalidateOptionsMenu();
+            }
             binding.emptyState.getRoot()
                     .setVisibility(trainings.isEmpty() ? View.VISIBLE : View.GONE);
         };
     }
 
-    private class TrainingAdapter extends ExpandableListAdapter<Month, Training> {
+    private class TrainingAdapter extends ExpandableListAdapter<Header, Training> {
 
-        TrainingAdapter() {
-            super(child -> new Month(Utils.getMonthId(child.date)),
+        TrainingAdapter(Context context) {
+            super(child -> Utils.getMonthHeader(context, child.date),
                     Collections.reverseOrder(),
                     Collections.reverseOrder());
         }
@@ -233,7 +236,7 @@ public class TrainingsFragment extends ExpandableListFragment<Month, Training> {
             binding.training.setText(item.title);
             binding.trainingDate.setText(item.getFormattedDate());
             binding.gesTraining.setText(item.getReachedScore()
-                    .format(SettingsManager.getScoreConfiguration()));
+                    .format(Utils.getCurrentLocale(getContext()), SettingsManager.getScoreConfiguration()));
         }
     }
 }

@@ -58,7 +58,7 @@ public class HtmlUtils {
             "  position: absolute; bottom: -4px; right: -4px; }" +
             "</style>";
 
-    public static String getScoreboard(long trainingId, long roundId, ScoreboardConfiguration configuration) {
+    public static String getScoreboard(Locale locale, long trainingId, long roundId, ScoreboardConfiguration configuration) {
         // Query information from database
         Training training = Training.get(trainingId);
         List<Round> rounds;
@@ -77,7 +77,7 @@ public class HtmlUtils {
 
         boolean[] equals = new boolean[2];
         if (configuration.showProperties) {
-            html += getTrainingInfoHTML(training, rounds, equals, true) + BR;
+            html += getTrainingInfoHTML(locale, training, rounds, equals, true) + BR;
         }
 
         if (configuration.showTable) {
@@ -91,7 +91,7 @@ public class HtmlUtils {
         }
 
         if (configuration.showStatistics) {
-            html += getStatistics(rounds);
+            html += getStatistics(locale, rounds);
         }
 
         if (configuration.showComments) {
@@ -214,19 +214,19 @@ public class HtmlUtils {
     }
 
     @NonNull
-    private static String getStatistics(List<Round> rounds) {
+    private static String getStatistics(Locale locale, List<Round> rounds) {
         if (rounds.size() == 0) {
             return "";
         } else if (rounds.size() == 1) {
-            return getStatisticsForRound(rounds);
+            return getStatisticsForRound(locale, rounds);
         } else {
             String html = "";
             for (Round round : rounds) {
                 html += BR + bold(get(R.string.round) + " " + (round.index + 1));
-                html += getStatisticsForRound(Collections.singletonList(round));
+                html += getStatisticsForRound(locale, Collections.singletonList(round));
             }
             html += BR + bold(get(R.string.training));
-            return html + getStatisticsForRound(rounds);
+            return html + getStatisticsForRound(locale, rounds);
         }
     }
 
@@ -236,7 +236,7 @@ public class HtmlUtils {
     }
 
     @NonNull
-    private static String getStatisticsForRound(List<Round> rounds) {
+    private static String getStatisticsForRound(Locale locale, List<Round> rounds) {
         String html = BR + "<table class=\"myTable\" style=\"margin-top:5px;\"><tr>";
         List<Map.Entry<SelectableZone, Integer>> scoreDistribution = getSortedScoreDistribution(
                 rounds);
@@ -261,11 +261,11 @@ public class HtmlUtils {
             html += "<td>" + topScore.second + "</td>";
         }
         html += "<td>" + hits + "/" + total + "</td>";
-        html += "<td>" + getAverageScore(scoreDistribution) + "</td>";
+        html += "<td>" + getAverageScore(locale, scoreDistribution) + "</td>";
         return html + "</tr></table>";
     }
 
-    private static String getAverageScore(List<Map.Entry<SelectableZone, Integer>> scoreDistribution) {
+    private static String getAverageScore(Locale locale, List<Map.Entry<SelectableZone, Integer>> scoreDistribution) {
         int sum = 0;
         int count = 0;
         for (Map.Entry<SelectableZone, Integer> entry : scoreDistribution) {
@@ -275,20 +275,20 @@ public class HtmlUtils {
         if (count == 0) {
             return "-";
         } else {
-            return String.format(Locale.getDefault(), "%.2f", sum * 1.0f / count);
+            return String.format(locale, "%.2f", sum * 1.0f / count);
         }
     }
 
-    public static String getTrainingInfoHTML(Training training, List<Round> rounds, boolean[] equals, boolean scoreboard) {
+    public static String getTrainingInfoHTML(Locale locale, Training training, List<Round> rounds, boolean[] equals, boolean scoreboard) {
         HtmlInfoBuilder info = new HtmlInfoBuilder();
-        addStaticTrainingHeaderInfo(info, training, rounds, scoreboard);
+        addStaticTrainingHeaderInfo(locale, info, training, rounds, scoreboard);
         addDynamicTrainingHeaderInfo(rounds, equals, info);
         return info.toString();
     }
 
-    private static void addStaticTrainingHeaderInfo(HtmlInfoBuilder info, Training training, List<Round> rounds, boolean scoreboard) {
+    private static void addStaticTrainingHeaderInfo(Locale locale, HtmlInfoBuilder info, Training training, List<Round> rounds, boolean scoreboard) {
         if (scoreboard) {
-            getScoreboardOnlyHeaderInfo(info, training, rounds);
+            getScoreboardOnlyHeaderInfo(locale, info, training, rounds);
         }
 
         if (training.indoor) {
@@ -345,7 +345,7 @@ public class HtmlUtils {
         }
     }
 
-    private static void getScoreboardOnlyHeaderInfo(HtmlInfoBuilder info, Training training, List<Round> rounds) {
+    private static void getScoreboardOnlyHeaderInfo(Locale locale, HtmlInfoBuilder info, Training training, List<Round> rounds) {
         final String fullName = SettingsManager.getProfileFullName();
         if (!fullName.trim().isEmpty()) {
             info.addLine(R.string.name, fullName);
@@ -359,7 +359,7 @@ public class HtmlUtils {
             info.addLine(R.string.club, club);
         }
         if (rounds.size() > 1) {
-            info.addLine(R.string.points, training.getReachedScore().format(SettingsManager.getScoreConfiguration()));
+            info.addLine(R.string.points, training.getReachedScore().format(locale, SettingsManager.getScoreConfiguration()));
         }
         info.addLine(R.string.date, training.getFormattedDate());
     }

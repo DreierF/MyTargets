@@ -22,21 +22,33 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Process;
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.View;
 
 import org.threeten.bp.LocalDate;
+import org.threeten.bp.format.DateTimeFormatter;
 
 import java.util.Locale;
 
 import de.dreier.mytargets.features.main.MainActivity;
+import de.dreier.mytargets.features.training.overview.Header;
 
 public class Utils {
 
-    public static long getMonthId(LocalDate date) {
-        return LocalDate.from(date).withDayOfMonth(1).toEpochDay();
+    public static Header getMonthHeader(Context context, LocalDate date) {
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMMM yyyy",
+                getCurrentLocale(context));
+        LocalDate month = getMonthStart(date);
+        return new Header(month.toEpochDay(), month.format(dateFormat));
+    }
+
+    @NonNull
+    private static LocalDate getMonthStart(LocalDate date) {
+        return LocalDate.from(date).withDayOfMonth(1);
     }
 
     public static void doRestart(Context context) {
@@ -110,5 +122,14 @@ public class Utils {
     public static int argb(int alpha, int color) {
         return Color.argb(alpha, Color.red(color), Color.green(color),
                 Color.blue(color));
+    }
+
+    public static Locale getCurrentLocale(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return context.getResources().getConfiguration().getLocales().get(0);
+        } else {
+            //noinspection deprecation
+            return context.getResources().getConfiguration().locale;
+        }
     }
 }

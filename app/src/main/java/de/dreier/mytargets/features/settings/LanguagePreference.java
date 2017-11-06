@@ -34,6 +34,7 @@ import im.delight.android.languages.LanguageList;
 public class LanguagePreference extends ListPreference {
 
     private static List<String> SUPPORTED_LOCALES = Arrays.asList(
+            "",
             "ca",
             "zh-CN",
             "zh-TW",
@@ -41,6 +42,7 @@ public class LanguagePreference extends ListPreference {
             "da",
             "nl",
             "et",
+            "en",
             "fi",
             "fr",
             "de",

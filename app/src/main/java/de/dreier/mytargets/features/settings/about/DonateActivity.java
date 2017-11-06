@@ -33,6 +33,7 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.features.settings.SettingsManager;
+import im.delight.android.languages.Language;
 
 public class DonateActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
 
@@ -56,6 +57,7 @@ public class DonateActivity extends AppCompatActivity implements BillingProcesso
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Language.setFromPreference(this, SettingsManager.KEY_LANGUAGE);
         super.onCreate(savedInstanceState);
         bp = new BillingProcessor(this, getString(R.string.BASE64_PUB_KEY), this);
     }
