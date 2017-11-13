@@ -278,7 +278,7 @@
                 android:value=".features.settings.SettingsActivity"/>
         </activity>
         <activity
-            android:name=".features.settings.licences.LicencesActivity"
+            android:name=".features.help.licences.LicencesActivity"
             android:label="@string/licences"
             android:parentActivityName=".features.settings.SettingsActivity">
             <meta-data

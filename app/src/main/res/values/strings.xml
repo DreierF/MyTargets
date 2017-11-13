@@ -355,6 +355,7 @@
     <string name="sort_shots">Sort shots</string>
     <string name="sort_shots_for_spots">Sort shots for spot target faces</string>
     <string name="target_captain">Target captain</string>
+    <string name="language">Language</string>
     <string name="warning_backup_experimental">Warning: This feature is still experimental! Please check in regular intervals if the backup was really successful!</string>
     <string name="drawer_open">Open drawer</string>
     <string name="drawer_close">Close drawer</string>
@@ -364,4 +365,6 @@
     <string name="no_trainings">You don\'t have any trainings, yet!</string>
     <string name="no_bows">No bows</string>
     <string name="no_arrows">No arrows</string>
+    <string name="version_info">Version info</string>
+    <string name="version_prefix">Version</string>
 </resources>

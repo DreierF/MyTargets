@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.features.help;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -22,6 +23,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,8 +34,11 @@ import java.io.InputStream;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentWebBinding;
+import de.dreier.mytargets.features.help.licences.LicencesActivity;
+import de.dreier.mytargets.features.settings.about.AboutFragment;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import uk.co.hassie.library.versioninfomdialog.VersionInfoMDialog;
 
 /**
  * Shows all rounds of one training.
@@ -80,16 +86,25 @@ public class HelpFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        inflater.inflate(R.menu.statistics_scoresheet, menu);
-//    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.help, menu);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_scoreboard:
-
+            case R.id.action_version_info:
+                new VersionInfoMDialog.Builder(getContext())
+                        .setCopyrightText(R.string.app_copyright)
+                        .setVersionPrefix(R.string.version_prefix)
+                        .show();
+                return true;
+            case R.id.action_open_source_licences:
+                startActivity(new Intent(getContext(), LicencesActivity.class));
+                return true;
+            case R.id.action_about:
+                AboutFragment.getIntent().withContext(this).start();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

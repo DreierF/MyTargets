@@ -24,7 +24,9 @@ import android.view.MenuItem;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.utils.Utils;
+import im.delight.android.languages.Language;
 
 public abstract class ChildActivityBase extends AppCompatActivity {
 
@@ -34,6 +36,7 @@ public abstract class ChildActivityBase extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        Language.setFromPreference(this, SettingsManager.KEY_LANGUAGE);
         super.onCreate(savedInstanceState);
         logEvent(getClass().getSimpleName());
     }

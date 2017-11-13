@@ -19,11 +19,12 @@ package de.dreier.mytargets.features.settings;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.threeten.bp.LocalDate;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.threeten.bp.LocalDate;
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.FormatStyle;
 
@@ -70,16 +71,17 @@ public class SettingsActivityTest extends UITestBase {
         SettingsManager.setBackupLocation(EBackupLocation.INTERNAL_STORAGE);
     }
 
+
     @Test
     public void settingsActivityTest() {
         matchToolbarTitle(getActivity().getString(R.string.preferences));
 
-        clickOnPreference(1);
+        clickOnPreference(0);
 
         matchToolbarTitle(getActivity().getString(R.string.overview));
         pressBack();
 
-        clickOnPreference(2);
+        clickOnPreference(1);
 
         matchToolbarTitle(getActivity().getString(R.string.input));
 
@@ -98,7 +100,7 @@ public class SettingsActivityTest extends UITestBase {
         pressBack();
         matchToolbarTitle(getActivity().getString(R.string.preferences));
 
-        clickOnPreference(3);
+        clickOnPreference(2);
         matchToolbarTitle(getActivity().getString(R.string.scoreboard));
 
         clickOnPreference(1);
@@ -137,7 +139,7 @@ public class SettingsActivityTest extends UITestBase {
         pressBack();
         matchToolbarTitle(getActivity().getString(R.string.preferences));
 
-        clickOnPreference(4);
+        clickOnPreference(3);
         matchToolbarTitle(getActivity().getString(R.string.timer));
 
         matchPreferenceSummary(0, getActivity()
@@ -152,18 +154,22 @@ public class SettingsActivityTest extends UITestBase {
         pressBack();
 
         // FIXME allowPermissionsIfNeeded does not seem to work/Is not called
-//        clickOnPreference(6);
+//        clickOnPreference(4);
 //        allowPermissionsIfNeeded(getActivity(), READ_EXTERNAL_STORAGE);
 //        matchToolbarTitle(getActivity().getString(R.string.backup_action));
 //        pressBack();
 
-        clickOnPreference(8);
-        matchToolbarTitle(getActivity().getString(R.string.about));
-        pressBack();
+        clickOnPreference(5);
+        selectFromList("Spanish (Español)");
+        matchToolbarTitle("Opciones");
+    }
 
-        clickOnPreference(9);
-        matchToolbarTitle(getActivity().getString(R.string.licences));
-        pressBack();
+    @After
+    public void tearDown() {
+        ApplicationInstance.getSharedPreferences()
+                .edit()
+                .clear()
+                .apply();
     }
 
     private SettingsActivity getActivity() {

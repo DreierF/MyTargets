@@ -83,6 +83,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static de.dreier.mytargets.shared.wearable.WearableClientBase.BROADCAST_TIMER_SETTINGS_FROM_REMOTE;
 import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE;
+import static de.dreier.mytargets.utils.Utils.getCurrentLocale;
 
 public class InputActivity extends ChildActivityBase
         implements TargetViewBase.OnEndFinishedListener, TargetView.OnEndUpdatedListener,
@@ -488,13 +489,13 @@ public class InputActivity extends ChildActivityBase
 
         switch (summaryShowScope) {
             case END:
-                binding.averageScore.setText(reachedEndScore.getShotAverageFormatted());
+                binding.averageScore.setText(reachedEndScore.getShotAverageFormatted(getCurrentLocale(this)));
                 break;
             case ROUND:
-                binding.averageScore.setText(reachedRoundScore.getShotAverageFormatted());
+                binding.averageScore.setText(reachedRoundScore.getShotAverageFormatted(getCurrentLocale(this)));
                 break;
             case TRAINING:
-                binding.averageScore.setText(reachedTrainingScore.getShotAverageFormatted());
+                binding.averageScore.setText(reachedTrainingScore.getShotAverageFormatted(getCurrentLocale(this)));
                 break;
             default:
                 break;

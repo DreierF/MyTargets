@@ -339,4 +339,5 @@
   <string name="show_arrow_average">Zobrazit průměr na šíp</string>
   <string name="image_deleted">Obrázek smazán</string>
   <string name="delete_image">Smazat obrázek?</string>
+  <string name="warning_backup_experimental">Upozornění: Tato funkce je stále experimentální! Prosím, zkontrolujte pravidelně, jestli byla záloha skutečně úspěšná!</string>
 </resources>

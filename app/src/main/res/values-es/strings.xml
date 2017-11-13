@@ -325,4 +325,5 @@
   <string name="show_arrow_average">Mostrar promedio de Flechas</string>
   <string name="image_deleted">Imagen borrada</string>
   <string name="delete_image">¿Borrar imagen?</string>
+  <string name="warning_backup_experimental">Warning: This feature is still experimental! Please check in regular intervals if the backup was really successful!</string>
 </resources>

@@ -17,6 +17,7 @@ package de.dreier.mytargets.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.util.Log;
 
 import com.google.firebase.crash.FirebaseCrash;
@@ -29,6 +30,7 @@ import org.parceler.ParcelClasses;
 import java.io.File;
 
 import de.dreier.mytargets.BuildConfig;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.analysis.aggregation.average.Average;
@@ -56,6 +58,7 @@ import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.utils.ImageList;
 import de.dreier.mytargets.utils.MobileWearableClient;
 import de.dreier.mytargets.utils.backup.MyBackupAgent;
+import im.delight.android.languages.Language;
 import timber.log.Timber;
 
 /**
@@ -98,6 +101,7 @@ public class ApplicationInstance extends SharedApplicationInstance {
 
     @Override
     public void onCreate() {
+        Language.setFromPreference(this, SettingsManager.KEY_LANGUAGE);
         if (BuildConfig.DEBUG) {
             enableDebugLogging();
         } else {
@@ -122,6 +126,12 @@ public class ApplicationInstance extends SharedApplicationInstance {
 
     public static void initFlowManager(Context context) {
         FlowManager.init(new FlowConfig.Builder(context).build());
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Language.setFromPreference(this, SettingsManager.KEY_LANGUAGE);
     }
 
     @Override

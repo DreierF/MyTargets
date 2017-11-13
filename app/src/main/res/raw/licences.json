@@ -1,116 +1,8 @@
 {
   "licenses": [
     {
-      "name": "Google Gson",
-      "version": "2.8.0",
-      "year": "2008",
-      "owner": "Google Inc.",
-      "description": "A Java serialization/deserialization library that can convert Java Objects into JSON and back.",
-      "url": "https://github.com/google/gson",
-      "license": "apache2"
-    },
-    {
-      "name": "ThreeTenABP",
-      "version": "1.0.5",
-      "year": "2015",
-      "owner": "Jake Wharton",
-      "description": "An adaptation of the JSR-310 backport for Android.",
-      "url": "https://github.com/JakeWharton/ThreeTenABP",
-      "license": "apache2"
-    },
-    {
-      "name": "OkHttp",
-      "version": "3.6.0",
-      "year": "2016",
-      "owner": "Square, Inc.",
-      "description": "An HTTP & HTTP/2 client for Android and Java applications.",
-      "url": "http://square.github.io/okhttp/",
-      "license": "apache2"
-    },
-    {
-      "name": "Retrofit",
-      "version": "2.2.0",
-      "year": "2013",
-      "owner": "Square, Inc.",
-      "description": "Type-safe HTTP client for Android and Java by Square, Inc.",
-      "url": "http://square.github.io/retrofit/",
-      "license": "apache2"
-    },
-    {
-      "name": "Picasso",
-      "version": "2.5.2",
-      "year": "2013",
-      "owner": "Square, Inc.",
-      "description": "A powerful image downloading and caching library for Android",
-      "url": "http://square.github.io/picasso/",
-      "license": "apache2"
-    },
-    {
-      "name": "FloatingActionButton",
-      "version": "1.6.4",
-      "year": "2015",
-      "owner": "Dmytro Tarianyk",
-      "description": "Android Floating Action Button based on Material Design specification.",
-      "url": "https://github.com/Clans/FloatingActionButton",
-      "license": "apache2"
-    },
-    {
-      "name": "Icepick",
-      "version": "3.2.0",
-      "year": "2016",
-      "owner": "frankiesardo",
-      "description": "Icepick is an Android library that eliminates the boilerplate of saving and restoring instance state.",
-      "url": "https://github.com/frankiesardo/icepick",
-      "license": "epl"
-    },
-    {
-      "name": "PermissionsDispatcher",
-      "version": "2.3.2",
-      "year": "2016",
-      "owner": "Shintaro Katafuchi, Marcel Schnelle, Yoshinori Isogai",
-      "description": "Provides simple annotation-based API to handle runtime permissions.",
-      "url": "http://hotchemi.github.io/PermissionsDispatcher/",
-      "license": "apache2"
-    },
-    {
-      "name": "MPAndroidChart",
-      "version": "3.0.2",
-      "year": "2016",
-      "owner": "Philipp Jahoda",
-      "description": "A powerful Android chart view / graph view library, supporting line- bar- pie- radar- bubble- and candlestick charts as well as scaling, dragging and animations.",
-      "url": "https://github.com/PhilJay/MPAndroidChart",
-      "license": "apache2"
-    },
-    {
-      "name": "DiscreteSeekBar",
-      "version": "1.0.1",
-      "year": "2014",
-      "owner": "Gustavo Claramunt (Ander Webbs)",
-      "description": "DiscreteSeekbar is an android implementation of the Discrete Slider component from the Google Material Design Guidelines.",
-      "url": "https://github.com/AnderWeb/discreteSeekBar",
-      "license": "apache2"
-    },
-    {
-      "name": "EasyImage",
-      "version": "1.4.2",
-      "year": "2015",
-      "owner": "Jacek Kwiecień",
-      "description": "Library for picking pictures from gallery or camera.",
-      "url": "https://github.com/jkwiecien/EasyImage",
-      "license": "apache2"
-    },
-    {
-      "name": "Material Dialogs",
-      "version": "0.9.4.2",
-      "year": "2014-2016",
-      "owner": "Aidan Michael Follestad",
-      "description": "A beautiful, easy-to-use, and customizable dialogs API, enabling you to use Material designed dialogs down to API 8.",
-      "url": "https://github.com/afollestad/material-dialogs",
-      "license": "mit"
-    },
-    {
       "name": "Android About Page",
-      "version": "1.2",
+      "version": "1.2.1",
       "year": "2016",
       "owner": "Mehdi Sakout",
       "description": "Create an awesome About Page for your Android App in 2 minutes.",
@@ -118,21 +10,21 @@
       "license": "mit"
     },
     {
-      "name": "Homage",
-      "version": "0.2.0",
-      "year": "2016",
-      "owner": "O'Riley ME",
-      "description": "Homage is a simple library, designed to make it more enjoyable (or less obnoxious, depending on your viewpoint) to include open source licenses for all your used libraries.",
-      "url": "https://github.com/oriley-me/homage",
+      "name": "Android Languages",
+      "version": "1.0.1",
+      "year": "2017",
+      "owner": "delight.im",
+      "description": "Custom language selection and access to language names for Android.",
+      "url": "https://github.com/delight-im/Android-Languages",
       "license": "apache2"
     },
     {
-      "name": "Material Tap Target Prompt",
-      "version": "1.2.1",
-      "year": "2016",
-      "owner": "Samuel Wall",
-      "description": "A Tap Target implementation in Android based on Material Design Onboarding guidelines.",
-      "url": "https://github.com/sjwall/MaterialTapTargetPrompt",
+      "name": "Lightweight-Stream-API",
+      "version": "1.1.9",
+      "year": "2017",
+      "owner": "Victor Melnik",
+      "description": "Stream API from Java 8 rewritten on iterators for Java 7 and below.",
+      "url": "https://github.com/aNNiMON/Lightweight-Stream-API",
       "license": "apache2"
     },
     {
@@ -145,22 +37,139 @@
       "license": "mit"
     },
     {
-      "name": "Lightweight-Stream-API",
-      "version": "1.1.6",
-      "year": "2017",
-      "owner": "Victor Melnik",
-      "description": "Stream API from Java 8 rewritten on iterators for Java 7 and below.",
-      "url": "https://github.com/aNNiMON/Lightweight-Stream-API",
+      "name": "DiscreteSeekBar",
+      "version": "1.0.1",
+      "year": "2014",
+      "owner": "Gustavo Claramunt (Ander Webbs)",
+      "description": "DiscreteSeekbar is an android implementation of the Discrete Slider component from the Google Material Design Guidelines.",
+      "url": "https://github.com/AnderWeb/discreteSeekBar",
       "license": "apache2"
     },
     {
-      "name": "Lightweight-Stream-API",
+      "name": "EasyImage",
+      "version": "2.0.3",
+      "year": "2015",
+      "owner": "Jacek Kwiecień",
+      "description": "Library for picking pictures from gallery or camera.",
+      "url": "https://github.com/jkwiecien/EasyImage",
+      "license": "apache2"
+    },
+    {
+      "name": "Google Gson",
+      "version": "2.8.2",
+      "year": "2008",
+      "owner": "Google Inc.",
+      "description": "A Java serialization/deserialization library that can convert Java Objects into JSON and back.",
+      "url": "https://github.com/google/gson",
+      "license": "apache2"
+    },
+    {
+      "name": "Homage",
+      "version": "0.2.0",
+      "year": "2016",
+      "owner": "O'Riley ME",
+      "description": "Homage is a simple library, designed to make it more enjoyable (or less obnoxious, depending on your viewpoint) to include open source licenses for all your used libraries.",
+      "url": "https://github.com/oriley-me/homage",
+      "license": "apache2"
+    },
+    {
+      "name": "Icepick",
+      "version": "3.2.0",
+      "year": "2016",
+      "owner": "frankiesardo",
+      "description": "Icepick is an Android library that eliminates the boilerplate of saving and restoring instance state.",
+      "url": "https://github.com/frankiesardo/icepick",
+      "license": "epl"
+    },
+    {
+      "name": "Material Dialogs",
+      "version": "0.9.4.7",
+      "year": "2014-2016",
+      "owner": "Aidan Michael Follestad",
+      "description": "A beautiful, easy-to-use, and customizable dialogs API, enabling you to use Material designed dialogs down to API 8.",
+      "url": "https://github.com/afollestad/material-dialogs",
+      "license": "mit"
+    },
+    {
+      "name": "Material Intro Screen",
       "version": "0.0.5",
       "year": "2016",
       "owner": "Tango Agency",
       "description": "Inspired by Heinrich Reimer Material Intro and developed with love from scratch.",
       "url": "https://github.com/TangoAgency/material-intro-screen",
       "license": "mit"
+    },
+    {
+      "name": "MPAndroidChart",
+      "version": "3.0.2",
+      "year": "2016",
+      "owner": "Philipp Jahoda",
+      "description": "A powerful Android chart view / graph view library, supporting line- bar- pie- radar- bubble- and candlestick charts as well as scaling, dragging and animations.",
+      "url": "https://github.com/PhilJay/MPAndroidChart",
+      "license": "apache2"
+    },
+    {
+      "name": "OkHttp",
+      "version": "3.9.0",
+      "year": "2016",
+      "owner": "Square, Inc.",
+      "description": "An HTTP & HTTP/2 client for Android and Java applications.",
+      "url": "http://square.github.io/okhttp/",
+      "license": "apache2"
+    },
+    {
+      "name": "PermissionsDispatcher",
+      "version": "3.0.1",
+      "year": "2016",
+      "owner": "Shintaro Katafuchi, Marcel Schnelle, Yoshinori Isogai",
+      "description": "Provides simple annotation-based API to handle runtime permissions.",
+      "url": "http://hotchemi.github.io/PermissionsDispatcher/",
+      "license": "apache2"
+    },
+    {
+      "name": "Picasso",
+      "version": "2.5.2",
+      "year": "2013",
+      "owner": "Square, Inc.",
+      "description": "A powerful image downloading and caching library for Android",
+      "url": "http://square.github.io/picasso/",
+      "license": "apache2"
+    },
+    {
+      "name": "Retrofit",
+      "version": "2.2.0",
+      "year": "2013",
+      "owner": "Square, Inc.",
+      "description": "Type-safe HTTP client for Android and Java by Square, Inc.",
+      "url": "http://square.github.io/retrofit/",
+      "license": "apache2"
+    },
+    {
+      "name": "Rounded Image View",
+      "version": "2.3.0",
+      "year": "2017",
+      "owner": "Vincent Mi",
+      "description": "A fast ImageView that supports rounded corners, ovals, and circles.",
+      "url": "https://github.com/vinc3m1/RoundedImageView",
+      "license": "apache2"
+    },
+    {
+      "name": "ThreeTenABP",
+      "version": "1.0.5",
+      "year": "2015",
+      "owner": "Jake Wharton",
+      "description": "An adaptation of the JSR-310 backport for Android.",
+      "url": "https://github.com/JakeWharton/ThreeTenABP",
+      "license": "apache2"
+    },
+    {
+      "name": "Version Info Material Dialog",
+      "version": "0.0.9",
+      "year": "2017",
+      "owner": "Hassie",
+      "description": "A library showing a dialog with version info for the app.",
+      "url": "https://github.com/hassie-dash/version-info-material-dialog",
+      "license": "apache2"
     }
   ]
 }

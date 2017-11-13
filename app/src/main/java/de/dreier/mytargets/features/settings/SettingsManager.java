@@ -96,6 +96,7 @@ public class SettingsManager {
     private static final String KEY_OVERVIEW_SHOW_ARROW_AVERAGE = "overview_show_arrow_average";
     private static final String KEY_OVERVIEW_SHOT_SORTING = "overview_shot_sorting";
     private static final String KEY_OVERVIEW_SHOT_SORTING_SPOT = "overview_shot_sorting_spot";
+    public static final String KEY_LANGUAGE = "language";
 
     public static Long getStandardRound() {
         return (long) lastUsed.getInt(KEY_STANDARD_ROUND, 32);
@@ -435,6 +436,13 @@ public class SettingsManager {
     public static void setBackupInterval(EBackupInterval interval) {
         preferences.edit()
                 .putString(KEY_BACKUP_INTERVAL, interval.name())
+                .apply();
+    }
+
+    public static void setLanguage(String language) {
+        preferences
+                .edit()
+                .putString(KEY_LANGUAGE, language)
                 .apply();
     }
 

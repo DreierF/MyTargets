@@ -29,6 +29,7 @@ import java.io.OutputStream;
 import java.util.concurrent.CountDownLatch;
 
 import de.dreier.mytargets.shared.utils.BitmapUtils;
+import de.dreier.mytargets.utils.Utils;
 
 public class ScoreboardImage {
 
@@ -36,7 +37,7 @@ public class ScoreboardImage {
 
         // Generate html content
         final String content = HtmlUtils
-                .getScoreboard(training, round, ScoreboardConfiguration.fromShareSettings());
+                .getScoreboard(Utils.getCurrentLocale(context), training, round, ScoreboardConfiguration.fromShareSettings());
 
         final CountDownLatch signal = new CountDownLatch(1);
         context.runOnUiThread(() -> {

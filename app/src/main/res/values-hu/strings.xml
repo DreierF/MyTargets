@@ -325,4 +325,5 @@
   <string name="show_arrow_average">Mutasd a vesszők pontátlagát</string>
   <string name="image_deleted">A kép törölve</string>
   <string name="delete_image">Törlöd a képet?</string>
+  <string name="warning_backup_experimental">Figyelmeztetés: Ez a szolgáltatás még kísérleti fázisban! Kérjük, ellenőrizze a rendszeres időközönként ha igazán sikeres volt, a biztonsági másolat!</string>
 </resources>

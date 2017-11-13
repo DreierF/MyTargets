@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings.licences;
+package de.dreier.mytargets.features.help.licences;
 
 import android.support.v4.app.Fragment;
 
