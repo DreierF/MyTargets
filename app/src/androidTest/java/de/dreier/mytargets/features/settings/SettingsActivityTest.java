@@ -19,11 +19,12 @@ package de.dreier.mytargets.features.settings;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.threeten.bp.LocalDate;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.threeten.bp.LocalDate;
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.FormatStyle;
 
@@ -69,6 +70,7 @@ public class SettingsActivityTest extends UITestBase {
         SettingsManager.setInputArrowDiameterScale(1.0f);
         SettingsManager.setBackupLocation(EBackupLocation.INTERNAL_STORAGE);
     }
+
 
     @Test
     public void settingsActivityTest() {
@@ -160,7 +162,14 @@ public class SettingsActivityTest extends UITestBase {
         clickOnPreference(5);
         selectFromList("Spanish (Español)");
         matchToolbarTitle("Opciones");
+    }
 
+    @After
+    public void tearDown() {
+        ApplicationInstance.getSharedPreferences()
+                .edit()
+                .clear()
+                .apply();
     }
 
     private SettingsActivity getActivity() {

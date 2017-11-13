@@ -439,6 +439,13 @@ public class SettingsManager {
                 .apply();
     }
 
+    public static void setLanguage(String language) {
+        preferences
+                .edit()
+                .putString(KEY_LANGUAGE, language)
+                .apply();
+    }
+
     public static Map<Long, Integer> getStandardRoundsLastUsed() {
         String[] split = lastUsed.getString(KEY_STANDARD_ROUNDS_LAST_USED, "").split(",");
         return Stream.of(Arrays.asList(split))
