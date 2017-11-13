@@ -85,12 +85,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     }
 
     @NonNull
-    public static IntentWrapper editIntent(Training training) {
-        return new IntentWrapper(EditTrainingActivity.class)
-                .with(ITEM_ID, training.getId());
-    }
-
-    @NonNull
     public static IntentWrapper editIntent(long trainingId) {
         return new IntentWrapper(EditTrainingActivity.class)
                 .with(ITEM_ID, trainingId);
@@ -98,7 +92,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_edit_training, container, false);
 
