@@ -365,4 +365,6 @@
     <string name="no_trainings">You don\'t have any trainings, yet!</string>
     <string name="no_bows">No bows</string>
     <string name="no_arrows">No arrows</string>
+    <string name="version_info">Version info</string>
+    <string name="version_prefix">Version</string>
 </resources>

@@ -14,8 +14,22 @@
   ~ GNU General Public License for more details.
   -->
 
-<resources>
-    <string name="my_targets" translatable="false">MyTargets</string>
-    <string name="content_authority" translatable="false">de.dreier.mytargets.provider</string>
-    <string name="app_copyright" translatable="false">&#169;2017 Florian Dreier.</string>
-</resources>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_version_info"
+        android:title="@string/version_info"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_open_source_licences"
+        android:title="@string/licences"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_about"
+        android:title="@string/about"
+        app:showAsAction="never"/>
+
+</menu>

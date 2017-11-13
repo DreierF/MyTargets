@@ -67,14 +67,15 @@ ext {
             playService          : '11.4.2',
             screengrab           : '1.1.0',
             retrofit             : '2.3.0',
-            roundedImageView     : '2.2.1',
+            roundedImageView     : '2.3.0',
             support              : '26.1.0',
             supportWearable      : '2.0.5',
             testSupport          : '1.0.1',
             threeTenABP          : '1.0.5',
             timber               : '4.5.1',
             truth                : '0.36',
-            uiAutomator          : '2.1.3'
+            uiAutomator          : '2.1.3',
+            versionInfoDialog    : '0.0.9'
     ]
 }
 

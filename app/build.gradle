@@ -155,6 +155,8 @@ dependencies {
 
     implementation "com.github.delight-im:Android-Languages:$libraryVersion.androidLanguages"
 
+    implementation "uk.co.hassie:version-info-material-dialog:$libraryVersion.versionInfoDialog"
+
     implementation project(':shared')
     wearApp project(':wearable')
 
