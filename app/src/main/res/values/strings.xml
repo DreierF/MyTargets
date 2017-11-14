@@ -367,4 +367,5 @@
     <string name="no_arrows">No arrows</string>
     <string name="version_info">Version info</string>
     <string name="version_prefix">Version</string>
+    <string name="max_arrow_number">Maximum arrow number</string>
 </resources>

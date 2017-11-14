@@ -155,7 +155,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 app:dsb_indicatorColor="@color/colorPrimary"
-                                app:dsb_max="12"
+                                app:dsb_max="24"
                                 app:dsb_min="1"
                                 app:dsb_progressColor="@color/colorPrimary" />
 

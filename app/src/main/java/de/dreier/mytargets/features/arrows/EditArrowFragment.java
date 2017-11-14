@@ -35,6 +35,7 @@ import icepick.State;
 
 import static de.dreier.mytargets.shared.models.Dimension.Unit.INCH;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.MILLIMETER;
+import static java.lang.Integer.parseInt;
 
 public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
 
@@ -130,6 +131,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
 
     private Arrow buildArrow() {
         arrow.name = contentBinding.name.getText().toString();
+        arrow.maxArrowNumber = parseInt(contentBinding.maxArrowNumber.getText().toString());
         arrow.length = contentBinding.length.getText().toString();
         arrow.material = contentBinding.material.getText().toString();
         arrow.spine = contentBinding.spine.getText().toString();

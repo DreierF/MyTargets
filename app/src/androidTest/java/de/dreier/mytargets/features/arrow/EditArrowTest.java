@@ -99,7 +99,7 @@ public class EditArrowTest extends UITestBase {
                 .check(matches(withSpinnerText("mm")));
 
         // Change unit to inch
-        onView(withId(R.id.diameterUnit)).perform(click());
+        onView(withId(R.id.diameterUnit)).perform(nestedScrollTo(), click());
         onData(allOf(is(instanceOf(String.class)), is("inch"))).perform(click());
         save();
 

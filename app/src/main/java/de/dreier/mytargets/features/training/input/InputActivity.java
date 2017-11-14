@@ -318,7 +318,7 @@ public class InputActivity extends ChildActivityBase
         }
         targetView = (TargetView) binding.targetViewStub.getBinding().getRoot();
         targetView.setTarget(data.getCurrentRound().getTarget());
-        targetView.setArrow(data.arrowDiameter, data.training.arrowNumbering);
+        targetView.setArrow(data.arrowDiameter, data.training.arrowNumbering, data.maxArrowNumber);
         targetView.setOnTargetSetListener(InputActivity.this);
         targetView.setUpdateListener(InputActivity.this);
         targetView.reloadSettings();
@@ -541,7 +541,7 @@ public class InputActivity extends ChildActivityBase
             if (training.arrowId != null) {
                 Arrow arrow = training.getArrow();
                 if (arrow != null) {
-                    result.setArrowDiameter(arrow.diameter);
+                    result.setArrow(arrow);
                 }
             }
             final Bow bow = training.getBow();
@@ -560,6 +560,7 @@ public class InputActivity extends ChildActivityBase
         SightMark sightMark = null;
         int roundIndex = 0;
         int endIndex = 0;
+        int maxArrowNumber = 12;
 
         @ParcelConstructor
         public LoaderResult(Training training) {
@@ -608,8 +609,9 @@ public class InputActivity extends ChildActivityBase
             return ends.get(endIndex);
         }
 
-        public void setArrowDiameter(Dimension arrowDiameter) {
-            this.arrowDiameter = arrowDiameter;
+        public void setArrow(Arrow arrow) {
+            maxArrowNumber = arrow.maxArrowNumber;
+            arrowDiameter = arrow.diameter;
         }
     }
 }

@@ -109,6 +109,7 @@ public class TargetView extends TargetViewBase {
     private Matrix[] spotMatrices;
     private boolean arrowNumbering;
     private Dimension arrowDiameter;
+    private int maxArrowNumber;
     private float targetZoomFactor;
     private OnEndUpdatedListener updateListener;
     /**
@@ -202,9 +203,10 @@ public class TargetView extends TargetViewBase {
         super.setEnd(end);
     }
 
-    public void setArrow(Dimension diameter, boolean numbers) {
+    public void setArrow(Dimension diameter, boolean numbers, int maxArrowNumber) {
         this.arrowNumbering = numbers;
         this.arrowDiameter = diameter;
+        this.maxArrowNumber = maxArrowNumber;
         targetDrawable.setArrowDiameter(diameter, SettingsManager.getInputArrowDiameterScale());
     }
 
@@ -463,7 +465,7 @@ public class TargetView extends TargetViewBase {
                     .setTitle(R.string.arrow_numbers)
                     .create();
 
-            List<String> numbers = Stream.rangeClosed(1, 12)
+            List<String> numbers = Stream.rangeClosed(1, maxArrowNumber)
                     .map(String::valueOf)
                     .collect(Collectors.toList());
             gridView.setAdapter(
