@@ -33,7 +33,6 @@ import android.support.v4.util.LongSparseArray;
 import android.support.v4.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Collectors;
@@ -59,13 +58,13 @@ import de.dreier.mytargets.utils.ToolbarUtils;
 import icepick.Icepick;
 import icepick.State;
 
+import static android.support.v4.view.GravityCompat.END;
+
 public class StatisticsActivity extends ChildActivityBase implements LoaderManager.LoaderCallbacks<List<Pair<Training, Round>>> {
 
     @VisibleForTesting
     public static final String ROUND_IDS = "round_ids";
 
-    @State
-    boolean showFilter = false;
     private ActivityStatisticsBinding binding;
     private List<Pair<Training, Round>> rounds;
     private List<Pair<Target, List<Round>>> filteredRounds;
@@ -93,6 +92,8 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_statistics);
         setSupportActionBar(binding.toolbar);
+
+        binding.reset.setOnClickListener(v -> resetFilter());
 
         binding.progressBar.show();
 
@@ -138,7 +139,8 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
             restoreCheckedStates();
         }
 
-        updateFilter();
+        applyFilter();
+        invalidateOptionsMenu();
     }
 
     private void restoreCheckedStates() {
@@ -171,9 +173,6 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         super.onPrepareOptionsMenu(menu);
         final MenuItem filter = menu.findItem(R.id.action_filter);
         final MenuItem export = menu.findItem(R.id.action_export);
-        filter.setIcon(showFilter ?
-                R.drawable.ic_clear_filter_white_24dp :
-                R.drawable.ic_filter_white_24dp);
         // only show filter if we have at least one category to filter by
         boolean filterAvailable = binding.distanceTags.getTags().size() > 1
                 || binding.diameterTags.getTags().size() > 1
@@ -191,21 +190,15 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 export();
                 return true;
             case R.id.action_filter:
-                showFilter = !showFilter;
-                updateFilter();
+                if(!binding.drawerLayout.isDrawerOpen(END)) {
+                    binding.drawerLayout.openDrawer(END);
+                } else {
+                    binding.drawerLayout.closeDrawer(END);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    protected void updateFilter() {
-        if (!showFilter) {
-            resetFilter();
-        }
-        binding.filterView.setVisibility(showFilter ? View.VISIBLE : View.GONE);
-        applyFilter();
-        invalidateOptionsMenu();
     }
 
     private void resetFilter() {
@@ -221,6 +214,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         binding.diameterTags.setTags(binding.diameterTags.getTags());
         binding.arrowTags.setTags(binding.arrowTags.getTags());
         binding.bowTags.setTags(binding.bowTags.getTags());
+        applyFilter();
     }
 
     private void applyFilter() {

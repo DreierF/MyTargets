@@ -155,8 +155,7 @@ public class ChipGroup extends ViewGroup {
      * @return the tag list.
      */
     public List<Tag> getTags() {
-        return Stream.of(tagList)
-                .collect(Collectors.toList());
+        return new ArrayList<>(tagList);
     }
 
     /**
