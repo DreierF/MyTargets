@@ -54,6 +54,9 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
     public String name = "";
 
     @Column
+    public int maxArrowNumber = 12;
+
+    @Column
     public String length = "";
 
     @Column
