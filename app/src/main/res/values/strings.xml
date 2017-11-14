@@ -368,4 +368,8 @@
     <string name="version_info">Version info</string>
     <string name="version_prefix">Version</string>
     <string name="max_arrow_number">Maximum arrow number</string>
+    <string name="distances">Distances</string>
+    <string name="diameters">Diameters</string>
+    <string name="bows">Bows</string>
+    <string name="reset">Reset</string>
 </resources>
