@@ -30,8 +30,10 @@ import java.util.List;
 
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.SharedApplicationInstance;
+import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.RoundTemplate_Table;
+import de.dreier.mytargets.shared.models.db.Round_Table;
 import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.shared.models.db.SightMark_Table;
 
@@ -99,6 +101,14 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
         distances.addAll(Stream.of(SQLite
                 .select(RoundTemplate_Table.distance)
                 .from(RoundTemplate.class)
+                .queryList())
+                .map(round -> round.distance)
+                .filter(d -> d.unit == unit)
+                .collect(Collectors.toSet()));
+
+        distances.addAll(Stream.of(SQLite
+                .select(Round_Table.distance)
+                .from(Round.class)
                 .queryList())
                 .map(round -> round.distance)
                 .filter(d -> d.unit == unit)
