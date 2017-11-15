@@ -22,7 +22,6 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.wearable.activity.ConfirmationActivity;
 import android.support.wearable.activity.WearableActivity;
-import android.support.wearable.view.DelayedConfirmationView;
 import android.view.View;
 
 import org.parceler.Parcels;
@@ -56,7 +55,7 @@ public class InputActivity extends WearableActivity implements TargetViewBase.On
         }
 
         // Workaround to avoid crash happening when setting invisible via xml layout
-        binding.delayedConfirm.setVisibility(View.INVISIBLE);
+        binding.circularProgress.setVisibility(View.INVISIBLE);
 
         // Set up target view
         binding.target.setTarget(round.getTarget());
@@ -96,33 +95,28 @@ public class InputActivity extends WearableActivity implements TargetViewBase.On
 
     @Override
     public void onEndFinished(final List<Shot> shotList) {
-        binding.delayedConfirm.setVisibility(View.VISIBLE);
-        binding.delayedConfirm.setTotalTimeMs(2500);
-        binding.delayedConfirm.start();
-        binding.delayedConfirm
-                .setListener(new DelayedConfirmationView.DelayedConfirmationListener() {
-                    @Override
-                    public void onTimerSelected(View view) {
-                        binding.target.setEnd(new End(round.shotsPerEnd, 0));
-                        binding.delayedConfirm.setVisibility(View.INVISIBLE);
-                        binding.delayedConfirm.reset();
-                    }
-
-                    @Override
-                    public void onTimerFinished(View view) {
-                        Intent intent = new Intent(InputActivity.this, ConfirmationActivity.class);
-                        intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
-                                ConfirmationActivity.SUCCESS_ANIMATION);
-                        intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, getString(R.string.saved));
-                        startActivity(intent);
-                        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                        v.vibrate(200);
-                        finish();
-                        End end = new End(round.shotsPerEnd, 0);
-                        end.setShots(shotList);
-                        end.roundId = round.getId();
-                        ApplicationInstance.wearableClient.sendEndUpdate(end);
-                    }
-                });
+        binding.circularProgress.setVisibility(View.VISIBLE);
+        binding.circularProgress.setTotalTime(2500);
+        binding.circularProgress.startTimer();
+        binding.circularProgress.setOnClickListener(view -> {
+            binding.circularProgress.setVisibility(View.INVISIBLE);
+            binding.circularProgress.stopTimer();
+        });
+        binding.circularProgress.setOnTimerFinishedListener(layout -> {
+            Intent intent = new Intent(InputActivity.this, ConfirmationActivity.class);
+            intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
+                    ConfirmationActivity.SUCCESS_ANIMATION);
+            intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, InputActivity.this
+                    .getString(R.string.saved));
+            InputActivity.this.startActivity(intent);
+            Vibrator v = (Vibrator) InputActivity.this
+                    .getSystemService(Context.VIBRATOR_SERVICE);
+            v.vibrate(200);
+            InputActivity.this.finish();
+            End end = new End(round.shotsPerEnd, 0);
+            end.setShots(shotList);
+            end.roundId = round.getId();
+            ApplicationInstance.wearableClient.sendEndUpdate(end);
+        });
     }
 }

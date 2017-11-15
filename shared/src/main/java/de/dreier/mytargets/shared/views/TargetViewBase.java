@@ -19,6 +19,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -37,6 +38,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.End;
@@ -45,6 +47,7 @@ import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
 import de.dreier.mytargets.shared.targets.models.WAFull;
 import de.dreier.mytargets.shared.utils.EndRenderer;
+import de.dreier.mytargets.shared.utils.RectUtils;
 
 public abstract class TargetViewBase extends View implements View.OnTouchListener {
     private final TargetAccessibilityTouchHelper touchHelper = new TargetAccessibilityTouchHelper(
@@ -54,7 +57,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
      * Zero-based index of the shot that is currently being changed.
      * If no shot is selected it is set to EndRenderer#NO_SELECTION.
      */
-    protected int currentShotIndex;
+    private int currentShotIndex;
     protected EndRenderer endRenderer = new EndRenderer();
     protected List<Shot> shots;
     protected RoundTemplate round;
@@ -65,6 +68,10 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected Target target;
     protected TargetImpactAggregationDrawable targetDrawable;
     protected AnimatorSet animator;
+
+    protected Drawable backspaceSymbol;
+    private Rect backspaceButtonBounds;
+
     /**
      * The screen area reserved to show the already entered shots.
      */
@@ -91,6 +98,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     private void initForDesigner() {
         density = getResources().getDisplayMetrics().density;
         ViewCompat.setAccessibilityDelegate(this, touchHelper);
+        backspaceSymbol = getResources().getDrawable(R.drawable.ic_backspace_grey600_24dp);
         if (isInEditMode()) {
             shots = new ArrayList<>();
             for (int i = 0; i < 3; i++) {
@@ -153,8 +161,25 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     protected void updateLayout() {
         updateLayoutBounds(getWidth(), getHeight());
+        backspaceButtonBounds = getBackspaceButtonBounds();
         endRect = getEndRect();
+        applyBoundsToBackspaceSymbol();
     }
+
+    private void applyBoundsToBackspaceSymbol() {
+        Rect innerButtonBounds = new Rect(backspaceButtonBounds);
+        innerButtonBounds.inset((int) (8 * density), (int) (8 * density));
+        Rect bounds = new Rect(0, 0, backspaceSymbol.getIntrinsicWidth(), backspaceSymbol
+                .getIntrinsicHeight());
+        Rect backspaceSymbolBounds = RectUtils.fitRectWithin(bounds, innerButtonBounds);
+        backspaceSymbol.setBounds(backspaceSymbolBounds);
+    }
+
+    protected void drawBackspaceButton(Canvas canvas) {
+        backspaceSymbol.draw(canvas);
+    }
+
+    protected abstract Rect getBackspaceButtonBounds();
 
     protected abstract void updateLayoutBounds(int width, int height);
 
@@ -196,7 +221,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         float x = motionEvent.getX();
         float y = motionEvent.getY();
 
-        if (!isCurrentlySelecting() && selectPreviousShots(motionEvent, x, y)) {
+        if (!isCurrentlySelecting() && (selectPreviousShots(motionEvent, x, y) || pressBackspace(motionEvent, x, y))) {
             return true;
         }
 
@@ -332,6 +357,26 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected abstract boolean updateShotToPosition(Shot shot, float x, float y);
 
     protected abstract boolean selectPreviousShots(MotionEvent motionEvent, float x, float y);
+
+    private boolean pressBackspace(MotionEvent motionEvent, float x, float y) {
+        if (backspaceButtonBounds.contains((int) x, (int) y)) {
+            if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                int currentShotIndex = getCurrentShotIndex();
+                if (currentShotIndex != 0) {
+                    if(currentShotIndex == EndRenderer.NO_SELECTION) {
+                        currentShotIndex = shots.size();
+                    }
+                    Shot shot = shots.get(currentShotIndex - 1);
+                    shot.scoringRing = Shot.NOTHING_SELECTED;
+                    setCurrentShotIndex(currentShotIndex - 1);
+                    notifyTargetShotsChanged();
+                    animateToNewState();
+                }
+            }
+            return true;
+        }
+        return false;
+    }
 
     protected int getCurrentShotIndex() {
         return currentShotIndex;

@@ -149,6 +149,7 @@ public class TargetView extends TargetViewBase {
      * Used to draw the keyboard button texts.
      */
     private TextPaint textPaint;
+
     /**
      * Percentage of the keyboard that is currently supposed to be shown. (0..1).
      */
@@ -199,7 +200,7 @@ public class TargetView extends TargetViewBase {
         } else {
             inputMethod = SettingsManager.getInputMethod();
         }
-        setInputMethod(inputMethod, false);
+        setInputMethod(inputMethod);
         super.setEnd(end);
     }
 
@@ -222,6 +223,8 @@ public class TargetView extends TargetViewBase {
         } else {
             drawTarget(canvas);
         }
+
+        drawBackspaceButton(canvas);
 
         // Draw right indicator
         if (keyboardVisibility > 0) {
@@ -288,7 +291,7 @@ public class TargetView extends TargetViewBase {
             }
             float indicatorHeight = keyboardRect.height() / selectableZones.size();
             int index = getSelectableZoneIndexFromShot(shots.get(i));
-            coordinate.y = indicatorHeight * index + indicatorHeight / 2.0f;
+            coordinate.y = keyboardRect.top + indicatorHeight * index + indicatorHeight / 2.0f;
         } else {
             pt[0] = shots.get(i).x;
             pt[1] = shots.get(i).y;
@@ -336,14 +339,24 @@ public class TargetView extends TargetViewBase {
         fullExtendedMatrix.invert(fullExtendedMatrixInverse);
 
         keyboardRect = new RectF();
-        keyboardRect.top = 0;
-        keyboardRect.bottom = height;
         if (keyboardType == LEFT) {
             keyboardRect.left = KEYBOARD_OUTER_PADDING_DP * density;
         } else {
             keyboardRect.left = width - KEYBOARD_TOTAL_WIDTH_DP * density;
         }
         keyboardRect.right = keyboardRect.left + KEYBOARD_WIDTH_DP * density;
+        keyboardRect.top = height / (selectableZones.size() + 1);
+        keyboardRect.bottom = height;
+    }
+
+    @Override
+    protected Rect getBackspaceButtonBounds() {
+        Rect backspaceButtonBounds = new Rect();
+        backspaceButtonBounds.top = 0;
+        backspaceButtonBounds.bottom = (int) (keyboardRect.top - density);
+        backspaceButtonBounds.left = (int) keyboardRect.left;
+        backspaceButtonBounds.right = (int) keyboardRect.right;
+        return backspaceButtonBounds;
     }
 
     @Override
@@ -351,19 +364,21 @@ public class TargetView extends TargetViewBase {
         RectF endRect = new RectF(targetRect);
         endRect.top = 0;
         endRect.bottom = targetRect.top;
+        if (keyboardType == LEFT) {
+            endRect.left = keyboardRect.right;
+        } else {
+            endRect.right = keyboardRect.left;
+        }
         endRect.inset(20 * density, TARGET_PADDING_DP * density);
         return endRect;
     }
 
-    public void setInputMethod(EInputMethod mode, boolean animate) {
+    public void setInputMethod(EInputMethod mode) {
         if (mode != inputMethod) {
             inputMethod = mode;
             targetDrawable.drawArrowsEnabled(inputMethod == PLOTTING);
             targetDrawable.setAggregationStrategy(inputMethod == PLOTTING
                     ? aggregationStrategy : EAggregationStrategy.NONE);
-            if (animate) {
-                animateToNewState();
-            }
         }
     }
 
@@ -374,7 +389,8 @@ public class TargetView extends TargetViewBase {
     protected boolean updateShotToPosition(Shot s, float x, float y) {
         if (inputMethod == KEYBOARD) {
             if (keyboardRect.contains(x, y)) {
-                int index = (int) (y * selectableZones.size() / keyboardRect.height());
+                int index = (int) ((y - keyboardRect.top) * selectableZones.size() /
+                        keyboardRect.height());
                 index = Math.min(Math.max(0, index), selectableZones.size() - 1);
                 s.scoringRing = selectableZones.get(index).index;
             } else {
@@ -514,8 +530,8 @@ public class TargetView extends TargetViewBase {
     protected Rect getSelectableZonePosition(int i) {
         final Rect rect = new Rect();
         final float singleZoneHeight = keyboardRect.height() / selectableZones.size();
-        rect.top = (int) (singleZoneHeight * i + density);
-        rect.bottom = (int) (singleZoneHeight * (i + 1) - density);
+        rect.top = (int) (singleZoneHeight * i + density + keyboardRect.top);
+        rect.bottom = (int) (singleZoneHeight * (i + 1) - density + keyboardRect.top);
         rect.left = (int) keyboardRect.left;
         rect.right = (int) keyboardRect.right;
         final int visibilityXOffset = (int) (KEYBOARD_TOTAL_WIDTH_DP * (1 - keyboardVisibility) *
