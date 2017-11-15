@@ -42,6 +42,10 @@ public class IFAAAnimal extends TargetOvalBase {
                         {20, 18},
                         {16, 14},
                         {12, 10}
+                }),
+                new ArrowAwareScoringStyle(false, new int[][]{
+                        {20, 15},
+                        {15, 10}
                 })
         };
         type = ETargetType.THREE_D;
