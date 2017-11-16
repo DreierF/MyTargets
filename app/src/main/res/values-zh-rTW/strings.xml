@@ -17,6 +17,7 @@
 <resources>
   <!-- General -->
   <string name="preferences">選擇</string>
+  <string name="settings">Settings</string>
   <string name="prev">前一步</string>
   <string name="next">下一步</string>
   <string name="save">儲存</string>
@@ -228,7 +229,6 @@
   <string name="last_name">Last name</string>
   <string name="age">Age</string>
   <string name="show_signature">Signature</string>
-  <string name="witness">Witness</string>
   <string name="archer">Archer</string>
   <string name="hits">Hits</string>
   <string name="misses">Misses</string>
@@ -311,5 +311,26 @@
   <string name="show_arrow_average">Show arrow average</string>
   <string name="image_deleted">Image deleted</string>
   <string name="delete_image">Delete image?</string>
+  <string name="keyboard_type">Keyboard type</string>
+  <string name="keyboard_enabled">Keyboard enabled</string>
+  <string name="sort_shots">Sort shots</string>
+  <string name="sort_shots_for_spots">Sort shots for spot target faces</string>
+  <string name="target_captain">Target captain</string>
+  <string name="language">Language</string>
   <string name="warning_backup_experimental">Warning: This feature is still experimental! Please check in regular intervals if the backup was really successful!</string>
+  <string name="drawer_open">Open drawer</string>
+  <string name="drawer_close">Close drawer</string>
+  <string name="help">Help</string>
+  <string name="home">Home</string>
+  <string name="click_to_enter_profile">Click to enter profile information</string>
+  <string name="no_trainings">You don\'t have any trainings, yet!</string>
+  <string name="no_bows">No bows</string>
+  <string name="no_arrows">No arrows</string>
+  <string name="version_info">Version info</string>
+  <string name="version_prefix">Version</string>
+  <string name="max_arrow_number">Maximum arrow number</string>
+  <string name="distances">Distances</string>
+  <string name="diameters">Diameters</string>
+  <string name="bows">Bows</string>
+  <string name="reset">Reset</string>
 </resources>
