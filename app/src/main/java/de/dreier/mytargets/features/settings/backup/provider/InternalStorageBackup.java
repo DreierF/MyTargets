@@ -35,7 +35,7 @@ import de.dreier.mytargets.features.settings.backup.BackupEntry;
 import de.dreier.mytargets.features.settings.backup.BackupException;
 
 import static de.dreier.mytargets.features.settings.backup.provider.BackupUtils.getBackupName;
-import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
+import static de.dreier.mytargets.shared.SharedApplicationInstance.Companion.getStr;
 
 public class InternalStorageBackup {
     private static final String FOLDER_NAME = "MyTargets";
@@ -44,7 +44,7 @@ public class InternalStorageBackup {
         //noinspection ResultOfMethodCallIgnored
         directory.mkdir();
         if (!directory.exists() || !directory.isDirectory()) {
-            throw new IOException(get(R.string.dir_not_created));
+            throw new IOException(Companion.getStr(R.string.dir_not_created));
         }
     }
 

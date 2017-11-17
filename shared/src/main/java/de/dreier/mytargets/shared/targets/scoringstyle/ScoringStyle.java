@@ -21,11 +21,10 @@ import android.support.annotation.StringRes;
 
 import com.annimon.stream.Stream;
 
+import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Shot;
-
-import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 
 public class ScoringStyle {
 
@@ -42,7 +41,7 @@ public class ScoringStyle {
     }
 
     public ScoringStyle(@StringRes int title, boolean showAsX, int... points) {
-        this(get(title), showAsX, new int[][]{points});
+        this(SharedApplicationInstance.Companion.getStr(title), showAsX, new int[][]{points});
     }
 
     private ScoringStyle(@Nullable String title, boolean showAsX, int[][] points) {

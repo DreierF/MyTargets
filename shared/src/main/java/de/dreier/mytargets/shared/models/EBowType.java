@@ -61,7 +61,7 @@ public enum EBowType {
 
     @Override
     public String toString() {
-        return SharedApplicationInstance.get(name);
+        return SharedApplicationInstance.Companion.getStr(name);
     }
 
     public int getId() {

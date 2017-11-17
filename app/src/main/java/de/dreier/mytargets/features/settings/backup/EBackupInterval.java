@@ -39,6 +39,6 @@ public enum EBackupInterval {
 
     @Override
     public String toString() {
-        return ApplicationInstance.get(textResId);
+        return ApplicationInstance.Companion.getStr(textResId);
     }
 }

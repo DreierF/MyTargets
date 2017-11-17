@@ -22,7 +22,6 @@ import android.text.TextUtils;
 import java.util.List;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.Round;
@@ -45,7 +44,7 @@ public class HtmlUtils {
         } else {
             info.addLine(R.string.weather, training.getEnvironment().weather.getName());
             info.addLine(R.string.wind,
-                    training.getEnvironment().getWindSpeed(ApplicationInstance.getContext()));
+                    training.getEnvironment().getWindSpeed(context));
             if (!TextUtils.isEmpty(training.getEnvironment().location)) {
                 info.addLine(R.string.location, training.getEnvironment().location);
             }

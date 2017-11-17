@@ -54,7 +54,7 @@ public class SettingsManagerTest extends InstrumentedTestBase {
 
     @Before
     public void setUp() {
-        ApplicationInstance.getSharedPreferences().edit().clear().apply();
+        ApplicationInstance.Companion.getSharedPreferences().edit().clear().apply();
         ApplicationInstance.getLastSharedPreferences().edit().clear().apply();
     }
 
@@ -167,7 +167,7 @@ public class SettingsManagerTest extends InstrumentedTestBase {
         settings.warnTime = 30;
         SettingsManager.setTimerSettings(settings);
         assertThat(SettingsManager.getTimerSettings()).isEqualTo(settings);
-        ApplicationInstance.getSharedPreferences()
+        ApplicationInstance.Companion.getSharedPreferences()
                 .edit()
                 .putString(SettingsManager.KEY_TIMER_WAIT_TIME, "")
                 .apply();

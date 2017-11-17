@@ -77,7 +77,7 @@ public class AppDatabase {
         private <T extends BaseModel & Image> void removeFilePath(DatabaseWrapper database, Class<? extends T> clazz) {
             List<? extends T> images = SQLite.select().from(clazz).queryList(database);
             for (T image : images) {
-                File filesDir = SharedApplicationInstance.getContext().getFilesDir();
+                File filesDir = SharedApplicationInstance.Companion.getContext().getFilesDir();
                 File imageFile = new File(filesDir, image.getFileName());
 
                 File imageFromSomewhere = new File(image.getFileName());
@@ -163,7 +163,7 @@ public class AppDatabase {
 
         @Override
         public void migrate(@NonNull DatabaseWrapper database) {
-            File filesDir = SharedApplicationInstance.getContext().getFilesDir();
+            File filesDir = SharedApplicationInstance.Companion.getContext().getFilesDir();
 
             // Migrate all bow images
             Cursor cur = database.rawQuery("SELECT image FROM BOW WHERE image IS NOT NULL", null);

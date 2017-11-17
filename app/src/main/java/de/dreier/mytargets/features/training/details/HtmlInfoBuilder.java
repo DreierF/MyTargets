@@ -45,7 +45,7 @@ public class HtmlInfoBuilder {
 
     @NonNull
     private String getKeyValueLine(@StringRes int key, @NonNull Object value) {
-        return getKeyValueLine(ApplicationInstance.get(key), value);
+        return getKeyValueLine(ApplicationInstance.Companion.getStr(key), value);
     }
 
     @NonNull

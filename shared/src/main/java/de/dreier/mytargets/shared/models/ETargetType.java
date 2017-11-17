@@ -17,7 +17,7 @@ package de.dreier.mytargets.shared.models;
 
 import de.dreier.mytargets.shared.R;
 
-import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
+import de.dreier.mytargets.shared.SharedApplicationInstance;
 
 public enum ETargetType {
     TARGET(R.string.target_type_target_archery),
@@ -32,6 +32,6 @@ public enum ETargetType {
 
     @Override
     public String toString() {
-        return get(name);
+        return SharedApplicationInstance.Companion.getStr(name);
     }
 }

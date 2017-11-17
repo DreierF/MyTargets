@@ -34,7 +34,7 @@ import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 
-import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
+import static de.dreier.mytargets.shared.SharedApplicationInstance.Companion.getStr;
 import static java.lang.Math.ceil;
 
 @Parcel
@@ -73,7 +73,7 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
                 .groupBy(r -> r.getTraining().arrowId == null ? 0 : r.getTraining().arrowId)
                 .flatMap(t -> {
                     Arrow arrow = Arrow.get(t.getKey());
-                    String name = arrow == null ? get(R.string.unknown) : arrow.getName();
+                    String name = arrow == null ? Companion.getStr(R.string.unknown) : arrow.getName();
                     return Stream.of(t.getValue())
                             .flatMap(r -> Stream.of(r.getEnds())
                                     .flatMap(e -> Stream.of(e.getShots())))

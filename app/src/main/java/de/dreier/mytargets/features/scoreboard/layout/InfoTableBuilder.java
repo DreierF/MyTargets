@@ -39,7 +39,7 @@ public class InfoTableBuilder {
 
     @NonNull
     private void getKeyValueLine(Table.Row row, @StringRes int key, @NonNull Object value) {
-        getKeyValueLine(row, ApplicationInstance.get(key), value);
+        getKeyValueLine(row, ApplicationInstance.Companion.getStr(key), value);
     }
 
     @NonNull
