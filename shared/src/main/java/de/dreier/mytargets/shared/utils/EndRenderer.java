@@ -21,6 +21,7 @@ import android.animation.ValueAnimator;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -236,5 +237,12 @@ public class EndRenderer {
 
     public void setAmbientMode(boolean ambientMode) {
         this.ambientMode = ambientMode;
+    }
+
+    public Rect getBoundsForShot(int index) {
+        PointF position = getPosition(index, shotList.get(index));
+        float radius = getRadius(shotList.get(index)) * density;
+        return new Rect((int) (position.x - radius), (int) (position.y - radius),
+                (int) (position.x + radius), (int) (position.y + radius));
     }
 }

@@ -42,7 +42,7 @@ public class TargetSelectView extends TargetViewBase {
     private Circle circle;
     private float chinBound;
     private boolean ambientMode = false;
-    Paint backspaceBackground = new Paint();
+    private Paint backspaceBackground = new Paint();
 
     public TargetSelectView(Context context) {
         super(context);

@@ -22,15 +22,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 
 import de.dreier.mytargets.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
+import static android.support.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
+import static de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isOnForegroundFragment;
 import static de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.withSpeedDialItem;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -52,5 +56,12 @@ public class ViewMatcher {
     public static void clickFabSpeedDialItem(@IdRes int id) {
         onView(ViewMatcher.supportFab()).perform(click());
         onView(withSpeedDialItem(withId(R.id.fabSpeedDial), id)).perform(click());
+    }
+
+    public static void clickOnPreference(int position) {
+        onView(Matchers.allOf(withId(R.id.list), isOnForegroundFragment()))
+                .perform(scrollToPosition(position));
+        onView(Matchers.allOf(withId(R.id.list), isOnForegroundFragment()))
+                .perform(actionOnItemAtPosition(position, click()));
     }
 }

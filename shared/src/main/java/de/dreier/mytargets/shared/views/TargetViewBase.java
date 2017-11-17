@@ -30,6 +30,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.support.v4.widget.ExploreByTouchHelper;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
@@ -98,6 +99,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     private void initForDesigner() {
         density = getResources().getDisplayMetrics().density;
         ViewCompat.setAccessibilityDelegate(this, touchHelper);
+        ViewCompat.setImportantForAccessibility(this, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES);
         backspaceSymbol = getResources().getDrawable(R.drawable.ic_backspace_grey600_24dp);
         if (isInEditMode()) {
             shots = new ArrayList<>();
@@ -147,8 +149,21 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         invalidate();
     }
 
+    @Override
     public boolean dispatchHoverEvent(MotionEvent event) {
         return touchHelper.dispatchHoverEvent(event) || super.dispatchHoverEvent(event);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        return touchHelper.dispatchKeyEvent(event) || super.dispatchKeyEvent(event);
+    }
+
+    @Override
+    public void onFocusChanged(boolean gainFocus, int direction,
+                                  Rect previouslyFocusedRect) {
+        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+        touchHelper.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
     }
 
     @Override
@@ -184,20 +199,6 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected abstract void updateLayoutBounds(int width, int height);
 
     protected abstract RectF getEndRect();
-
-    private void updateVirtualViews() {
-        virtualViews.clear();
-        if (inputMethod == EInputMethod.KEYBOARD) {
-            for (int i = 0; i < selectableZones.size(); i++) {
-                VirtualView vv = new VirtualView();
-                vv.id = i;
-                vv.shot = false;
-                vv.description = selectableZones.get(i).text;
-                vv.rect = getSelectableZonePosition(i);
-                virtualViews.add(vv);
-            }
-        }
-    }
 
     protected int getSelectableZoneIndexFromShot(Shot shot) {
         int i = 0;
@@ -406,6 +407,45 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         void onEndFinished(List<Shot> shotList);
     }
 
+    private void updateVirtualViews() {
+        virtualViews.clear();
+        VirtualView vv = new VirtualView();
+        vv.description = getResources().getString(R.string.backspace);
+        vv.rect = backspaceButtonBounds;
+        vv.id = 0;
+        vv.shot = false;
+        virtualViews.add(vv);
+        if (inputMethod == EInputMethod.KEYBOARD) {
+            for (int i = 0; i < selectableZones.size(); i++) {
+                vv = new VirtualView();
+                vv.id = i + 1;
+                vv.shot = false;
+                vv.description = selectableZones.get(i).text;
+                if("M".equals(vv.description)) {
+                    vv.description = getResources().getString(R.string.miss);
+                }
+                vv.rect = getSelectableZonePosition(i);
+                virtualViews.add(vv);
+            }
+        }
+        int firstId = virtualViews.size();
+        for(Shot s : shots) {
+            if (s.scoringRing == Shot.NOTHING_SELECTED) {
+                continue;
+            }
+            vv = new VirtualView();
+            vv.id = firstId + s.index;
+            vv.shot = true;
+            String score = target.zoneToString(s.scoringRing, s.index);
+            if("M".equals(score)) {
+                score = getResources().getString(R.string.miss);
+            }
+            vv.description = getResources().getString(R.string.accessibility_description_shot_n_score, s.index + 1, score);
+            vv.rect = endRenderer.getBoundsForShot(s.index);
+            virtualViews.add(vv);
+        }
+    }
+
     private static class TargetAccessibilityTouchHelper extends ExploreByTouchHelper {
 
         private final TargetViewBase targetView;
@@ -441,7 +481,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         }
 
         @Override
-        protected void onPopulateEventForVirtualView(int virtualViewId, AccessibilityEvent event) {
+        protected void onPopulateEventForVirtualView(int virtualViewId, @NonNull AccessibilityEvent event) {
             final VirtualView vw = findVirtualViewById(virtualViewId);
             if (vw == null) {
                 return;
@@ -459,7 +499,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         }
 
         @Override
-        protected void onPopulateNodeForVirtualView(int virtualViewId, AccessibilityNodeInfoCompat node) {
+        protected void onPopulateNodeForVirtualView(int virtualViewId, @NonNull AccessibilityNodeInfoCompat node) {
             final VirtualView vw = findVirtualViewById(virtualViewId);
             if (vw == null) {
                 return;
