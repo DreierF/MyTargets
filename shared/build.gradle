@@ -15,6 +15,7 @@
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'jacoco-android'
 
@@ -49,7 +50,7 @@ dependencies {
 
     implementation "org.parceler:parceler-api:$libraryVersion.parceler"
 
-    annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$libraryVersion.dbFlow"
+    kapt "com.github.Raizlabs.DBFlow:dbflow-processor:$libraryVersion.dbFlow"
     implementation "com.github.Raizlabs.DBFlow:dbflow-core:$libraryVersion.dbFlow"
     implementation "com.github.Raizlabs.DBFlow:dbflow:$libraryVersion.dbFlow"
 

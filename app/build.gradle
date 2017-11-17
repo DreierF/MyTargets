@@ -15,6 +15,7 @@
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.triplet.play'
 apply plugin: 'jacoco-android'
@@ -89,10 +90,28 @@ android {
     }
 }
 
+project.afterEvaluate {
+    android.applicationVariants.all { variant ->
+        def realVariantName = variant.name
+        def variantName = variant.name.capitalize()
+
+        def task = project.tasks["jacocoTest${variantName}UnitTestReport"]
+        def defaultExcludes = task.classDirectories.excludes
+
+        def excludes = defaultExcludes
+
+        def kotlinDebugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${realVariantName}", excludes: excludes)
+
+        task.classDirectories.excludes = excludes
+        task.classDirectories += kotlinDebugTree
+    }
+}
+
 apply from: '../tools/script-codacy.gradle'
 apply from: '../tools/script-play-store.gradle'
 
 dependencies {
+    kapt "com.android.databinding:compiler:$androidPluginVersion"
     implementation "com.android.support:support-compat:$libraryVersion.support"
     implementation "com.android.support:support-core-utils:$libraryVersion.support"
     implementation "com.android.support:support-core-ui:$libraryVersion.support"
@@ -121,13 +140,13 @@ dependencies {
     implementation "com.squareup.picasso:picasso:$libraryVersion.picasso"
 
     implementation "com.evernote:android-state:$libraryVersion.androidState"
-    annotationProcessor "com.evernote:android-state-processor:$libraryVersion.androidState"
+    kapt "com.evernote:android-state-processor:$libraryVersion.androidState"
 
     implementation "com.github.hotchemi:permissionsdispatcher:$libraryVersion.permissionsdispatcher"
-    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$libraryVersion.permissionsdispatcher"
+    kapt "com.github.hotchemi:permissionsdispatcher-processor:$libraryVersion.permissionsdispatcher"
 
     implementation "org.parceler:parceler-api:$libraryVersion.parceler"
-    annotationProcessor "org.parceler:parceler:$libraryVersion.parceler"
+    kapt "org.parceler:parceler:$libraryVersion.parceler"
 
     implementation "com.anjlab.android.iab.v3:library:$libraryVersion.iab"
 
@@ -148,7 +167,7 @@ dependencies {
 
     implementation "agency.tango.android:material-intro-screen:$libraryVersion.materialIntroScreen"
 
-    annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$libraryVersion.dbFlow"
+    kapt "com.github.Raizlabs.DBFlow:dbflow-processor:$libraryVersion.dbFlow"
     implementation "com.github.Raizlabs.DBFlow:dbflow-core:$libraryVersion.dbFlow"
     implementation "com.github.Raizlabs.DBFlow:dbflow:$libraryVersion.dbFlow"
 
