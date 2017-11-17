@@ -14,6 +14,7 @@
  */
 
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.triplet.play'
 apply plugin: 'jacoco-android'
@@ -182,6 +183,10 @@ dependencies {
 
     implementation "com.android.support.test.espresso:espresso-idling-resource:$libraryVersion.espresso"
     androidTestScreengrabImplementation "tools.fastlane:screengrab:$libraryVersion.screengrab"
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
+    testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
 }
 
 // Must be at the bottom
