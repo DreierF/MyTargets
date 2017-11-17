@@ -38,7 +38,7 @@ plugins {
 }
 
 ext {
-    compileSdkVersionCode = 26
+    compileSdkVersionCode = 27
 
     libraryVersion = [
             aboutPage            : '1.2.1',
