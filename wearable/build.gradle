@@ -15,6 +15,7 @@
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileOptions {
@@ -69,16 +70,17 @@ dependencies {
     implementation "com.android.support:support-compat:$libraryVersion.support"
     implementation "com.android.support:wear:$libraryVersion.support"
 
-    annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$libraryVersion.dbFlow"
+    kapt "com.github.Raizlabs.DBFlow:dbflow-processor:$libraryVersion.dbFlow"
     implementation "com.github.Raizlabs.DBFlow:dbflow-core:$libraryVersion.dbFlow"
     implementation "com.github.Raizlabs.DBFlow:dbflow:$libraryVersion.dbFlow"
 
     implementation "org.parceler:parceler-api:$libraryVersion.parceler"
-    annotationProcessor "org.parceler:parceler:$libraryVersion.parceler"
+    kapt "org.parceler:parceler:$libraryVersion.parceler"
 
     implementation "com.evernote:android-state:$libraryVersion.androidState"
     annotationProcessor "com.evernote:android-state-processor:$libraryVersion.androidState"
 
     implementation project(':shared')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
+    kapt "com.android.databinding:compiler:$androidPluginVersion"
 }
