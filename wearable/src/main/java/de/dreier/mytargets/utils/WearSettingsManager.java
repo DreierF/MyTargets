@@ -28,7 +28,7 @@ public class WearSettingsManager {
     private static final String KEY_TIMER_SHOOT_TIME = "timer_shoot_time";
     private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
     private static final String KEY_TIMER_SOUND = "timer_sound";
-    private static final SharedPreferences preferences = ApplicationInstance
+    private static final SharedPreferences preferences = ApplicationInstance.Companion
             .getSharedPreferences();
 
     @NonNull

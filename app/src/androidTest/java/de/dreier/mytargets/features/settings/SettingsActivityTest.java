@@ -65,7 +65,7 @@ public class SettingsActivityTest extends UITestBase {
 
     @Before
     public void setUp() {
-        ApplicationInstance.getSharedPreferences()
+        ApplicationInstance.Companion.getSharedPreferences()
                 .edit()
                 .clear()
                 .apply();
@@ -164,7 +164,7 @@ public class SettingsActivityTest extends UITestBase {
 
     @After
     public void tearDown() {
-        ApplicationInstance.getSharedPreferences()
+        ApplicationInstance.Companion.getSharedPreferences()
                 .edit()
                 .clear()
                 .apply();

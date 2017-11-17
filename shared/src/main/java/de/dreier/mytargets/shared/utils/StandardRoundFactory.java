@@ -732,7 +732,7 @@ public class StandardRoundFactory {
         StandardRound standardRound = new StandardRound();
         idCounter++;
         standardRound.setId(idCounter);
-        standardRound.name = SharedApplicationInstance.getContext().getString(name);
+        standardRound.name = SharedApplicationInstance.Companion.getContext().getString(name);
         standardRound.club = institution;
         standardRound.setRounds(new ArrayList<>());
         for (int i = 0; i < roundDetails.length; i += 3) {

@@ -141,7 +141,7 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
     @NonNull
     @Override
     public String toString() {
-        final Context context = SharedApplicationInstance.getContext();
+        final Context context = SharedApplicationInstance.Companion.getContext();
         if (value == -1) {
             return context.getString(R.string.unknown);
         } else if (unit == null) {

@@ -27,7 +27,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.features.scoreboard.ScoreboardBuilder;
 import de.dreier.mytargets.features.scoreboard.ScoreboardConfiguration;
 import de.dreier.mytargets.features.scoreboard.builder.model.Table;
@@ -114,7 +113,7 @@ public class DefaultScoreboardLayout {
         } else {
             info.addLine(R.string.weather, training.getEnvironment().weather.getName());
             info.addLine(R.string.wind,
-                    training.getEnvironment().getWindSpeed(ApplicationInstance.getContext()));
+                    training.getEnvironment().getWindSpeed(context));
             if (!TextUtils.isEmpty(training.getEnvironment().location)) {
                 info.addLine(R.string.location, training.getEnvironment().location);
             }

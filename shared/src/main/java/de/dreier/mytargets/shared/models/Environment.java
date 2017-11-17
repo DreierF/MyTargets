@@ -51,7 +51,7 @@ public class Environment implements IImageProvider, IDetailProvider {
     @NonNull
     @Override
     public String getName() {
-        return indoor ? SharedApplicationInstance.get(R.string.indoor) : weather.getName();
+        return indoor ? SharedApplicationInstance.Companion.getStr(R.string.indoor) : weather.getName();
     }
 
     @Override

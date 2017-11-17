@@ -13,52 +13,52 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared;
+package de.dreier.mytargets.shared
 
-import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.StrictMode;
-import android.preference.PreferenceManager;
-import android.support.annotation.StringRes;
+import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
+import android.os.StrictMode
+import android.preference.PreferenceManager
+import android.support.annotation.StringRes
 
-import com.jakewharton.threetenabp.AndroidThreeTen;
+import com.jakewharton.threetenabp.AndroidThreeTen
 
-import timber.log.Timber;
+import timber.log.Timber
 
-public class SharedApplicationInstance extends Application {
+open class SharedApplicationInstance : Application() {
 
-    protected static Context context;
-
-    public static Context getContext() {
-        return context;
+    override fun onCreate() {
+        super.onCreate()
+        AndroidThreeTen.init(this)
+        context = applicationContext
     }
 
-    public static String get(@StringRes int string) {
-        return context.getString(string);
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        AndroidThreeTen.init(this);
-        context = getApplicationContext();
-    }
-
-    protected void enableDebugLogging() {
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+    protected fun enableDebugLogging() {
+        StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
                 .detectAll()
                 .penaltyLog()
-                .build());
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .build())
+        StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder()
                 .detectLeakedSqlLiteObjects()
                 .detectLeakedClosableObjects()
                 .penaltyLog()
-                .build());
-        Timber.plant(new Timber.DebugTree());
+                .build())
+        Timber.plant(Timber.DebugTree())
     }
 
-    public static SharedPreferences getSharedPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(context);
+    companion object {
+
+        lateinit var context: Context
+            protected set
+
+        fun getStr(@StringRes string: Int): String {
+            return context.getString(string)
+        }
+
+        val sharedPreferences: SharedPreferences
+            get() {
+                return PreferenceManager.getDefaultSharedPreferences(context)
+            }
     }
 }

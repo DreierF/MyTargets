@@ -50,7 +50,7 @@ import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 public class SettingsManager {
     private static final SharedPreferences lastUsed = ApplicationInstance
             .getLastSharedPreferences();
-    private static final SharedPreferences preferences = ApplicationInstance
+    private static final SharedPreferences preferences = ApplicationInstance.Companion
             .getSharedPreferences();
 
     public static final String KEY_TIMER_WARN_TIME = "timer_warn_time";

@@ -79,7 +79,7 @@ public class TargetModelBase implements IIdProvider {
     @NonNull
     @Override
     public String toString() {
-        return SharedApplicationInstance.get(nameRes);
+        return SharedApplicationInstance.Companion.getStr(nameRes);
     }
 
     public ZoneBase getZone(int zone) {

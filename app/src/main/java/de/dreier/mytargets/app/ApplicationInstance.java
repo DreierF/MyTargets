@@ -103,7 +103,7 @@ public class ApplicationInstance extends SharedApplicationInstance {
     public static MobileWearableClient wearableClient;
 
     public static SharedPreferences getLastSharedPreferences() {
-        return context.getSharedPreferences(MyBackupAgent.PREFS, 0);
+        return Companion.getContext().getSharedPreferences(MyBackupAgent.PREFS, 0);
     }
 
     @Override

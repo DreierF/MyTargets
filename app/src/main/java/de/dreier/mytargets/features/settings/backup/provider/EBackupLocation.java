@@ -86,7 +86,7 @@ public enum EBackupLocation implements IIdProvider {
 
     @Override
     public String toString() {
-        return ApplicationInstance.get(name);
+        return ApplicationInstance.Companion.getStr(name);
     }
 
     public boolean needsStoragePermissions() {
