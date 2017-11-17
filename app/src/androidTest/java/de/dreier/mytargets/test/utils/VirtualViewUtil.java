@@ -26,6 +26,11 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
 public class VirtualViewUtil {
     public static void assertVirtualViewExists(String contentDescription) throws UiObjectNotFoundException {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         UiDevice device = UiDevice.getInstance(getInstrumentation());
         UiObject marker = device.findObject(new UiSelector().descriptionContains(contentDescription));
         Assert.assertTrue(marker.exists());
@@ -43,6 +48,11 @@ public class VirtualViewUtil {
     }
 
     public static void clickVirtualView(String contentDescription) throws UiObjectNotFoundException {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         UiDevice device = UiDevice.getInstance(getInstrumentation());
         UiObject marker = device.findObject(new UiSelector().descriptionContains(contentDescription));
         marker.click();
