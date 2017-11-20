@@ -17,6 +17,7 @@ package de.dreier.mytargets.shared.utils;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 
 import java.io.File;
@@ -26,6 +27,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
+
+import timber.log.Timber;
 
 public class FileUtils {
     public static void copy(File src, File dst) throws IOException {
@@ -56,5 +59,18 @@ public class FileUtils {
         String packageName = context.getPackageName();
         String authority = packageName + ".easyphotopicker.fileprovider";
         return FileProvider.getUriForFile(context, authority, file);
+    }
+
+    @NonNull
+    public static File move(@NonNull File from, @NonNull File to) throws IOException {
+        File directory = to.getParentFile();
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+        if (!from.renameTo(to)) {
+            Timber.e("Couldn't rename file to " + to.getAbsolutePath());
+            copy(from, to);
+            from.delete();
+        }
     }
 }

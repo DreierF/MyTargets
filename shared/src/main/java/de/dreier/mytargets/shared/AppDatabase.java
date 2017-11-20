@@ -97,8 +97,7 @@ public class AppDatabase {
                 if (imageFromSomewhere.exists()) {
                     try {
                         imageFile = File.createTempFile("img", imageFromSomewhere.getName(), filesDir);
-                        FileUtils.copy(imageFromSomewhere, imageFile);
-                        imageFromSomewhere.delete();
+                        FileUtils.move(imageFromSomewhere, imageFile);
                         image.setFileName(imageFile.getName());
                         image.save(database);
                     } catch (IOException e) {

@@ -270,7 +270,7 @@ public class GalleryActivity extends ChildActivityBase {
                         File internal = File
                                 .createTempFile("img", file.getName(), getFilesDir());
                         internalFiles.add(internal);
-                        FileUtils.copy(file, internal);
+                        FileUtils.move(file, internal);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
