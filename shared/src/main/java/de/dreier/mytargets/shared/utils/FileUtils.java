@@ -61,8 +61,7 @@ public class FileUtils {
         return FileProvider.getUriForFile(context, authority, file);
     }
 
-    @NonNull
-    public static File move(@NonNull File from, @NonNull File to) throws IOException {
+    public static void move(@NonNull File from, @NonNull File to) throws IOException {
         File directory = to.getParentFile();
         if (!directory.exists()) {
             directory.mkdir();
