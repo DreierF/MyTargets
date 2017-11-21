@@ -27,7 +27,7 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 public class VirtualViewUtil {
     public static void assertVirtualViewExists(String contentDescription) throws UiObjectNotFoundException {
         try {
-            Thread.sleep(1500);
+            Thread.sleep(4000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -38,7 +38,7 @@ public class VirtualViewUtil {
 
     public static void assertVirtualViewNotExists(String contentDescription) {
         try {
-            Thread.sleep(1500);
+            Thread.sleep(4000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -49,7 +49,7 @@ public class VirtualViewUtil {
 
     public static void clickVirtualView(String contentDescription) throws UiObjectNotFoundException {
         try {
-            Thread.sleep(1500);
+            Thread.sleep(4000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
