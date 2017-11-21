@@ -79,15 +79,12 @@ public class AppDatabase {
                 File filesDir = SharedApplicationInstance.getContext().getFilesDir();
                 File imageFile = new File(filesDir, image.getFileName());
 
-                // If imagePath is just the name and is placed inside files directory
-                if (imageFile.exists()) {
-                    continue;
-                }
-
-                // In case the image was already copied to the files, but does still contain the wrong path
                 File imageFromSomewhere = new File(image.getFileName());
-                imageFile = new File(filesDir, imageFromSomewhere.getName());
-                if (imageFile.exists()) {
+                File imageFileFromSomewhere = new File(filesDir, imageFromSomewhere.getName());
+
+                // If imagePath is just the name and is placed inside files directory or
+                // In case the image was already copied to the files, but does still contain the wrong path
+                if (imageFile.exists() || imageFileFromSomewhere.exists()) {
                     image.setFileName(imageFile.getName());
                     image.save(database);
                     continue;
@@ -97,8 +94,7 @@ public class AppDatabase {
                 if (imageFromSomewhere.exists()) {
                     try {
                         imageFile = File.createTempFile("img", imageFromSomewhere.getName(), filesDir);
-                        FileUtils.copy(imageFromSomewhere, imageFile);
-                        imageFromSomewhere.delete();
+                        FileUtils.move(imageFromSomewhere, imageFile);
                         image.setFileName(imageFile.getName());
                         image.save(database);
                     } catch (IOException e) {

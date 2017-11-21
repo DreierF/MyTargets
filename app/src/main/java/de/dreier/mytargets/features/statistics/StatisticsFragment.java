@@ -261,7 +261,7 @@ public class StatisticsFragment extends FragmentBase {
     private void showPieChart() {
         // enable hole and configure
         binding.distributionChart.setTransparentCircleRadius(15);
-        binding.distributionChart.setHoleColor(0x00EEEEEE);
+        binding.distributionChart.setHoleColor(0xFFEEEEEE);
         binding.distributionChart.getLegend().setEnabled(false);
         binding.distributionChart.setDescription(EMPTY_DESCRIPTION);
 
@@ -271,7 +271,7 @@ public class StatisticsFragment extends FragmentBase {
 
         binding.distributionChart.setUsePercentValues(false);
         binding.distributionChart.highlightValues(null);
-        binding.distributionChart.setBackgroundColor(0x00EEEEEE);
+        binding.distributionChart.setBackgroundColor(0xFFEEEEEE);
         binding.distributionChart.invalidate();
         addPieData();
     }
