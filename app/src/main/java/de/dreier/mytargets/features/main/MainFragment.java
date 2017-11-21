@@ -82,7 +82,6 @@ public class MainFragment extends Fragment {
                         .getIntent(Stream.of(Training.getAll())
                                 .flatMap((training) -> Stream.of(training.getRounds()))
                                 .map(Round::getId)
-
                                 .collect(Collectors.toList())).withContext(this)
                         .start();
                 return true;
