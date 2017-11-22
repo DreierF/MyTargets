@@ -117,7 +117,7 @@ public class TargetSelectView extends TargetViewBase {
     }
 
     @Override
-    protected PointF initAnimationPositions(int i) {
+    protected PointF getShotCoordinates(Shot shot) {
         return getCircularCoordinates(getSelectableZoneIndexFromShot(shots.get(i)));
     }
 

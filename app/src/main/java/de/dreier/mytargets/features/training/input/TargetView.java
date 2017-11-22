@@ -280,7 +280,7 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    protected PointF initAnimationPositions(int i) {
+    protected PointF getShotCoordinates(Shot shot) {
         PointF coordinate = new PointF();
         if (inputMethod == KEYBOARD) {
             coordinate.x = keyboardRect.left;
@@ -290,11 +290,11 @@ public class TargetView extends TargetViewBase {
                 coordinate.x -= KEYBOARD_INNER_PADDING_DP * density;
             }
             float indicatorHeight = keyboardRect.height() / selectableZones.size();
-            int index = getSelectableZoneIndexFromShot(shots.get(i));
+            int index = getSelectableZoneIndexFromShot(shot);
             coordinate.y = keyboardRect.top + indicatorHeight * index + indicatorHeight / 2.0f;
         } else {
-            pt[0] = shots.get(i).x;
-            pt[1] = shots.get(i).y;
+            pt[0] = shot.x;
+            pt[1] = shot.y;
             fullMatrix.mapPoints(pt);
             coordinate.x = pt[0];
             coordinate.y = pt[1];

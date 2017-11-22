@@ -67,4 +67,5 @@ DROP TABLE END_OLD;
 DROP TABLE TRAINING_OLD;
 
 -- Add max arrow number
-ALTER TABLE `Arrow` ADD COLUMN maxArrowNumber INTEGER DEFAULT '12';
+ALTER TABLE `Arrow` ADD COLUMN maxArrowNumber INTEGER;
+UPDATE `Arrow` SET maxArrowNumber=12;

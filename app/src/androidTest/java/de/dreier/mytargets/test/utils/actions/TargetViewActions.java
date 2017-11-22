@@ -25,7 +25,7 @@ public class TargetViewActions {
         return new GeneralClickAction(
                 Tap.SINGLE,
                 view -> LowLevelActions.getTargetCoordinates(view, new float[]{x, y}),
-                Press.FINGER, 0, 0);
+                Press.PINPOINT, 0, 0);
     }
 
     public static ViewAction holdTapTarget(final float x, final float y) {

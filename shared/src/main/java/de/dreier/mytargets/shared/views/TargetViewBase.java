@@ -233,7 +233,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         Shot shot = shots.get(getCurrentShotIndex());
         if(updateShotToPosition(shot, x, y)) {
             endRenderer.setSelection(
-                    getCurrentShotIndex(), initAnimationPositions(getCurrentShotIndex()),
+                    getCurrentShotIndex(), getShotCoordinates(shot),
                     getSelectedShotCircleRadius());
             invalidate();
 
@@ -288,7 +288,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         }
     }
 
-    protected abstract PointF initAnimationPositions(int i);
+    protected abstract PointF getShotCoordinates(Shot shot);
 
     protected void animateToNewState() {
         if (endRect == null) {
@@ -310,7 +310,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected Animator getCircleAnimation() {
         PointF pos = null;
         if (isCurrentlySelecting()) {
-            pos = initAnimationPositions(getCurrentShotIndex());
+            pos = getShotCoordinates(shots.get(getCurrentShotIndex()));
         }
         int initialSize = getSelectedShotCircleRadius();
         return endRenderer

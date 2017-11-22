@@ -15,6 +15,8 @@
 
 package de.dreier.mytargets.test.utils.actions;
 
+import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.UiController;
@@ -25,6 +27,8 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import org.hamcrest.Matcher;
+
+import de.dreier.mytargets.shared.targets.drawable.TargetDrawable;
 
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 
@@ -53,19 +57,22 @@ public class LowLevelActions {
         float density = InstrumentationRegistry.getTargetContext().getResources()
                 .getDisplayMetrics().density;
 
-        float radH = (contentHeight - 10 * density) / 2.45f;
-        float radW = ((int) contentWidth - 20 * density) * 0.5f;
-        int orgRadius = (int) (Math.min(radW, radH));
-        int orgMidX = (int) contentWidth / 2;
-        float orgMidY = contentHeight - orgRadius - 10 * density;
+        RectF targetRectExt = new RectF(0, 80 * density, contentWidth, contentHeight);
+        targetRectExt.inset(10 * density, 10 * density);
+        if (targetRectExt.height() > targetRectExt.width()) {
+            targetRectExt.top = targetRectExt.bottom - targetRectExt.width();
+        }
 
-        float x = coordinates[0] * (orgRadius - 30 * density) + orgMidX;
-        float y = coordinates[1] * (orgRadius - 30 * density) + orgMidY;
+        targetRectExt.inset(30 * density, 30 * density);
+        Matrix fullExtendedMatrix = new Matrix();
+        fullExtendedMatrix
+                .setRectToRect(TargetDrawable.SRC_RECT, targetRectExt, Matrix.ScaleToFit.CENTER);
 
-        final float screenX = screenPos[0] + x;
-        final float screenY = screenPos[1] + y;
-
-        return new float[]{screenX, screenY};
+        final float[] shotPos = new float[2];
+        fullExtendedMatrix.mapPoints(shotPos, coordinates);
+        shotPos[0] += screenPos[0];
+        shotPos[1] += screenPos[1];
+        return shotPos;
     }
 
     public static class PressAndHoldAction implements ViewAction {
