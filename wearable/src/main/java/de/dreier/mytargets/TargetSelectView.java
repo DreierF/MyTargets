@@ -31,7 +31,6 @@ import de.dreier.mytargets.shared.utils.Circle;
 import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 
-
 public class TargetSelectView extends TargetViewBase {
 
     public static final int RADIUS_SELECTED = 23;
@@ -118,7 +117,7 @@ public class TargetSelectView extends TargetViewBase {
 
     @Override
     protected PointF getShotCoordinates(Shot shot) {
-        return getCircularCoordinates(getSelectableZoneIndexFromShot(shots.get(i)));
+        return getCircularCoordinates(getSelectableZoneIndexFromShot(shot));
     }
 
     @Override
