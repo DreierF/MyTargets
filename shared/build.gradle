@@ -27,8 +27,14 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 27
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+        vectorDrawables.useSupportLibrary true
+    }
+
+    buildTypes {
+        debug {}
+        release {}
     }
 }
 

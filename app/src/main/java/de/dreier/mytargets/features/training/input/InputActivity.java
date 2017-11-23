@@ -323,7 +323,7 @@ public class InputActivity extends ChildActivityBase
         targetView.setUpdateListener(InputActivity.this);
         targetView.reloadSettings();
         targetView.setAggregationStrategy(SettingsManager.getAggregationStrategy());
-        targetView.setInputMethod(SettingsManager.getInputMethod(), false);
+        targetView.setInputMethod(SettingsManager.getInputMethod());
         updateOldShoots();
     }
 

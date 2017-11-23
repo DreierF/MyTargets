@@ -17,6 +17,7 @@ package de.dreier.mytargets.features.training.input;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.test.uiautomator.UiObjectNotFoundException;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -33,13 +34,17 @@ import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 import de.dreier.mytargets.test.base.UITestBase;
+import de.dreier.mytargets.test.utils.actions.TargetViewActions;
 import de.dreier.mytargets.test.utils.rules.DbTestRuleBase;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
+import static android.support.test.espresso.Espresso.pressBack;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.hamcrest.Matchers.allOf;
+import static de.dreier.mytargets.test.utils.VirtualViewUtil.assertVirtualViewExists;
+import static de.dreier.mytargets.test.utils.VirtualViewUtil.assertVirtualViewNotExists;
+import static de.dreier.mytargets.test.utils.VirtualViewUtil.clickVirtualView;
+import static de.dreier.mytargets.test.utils.matchers.ViewMatcher.clickOnPreference;
 
 @RunWith(AndroidJUnit4.class)
 public class InputActivityTest extends UITestBase {
@@ -72,18 +77,63 @@ public class InputActivityTest extends UITestBase {
 
     @Before
     public void setUp() {
-        SettingsManager.setInputMethod(TargetViewBase.EInputMethod.PLOTTING);
+        SettingsManager.setInputMethod(TargetViewBase.EInputMethod.KEYBOARD);
     }
 
     @Test
-    public void inputActivityTest() {
+    public void inputActivityTest() throws UiObjectNotFoundException {
         activityTestRule.launchActivity(InputActivity.getIntent(round1, 0).build());
 
-        onView(allOf(withContentDescription("X"), withId(R.id.targetView)))
-                .check(doesNotExist());
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        //clickActionBarItem(R.id.action_keyboard, R.string.keyboard);
+        clickVirtualView("10");
+        assertVirtualViewExists("Shot 1: 10");
 
-        //onView(withContentDescription("X")).check(matches(isDisplayed()));
+        clickActionBarItem(R.id.action_settings, R.string.preferences);
+        clickOnPreference(12); //Keyboard
+        pressBack();
+        // Wait for keyboard animation to finish
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        //assertVirtualViewNotExists("10");
+
+        onView(withId(R.id.targetViewContainer))
+                .perform(TargetViewActions.clickTarget(0, 0));
+        assertVirtualViewExists("Shot 2: X");
+
+        clickVirtualView("Backspace");
+        assertVirtualViewNotExists("Shot 2: X");
+
+        onView(withId(R.id.targetViewContainer))
+                .perform(TargetViewActions.clickTarget(0.1f, 0.2f));
+        assertVirtualViewExists("Shot 2: 8");
+
+        onView(withId(R.id.targetViewContainer))
+                .perform(TargetViewActions.clickTarget(0, 0));
+        assertVirtualViewExists("Shot 3: X");
+
+        onView(withId(R.id.targetViewContainer))
+                .perform(TargetViewActions.clickTarget(-0.9f, -0.9f));
+        assertVirtualViewExists("Shot 4: M");
+
+        onView(withId(R.id.targetViewContainer))
+                .perform(TargetViewActions.clickTarget(0, 0));
+        assertVirtualViewExists("Shot 5: X");
+
+        onView(withId(R.id.targetViewContainer))
+                .perform(TargetViewActions.clickTarget(0, 0));
+        assertVirtualViewExists("Shot 6: X");
+
+        onView(withId(R.id.next)).perform(click());
     }
 }

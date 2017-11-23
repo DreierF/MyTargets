@@ -17,6 +17,7 @@
 <resources>
   <!-- General -->
   <string name="preferences">Možnosti</string>
+  <string name="settings">Nastavení</string>
   <string name="prev">Předchozí</string>
   <string name="next">Další</string>
   <string name="save">Uložit</string>
@@ -256,7 +257,6 @@
   <string name="last_name">Příjmení</string>
   <string name="age">Věk</string>
   <string name="show_signature">Podpis</string>
-  <string name="witness">Svědek</string>
   <string name="archer">Střelec</string>
   <string name="hits">Zásahy</string>
   <string name="misses">Minuto</string>
@@ -339,5 +339,26 @@
   <string name="show_arrow_average">Zobrazit průměr na šíp</string>
   <string name="image_deleted">Obrázek smazán</string>
   <string name="delete_image">Smazat obrázek?</string>
+  <string name="keyboard_type">Typ klávesnice</string>
+  <string name="keyboard_enabled">Zapnout klávesnici</string>
+  <string name="sort_shots">Třídění výstřelů</string>
+  <string name="sort_shots_for_spots">Řazení snímků pro účely zón</string>
+  <string name="target_captain">Terčový rozhodčí</string>
+  <string name="language">Jazyk</string>
   <string name="warning_backup_experimental">Upozornění: Tato funkce je stále experimentální! Prosím, zkontrolujte pravidelně, jestli byla záloha skutečně úspěšná!</string>
+  <string name="drawer_open">Otevřít navigační panel</string>
+  <string name="drawer_close">Zavřít navigační panel</string>
+  <string name="help">Nápověda</string>
+  <string name="home">Domů</string>
+  <string name="click_to_enter_profile">Kliknutím upravíte profil</string>
+  <string name="no_trainings">Zatím nemáte žádný trénink!</string>
+  <string name="no_bows">Žádné luky</string>
+  <string name="no_arrows">Žádné šípy</string>
+  <string name="version_info">Version info</string>
+  <string name="version_prefix">Version</string>
+  <string name="max_arrow_number">Maximum arrow number</string>
+  <string name="distances">Distances</string>
+  <string name="diameters">Diameters</string>
+  <string name="bows">Bows</string>
+  <string name="reset">Reset</string>
 </resources>

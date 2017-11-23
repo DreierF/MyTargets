@@ -41,13 +41,13 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static android.support.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.test.utils.matchers.MatcherUtils.matchToolbarTitle;
 import static de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isOnForegroundFragment;
+import static de.dreier.mytargets.test.utils.matchers.ViewMatcher.clickOnPreference;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasToString;
@@ -196,12 +196,5 @@ public class SettingsActivityTest extends UITestBase {
         onView(RecyclerViewMatcher.withRecyclerView(allOf(withId(R.id.list),
                 isOnForegroundFragment())).atPositionOnView(position, android.R.id.summary))
                 .check(matches(withText(expectedSummary)));
-    }
-
-    private void clickOnPreference(int position) {
-        onView(allOf(withId(R.id.list), isOnForegroundFragment()))
-                .perform(scrollToPosition(position));
-        onView(allOf(withId(R.id.list), isOnForegroundFragment()))
-                .perform(actionOnItemAtPosition(position, click()));
     }
 }
