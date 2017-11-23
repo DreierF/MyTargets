@@ -16,7 +16,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.wearable.view.drawer.WearableDrawerLayout
+    <android.support.wear.widget.drawer.WearableDrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -24,20 +24,21 @@
         tools:context=".RoundActivity"
         tools:deviceIds="wear">
 
-        <android.support.wearable.view.WearableRecyclerView
+        <android.support.wear.widget.WearableRecyclerView
             android:id="@+id/recyclerViewEnds"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingTop="48dp"
-            android:scrollbars="vertical"/>
+            android:scrollbars="vertical"
+            app:layoutManager="LinearLayoutManager"/>
 
-        <android.support.wearable.view.drawer.WearableDrawerView
+        <android.support.wear.widget.drawer.WearableDrawerView
             android:id="@+id/wearableDrawerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="bottom"
             android:background="@color/md_wear_green_lighter_ui_element"
-            app:peek_view="@+id/peek_view">
+            app:peekView="@+id/peek_view">
 
             <LinearLayout
                 android:id="@id/peek_view"
@@ -56,12 +57,12 @@
 
             </LinearLayout>
 
-        </android.support.wearable.view.drawer.WearableDrawerView>
+        </android.support.wear.widget.drawer.WearableDrawerView>
 
         <include
             android:id="@+id/clock"
             layout="@layout/layout_clock"/>
 
-    </android.support.wearable.view.drawer.WearableDrawerLayout>
+    </android.support.wear.widget.drawer.WearableDrawerLayout>
 
 </layout>

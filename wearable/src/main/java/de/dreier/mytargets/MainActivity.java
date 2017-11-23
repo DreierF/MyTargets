@@ -21,9 +21,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.wearable.activity.WearableActivity;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -58,7 +58,7 @@ public class MainActivity extends WearableActivity {
                     LinearLayout peekView = ((LinearLayout) binding.primaryActionAdd.getParent());
                     ViewGroup peekContainer = ((ViewGroup) peekView.getParent());
                     peekContainer.setOnClickListener(view -> ApplicationInstance.wearableClient.sendCreateTraining(training));
-                    binding.drawerLayout.peekDrawer(Gravity.BOTTOM);
+                    binding.wearableDrawerView.getController().peekDrawer();
                     break;
                 case BROADCAST_TRAINING_UPDATED:
                     TrainingInfo info = Parcels.unwrap(intent.getParcelableExtra(WearWearableClient.EXTRA_INFO));
@@ -98,7 +98,7 @@ public class MainActivity extends WearableActivity {
         super.onEnterAmbient(ambientDetails);
         binding.drawerLayout.setBackgroundResource(R.color.md_black_1000);
         binding.wearableDrawerView.setBackgroundResource(R.color.md_black_1000);
-        binding.date.setTextColor(getResources().getColor(R.color.md_white_1000));
+        binding.date.setTextColor(ContextCompat.getColor(this, R.color.md_white_1000));
         binding.icon.setVisibility(View.INVISIBLE);
         binding.clock.time.setVisibility(View.VISIBLE);
         binding.clock.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
@@ -115,7 +115,7 @@ public class MainActivity extends WearableActivity {
         super.onExitAmbient();
         binding.drawerLayout.setBackgroundResource(R.color.md_wear_green_dark_background);
         binding.wearableDrawerView.setBackgroundResource(R.color.md_wear_green_lighter_ui_element);
-        binding.date.setTextColor(getResources().getColor(R.color.md_wear_green_lighter_ui_element));
+        binding.date.setTextColor(ContextCompat.getColor(this, R.color.md_wear_green_lighter_ui_element));
         binding.icon.setVisibility(View.VISIBLE);
         binding.clock.time.setVisibility(View.GONE);
     }
