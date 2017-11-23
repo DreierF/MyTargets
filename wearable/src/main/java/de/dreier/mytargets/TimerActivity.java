@@ -18,8 +18,6 @@ import android.app.FragmentManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
-import android.support.wearable.view.drawer.WearableActionDrawer;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,8 +37,7 @@ import static android.view.View.VISIBLE;
 /**
  * Demonstrates use of Navigation and Action Drawers on Android Wear.
  */
-public class TimerActivity extends WearableActivity implements
-        WearableActionDrawer.OnMenuItemClickListener {
+public class TimerActivity extends WearableActivity implements MenuItem.OnMenuItemClickListener {
 
     public static final String EXTRA_TIMER_SETTINGS = "timer_settings";
 
@@ -58,7 +55,7 @@ public class TimerActivity extends WearableActivity implements
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, timerFragment).commit();
 
-        binding.primaryActionPeek.setOnClickListener(v -> binding.drawerLayout.openDrawer(Gravity.BOTTOM));
+        binding.primaryActionPeek.setOnClickListener(v -> binding.bottomActionDrawer.getController().openDrawer());
         binding.bottomActionDrawer.setOnMenuItemClickListener(this);
         binding.bottomActionDrawer.getMenu().findItem(R.id.menu_vibrate)
                 .setIcon(settings.vibrate
@@ -68,17 +65,15 @@ public class TimerActivity extends WearableActivity implements
                 .setIcon(settings.sound
                         ? R.drawable.ic_volume_up_white_24dp
                         : R.drawable.ic_volume_off_white_24dp);
-        binding.drawerLayout.peekDrawer(Gravity.BOTTOM);
+        binding.bottomActionDrawer.getController().peekDrawer();
     }
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
-        final int itemId = menuItem.getItemId();
-
-        switch (itemId) {
+        switch (menuItem.getItemId()) {
             case R.id.menu_stop:
                 finish();
-                break;
+                return true;
             case R.id.menu_vibrate:
                 timerFragment.settings.vibrate = !timerFragment.settings.vibrate;
                 menuItem.setIcon(timerFragment.settings.vibrate
@@ -96,9 +91,6 @@ public class TimerActivity extends WearableActivity implements
             default:
                 return false;
         }
-
-        binding.drawerLayout.closeDrawer(binding.bottomActionDrawer);
-        return true;
     }
 
     public void applyStatus(ETimerState status) {

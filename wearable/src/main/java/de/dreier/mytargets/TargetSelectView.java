@@ -22,6 +22,7 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
@@ -61,7 +62,7 @@ public class TargetSelectView extends TargetViewBase {
     private void init() {
         backspaceSymbol.setTint(0xFFFFFFFF);
         backspaceBackground
-                .setColor(getResources().getColor(R.color.md_wear_green_active_ui_element));
+                .setColor(ContextCompat.getColor(getContext(), R.color.md_wear_green_active_ui_element));
         backspaceBackground.setAntiAlias(true);
     }
 

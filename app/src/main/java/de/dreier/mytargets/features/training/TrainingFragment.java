@@ -113,7 +113,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
 
     @Override
     @CallSuper
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_training, container, false);
 
         binding.recyclerView.setHasFixedSize(true);
@@ -168,7 +168,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
                             .getCurrentLocale(getContext()), training, rounds, equals, false)));
             adapter.setList(rounds);
 
-            getActivity().supportInvalidateOptionsMenu();
+            getActivity().invalidateOptionsMenu();
 
             ToolbarUtils.setTitle(TrainingFragment.this, training.title);
             ToolbarUtils.setSubtitle(TrainingFragment.this, training.getFormattedDate());

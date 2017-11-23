@@ -20,10 +20,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.wearable.activity.WearableActivity;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,7 +96,7 @@ public class RoundActivity extends WearableActivity {
 
         showRoundData();
 
-        binding.drawerLayout.peekDrawer(Gravity.BOTTOM);
+        binding.wearableDrawerView.getController().peekDrawer();
 
         // Replaces the on click behaviour that open the (empty) drawer
         LinearLayout peekView = ((LinearLayout) binding.primaryActionTimer.getParent());
@@ -216,11 +216,11 @@ public class RoundActivity extends WearableActivity {
                 viewHolder.end.setText(getString(R.string.end_n, end.index + 1));
                 viewHolder.shots.setShots(round.getTarget(), end.getShots());
 
-                viewHolder.end.setTextColor(getResources().getColor(
+                viewHolder.end.setTextColor(ContextCompat.getColor(RoundActivity.this,
                         isAmbient() ? R.color.md_white_1000 :
                                 R.color.md_wear_green_active_ui_element));
                 viewHolder.shots.setAmbientMode(isAmbient());
-                viewHolder.itemView.setBackgroundColor(getResources().getColor(
+                viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(RoundActivity.this,
                         isAmbient() ? R.color.md_black_1000 :
                                 R.color.md_wear_green_lighter_background));
             } else if(holder instanceof InlineButtonViewHolder) {
