@@ -19,6 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,7 +32,7 @@ import de.dreier.mytargets.shared.targets.drawable.TargetImpactDrawable;
 
 public class DispersionPatternUtils {
 
-    public static void createDispersionPatternImageFile(int size, File f, ArrowStatistic statistic) throws FileNotFoundException {
+    public static void createDispersionPatternImageFile(int size, @NonNull File f, @NonNull ArrowStatistic statistic) throws FileNotFoundException {
         Bitmap b = getDispersionPatternBitmap(size, statistic);
         if (b == null) {
             return;
@@ -53,7 +54,7 @@ public class DispersionPatternUtils {
         }
     }
 
-    public static Bitmap getDispersionPatternBitmap(int size, ArrowStatistic statistic) {
+    public static Bitmap getDispersionPatternBitmap(int size, @NonNull ArrowStatistic statistic) {
         Bitmap b = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(b);
         canvas.drawColor(Color.WHITE);

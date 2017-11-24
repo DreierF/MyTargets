@@ -21,6 +21,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Picture;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -30,7 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class BitmapUtils {
-    public static Bitmap decodeSampledBitmapFromFile(File file, int reqWidth, int reqHeight)
+    public static Bitmap decodeSampledBitmapFromFile(@NonNull File file, int reqWidth, int reqHeight)
             throws IOException {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -45,7 +47,7 @@ public class BitmapUtils {
         return bmp;
     }
 
-    public static Bitmap decodeSampledBitmapFromStream(Context context, Uri uri, int reqWidth, int reqHeight)
+    public static Bitmap decodeSampledBitmapFromStream(@NonNull Context context, @NonNull Uri uri, int reqWidth, int reqHeight)
             throws IOException {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -60,7 +62,7 @@ public class BitmapUtils {
         return bmp;
     }
 
-    public static Bitmap decodeSampledBitmapFromRes(Context context, int id, int reqWidth, int reqHeight) {
+    public static Bitmap decodeSampledBitmapFromRes(@NonNull Context context, int id, int reqWidth, int reqHeight) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(context.getResources(), id, options);
@@ -70,7 +72,7 @@ public class BitmapUtils {
     }
 
     private static int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+            @NonNull BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;
@@ -91,14 +93,14 @@ public class BitmapUtils {
         return inSampleSize;
     }
 
-    public static byte[] getBitmapAsByteArray(Bitmap bitmap) {
+    public static byte[] getBitmapAsByteArray(@NonNull Bitmap bitmap) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
         return outputStream.toByteArray();
     }
 
     // Convert Picture to Bitmap
-    public static Bitmap pictureDrawable2Bitmap(Picture picture) {
+    public static Bitmap pictureDrawable2Bitmap(@NonNull Picture picture) {
         Bitmap bitmap = Bitmap
                 .createBitmap(picture.getWidth(), picture.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
@@ -122,7 +124,7 @@ public class BitmapUtils {
         return (ra << 24) | (rr << 16) | (rg << 8) | rb;
     }
 
-    public static Bitmap getBitmap(Context context, String imageFile) {
+    public static Bitmap getBitmap(@NonNull Context context, @Nullable String imageFile) {
         try {
             if (imageFile != null) {
                 if (imageFile.contains("/")) {

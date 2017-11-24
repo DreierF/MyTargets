@@ -56,7 +56,7 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
         calcSizes();
     }
 
-    public boolean onTouch(View view, MotionEvent motionEvent) {
+    public boolean onTouch(View view, @NonNull MotionEvent motionEvent) {
         float x = motionEvent.getX();
         float y = motionEvent.getY();
 
@@ -75,7 +75,7 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
         return true;
     }
 
-    public void setShots(ArrowStatistic statistic) {
+    public void setShots(@NonNull ArrowStatistic statistic) {
         this.target = statistic.target.getImpactAggregationDrawable();
         // TODO merge all these setters into a single setArrowStatistic(stats)
         this.target.setAggregationStrategy(SettingsManager.getAggregationStrategy());
@@ -93,7 +93,7 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         if (target == null) {
             return;
         }
@@ -104,7 +104,7 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
         }
     }
 
-    private void drawZoomedInTarget(Canvas canvas) {
+    private void drawZoomedInTarget(@NonNull Canvas canvas) {
         float px = zoomInX;
         float py = zoomInY;
         int radius2 = (int) (orgRadius * ZOOM_FACTOR);
@@ -113,7 +113,7 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
         drawTarget(canvas, x, y, radius2);
     }
 
-    private void drawTarget(Canvas canvas, float x, float y, float radius) {
+    private void drawTarget(@NonNull Canvas canvas, float x, float y, float radius) {
         // Draw actual target face
         target.setBounds((int) (x - radius), (int) (y - radius), (int) (x + radius),
                 (int) (y + radius));

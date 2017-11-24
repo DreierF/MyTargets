@@ -17,6 +17,7 @@ package de.dreier.mytargets.features.settings.backup;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,7 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.BackupView
         setHasStableIds(true);
     }
 
+    @NonNull
     @Override
     public BackupViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = inflater.inflate(R.layout.item_details_secondary_action, parent, false);
@@ -53,7 +55,7 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.BackupView
     }
 
     @Override
-    public void onBindViewHolder(BackupViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull BackupViewHolder holder, int position) {
         BackupEntry p = backupEntries.get(position);
         final String modified = formatDateTime.format(p.getModifiedDate());
         holder.binding.name.setText(modified);
@@ -95,7 +97,7 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.BackupView
 
         public final ItemDetailsSecondaryActionBinding binding;
 
-        public BackupViewHolder(View itemView) {
+        public BackupViewHolder(@NonNull View itemView) {
             super(itemView);
             binding = DataBindingUtil.bind(itemView);
         }

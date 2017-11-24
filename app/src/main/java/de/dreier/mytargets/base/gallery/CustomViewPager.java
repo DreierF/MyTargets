@@ -16,16 +16,17 @@
 package de.dreier.mytargets.base.gallery;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 public class CustomViewPager extends ViewPager {
-    public CustomViewPager(Context context) {
+    public CustomViewPager(@NonNull Context context) {
         super(context);
     }
 
-    public CustomViewPager(Context context, AttributeSet attrs) {
+    public CustomViewPager(@NonNull Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

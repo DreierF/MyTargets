@@ -21,6 +21,7 @@ import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import de.dreier.mytargets.features.settings.SettingsManager;
@@ -62,7 +63,7 @@ class SyncAdapter extends AbstractThreadedSyncAdapter {
      */
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority,
-                              ContentProviderClient provider, SyncResult syncResult) {
+                              ContentProviderClient provider, @NonNull SyncResult syncResult) {
         Log.e("SyncAdapter", "Beginning network synchronization");
         IBlockingBackup backup = SettingsManager.getBackupLocation().createBackup();
         try {

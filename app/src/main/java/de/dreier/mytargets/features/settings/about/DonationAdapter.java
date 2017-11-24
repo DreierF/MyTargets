@@ -17,6 +17,7 @@ package de.dreier.mytargets.features.settings.about;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ public class DonationAdapter extends RecyclerView.Adapter<DonationAdapter.Donati
         this.listener = listener;
     }
 
+    @NonNull
     @Override
     public DonationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View itemView = inflater.inflate(R.layout.item_donation, parent, false);
@@ -42,7 +44,7 @@ public class DonationAdapter extends RecyclerView.Adapter<DonationAdapter.Donati
     }
 
     @Override
-    public void onBindViewHolder(DonationViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull DonationViewHolder holder, int position) {
         holder.itemView.setEnabled(position < 4);
         holder.itemView.setOnClickListener(view -> listener.onItemClicked(position));
 
@@ -85,7 +87,7 @@ public class DonationAdapter extends RecyclerView.Adapter<DonationAdapter.Donati
     static class DonationViewHolder extends RecyclerView.ViewHolder {
         ItemDonationBinding binding;
 
-        public DonationViewHolder(View itemView) {
+        public DonationViewHolder(@NonNull View itemView) {
             super(itemView);
             binding = DataBindingUtil.bind(itemView);
         }

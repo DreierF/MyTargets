@@ -39,7 +39,7 @@ import de.dreier.mytargets.features.training.overview.Header;
 
 public class Utils {
 
-    public static Header getMonthHeader(Context context, LocalDate date) {
+    public static Header getMonthHeader(@NonNull Context context, @NonNull LocalDate date) {
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMMM yyyy",
                 getCurrentLocale(context));
         LocalDate month = getMonthStart(date);
@@ -47,11 +47,11 @@ public class Utils {
     }
 
     @NonNull
-    private static LocalDate getMonthStart(LocalDate date) {
+    private static LocalDate getMonthStart(@NonNull LocalDate date) {
         return LocalDate.from(date).withDayOfMonth(1);
     }
 
-    public static void doRestart(Context context) {
+    public static void doRestart(@NonNull Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -86,12 +86,12 @@ public class Utils {
         return String.format(Locale.US, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
-    public static boolean hasCameraHardware(Context context) {
+    public static boolean hasCameraHardware(@NonNull Context context) {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
     @SuppressLint("InlinedApi")
-    public static void hideSystemUI(Activity activity) {
+    public static void hideSystemUI(@NonNull Activity activity) {
         View decorView = activity.getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -102,7 +102,7 @@ public class Utils {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
     }
 
-    public static void showSystemUI(Activity activity) {
+    public static void showSystemUI(@NonNull Activity activity) {
         View decorView = activity.getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -124,7 +124,7 @@ public class Utils {
                 Color.blue(color));
     }
 
-    public static Locale getCurrentLocale(Context context) {
+    public static Locale getCurrentLocale(@NonNull Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return context.getResources().getConfiguration().getLocales().get(0);
         } else {

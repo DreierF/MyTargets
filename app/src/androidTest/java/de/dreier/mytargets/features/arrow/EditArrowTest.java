@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.arrow;
 
 
+import android.support.annotation.NonNull;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -49,6 +50,7 @@ import static org.hamcrest.Matchers.allOf;
 @RunWith(AndroidJUnit4.class)
 public class EditArrowTest extends UITestBase {
 
+    @NonNull
     private ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(
             MainActivity.class);
 

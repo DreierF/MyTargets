@@ -18,6 +18,7 @@ package de.dreier.mytargets.features.scoreboard;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -33,7 +34,7 @@ import de.dreier.mytargets.utils.Utils;
 
 public class ScoreboardImage {
 
-    public void generateBitmap(final Activity context, final long training, final long round, final File f) {
+    public void generateBitmap(@NonNull final Activity context, final long training, final long round, @NonNull final File f) {
 
         // Generate html content
         final String content = HtmlUtils

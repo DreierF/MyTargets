@@ -21,6 +21,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.wearable.activity.WearableActivity;
@@ -44,9 +46,10 @@ import static de.dreier.mytargets.utils.WearWearableClient.BROADCAST_TRAINING_UP
 
 public class MainActivity extends WearableActivity {
 
+    @Nullable
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context context, @NonNull Intent intent) {
             switch (intent.getAction()) {
                 case BROADCAST_TRAINING_TEMPLATE:
                     Training training = Parcels
@@ -124,19 +127,19 @@ public class MainActivity extends WearableActivity {
         binding.clock.time.setVisibility(View.GONE);
     }
 
-    public void setTrainingInfo(TrainingInfo info) {
+    public void setTrainingInfo(@NonNull TrainingInfo info) {
         setCommonTrainingInfo(info);
         binding.date.setText(R.string.today);
     }
 
-    private void setTraining(Training training) {
+    private void setTraining(@NonNull Training training) {
         Round round = training.getRounds().get(0);
         TrainingInfo info = new TrainingInfo(training, round);
         setCommonTrainingInfo(info);
         binding.date.setText("");
     }
 
-    private void setCommonTrainingInfo(TrainingInfo info) {
+    private void setCommonTrainingInfo(@NonNull TrainingInfo info) {
         binding.title.setText(info.title);
         binding.rounds.setText(info.getRoundDetails(this));
         binding.ends.setText(info.getEndDetails(this));

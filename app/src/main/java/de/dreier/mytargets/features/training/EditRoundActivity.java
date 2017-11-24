@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.features.training;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
@@ -22,6 +23,7 @@ import de.dreier.mytargets.features.rounds.EditRoundFragment;
 
 public class EditRoundActivity extends SimpleFragmentActivityBase {
 
+    @NonNull
     @Override
     protected Fragment instantiateFragment() {
         return new EditRoundFragment();

@@ -88,7 +88,7 @@ public class EditArrowListFragment extends EditableListFragment<Arrow> {
     }
 
     @Override
-    protected void onItemSelected(Arrow item) {
+    protected void onItemSelected(@NonNull Arrow item) {
         EditArrowFragment.editIntent(item.getId())
                 .withContext(this)
                 .start();
@@ -96,8 +96,9 @@ public class EditArrowListFragment extends EditableListFragment<Arrow> {
 
     private class ArrowAdapter extends SimpleListAdapterBase<Arrow> {
 
+        @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent) {
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_image_details, parent, false);
             return new ViewHolder(itemView);
@@ -107,7 +108,7 @@ public class EditArrowListFragment extends EditableListFragment<Arrow> {
     class ViewHolder extends SelectableViewHolder<Arrow> {
         private final ItemImageDetailsBinding binding;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView, selector, EditArrowListFragment.this);
             binding = DataBindingUtil.bind(itemView);
         }

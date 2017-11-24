@@ -19,6 +19,7 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.PreferenceFragmentCompat;
@@ -35,7 +36,7 @@ public abstract class SettingsFragmentBase extends PreferenceFragmentCompat
     private String rootKey;
 
     @Override
-    public final void onCreatePreferences(Bundle bundle, String rootKey) {
+    public final void onCreatePreferences(Bundle bundle, @Nullable String rootKey) {
         this.rootKey = rootKey == null ? "main" : rootKey;
         onCreatePreferences();
     }

@@ -16,6 +16,7 @@
 package de.dreier.mytargets.shared.analysis.aggregation.cluster;
 
 import android.graphics.PointF;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 
@@ -53,6 +54,7 @@ public class Cluster {
         isDirty = true;
     }
 
+    @NonNull
     public PointF getCenterOfGroup() {
         compute();
         return centerOfGroup;
@@ -67,6 +69,7 @@ public class Cluster {
         return weight;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Cluster{" +

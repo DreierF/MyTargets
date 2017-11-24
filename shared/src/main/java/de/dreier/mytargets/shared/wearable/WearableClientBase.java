@@ -19,6 +19,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -44,18 +45,20 @@ public class WearableClientBase {
     private static final String EXTRA_TIMER_SETTINGS = "timer_settings";
 
     private GoogleApiClient googleApiClient;
+    @NonNull
     protected final Context context;
 
+    @NonNull
     private BroadcastReceiver timerReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context context, @NonNull Intent intent) {
             TimerSettings settings = Parcels
                     .unwrap(intent.getParcelableExtra(EXTRA_TIMER_SETTINGS));
             sendTimerSettings(settings);
         }
     };
 
-    public WearableClientBase(Context context) {
+    public WearableClientBase(@NonNull Context context) {
         this.context = context;
         googleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(Wearable.API)
@@ -80,7 +83,7 @@ public class WearableClientBase {
                 });
     }
 
-    private void sendToNode(Node node, String path, byte[] data) {
+    private void sendToNode(@NonNull Node node, String path, byte[] data) {
         Wearable.MessageApi.sendMessage(
                 googleApiClient, node.getId(), path, data)
                 .setResultCallback(

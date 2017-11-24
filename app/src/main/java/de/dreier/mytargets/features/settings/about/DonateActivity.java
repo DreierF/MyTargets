@@ -17,6 +17,8 @@ package de.dreier.mytargets.features.settings.about;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
@@ -41,7 +43,9 @@ public class DonateActivity extends AppCompatActivity implements BillingProcesso
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
+    @NonNull
     public static final ArrayList<String> donations;
+    @NonNull
     public static final HashMap<String, String> prices;
 
     static {
@@ -130,7 +134,7 @@ public class DonateActivity extends AppCompatActivity implements BillingProcesso
     }
 
     @Override
-    public void onBillingError(int errorCode, Throwable error) {
+    public void onBillingError(int errorCode, @Nullable Throwable error) {
         /*
          * Called when some error occurred. See Constants class for more details
          */

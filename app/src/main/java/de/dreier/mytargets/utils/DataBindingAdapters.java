@@ -16,6 +16,7 @@
 package de.dreier.mytargets.utils;
 
 import android.databinding.BindingAdapter;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,12 +24,12 @@ import android.widget.ImageView;
 public class DataBindingAdapters {
 
     @BindingAdapter("android:src")
-    public static void setImageResource(ImageView imageView, int resource) {
+    public static void setImageResource(@NonNull ImageView imageView, int resource) {
         imageView.setImageResource(resource);
     }
 
     @BindingAdapter({"propertyShowAll", "propertyShouldShow", "propertyValue"})
-    public static void setPropertyVisibility(View view, boolean showAll, boolean shouldShow, String value) {
+    public static void setPropertyVisibility(@NonNull View view, boolean showAll, boolean shouldShow, String value) {
         boolean visible = shouldShow && (showAll || !TextUtils.isEmpty(value));
         view.setVisibility(visible ? View.VISIBLE : View.GONE);
     }

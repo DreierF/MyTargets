@@ -72,6 +72,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
     private final boolean[] equals = new boolean[2];
     protected FragmentTrainingBinding binding;
     private long trainingId;
+    @Nullable
     private Training training;
 
     public TrainingFragment() {
@@ -83,11 +84,12 @@ public class TrainingFragment extends EditableListFragment<Round> {
     }
 
     @NonNull
-    public static IntentWrapper getIntent(Training training) {
+    public static IntentWrapper getIntent(@NonNull Training training) {
         return new IntentWrapper(TrainingActivity.class)
                 .with(ITEM_ID, training.getId());
     }
 
+    @NonNull
     private BroadcastReceiver updateReceiver = new MobileWearableClient.EndUpdateReceiver() {
 
         @Override
@@ -176,19 +178,19 @@ public class TrainingFragment extends EditableListFragment<Round> {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.statistics_scoresheet, menu);
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.action_scoreboard).setVisible(training != null);
         menu.findItem(R.id.action_statistics).setVisible(training != null);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_scoreboard:
                 ScoreboardActivity.getIntent(trainingId)
@@ -220,7 +222,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
     }
 
     @Override
-    protected void onItemSelected(Round item) {
+    protected void onItemSelected(@NonNull Round item) {
         RoundFragment.getIntent(item)
                 .withContext(this)
                 .start();
@@ -241,8 +243,9 @@ public class TrainingFragment extends EditableListFragment<Round> {
 
     private class RoundAdapter extends SimpleListAdapterBase<Round> {
 
+        @NonNull
         @Override
-        protected SelectableViewHolder<Round> onCreateViewHolder(ViewGroup parent) {
+        protected SelectableViewHolder<Round> onCreateViewHolder(@NonNull ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_round, parent, false);
             return new ViewHolder(itemView);
@@ -252,7 +255,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
     private class ViewHolder extends SelectableViewHolder<Round> {
         private final ItemRoundBinding binding;
 
-        ViewHolder(View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView, selector, TrainingFragment.this);
             binding = DataBindingUtil.bind(itemView);
         }

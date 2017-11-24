@@ -15,6 +15,9 @@
 
 package de.dreier.mytargets.shared.models;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.annimon.stream.Collector;
 import com.annimon.stream.function.BiConsumer;
 import com.annimon.stream.function.Function;
@@ -57,6 +60,7 @@ public class Score {
                 return Score::add;
             }
 
+            @NonNull
             @Override
             public Function<Score, Score> finisher() {
                 return score -> score;
@@ -64,19 +68,22 @@ public class Score {
         };
     }
 
-    public Score add(Score other) {
+    @NonNull
+    public Score add(@NonNull Score other) {
         reachedScore += other.reachedScore;
         totalScore += other.totalScore;
         shotCount += other.shotCount;
         return this;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return reachedScore + "/" + totalScore;
     }
 
-    public String format(Locale locale, Configuration config) {
+    @NonNull
+    public String format(Locale locale, @NonNull Configuration config) {
         if (!config.showReachedScore) {
             return "";
         }
@@ -128,7 +135,7 @@ public class Score {
         public boolean showAverage;
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }

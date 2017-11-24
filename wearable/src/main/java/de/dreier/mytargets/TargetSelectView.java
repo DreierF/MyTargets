@@ -42,6 +42,7 @@ public class TargetSelectView extends TargetViewBase {
     private Circle circle;
     private float chinBound;
     private boolean ambientMode = false;
+    @NonNull
     private Paint backspaceBackground = new Paint();
 
     public TargetSelectView(Context context) {
@@ -78,7 +79,7 @@ public class TargetSelectView extends TargetViewBase {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         // Draw all possible points in a circular
         int curZone = getCurrentlySelectedZone();
         for (int i = 0; i < selectableZones.size(); i++) {
@@ -106,6 +107,7 @@ public class TargetSelectView extends TargetViewBase {
         }
     }
 
+    @NonNull
     private PointF getCircularCoordinates(int zone) {
         double degree = Math.toRadians(zone * 360.0 / (double) selectableZones.size());
         PointF coordinate = new PointF();
@@ -117,8 +119,9 @@ public class TargetSelectView extends TargetViewBase {
         return coordinate;
     }
 
+    @NonNull
     @Override
-    protected PointF getShotCoordinates(Shot shot) {
+    protected PointF getShotCoordinates(@NonNull Shot shot) {
         return getCircularCoordinates(getSelectableZoneIndexFromShot(shot));
     }
 
@@ -129,6 +132,7 @@ public class TargetSelectView extends TargetViewBase {
         circleRadius = radius - 25 * density;
     }
 
+    @NonNull
     @Override
     protected RectF getEndRect() {
         RectF endRect = new RectF();
@@ -139,6 +143,7 @@ public class TargetSelectView extends TargetViewBase {
         return endRect;
     }
 
+    @NonNull
     @Override
     protected Rect getBackspaceButtonBounds() {
         Rect backspaceBounds = new Rect();
@@ -163,7 +168,7 @@ public class TargetSelectView extends TargetViewBase {
     }
 
     @Override
-    protected boolean updateShotToPosition(Shot shot, float x, float y) {
+    protected boolean updateShotToPosition(@NonNull Shot shot, float x, float y) {
         int zones = selectableZones.size();
 
         double xDiff = x - radius;

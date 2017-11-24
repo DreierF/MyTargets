@@ -16,11 +16,14 @@
 package de.dreier.mytargets.utils.multiselector;
 
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 public abstract class ExpandableHeaderBindingHolder<T> extends HeaderBindingHolder<T> {
 
+    @Nullable
     private View expandCollapseView = null;
     private View.OnClickListener expandListener;
     private boolean expanded = false;
@@ -31,7 +34,7 @@ public abstract class ExpandableHeaderBindingHolder<T> extends HeaderBindingHold
      * @param itemView        Header view
      * @param expand_collapse Expand/Collapse ImageView's resource id
      */
-    public ExpandableHeaderBindingHolder(View itemView, @IdRes int expand_collapse) {
+    public ExpandableHeaderBindingHolder(@NonNull View itemView, @IdRes int expand_collapse) {
         super(itemView);
         itemView.setOnClickListener(this);
         expandCollapseView = itemView.findViewById(expand_collapse);

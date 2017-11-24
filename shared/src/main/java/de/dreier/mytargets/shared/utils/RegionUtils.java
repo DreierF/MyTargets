@@ -20,9 +20,11 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
+import android.support.annotation.NonNull;
 
 public class RegionUtils {
 
+    @NonNull
     public static Region getScaledRegion(Path path, float scale) {
         // Scale the path
         Path scaledPath = new Path(path);

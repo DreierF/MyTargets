@@ -24,6 +24,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -82,7 +83,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
     List<Long> bowTags;
 
     @NonNull
-    public static IntentWrapper getIntent(List<Long> roundIds) {
+    public static IntentWrapper getIntent(@NonNull List<Long> roundIds) {
         return new IntentWrapper(StatisticsActivity.class)
                 .with(ROUND_IDS, LongUtils.toArray(roundIds));
     }
@@ -103,6 +104,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         getLoaderManager().initLoader(0, getIntent().getExtras(), this).forceLoad();
     }
 
+    @NonNull
     @Override
     public Loader<List<Pair<Training, Round>>> onCreateLoader(int i, Bundle bundle) {
         final long[] roundIds = getIntent().getLongArrayExtra(ROUND_IDS);
@@ -169,7 +171,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
         final MenuItem filter = menu.findItem(R.id.action_filter);
         final MenuItem export = menu.findItem(R.id.action_export);
@@ -184,7 +186,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_export:
                 export();
@@ -316,6 +318,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 .show();
         new AsyncTask<Void, Void, Uri>() {
 
+            @Nullable
             @Override
             protected Uri doInBackground(Void... params) {
                 try {
@@ -330,7 +333,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
             }
 
             @Override
-            protected void onPostExecute(Uri uri) {
+            protected void onPostExecute(@Nullable Uri uri) {
                 super.onPostExecute(uri);
                 progress.dismiss();
                 if (uri != null) {

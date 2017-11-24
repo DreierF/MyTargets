@@ -72,10 +72,14 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private static final int REQ_SELECTED_DATE = 2;
     private static final int SR_TARGET_REQUEST_CODE = 11;
 
+    @Nullable
     private Long trainingId = null;
+    @NonNull
     private ETrainingType trainingType = FREE_TRAINING;
+    @Nullable
     private LocalDate date = LocalDate.now();
     private FragmentEditTrainingBinding binding;
+    @Nullable
     private Target roundTarget;
 
     @NonNull
@@ -182,7 +186,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                         binding.arrows.getProgress()));
     }
 
-    protected void setScoringStyleForCompoundBow(Bow bow) {
+    protected void setScoringStyleForCompoundBow(@Nullable Bow bow) {
         final Target target = binding.target.getSelectedItem();
         if (bow != null && target != null && target.id <= WA3Ring3Spot.ID) {
             if (bow.type == EBowType.COMPOUND_BOW && target.scoringStyle == 0) {
@@ -309,7 +313,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         binding.target.onActivityResult(requestCode, resultCode, data);
         binding.distance.onActivityResult(requestCode, resultCode, data);

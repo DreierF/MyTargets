@@ -18,6 +18,7 @@ package de.dreier.mytargets.test.utils.actions;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
@@ -33,6 +34,7 @@ import de.dreier.mytargets.shared.targets.drawable.TargetDrawable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 
 public class LowLevelActions {
+    @Nullable
     private static MotionEvent sMotionEventDownHeldView = null;
 
     public static PressAndHoldAction pressAndHold(float[] coordinates) {
@@ -48,7 +50,7 @@ public class LowLevelActions {
     }
 
     @NonNull
-    public static float[] getTargetCoordinates(View v, float[] coordinates) {
+    public static float[] getTargetCoordinates(@NonNull View v, float[] coordinates) {
         final int[] screenPos = new int[2];
         v.getLocationOnScreen(screenPos);
         float contentWidth = v.getWidth();
@@ -82,18 +84,20 @@ public class LowLevelActions {
             this.coordinates = coordinates;
         }
 
+        @NonNull
         @Override
         public Matcher<View> getConstraints() {
             return isDisplayingAtLeast(90);
         }
 
+        @NonNull
         @Override
         public String getDescription() {
             return "Press and hold action";
         }
 
         @Override
-        public void perform(final UiController uiController, final View view) {
+        public void perform(@NonNull final UiController uiController, @NonNull final View view) {
             if (sMotionEventDownHeldView != null) {
                 throw new AssertionError("Only one view can be held at a time");
             }
@@ -114,18 +118,20 @@ public class LowLevelActions {
             this.coordinates = coordinates;
         }
 
+        @NonNull
         @Override
         public Matcher<View> getConstraints() {
             return isDisplayingAtLeast(90);
         }
 
+        @NonNull
         @Override
         public String getDescription() {
             return "Release action";
         }
 
         @Override
-        public void perform(final UiController uiController, final View view) {
+        public void perform(@NonNull final UiController uiController, @NonNull final View view) {
             if (sMotionEventDownHeldView == null) {
                 throw new AssertionError(
                         "Before calling release(), you must call pressAndHold() on a view");

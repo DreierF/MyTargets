@@ -20,6 +20,8 @@ import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -60,13 +62,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     ActivityMainBinding binding;
+    @Nullable
     private ActionBarDrawerToggle drawerToggle;
+    @Nullable
     private IntentWrapper onDrawerClosePendingIntent = null;
+    @NonNull
     private CountingIdlingResource espressoTestIdlingResource = new CountingIdlingResource("delayed_activity");
+    @Nullable
     private String countryCode;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         setTheme(R.style.AppTheme_CustomToolbar);
         Language.setFromPreference(this, SettingsManager.KEY_LANGUAGE);
         countryCode = getCountryCode();
@@ -91,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(KEY_LANGUAGE, countryCode);
     }
@@ -101,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         countryCode = savedInstanceState.getString(KEY_LANGUAGE);
     }
@@ -214,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 binding.drawerLayout.openDrawer(GravityCompat.START);
@@ -227,6 +233,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Ensures that espresso is waiting until the launched intent is sent from the navigation drawer.
      */
+    @NonNull
     public CountingIdlingResource getEspressoIdlingResourceForMainActivity() {
         return espressoTestIdlingResource;
     }

@@ -17,6 +17,7 @@ package de.dreier.mytargets.base.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
@@ -28,7 +29,7 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
     protected abstract Fragment instantiateFragment();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
@@ -52,7 +53,7 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@Nullable Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
         childFragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);

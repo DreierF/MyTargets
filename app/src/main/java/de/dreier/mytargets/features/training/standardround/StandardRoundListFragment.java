@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -62,19 +63,21 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
     private static final int EDIT_STANDARD_ROUND = 2;
     private static final String KEY_QUERY = "query";
 
+    @Nullable
     @State(ParcelsBundler.class)
     StandardRound currentSelection;
     private SearchView searchView;
 
     protected FragmentListBinding binding;
 
+    @NonNull
     public static IntentWrapper getIntent(StandardRound standardRound) {
         return new IntentWrapper(StandardRoundActivity.class)
                 .with(ITEM, Parcels.wrap(standardRound));
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
             currentSelection = Parcels.unwrap(getArguments().getParcelable(ITEM));
@@ -104,7 +107,7 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
 
     @NonNull
     @Override
-    protected LoaderUICallback onLoad(Bundle args) {
+    protected LoaderUICallback onLoad(@Nullable Bundle args) {
         List<StandardRound> data;
         if (args != null && args.containsKey(KEY_QUERY)) {
             String query = args.getString(KEY_QUERY);
@@ -131,13 +134,13 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
     }
 
     @Override
-    public void onClick(SelectableViewHolder<StandardRound> holder, StandardRound item) {
+    public void onClick(@NonNull SelectableViewHolder<StandardRound> holder, StandardRound item) {
         currentSelection = item;
         super.onClick(holder, item);
     }
 
     @Override
-    public void onLongClick(SelectableViewHolder<StandardRound> holder) {
+    public void onLongClick(@NonNull SelectableViewHolder<StandardRound> holder) {
         StandardRound item = holder.getItem();
         if (item.club == StandardRoundFactory.CUSTOM) {
             EditStandardRoundFragment.editIntent(item)
@@ -160,7 +163,7 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.search, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) searchItem.getActionView();
@@ -190,7 +193,7 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == NEW_STANDARD_ROUND) {
             persistSelection(Parcels.unwrap(data.getParcelableExtra(ITEM)));
@@ -208,13 +211,14 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
         }
     }
 
+    @Nullable
     @Override
     protected StandardRound onSave() {
         persistSelection(currentSelection);
         return currentSelection;
     }
 
-    private void persistSelection(StandardRound standardRound) {
+    private void persistSelection(@NonNull StandardRound standardRound) {
         Map<Long, Integer> map = SettingsManager.getStandardRoundsLastUsed();
         Integer counter = map.get(standardRound.getId());
         if (counter == null) {
@@ -226,7 +230,7 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
     }
 
     private class StandardRoundListAdapter extends HeaderListAdapter<StandardRound> {
-        StandardRoundListAdapter(Context context, Map<Long, Integer> usedIds) {
+        StandardRoundListAdapter(@NonNull Context context, @NonNull Map<Long, Integer> usedIds) {
             super(child -> {
                 if (usedIds.containsKey(child.getId())) {
                     return new SimpleHeader(0L, context.getString(R.string.recently_used));
@@ -247,17 +251,19 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
             });
         }
 
+        @NonNull
         @Override
-        protected ViewHolder getSecondLevelViewHolder(ViewGroup parent) {
+        protected ViewHolder getSecondLevelViewHolder(@NonNull ViewGroup parent) {
             return new ViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
                     R.layout.item_standard_round, parent, false));
         }
     }
 
     public class ViewHolder extends SelectableViewHolder<StandardRound> {
+        @NonNull
         private final ItemStandardRoundBinding binding;
 
-        public ViewHolder(ItemStandardRoundBinding binding) {
+        public ViewHolder(@NonNull ItemStandardRoundBinding binding) {
             super(binding.getRoot(), selector, StandardRoundListFragment.this);
             this.binding = binding;
         }

@@ -17,6 +17,7 @@ package de.dreier.mytargets.shared.targets.models;
 
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import com.annimon.stream.Collectors;
@@ -47,9 +48,11 @@ public class TargetModelBase implements IIdProvider {
     public float faceRadius;
     public PointF[] facePositions;
     protected ZoneBase[] zones;
+    @Nullable
     protected Dimension[] diameters;
     protected ScoringStyle[] scoringStyles;
     protected TargetDecorator decorator;
+    @NonNull
     protected ETargetType type = ETargetType.TARGET;
 
     /**
@@ -71,10 +74,12 @@ public class TargetModelBase implements IIdProvider {
         return id;
     }
 
+    @NonNull
     public ETargetType getType() {
         return type;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return SharedApplicationInstance.get(nameRes);
@@ -87,11 +92,13 @@ public class TargetModelBase implements IIdProvider {
         return zones[zone];
     }
 
+    @Nullable
     public Dimension[] getDiameters() {
         return diameters;
     }
 
-    public Dimension getRealSize(Dimension diameter) {
+    @Nullable
+    public Dimension getRealSize(@NonNull Dimension diameter) {
         return new Dimension(realSizeFactor * diameter.value, diameter.unit);
     }
 
@@ -154,6 +161,7 @@ public class TargetModelBase implements IIdProvider {
      * @param arrow             Shot index, describes whether it is the first arrow(0), the second one, ...
      *                          This has an impact on the yielded score for some animal target faces.
      */
+    @NonNull
     public List<SelectableZone> getSelectableZoneList(int scoringStyleIndex, int arrow) {
         ScoringStyle scoringStyle = getScoringStyle(scoringStyleIndex);
         List<SelectableZone> list = new ArrayList<>();

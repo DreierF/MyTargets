@@ -20,6 +20,8 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -41,6 +43,7 @@ import de.dreier.mytargets.databinding.ViewChipsBinding;
 import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable;
 
 public class ChipGroup extends ViewGroup {
+    @NonNull
     List<Tag> tagList = new ArrayList<>();
 
     private int horizontalSpacing = (int) dp2px(8.0f);
@@ -154,6 +157,7 @@ public class ChipGroup extends ViewGroup {
      *
      * @return the tag list.
      */
+    @NonNull
     public List<Tag> getTags() {
         return new ArrayList<>(tagList);
     }
@@ -164,7 +168,7 @@ public class ChipGroup extends ViewGroup {
      *
      * @param tags the tag list to set.
      */
-    public void setTags(List<Tag> tags) {
+    public void setTags(@NonNull List<Tag> tags) {
         removeAllViews();
         tagList.clear();
         tagList.addAll(tags);
@@ -190,7 +194,7 @@ public class ChipGroup extends ViewGroup {
      *
      * @param tag the tag to append.
      */
-    protected void appendTag(Tag tag) {
+    protected void appendTag(@NonNull Tag tag) {
         ViewChipsBinding binding = tag.getView(getContext(), this);
         binding.getRoot().setOnClickListener(v -> {
             tag.isChecked = !tag.isChecked;
@@ -207,6 +211,7 @@ public class ChipGroup extends ViewGroup {
                 getResources().getDisplayMetrics());
     }
 
+    @NonNull
     @Override
     public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {
         return new ChipGroup.LayoutParams(getContext(), attrs);
@@ -265,7 +270,7 @@ public class ChipGroup extends ViewGroup {
             this.image = image;
         }
 
-        public ViewChipsBinding getView(Context context, ViewGroup parent) {
+        public ViewChipsBinding getView(@NonNull Context context, ViewGroup parent) {
             ViewChipsBinding binding = DataBindingUtil
                     .inflate(LayoutInflater.from(context), R.layout.view_chips, parent, false);
             binding.setTag(this);
@@ -277,6 +282,7 @@ public class ChipGroup extends ViewGroup {
             return binding;
         }
 
+        @Nullable
         public Drawable getDrawable() {
             if (image == null) {
                 return null;

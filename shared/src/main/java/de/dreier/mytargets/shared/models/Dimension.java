@@ -16,6 +16,7 @@ package de.dreier.mytargets.shared.models;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
@@ -39,18 +40,25 @@ import de.dreier.mytargets.shared.models.db.SightMark_Table;
 
 @Parcel
 public class Dimension implements IIdProvider, Comparable<Dimension> {
+    @Nullable
     public static final Dimension UNKNOWN = new Dimension(-1, (Unit) null);
     private static final int MINI_VALUE = -6;
+    @Nullable
     public static final Dimension MINI = new Dimension(MINI_VALUE, (Unit) null);
     private static final int SMALL_VALUE = -5;
+    @Nullable
     public static final Dimension SMALL = new Dimension(SMALL_VALUE, (Unit) null);
     private static final int MEDIUM_VALUE = -4;
+    @Nullable
     public static final Dimension MEDIUM = new Dimension(MEDIUM_VALUE, (Unit) null);
     private static final int LARGE_VALUE = -3;
+    @Nullable
     public static final Dimension LARGE = new Dimension(LARGE_VALUE, (Unit) null);
     private static final int XLARGE_VALUE = -2;
+    @Nullable
     public static final Dimension XLARGE = new Dimension(XLARGE_VALUE, (Unit) null);
     public final float value;
+    @Nullable
     public final Unit unit;
 
     @ParcelConstructor
@@ -79,7 +87,7 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
      * @param unit     Distances are only returned which match the specified unit
      * @return List of distances
      */
-    public static List<Dimension> getAll(Dimension distance, Unit unit) {
+    public static List<Dimension> getAll(@NonNull Dimension distance, Unit unit) {
         HashSet<Dimension> distances = new HashSet<>();
 
         distances.add(Dimension.UNKNOWN);
@@ -130,6 +138,7 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
         }
     }
 
+    @NonNull
     @Override
     public String toString() {
         final Context context = SharedApplicationInstance.getContext();
@@ -154,12 +163,13 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
         return Integer.toString((int) value) + unit.toString();
     }
 
+    @NonNull
     public Long getId() {
         return (long) hashCode();
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -176,7 +186,8 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
         return 31 * result + (unit != null ? unit.hashCode() : 0);
     }
 
-    public Dimension convertTo(Unit unit) {
+    @NonNull
+    public Dimension convertTo(@NonNull Unit unit) {
         if (this.unit == null) {
             return new Dimension((8f - this.value) * 4f, Unit.CENTIMETER).convertTo(unit);
         }
@@ -201,7 +212,8 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
             this.factor = factor;
         }
 
-        public static Unit from(String unit) {
+        @Nullable
+        public static Unit from(@Nullable String unit) {
             if (unit == null) {
                 return null;
             }
@@ -223,7 +235,8 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
             }
         }
 
-        public static String toStringHandleNull(Unit unit) {
+        @Nullable
+        public static String toStringHandleNull(@Nullable Unit unit) {
             if (unit == null) {
                 return null;
             }

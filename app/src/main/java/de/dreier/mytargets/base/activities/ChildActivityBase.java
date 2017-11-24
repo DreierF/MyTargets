@@ -16,6 +16,7 @@
 package de.dreier.mytargets.base.activities;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
@@ -41,12 +42,12 @@ public abstract class ChildActivityBase extends AppCompatActivity {
         logEvent(getClass().getSimpleName());
     }
 
-    protected void logEvent(String event) {
+    protected void logEvent(@NonNull String event) {
         FirebaseAnalytics.getInstance(this).logEvent(event, null);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();

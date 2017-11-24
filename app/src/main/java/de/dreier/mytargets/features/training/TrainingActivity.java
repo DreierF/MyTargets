@@ -15,12 +15,14 @@
 
 package de.dreier.mytargets.features.training;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
 
 public class TrainingActivity extends SimpleFragmentActivityBase {
 
+    @NonNull
     @Override
     public Fragment instantiateFragment() {
         return new TrainingFragment();

@@ -79,7 +79,7 @@ public abstract class ExpandableListAdapter<P extends IIdProvider, C extends IId
         }
     }
 
-    private void expandOrCollapse(ExpandableHeaderHolder<P, C> header) {
+    private void expandOrCollapse(@NonNull ExpandableHeaderHolder<P, C> header) {
         int childLength = header.children.size();
         if (!header.expanded) {
             notifyItemRangeInserted(getAbsolutePosition(header) + 1, childLength);
@@ -110,7 +110,7 @@ public abstract class ExpandableListAdapter<P extends IIdProvider, C extends IId
                 .collect(Collectors.toList());
     }
 
-    public void setExpandedIds(List<Long> expanded) {
+    public void setExpandedIds(@NonNull List<Long> expanded) {
         for (int i = 0; i < headersList.size(); i++) {
             final ExpandableHeaderHolder<P, C> header = headersList.get(i);
             header.expanded = expanded.contains(header.item.getId());
@@ -144,8 +144,9 @@ public abstract class ExpandableListAdapter<P extends IIdProvider, C extends IId
         return new ExpandableHeaderHolder<>(parent, childComparator);
     }
 
+    @NonNull
     @Override
-    protected HeaderViewHolder<P> getTopLevelViewHolder(ViewGroup parent) {
+    protected HeaderViewHolder<P> getTopLevelViewHolder(@NonNull ViewGroup parent) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_header_expandable, parent, false);
         return new HeaderViewHolder<>(itemView);

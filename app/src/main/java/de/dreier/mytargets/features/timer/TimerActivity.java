@@ -18,6 +18,8 @@ package de.dreier.mytargets.features.timer;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import de.dreier.mytargets.base.activities.ChildActivityBase;
 
@@ -27,7 +29,7 @@ public class TimerActivity extends ChildActivityBase {
     Fragment childFragment;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
@@ -46,6 +48,7 @@ public class TimerActivity extends ChildActivityBase {
         }
     }
 
+    @NonNull
     public Fragment instantiateFragment() {
         return new TimerFragment();
     }

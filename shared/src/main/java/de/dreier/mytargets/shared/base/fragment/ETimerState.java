@@ -16,6 +16,7 @@
 package de.dreier.mytargets.shared.base.fragment;
 
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 
 import de.dreier.mytargets.shared.R;
 
@@ -35,6 +36,7 @@ public enum ETimerState {
         this.signalCount = signalCount;
     }
 
+    @NonNull
     public ETimerState getNext() {
         switch (this) {
             case WAIT_FOR_START:

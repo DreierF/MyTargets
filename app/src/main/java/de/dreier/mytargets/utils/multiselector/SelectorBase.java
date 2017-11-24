@@ -17,9 +17,12 @@ package de.dreier.mytargets.utils.multiselector;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 public abstract class SelectorBase {
     private static final String SELECTIONS_STATE = "state";
+    @NonNull
     protected WeakHolderTracker tracker = new WeakHolderTracker();
     private boolean isSelectable;
 
@@ -34,7 +37,7 @@ public abstract class SelectorBase {
         }
     }
 
-    protected void refreshHolder(SelectableHolder holder) {
+    protected void refreshHolder(@Nullable SelectableHolder holder) {
         if (holder != null) {
             if (holder instanceof ItemBindingHolder &&
                     ((ItemBindingHolder) holder).getItem() != null) {
@@ -46,7 +49,7 @@ public abstract class SelectorBase {
         }
     }
 
-    public void setSelected(SelectableHolder holder, boolean isSelected) {
+    public void setSelected(@NonNull SelectableHolder holder, boolean isSelected) {
         setSelected(holder.getItemId(), isSelected);
     }
 
@@ -54,7 +57,7 @@ public abstract class SelectorBase {
 
     protected abstract boolean isSelected(long id);
 
-    public boolean tapSelection(SelectableHolder holder) {
+    public boolean tapSelection(@NonNull SelectableHolder holder) {
         long itemId = holder.getItemId();
         if (isSelectable) {
             boolean isSelected = isSelected(itemId);
@@ -65,6 +68,7 @@ public abstract class SelectorBase {
         }
     }
 
+    @NonNull
     public final Bundle saveSelectionStates() {
         Bundle bundle = new Bundle();
         bundle.putBoolean(SELECTIONS_STATE, isSelectable);
@@ -80,7 +84,7 @@ public abstract class SelectorBase {
     protected abstract void saveSelectionStates(Bundle bundle);
 
     @CallSuper
-    public void restoreSelectionStates(Bundle savedStates) {
+    public void restoreSelectionStates(@NonNull Bundle savedStates) {
         isSelectable = savedStates.getBoolean(SELECTIONS_STATE);
     }
 }

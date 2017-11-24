@@ -62,11 +62,13 @@ public class GoogleDriveBackup {
          */
         public static final int REQUEST_CODE_RESOLUTION = 1;
 
+        @Nullable
         private GoogleApiClient googleApiClient;
+        @Nullable
         private Activity activity;
 
         @Override
-        public void connect(Activity activity, ConnectionListener listener) {
+        public void connect(@NonNull Activity activity, @NonNull ConnectionListener listener) {
             this.activity = activity;
             if (googleApiClient == null) {
                 googleApiClient = new GoogleApiClient.Builder(activity)
@@ -105,7 +107,7 @@ public class GoogleDriveBackup {
         }
 
         @Override
-        public void getBackups(OnLoadFinishedListener listener) {
+        public void getBackups(@NonNull OnLoadFinishedListener listener) {
             Query query = new Query.Builder()
                     .addFilter(Filters.eq(SearchableField.MIME_TYPE, MYTARGETS_MIME_TYPE))
                     .addFilter(Filters.eq(SearchableField.TRASHED, false))
@@ -115,6 +117,7 @@ public class GoogleDriveBackup {
             Drive.DriveApi.getAppFolder(googleApiClient).queryChildren(googleApiClient, query)
                     .setResultCallback(new ResultCallback<DriveApi.MetadataBufferResult>() {
 
+                        @NonNull
                         private ArrayList<BackupEntry> backupsArray = new ArrayList<>();
 
                         @Override
@@ -138,7 +141,7 @@ public class GoogleDriveBackup {
          * Restores the given backup and restarts the app if the restore was successful.
          */
         @Override
-        public void restoreBackup(BackupEntry backup, BackupStatusListener listener) {
+        public void restoreBackup(@NonNull BackupEntry backup, @NonNull BackupStatusListener listener) {
             DriveId.decodeFromString(backup.getFileId())
                     .asDriveFile()
                     .open(googleApiClient, DriveFile.MODE_READ_ONLY, null)
@@ -162,7 +165,7 @@ public class GoogleDriveBackup {
         }
 
         @Override
-        public void deleteBackup(BackupEntry backup, BackupStatusListener listener) {
+        public void deleteBackup(@NonNull BackupEntry backup, @NonNull BackupStatusListener listener) {
             DriveId.decodeFromString(backup.getFileId())
                     .asDriveFile()
                     .delete(googleApiClient)
@@ -187,7 +190,7 @@ public class GoogleDriveBackup {
 
     public static class Backup implements IBlockingBackup {
         @Override
-        public void performBackup(Context context) throws BackupException {
+        public void performBackup(@NonNull Context context) throws BackupException {
             GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
                     .addApi(Drive.API)
                     .addScope(Drive.SCOPE_APPFOLDER)

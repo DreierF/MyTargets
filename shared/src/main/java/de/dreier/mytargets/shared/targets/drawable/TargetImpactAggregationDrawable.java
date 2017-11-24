@@ -16,6 +16,7 @@
 package de.dreier.mytargets.shared.targets.drawable;
 
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +34,12 @@ public class TargetImpactAggregationDrawable extends TargetImpactDrawable implem
     private final List<IAggregationStrategy> faceAggregations = new ArrayList<>();
     private int resultsMissing = 0;
 
-    public TargetImpactAggregationDrawable(Target target) {
+    public TargetImpactAggregationDrawable(@NonNull Target target) {
         super(target);
         setAggregationStrategy(NONE);
     }
 
-    public void setAggregationStrategy(EAggregationStrategy aggregation) {
+    public void setAggregationStrategy(@NonNull EAggregationStrategy aggregation) {
         faceAggregations.clear();
         for (int i = 0; i < model.getFaceCount(); i++) {
             IAggregationStrategy strategy = aggregation.newInstance();
@@ -64,7 +65,7 @@ public class TargetImpactAggregationDrawable extends TargetImpactDrawable implem
     }
 
     @Override
-    protected void onPostDraw(CanvasWrapper canvas, int faceIndex) {
+    protected void onPostDraw(@NonNull CanvasWrapper canvas, int faceIndex) {
         super.onPostDraw(canvas, faceIndex);
         final IAggregationResultRenderer result = faceAggregations.get(faceIndex).getResult();
         result.onDraw(canvas);

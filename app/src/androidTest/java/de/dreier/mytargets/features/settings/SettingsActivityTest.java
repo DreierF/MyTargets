@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.settings;
 
 
+import android.support.annotation.NonNull;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -56,6 +57,7 @@ import static org.hamcrest.Matchers.startsWith;
 @RunWith(AndroidJUnit4.class)
 public class SettingsActivityTest extends UITestBase {
 
+    @NonNull
     @Rule
     public ActivityTestRule<SettingsActivity> activityTestRule = new ActivityTestRule<>(
             SettingsActivity.class);
@@ -177,7 +179,7 @@ public class SettingsActivityTest extends UITestBase {
         return activityTestRule.getActivity();
     }
 
-    private void enterText(String text) {
+    private void enterText(@NonNull String text) {
         onView(withId(android.R.id.edit))
                 .perform(replaceText(text), closeSoftKeyboard());
 

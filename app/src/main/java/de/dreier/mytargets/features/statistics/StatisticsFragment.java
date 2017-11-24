@@ -92,6 +92,7 @@ public class StatisticsFragment extends FragmentBase {
             "<small>&nbsp;</small><br>" +
             "<font color='gray'>%s</font><br>" +
             "<big>%d</big>";
+    @NonNull
     private static final Description EMPTY_DESCRIPTION;
 
     static {
@@ -99,6 +100,7 @@ public class StatisticsFragment extends FragmentBase {
         EMPTY_DESCRIPTION.setText("");
     }
 
+    @Nullable
     private long[] roundIds;
     private List<Round> rounds;
     private ArrowStatisticAdapter adapter;
@@ -106,6 +108,7 @@ public class StatisticsFragment extends FragmentBase {
     private Target target;
     private boolean animate;
 
+    @NonNull
     private BroadcastReceiver updateReceiver = new MobileWearableClient.EndUpdateReceiver() {
 
         @Override
@@ -117,7 +120,8 @@ public class StatisticsFragment extends FragmentBase {
         }
     };
 
-    public static StatisticsFragment newInstance(List<Long> roundIds, Target item, boolean animate) {
+    @NonNull
+    public static StatisticsFragment newInstance(@NonNull List<Long> roundIds, Target item, boolean animate) {
         StatisticsFragment fragment = new StatisticsFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(StatisticsFragment.ARG_TARGET, Parcels.wrap(item));
@@ -230,7 +234,7 @@ public class StatisticsFragment extends FragmentBase {
                 new LineChartRenderer(binding.chartView, binding.chartView.getAnimator(),
                         binding.chartView.getViewPortHandler()) {
                     @Override
-                    public void drawHighlighted(Canvas canvas, Highlight[] indices) {
+                    public void drawHighlighted(@NonNull Canvas canvas, Highlight[] indices) {
                         mRenderPaint.setStyle(Paint.Style.FILL);
 
                         List<ILineDataSet> dataSets = mChart.getLineData().getDataSets();
@@ -316,7 +320,7 @@ public class StatisticsFragment extends FragmentBase {
         binding.distributionChart
                 .setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
                     @Override
-                    public void onValueSelected(Entry e, Highlight h) {
+                    public void onValueSelected(@NonNull Entry e, Highlight h) {
                         final SelectableZone selectableZone = (SelectableZone) e.getData();
                         final String s = String.format(Locale.US,
                                 PIE_CHART_CENTER_TEXT_FORMAT,
@@ -388,18 +392,19 @@ public class StatisticsFragment extends FragmentBase {
     }
 
     @NonNull
-    private Evaluator getEntryEvaluator(final List<Pair<Float, LocalDateTime>> values) {
+    private Evaluator getEntryEvaluator(@NonNull final List<Pair<Float, LocalDateTime>> values) {
         boolean singleTraining = Stream.of(rounds)
                 .groupBy(r -> r.trainingId).count() == 1;
 
         Evaluator eval;
         if (singleTraining) {
             eval = new Evaluator() {
+                @NonNull
                 private DateTimeFormatter dateFormat = DateTimeFormatter
                         .ofLocalizedTime(FormatStyle.SHORT);
 
                 @Override
-                public long getXValue(List<Pair<Float, LocalDateTime>> values, int i) {
+                public long getXValue(@NonNull List<Pair<Float, LocalDateTime>> values, int i) {
                     return Duration.between(values.get(0).second, values.get(i).second)
                             .getSeconds();
                 }
@@ -412,6 +417,7 @@ public class StatisticsFragment extends FragmentBase {
             };
         } else {
             eval = new Evaluator() {
+                @NonNull
                 private DateTimeFormatter dateFormat = DateTimeFormatter
                         .ofLocalizedDate(FormatStyle.SHORT);
 
@@ -430,14 +436,14 @@ public class StatisticsFragment extends FragmentBase {
         return eval;
     }
 
-    private Pair<Float, LocalDateTime> getPairEndSummary(Target target, End end, LocalDate trainingDate) {
+    private Pair<Float, LocalDateTime> getPairEndSummary(@NonNull Target target, @NonNull End end, @NonNull LocalDate trainingDate) {
         Score reachedScore = target.getReachedScore(end);
         return new Pair<>(reachedScore.getShotAverage(),
                 LocalDateTime.of(trainingDate, end.saveTime));
     }
 
     @NonNull
-    private LineDataSet convertToLineData(List<Pair<Float, LocalDateTime>> values, Evaluator evaluator) {
+    private LineDataSet convertToLineData(@NonNull List<Pair<Float, LocalDateTime>> values, @NonNull Evaluator evaluator) {
         List<Entry> seriesEntries = new ArrayList<>();
         for (int i = 0; i < values.size(); i++) {
             seriesEntries.add(new Entry(evaluator.getXValue(values, i), values.get(i).first));
@@ -460,7 +466,7 @@ public class StatisticsFragment extends FragmentBase {
         return series;
     }
 
-    private ILineDataSet generateLinearRegressionLine(List<Pair<Float, LocalDateTime>> values, Evaluator eval) {
+    private ILineDataSet generateLinearRegressionLine(@NonNull List<Pair<Float, LocalDateTime>> values, @NonNull Evaluator eval) {
         int dataSetSize = values.size();
         double[] x = new double[dataSetSize];
         double[] y = new double[dataSetSize];
@@ -522,15 +528,16 @@ public class StatisticsFragment extends FragmentBase {
 
         private List<ArrowStatistic> data = new ArrayList<>();
 
+        @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_image_simple, parent, false);
             return new ViewHolder(itemView);
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             holder.bindItem(data.get(position));
         }
 
@@ -550,7 +557,7 @@ public class StatisticsFragment extends FragmentBase {
         private ItemImageSimpleBinding binding;
         private ArrowStatistic mItem;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setClickable(true);
             binding = DataBindingUtil.bind(itemView);
@@ -563,7 +570,7 @@ public class StatisticsFragment extends FragmentBase {
                     .start();
         }
 
-        void bindItem(ArrowStatistic item) {
+        void bindItem(@NonNull ArrowStatistic item) {
             mItem = item;
             binding.name.setText(
                     getString(R.string.arrow_x_of_set_of_arrows, item.arrowNumber, item.arrowName));

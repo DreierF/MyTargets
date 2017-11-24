@@ -80,6 +80,7 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
         binding.fabSpeedDial.closeMenu();
     }
 
+    @NonNull
     private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
 
         @Override
@@ -142,19 +143,19 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.statistics, menu);
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
         boolean showStatistics = adapter != null && adapter.getItemCount() > 0;
         menu.findItem(R.id.action_statistics).setVisible(showStatistics);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_statistics:
                 StatisticsActivity
@@ -176,7 +177,7 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
                 .start();
     }
 
-    public void onStatistics(List<Long> ids) {
+    public void onStatistics(@NonNull List<Long> ids) {
         StatisticsActivity.getIntent(Stream.of(ids)
                 .map(Training::get)
                 .flatMap(t -> Stream.of(t.getRounds()))
@@ -209,14 +210,15 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
 
     private class TrainingAdapter extends ExpandableListAdapter<Header, Training> {
 
-        TrainingAdapter(Context context) {
+        TrainingAdapter(@NonNull Context context) {
             super(child -> Utils.getMonthHeader(context, child.date),
                     Collections.reverseOrder(),
                     Collections.reverseOrder());
         }
 
+        @NonNull
         @Override
-        protected ViewHolder getSecondLevelViewHolder(ViewGroup parent) {
+        protected ViewHolder getSecondLevelViewHolder(@NonNull ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_training, parent, false);
             return new ViewHolder(itemView);
@@ -226,7 +228,7 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
     private class ViewHolder extends SelectableViewHolder<Training> {
         ItemTrainingBinding binding;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView, selector, TrainingsFragment.this);
             binding = DataBindingUtil.bind(itemView);
         }

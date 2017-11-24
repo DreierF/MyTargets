@@ -18,6 +18,7 @@ package de.dreier.mytargets.shared.targets.drawable;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.text.TextPaint;
 
 import com.annimon.stream.Collectors;
@@ -34,7 +35,9 @@ import de.dreier.mytargets.shared.models.db.Shot;
 import static de.dreier.mytargets.shared.utils.Color.WHITE;
 
 public class TargetImpactDrawable extends TargetDrawable {
+    @NonNull
     protected List<List<Shot>> shots = new ArrayList<>();
+    @NonNull
     protected List<List<Shot>> transparentShots = new ArrayList<>();
     private Paint paintFill;
     private float arrowRadius;
@@ -42,7 +45,7 @@ public class TargetImpactDrawable extends TargetDrawable {
     private Shot focusedArrow;
     private TextPaint paintText;
 
-    public TargetImpactDrawable(Target target) {
+    public TargetImpactDrawable(@NonNull Target target) {
         super(target);
         initPaint();
         setArrowDiameter(new Dimension(5, Dimension.Unit.MILLIMETER), 1);
@@ -60,13 +63,13 @@ public class TargetImpactDrawable extends TargetDrawable {
         paintText.setColor(WHITE);
     }
 
-    public void setArrowDiameter(Dimension arrowDiameter, float scale) {
+    public void setArrowDiameter(@NonNull Dimension arrowDiameter, float scale) {
         Dimension targetSize = model.getRealSize(target.size).convertTo(arrowDiameter.unit);
         arrowRadius = arrowDiameter.value * scale / targetSize.value;
     }
 
     @Override
-    protected void onPostDraw(CanvasWrapper canvas, int faceIndex) {
+    protected void onPostDraw(@NonNull CanvasWrapper canvas, int faceIndex) {
         super.onPostDraw(canvas, faceIndex);
         if (!shouldDrawArrows) {
             return;
@@ -94,7 +97,7 @@ public class TargetImpactDrawable extends TargetDrawable {
         return model.getZoneFromPoint(x, y, arrowRadius);
     }
 
-    private void drawArrow(CanvasWrapper canvas, Shot shot, boolean transparent) {
+    private void drawArrow(@NonNull CanvasWrapper canvas, @NonNull Shot shot, boolean transparent) {
         int color = model.getContrastColor(shot.scoringRing);
         if (transparent) {
             color = 0x55000000 | color & 0xFFFFFF;
@@ -103,7 +106,7 @@ public class TargetImpactDrawable extends TargetDrawable {
         canvas.drawCircle(shot.x, shot.y, arrowRadius, paintFill);
     }
 
-    public void setFocusedArrow(Shot shot) {
+    public void setFocusedArrow(@NonNull Shot shot) {
         focusedArrow = shot;
         if (focusedArrow == null) {
             setMid(0, 0);
@@ -112,7 +115,7 @@ public class TargetImpactDrawable extends TargetDrawable {
         }
     }
 
-    private void drawFocusedArrow(CanvasWrapper canvas, Shot shot, int drawFaceIndex) {
+    private void drawFocusedArrow(@NonNull CanvasWrapper canvas, @NonNull Shot shot, int drawFaceIndex) {
         if (shot.index % model.getFaceCount() != drawFaceIndex) {
             return;
         }
@@ -133,7 +136,7 @@ public class TargetImpactDrawable extends TargetDrawable {
         canvas.drawText(zoneString, srcRect, paintText);
     }
 
-    public void setShots(List<Shot> shots) {
+    public void setShots(@NonNull List<Shot> shots) {
         for (int i = 0; i < this.shots.size(); i++) {
             this.shots.get(i).clear();
         }
@@ -145,7 +148,7 @@ public class TargetImpactDrawable extends TargetDrawable {
         notifyArrowSetChanged();
     }
 
-    public void setTransparentShots(Stream<Shot> shots) {
+    public void setTransparentShots(@NonNull Stream<Shot> shots) {
         new AsyncTask<Void, Void, Map<Integer, List<Shot>>>() {
             @Override
             protected Map<Integer, List<Shot>> doInBackground(Void... objects) {
@@ -154,7 +157,7 @@ public class TargetImpactDrawable extends TargetDrawable {
             }
 
             @Override
-            protected void onPostExecute(Map<Integer, List<Shot>> map) {
+            protected void onPostExecute(@NonNull Map<Integer, List<Shot>> map) {
                 super.onPostExecute(map);
                 for (List<Shot> shotList : transparentShots) {
                     shotList.clear();

@@ -15,6 +15,8 @@
 
 package de.dreier.mytargets.utils.multiselector;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 /**
@@ -41,6 +43,7 @@ import android.view.View;
  */
 public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
         implements View.OnClickListener, View.OnLongClickListener {
+    @Nullable
     private final SelectorBase multiSelector;
     private OnItemClickListener<T> listener;
     private boolean isSelectable = false;
@@ -58,7 +61,7 @@ public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
      * @param itemView Item view for this ViewHolder
      * @param selector A selector set to bind this holder to
      */
-    public SelectableViewHolder(View itemView, SelectorBase selector, OnItemClickListener<T> listener) {
+    public SelectableViewHolder(@NonNull View itemView, @Nullable SelectorBase selector, OnItemClickListener<T> listener) {
         super(itemView);
         this.multiSelector = selector;
         itemView.setOnClickListener(this);

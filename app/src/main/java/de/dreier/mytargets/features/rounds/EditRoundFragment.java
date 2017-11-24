@@ -43,18 +43,20 @@ import static de.dreier.mytargets.base.fragments.EditableListFragmentBase.ITEM_I
 
 public class EditRoundFragment extends EditFragmentBase {
     private static final String ROUND_ID = "round_id";
+    @Nullable
     private Long trainingId = null;
+    @Nullable
     private Long roundId = null;
     private FragmentEditRoundBinding binding;
 
     @NonNull
-    public static IntentWrapper createIntent(Training training) {
+    public static IntentWrapper createIntent(@NonNull Training training) {
         return new IntentWrapper(EditRoundActivity.class)
                 .with(ITEM_ID, training.getId());
     }
 
     @NonNull
-    public static IntentWrapper editIntent(Training training, long roundId) {
+    public static IntentWrapper editIntent(@NonNull Training training, long roundId) {
         return new IntentWrapper(EditRoundActivity.class)
                 .with(ITEM_ID, training.getId())
                 .with(ROUND_ID, roundId);
@@ -135,6 +137,7 @@ public class EditRoundFragment extends EditFragmentBase {
         }
     }
 
+    @Nullable
     private Round onSaveRound() {
         Training training = Training.get(trainingId);
 
@@ -167,7 +170,7 @@ public class EditRoundFragment extends EditFragmentBase {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         binding.target.onActivityResult(requestCode, resultCode, data);
         binding.distance.onActivityResult(requestCode, resultCode, data);

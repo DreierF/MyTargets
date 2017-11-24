@@ -17,6 +17,8 @@ package de.dreier.mytargets.shared.utils;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextPaint;
 
 import de.dreier.mytargets.shared.models.Target;
@@ -25,7 +27,9 @@ import de.dreier.mytargets.shared.targets.zone.ZoneBase;
 public class Circle {
     private final float density;
     private final Target target;
+    @NonNull
     private final Paint circleColorP;
+    @NonNull
     private final Paint textPaint;
 
     public Circle(float density, Target target) {
@@ -42,7 +46,7 @@ public class Circle {
         textPaint.setTextAlign(Paint.Align.CENTER);
     }
 
-    public void draw(Canvas can, float x, float y, int zone, int rad, int arrow, String number, boolean ambientMode) {
+    public void draw(@NonNull Canvas can, float x, float y, int zone, int rad, int arrow, @Nullable String number, boolean ambientMode) {
         ZoneBase zoneBase = target.getModel().getZone(zone);
 
         // Draw the circles background

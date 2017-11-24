@@ -15,6 +15,8 @@
 
 package de.dreier.mytargets.features.training.environment;
 
+import android.support.annotation.NonNull;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Call;
@@ -30,6 +32,7 @@ public class WeatherService {
     private final OpenWeatherMapWebService mWebService;
 
     private interface OpenWeatherMapWebService {
+        @NonNull
         @GET("weather?units=metric")
         Call<CurrentWeather> fetchCurrentWeather(@Query("lon") double longitude,
                                                  @Query("lat") double latitude,
@@ -56,6 +59,7 @@ public class WeatherService {
                 .create(OpenWeatherMapWebService.class);
     }
 
+    @NonNull
     public Call<CurrentWeather> fetchCurrentWeather(final double longitude, final double latitude) {
         return mWebService.fetchCurrentWeather(longitude, latitude, APPID);
     }

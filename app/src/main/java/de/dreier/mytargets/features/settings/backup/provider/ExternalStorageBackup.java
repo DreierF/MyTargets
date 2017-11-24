@@ -17,6 +17,8 @@ package de.dreier.mytargets.features.settings.backup.provider;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.File;
@@ -38,7 +40,7 @@ import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 public class ExternalStorageBackup {
     private static final String FOLDER_NAME = "MyTargets";
 
-    private static void createDirectory(File directory) throws IOException {
+    private static void createDirectory(@NonNull File directory) throws IOException {
         //noinspection ResultOfMethodCallIgnored
         directory.mkdir();
         if (!directory.exists() || !directory.isDirectory()) {
@@ -72,16 +74,17 @@ public class ExternalStorageBackup {
     }
 
     public static class AsyncRestore implements IAsyncBackupRestore {
+        @Nullable
         private Activity activity;
 
         @Override
-        public void connect(Activity activity, ConnectionListener listener) {
+        public void connect(Activity activity, @NonNull ConnectionListener listener) {
             this.activity = activity;
             listener.onConnected();
         }
 
         @Override
-        public void getBackups(OnLoadFinishedListener listener) {
+        public void getBackups(@NonNull OnLoadFinishedListener listener) {
             File backupDir = new File(getMicroSdCardPath(), FOLDER_NAME);
             if (backupDir.isDirectory()) {
                 List<BackupEntry> backups = new ArrayList<>();
@@ -99,13 +102,13 @@ public class ExternalStorageBackup {
             }
         }
 
-        private boolean isBackup(File file) {
+        private boolean isBackup(@NonNull File file) {
             return file.isFile() && file.getName().contains("backup_") && file.getName()
                     .endsWith(".zip");
         }
 
         @Override
-        public void restoreBackup(BackupEntry backup, BackupStatusListener listener) {
+        public void restoreBackup(@NonNull BackupEntry backup, @NonNull BackupStatusListener listener) {
             File file = new File(backup.getFileId());
             try {
                 BackupUtils.importZip(activity, new FileInputStream(file));
@@ -117,7 +120,7 @@ public class ExternalStorageBackup {
         }
 
         @Override
-        public void deleteBackup(BackupEntry backup, BackupStatusListener listener) {
+        public void deleteBackup(@NonNull BackupEntry backup, @NonNull BackupStatusListener listener) {
             if (new File(backup.getFileId()).delete()) {
                 listener.onFinished();
             } else {
@@ -133,7 +136,7 @@ public class ExternalStorageBackup {
 
     public static class Backup implements IBlockingBackup {
         @Override
-        public void performBackup(Context context) throws BackupException {
+        public void performBackup(@NonNull Context context) throws BackupException {
             try {
                 File backupDir = new File(getMicroSdCardPath(), FOLDER_NAME);
                 createDirectory(backupDir);

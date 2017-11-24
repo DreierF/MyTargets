@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.training;
 
 
+import android.support.annotation.NonNull;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -44,6 +45,7 @@ import static org.hamcrest.Matchers.containsString;
 @RunWith(AndroidJUnit4.class)
 public class TrainingActivityTest extends UITestBase {
 
+    @NonNull
     private IntentsTestRule<TrainingActivity> activityTestRule = new IntentsTestRule<>(
             TrainingActivity.class, true, false);
     @Rule

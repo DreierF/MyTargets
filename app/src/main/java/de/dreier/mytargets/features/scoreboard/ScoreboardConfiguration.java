@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.scoreboard;
 
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 
 import de.dreier.mytargets.app.ApplicationInstance;
 
@@ -32,21 +33,25 @@ public class ScoreboardConfiguration {
     }
 
     //TODO Use default values from xml
+    @NonNull
     public static ScoreboardConfiguration fromDisplaySettings() {
         return getFromSettingsForPrefix("scoreboard_display_", true, true, true, true, true, true,
                 false);
     }
 
+    @NonNull
     public static ScoreboardConfiguration fromPrintSettings() {
         return getFromSettingsForPrefix("scoreboard_print_", true, true, true, true, true, false,
                 true);
     }
 
+    @NonNull
     static ScoreboardConfiguration fromShareSettings() {
         return getFromSettingsForPrefix("scoreboard_share_", true, true, true, true, true, true,
                 false);
     }
 
+    @NonNull
     private static ScoreboardConfiguration getFromSettingsForPrefix(String prefix,
                                                                     boolean title, boolean properties,
                                                                     boolean table, boolean statistics, boolean comments,

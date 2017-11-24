@@ -16,6 +16,7 @@
 package de.dreier.mytargets.test.utils.matchers;
 
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +29,9 @@ import org.hamcrest.TypeSafeMatcher;
 import de.dreier.mytargets.views.speeddial.FabSpeedDial;
 
 public class ParentViewMatcher {
-    public static Matcher<View> isNestedChildOfView(Matcher<View> parentViewMatcher) {
+    public static Matcher<View> isNestedChildOfView(@NonNull Matcher<View> parentViewMatcher) {
         return new TypeSafeMatcher<View>() {
-            public void describeTo(Description description) {
+            public void describeTo(@NonNull Description description) {
                 description.appendText("is nested child of view ");
                 parentViewMatcher.describeTo(description);
             }
@@ -44,12 +45,12 @@ public class ParentViewMatcher {
     public static Matcher<View> isOnForegroundFragment() {
         return new TypeSafeMatcher<View>() {
             @Override
-            public void describeTo(Description description) {
+            public void describeTo(@NonNull Description description) {
                 description.appendText("is on foreground fragment");
             }
 
             @Override
-            public boolean matchesSafely(View view) {
+            public boolean matchesSafely(@NonNull View view) {
                 View content = MatcherUtils.getParentViewById(view, android.R.id.content);
                 if (content != null && content instanceof ViewGroup) {
                     final View currentFragment = ((ViewGroup) content)
@@ -61,9 +62,9 @@ public class ParentViewMatcher {
         };
     }
 
-    public static Matcher<View> withSpeedDialItem(Matcher<View> speedDialViewMatcher, @IdRes int id) {
+    public static Matcher<View> withSpeedDialItem(@NonNull Matcher<View> speedDialViewMatcher, @IdRes int id) {
         return new TypeSafeMatcher<View>() {
-            public void describeTo(Description description) {
+            public void describeTo(@NonNull Description description) {
                 description.appendText("with id " + id + " on speed dial ");
                 speedDialViewMatcher.describeTo(description);
             }

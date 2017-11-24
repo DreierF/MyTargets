@@ -16,6 +16,7 @@
 package de.dreier.mytargets.shared.models.db;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.annimon.stream.Stream;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -51,26 +52,32 @@ import de.dreier.mytargets.shared.utils.typeconverters.LocalDateConverter;
 @Table(database = AppDatabase.class)
 public class Training extends BaseModel implements IIdSettable, Comparable<Training>, IRecursiveModel {
 
+    @Nullable
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     Long id;
 
+    @Nullable
     @Column
     public String title = "";
 
+    @Nullable
     @Column(typeConverter = LocalDateConverter.class)
     public LocalDate date;
 
+    @Nullable
     @ForeignKey(tableClass = StandardRound.class, references = {
             @ForeignKeyReference(columnName = "standardRound", columnType = Long.class, foreignKeyColumnName = "_id")},
             onDelete = ForeignKeyAction.SET_NULL)
     public Long standardRoundId;
 
+    @Nullable
     @ForeignKey(tableClass = Bow.class, references = {
             @ForeignKeyReference(columnName = "bow", columnType = Long.class, foreignKeyColumnName = "_id")},
             onDelete = ForeignKeyAction.SET_NULL)
     public Long bowId;
 
+    @Nullable
     @ForeignKey(tableClass = Arrow.class, references = {
             @ForeignKeyReference(columnName = "arrow", columnType = Long.class, foreignKeyColumnName = "_id")},
             onDelete = ForeignKeyAction.SET_NULL)
@@ -82,6 +89,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     @Column
     public boolean indoor;
 
+    @Nullable
     @Column(typeConverter = EWeatherConverter.class)
     public EWeather weather;
 
@@ -91,14 +99,17 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     @Column
     public int windSpeed;
 
+    @Nullable
     @Column
     public String location = "";
 
+    @Nullable
     @Column
     public String comment = "";
 
     public List<Round> rounds;
 
+    @Nullable
     public static Training get(Long id) {
         return SQLite.select()
                 .from(Training.class)
@@ -110,6 +121,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
         return SQLite.select().from(Training.class).queryList();
     }
 
+    @Nullable
     public Long getId() {
         return id;
     }
@@ -125,11 +137,12 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
                 id.equals(((Training) another).id);
     }
 
+    @Nullable
     public Environment getEnvironment() {
         return new Environment(indoor, weather, windSpeed, windDirection, location);
     }
 
-    public void setEnvironment(Environment env) {
+    public void setEnvironment(@NonNull Environment env) {
         indoor = env.indoor;
         weather = env.weather;
         windDirection = env.windDirection;
@@ -149,6 +162,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
         return rounds;
     }
 
+    @Nullable
     public StandardRound getStandardRound() {
         return SQLite.select()
                 .from(StandardRound.class)
@@ -156,6 +170,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
                 .querySingle();
     }
 
+    @Nullable
     public Bow getBow() {
         return SQLite.select()
                 .from(Bow.class)
@@ -163,6 +178,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
                 .querySingle();
     }
 
+    @Nullable
     public Arrow getArrow() {
         return SQLite.select()
                 .from(Arrow.class)
@@ -217,6 +233,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
         super.delete(databaseWrapper);
     }
 
+    @NonNull
     public Training ensureLoaded() {
         for (Round round : getRounds()) {
             for (End end : round.getEnds()) {
@@ -226,7 +243,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
         return this;
     }
 
-    public void initRoundsFromTemplate(StandardRound standardRound) {
+    public void initRoundsFromTemplate(@NonNull StandardRound standardRound) {
         rounds = new ArrayList<>();
         for (RoundTemplate template : standardRound.getRounds()) {
             Round round = new Round(template);
@@ -253,6 +270,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
         }
     }
 
+    @NonNull
     public List<Round> getRounds(DatabaseWrapper databaseWrapper) {
         return SQLite.select()
                 .from(Round.class)

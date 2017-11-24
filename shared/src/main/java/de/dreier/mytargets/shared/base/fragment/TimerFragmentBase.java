@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.PowerManager;
 import android.os.Vibrator;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
@@ -42,6 +43,7 @@ public abstract class TimerFragmentBase extends Fragment implements View.OnClick
 
     private ETimerState currentStatus = WAIT_FOR_START;
     private CountDownTimer countdown;
+    @Nullable
     private MediaPlayer horn;
     private PowerManager.WakeLock wakeLock;
     public TimerSettings settings;
@@ -141,7 +143,7 @@ public abstract class TimerFragmentBase extends Fragment implements View.OnClick
 
     protected abstract void applyStatus(ETimerState status);
 
-    protected int getDuration(ETimerState status) {
+    protected int getDuration(@NonNull ETimerState status) {
         switch (status) {
             case PREPARATION:
                 return settings.waitTime;

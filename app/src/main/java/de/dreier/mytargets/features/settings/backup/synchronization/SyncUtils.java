@@ -20,6 +20,7 @@ import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import de.dreier.mytargets.BuildConfig;
 import de.dreier.mytargets.features.settings.SettingsManager;
@@ -37,7 +38,7 @@ public class SyncUtils {
      *
      * @param context Context
      */
-    public static void createSyncAccount(Context context) {
+    public static void createSyncAccount(@NonNull Context context) {
         // Create account, if it's missing. (Either first run, or user has deleted account.)
         Account account = GenericAccountService.getAccount();
         AccountManager accountManager = (AccountManager) context

@@ -24,14 +24,14 @@ import de.dreier.mytargets.app.ApplicationInstance;
 public class HtmlInfoBuilder {
     private final StringBuilder info = new StringBuilder();
 
-    public void addLine(int key, Object value) {
+    public void addLine(int key, @NonNull Object value) {
         if (info.length() != 0) {
             info.append("<br>");
         }
         info.append(getKeyValueLine(key, value));
     }
 
-    public void addLine(String key, Object value) {
+    public void addLine(String key, @NonNull Object value) {
         if (info.length() != 0) {
             info.append("<br>");
         }
@@ -39,15 +39,16 @@ public class HtmlInfoBuilder {
     }
 
     @NonNull
-    private String getKeyValueLine(String key, Object value) {
+    private String getKeyValueLine(String key, @NonNull Object value) {
         return String.format("%s: <b>%s</b>", key, TextUtils.htmlEncode(value.toString()));
     }
 
     @NonNull
-    private String getKeyValueLine(@StringRes int key, Object value) {
+    private String getKeyValueLine(@StringRes int key, @NonNull Object value) {
         return getKeyValueLine(ApplicationInstance.get(key), value);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return info.toString();

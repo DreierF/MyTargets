@@ -19,6 +19,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.support.annotation.NonNull;
 import android.text.TextPaint;
 
 import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper;
@@ -32,8 +33,11 @@ public class BeursaultDecorator extends CenterMarkDecorator {
     private static final Path one = new Path();
     private static final Path two = new Path();
     private static final Path three = new Path();
+    @NonNull
     private static final RectF oneBounds;
+    @NonNull
     private static final RectF twoBounds;
+    @NonNull
     private static final RectF threeBounds;
 
     static {
@@ -135,7 +139,7 @@ public class BeursaultDecorator extends CenterMarkDecorator {
     }
 
     @Override
-    public void drawDecoration(CanvasWrapper canvas) {
+    public void drawDecoration(@NonNull CanvasWrapper canvas) {
         super.drawDecoration(canvas);
         if (paintText == null) {
             initPaint();
@@ -145,7 +149,7 @@ public class BeursaultDecorator extends CenterMarkDecorator {
         drawPathsForZone(canvas, 2, 3, 1.05f, three, threeBounds);
     }
 
-    private void drawPathsForZone(CanvasWrapper canvas, int innerZoneIndex, int outerZoneIndex, float scale, Path path, RectF pathBounds) {
+    private void drawPathsForZone(@NonNull CanvasWrapper canvas, int innerZoneIndex, int outerZoneIndex, float scale, Path path, RectF pathBounds) {
         final ZoneBase outerZone = model.getZone(outerZoneIndex);
         final ZoneBase innerZone = model.getZone(innerZoneIndex);
         final float outerRadius = outerZone.radius - outerZone.strokeWidth * 0.5f;
@@ -157,7 +161,7 @@ public class BeursaultDecorator extends CenterMarkDecorator {
         drawFilledPath(canvas, rel, 0f, scale, path, pathBounds); // right
     }
 
-    private void drawFilledPath(CanvasWrapper canvas, float x, float y, float scaleFactor, Path path, RectF bounds) {
+    private void drawFilledPath(@NonNull CanvasWrapper canvas, float x, float y, float scaleFactor, Path path, RectF bounds) {
         float rectSize = 0.012f * 2 * scaleFactor;
         final RectF bgRect = new RectF(x - rectSize, y - rectSize, x + rectSize, y + rectSize);
         canvas.drawRect(bgRect, paintFill);

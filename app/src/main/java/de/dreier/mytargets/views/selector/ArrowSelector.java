@@ -18,6 +18,8 @@ package de.dreier.mytargets.views.selector;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 import java.util.List;
@@ -42,6 +44,7 @@ public class ArrowSelector extends ImageSelectorBase<Arrow> {
         requestCode = ARROW_REQUEST_CODE;
     }
 
+    @NonNull
     @Override
     protected IntentWrapper getAddIntent() {
         return EditArrowFragment.createIntent()
@@ -49,14 +52,14 @@ public class ArrowSelector extends ImageSelectorBase<Arrow> {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && requestCode == ARROW_ADD_REQUEST_CODE) {
             setItemId(null);
         }
     }
 
-    public void setItemId(Long arrowId) {
+    public void setItemId(@Nullable Long arrowId) {
         Arrow item = null;
         if (arrowId != null) {
             item = Arrow.get(arrowId);

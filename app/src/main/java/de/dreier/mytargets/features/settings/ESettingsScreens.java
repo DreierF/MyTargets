@@ -15,6 +15,8 @@
 
 package de.dreier.mytargets.features.settings;
 
+import android.support.annotation.NonNull;
+
 import de.dreier.mytargets.features.settings.backup.BackupSettingsFragment;
 
 public enum ESettingsScreens {
@@ -31,7 +33,8 @@ public enum ESettingsScreens {
         this.settingsFragment = settingsFragment;
     }
 
-    public static ESettingsScreens from(String key) {
+    @NonNull
+    public static ESettingsScreens from(@NonNull String key) {
         switch (key) {
             case "overview":
                 return OVERVIEW;

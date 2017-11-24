@@ -15,6 +15,8 @@
 
 package de.dreier.mytargets.utils;
 
+import android.support.annotation.NonNull;
+
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.google.android.gms.wearable.MessageEvent;
@@ -49,7 +51,7 @@ import static org.parceler.Parcels.unwrap;
 public class MobileWearableListener extends WearableListenerService {
 
     @Override
-    public void onMessageReceived(MessageEvent messageEvent) {
+    public void onMessageReceived(@NonNull MessageEvent messageEvent) {
         super.onMessageReceived(messageEvent);
         switch (messageEvent.getPath()) {
             case WearableClientBase.TRAINING_CREATE:
@@ -69,7 +71,7 @@ public class MobileWearableListener extends WearableListenerService {
         }
     }
 
-    private void timerSettings(MessageEvent messageEvent) {
+    private void timerSettings(@NonNull MessageEvent messageEvent) {
         byte[] data = messageEvent.getData();
         TimerSettings settings = unwrap(ParcelableUtil
                 .unmarshall(data, TimerSettings$$Parcelable.CREATOR));
@@ -109,7 +111,7 @@ public class MobileWearableListener extends WearableListenerService {
         }
     }
 
-    public void createTraining(MessageEvent messageEvent) {
+    public void createTraining(@NonNull MessageEvent messageEvent) {
         byte[] data = messageEvent.getData();
         Training training = unwrap(ParcelableUtil.unmarshall(data, Training$$Parcelable.CREATOR));
         training.save();
@@ -117,7 +119,7 @@ public class MobileWearableListener extends WearableListenerService {
         ApplicationInstance.wearableClient.sendCreateTrainingFromRemoteBroadcast();
     }
 
-    private void endUpdated(MessageEvent messageEvent) {
+    private void endUpdated(@NonNull MessageEvent messageEvent) {
         byte[] data = messageEvent.getData();
         End end = unwrap(ParcelableUtil.unmarshall(data, End$$Parcelable.CREATOR));
         Round round = Round.get(end.roundId);
@@ -132,7 +134,7 @@ public class MobileWearableListener extends WearableListenerService {
                         .ensureLoaded());
     }
 
-    private End getLastEmptyOrCreateNewEnd(Round round) {
+    private End getLastEmptyOrCreateNewEnd(@NonNull Round round) {
         if (round.getEnds().isEmpty()) {
             return round.addEnd();
         }

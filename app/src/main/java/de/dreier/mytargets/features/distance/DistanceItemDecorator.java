@@ -17,6 +17,7 @@ package de.dreier.mytargets.features.distance;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -28,7 +29,7 @@ public class DistanceItemDecorator extends RecyclerView.ItemDecoration {
     private final int spaceVertical;
     private final int gridSize;
 
-    public DistanceItemDecorator(Context context, int gridSize) {
+    public DistanceItemDecorator(@NonNull Context context, int gridSize) {
         this.spaceHorizontal = (int) context.getResources()
                 .getDimension(R.dimen.card_padding_horizontal);
         this.spaceVertical = (int) context.getResources()
@@ -37,7 +38,7 @@ public class DistanceItemDecorator extends RecyclerView.ItemDecoration {
     }
 
     @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+    public void getItemOffsets(@NonNull Rect outRect, View view, @NonNull RecyclerView parent, RecyclerView.State state) {
         int position = parent.getChildAdapterPosition(view);
         if (position % gridSize == 0) {
             outRect.left = spaceHorizontal;

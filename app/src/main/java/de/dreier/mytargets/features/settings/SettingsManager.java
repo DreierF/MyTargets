@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.settings;
 
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.annimon.stream.Collectors;
@@ -98,6 +99,7 @@ public class SettingsManager {
     private static final String KEY_OVERVIEW_SHOT_SORTING_SPOT = "overview_shot_sorting_spot";
     public static final String KEY_LANGUAGE = "language";
 
+    @NonNull
     public static Long getStandardRound() {
         return (long) lastUsed.getInt(KEY_STANDARD_ROUND, 32);
     }
@@ -138,7 +140,7 @@ public class SettingsManager {
         return new Dimension(distance, unit);
     }
 
-    public static void setDistance(Dimension distance) {
+    public static void setDistance(@NonNull Dimension distance) {
         lastUsed.edit()
                 .putInt(KEY_DISTANCE_VALUE, (int) distance.value)
                 .putString(KEY_DISTANCE_UNIT, Dimension.Unit.toStringHandleNull(distance.unit))
@@ -165,7 +167,7 @@ public class SettingsManager {
         return new Target(targetId, scoringStyle, diameter);
     }
 
-    public static void setTarget(Target target) {
+    public static void setTarget(@NonNull Target target) {
         lastUsed.edit()
                 .putInt(KEY_TARGET, (int) (long) target.getId())
                 .putInt(KEY_SCORING_STYLE, target.scoringStyle)
@@ -185,6 +187,7 @@ public class SettingsManager {
                 .apply();
     }
 
+    @NonNull
     public static TimerSettings getTimerSettings() {
         TimerSettings settings = new TimerSettings();
         settings.enabled = lastUsed.getBoolean(KEY_TIMER, false);
@@ -204,7 +207,7 @@ public class SettingsManager {
         }
     }
 
-    public static void setTimerSettings(TimerSettings settings) {
+    public static void setTimerSettings(@NonNull TimerSettings settings) {
         lastUsed.edit()
                 .putBoolean(KEY_TIMER, settings.enabled)
                 .apply();
@@ -248,6 +251,7 @@ public class SettingsManager {
                 .apply();
     }
 
+    @NonNull
     public static TargetViewBase.EInputMethod getInputMethod() {
         return preferences
                 .getBoolean(KEY_INPUT_MODE, false)
@@ -279,7 +283,7 @@ public class SettingsManager {
                 .getString(KEY_SHOW_MODE, ETrainingScope.END.toString()));
     }
 
-    public static void setShowMode(ETrainingScope showMode) {
+    public static void setShowMode(@NonNull ETrainingScope showMode) {
         preferences
                 .edit()
                 .putString(KEY_SHOW_MODE, showMode.toString())
@@ -291,13 +295,14 @@ public class SettingsManager {
                 .getString(KEY_AGGREGATION_STRATEGY, EAggregationStrategy.AVERAGE.toString()));
     }
 
-    public static void setAggregationStrategy(EAggregationStrategy aggregationStrategy) {
+    public static void setAggregationStrategy(@NonNull EAggregationStrategy aggregationStrategy) {
         preferences
                 .edit()
                 .putString(KEY_AGGREGATION_STRATEGY, aggregationStrategy.toString())
                 .apply();
     }
 
+    @Nullable
     public static String getProfileFirstName() {
         return preferences
                 .getString(KEY_PROFILE_FIRST_NAME, "");
@@ -310,6 +315,7 @@ public class SettingsManager {
                 .apply();
     }
 
+    @Nullable
     public static String getProfileLastName() {
         return preferences
                 .getString(KEY_PROFILE_LAST_NAME, "");
@@ -326,6 +332,7 @@ public class SettingsManager {
         return String.format("%s %s", getProfileFirstName(), getProfileLastName());
     }
 
+    @Nullable
     public static String getProfileClub() {
         return preferences
                 .getString(KEY_PROFILE_CLUB, "");
@@ -338,6 +345,7 @@ public class SettingsManager {
                 .apply();
     }
 
+    @Nullable
     public static String getProfileTargetCaptain() {
         return preferences
                 .getString(KEY_PROFILE_TARGET_CAPTAIN, "");
@@ -359,7 +367,7 @@ public class SettingsManager {
         return LocalDate.parse(date);
     }
 
-    public static void setProfileBirthDay(LocalDate birthDay) {
+    public static void setProfileBirthDay(@NonNull LocalDate birthDay) {
         preferences.edit()
                 .putString(KEY_PROFILE_BIRTHDAY, birthDay.toString())
                 .apply();
@@ -408,7 +416,7 @@ public class SettingsManager {
                 .getString(KEY_INPUT_KEYBOARD_TYPE, EKeyboardType.RIGHT.name()));
     }
 
-    public static void setInputKeyboardType(EKeyboardType type) {
+    public static void setInputKeyboardType(@NonNull EKeyboardType type) {
         preferences
                 .edit()
                 .putString(KEY_INPUT_KEYBOARD_TYPE, type.name())
@@ -421,7 +429,7 @@ public class SettingsManager {
         return EBackupLocation.valueOf(location);
     }
 
-    public static void setBackupLocation(EBackupLocation location) {
+    public static void setBackupLocation(@NonNull EBackupLocation location) {
         preferences
                 .edit()
                 .putString(KEY_BACKUP_LOCATION, location.name())
@@ -433,7 +441,7 @@ public class SettingsManager {
                 EBackupInterval.WEEKLY.name()));
     }
 
-    public static void setBackupInterval(EBackupInterval interval) {
+    public static void setBackupInterval(@NonNull EBackupInterval interval) {
         preferences.edit()
                 .putString(KEY_BACKUP_INTERVAL, interval.name())
                 .apply();
@@ -454,7 +462,7 @@ public class SettingsManager {
                 .collect(Collectors.toMap(a -> Long.valueOf(a[0]), a -> Integer.valueOf(a[1])));
     }
 
-    public static void setStandardRoundsLastUsed(Map<Long, Integer> ids) {
+    public static void setStandardRoundsLastUsed(@NonNull Map<Long, Integer> ids) {
         lastUsed.edit()
                 .putString(KEY_STANDARD_ROUNDS_LAST_USED, Stream.of(ids)
                         .map(id -> id.getKey() + ":" + id.getValue())
@@ -473,6 +481,7 @@ public class SettingsManager {
                 .apply();
     }
 
+    @NonNull
     public static SummaryConfiguration getInputSummaryConfiguration() {
         SummaryConfiguration config = new SummaryConfiguration();
         config.showEnd = preferences.getBoolean(KEY_INPUT_SUMMARY_SHOW_END, true);
@@ -484,7 +493,7 @@ public class SettingsManager {
         return config;
     }
 
-    public static void setInputSummaryConfiguration(SummaryConfiguration configuration) {
+    public static void setInputSummaryConfiguration(@NonNull SummaryConfiguration configuration) {
         preferences.edit()
                 .putBoolean(KEY_INPUT_SUMMARY_SHOW_END, configuration.showEnd)
                 .putBoolean(KEY_INPUT_SUMMARY_SHOW_ROUND, configuration.showRound)
@@ -494,6 +503,7 @@ public class SettingsManager {
                 .apply();
     }
 
+    @NonNull
     public static Score.Configuration getScoreConfiguration() {
         Score.Configuration config = new Score.Configuration();
         config.showReachedScore = preferences.getBoolean(KEY_OVERVIEW_SHOW_REACHED_SCORE, true);
@@ -503,7 +513,7 @@ public class SettingsManager {
         return config;
     }
 
-    public static void setScoreConfiguration(Score.Configuration configuration) {
+    public static void setScoreConfiguration(@NonNull Score.Configuration configuration) {
         preferences.edit()
                 .putBoolean(KEY_OVERVIEW_SHOW_REACHED_SCORE, configuration.showReachedScore)
                 .putBoolean(KEY_OVERVIEW_SHOW_TOTAL_SCORE, configuration.showTotalScore)
@@ -512,7 +522,7 @@ public class SettingsManager {
                 .apply();
     }
 
-    public static boolean shouldSortTarget(Target target) {
+    public static boolean shouldSortTarget(@NonNull Target target) {
         return preferences.getBoolean(KEY_OVERVIEW_SHOT_SORTING, true) &&
                 (target.getModel().getFaceCount() == 1 ||
                         preferences.getBoolean(KEY_OVERVIEW_SHOT_SORTING_SPOT, false));

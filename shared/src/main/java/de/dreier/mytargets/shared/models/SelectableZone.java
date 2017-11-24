@@ -16,6 +16,7 @@
 package de.dreier.mytargets.shared.models;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import de.dreier.mytargets.shared.targets.zone.ZoneBase;
 
@@ -33,7 +34,7 @@ public class SelectableZone implements Comparable<SelectableZone> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

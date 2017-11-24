@@ -35,10 +35,14 @@ import de.dreier.mytargets.shared.targets.zone.ZoneBase;
 public class TargetDrawable extends Drawable {
 
     public static final RectF SRC_RECT = new RectF(-1, -1, 1, 1);
+    @NonNull
     protected final Target target;
     final TargetModelBase model;
+    @NonNull
     private final List<ZoneBase> zonesToDraw;
+    @NonNull
     private final ArrayList<Matrix> targetFaceMatrices;
+    @NonNull
     private final ArrayList<Matrix> drawMatrices;
     private Matrix matrix = new Matrix();
     private float zoom = 1;
@@ -47,9 +51,10 @@ public class TargetDrawable extends Drawable {
     private Matrix spotMatrix = new Matrix();
     private float xOffset;
     private float yOffset;
+    @NonNull
     private CanvasWrapper canvasWrapper = new CanvasWrapper();
 
-    public TargetDrawable(Target target) {
+    public TargetDrawable(@NonNull Target target) {
         this.model = target.getModel();
         this.target = target;
         this.zonesToDraw = new ArrayList<>();
@@ -93,6 +98,7 @@ public class TargetDrawable extends Drawable {
                 Matrix.ScaleToFit.CENTER);
     }
 
+    @NonNull
     public Target getTarget() {
         return target;
     }

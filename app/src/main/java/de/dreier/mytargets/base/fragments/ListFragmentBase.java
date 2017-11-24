@@ -16,6 +16,7 @@ package de.dreier.mytargets.base.fragments;
 
 import android.content.Context;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import de.dreier.mytargets.base.adapters.ListAdapterBase;
 import de.dreier.mytargets.utils.multiselector.OnItemClickListener;
@@ -30,6 +31,7 @@ public abstract class ListFragmentBase<T, U extends ListAdapterBase<?, T>> exten
     /**
      * Adapter for the fragment's RecyclerView
      */
+    @Nullable
     protected U adapter;
 
     @Override

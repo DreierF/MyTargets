@@ -15,14 +15,17 @@
 
 package de.dreier.mytargets.shared.utils.typeconverters;
 
+import android.support.annotation.Nullable;
+
 import com.raizlabs.android.dbflow.converter.TypeConverter;
 
 import de.dreier.mytargets.shared.models.EWeather;
 
 public final class EWeatherConverter extends TypeConverter<Integer, EWeather> {
 
+    @Nullable
     @Override
-    public Integer getDBValue(EWeather model) {
+    public Integer getDBValue(@Nullable EWeather model) {
         if (model != null) {
             return model.getValue();
         }
@@ -30,8 +33,9 @@ public final class EWeatherConverter extends TypeConverter<Integer, EWeather> {
         return null;
     }
 
+    @Nullable
     @Override
-    public EWeather getModelValue(Integer data) {
+    public EWeather getModelValue(@Nullable Integer data) {
         if (data != null) {
             return EWeather.getOfValue(data);
         }

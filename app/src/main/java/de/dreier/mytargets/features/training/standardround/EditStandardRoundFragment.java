@@ -73,7 +73,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_edit_standard_round, container, false);
 
@@ -173,7 +173,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
@@ -198,13 +198,13 @@ public class EditStandardRoundFragment extends EditFragmentBase {
 
         ItemRoundTemplateBinding binding;
 
-        RoundTemplateHolder(View view) {
+        RoundTemplateHolder(@NonNull View view) {
             super(view);
             binding = DataBindingUtil.bind(view);
         }
 
         @Override
-        public void onBind(RoundTemplate roundTemplate, int position, Fragment fragment, View.OnClickListener removeListener) {
+        public void onBind(RoundTemplate roundTemplate, int position, @NonNull Fragment fragment, View.OnClickListener removeListener) {
             item = roundTemplate;
 
             // Set title of round
@@ -243,10 +243,11 @@ public class EditStandardRoundFragment extends EditFragmentBase {
     }
 
     private class RoundTemplateAdapter extends DynamicItemAdapter<RoundTemplate> {
-        RoundTemplateAdapter(Fragment fragment, List<RoundTemplate> list) {
+        RoundTemplateAdapter(@NonNull Fragment fragment, List<RoundTemplate> list) {
             super(fragment, list, R.string.round_removed);
         }
 
+        @NonNull
         @Override
         public DynamicItemHolder<RoundTemplate> onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = inflater.inflate(R.layout.item_round_template, parent, false);

@@ -15,11 +15,14 @@
 
 package de.dreier.mytargets.shared.utils;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class LongUtils {
-    public static long[] toArray(List<Long> values) {
+    @NonNull
+    public static long[] toArray(@NonNull List<Long> values) {
         long[] result = new long[values.size()];
         int i = 0;
         for (Long l : values) {
@@ -28,7 +31,8 @@ public class LongUtils {
         return result;
     }
 
-    public static List<Long> toList(long[] array) {
+    @NonNull
+    public static List<Long> toList(@NonNull long[] array) {
         List<Long> list = new ArrayList<>();
         for (long value : array) {
             list.add(value);

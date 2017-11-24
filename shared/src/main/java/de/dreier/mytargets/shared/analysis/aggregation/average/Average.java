@@ -17,6 +17,7 @@ package de.dreier.mytargets.shared.analysis.aggregation.average;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.support.annotation.NonNull;
 
 import java.util.List;
 
@@ -24,13 +25,16 @@ import de.dreier.mytargets.shared.models.db.Shot;
 
 public class Average {
     int dataPointCount;
+    @NonNull
     PointF average = new PointF(0.0F, 0.0F);
+    @NonNull
     PointF weightedAverage = new PointF(0.0F, 0.0F);
+    @NonNull
     RectF nonUniformStdDev = new RectF(-1.0F, -1.0F, -1.0F, -1.0F);
     double stdDevX = -1.0D;
     double stdDevY = -1.0D;
 
-    public void computeAll(List<Shot> shots) {
+    public void computeAll(@NonNull List<Shot> shots) {
         dataPointCount = shots.size();
         computeAverage(shots);
         computeNonUniformStdDeviations(shots);
@@ -39,7 +43,7 @@ public class Average {
         computeWeightedAverage(shots);
     }
 
-    private void computeWeightedAverage(List<Shot> data) {
+    private void computeWeightedAverage(@NonNull List<Shot> data) {
         double sumX = 0.0D;
         double sumY = 0.0D;
         int i = 0;
@@ -54,7 +58,7 @@ public class Average {
         weightedAverage.set((float) (sumX / (double) i), (float) (sumY / (double) i));
     }
 
-    private void computeNonUniformStdDeviations(List<Shot> data) {
+    private void computeNonUniformStdDeviations(@NonNull List<Shot> data) {
         int negCountX = 0;
         int posCountX = 0;
         int posCountY = 0;
@@ -90,7 +94,7 @@ public class Average {
                 (float) Math.sqrt(negSquaredYError / (double) negCountY));
     }
 
-    public void computeStdDevX(List<Shot> data) {
+    public void computeStdDevX(@NonNull List<Shot> data) {
         double sumSquaredXError = 0.0D;
 
         for (Shot point : data) {
@@ -101,7 +105,7 @@ public class Average {
         stdDevX = Math.sqrt(sumSquaredXError / (double) data.size());
     }
 
-    public void computeStdDevY(List<Shot> data) {
+    public void computeStdDevY(@NonNull List<Shot> data) {
         double sumSquaredYError = 0.0D;
 
         for (Shot point : data) {
@@ -112,7 +116,7 @@ public class Average {
         stdDevY = Math.sqrt(sumSquaredYError / (double) data.size());
     }
 
-    public void computeAverage(List<Shot> data) {
+    public void computeAverage(@NonNull List<Shot> data) {
         double sumX = 0.0D;
         double sumY = 0.0D;
 
@@ -124,10 +128,12 @@ public class Average {
         average.set((float) (sumX / (double) data.size()), (float) (sumY / (double) data.size()));
     }
 
+    @NonNull
     public PointF getAverage() {
         return average;
     }
 
+    @NonNull
     public RectF getNonUniformStdDev() {
         return nonUniformStdDev;
     }

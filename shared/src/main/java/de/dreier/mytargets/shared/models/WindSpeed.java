@@ -38,7 +38,8 @@ public class WindSpeed implements IIdProvider, IImageProvider, Comparable<WindSp
         this.drawable = drawable;
     }
 
-    public static List<WindSpeed> getList(Context context) {
+    @NonNull
+    public static List<WindSpeed> getList(@NonNull Context context) {
         List<WindSpeed> list = new ArrayList<>();
         list.add(new WindSpeed(0, context.getString(R.string.bft_0),
                 R.drawable.ic_bft_0_black_24dp));
@@ -76,7 +77,7 @@ public class WindSpeed implements IIdProvider, IImageProvider, Comparable<WindSp
     }
 
     @Override
-    public Drawable getDrawable(Context context) {
+    public Drawable getDrawable(@NonNull Context context) {
         return context.getResources().getDrawable(drawable);
     }
 

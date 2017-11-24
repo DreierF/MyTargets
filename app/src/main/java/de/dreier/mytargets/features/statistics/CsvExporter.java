@@ -43,9 +43,10 @@ import de.dreier.mytargets.shared.utils.FileUtils;
 import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 
 public class CsvExporter {
+    @NonNull
     private static DateFormat timeInstance = new SimpleDateFormat("HH:mm:ss", Locale.US);
 
-    public static Uri export(Context context, List<Long> roundIds) throws IOException {
+    public static Uri export(@NonNull Context context, @NonNull List<Long> roundIds) throws IOException {
         final File f = new File(context.getCacheDir(), getExportFileName());
         exportAll(f, roundIds);
         return FileUtils.getUriForFile(context, f);
@@ -58,14 +59,14 @@ public class CsvExporter {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private static void exportAll(File file, List<Long> roundIds) throws IOException {
+    private static void exportAll(@NonNull File file, @NonNull List<Long> roundIds) throws IOException {
         file.getParentFile().mkdirs();
         file.createNewFile();
         FileWriter writer = new FileWriter(file);
         writeExportData(writer, roundIds);
     }
 
-    public static void writeExportData(Writer writer, List<Long> roundIds) throws IOException {
+    public static void writeExportData(@NonNull Writer writer, @NonNull List<Long> roundIds) throws IOException {
         CsvBuilder csv = new CsvBuilder(writer);
         csv.enterScope();
         csv.add(get(R.string.title));
@@ -92,7 +93,7 @@ public class CsvExporter {
         writer.close();
     }
 
-    private static void addTraining(CsvBuilder csv, Training t, List<Long> roundIds) throws IOException {
+    private static void addTraining(@NonNull CsvBuilder csv, @NonNull Training t, @NonNull List<Long> roundIds) throws IOException {
         csv.enterScope();
         // Title
         csv.add(t.title);
@@ -116,7 +117,7 @@ public class CsvExporter {
         csv.exitScope();
     }
 
-    private static void addRound(CsvBuilder csv, Round r) throws IOException {
+    private static void addRound(@NonNull CsvBuilder csv, @NonNull Round r) throws IOException {
         csv.enterScope();
         // Round
         csv.add(String.valueOf(r.index + 1));

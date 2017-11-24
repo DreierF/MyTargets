@@ -15,6 +15,8 @@
 
 package de.dreier.mytargets.features.training.environment;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ public class CurrentWeather {
     public Integer httpCode;
     @SerializedName("name")
     public String cityName;
+    @NonNull
     @SerializedName("weather")
     public List<Weather> weather = new ArrayList<>();
     @SerializedName("wind")
@@ -43,6 +46,7 @@ public class CurrentWeather {
         return (int) Math.round(Math.pow(kmh / 3.01, 0.666666666));
     }
 
+    @NonNull
     public Environment toEnvironment() {
         Environment e = new Environment();
         int code = Integer.parseInt(weather.get(0).icon.substring(0, 2));
@@ -55,6 +59,7 @@ public class CurrentWeather {
         return e;
     }
 
+    @NonNull
     private EWeather imageCodeToWeather(int code) {
         switch (code) {
             case 1:

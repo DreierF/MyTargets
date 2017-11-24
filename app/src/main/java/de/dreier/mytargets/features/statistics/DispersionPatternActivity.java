@@ -71,14 +71,14 @@ public class DispersionPatternActivity extends ChildActivityBase {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.menu_scoreboard, menu);
         menu.findItem(R.id.action_settings).setVisible(false);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
                 shareImage();

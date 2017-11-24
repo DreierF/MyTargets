@@ -18,6 +18,7 @@ package de.dreier.mytargets.views;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.PluralsRes;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -80,7 +81,7 @@ public class NumberPicker extends LinearLayout {
         }
     }
 
-    public NumberPicker(Context context, AttributeSet attributeSet) {
+    public NumberPicker(@NonNull Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
 
         LayoutInflater inflater = (LayoutInflater) context

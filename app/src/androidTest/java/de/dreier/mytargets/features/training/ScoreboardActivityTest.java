@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.training;
 
 
+import android.support.annotation.NonNull;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -37,6 +38,7 @@ import de.dreier.mytargets.test.utils.rules.SimpleDbTestRule;
 @RunWith(AndroidJUnit4.class)
 public class ScoreboardActivityTest extends UITestBase {
 
+    @NonNull
     private IntentsTestRule<ScoreboardActivity> activityTestRule = new IntentsTestRule<>(
             ScoreboardActivity.class, true, false);
     @Rule

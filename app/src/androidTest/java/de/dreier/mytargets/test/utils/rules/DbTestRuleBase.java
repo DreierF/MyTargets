@@ -49,8 +49,9 @@ public abstract class DbTestRuleBase implements TestRule {
         context = InstrumentationRegistry.getTargetContext();
     }
 
+    @NonNull
     @Override
-    public Statement apply(Statement base, Description description) {
+    public Statement apply(@NonNull Statement base, Description description) {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
@@ -64,7 +65,8 @@ public abstract class DbTestRuleBase implements TestRule {
         };
     }
 
-    protected End buildEnd(Round round, int... shots) {
+    @NonNull
+    protected End buildEnd(@NonNull Round round, @NonNull int... shots) {
         End end = round.addEnd();
         end.roundId = round.getId();
         for (int i = 0; i < shots.length; i++) {
@@ -74,7 +76,8 @@ public abstract class DbTestRuleBase implements TestRule {
         return end;
     }
 
-    protected End randomEnd(Training training, Round round, int arrowsPerEnd, Random gen, int index) {
+    @NonNull
+    protected End randomEnd(Training training, @NonNull Round round, int arrowsPerEnd, @NonNull Random gen, int index) {
         End end = new End(arrowsPerEnd, index);
         end.roundId = round.getId();
         end.exact = true;
@@ -90,7 +93,7 @@ public abstract class DbTestRuleBase implements TestRule {
         return end;
     }
 
-    private float gaussianRand(Random gen) {
+    private float gaussianRand(@NonNull Random gen) {
         final float rand1 = gen.nextFloat();
         final float rand2 = gen.nextFloat();
         return (float) (Math.sqrt(-2 * Math.log(rand1) / Math.log(Math.E)) *
@@ -128,7 +131,7 @@ public abstract class DbTestRuleBase implements TestRule {
     }
 
     @NonNull
-    protected Training saveDefaultTraining(Long standardRoundId, Random generator) {
+    protected Training saveDefaultTraining(Long standardRoundId, @NonNull Random generator) {
         Training training = new Training();
         training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training);
         training.date = LocalDate.of(2016, 4 + generator.nextInt(5), generator.nextInt(29));

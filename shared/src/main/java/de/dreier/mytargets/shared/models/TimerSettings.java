@@ -15,6 +15,8 @@
 
 package de.dreier.mytargets.shared.models;
 
+import android.support.annotation.Nullable;
+
 public class TimerSettings {
     public boolean enabled;
     public boolean sound;
@@ -24,7 +26,7 @@ public class TimerSettings {
     public int warnTime;
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

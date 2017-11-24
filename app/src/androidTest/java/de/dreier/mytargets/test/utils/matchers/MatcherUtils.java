@@ -16,6 +16,8 @@
 package de.dreier.mytargets.test.utils.matchers;
 
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.matcher.BoundedMatcher;
@@ -32,7 +34,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFro
 import static org.hamcrest.CoreMatchers.is;
 
 public class MatcherUtils {
-    public static View getParentViewById(View view, int parentViewId) {
+    public static View getParentViewById(@NonNull View view, int parentViewId) {
         if (view.getId() == parentViewId) {
             return view;
         } else if (view.getParent() != null && view.getParent() instanceof ViewGroup) {
@@ -41,7 +43,7 @@ public class MatcherUtils {
         return null;
     }
 
-    public static boolean isInViewHierarchy(View view, View viewToFind) {
+    public static boolean isInViewHierarchy(@NonNull View view, View viewToFind) {
         if (view == viewToFind) {
             return true;
         } else if (view.getParent() != null && view.getParent() instanceof ViewGroup) {
@@ -56,22 +58,23 @@ public class MatcherUtils {
     }
 
     private static Matcher<Object> withToolbarTitle(
-            final Matcher<CharSequence> textMatcher) {
+            @NonNull final Matcher<CharSequence> textMatcher) {
         return new BoundedMatcher<Object, Toolbar>(Toolbar.class) {
             @Override
-            public boolean matchesSafely(Toolbar toolbar) {
+            public boolean matchesSafely(@NonNull Toolbar toolbar) {
                 return textMatcher.matches(toolbar.getTitle());
             }
 
             @Override
-            public void describeTo(Description description) {
+            public void describeTo(@NonNull Description description) {
                 description.appendText("with toolbar title: ");
                 textMatcher.describeTo(description);
             }
         };
     }
 
-    public static View getMatchingParent(View view, Matcher<View> matcher) {
+    @Nullable
+    public static View getMatchingParent(@Nullable View view, @NonNull Matcher<View> matcher) {
         if (view == null) {
             return null;
         }
@@ -91,11 +94,13 @@ public class MatcherUtils {
      */
     public static Matcher<View> containsStringRes(final int resourceId) {
         return new BoundedMatcher<View, TextView>(TextView.class) {
+            @Nullable
             private String resourceName = null;
+            @Nullable
             private String expectedText = null;
 
             @Override
-            public void describeTo(Description description) {
+            public void describeTo(@NonNull Description description) {
                 description.appendText("contains string from resource id: ");
                 description.appendValue(resourceId);
                 if (resourceName != null) {
@@ -110,7 +115,7 @@ public class MatcherUtils {
             }
 
             @Override
-            public boolean matchesSafely(TextView textView) {
+            public boolean matchesSafely(@NonNull TextView textView) {
                 if (expectedText == null) {
                     try {
                         expectedText = textView.getResources().getString(resourceId);

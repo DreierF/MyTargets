@@ -16,6 +16,7 @@
 package de.dreier.mytargets.shared.targets.zone;
 
 import android.graphics.PointF;
+import android.support.annotation.NonNull;
 
 import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper;
 
@@ -48,14 +49,14 @@ public class CircularZone extends ZoneBase {
     }
 
     @Override
-    public void drawFill(CanvasWrapper canvas) {
+    public void drawFill(@NonNull CanvasWrapper canvas) {
         initPaint();
         canvas.drawCircle(midpoint.x, midpoint.y, radius, paintFill);
     }
 
 
     @Override
-    public void drawStroke(CanvasWrapper canvas) {
+    public void drawStroke(@NonNull CanvasWrapper canvas) {
         initPaint();
         canvas.drawCircle(midpoint.x, midpoint.y, radius, paintStroke);
     }

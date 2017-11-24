@@ -137,7 +137,7 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         randomEnd(training, round2, 6, generator, 5).save();
     }
 
-    private void addFullTraining(Bow bow) {
+    private void addFullTraining(@NonNull Bow bow) {
         StandardRound standardRound = StandardRound.get(32L);
 
         Training training = new Training();

@@ -16,6 +16,7 @@ package de.dreier.mytargets.test.utils.actions;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
+import android.support.annotation.NonNull;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.rule.ActivityTestRule;
@@ -36,23 +37,25 @@ public class OrientationChangeAction implements ViewAction {
     private final int orientation;
     private final Activity activity;
 
-    private OrientationChangeAction(int orientation, ActivityTestRule<?> rule) {
+    private OrientationChangeAction(int orientation, @NonNull ActivityTestRule<?> rule) {
         this.orientation = orientation;
         this.activity = rule.getActivity();
     }
 
+    @NonNull
     @Override
     public Matcher<View> getConstraints() {
         return isRoot();
     }
 
+    @NonNull
     @Override
     public String getDescription() {
         return "change orientation to " + orientation;
     }
 
     @Override
-    public void perform(UiController uiController, View view) {
+    public void perform(@NonNull UiController uiController, View view) {
         uiController.loopMainThreadUntilIdle();
         //final Activity activity = getActivity(view.getContext());
         activity.setRequestedOrientation(orientation);
@@ -64,11 +67,11 @@ public class OrientationChangeAction implements ViewAction {
         }
     }
 
-    public static ViewAction orientationLandscape(ActivityTestRule<?> rule) {
+    public static ViewAction orientationLandscape(@NonNull ActivityTestRule<?> rule) {
         return new OrientationChangeAction(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE, rule);
     }
 
-    public static ViewAction orientationPortrait(ActivityTestRule<?> rule) {
+    public static ViewAction orientationPortrait(@NonNull ActivityTestRule<?> rule) {
         return new OrientationChangeAction(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, rule);
     }
 }

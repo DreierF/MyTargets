@@ -51,11 +51,11 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
     public ArrowStatistic() {
     }
 
-    public ArrowStatistic(Target target, List<Shot> shots) {
+    public ArrowStatistic(@NonNull Target target, @NonNull List<Shot> shots) {
         this(null, null, target, shots);
     }
 
-    private ArrowStatistic(String arrow, String arrowNumber, Target target, List<Shot> shots) {
+    private ArrowStatistic(String arrow, String arrowNumber, @NonNull Target target, @NonNull List<Shot> shots) {
         this.arrowName = arrow;
         this.arrowNumber = arrowNumber;
         this.target = target;
@@ -65,7 +65,7 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
                 (sum, shot) -> sum + target.getScoreByZone(shot.scoringRing, shot.index));
     }
 
-    public static List<ArrowStatistic> getAll(Target target, List<Round> rounds) {
+    public static List<ArrowStatistic> getAll(@NonNull Target target, @NonNull List<Round> rounds) {
         return Stream.of(rounds)
                 .withoutNulls()
                 .groupBy(r -> r.getTraining().arrowId == null ? 0 : r.getTraining().arrowId)

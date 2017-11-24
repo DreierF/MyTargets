@@ -15,6 +15,7 @@
 package de.dreier.mytargets.features.training.input;
 
 
+import android.support.annotation.NonNull;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.UiObjectNotFoundException;
@@ -49,6 +50,7 @@ import static de.dreier.mytargets.test.utils.matchers.ViewMatcher.clickOnPrefere
 @RunWith(AndroidJUnit4.class)
 public class InputActivityTest extends UITestBase {
 
+    @NonNull
     private ActivityTestRule<InputActivity> activityTestRule = new ActivityTestRule<>(
             InputActivity.class, true, false);
 

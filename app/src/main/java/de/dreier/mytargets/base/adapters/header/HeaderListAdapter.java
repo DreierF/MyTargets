@@ -59,8 +59,9 @@ public abstract class HeaderListAdapter<C extends IIdProvider>
         return -1;
     }
 
+    @NonNull
     @Override
-    protected HeaderViewHolder getTopLevelViewHolder(ViewGroup parent) {
+    protected HeaderViewHolder getTopLevelViewHolder(@NonNull ViewGroup parent) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_header, parent, false);
         return new HeaderViewHolder(itemView);

@@ -16,6 +16,7 @@
 package de.dreier.mytargets.shared.models.db;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
@@ -36,6 +37,7 @@ public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
     public static final int NOTHING_SELECTED = -2;
     public static final int MISS = -1;
 
+    @Nullable
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     Long id;
@@ -44,6 +46,7 @@ public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
     @Column
     public int index;
 
+    @Nullable
     @ForeignKey(tableClass = End.class, references = {
             @ForeignKeyReference(columnName = "end", columnType = Long.class, foreignKeyColumnName = "_id", referencedGetterName = "getId", referencedSetterName = "setId")},
             onDelete = ForeignKeyAction.CASCADE)
@@ -59,6 +62,7 @@ public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
     public int scoringRing = NOTHING_SELECTED;
 
     // Is the actual number of the arrow not its index, arrow id or something else
+    @Nullable
     @Column
     public String arrowNumber = null;
 
@@ -69,11 +73,12 @@ public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
         this.index = i;
     }
 
+    @Nullable
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(@Nullable Long id) {
         this.id = id;
     }
 
@@ -89,7 +94,7 @@ public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         return this == o || !(o == null || getClass() != o.getClass())
                 && (id != null ? id.equals(((Shot) o).id) : ((Shot) o).id == null);
     }

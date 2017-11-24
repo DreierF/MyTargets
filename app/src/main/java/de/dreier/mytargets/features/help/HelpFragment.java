@@ -87,12 +87,12 @@ public class HelpFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.help, menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_version_info:
                 new VersionInfoMDialog.Builder(getContext())

@@ -15,12 +15,14 @@
 
 package de.dreier.mytargets.features.bows;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
 
 public class EditBowActivity extends SimpleFragmentActivityBase {
 
+    @NonNull
     @Override
     protected Fragment instantiateFragment() {
         return new EditBowFragment();

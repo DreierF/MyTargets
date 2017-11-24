@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.test.runner.intent.IntentStubberRegistry;
 
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class ImageCaptureStubbingUtils {
 
     private static boolean matched = false;
 
-    public static void intendingImageCapture(final Context context, final int mockedImage) {
+    public static void intendingImageCapture(@NonNull final Context context, final int mockedImage) {
         matched = false;
         IntentStubberRegistry.load(intent -> {
             if (MediaStore.ACTION_IMAGE_CAPTURE.equals(intent.getAction())) {
@@ -49,7 +50,7 @@ public class ImageCaptureStubbingUtils {
         });
     }
 
-    private static void saveMockToUri(Context context, int mockedImage, Uri uriToSaveImage) {
+    private static void saveMockToUri(@NonNull Context context, int mockedImage, @NonNull Uri uriToSaveImage) {
         try {
             Resources testRes = context.getResources();
             InputStream ts = testRes.openRawResource(mockedImage);

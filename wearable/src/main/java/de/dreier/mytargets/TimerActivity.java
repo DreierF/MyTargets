@@ -17,6 +17,7 @@ package de.dreier.mytargets;
 import android.app.FragmentManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.wearable.activity.WearableActivity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -71,7 +72,7 @@ public class TimerActivity extends WearableActivity implements MenuItem.OnMenuIt
     }
 
     @Override
-    public boolean onMenuItemClick(MenuItem menuItem) {
+    public boolean onMenuItemClick(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.menu_stop:
                 finish();
@@ -112,6 +113,7 @@ public class TimerActivity extends WearableActivity implements MenuItem.OnMenuIt
 
         private FragmentTimerBinding binding;
 
+        @NonNull
         public static TimerFragment getInstance(TimerSettings settings) {
             TimerFragment timer = new TimerFragment();
             Bundle bundle = new Bundle();
@@ -121,7 +123,7 @@ public class TimerActivity extends WearableActivity implements MenuItem.OnMenuIt
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             binding = DataBindingUtil.inflate(inflater, R.layout.fragment_timer, container, false);
             binding.startTimer.setOnClickListener(this);
             return binding.getRoot();
@@ -133,7 +135,7 @@ public class TimerActivity extends WearableActivity implements MenuItem.OnMenuIt
         }
 
         @Override
-        protected void applyStatus(ETimerState status) {
+        protected void applyStatus(@NonNull ETimerState status) {
             if (getActivity() != null) {
                 ((TimerActivity) getActivity()).applyStatus(status);
             }

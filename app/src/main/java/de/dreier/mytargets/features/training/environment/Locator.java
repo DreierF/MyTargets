@@ -20,6 +20,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 import android.util.Log;
 
@@ -44,12 +46,14 @@ public class Locator implements LocationListener {
         NETWORK_THEN_GPS
     }
 
+    @NonNull
     private final Context context;
+    @Nullable
     private final LocationManager locationManager;
     private Locator.Method method;
     private Locator.Listener callback;
 
-    public Locator(Context context) {
+    public Locator(@NonNull Context context) {
         super();
         this.context = context;
         this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -91,7 +95,7 @@ public class Locator implements LocationListener {
     }
 
     @SuppressWarnings("MissingPermission")
-    private void requestUpdates(String provider) {
+    private void requestUpdates(@NonNull String provider) {
         if (this.locationManager.isProviderEnabled(provider)) {
             if (provider.contentEquals(LocationManager.NETWORK_PROVIDER)
                     && Connectivity.isConnected(this.context)) {
@@ -120,7 +124,7 @@ public class Locator implements LocationListener {
 
     @SuppressWarnings("MissingPermission")
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged(@NonNull Location location) {
         Log.d(LOG_TAG, "Location found : " + location.getLatitude() + ", " + location
                 .getLongitude() + (location.hasAccuracy() ? " : +- " + location
                 .getAccuracy() + " meters" : ""));
@@ -130,7 +134,7 @@ public class Locator implements LocationListener {
 
     @SuppressWarnings("MissingPermission")
     @Override
-    public void onProviderDisabled(String provider) {
+    public void onProviderDisabled(@NonNull String provider) {
         Log.d(LOG_TAG, "Provider disabled : " + provider);
         if (this.method == Locator.Method.NETWORK_THEN_GPS
                 && provider.contentEquals(LocationManager.NETWORK_PROVIDER)) {

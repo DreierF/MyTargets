@@ -17,6 +17,8 @@ package de.dreier.mytargets.base.gallery.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -42,13 +44,14 @@ import de.dreier.mytargets.utils.Utils;
 public class ViewPagerAdapter extends PagerAdapter {
 
     private Activity activity;
+    @Nullable
     private LayoutInflater layoutInflater;
     private ImageList images;
     private boolean isShowing = true;
     private Toolbar toolbar;
     private RecyclerView imagesHorizontalList;
 
-    public ViewPagerAdapter(Activity activity, ImageList images, Toolbar toolbar, RecyclerView imagesHorizontalList) {
+    public ViewPagerAdapter(@NonNull Activity activity, ImageList images, Toolbar toolbar, RecyclerView imagesHorizontalList) {
         this.activity = activity;
         this.layoutInflater = (LayoutInflater) activity
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -72,6 +75,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         return POSITION_NONE;
     }
 
+    @NonNull
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View itemView = layoutInflater.inflate(R.layout.pager_item, container, false);

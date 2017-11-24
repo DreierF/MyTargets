@@ -59,7 +59,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & IRecursiv
         reloadData();
     }
 
-    public void onDelete(List<Long> deletedIds) {
+    public void onDelete(@NonNull List<Long> deletedIds) {
         FirebaseAnalytics.getInstance(getContext()).logEvent("delete", null);
         List<T> deleted = deleteItems(deletedIds);
         String message = getResources()
@@ -71,7 +71,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & IRecursiv
     }
 
     @NonNull
-    private List<T> deleteItems(List<Long> deletedIds) {
+    private List<T> deleteItems(@NonNull List<Long> deletedIds) {
         List<T> deleted = Stream.of(deletedIds)
                 .map(id -> adapter.getItemById(id))
                 .filter(item -> item != null)
@@ -85,7 +85,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & IRecursiv
         return deleted;
     }
 
-    private void undoDeletion(List<T> deleted) {
+    private void undoDeletion(@NonNull List<T> deleted) {
         for (T item : deleted) {
             item.saveRecursively();
             adapter.addItem(item);

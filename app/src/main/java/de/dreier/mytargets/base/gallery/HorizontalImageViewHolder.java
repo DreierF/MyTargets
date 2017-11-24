@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.base.gallery;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,7 +26,7 @@ public class HorizontalImageViewHolder extends RecyclerView.ViewHolder {
     public ImageView camera;
     public ImageView image;
 
-    public HorizontalImageViewHolder(View itemView) {
+    public HorizontalImageViewHolder(@NonNull View itemView) {
         super(itemView);
         image = itemView.findViewById(R.id.iv);
         camera = itemView.findViewById(R.id.camera);

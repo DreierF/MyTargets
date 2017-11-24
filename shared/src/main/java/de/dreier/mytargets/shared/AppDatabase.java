@@ -16,6 +16,7 @@
 package de.dreier.mytargets.shared;
 
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.annotation.Database;
 import com.raizlabs.android.dbflow.annotation.Migration;
@@ -119,7 +120,7 @@ public class AppDatabase {
     public static class Migration3 extends BaseMigration {
 
         @Override
-        public void migrate(DatabaseWrapper database) {
+        public void migrate(@NonNull DatabaseWrapper database) {
             database.execSQL("ALTER TABLE SHOOT ADD COLUMN x REAL");
             database.execSQL("ALTER TABLE SHOOT ADD COLUMN y REAL");
             Cursor cur = database.rawQuery("SELECT s._id, s.points, r.target " +
@@ -140,7 +141,7 @@ public class AppDatabase {
     public static class Migration4 extends BaseMigration {
 
         @Override
-        public void migrate(DatabaseWrapper database) {
+        public void migrate(@NonNull DatabaseWrapper database) {
             database.execSQL(
                     "CREATE TABLE IF NOT EXISTS VISIER ( _id INTEGER PRIMARY KEY AUTOINCREMENT," +
                             "bow REFERENCES BOW ON DELETE CASCADE," +
@@ -161,7 +162,7 @@ public class AppDatabase {
     public static class Migration6 extends BaseMigration {
 
         @Override
-        public void migrate(DatabaseWrapper database) {
+        public void migrate(@NonNull DatabaseWrapper database) {
             File filesDir = SharedApplicationInstance.getContext().getFilesDir();
 
             // Migrate all bow images
