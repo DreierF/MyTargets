@@ -90,7 +90,7 @@ public class RoundFragment extends EditableListFragment<End> {
 
         @Override
         protected void onUpdate(Long trainingId, Long round, End end) {
-            if(roundId == round) {
+            if (roundId == round) {
                 reloadData();
             }
         }
@@ -229,11 +229,12 @@ public class RoundFragment extends EditableListFragment<End> {
         @Override
         public void bindItem() {
             List<Shot> shots = item.getShots();
-            if(SettingsManager.shouldSortTarget(round.getTarget())) {
+            if (SettingsManager.shouldSortTarget(round.getTarget())) {
                 Collections.sort(shots);
             }
             binding.shoots.setShots(round.getTarget(), shots);
-            binding.imageIndicator.setVisibility(item.getImages().isEmpty() ? View.INVISIBLE : View.VISIBLE);
+            binding.imageIndicator
+                    .setVisibility(item.getImages().isEmpty() ? View.INVISIBLE : View.VISIBLE);
             binding.end.setText(getString(R.string.passe_n, (item.index + 1)));
         }
     }

@@ -32,7 +32,7 @@ public class NFAAIndoor extends TargetModelBase {
 
     public NFAAIndoor() {
         super(ID, R.string.nfaa_indoor);
-        zones = new ZoneBase[] {
+        zones = new ZoneBase[]{
                 new CircularZone(0.1f, WHITE, DARK_GRAY, 4),
                 new CircularZone(0.2f, WHITE, DARK_GRAY, 0),
                 new CircularZone(0.4f, SAPPHIRE_BLUE, WHITE, 4),

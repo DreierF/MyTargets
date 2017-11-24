@@ -32,11 +32,11 @@ import de.dreier.mytargets.shared.targets.models.NFAAField;
 import de.dreier.mytargets.shared.targets.models.NFAAHunter;
 import de.dreier.mytargets.shared.targets.models.NFAAIndoor;
 import de.dreier.mytargets.shared.targets.models.NFASField;
-import de.dreier.mytargets.shared.targets.models.WAVertical3Spot;
 import de.dreier.mytargets.shared.targets.models.WA5Ring;
 import de.dreier.mytargets.shared.targets.models.WA6Ring;
 import de.dreier.mytargets.shared.targets.models.WAField;
 import de.dreier.mytargets.shared.targets.models.WAFull;
+import de.dreier.mytargets.shared.targets.models.WAVertical3Spot;
 import de.dreier.mytargets.shared.targets.models.Worcester;
 
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
@@ -715,13 +715,13 @@ public class StandardRoundFactory {
     /**
      * Builds a new standard round instance
      *
-     * @param institution    Institution that specified the round (ARCHERY_GB or FITA)
-     * @param name           Name of the round
-     * @param distanceUnit   Unit of the distance specified in round Details
-     * @param targetUnit     Unit of the target size specified in roundDetails
-     * @param target         Index of the target that is used for shooting
-     * @param shotsPerEnd    Number of arrows that are shot per end
-     * @param roundDetails   Per round distance, targetSize and number of ends are expected
+     * @param institution  Institution that specified the round (ARCHERY_GB or FITA)
+     * @param name         Name of the round
+     * @param distanceUnit Unit of the distance specified in round Details
+     * @param targetUnit   Unit of the target size specified in roundDetails
+     * @param target       Index of the target that is used for shooting
+     * @param shotsPerEnd  Number of arrows that are shot per end
+     * @param roundDetails Per round distance, targetSize and number of ends are expected
      * @return The standard round with the specified properties
      */
     private static StandardRound build(int institution, int name, Dimension.Unit distanceUnit, Dimension.Unit targetUnit, int target, int scoringStyle, int shotsPerEnd, int... roundDetails) {
@@ -738,7 +738,8 @@ public class StandardRoundFactory {
             roundTemplate.shotsPerEnd = shotsPerEnd;
             roundTemplate.distance = new Dimension(roundDetails[i], distanceUnit);
             roundTemplate.setTargetTemplate(
-                    new Target(target, scoringStyle, new Dimension(roundDetails[i + 1], targetUnit)));
+                    new Target(target, scoringStyle, new Dimension(roundDetails[i +
+                            1], targetUnit)));
             roundTemplate.endCount = roundDetails[i + 2];
             standardRound.insert(roundTemplate);
         }

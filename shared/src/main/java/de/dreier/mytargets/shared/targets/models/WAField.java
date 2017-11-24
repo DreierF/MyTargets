@@ -36,7 +36,7 @@ public class WAField extends TargetModelBase {
 
     WAField(int id, int nameRes) {
         super(id, nameRes);
-        zones = new ZoneBase[] {
+        zones = new ZoneBase[]{
                 new CircularZone(0.1f, LEMON_YELLOW, DARK_GRAY, 4),
                 new CircularZone(0.2f, LEMON_YELLOW, DARK_GRAY, 4),
                 new CircularZone(0.4f, DARK_GRAY, WHITE, 4),

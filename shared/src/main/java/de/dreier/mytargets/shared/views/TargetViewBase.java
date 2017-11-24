@@ -161,7 +161,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     @Override
     public void onFocusChanged(boolean gainFocus, int direction,
-                                  Rect previouslyFocusedRect) {
+                               Rect previouslyFocusedRect) {
         super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
         touchHelper.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
     }
@@ -222,16 +222,17 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         float x = motionEvent.getX();
         float y = motionEvent.getY();
 
-        if (!isCurrentlySelecting() && (selectPreviousShots(motionEvent, x, y) || pressBackspace(motionEvent, x, y))) {
+        if (!isCurrentlySelecting() &&
+                (selectPreviousShots(motionEvent, x, y) || pressBackspace(motionEvent, x, y))) {
             return true;
         }
 
-        if(getCurrentShotIndex() == EndRenderer.NO_SELECTION) {
+        if (getCurrentShotIndex() == EndRenderer.NO_SELECTION) {
             return true;
         }
 
         Shot shot = shots.get(getCurrentShotIndex());
-        if(updateShotToPosition(shot, x, y)) {
+        if (updateShotToPosition(shot, x, y)) {
             endRenderer.setSelection(
                     getCurrentShotIndex(), getShotCoordinates(shot),
                     getSelectedShotCircleRadius());
@@ -351,8 +352,8 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
      * Updates the given Shot to the given position.
      *
      * @param shot Shot to update
-     * @param x X-Coordinate
-     * @param y Y-Coordinate
+     * @param x    X-Coordinate
+     * @param y    Y-Coordinate
      * @return Returns true if the update was successful and false if the position is invalid
      */
     protected abstract boolean updateShotToPosition(Shot shot, float x, float y);
@@ -364,7 +365,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
             if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 int currentShotIndex = getCurrentShotIndex();
                 if (currentShotIndex != 0) {
-                    if(currentShotIndex == EndRenderer.NO_SELECTION) {
+                    if (currentShotIndex == EndRenderer.NO_SELECTION) {
                         currentShotIndex = shots.size();
                     }
                     Shot shot = shots.get(currentShotIndex - 1);
@@ -391,7 +392,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     protected void updateSelectableZones() {
-        if(getCurrentShotIndex() != EndRenderer.NO_SELECTION) {
+        if (getCurrentShotIndex() != EndRenderer.NO_SELECTION) {
             selectableZones = target.getSelectableZoneList(getCurrentShotIndex());
             if (virtualViews.size() > 0) {
                 updateVirtualViews();
@@ -421,7 +422,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
                 vv.id = i + 1;
                 vv.shot = false;
                 vv.description = selectableZones.get(i).text;
-                if("M".equals(vv.description)) {
+                if ("M".equals(vv.description)) {
                     vv.description = getResources().getString(R.string.miss);
                 }
                 vv.rect = getSelectableZonePosition(i);
@@ -429,7 +430,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
             }
         }
         int firstId = virtualViews.size();
-        for(Shot s : shots) {
+        for (Shot s : shots) {
             if (s.scoringRing == Shot.NOTHING_SELECTED) {
                 continue;
             }
@@ -437,10 +438,11 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
             vv.id = firstId + s.index;
             vv.shot = true;
             String score = target.zoneToString(s.scoringRing, s.index);
-            if("M".equals(score)) {
+            if ("M".equals(score)) {
                 score = getResources().getString(R.string.miss);
             }
-            vv.description = getResources().getString(R.string.accessibility_description_shot_n_score, s.index + 1, score);
+            vv.description = getResources()
+                    .getString(R.string.accessibility_description_shot_n_score, s.index + 1, score);
             vv.rect = endRenderer.getBoundsForShot(s.index);
             virtualViews.add(vv);
         }

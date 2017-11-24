@@ -15,12 +15,12 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <string name="saved">Uložené</string>
-  <string name="start_phone_app">Pre pokračovanie spustite na telefóne aplikáciu…</string>
-  <string name="add_end">Pridať sadu</string>
-  <string name="toggle_timer">Prepnúť časovač</string>
-  <string name="start_timer">Spustiť časovač</string>
-  <string name="vibration">Vibrovať</string>
-  <string name="sound">Zvuk</string>
-  <string name="today">dnes</string>
+    <string name="saved">Uložené</string>
+    <string name="start_phone_app">Pre pokračovanie spustite na telefóne aplikáciu…</string>
+    <string name="add_end">Pridať sadu</string>
+    <string name="toggle_timer">Prepnúť časovač</string>
+    <string name="start_timer">Spustiť časovač</string>
+    <string name="vibration">Vibrovať</string>
+    <string name="sound">Zvuk</string>
+    <string name="today">dnes</string>
 </resources>

@@ -14,17 +14,17 @@
   -->
 
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:dither="true"
-    android:shape="rectangle">
+       android:dither="true"
+       android:shape="rectangle">
 
-    <corners android:radius="3dp" />
+    <corners android:radius="3dp"/>
 
-    <solid android:color="#EBEBEB" />
+    <solid android:color="#EBEBEB"/>
 
     <padding
         android:bottom="6dp"
         android:left="8dp"
         android:right="8dp"
-        android:top="4dp" />
+        android:top="4dp"/>
 
 </shape>

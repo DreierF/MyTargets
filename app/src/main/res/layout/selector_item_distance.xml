@@ -29,14 +29,14 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:text="@string/distance" />
+            android:text="@string/distance"/>
 
         <TextView
             android:id="@+id/distanceValue"
             style="@style/primaryText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"/>
     </LinearLayout>
 
 </layout>

@@ -45,7 +45,8 @@ public class HorizontalListAdapters extends RecyclerView.Adapter<HorizontalImage
 
     @Override
     public HorizontalImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new HorizontalImageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image_horizontal, parent, false));
+        return new HorizontalImageViewHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_image_horizontal, parent, false));
     }
 
     @Override

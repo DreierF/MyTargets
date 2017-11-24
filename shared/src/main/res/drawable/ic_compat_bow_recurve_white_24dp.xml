@@ -15,4 +15,4 @@
   -->
 
 <inset xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/ic_bow_recurve_white_24dp" />
+       android:drawable="@drawable/ic_bow_recurve_white_24dp"/>

@@ -186,7 +186,8 @@ public class EditStandardRoundFragment extends EditFragmentBase {
                     adapter.notifyItemChanged(index);
                     break;
                 case TargetSelector.TARGET_REQUEST_CODE:
-                    standardRound.getRounds().get(index).setTargetTemplate(Parcels.unwrap(parcelable));
+                    standardRound.getRounds().get(index)
+                            .setTargetTemplate(Parcels.unwrap(parcelable));
                     adapter.notifyItemChanged(index);
                     break;
             }

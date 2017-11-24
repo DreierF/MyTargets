@@ -62,7 +62,8 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & IRecursiv
     public void onDelete(List<Long> deletedIds) {
         FirebaseAnalytics.getInstance(getContext()).logEvent("delete", null);
         List<T> deleted = deleteItems(deletedIds);
-        String message = getResources().getQuantityString(itemTypeDelRes, deleted.size(), deleted.size());
+        String message = getResources()
+                .getQuantityString(itemTypeDelRes, deleted.size(), deleted.size());
         View coordinatorLayout = getView().findViewById(R.id.coordinatorLayout);
         Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, v -> undoDeletion(deleted))
@@ -95,7 +96,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & IRecursiv
 
     @Override
     public void onClick(SelectableViewHolder<T> holder, T item) {
-        if(!actionModeCallback.click(holder)) {
+        if (!actionModeCallback.click(holder)) {
             onSelected(item);
         }
     }

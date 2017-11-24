@@ -65,7 +65,8 @@ public class HeartZone extends ZoneBase {
 
     @Override
     public boolean isInZone(float ax, float ay, float arrowRadius) {
-        return HEART_REGION.contains((int) (ax * REGION_SCALE_FACTOR), (int) (ay * REGION_SCALE_FACTOR));
+        return HEART_REGION
+                .contains((int) (ax * REGION_SCALE_FACTOR), (int) (ay * REGION_SCALE_FACTOR));
     }
 
     @Override

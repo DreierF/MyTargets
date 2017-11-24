@@ -115,7 +115,7 @@ public class HtmlUtils {
             html += "<td>" + (end.index + 1) + "</td>";
             int sum = 0;
             final List<Shot> shots = end.getShots();
-            if(SettingsManager.shouldSortTarget(round.getTarget())) {
+            if (SettingsManager.shouldSortTarget(round.getTarget())) {
                 Collections.sort(shots);
             }
             for (Shot shot : shots) {
@@ -359,18 +359,19 @@ public class HtmlUtils {
             info.addLine(R.string.club, club);
         }
         if (rounds.size() > 1) {
-            info.addLine(R.string.points, training.getReachedScore().format(locale, SettingsManager.getScoreConfiguration()));
+            info.addLine(R.string.points, training.getReachedScore()
+                    .format(locale, SettingsManager.getScoreConfiguration()));
         }
         info.addLine(R.string.date, training.getFormattedDate());
     }
 
     private static String getSignature() {
         String archer = SettingsManager.getProfileFullName();
-        if(archer.trim().isEmpty()) {
+        if (archer.trim().isEmpty()) {
             archer = get(R.string.archer);
         }
         String targetCaptain = SettingsManager.getProfileTargetCaptain();
-        if(targetCaptain.trim().isEmpty()) {
+        if (targetCaptain.trim().isEmpty()) {
             targetCaptain = get(R.string.target_captain);
         }
         return "<div style=\"border-top: 2px solid black; width: 30%;margin-right: 5%;margin-top: 100px;float:left;\">" +

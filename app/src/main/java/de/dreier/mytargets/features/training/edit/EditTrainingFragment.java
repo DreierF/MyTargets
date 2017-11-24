@@ -145,14 +145,15 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         if (trainingId == null) {
             ToolbarUtils.setTitle(this, R.string.new_training);
             binding.training.setText(getString(
-                    trainingType == ETrainingType.COMPETITION ? R.string.competition : R.string.training));
+                    trainingType == ETrainingType.COMPETITION ? R.string.competition :
+                            R.string.training));
             setTrainingDate();
             loadRoundDefaultValues();
             binding.bow.setItemId(SettingsManager.getBow());
             binding.arrow.setItemId(SettingsManager.getArrow());
             binding.standardRound.setItemId(SettingsManager.getStandardRound());
             binding.numberArrows.setChecked(SettingsManager.getArrowNumbersEnabled());
-            if(savedInstanceState == null) {
+            if (savedInstanceState == null) {
                 binding.environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
             }
             binding.changeTargetFace.setVisibility(trainingType == TRAINING_WITH_STANDARD_ROUND
@@ -234,7 +235,8 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     }
 
     private void setTrainingDate() {
-        binding.trainingDate.setText(date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
+        binding.trainingDate
+                .setText(date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
     }
 
     @Override

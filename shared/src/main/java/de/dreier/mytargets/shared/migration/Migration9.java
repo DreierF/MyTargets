@@ -154,7 +154,8 @@ public class Migration9 extends BaseMigration {
                     long bow = res.getLong(3);
                     long arrow = res.getLong(4);
                     database.execSQL(
-                            "UPDATE TRAINING SET bow=" + bow + ", arrow=" + arrow + " WHERE _id=" + training);
+                            "UPDATE TRAINING SET bow=" + bow + ", arrow=" + arrow + " WHERE _id=" +
+                                    training);
                     do {
                         RoundTemplate info = getRoundTemplate(database, sid, index);
                         int target = res.getInt(2);
@@ -194,7 +195,8 @@ public class Migration9 extends BaseMigration {
                 RoundTemplate template = new RoundTemplate();
                 template.shotsPerEnd = res.getInt(0);
                 int target = res.getInt(1);
-                template.setTargetTemplate(new Target(target == 4 ? 5 : target, target == 5 ? 1 : 0));
+                template.setTargetTemplate(new Target(
+                        target == 4 ? 5 : target, target == 5 ? 1 : 0));
                 template.distance = new Dimension(res.getInt(2), res.getString(3));
                 template.endCount = res.getInt(4);
                 template.index = sr.getRounds().size();
@@ -216,7 +218,8 @@ public class Migration9 extends BaseMigration {
         values.put(SR_INSTITUTION, item.club);
         values.put(SR_INDOOR, 0);
         if (item.getId() == null) {
-            item.setId(database.insertWithOnConflict(SR_TABLE, null, values, SQLiteDatabase.CONFLICT_NONE));
+            item.setId(database
+                    .insertWithOnConflict(SR_TABLE, null, values, SQLiteDatabase.CONFLICT_NONE));
             for (RoundTemplate r : item.getRounds()) {
                 r.standardRound = item.getId();
             }
@@ -240,10 +243,12 @@ public class Migration9 extends BaseMigration {
         values.put(RT_ARROWS_PER_PASSE, item.shotsPerEnd);
         values.put(RT_TARGET, item.getTargetTemplate().id);
         values.put(RT_TARGET_SIZE, item.getTargetTemplate().size.value);
-        values.put(RT_TARGET_SIZE_UNIT, Dimension.Unit.toStringHandleNull(item.getTargetTemplate().size.unit));
+        values.put(RT_TARGET_SIZE_UNIT, Dimension.Unit
+                .toStringHandleNull(item.getTargetTemplate().size.unit));
         values.put(RT_SCORING_STYLE, item.getTargetTemplate().scoringStyle);
         if (item.getId() == null) {
-            item.setId(database.insertWithOnConflict(RT_TABLE, null, values, SQLiteDatabase.CONFLICT_NONE));
+            item.setId(database
+                    .insertWithOnConflict(RT_TABLE, null, values, SQLiteDatabase.CONFLICT_NONE));
         } else {
             values.put(RT_ID, item.getId());
             database.insertWithOnConflict(RT_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);

@@ -395,11 +395,13 @@ public class StatisticsFragment extends FragmentBase {
         Evaluator eval;
         if (singleTraining) {
             eval = new Evaluator() {
-                private DateTimeFormatter dateFormat = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
+                private DateTimeFormatter dateFormat = DateTimeFormatter
+                        .ofLocalizedTime(FormatStyle.SHORT);
 
                 @Override
                 public long getXValue(List<Pair<Float, LocalDateTime>> values, int i) {
-                    return Duration.between(values.get(0).second, values.get(i).second).getSeconds();
+                    return Duration.between(values.get(0).second, values.get(i).second)
+                            .getSeconds();
                 }
 
                 @Override
@@ -410,7 +412,8 @@ public class StatisticsFragment extends FragmentBase {
             };
         } else {
             eval = new Evaluator() {
-                private DateTimeFormatter dateFormat = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+                private DateTimeFormatter dateFormat = DateTimeFormatter
+                        .ofLocalizedDate(FormatStyle.SHORT);
 
                 @Override
                 public long getXValue(List<Pair<Float, LocalDateTime>> values, int i) {

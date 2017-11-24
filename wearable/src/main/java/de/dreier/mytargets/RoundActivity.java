@@ -223,7 +223,7 @@ public class RoundActivity extends WearableActivity {
                 viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(RoundActivity.this,
                         isAmbient() ? R.color.md_black_1000 :
                                 R.color.md_wear_green_lighter_background));
-            } else if(holder instanceof InlineButtonViewHolder) {
+            } else if (holder instanceof InlineButtonViewHolder) {
                 holder.itemView.setVisibility(isAmbient() ? View.INVISIBLE : View.VISIBLE);
             }
         }

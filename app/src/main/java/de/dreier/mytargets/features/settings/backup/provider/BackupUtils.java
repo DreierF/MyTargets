@@ -91,7 +91,7 @@ public class BackupUtils {
 
     /**
      * Returns a list of file names, which are implicitly placed in the ../files/ folder of the app.
-     * */
+     */
     public static String[] getImages() {
         ArrayList<String> list = new ArrayList<>();
         list.addAll(Stream.of(SQLite.select()

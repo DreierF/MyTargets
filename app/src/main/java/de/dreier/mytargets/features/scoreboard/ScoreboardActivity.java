@@ -133,7 +133,8 @@ public class ScoreboardActivity extends ChildActivityBase {
 
             @Override
             protected String doInBackground(Void... params) {
-                return HtmlUtils.getScoreboard(Utils.getCurrentLocale(ScoreboardActivity.this), trainingId, roundId,
+                return HtmlUtils.getScoreboard(Utils
+                                .getCurrentLocale(ScoreboardActivity.this), trainingId, roundId,
                         ScoreboardConfiguration.fromDisplaySettings());
             }
 
@@ -225,7 +226,8 @@ public class ScoreboardActivity extends ChildActivityBase {
 
             @Override
             protected String doInBackground(Void... params) {
-                return HtmlUtils.getScoreboard(Utils.getCurrentLocale(ScoreboardActivity.this), trainingId, roundId,
+                return HtmlUtils.getScoreboard(Utils
+                                .getCurrentLocale(ScoreboardActivity.this), trainingId, roundId,
                         ScoreboardConfiguration.fromPrintSettings());
             }
 

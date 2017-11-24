@@ -111,7 +111,8 @@ public class EditTrainingActivityTest extends UITestBase {
         onView(withText("40cm")).perform(click());
         pressBack();
         onView(withId(R.id.target))
-                .check(matches(hasDescendant(withText(containsString(activityTestRule.getActivity().getString(R.string.vertical_3_spot))))))
+                .check(matches(hasDescendant(withText(containsString(activityTestRule.getActivity()
+                        .getString(R.string.vertical_3_spot))))))
                 .check(matches(hasDescendant(withText(containsString("40cm")))))
                 .check(matches(hasDescendant(withText(containsString("Compound")))));
 

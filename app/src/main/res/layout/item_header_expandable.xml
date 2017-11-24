@@ -14,8 +14,8 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout style="@style/header_container">
 
@@ -27,7 +27,7 @@
             android:layout_centerVertical="true"
             android:clickable="false"
             android:gravity="start"
-            tools:text="August 2015" />
+            tools:text="August 2015"/>
 
         <ImageView
             android:id="@+id/expand_collapse"
@@ -38,7 +38,7 @@
             android:layout_centerVertical="true"
             android:clickable="false"
             android:contentDescription="@string/expand_collapse"
-            app:srcCompat="@drawable/ic_expand_more_grey600_24dp" />
+            app:srcCompat="@drawable/ic_expand_more_grey600_24dp"/>
 
     </RelativeLayout>
 

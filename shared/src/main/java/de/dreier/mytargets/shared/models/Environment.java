@@ -54,7 +54,7 @@ public class Environment implements IImageProvider, IDetailProvider {
     @Override
     public String getDetails(Context context) {
         String description;
-        if(indoor) {
+        if (indoor) {
             description = "";
             if (!TextUtils.isEmpty(location)) {
                 description += context.getString(R.string.location) + ": " + location;

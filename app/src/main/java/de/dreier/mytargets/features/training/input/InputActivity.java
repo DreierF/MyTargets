@@ -179,7 +179,7 @@ public class InputActivity extends ChildActivityBase
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
             ImageList imageList = GalleryActivity.getResult(data);
             this.data.getCurrentEnd().images = imageList.toEndImageList();
             for (File image : imageList.getRemovedImages()) {
@@ -258,7 +258,8 @@ public class InputActivity extends ChildActivityBase
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_photo:
-                GalleryActivity.getIntent(new ImageList(data.getCurrentEnd().getImages()), getString(R.string.end_n, data.endIndex + 1))
+                GalleryActivity.getIntent(new ImageList(data.getCurrentEnd()
+                        .getImages()), getString(R.string.end_n, data.endIndex + 1))
                         .withContext(this)
                         .forResult(GALLERY_REQUEST_CODE)
                         .start();
@@ -489,13 +490,16 @@ public class InputActivity extends ChildActivityBase
 
         switch (summaryShowScope) {
             case END:
-                binding.averageScore.setText(reachedEndScore.getShotAverageFormatted(getCurrentLocale(this)));
+                binding.averageScore
+                        .setText(reachedEndScore.getShotAverageFormatted(getCurrentLocale(this)));
                 break;
             case ROUND:
-                binding.averageScore.setText(reachedRoundScore.getShotAverageFormatted(getCurrentLocale(this)));
+                binding.averageScore
+                        .setText(reachedRoundScore.getShotAverageFormatted(getCurrentLocale(this)));
                 break;
             case TRAINING:
-                binding.averageScore.setText(reachedTrainingScore.getShotAverageFormatted(getCurrentLocale(this)));
+                binding.averageScore.setText(reachedTrainingScore
+                        .getShotAverageFormatted(getCurrentLocale(this)));
                 break;
             default:
                 break;

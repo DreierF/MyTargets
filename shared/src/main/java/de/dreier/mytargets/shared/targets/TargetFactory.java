@@ -53,6 +53,7 @@ import de.dreier.mytargets.shared.targets.models.Worcester;
 public class TargetFactory {
 
     private static final List<TargetModelBase> list;
+
     static {
         list = new ArrayList<>();
         list.add(new WAFull());
@@ -87,6 +88,7 @@ public class TargetFactory {
     }
 
     private static Integer[] idIndexLookup;
+
     static {
         idIndexLookup = new Integer[list.size()];
         for (int i = 0; i < list.size(); i++) {

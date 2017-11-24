@@ -21,7 +21,7 @@
             android:pivotY="50%"
             android:pivotX="50%"
             android:fromDegrees="45"
-            android:toDegrees="45" />
+            android:toDegrees="45"/>
     </item>
-    <item android:id="@+id/default_state" android:drawable="@drawable/ic_add" />
+    <item android:id="@+id/default_state" android:drawable="@drawable/ic_add"/>
 </selector>

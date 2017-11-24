@@ -22,7 +22,7 @@ public class MainSettingsFragment extends SettingsFragmentBase {
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         super.onSharedPreferenceChanged(sharedPreferences, s);
-        if(s.equals(SettingsManager.KEY_LANGUAGE)) {
+        if (s.equals(SettingsManager.KEY_LANGUAGE)) {
             getActivity().recreate();
         }
     }

@@ -40,8 +40,10 @@ public class CircularZone extends ZoneBase {
 
     @Override
     public boolean isInZone(float ax, float ay, float arrowRadius) {
-        float distance = (ax - midpoint.x) * (ax - midpoint.x) + (ay - midpoint.y) * (ay - midpoint.y);
-        float adaptedRadius = radius + (scoresAsOutsideIn ? 1f : -1f) * (arrowRadius + strokeWidth / 2.0f);
+        float distance =
+                (ax - midpoint.x) * (ax - midpoint.x) + (ay - midpoint.y) * (ay - midpoint.y);
+        float adaptedRadius =
+                radius + (scoresAsOutsideIn ? 1f : -1f) * (arrowRadius + strokeWidth / 2.0f);
         return adaptedRadius * adaptedRadius > distance;
     }
 

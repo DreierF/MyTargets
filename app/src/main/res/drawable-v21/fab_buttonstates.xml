@@ -22,6 +22,6 @@
     </item>
     <item
         android:id="@+id/default_state"
-        android:drawable="@drawable/fab_add_animated_reverse" />
+        android:drawable="@drawable/fab_add_animated_reverse"/>
 
 </selector>

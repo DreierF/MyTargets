@@ -32,7 +32,8 @@ public class VirtualViewUtil {
             e.printStackTrace();
         }
         UiDevice device = UiDevice.getInstance(getInstrumentation());
-        UiObject marker = device.findObject(new UiSelector().descriptionContains(contentDescription));
+        UiObject marker = device
+                .findObject(new UiSelector().descriptionContains(contentDescription));
         Assert.assertTrue(marker.exists());
     }
 
@@ -43,7 +44,8 @@ public class VirtualViewUtil {
             e.printStackTrace();
         }
         UiDevice device = UiDevice.getInstance(getInstrumentation());
-        UiObject marker = device.findObject(new UiSelector().descriptionContains(contentDescription));
+        UiObject marker = device
+                .findObject(new UiSelector().descriptionContains(contentDescription));
         Assert.assertFalse(marker.exists());
     }
 
@@ -54,7 +56,8 @@ public class VirtualViewUtil {
             e.printStackTrace();
         }
         UiDevice device = UiDevice.getInstance(getInstrumentation());
-        UiObject marker = device.findObject(new UiSelector().descriptionContains(contentDescription));
+        UiObject marker = device
+                .findObject(new UiSelector().descriptionContains(contentDescription));
         marker.click();
     }
 }

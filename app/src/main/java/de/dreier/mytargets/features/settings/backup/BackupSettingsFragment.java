@@ -268,7 +268,8 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
 
     private void applyBackupLocationWithPermissionCheck(EBackupLocation item) {
         if (item.needsStoragePermissions()) {
-            BackupSettingsFragmentPermissionsDispatcher.applyBackupLocationWithPermissionCheck(this, item);
+            BackupSettingsFragmentPermissionsDispatcher
+                    .applyBackupLocationWithPermissionCheck(this, item);
         } else {
             applyBackupLocation(item);
         }

@@ -236,7 +236,8 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
             binding.training.setText(item.title);
             binding.trainingDate.setText(item.getFormattedDate());
             binding.gesTraining.setText(item.getReachedScore()
-                    .format(Utils.getCurrentLocale(getContext()), SettingsManager.getScoreConfiguration()));
+                    .format(Utils.getCurrentLocale(getContext()), SettingsManager
+                            .getScoreConfiguration()));
         }
     }
 }
