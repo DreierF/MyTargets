@@ -13,10 +13,4 @@
   ~ GNU General Public License for more details.
   -->
 
-<manifest package="de.dreier.mytargets.shared"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <application/><!--
-        android:name=".SharedApplicationInstance"-->
-
-</manifest>
+<manifest package="de.dreier.mytargets.shared"/>

@@ -49,7 +49,8 @@ public class WearableClientBase {
     private BroadcastReceiver timerReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            TimerSettings settings = Parcels.unwrap(intent.getParcelableExtra(EXTRA_TIMER_SETTINGS));
+            TimerSettings settings = Parcels
+                    .unwrap(intent.getParcelableExtra(EXTRA_TIMER_SETTINGS));
             sendTimerSettings(settings);
         }
     };

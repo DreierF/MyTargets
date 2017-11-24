@@ -18,21 +18,21 @@
 
     <declare-styleable name="FabSpeedDial">
         <!-- Compulsory attributes -->
-        <attr name="fabMenu" format="reference" />
+        <attr name="fabMenu" format="reference"/>
 
         <!-- Optional attributes -->
-        <attr name="fabDrawable" format="color|reference" />
-        <attr name="fabDrawableTint" format="color|reference" />
-        <attr name="fabBackgroundTint" format="color|reference" />
+        <attr name="fabDrawable" format="color|reference"/>
+        <attr name="fabDrawableTint" format="color|reference"/>
+        <attr name="fabBackgroundTint" format="color|reference"/>
 
-        <attr name="miniFabBackgroundTint" format="color|reference" />
-        <attr name="miniFabBackgroundTintList" format="reference" />
-        <attr name="miniFabDrawableTint" format="color|reference" />
-        <attr name="miniFabTitleTextColor" format="color|reference" />
-        <attr name="miniFabTitleTextColorList" format="reference" />
+        <attr name="miniFabBackgroundTint" format="color|reference"/>
+        <attr name="miniFabBackgroundTintList" format="reference"/>
+        <attr name="miniFabDrawableTint" format="color|reference"/>
+        <attr name="miniFabTitleTextColor" format="color|reference"/>
+        <attr name="miniFabTitleTextColorList" format="reference"/>
 
-        <attr name="touchGuard" format="boolean" />
-        <attr name="touchGuardDrawable" format="color|reference" />
+        <attr name="touchGuard" format="boolean"/>
+        <attr name="touchGuardDrawable" format="color|reference"/>
 
         <attr name="miniFabTitleBackgroundTint" format="color|reference"/>
         <attr name="miniFabTitlesEnabled" format="boolean"/>

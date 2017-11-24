@@ -56,7 +56,7 @@ public class TargetModelBase implements IIdProvider {
      * Factor that needs to be applied to the target's diameter to get the real target size.
      * e.g. 5 Ring 40cm is half the size of a full 40cm, therefore the target is 20cm in reality,
      * hence the factor is 0.5f.
-     * */
+     */
     protected float realSizeFactor = 1f;
 
     protected TargetModelBase(long id, @StringRes int nameRes) {
@@ -149,9 +149,10 @@ public class TargetModelBase implements IIdProvider {
     /**
      * Lists all zones that can be selected for the given scoringStyle and arrow index.
      * Consecutive zones with the same text are excluded.
+     *
      * @param scoringStyleIndex Index of the scoring style for this target.
-     * @param arrow Shot index, describes whether it is the first arrow(0), the second one, ...
-     *              This has an impact on the yielded score for some animal target faces.
+     * @param arrow             Shot index, describes whether it is the first arrow(0), the second one, ...
+     *                          This has an impact on the yielded score for some animal target faces.
      */
     public List<SelectableZone> getSelectableZoneList(int scoringStyleIndex, int arrow) {
         ScoringStyle scoringStyle = getScoringStyle(scoringStyleIndex);

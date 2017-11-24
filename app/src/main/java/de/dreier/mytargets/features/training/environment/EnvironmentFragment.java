@@ -73,7 +73,7 @@ public class EnvironmentFragment extends FragmentBase {
 
         if (savedInstanceState == null) {
             Bundle i = getArguments();
-            assert i!= null;
+            assert i != null;
             environment = Parcels.unwrap(i.getParcelable(ITEM));
         }
         setWeather(environment.weather);

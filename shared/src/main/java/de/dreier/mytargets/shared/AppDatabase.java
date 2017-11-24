@@ -75,7 +75,7 @@ public class AppDatabase {
 
         private <T extends BaseModel & Image> void removeFilePath(DatabaseWrapper database, Class<? extends T> clazz) {
             List<? extends T> images = SQLite.select().from(clazz).queryList(database);
-            for(T image : images) {
+            for (T image : images) {
                 File filesDir = SharedApplicationInstance.getContext().getFilesDir();
                 File imageFile = new File(filesDir, image.getFileName());
 
@@ -93,7 +93,8 @@ public class AppDatabase {
                 // In case the image is placed somewhere else, but still exists
                 if (imageFromSomewhere.exists()) {
                     try {
-                        imageFile = File.createTempFile("img", imageFromSomewhere.getName(), filesDir);
+                        imageFile = File
+                                .createTempFile("img", imageFromSomewhere.getName(), filesDir);
                         FileUtils.move(imageFromSomewhere, imageFile);
                         image.setFileName(imageFile.getName());
                         image.save(database);

@@ -115,7 +115,8 @@ public class SettingsActivityTest extends UITestBase {
 
         clickOnPreference(3);
         enterDate(1990, 2, 11);
-        matchPreferenceSummary(3, DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(LocalDate.of(1990, 2, 11)));
+        matchPreferenceSummary(3, DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+                .format(LocalDate.of(1990, 2, 11)));
 
         clickOnPreference(4);
         enterText("Archery Club");

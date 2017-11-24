@@ -83,6 +83,7 @@ public class ApplicationInstance extends SharedApplicationInstance {
         super.onCreate();
         wearableClient = new WearWearableClient(this);
     }
+
     @Override
     public void onTerminate() {
         wearableClient.disconnect();

@@ -62,7 +62,7 @@ public class ImageCaptureStubbingUtils {
     }
 
     public static void intendedImageCapture() {
-        if(!matched) {
+        if (!matched) {
             throw new RuntimeException("No intent captured with action ACTION_IMAGE_CAPTURE.");
         }
         IntentStubberRegistry.reset();

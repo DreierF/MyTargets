@@ -62,7 +62,8 @@ public class TargetSelectView extends TargetViewBase {
     private void init() {
         backspaceSymbol.setTint(0xFFFFFFFF);
         backspaceBackground
-                .setColor(ContextCompat.getColor(getContext(), R.color.md_wear_green_active_ui_element));
+                .setColor(ContextCompat
+                        .getColor(getContext(), R.color.md_wear_green_active_ui_element));
         backspaceBackground.setAntiAlias(true);
     }
 

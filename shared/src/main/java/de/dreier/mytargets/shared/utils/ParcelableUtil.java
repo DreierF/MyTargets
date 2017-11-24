@@ -34,7 +34,8 @@ public class ParcelableUtil {
             return Parcels.unwrap(parcel.readParcelable(type.getClassLoader()));
         }
 
-        @Override public T[] newArray(int i) {
+        @Override
+        public T[] newArray(int i) {
             return (T[]) Array.newInstance(type, i);
         }
     }

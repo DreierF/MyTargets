@@ -247,7 +247,8 @@ public class GalleryActivity extends ChildActivityBase {
                     public void onCanceled(EasyImage.ImageSource source, int type) {
                         //Cancel handling, you might wanna remove taken photo if it was canceled
                         if (source == EasyImage.ImageSource.CAMERA) {
-                            File photoFile = EasyImage.lastlyTakenButCanceledPhoto(getApplicationContext());
+                            File photoFile = EasyImage
+                                    .lastlyTakenButCanceledPhoto(getApplicationContext());
                             if (photoFile != null) {
                                 photoFile.delete();
                             }

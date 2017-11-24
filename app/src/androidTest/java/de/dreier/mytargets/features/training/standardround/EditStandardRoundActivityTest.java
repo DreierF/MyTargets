@@ -34,7 +34,6 @@ import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.models.WAFull;
 import de.dreier.mytargets.test.base.UITestBase;
 
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
@@ -48,7 +47,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
-import static de.dreier.mytargets.test.utils.PermissionGranter.allowPermissionsIfNeeded;
 import static de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isNestedChildOfView;
 import static de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 import static org.hamcrest.Matchers.allOf;

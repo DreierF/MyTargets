@@ -55,7 +55,7 @@ public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
      * ViewHolder that you can control manually by setting {@link #setSelectable(boolean)}
      * and {@link #setActivated(boolean)}
      *
-     * @param itemView      Item view for this ViewHolder
+     * @param itemView Item view for this ViewHolder
      * @param selector A selector set to bind this holder to
      */
     public SelectableViewHolder(View itemView, SelectorBase selector, OnItemClickListener<T> listener) {

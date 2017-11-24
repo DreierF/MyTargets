@@ -49,7 +49,7 @@ public class AverageResultRenderer implements IAggregationResultRenderer {
 
     @Override
     public void onPrepareDraw() {
-        PointF avg =  average.getAverage();
+        PointF avg = average.getAverage();
         RectF nUniStdDev = average.getNonUniformStdDev();
         stdDevPath.rewind();
         stdDevPath.arcTo(new RectF(

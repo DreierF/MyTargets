@@ -99,7 +99,8 @@ public class BitmapUtils {
 
     // Convert Picture to Bitmap
     public static Bitmap pictureDrawable2Bitmap(Picture picture) {
-        Bitmap bitmap = Bitmap.createBitmap(picture.getWidth(), picture.getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap
+                .createBitmap(picture.getWidth(), picture.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         picture.draw(canvas);
         return bitmap;

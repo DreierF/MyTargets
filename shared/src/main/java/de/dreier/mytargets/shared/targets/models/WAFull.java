@@ -49,7 +49,7 @@ public class WAFull extends TargetModelBase {
                 new CircularZone(0.9f, WHITE, DARK_GRAY, 2),
                 new CircularZone(1.0f, WHITE, DARK_GRAY, 2)
         };
-        scoringStyles = new ScoringStyle[] {
+        scoringStyles = new ScoringStyle[]{
                 new ScoringStyle(R.string.recurve_style_x_1, true, 10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1),
                 new ScoringStyle(R.string.recurve_style_10_1, false, 10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1),
                 new ScoringStyle(R.string.compound_style, false, 10, 9, 9, 8, 7, 6, 5, 4, 3, 2, 1),

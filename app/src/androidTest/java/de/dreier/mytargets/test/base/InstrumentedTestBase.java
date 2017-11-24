@@ -18,11 +18,6 @@ package de.dreier.mytargets.test.base;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.support.test.InstrumentationRegistry;
-import android.util.Log;
-
-import org.junit.Rule;
-import org.junit.rules.TestName;
-import org.junit.runner.Description;
 
 import java.util.Locale;
 

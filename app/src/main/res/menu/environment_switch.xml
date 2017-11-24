@@ -22,6 +22,6 @@
         android:id="@+id/action_switch"
         android:title="@string/outdoor"
         app:actionLayout="@layout/layout_switch_label"
-        app:showAsAction="always" />
+        app:showAsAction="always"/>
 
 </menu>

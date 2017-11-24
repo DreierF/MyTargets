@@ -67,7 +67,8 @@ public class Circle {
         if (!ambientMode && number != null) {
             circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
             circleColorP.setColor(0xFF333333);
-            can.drawCircle(x + rad * 0.8f * density, y + rad * 0.8f * density, 8 * density, circleColorP);
+            can.drawCircle(
+                    x + rad * 0.8f * density, y + rad * 0.8f * density, 8 * density, circleColorP);
             textPaint.setTextSize(font_size * density * 0.5f);
             textPaint.setColor(0xFFFFFFFF);
             can.drawText(number, x + rad * 0.8f * density, y + rad * 1.05f * density, textPaint);

@@ -190,7 +190,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 export();
                 return true;
             case R.id.action_filter:
-                if(!binding.drawerLayout.isDrawerOpen(END)) {
+                if (!binding.drawerLayout.isDrawerOpen(END)) {
                     binding.drawerLayout.openDrawer(END);
                 } else {
                     binding.drawerLayout.closeDrawer(END);

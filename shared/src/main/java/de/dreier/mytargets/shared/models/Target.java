@@ -132,7 +132,7 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
     public Set<SelectableZone> getAllPossibleSelectableZones() {
         return getModel().getAllPossibleSelectableZones(scoringStyle);
     }
-    
+
     @Override
     public int compareTo(@NonNull Target target) {
         return id - target.id;

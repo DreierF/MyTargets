@@ -20,6 +20,10 @@
     <files-path
         name="files"
         path="."/>
-    <external-cache-path name="picturesext" path="EasyImage/" />
-    <cache-path name="picturesint" path="EasyImage/" />
+    <external-cache-path
+        name="picturesext"
+        path="EasyImage/"/>
+    <cache-path
+        name="picturesint"
+        path="EasyImage/"/>
 </paths>

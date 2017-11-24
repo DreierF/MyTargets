@@ -50,12 +50,14 @@ public class TimerActivity extends WearableActivity implements MenuItem.OnMenuIt
         binding = DataBindingUtil.setContentView(this, R.layout.activity_timer);
         setAmbientEnabled();
 
-        TimerSettings settings = Parcels.unwrap(getIntent().getParcelableExtra(EXTRA_TIMER_SETTINGS));
+        TimerSettings settings = Parcels
+                .unwrap(getIntent().getParcelableExtra(EXTRA_TIMER_SETTINGS));
         timerFragment = TimerFragment.getInstance(settings);
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, timerFragment).commit();
 
-        binding.primaryActionPeek.setOnClickListener(v -> binding.bottomActionDrawer.getController().openDrawer());
+        binding.primaryActionPeek
+                .setOnClickListener(v -> binding.bottomActionDrawer.getController().openDrawer());
         binding.bottomActionDrawer.setOnMenuItemClickListener(this);
         binding.bottomActionDrawer.getMenu().findItem(R.id.menu_vibrate)
                 .setIcon(settings.vibrate
@@ -79,14 +81,16 @@ public class TimerActivity extends WearableActivity implements MenuItem.OnMenuIt
                 menuItem.setIcon(timerFragment.settings.vibrate
                         ? R.drawable.ic_vibration_white_24dp
                         : R.drawable.ic_vibration_off_white_24dp);
-                ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(timerFragment.settings);
+                ApplicationInstance.wearableClient
+                        .sendTimerSettingsFromLocal(timerFragment.settings);
                 return true;
             case R.id.menu_sound:
                 timerFragment.settings.sound = !timerFragment.settings.sound;
                 menuItem.setIcon(timerFragment.settings.sound
                         ? R.drawable.ic_volume_up_white_24dp
                         : R.drawable.ic_volume_off_white_24dp);
-                ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(timerFragment.settings);
+                ApplicationInstance.wearableClient
+                        .sendTimerSettingsFromLocal(timerFragment.settings);
                 return true;
             default:
                 return false;

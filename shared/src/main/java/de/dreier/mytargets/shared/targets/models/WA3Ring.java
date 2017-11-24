@@ -37,7 +37,7 @@ public class WA3Ring extends TargetModelBase {
     WA3Ring(int id, int nameRes) {
         super(id, nameRes);
         realSizeFactor = 0.3f;
-        zones = new ZoneBase[] {
+        zones = new ZoneBase[]{
                 new CircularZone(0.166f, LEMON_YELLOW, DARK_GRAY, 4),
                 new CircularZone(0.334f, LEMON_YELLOW, DARK_GRAY, 4),
                 new CircularZone(0.666f, LEMON_YELLOW, DARK_GRAY, 4),

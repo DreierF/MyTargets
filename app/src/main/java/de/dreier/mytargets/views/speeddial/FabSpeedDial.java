@@ -62,7 +62,7 @@ import timber.log.Timber;
 
 /**
  * Adopted from https://github.com/yavski/fab-speed-dial
- * */
+ */
 @SuppressLint("RestrictedApi")
 @CoordinatorLayout.DefaultBehavior(FabSpeedDialBehaviour.class)
 public class FabSpeedDial extends LinearLayout implements View.OnClickListener {

@@ -14,8 +14,8 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +37,7 @@
                 android:layout_toStartOf="@+id/remove"
                 android:padding="16dp"
                 android:textSize="16sp"
-                tools:text="Round 1" />
+                tools:text="Round 1"/>
 
             <ImageButton
                 android:id="@+id/remove"
@@ -50,20 +50,20 @@
                 android:layout_marginRight="16dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:contentDescription="@string/delete"
-                app:srcCompat="@drawable/ic_cancel_grey600_24dp" />
+                app:srcCompat="@drawable/ic_cancel_grey600_24dp"/>
         </RelativeLayout>
 
         <de.dreier.mytargets.views.selector.DistanceSelector
             android:id="@+id/distance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical"/>
 
         <de.dreier.mytargets.views.selector.TargetSelector
             android:id="@+id/target"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -75,7 +75,7 @@
                 style="@style/Label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/format" />
+                android:text="@string/format"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -86,7 +86,7 @@
                 <de.dreier.mytargets.views.NumberPicker
                     android:id="@+id/endCount"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
 
                 <TextView
                     style="@style/primaryText"
@@ -95,18 +95,18 @@
                     android:layout_gravity="top"
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
-                    android:text="@string/with" />
+                    android:text="@string/with"/>
 
                 <de.dreier.mytargets.views.NumberPicker
                     android:id="@+id/shotCount"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <include layout="@layout/partial_divider_full" />
+        <include layout="@layout/partial_divider_full"/>
 
     </LinearLayout>
 

@@ -135,7 +135,8 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == Activity.RESULT_OK && requestCode == SimpleDistanceSelector.SIMPLE_DISTANCE_REQUEST_CODE) {
+        if (resultCode == Activity.RESULT_OK &&
+                requestCode == SimpleDistanceSelector.SIMPLE_DISTANCE_REQUEST_CODE) {
             Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
             final int index = intentData.getInt(SelectorBase.INDEX);
             final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);

@@ -46,7 +46,8 @@ public class EllipseZone extends ZoneBase {
 
     @Override
     public boolean isInZone(float ax, float ay, float arrowRadius) {
-        return ELLIPSE_REGION.contains((int) (ax * REGION_SCALE_FACTOR), (int) (ay * REGION_SCALE_FACTOR));
+        return ELLIPSE_REGION
+                .contains((int) (ax * REGION_SCALE_FACTOR), (int) (ay * REGION_SCALE_FACTOR));
     }
 
     @Override

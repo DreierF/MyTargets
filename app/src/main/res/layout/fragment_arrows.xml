@@ -14,8 +14,8 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordinatorLayout"
@@ -26,7 +26,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             style="@style/card_list"
-            app:layoutManager="LinearLayoutManager" />
+            app:layoutManager="LinearLayoutManager"/>
 
         <include
             android:id="@+id/emptyState"
@@ -42,7 +42,7 @@
             android:layout_margin="16dp"
             android:src="@drawable/fab_add_white_24dp"
             android:transitionName="@string/transition_root_view"
-            tools:targetApi="lollipop" />
+            tools:targetApi="lollipop"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

@@ -15,12 +15,12 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <string name="saved">Gespeichert</string>
-  <string name="start_phone_app">Starte die App auf deinem Handy um fortzufahren…</string>
-  <string name="add_end">Neue Passe</string>
-  <string name="toggle_timer">Schießuhr ein/aus</string>
-  <string name="start_timer">Schießuhr starten</string>
-  <string name="vibration">Vibration</string>
-  <string name="sound">Ton</string>
-  <string name="today">heute</string>
+    <string name="saved">Gespeichert</string>
+    <string name="start_phone_app">Starte die App auf deinem Handy um fortzufahren…</string>
+    <string name="add_end">Neue Passe</string>
+    <string name="toggle_timer">Schießuhr ein/aus</string>
+    <string name="start_timer">Schießuhr starten</string>
+    <string name="vibration">Vibration</string>
+    <string name="sound">Ton</string>
+    <string name="today">heute</string>
 </resources>

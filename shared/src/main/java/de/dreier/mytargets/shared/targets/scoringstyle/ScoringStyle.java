@@ -74,7 +74,8 @@ public class ScoringStyle {
     private String getDescriptionString() {
         String style = "";
         for (int i = 0; i < points[0].length; i++) {
-            if (i + 1 < points[0].length && points[0][i] <= points[0][i + 1] && !(i == 0 && showAsX)) {
+            if (i + 1 < points[0].length && points[0][i] <= points[0][i + 1] &&
+                    !(i == 0 && showAsX)) {
                 continue;
             }
             if (!style.isEmpty()) {
@@ -123,7 +124,7 @@ public class ScoringStyle {
     }
 
     public Score getReachedScore(Shot shot) {
-        if(shot.scoringRing == Shot.NOTHING_SELECTED) {
+        if (shot.scoringRing == Shot.NOTHING_SELECTED) {
             return new Score(maxScorePerShot);
         }
         int reachedScore = getScoreByScoringRing(shot.scoringRing, shot.index);

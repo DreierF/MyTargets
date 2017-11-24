@@ -20,5 +20,6 @@ import android.graphics.drawable.Drawable;
 
 public interface IImageProvider {
     Drawable getDrawable(Context context);
+
     String getName();
 }

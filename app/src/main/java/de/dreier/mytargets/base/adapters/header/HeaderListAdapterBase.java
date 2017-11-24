@@ -145,7 +145,7 @@ public abstract class HeaderListAdapterBase<P extends IIdProvider, C extends IId
         }
         H header = headersList.get(headerIndex);
         header.remove(item);
-        if(header.children.isEmpty()) {
+        if (header.children.isEmpty()) {
             headersList.remove(header);
         }
     }

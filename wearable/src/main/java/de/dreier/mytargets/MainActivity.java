@@ -49,7 +49,8 @@ public class MainActivity extends WearableActivity {
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()) {
                 case BROADCAST_TRAINING_TEMPLATE:
-                    Training training = Parcels.unwrap(intent.getParcelableExtra(WearWearableClient.EXTRA_TRAINING));
+                    Training training = Parcels
+                            .unwrap(intent.getParcelableExtra(WearWearableClient.EXTRA_TRAINING));
                     setTraining(training);
                     binding.root.setClickable(false);
                     binding.wearableDrawerView.setVisibility(View.VISIBLE);
@@ -57,11 +58,13 @@ public class MainActivity extends WearableActivity {
                     // Replaces the on click behaviour that open the (empty) drawer
                     LinearLayout peekView = ((LinearLayout) binding.primaryActionAdd.getParent());
                     ViewGroup peekContainer = ((ViewGroup) peekView.getParent());
-                    peekContainer.setOnClickListener(view -> ApplicationInstance.wearableClient.sendCreateTraining(training));
+                    peekContainer.setOnClickListener(view -> ApplicationInstance.wearableClient
+                            .sendCreateTraining(training));
                     binding.wearableDrawerView.getController().peekDrawer();
                     break;
                 case BROADCAST_TRAINING_UPDATED:
-                    TrainingInfo info = Parcels.unwrap(intent.getParcelableExtra(WearWearableClient.EXTRA_INFO));
+                    TrainingInfo info = Parcels
+                            .unwrap(intent.getParcelableExtra(WearWearableClient.EXTRA_INFO));
                     setTrainingInfo(info);
                     binding.root.setClickable(true);
                     binding.root.setOnClickListener(v -> {
@@ -115,7 +118,8 @@ public class MainActivity extends WearableActivity {
         super.onExitAmbient();
         binding.drawerLayout.setBackgroundResource(R.color.md_wear_green_dark_background);
         binding.wearableDrawerView.setBackgroundResource(R.color.md_wear_green_lighter_ui_element);
-        binding.date.setTextColor(ContextCompat.getColor(this, R.color.md_wear_green_lighter_ui_element));
+        binding.date.setTextColor(ContextCompat
+                .getColor(this, R.color.md_wear_green_lighter_ui_element));
         binding.icon.setVisibility(View.VISIBLE);
         binding.clock.time.setVisibility(View.GONE);
     }
