@@ -15,6 +15,7 @@
 package de.dreier.mytargets.base.fragments;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,12 +25,12 @@ import de.dreier.mytargets.R;
 public abstract class EditFragmentBase extends FragmentBase {
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.save, menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
             getActivity().setResult(Activity.RESULT_OK);
             onSave();

@@ -16,6 +16,7 @@
 package de.dreier.mytargets.test.utils.matchers;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -40,14 +41,14 @@ public class IntentMatcher {
             }
 
             @Override
-            protected boolean matchesSafely(Intent intent) {
+            protected boolean matchesSafely(@NonNull Intent intent) {
                 long[] items = intent.getLongArrayExtra(key);
                 return items != null && new TreeSet(LongUtils.toList(items)).equals(values);
             }
         };
     }
 
-    public static Matcher<Intent> hasClass(Class<?> clazz) {
+    public static Matcher<Intent> hasClass(@NonNull Class<?> clazz) {
         return hasComponent(allOf(hasClassName(clazz.getName()), hasMyPackageName()));
     }
 }

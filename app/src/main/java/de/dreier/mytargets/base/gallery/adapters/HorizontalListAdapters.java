@@ -18,6 +18,7 @@ package de.dreier.mytargets.base.gallery.adapters;
 import android.app.Activity;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,14 +44,15 @@ public class HorizontalListAdapters extends RecyclerView.Adapter<HorizontalImage
         this.clickListener = clickListener;
     }
 
+    @NonNull
     @Override
-    public HorizontalImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public HorizontalImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new HorizontalImageViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_image_horizontal, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(HorizontalImageViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull HorizontalImageViewHolder holder, final int position) {
         if (position == images.size()) {
             holder.image.setVisibility(View.GONE);
             holder.camera.setVisibility(View.VISIBLE);

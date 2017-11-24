@@ -18,6 +18,7 @@ package de.dreier.mytargets.shared.models.db;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.annimon.stream.Collectors;
@@ -49,76 +50,100 @@ import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter;
 @Table(database = AppDatabase.class)
 public class Bow extends BaseModel implements IImageProvider, IIdSettable, Comparable<Bow>, IRecursiveModel {
 
+    @Nullable
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     public Long id = -1L;
 
+    @Nullable
     @Column
     public String name = "";
 
+    @Nullable
     @Column(typeConverter = EBowTypeConverter.class)
     public EBowType type = EBowType.RECURVE_BOW;
 
+    @Nullable
     @Column
     public String brand = "";
 
+    @Nullable
     @Column
     public String size = "";
 
+    @Nullable
     @Column
     public String braceHeight = "";
 
+    @Nullable
     @Column
     public String tiller = "";
 
+    @Nullable
     @Column
     public String limbs = "";
 
+    @Nullable
     @Column
     public String sight = "";
 
+    @Nullable
     @Column
     public String drawWeight = "";
 
+    @Nullable
     @Column
     public String stabilizer = "";
 
+    @Nullable
     @Column
     public String clicker = "";
 
+    @Nullable
     @Column
     public String button = "";
 
+    @Nullable
     @Column
     public String string = "";
 
+    @Nullable
     @Column
     public String nockingPoint = "";
 
+    @Nullable
     @Column
     public String letoffWeight = "";
 
+    @Nullable
     @Column
     public String arrowRest = "";
 
+    @Nullable
     @Column
     public String restHorizontalPosition = "";
 
+    @Nullable
     @Column
     public String restVerticalPosition = "";
 
+    @Nullable
     @Column
     public String restStiffness = "";
 
+    @Nullable
     @Column
     public String camSetting = "";
 
+    @Nullable
     @Column
     public String scopeMagnification = "";
 
+    @Nullable
     @Column
     public String description = "";
 
+    @Nullable
     @Column(typeConverter = ThumbnailConverter.class)
     public Thumbnail thumbnail;
 
@@ -130,6 +155,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
         return SQLite.select().from(Bow.class).queryList();
     }
 
+    @Nullable
     public static Bow get(Long id) {
         return SQLite.select()
                 .from(Bow.class)
@@ -161,6 +187,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
         return images;
     }
 
+    @Nullable
     public Long getId() {
         return id;
     }
@@ -178,6 +205,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
         return getDrawable();
     }
 
+    @Nullable
     @Override
     public String getName() {
         return name;

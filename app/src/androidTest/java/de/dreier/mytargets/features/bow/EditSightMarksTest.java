@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.bow;
 
 
+import android.support.annotation.NonNull;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -51,6 +52,7 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 public class EditSightMarksTest extends UITestBase {
 
+    @NonNull
     private ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(
             MainActivity.class);
 

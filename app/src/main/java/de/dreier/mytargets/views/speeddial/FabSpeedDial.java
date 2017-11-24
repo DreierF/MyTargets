@@ -26,6 +26,8 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -77,19 +79,27 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
 
     private LinearLayout menuItemsLayout;
     FloatingActionButton fab;
+    @Nullable
     private View touchGuard = null;
 
     private int menuId;
+    @Nullable
     private Drawable fabDrawable;
+    @Nullable
     private ColorStateList fabDrawableTint;
+    @Nullable
     private ColorStateList fabBackgroundTint;
+    @Nullable
     private ColorStateList miniFabDrawableTint;
+    @Nullable
     private ColorStateList miniFabBackgroundTint;
     private int[] miniFabBackgroundTintArray;
+    @Nullable
     private ColorStateList miniFabTitleBackgroundTint;
     private boolean miniFabTitlesEnabled;
     private int miniFabTitleTextColor;
     private int[] miniFabTitleTextColorArray;
+    @Nullable
     private Drawable touchGuardDrawable;
     private boolean useTouchGuard;
 
@@ -98,17 +108,17 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
     // Variable to hold whether the menu was open or not on config change
     private boolean shouldOpenMenu;
 
-    public FabSpeedDial(Context context, AttributeSet attrs) {
+    public FabSpeedDial(@NonNull Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
 
-    public FabSpeedDial(Context context, AttributeSet attrs, int defStyleAttr) {
+    public FabSpeedDial(@NonNull Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
 
-    private void init(Context context, AttributeSet attrs) {
+    private void init(@NonNull Context context, AttributeSet attrs) {
         TypedArray typedArray = context.getTheme()
                 .obtainStyledAttributes(attrs, R.styleable.FabSpeedDial, 0, 0);
         resolveCompulsoryAttributes(typedArray);
@@ -129,7 +139,7 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
         cardViewMenuItemMap = new HashMap<>(menuItemCount);
     }
 
-    private void resolveCompulsoryAttributes(TypedArray typedArray) {
+    private void resolveCompulsoryAttributes(@NonNull TypedArray typedArray) {
         if (typedArray.hasValue(R.styleable.FabSpeedDial_fabMenu)) {
             menuId = typedArray.getResourceId(R.styleable.FabSpeedDial_fabMenu, 0);
         } else {
@@ -137,7 +147,7 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
         }
     }
 
-    private void resolveOptionalAttributes(TypedArray typedArray) {
+    private void resolveOptionalAttributes(@NonNull TypedArray typedArray) {
         fabDrawable = typedArray.getDrawable(R.styleable.FabSpeedDial_fabDrawable);
         if (fabDrawable == null) {
             fabDrawable = ContextCompat.getDrawable(getContext(), R.drawable.fab_buttonstates);
@@ -422,7 +432,8 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
         animateFabMenuItemsIn();
     }
 
-    private View createFabMenuItem(MenuItem menuItem) {
+    @NonNull
+    private View createFabMenuItem(@NonNull MenuItem menuItem) {
         ViewGroup fabMenuItem = (ViewGroup) LayoutInflater.from(getContext())
                 .inflate(R.layout.fab_menu_item_end, this, false);
 
@@ -512,7 +523,7 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
         }
     }
 
-    private void animateViewIn(final View view, int position) {
+    private void animateViewIn(@NonNull final View view, int position) {
         final float offsetY = getResources().getDimensionPixelSize(R.dimen.keyline_1);
 
         view.setScaleX(0.25f);
@@ -558,7 +569,7 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
     }
 
     @Override
-    public boolean dispatchKeyEventPreIme(KeyEvent event) {
+    public boolean dispatchKeyEventPreIme(@NonNull KeyEvent event) {
         if (isMenuOpen()
                 && event.getKeyCode() == KeyEvent.KEYCODE_BACK
                 && event.getAction() == KeyEvent.ACTION_UP
@@ -574,7 +585,7 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
 
         boolean isShowingMenu;
 
-        public SavedState(Parcel source) {
+        public SavedState(@NonNull Parcel source) {
             super(source);
             this.isShowingMenu = source.readInt() == 1;
         }
@@ -584,14 +595,14 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
         }
 
         @Override
-        public void writeToParcel(Parcel out, int flags) {
+        public void writeToParcel(@NonNull Parcel out, int flags) {
             super.writeToParcel(out, flags);
             out.writeInt(this.isShowingMenu ? 1 : 0);
         }
 
         public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
             @Override
-            public SavedState createFromParcel(Parcel parcel) {
+            public SavedState createFromParcel(@NonNull Parcel parcel) {
                 return new SavedState(parcel);
             }
 

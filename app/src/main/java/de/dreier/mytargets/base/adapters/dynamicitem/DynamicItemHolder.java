@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.base.adapters.dynamicitem;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -22,7 +23,7 @@ import android.view.View;
 public abstract class DynamicItemHolder<T> extends RecyclerView.ViewHolder {
     protected T item;
 
-    public DynamicItemHolder(View itemView) {
+    public DynamicItemHolder(@NonNull View itemView) {
         super(itemView);
     }
 

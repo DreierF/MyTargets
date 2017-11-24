@@ -30,10 +30,12 @@ import de.dreier.mytargets.shared.analysis.aggregation.NOPResultRenderer;
 import de.dreier.mytargets.shared.models.db.Shot;
 
 public abstract class AggregationStrategyBase implements IAggregationStrategy {
+    @NonNull
     protected final ArrayList<Shot> data;
     @NonNull
     protected IAggregationResultRenderer result = new NOPResultRenderer();
     protected boolean isDirty;
+    @Nullable
     private OnAggregationResult resultListener;
     private AsyncTask<List<Shot>, Integer, IAggregationResultRenderer> computeTask;
     private int color;
@@ -92,11 +94,12 @@ public abstract class AggregationStrategyBase implements IAggregationStrategy {
 
     private class ComputeTask extends AsyncTask<List<Shot>, Integer, IAggregationResultRenderer> {
 
+        @Nullable
         protected IAggregationResultRenderer doInBackground(final List<Shot>... array) {
             return compute(array[0]);
         }
 
-        protected void onPostExecute(final IAggregationResultRenderer clusterResultRenderer) {
+        protected void onPostExecute(@Nullable final IAggregationResultRenderer clusterResultRenderer) {
             super.onPostExecute(clusterResultRenderer);
             if (clusterResultRenderer != null) {
                 clusterResultRenderer.setColor(color);

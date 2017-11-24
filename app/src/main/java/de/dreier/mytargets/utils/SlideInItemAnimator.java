@@ -18,6 +18,7 @@ package de.dreier.mytargets.utils;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
@@ -90,7 +91,7 @@ public class SlideInItemAnimator extends DefaultItemAnimator {
                                     }
 
                                     @Override
-                                    public void onAnimationEnd(Animator animation) {
+                                    public void onAnimationEnd(@NonNull Animator animation) {
                                         animation.getListeners().remove(this);
                                         dispatchAddFinished(holder);
                                         dispatchFinishedWhenDone();
@@ -141,7 +142,7 @@ public class SlideInItemAnimator extends DefaultItemAnimator {
         }
     }
 
-    private void clearAnimatedValues(final View view) {
+    private void clearAnimatedValues(@NonNull final View view) {
         view.setAlpha(1f);
         view.setTranslationX(0f);
         view.setTranslationY(0f);

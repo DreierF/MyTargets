@@ -17,6 +17,7 @@ package de.dreier.mytargets.features.main;
 
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.support.annotation.NonNull;
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.contrib.NavigationViewActions;
@@ -82,6 +83,7 @@ import static org.hamcrest.CoreMatchers.allOf;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest extends UITestBase {
 
+    @NonNull
     private IntentsTestRule<MainActivity> activityTestRule = new IntentsTestRule<>(
             MainActivity.class);
     @Rule

@@ -28,6 +28,7 @@ import de.dreier.mytargets.shared.targets.drawable.TargetDrawable;
 public class CombinedSpot extends Drawable {
 
     private final List<TargetDrawable> faces;
+    @NonNull
     private final Rect faceRect;
 
     public CombinedSpot(List<TargetDrawable> faces) {

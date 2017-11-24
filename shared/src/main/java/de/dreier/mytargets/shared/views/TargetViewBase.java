@@ -26,6 +26,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.support.v4.widget.ExploreByTouchHelper;
@@ -59,15 +60,18 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
      * If no shot is selected it is set to EndRenderer#NO_SELECTION.
      */
     private int currentShotIndex;
+    @NonNull
     protected EndRenderer endRenderer = new EndRenderer();
     protected List<Shot> shots;
     protected RoundTemplate round;
+    @Nullable
     protected OnEndFinishedListener setListener = null;
     protected EInputMethod inputMethod = EInputMethod.KEYBOARD;
     protected float density;
     protected List<SelectableZone> selectableZones;
     protected Target target;
     protected TargetImpactAggregationDrawable targetDrawable;
+    @Nullable
     protected AnimatorSet animator;
 
     protected Drawable backspaceSymbol;
@@ -134,7 +138,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         updateSelectableZones();
     }
 
-    public void setEnd(End end) {
+    public void setEnd(@NonNull End end) {
         shots = end.getShots();
         setCurrentShotIndex(getNextShotIndex(-1));
         endRenderer.setShots(shots);
@@ -150,12 +154,12 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     @Override
-    public boolean dispatchHoverEvent(MotionEvent event) {
+    public boolean dispatchHoverEvent(@NonNull MotionEvent event) {
         return touchHelper.dispatchHoverEvent(event) || super.dispatchHoverEvent(event);
     }
 
     @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
+    public boolean dispatchKeyEvent(@NonNull KeyEvent event) {
         return touchHelper.dispatchKeyEvent(event) || super.dispatchKeyEvent(event);
     }
 
@@ -190,7 +194,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         backspaceSymbol.setBounds(backspaceSymbolBounds);
     }
 
-    protected void drawBackspaceButton(Canvas canvas) {
+    protected void drawBackspaceButton(@NonNull Canvas canvas) {
         backspaceSymbol.draw(canvas);
     }
 
@@ -200,7 +204,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     protected abstract RectF getEndRect();
 
-    protected int getSelectableZoneIndexFromShot(Shot shot) {
+    protected int getSelectableZoneIndexFromShot(@NonNull Shot shot) {
         int i = 0;
         for (SelectableZone selectableZone : selectableZones) {
             if (shot.scoringRing == selectableZone.index) {
@@ -218,7 +222,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     @NonNull
     protected abstract Rect getSelectableZonePosition(int i);
 
-    public boolean onTouch(View view, MotionEvent motionEvent) {
+    public boolean onTouch(View view, @NonNull MotionEvent motionEvent) {
         float x = motionEvent.getX();
         float y = motionEvent.getY();
 
@@ -301,13 +305,14 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         playAnimations(animations);
     }
 
-    protected void collectAnimations(List<Animator> animations) {
+    protected void collectAnimations(@NonNull List<Animator> animations) {
         final Animator animation = getCircleAnimation();
         if (animation != null) {
             animations.add(animation);
         }
     }
 
+    @Nullable
     protected Animator getCircleAnimation() {
         PointF pos = null;
         if (isCurrentlySelecting()) {
@@ -360,7 +365,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     protected abstract boolean selectPreviousShots(MotionEvent motionEvent, float x, float y);
 
-    private boolean pressBackspace(MotionEvent motionEvent, float x, float y) {
+    private boolean pressBackspace(@NonNull MotionEvent motionEvent, float x, float y) {
         if (backspaceButtonBounds.contains((int) x, (int) y)) {
             if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 int currentShotIndex = getCurrentShotIndex();
@@ -450,9 +455,10 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     private static class TargetAccessibilityTouchHelper extends ExploreByTouchHelper {
 
+        @NonNull
         private final TargetViewBase targetView;
 
-        TargetAccessibilityTouchHelper(TargetViewBase targetView) {
+        TargetAccessibilityTouchHelper(@NonNull TargetViewBase targetView) {
             super(targetView);
             this.targetView = targetView;
         }
@@ -476,7 +482,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         }
 
         @Override
-        protected void getVisibleVirtualViews(List<Integer> virtualViewIds) {
+        protected void getVisibleVirtualViews(@NonNull List<Integer> virtualViewIds) {
             for (int i = 0; i < targetView.virtualViews.size(); i++) {
                 virtualViewIds.add(targetView.virtualViews.get(i).id);
             }

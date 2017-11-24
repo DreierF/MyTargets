@@ -17,6 +17,7 @@ package de.dreier.mytargets.features.arrow;
 
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -49,6 +50,7 @@ import static org.hamcrest.Matchers.allOf;
 @RunWith(AndroidJUnit4.class)
 public class ArrowSelectorTest extends UITestBase {
 
+    @NonNull
     private IntentsTestRule<EditTrainingActivity> activityTestRule = new IntentsTestRule<>(
             EditTrainingActivity.class, true, false);
 

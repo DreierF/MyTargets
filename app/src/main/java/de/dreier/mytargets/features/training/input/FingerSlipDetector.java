@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.training.input;
 
 import android.graphics.PointF;
+import android.support.annotation.Nullable;
 
 import java.util.LinkedList;
 import java.util.Stack;
@@ -30,6 +31,7 @@ class FingerSlipDetector {
 
     private Stack<TimedPoint> cache;
     private LinkedList<TimedPoint> list;
+    @Nullable
     private TimedPoint currentMaturePosition = null;
 
     public FingerSlipDetector() {
@@ -59,6 +61,7 @@ class FingerSlipDetector {
         }
     }
 
+    @Nullable
     public PointF getFinalPosition() {
         if (currentMaturePosition == null) {
             return null;

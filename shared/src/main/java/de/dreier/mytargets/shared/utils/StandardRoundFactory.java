@@ -15,6 +15,8 @@
 
 package de.dreier.mytargets.shared.utils;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +59,7 @@ public class StandardRoundFactory {
     private static long idCounter;
     private static long roundCounter;
 
+    @NonNull
     public static List<StandardRound> initTable() {
         List<StandardRound> rounds = new ArrayList<>();
 
@@ -724,7 +727,8 @@ public class StandardRoundFactory {
      * @param roundDetails Per round distance, targetSize and number of ends are expected
      * @return The standard round with the specified properties
      */
-    private static StandardRound build(int institution, int name, Dimension.Unit distanceUnit, Dimension.Unit targetUnit, int target, int scoringStyle, int shotsPerEnd, int... roundDetails) {
+    @NonNull
+    private static StandardRound build(int institution, int name, Dimension.Unit distanceUnit, Dimension.Unit targetUnit, int target, int scoringStyle, int shotsPerEnd, @NonNull int... roundDetails) {
         StandardRound standardRound = new StandardRound();
         idCounter++;
         standardRound.setId(idCounter);
@@ -746,7 +750,8 @@ public class StandardRoundFactory {
         return standardRound;
     }
 
-    private static StandardRound build(int institution, int name, Dimension.Unit distanceUnit, Dimension.Unit targetUnit, int target, int scoringStyle, Target target2, int shotsPerEnd, int... roundDetails) {
+    @NonNull
+    private static StandardRound build(int institution, int name, Dimension.Unit distanceUnit, Dimension.Unit targetUnit, int target, int scoringStyle, @NonNull Target target2, int shotsPerEnd, int... roundDetails) {
         StandardRound standardRound = build(institution, name, distanceUnit,
                 targetUnit, target, scoringStyle, shotsPerEnd, roundDetails);
         RoundTemplate round2 = standardRound.getRounds().get(1);

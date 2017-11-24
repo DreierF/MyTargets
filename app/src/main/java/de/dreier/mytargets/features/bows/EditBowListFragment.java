@@ -47,6 +47,7 @@ public class EditBowListFragment extends EditableListFragment<Bow> {
 
     protected FragmentBowsBinding binding;
 
+    @NonNull
     static SparseArray<EBowType> bowTypeMap = new SparseArray<>();
 
     static {
@@ -115,7 +116,7 @@ public class EditBowListFragment extends EditableListFragment<Bow> {
     }
 
     @Override
-    protected void onItemSelected(Bow item) {
+    protected void onItemSelected(@NonNull Bow item) {
         EditBowFragment.editIntent(item.getId()).withContext(this).start();
     }
 }

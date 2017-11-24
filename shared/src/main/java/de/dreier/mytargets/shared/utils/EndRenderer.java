@@ -24,6 +24,7 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
@@ -72,7 +73,7 @@ public class EndRenderer {
         grayBackground.setAntiAlias(true);
     }
 
-    public void setRect(RectF rect) {
+    public void setRect(@NonNull RectF rect) {
         this.rect = rect;
         if (shotList == null) {
             return;
@@ -101,7 +102,7 @@ public class EndRenderer {
         }
     }
 
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         if (rect == null || shotsPerRow == 0) {
             return;
         }
@@ -131,7 +132,7 @@ public class EndRenderer {
     }
 
     @NonNull
-    private PointF getPosition(int i, Shot shot) {
+    private PointF getPosition(int i, @NonNull Shot shot) {
         if (selected == shot.index && selectedPosition != null) {
             return new PointF(selectedPosition.x, selectedPosition.y);
         } else {
@@ -144,7 +145,8 @@ public class EndRenderer {
         }
     }
 
-    private PointF getAnimatedPosition(int i, Shot shot) {
+    @NonNull
+    private PointF getAnimatedPosition(int i, @NonNull Shot shot) {
         PointF coordinate = getPosition(i, shot);
         if (currentAnimationProgress != -1 && oldCoordinate[shot.index] != null) {
             float oldX = oldCoordinate[shot.index].x;
@@ -155,7 +157,7 @@ public class EndRenderer {
         return coordinate;
     }
 
-    private int getRadius(Shot shot) {
+    private int getRadius(@NonNull Shot shot) {
         int rad = radius;
         int oRad = oldRadius;
         if (selected == shot.index) {
@@ -170,7 +172,8 @@ public class EndRenderer {
         }
     }
 
-    public Animator getAnimationToSelection(int selectedShot, PointF c, int radius, RectF rect) {
+    @Nullable
+    public Animator getAnimationToSelection(int selectedShot, PointF c, int radius, @Nullable RectF rect) {
         if (rect == null) {
             setSelection(selectedShot, c, radius);
             return null;
@@ -239,6 +242,7 @@ public class EndRenderer {
         this.ambientMode = ambientMode;
     }
 
+    @NonNull
     public Rect getBoundsForShot(int index) {
         PointF position = getPosition(index, shotList.get(index));
         float radius = getRadius(shotList.get(index)) * density;

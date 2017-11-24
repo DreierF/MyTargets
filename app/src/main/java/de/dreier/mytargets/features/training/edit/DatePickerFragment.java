@@ -29,6 +29,7 @@ public class DatePickerFragment extends DialogFragment {
 
     private static final String ARG_CURRENT_DATE = "current_date";
 
+    @NonNull
     public static DatePickerFragment newInstance(LocalDate date) {
         DatePickerFragment datePickerDialog = new DatePickerFragment();
         Bundle bundle = new Bundle();

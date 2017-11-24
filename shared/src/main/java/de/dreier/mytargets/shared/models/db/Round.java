@@ -16,6 +16,7 @@
 package de.dreier.mytargets.shared.models.db;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.annimon.stream.Stream;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -48,10 +49,12 @@ import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter;
 @Table(database = AppDatabase.class)
 public class Round extends BaseModel implements IIdSettable, Comparable<Round>, IRecursiveModel {
 
+    @Nullable
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     Long id;
 
+    @Nullable
     @ForeignKey(tableClass = Training.class, references = {
             @ForeignKeyReference(columnName = "training", columnType = Long.class, foreignKeyColumnName = "_id")},
             onDelete = ForeignKeyAction.CASCADE)
@@ -63,12 +66,15 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round>, 
     @Column
     public int shotsPerEnd;
 
+    @Nullable
     @Column
     public Integer maxEndCount;
 
+    @Nullable
     @Column(typeConverter = DimensionConverter.class)
     public Dimension distance;
 
+    @Nullable
     @Column
     public String comment = "";
 
@@ -78,6 +84,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round>, 
     @Column
     int targetScoringStyle;
 
+    @Nullable
     @Column(typeConverter = DimensionConverter.class)
     Dimension targetDiameter;
 
@@ -87,7 +94,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round>, 
 
     }
 
-    public Round(RoundTemplate info) {
+    public Round(@NonNull RoundTemplate info) {
         distance = info.distance;
         shotsPerEnd = info.shotsPerEnd;
         maxEndCount = info.endCount;
@@ -95,7 +102,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round>, 
         setTarget(info.getTargetTemplate());
     }
 
-    public Round(Round round) {
+    public Round(@NonNull Round round) {
         this.id = round.id;
         this.trainingId = round.trainingId;
         this.index = round.index;
@@ -109,6 +116,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round>, 
         this.ends = round.ends;
     }
 
+    @Nullable
     public static Round get(Long id) {
         return SQLite.select()
                 .from(Round.class)
@@ -116,7 +124,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round>, 
                 .querySingle();
     }
 
-    public static List<Round> getAll(long[] roundIds) {
+    public static List<Round> getAll(@NonNull long[] roundIds) {
         return SQLite.select()
                 .from(Round.class)
                 .where(Round_Table._id.in(LongUtils.toList(roundIds)))
@@ -151,16 +159,18 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round>, 
         }
     }
 
+    @Nullable
     public Target getTarget() {
         return new Target(targetId, targetScoringStyle, targetDiameter);
     }
 
-    public void setTarget(Target targetTemplate) {
+    public void setTarget(@NonNull Target targetTemplate) {
         targetId = targetTemplate.id;
         targetScoringStyle = targetTemplate.scoringStyle;
         targetDiameter = targetTemplate.size;
     }
 
+    @Nullable
     public Long getId() {
         return id;
     }
@@ -188,6 +198,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round>, 
         return ends;
     }
 
+    @NonNull
     public List<End> getEnds(DatabaseWrapper databaseWrapper) {
         return SQLite.select()
                 .from(End.class)
@@ -213,6 +224,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round>, 
      *
      * @return Returns the newly created end
      */
+    @NonNull
     public End addEnd() {
         End end = new End(shotsPerEnd, getEnds().size());
         end.roundId = id;

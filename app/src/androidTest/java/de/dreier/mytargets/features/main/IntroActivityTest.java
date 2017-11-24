@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.features.main;
 
+import android.support.annotation.NonNull;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -42,6 +43,7 @@ import static org.hamcrest.Matchers.allOf;
 @RunWith(AndroidJUnit4.class)
 public class IntroActivityTest extends UITestBase {
 
+    @NonNull
     private ActivityTestRule activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Rule

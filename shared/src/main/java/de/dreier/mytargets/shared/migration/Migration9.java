@@ -18,6 +18,8 @@ package de.dreier.mytargets.shared.migration;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.raizlabs.android.dbflow.annotation.Migration;
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
@@ -58,7 +60,7 @@ public class Migration9 extends BaseMigration {
     private static final String RT_TARGET_SIZE_UNIT = "target_unit";
 
     @Override
-    public void migrate(DatabaseWrapper database) {
+    public void migrate(@NonNull DatabaseWrapper database) {
         database.execSQL("DROP TABLE IF EXISTS ZONE_MATRIX");
         database.execSQL("ALTER TABLE VISIER ADD COLUMN unit TEXT DEFAULT 'm'");
         database.execSQL("ALTER TABLE PASSE ADD COLUMN image TEXT DEFAULT ''");
@@ -178,7 +180,8 @@ public class Migration9 extends BaseMigration {
         trainings.close();
     }
 
-    private Long getOrCreateStandardRound(DatabaseWrapper db, long training) {
+    @Nullable
+    private Long getOrCreateStandardRound(@NonNull DatabaseWrapper db, long training) {
         Cursor res = db.rawQuery(
                 "SELECT r.ppp, r.target, r.distance, r.unit, COUNT(p._id), r.indoor " +
                         "FROM ROUND_OLD r " +
@@ -212,7 +215,7 @@ public class Migration9 extends BaseMigration {
         return sr.getId();
     }
 
-    private static void insertStandardRound(DatabaseWrapper database, StandardRound item) {
+    private static void insertStandardRound(@NonNull DatabaseWrapper database, @NonNull StandardRound item) {
         ContentValues values = new ContentValues();
         values.put(SR_NAME, item.name);
         values.put(SR_INSTITUTION, item.club);
@@ -233,7 +236,7 @@ public class Migration9 extends BaseMigration {
         }
     }
 
-    private static void insertRoundTemplate(DatabaseWrapper database, RoundTemplate item) {
+    private static void insertRoundTemplate(@NonNull DatabaseWrapper database, @NonNull RoundTemplate item) {
         ContentValues values = new ContentValues();
         values.put(RT_STANDARD_ID, item.standardRound);
         values.put(RT_INDEX, item.index);
@@ -255,7 +258,8 @@ public class Migration9 extends BaseMigration {
         }
     }
 
-    private static RoundTemplate getRoundTemplate(DatabaseWrapper database, long sid, int index) {
+    @Nullable
+    private static RoundTemplate getRoundTemplate(@NonNull DatabaseWrapper database, long sid, int index) {
         Cursor cursor = database.rawQuery("SELECT _id, r_index, arrows, target, scoring_style, " +
                         "target, scoring_style, distance, unit, size, target_unit, passes, sid " +
                         "FROM ROUND_TEMPLATE WHERE sid=? AND r_index=?",
@@ -268,7 +272,8 @@ public class Migration9 extends BaseMigration {
         return r;
     }
 
-    private static RoundTemplate cursorToRoundTemplate(Cursor cursor, int startColumnIndex) {
+    @NonNull
+    private static RoundTemplate cursorToRoundTemplate(@NonNull Cursor cursor, int startColumnIndex) {
         RoundTemplate roundTemplate = new RoundTemplate();
         roundTemplate.setId(cursor.getLong(startColumnIndex));
         roundTemplate.index = cursor.getInt(startColumnIndex + 1);

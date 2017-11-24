@@ -19,6 +19,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.annimon.stream.Stream;
@@ -49,7 +50,7 @@ public class MobileWearableClient extends WearableClientBase {
     private static final String EXTRA_ROUND_ID = "round_id";
     private static final String EXTRA_END = "end_index";
 
-    public MobileWearableClient(Context context) {
+    public MobileWearableClient(@NonNull Context context) {
         super(context);
         LocalBroadcastManager.getInstance(context).registerReceiver(updateReceiver,
                 new IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_LOCAL));
@@ -61,9 +62,10 @@ public class MobileWearableClient extends WearableClientBase {
         super.disconnect();
     }
 
+    @NonNull
     private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context context, @NonNull Intent intent) {
             Training training = Parcels.unwrap(intent.getParcelableExtra(EXTRA_TRAINING));
             updateTraining(training);
         }
@@ -75,7 +77,7 @@ public class MobileWearableClient extends WearableClientBase {
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
-    public void sendUpdateTrainingFromRemoteBroadcast(Round round, End end) {
+    public void sendUpdateTrainingFromRemoteBroadcast(@NonNull Round round, End end) {
         Intent intent = new Intent(BROADCAST_UPDATE_TRAINING_FROM_REMOTE);
         intent.putExtra(EXTRA_TRAINING_ID, round.trainingId);
         intent.putExtra(EXTRA_ROUND_ID, round.getId());
@@ -88,7 +90,7 @@ public class MobileWearableClient extends WearableClientBase {
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
-    public void updateTraining(Training training) {
+    public void updateTraining(@NonNull Training training) {
         List<Round> rounds = training.getRounds();
         int roundCount = rounds.size();
         if (roundCount < 1) {
@@ -131,7 +133,7 @@ public class MobileWearableClient extends WearableClientBase {
     public abstract static class EndUpdateReceiver extends BroadcastReceiver {
 
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context context, @NonNull Intent intent) {
             Long trainingId = intent.getLongExtra(EXTRA_TRAINING_ID, -1);
             Long roundId = intent.getLongExtra(EXTRA_ROUND_ID, -1);
             End end = Parcels.unwrap(intent.getParcelableExtra(EXTRA_END));

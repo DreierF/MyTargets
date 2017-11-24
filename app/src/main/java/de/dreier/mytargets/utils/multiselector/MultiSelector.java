@@ -21,6 +21,8 @@
 package de.dreier.mytargets.utils.multiselector;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,6 +33,7 @@ import de.dreier.mytargets.shared.utils.LongUtils;
 
 public class MultiSelector extends SelectorBase {
     private static final String SELECTION_IDS = "ids";
+    @NonNull
     private Set<Long> selections = new HashSet<>();
 
     @Override
@@ -53,23 +56,24 @@ public class MultiSelector extends SelectorBase {
         refreshAllHolders();
     }
 
+    @NonNull
     public ArrayList<Long> getSelectedIds() {
         return new ArrayList<>(selections);
     }
 
     @Override
-    protected void saveSelectionStates(Bundle bundle) {
+    protected void saveSelectionStates(@NonNull Bundle bundle) {
         bundle.putLongArray(SELECTION_IDS, LongUtils.toArray(getSelectedIds()));
     }
 
     @Override
-    public void restoreSelectionStates(Bundle savedStates) {
+    public void restoreSelectionStates(@NonNull Bundle savedStates) {
         super.restoreSelectionStates(savedStates);
         long[] selectedIds = savedStates.getLongArray(SELECTION_IDS);
         restoreSelections(LongUtils.toList(selectedIds));
     }
 
-    private void restoreSelections(List<Long> selected) {
+    private void restoreSelections(@Nullable List<Long> selected) {
         if (selected != null) {
             selections.clear();
             selections.addAll(selected);

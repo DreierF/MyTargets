@@ -19,6 +19,7 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.Region;
+import android.support.annotation.NonNull;
 
 import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper;
 import de.dreier.mytargets.shared.utils.RegionUtils;
@@ -26,6 +27,7 @@ import de.dreier.mytargets.shared.utils.RegionUtils;
 public class EllipseZone extends ZoneBase {
 
     private static final float REGION_SCALE_FACTOR = 1000f;
+    @NonNull
     private static final Region ELLIPSE_REGION;
     private static final Path ellipse = new Path();
 
@@ -51,13 +53,13 @@ public class EllipseZone extends ZoneBase {
     }
 
     @Override
-    public void drawFill(CanvasWrapper canvas) {
+    public void drawFill(@NonNull CanvasWrapper canvas) {
         initPaint();
         canvas.drawPath(ellipse, paintFill);
     }
 
     @Override
-    public void drawStroke(CanvasWrapper canvas) {
+    public void drawStroke(@NonNull CanvasWrapper canvas) {
         initPaint();
         canvas.drawPath(ellipse, paintStroke);
     }

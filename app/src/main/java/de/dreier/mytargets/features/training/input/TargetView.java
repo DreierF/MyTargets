@@ -28,6 +28,7 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Property;
@@ -69,13 +70,13 @@ public class TargetView extends TargetViewBase {
             Matrix.class, "animatedSpotTransform") {
 
         @Override
-        public void set(TargetView targetView, Matrix matrix) {
+        public void set(@NonNull TargetView targetView, Matrix matrix) {
             targetView.targetDrawable.setSpotMatrix(matrix);
             targetView.invalidate();
         }
 
         @Override
-        public Matrix get(TargetView targetView) {
+        public Matrix get(@NonNull TargetView targetView) {
             return targetView.targetDrawable.getSpotMatrix();
         }
     };
@@ -83,11 +84,12 @@ public class TargetView extends TargetViewBase {
     /**
      * This property is passed to ObjectAnimator when animating the full matrix of TargetView
      */
+    @Nullable
     private static final Property<TargetView, Matrix> ANIMATED_FULL_TRANSFORM_PROPERTY = new Property<TargetView, Matrix>(
             Matrix.class, "animatedFullTransform") {
 
         @Override
-        public void set(TargetView targetView, Matrix matrix) {
+        public void set(@NonNull TargetView targetView, Matrix matrix) {
             targetView.targetDrawable.setMatrix(matrix);
             targetView.invalidate();
         }
@@ -131,6 +133,7 @@ public class TargetView extends TargetViewBase {
     /**
      * Temporary point vector used to translate between different coordinate systems.
      */
+    @NonNull
     private float[] pt = new float[2];
     private EAggregationStrategy aggregationStrategy = EAggregationStrategy.NONE;
     /**
@@ -157,6 +160,7 @@ public class TargetView extends TargetViewBase {
     private RectF keyboardRect;
     private RectF targetRect;
 
+    @NonNull
     private FingerSlipDetector slipDetector = new FingerSlipDetector();
 
     public TargetView(Context context) {
@@ -204,7 +208,7 @@ public class TargetView extends TargetViewBase {
         super.setEnd(end);
     }
 
-    public void setArrow(Dimension diameter, boolean numbers, int maxArrowNumber) {
+    public void setArrow(@NonNull Dimension diameter, boolean numbers, int maxArrowNumber) {
         this.arrowNumbering = numbers;
         this.arrowDiameter = diameter;
         this.maxArrowNumber = maxArrowNumber;
@@ -216,7 +220,7 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         // Draw target
         if (inputMethod == PLOTTING && isCurrentlySelecting()) {
             drawZoomedInTarget(canvas);
@@ -235,7 +239,7 @@ public class TargetView extends TargetViewBase {
         endRenderer.draw(canvas);
     }
 
-    private void drawZoomedInTarget(Canvas canvas) {
+    private void drawZoomedInTarget(@NonNull Canvas canvas) {
         Shot shot = shots.get(getCurrentShotIndex());
 
         targetDrawable.setMatrix(fullExtendedMatrix);
@@ -249,7 +253,7 @@ public class TargetView extends TargetViewBase {
     }
 
     // Draw actual target face
-    private void drawTarget(Canvas canvas) {
+    private void drawTarget(@NonNull Canvas canvas) {
         targetDrawable.setOffset(0, 0);
         targetDrawable.setZoom(1);
         targetDrawable.setFocusedArrow(null);
@@ -279,8 +283,9 @@ public class TargetView extends TargetViewBase {
         }
     }
 
+    @NonNull
     @Override
-    protected PointF getShotCoordinates(Shot shot) {
+    protected PointF getShotCoordinates(@NonNull Shot shot) {
         PointF coordinate = new PointF();
         if (inputMethod == KEYBOARD) {
             coordinate.x = keyboardRect.left;
@@ -349,6 +354,7 @@ public class TargetView extends TargetViewBase {
         keyboardRect.bottom = height;
     }
 
+    @NonNull
     @Override
     protected Rect getBackspaceButtonBounds() {
         Rect backspaceButtonBounds = new Rect();
@@ -359,6 +365,7 @@ public class TargetView extends TargetViewBase {
         return backspaceButtonBounds;
     }
 
+    @NonNull
     @Override
     protected RectF getEndRect() {
         RectF endRect = new RectF(targetRect);
@@ -386,7 +393,7 @@ public class TargetView extends TargetViewBase {
      * {@inheritDoc}
      */
     @Override
-    protected boolean updateShotToPosition(Shot s, float x, float y) {
+    protected boolean updateShotToPosition(@NonNull Shot s, float x, float y) {
         if (inputMethod == KEYBOARD) {
             if (keyboardRect.contains(x, y)) {
                 int index = (int) ((y - keyboardRect.top) * selectableZones.size() /
@@ -409,7 +416,7 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    protected boolean selectPreviousShots(MotionEvent motionEvent, float x, float y) {
+    protected boolean selectPreviousShots(@NonNull MotionEvent motionEvent, float x, float y) {
         // Handle selection of already saved shoots
         int shotIndex = endRenderer.getPressedPosition(x, y);
         endRenderer.setPressed(shotIndex);
@@ -506,7 +513,7 @@ public class TargetView extends TargetViewBase {
      *
      * @param canvas Canvas to draw on
      */
-    private void drawKeyboard(Canvas canvas) {
+    private void drawKeyboard(@NonNull Canvas canvas) {
         for (int i = 0; i < selectableZones.size(); i++) {
             SelectableZone zone = selectableZones.get(i);
 
@@ -570,7 +577,7 @@ public class TargetView extends TargetViewBase {
                 .setArrowDiameter(arrowDiameter, SettingsManager.getInputArrowDiameterScale());
     }
 
-    public void setTransparentShots(Stream<Shot> shotStream) {
+    public void setTransparentShots(@NonNull Stream<Shot> shotStream) {
         targetDrawable.setTransparentShots(shotStream);
     }
 

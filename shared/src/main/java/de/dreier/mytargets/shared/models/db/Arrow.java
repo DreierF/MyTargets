@@ -18,6 +18,7 @@ package de.dreier.mytargets.shared.models.db;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -46,52 +47,66 @@ import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter;
 @Table(database = AppDatabase.class)
 public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Comparable<Arrow>, IRecursiveModel {
 
+    @Nullable
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     public Long id = -1L;
 
+    @Nullable
     @Column
     public String name = "";
 
     @Column
     public int maxArrowNumber = 12;
 
+    @Nullable
     @Column
     public String length = "";
 
+    @Nullable
     @Column
     public String material = "";
 
+    @Nullable
     @Column
     public String spine = "";
 
+    @Nullable
     @Column
     public String weight = "";
 
+    @Nullable
     @Column
     public String tipWeight = "";
 
+    @Nullable
     @Column
     public String vanes = "";
 
+    @Nullable
     @Column
     public String nock = "";
 
+    @Nullable
     @Column
     public String comment = "";
 
+    @Nullable
     @Column(typeConverter = DimensionConverter.class)
     public Dimension diameter = new Dimension(5, Dimension.Unit.MILLIMETER);
 
+    @Nullable
     @Column(typeConverter = ThumbnailConverter.class)
     public Thumbnail thumbnail;
 
+    @Nullable
     public List<ArrowImage> images = null;
 
     public static List<Arrow> getAll() {
         return SQLite.select().from(Arrow.class).queryList();
     }
 
+    @Nullable
     public static Arrow get(Long id) {
         return SQLite.select()
                 .from(Arrow.class)
@@ -99,6 +114,7 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
                 .querySingle();
     }
 
+    @Nullable
     @OneToMany(methods = {}, variableName = "images")
     public List<ArrowImage> getImages() {
         if (images == null) {
@@ -110,6 +126,7 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
         return images;
     }
 
+    @Nullable
     public Long getId() {
         return id;
     }
@@ -127,6 +144,7 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
         return getDrawable();
     }
 
+    @Nullable
     @Override
     public String getName() {
         return name;

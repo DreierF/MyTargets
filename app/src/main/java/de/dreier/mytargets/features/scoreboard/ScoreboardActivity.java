@@ -28,6 +28,7 @@ import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
@@ -79,6 +80,7 @@ public class ScoreboardActivity extends ChildActivityBase {
                 .with(ROUND_ID, roundId);
     }
 
+    @NonNull
     private BroadcastReceiver updateReceiver = new MobileWearableClient.EndUpdateReceiver() {
 
         @Override
@@ -131,6 +133,7 @@ public class ScoreboardActivity extends ChildActivityBase {
     private void reloadData() {
         new AsyncTask<Void, Void, String>() {
 
+            @NonNull
             @Override
             protected String doInBackground(Void... params) {
                 return HtmlUtils.getScoreboard(Utils
@@ -147,7 +150,7 @@ public class ScoreboardActivity extends ChildActivityBase {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_scoreboard, menu);
         menu.findItem(R.id.action_print).setVisible(pageLoaded &&
@@ -157,7 +160,7 @@ public class ScoreboardActivity extends ChildActivityBase {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
                 shareImage();
@@ -180,6 +183,7 @@ public class ScoreboardActivity extends ChildActivityBase {
         // Construct share intent
         new AsyncTask<Void, Void, Uri>() {
 
+            @Nullable
             @Override
             protected Uri doInBackground(Void... objects) {
                 try {
@@ -195,7 +199,7 @@ public class ScoreboardActivity extends ChildActivityBase {
             }
 
             @Override
-            protected void onPostExecute(Uri uri) {
+            protected void onPostExecute(@Nullable Uri uri) {
                 super.onPostExecute(uri);
                 if (uri == null) {
                     Snackbar.make(binding.getRoot(), R.string.sharing_failed, Snackbar.LENGTH_SHORT)
@@ -224,6 +228,7 @@ public class ScoreboardActivity extends ChildActivityBase {
 
         new AsyncTask<Void, Void, String>() {
 
+            @NonNull
             @Override
             protected String doInBackground(Void... params) {
                 return HtmlUtils.getScoreboard(Utils

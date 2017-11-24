@@ -16,6 +16,7 @@
 package de.dreier.mytargets.test.utils.actions;
 
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 import android.support.test.espresso.PerformException;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
@@ -50,7 +51,7 @@ public final class NestedScrollToAction implements ViewAction {
     }
 
     @Override
-    public void perform(UiController uiController, View view) {
+    public void perform(@NonNull UiController uiController, @NonNull View view) {
         if (isDisplayingAtLeast(90).matches(view)) {
             Log.i(TAG, "View is already displayed. Returning.");
             return;

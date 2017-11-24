@@ -15,6 +15,8 @@
 
 package de.dreier.mytargets.shared.utils.typeconverters;
 
+import android.support.annotation.Nullable;
+
 import com.raizlabs.android.dbflow.converter.TypeConverter;
 import com.raizlabs.android.dbflow.data.Blob;
 
@@ -22,8 +24,9 @@ import de.dreier.mytargets.shared.models.Thumbnail;
 
 public final class ThumbnailConverter extends TypeConverter<Blob, Thumbnail> {
 
+    @Nullable
     @Override
-    public Blob getDBValue(Thumbnail model) {
+    public Blob getDBValue(@Nullable Thumbnail model) {
         if (model != null) {
             return model.getBlob();
         }
@@ -31,8 +34,9 @@ public final class ThumbnailConverter extends TypeConverter<Blob, Thumbnail> {
         return null;
     }
 
+    @Nullable
     @Override
-    public Thumbnail getModelValue(Blob data) {
+    public Thumbnail getModelValue(@Nullable Blob data) {
         if (data != null) {
             return new Thumbnail(data);
         }

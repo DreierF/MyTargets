@@ -18,6 +18,7 @@ package de.dreier.mytargets.app;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -111,7 +112,7 @@ public final class MigrationTest extends InstrumentedTestBase {
                 .isEqualTo("img175420839671886584-0f61-43a6-bc1e-dbcd8526056c794370927.jpg");
     }
 
-    private void assertTraining1(Training training) {
+    private void assertTraining1(@NonNull Training training) {
         Truth.assertThat(training.getId()).isEqualTo(1);
         Truth.assertThat(training.title).isEqualTo("Training im Dez");
         Truth.assertThat(training.standardRoundId).isEqualTo(null);
@@ -140,7 +141,7 @@ public final class MigrationTest extends InstrumentedTestBase {
         Truth.assertThat(rounds.get(1).getEnds()).hasSize(2);
     }
 
-    private void assertRound11(List<Round> rounds) {
+    private void assertRound11(@NonNull List<Round> rounds) {
         final Round round1 = rounds.get(0);
         Truth.assertThat(round1.getId()).isEqualTo(1L);
         Truth.assertThat(round1.trainingId).isEqualTo(1L);
@@ -175,7 +176,7 @@ public final class MigrationTest extends InstrumentedTestBase {
         Truth.assertThat(shots.get(3).scoringRing).isEqualTo(0);
     }
 
-    private void assertTraining2(Training training) {
+    private void assertTraining2(@NonNull Training training) {
         Truth.assertThat(training.getId()).isEqualTo(2);
         Truth.assertThat(training.title).isEqualTo("Training");
         Truth.assertThat(training.standardRoundId).isEqualTo(32L);
@@ -206,7 +207,8 @@ public final class MigrationTest extends InstrumentedTestBase {
         Truth.assertThat(upgradedSchema.size() > 0);
     }
 
-    private Set<String> extractSchema(DatabaseWrapper db) {
+    @NonNull
+    private Set<String> extractSchema(@NonNull DatabaseWrapper db) {
         Cursor c = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
         final Set<String> schema = new TreeSet<>();
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {

@@ -24,6 +24,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -99,13 +100,15 @@ public class InputActivity extends ChildActivityBase
 
     private ActivityInputBinding binding;
     private boolean transitionFinished = true;
+    @Nullable
     private ETrainingScope summaryShowScope = null;
     private TargetView targetView;
 
+    @NonNull
     private BroadcastReceiver updateReceiver = new MobileWearableClient.EndUpdateReceiver() {
 
         @Override
-        protected void onUpdate(Long trainingId, Long roundId, End end) {
+        protected void onUpdate(Long trainingId, Long roundId, @NonNull End end) {
             Bundle extras = getIntent().getExtras();
             extras.putLong(TRAINING_ID, trainingId);
             extras.putLong(ROUND_ID, roundId);
@@ -122,23 +125,24 @@ public class InputActivity extends ChildActivityBase
     };
 
     @NonNull
-    public static IntentWrapper createIntent(Round round) {
+    public static IntentWrapper createIntent(@NonNull Round round) {
         return getIntent(round, 0);
     }
 
-    public static IntentWrapper getIntent(Round round, int endIndex) {
+    @NonNull
+    public static IntentWrapper getIntent(@NonNull Round round, int endIndex) {
         return new IntentWrapper(InputActivity.class)
                 .with(TRAINING_ID, round.trainingId)
                 .with(ROUND_ID, round.getId())
                 .with(END_INDEX, endIndex);
     }
 
-    private static boolean shouldShowRound(Round r, ETrainingScope shotShowScope, Long roundId) {
+    private static boolean shouldShowRound(@NonNull Round r, ETrainingScope shotShowScope, Long roundId) {
         return shotShowScope != ETrainingScope.END
                 && (shotShowScope == ETrainingScope.TRAINING || r.getId().equals(roundId));
     }
 
-    private static boolean shouldShowEnd(End end, Long currentEndId) {
+    private static boolean shouldShowEnd(@NonNull End end, Long currentEndId) {
         return !SharedUtils.equals(end.getId(), currentEndId) && end.exact;
     }
 
@@ -177,7 +181,7 @@ public class InputActivity extends ChildActivityBase
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
             ImageList imageList = GalleryActivity.getResult(data);
@@ -231,7 +235,7 @@ public class InputActivity extends ChildActivityBase
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         final MenuItem timer = menu.findItem(R.id.action_timer);
         final MenuItem newRound = menu.findItem(R.id.action_new_round);
         final MenuItem takePicture = menu.findItem(R.id.action_photo);
@@ -255,7 +259,7 @@ public class InputActivity extends ChildActivityBase
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_photo:
                 GalleryActivity.getIntent(new ImageList(data.getCurrentEnd()
@@ -297,8 +301,9 @@ public class InputActivity extends ChildActivityBase
         }
     }
 
+    @NonNull
     @Override
-    public Loader<LoaderResult> onCreateLoader(int id, Bundle args) {
+    public Loader<LoaderResult> onCreateLoader(int id, @NonNull Bundle args) {
         long trainingId = args.getLong(TRAINING_ID);
         long roundId = args.getLong(ROUND_ID);
         int endIndex = args.getInt(END_INDEX);
@@ -306,7 +311,7 @@ public class InputActivity extends ChildActivityBase
     }
 
     @Override
-    public void onLoadFinished(Loader<LoaderResult> loader, LoaderResult data) {
+    public void onLoadFinished(Loader<LoaderResult> loader, @NonNull LoaderResult data) {
         this.data = data;
         onDataLoadFinished();
         showEnd(data.endIndex);
@@ -454,7 +459,7 @@ public class InputActivity extends ChildActivityBase
         binding.next.setEnabled(isEnabled);
     }
 
-    private void openRound(Round round, int endIndex) {
+    private void openRound(@NonNull Round round, int endIndex) {
         finish();
         RoundFragment.getIntent(round)
                 .noAnimation()
@@ -528,7 +533,7 @@ public class InputActivity extends ChildActivityBase
         private final long roundId;
         private final int endIndex;
 
-        public UITaskAsyncTaskLoader(Context context, long trainingId, long roundId, int endIndex) {
+        public UITaskAsyncTaskLoader(@NonNull Context context, long trainingId, long roundId, int endIndex) {
             super(context);
             this.trainingId = trainingId;
             this.roundId = roundId;
@@ -558,16 +563,20 @@ public class InputActivity extends ChildActivityBase
 
     @Parcel
     static class LoaderResult {
+        @NonNull
         final Training training;
+        @Nullable
         StandardRound standardRound;
+        @Nullable
         Dimension arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
+        @Nullable
         SightMark sightMark = null;
         int roundIndex = 0;
         int endIndex = 0;
         int maxArrowNumber = 12;
 
         @ParcelConstructor
-        public LoaderResult(Training training) {
+        public LoaderResult(@NonNull Training training) {
             this.training = training.ensureLoaded();
             this.standardRound = training.getStandardRound();
         }
@@ -587,6 +596,7 @@ public class InputActivity extends ChildActivityBase
             this.endIndex = Math.min(endIndex, getCurrentRound().getEnds().size());
         }
 
+        @Nullable
         public Dimension getDistance() {
             return getCurrentRound().distance;
         }
@@ -613,7 +623,7 @@ public class InputActivity extends ChildActivityBase
             return ends.get(endIndex);
         }
 
-        public void setArrow(Arrow arrow) {
+        public void setArrow(@NonNull Arrow arrow) {
             maxArrowNumber = arrow.maxArrowNumber;
             arrowDiameter = arrow.diameter;
         }

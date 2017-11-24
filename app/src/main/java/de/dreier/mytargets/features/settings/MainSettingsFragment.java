@@ -16,11 +16,12 @@
 package de.dreier.mytargets.features.settings;
 
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 
 public class MainSettingsFragment extends SettingsFragmentBase {
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @NonNull String s) {
         super.onSharedPreferenceChanged(sharedPreferences, s);
         if (s.equals(SettingsManager.KEY_LANGUAGE)) {
             getActivity().recreate();

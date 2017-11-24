@@ -17,11 +17,12 @@ package de.dreier.mytargets.utils.backup;
 
 import android.app.backup.FileBackupHelper;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import de.dreier.mytargets.shared.AppDatabase;
 
 class DbBackupHelper extends FileBackupHelper {
-    public DbBackupHelper(Context ctx) {
+    public DbBackupHelper(@NonNull Context ctx) {
         super(ctx, ctx.getDatabasePath(AppDatabase.DATABASE_FILE_NAME).getAbsolutePath());
     }
 }

@@ -18,6 +18,7 @@ package de.dreier.mytargets.test.utils;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiObjectNotFoundException;
@@ -31,7 +32,7 @@ public class PermissionGranter {
     private static final int PERMISSIONS_DIALOG_DELAY = 1000;
     private static final int GRANT_BUTTON_INDEX = 1;
 
-    public static void allowPermissionsIfNeeded(Activity activity, String permissionNeeded) {
+    public static void allowPermissionsIfNeeded(@NonNull Activity activity, @NonNull String permissionNeeded) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !hasNeededPermission(activity,
                     permissionNeeded)) {
@@ -48,7 +49,7 @@ public class PermissionGranter {
         }
     }
 
-    private static boolean hasNeededPermission(Activity activity, String permissionNeeded) {
+    private static boolean hasNeededPermission(@NonNull Activity activity, @NonNull String permissionNeeded) {
         int permissionStatus = ContextCompat.checkSelfPermission(activity, permissionNeeded);
         return permissionStatus == PackageManager.PERMISSION_GRANTED;
     }

@@ -18,6 +18,7 @@ package de.dreier.mytargets.features.distance;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.support.annotation.NonNull;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.widget.EditText;
@@ -60,11 +61,13 @@ public class DistanceInputDialog {
                     .show();
         }
 
+        @NonNull
         public Builder setOnClickListener(OnClickListener listener) {
             clickListener = listener;
             return this;
         }
 
+        @NonNull
         public Builder setUnit(String unit) {
             this.unit = unit;
             return this;

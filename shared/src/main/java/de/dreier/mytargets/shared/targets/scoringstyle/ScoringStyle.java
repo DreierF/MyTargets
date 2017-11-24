@@ -16,6 +16,7 @@
 package de.dreier.mytargets.shared.targets.scoringstyle;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import com.annimon.stream.Stream;
@@ -30,6 +31,7 @@ public class ScoringStyle {
 
     public static final String MISS_SYMBOL = "M";
     private static final String X_SYMBOL = "X";
+    @Nullable
     private final String title;
     private final boolean showAsX;
     protected final int[][] points;
@@ -43,7 +45,7 @@ public class ScoringStyle {
         this(get(title), showAsX, new int[][]{points});
     }
 
-    private ScoringStyle(String title, boolean showAsX, int[][] points) {
+    private ScoringStyle(@Nullable String title, boolean showAsX, int[][] points) {
         this.showAsX = showAsX;
         this.points = points;
         getMaxPoints();
@@ -89,11 +91,13 @@ public class ScoringStyle {
         return style;
     }
 
+    @Nullable
     @Override
     public String toString() {
         return title;
     }
 
+    @NonNull
     public String zoneToString(int zone, int arrow) {
         if (isOutOfRange(zone)) {
             return MISS_SYMBOL;
@@ -123,7 +127,8 @@ public class ScoringStyle {
         return zone < 0 || zone >= points[0].length;
     }
 
-    public Score getReachedScore(Shot shot) {
+    @NonNull
+    public Score getReachedScore(@NonNull Shot shot) {
         if (shot.scoringRing == Shot.NOTHING_SELECTED) {
             return new Score(maxScorePerShot);
         }
@@ -131,7 +136,7 @@ public class ScoringStyle {
         return new Score(reachedScore, maxScorePerShot);
     }
 
-    public Score getReachedScore(End end) {
+    public Score getReachedScore(@NonNull End end) {
         return Stream.of(end.getShots())
                 .map(this::getReachedScore)
                 .collect(Score.sum());

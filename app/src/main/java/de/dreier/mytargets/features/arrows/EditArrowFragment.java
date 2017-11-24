@@ -17,6 +17,7 @@ package de.dreier.mytargets.features.arrows;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +42,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
 
     @VisibleForTesting
     public static final String ARROW_ID = "arrow_id";
+    @Nullable
     @State(ParcelsBundler.class)
     Arrow arrow;
     private FragmentEditArrowBinding contentBinding;
@@ -61,7 +63,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         contentBinding = FragmentEditArrowBinding.inflate(inflater, binding.content, true);
         contentBinding.moreFields.setOnClickListener(v -> contentBinding.setShowAll(true));
@@ -129,6 +131,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
         return true;
     }
 
+    @Nullable
     private Arrow buildArrow() {
         arrow.name = contentBinding.name.getText().toString();
         arrow.maxArrowNumber = parseInt(contentBinding.maxArrowNumber.getText().toString());

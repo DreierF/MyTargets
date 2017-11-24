@@ -69,6 +69,7 @@ public class RoundFragment extends EditableListFragment<End> {
 
     private long roundId;
     private FragmentListBinding binding;
+    @Nullable
     private Round round;
 
     public RoundFragment() {
@@ -80,12 +81,13 @@ public class RoundFragment extends EditableListFragment<End> {
     }
 
     @NonNull
-    public static IntentWrapper getIntent(Round round) {
+    public static IntentWrapper getIntent(@NonNull Round round) {
         return new IntentWrapper(RoundActivity.class)
                 .with(ROUND_ID, round.getId())
                 .clearTopSingleTop();
     }
 
+    @NonNull
     private BroadcastReceiver updateReceiver = new MobileWearableClient.EndUpdateReceiver() {
 
         @Override
@@ -159,12 +161,12 @@ public class RoundFragment extends EditableListFragment<End> {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.statistics_scoresheet, menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_statistics:
                 StatisticsActivity
@@ -195,7 +197,7 @@ public class RoundFragment extends EditableListFragment<End> {
     }
 
     @Override
-    protected void onItemSelected(End item) {
+    protected void onItemSelected(@NonNull End item) {
         InputActivity.getIntent(round, item.index)
                 .withContext(this)
                 .start();
@@ -209,8 +211,9 @@ public class RoundFragment extends EditableListFragment<End> {
 
     private class EndAdapter extends SimpleListAdapterBase<End> {
 
+        @NonNull
         @Override
-        protected SelectableViewHolder<End> onCreateViewHolder(ViewGroup parent) {
+        protected SelectableViewHolder<End> onCreateViewHolder(@NonNull ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_end, parent, false);
             return new EndViewHolder(itemView);
@@ -221,7 +224,7 @@ public class RoundFragment extends EditableListFragment<End> {
 
         private final ItemEndBinding binding;
 
-        EndViewHolder(View itemView) {
+        EndViewHolder(@NonNull View itemView) {
             super(itemView, selector, RoundFragment.this);
             binding = DataBindingUtil.bind(itemView);
         }

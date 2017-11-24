@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.test.utils;
 
+import android.support.annotation.NonNull;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiObjectNotFoundException;
@@ -25,7 +26,7 @@ import org.junit.Assert;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
 public class VirtualViewUtil {
-    public static void assertVirtualViewExists(String contentDescription) throws UiObjectNotFoundException {
+    public static void assertVirtualViewExists(@NonNull String contentDescription) throws UiObjectNotFoundException {
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
@@ -37,7 +38,7 @@ public class VirtualViewUtil {
         Assert.assertTrue(marker.exists());
     }
 
-    public static void assertVirtualViewNotExists(String contentDescription) {
+    public static void assertVirtualViewNotExists(@NonNull String contentDescription) {
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
@@ -49,7 +50,7 @@ public class VirtualViewUtil {
         Assert.assertFalse(marker.exists());
     }
 
-    public static void clickVirtualView(String contentDescription) throws UiObjectNotFoundException {
+    public static void clickVirtualView(@NonNull String contentDescription) throws UiObjectNotFoundException {
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {

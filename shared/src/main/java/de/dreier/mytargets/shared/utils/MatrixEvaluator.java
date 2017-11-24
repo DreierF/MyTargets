@@ -17,20 +17,25 @@ package de.dreier.mytargets.shared.utils;
 
 import android.animation.TypeEvaluator;
 import android.graphics.Matrix;
+import android.support.annotation.NonNull;
 
 /**
  * This class is passed to ValueAnimator in order to animate matrix changes
  */
 public class MatrixEvaluator implements TypeEvaluator<Matrix> {
 
+    @NonNull
     private float[] tempStartValues = new float[9];
 
+    @NonNull
     private float[] tempEndValues = new float[9];
 
+    @NonNull
     private Matrix tempMatrix = new Matrix();
 
+    @NonNull
     @Override
-    public Matrix evaluate(float fraction, Matrix startValue, Matrix endValue) {
+    public Matrix evaluate(float fraction, @NonNull Matrix startValue, @NonNull Matrix endValue) {
         startValue.getValues(tempStartValues);
         endValue.getValues(tempEndValues);
         for (int i = 0; i < 9; i++) {

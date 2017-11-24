@@ -15,14 +15,18 @@
 
 package de.dreier.mytargets.shared.utils.typeconverters;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.raizlabs.android.dbflow.converter.TypeConverter;
 
 import de.dreier.mytargets.shared.models.Dimension;
 
 public final class DimensionConverter extends TypeConverter<String, Dimension> {
 
+    @Nullable
     @Override
-    public String getDBValue(Dimension model) {
+    public String getDBValue(@Nullable Dimension model) {
         if (model != null) {
             return model.value + " " + model.unit;
         }
@@ -30,7 +34,7 @@ public final class DimensionConverter extends TypeConverter<String, Dimension> {
     }
 
     @Override
-    public Dimension getModelValue(String data) {
+    public Dimension getModelValue(@NonNull String data) {
         int index = data.indexOf(' ');
         final String value = data.substring(0, index);
         final String unit = data.substring(index + 1);

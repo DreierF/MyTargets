@@ -19,6 +19,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -51,7 +52,7 @@ public class EndView extends View {
         super(context, attrs, defStyle);
     }
 
-    public void setShots(Target target, List<Shot> shots) {
+    public void setShots(Target target, @NonNull List<Shot> shots) {
         shotCount = shots.size();
         density = getResources().getDisplayMetrics().density;
         endRenderer.init(this, density, target);
@@ -60,7 +61,7 @@ public class EndView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
         endRenderer.draw(canvas);
     }

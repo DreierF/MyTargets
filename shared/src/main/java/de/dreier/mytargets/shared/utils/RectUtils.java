@@ -16,9 +16,10 @@
 package de.dreier.mytargets.shared.utils;
 
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 
 public class RectUtils {
-    public static Rect fitRectWithin(Rect inner, Rect outer) {
+    public static Rect fitRectWithin(@NonNull Rect inner, @NonNull Rect outer) {
         float innerAspectRatio = inner.width() / (float) inner.height();
         float outerAspectRatio = outer.width() / (float) outer.height();
 

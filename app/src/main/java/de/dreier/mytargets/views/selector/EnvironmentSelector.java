@@ -19,6 +19,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -63,13 +65,13 @@ public class EnvironmentSelector extends ImageSelectorBase<Environment> {
         try {
             Class.forName("de.dreier.mytargets.test.base.InstrumentedTestBase");
             result = true;
-        } catch (final Exception e) {
+        } catch (@NonNull final Exception e) {
             result = false;
         }
         return result;
     }
 
-    public void queryWeather(Fragment fragment, int request_code) {
+    public void queryWeather(@NonNull Fragment fragment, int request_code) {
         if (isTestMode()) {
             setDefaultWeather();
             return;
@@ -84,7 +86,7 @@ public class EnvironmentSelector extends ImageSelectorBase<Environment> {
         }
     }
 
-    public void onPermissionResult(Activity activity, int[] grantResult) {
+    public void onPermissionResult(Activity activity, @NonNull int[] grantResult) {
         if (grantResult.length > 0 && grantResult[0] == PackageManager.PERMISSION_GRANTED) {
             //noinspection MissingPermission
             queryWeatherInfo(activity);
@@ -100,7 +102,7 @@ public class EnvironmentSelector extends ImageSelectorBase<Environment> {
         setItem(null);
         new Locator(context).getLocation(Locator.Method.NETWORK_THEN_GPS, new Locator.Listener() {
             @Override
-            public void onLocationFound(Location location) {
+            public void onLocationFound(@NonNull Location location) {
                 final WeatherService weatherService = new WeatherService();
                 final Call<CurrentWeather> weatherCall = weatherService
                         .fetchCurrentWeather(location.getLongitude(), location.getLatitude());
@@ -132,6 +134,7 @@ public class EnvironmentSelector extends ImageSelectorBase<Environment> {
         setItem(Environment.getDefault(SettingsManager.getIndoor()));
     }
 
+    @Nullable
     @Override
     public Environment getSelectedItem() {
         if (item == null) {

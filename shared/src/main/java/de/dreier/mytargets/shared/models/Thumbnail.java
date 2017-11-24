@@ -21,6 +21,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.data.Blob;
 
@@ -44,7 +45,7 @@ public class Thumbnail {
     public Thumbnail() {
     }
 
-    public Thumbnail(Blob data) {
+    public Thumbnail(@NonNull Blob data) {
         this.data = data.getBlob();
     }
 
@@ -57,7 +58,7 @@ public class Thumbnail {
         image = new RoundedAvatarDrawable(thumbnail);
     }
 
-    public Thumbnail(File imageFile) {
+    public Thumbnail(@NonNull File imageFile) {
         Bitmap thumbnail = ThumbnailUtils
                 .extractThumbnail(BitmapFactory.decodeFile(imageFile.getPath()),
                         TARGET_SIZE_MICRO_THUMBNAIL, TARGET_SIZE_MICRO_THUMBNAIL);
@@ -71,7 +72,7 @@ public class Thumbnail {
         }
     }
 
-    public Thumbnail(Context context, @DrawableRes int resId) {
+    public Thumbnail(@NonNull Context context, @DrawableRes int resId) {
         this(BitmapFactory.decodeResource(context.getResources(), resId));
     }
 
@@ -83,6 +84,7 @@ public class Thumbnail {
         return image;
     }
 
+    @NonNull
     public Blob getBlob() {
         return new Blob(data);
     }

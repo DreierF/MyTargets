@@ -55,7 +55,7 @@ public class TimerFragment extends TimerFragmentBase {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_timer, container, false);
         return binding.getRoot();
     }
@@ -74,7 +74,7 @@ public class TimerFragment extends TimerFragmentBase {
     }
 
     @Override
-    protected void applyStatus(ETimerState status) {
+    protected void applyStatus(@NonNull ETimerState status) {
         binding.getRoot().setBackgroundResource(status.color);
         if (Utils.isLollipop() && getActivity() != null) {
             Window window = getActivity().getWindow();
@@ -88,7 +88,7 @@ public class TimerFragment extends TimerFragmentBase {
         }
     }
 
-    private int getStatusText(ETimerState state) {
+    private int getStatusText(@NonNull ETimerState state) {
         switch (state) {
             case WAIT_FOR_START:
                 return R.string.touch_to_start;

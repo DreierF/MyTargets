@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.utils;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
@@ -29,33 +30,33 @@ import de.dreier.mytargets.R;
 
 public class ToolbarUtils {
 
-    public static void showUpAsX(Fragment fragment) {
+    public static void showUpAsX(@NonNull Fragment fragment) {
         showUpAsX((AppCompatActivity) fragment.getActivity());
     }
 
-    private static void showUpAsX(AppCompatActivity activity) {
+    private static void showUpAsX(@NonNull AppCompatActivity activity) {
         ActionBar supportActionBar = activity.getSupportActionBar();
         assert supportActionBar != null;
         supportActionBar.setDisplayHomeAsUpEnabled(true);
         supportActionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
     }
 
-    public static void showHomeAsUp(Fragment fragment) {
+    public static void showHomeAsUp(@NonNull Fragment fragment) {
         showHomeAsUp((AppCompatActivity) fragment.getActivity());
     }
 
-    public static void showHomeAsUp(AppCompatActivity activity) {
+    public static void showHomeAsUp(@NonNull AppCompatActivity activity) {
         ActionBar supportActionBar = activity.getSupportActionBar();
         assert supportActionBar != null;
         supportActionBar.setDisplayHomeAsUpEnabled(true);
     }
 
-    public static void setSupportActionBar(Fragment fragment, Toolbar toolbar) {
+    public static void setSupportActionBar(@NonNull Fragment fragment, Toolbar toolbar) {
         AppCompatActivity activity = (AppCompatActivity) fragment.getActivity();
         activity.setSupportActionBar(toolbar);
     }
 
-    public static void setToolbarTransitionName(Toolbar toolbar) {
+    public static void setToolbarTransitionName(@NonNull Toolbar toolbar) {
         TextView textViewTitle = null;
         for (int i = 0; i < toolbar.getChildCount(); i++) {
             View view = toolbar.getChildAt(i);
@@ -67,30 +68,30 @@ public class ToolbarUtils {
         ViewCompat.setTransitionName(textViewTitle, "title");
     }
 
-    public static void setTitle(Fragment fragment, @StringRes int title) {
+    public static void setTitle(@NonNull Fragment fragment, @StringRes int title) {
         setTitle((AppCompatActivity) fragment.getActivity(), title);
     }
 
-    public static void setTitle(Fragment fragment, String title) {
+    public static void setTitle(@NonNull Fragment fragment, String title) {
         setTitle((AppCompatActivity) fragment.getActivity(), title);
     }
 
-    public static void setTitle(AppCompatActivity activity, @StringRes int title) {
+    public static void setTitle(@NonNull AppCompatActivity activity, @StringRes int title) {
         assert activity.getSupportActionBar() != null;
         activity.getSupportActionBar().setTitle(title);
     }
 
-    public static void setTitle(AppCompatActivity activity, String title) {
+    public static void setTitle(@NonNull AppCompatActivity activity, String title) {
         assert activity.getSupportActionBar() != null;
         activity.getSupportActionBar().setTitle(title);
     }
 
-    public static void setSubtitle(Fragment fragment, String subtitle) {
+    public static void setSubtitle(@NonNull Fragment fragment, String subtitle) {
         AppCompatActivity activity = (AppCompatActivity) fragment.getActivity();
         setSubtitle(activity, subtitle);
     }
 
-    public static void setSubtitle(AppCompatActivity activity, String subtitle) {
+    public static void setSubtitle(@NonNull AppCompatActivity activity, String subtitle) {
         assert activity.getSupportActionBar() != null;
         activity.getSupportActionBar().setSubtitle(subtitle);
     }

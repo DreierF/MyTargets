@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.settings;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -31,7 +32,8 @@ import static android.support.v7.preference.PreferenceFragmentCompat.ARG_PREFERE
 public class SettingsActivity extends SimpleFragmentActivityBase implements
         PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 
-    public static IntentWrapper getIntent(ESettingsScreens subScreen) {
+    @NonNull
+    public static IntentWrapper getIntent(@NonNull ESettingsScreens subScreen) {
         return new IntentWrapper(SettingsActivity.class)
                 .with(ARG_PREFERENCE_ROOT, subScreen.getKey());
     }
@@ -63,7 +65,7 @@ public class SettingsActivity extends SimpleFragmentActivityBase implements
 
     @Override
     public boolean onPreferenceStartScreen(PreferenceFragmentCompat preferenceFragmentCompat,
-                                           PreferenceScreen preferenceScreen) {
+                                           @NonNull PreferenceScreen preferenceScreen) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ESettingsScreens screen = ESettingsScreens.from(preferenceScreen.getKey());
         SettingsFragmentBase fragment = screen.create();

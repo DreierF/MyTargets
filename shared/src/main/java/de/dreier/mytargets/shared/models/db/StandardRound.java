@@ -17,6 +17,7 @@ package de.dreier.mytargets.shared.models.db;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
@@ -44,6 +45,7 @@ import de.dreier.mytargets.shared.targets.models.CombinedSpot;
 @Table(database = AppDatabase.class)
 public class StandardRound extends BaseModel implements IIdSettable, IImageProvider, IDetailProvider, Comparable<StandardRound> {
 
+    @Nullable
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     Long id;
@@ -51,11 +53,13 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
     @Column
     public int club;
 
+    @Nullable
     @Column
     public String name;
 
     List<RoundTemplate> rounds;
 
+    @Nullable
     public static StandardRound get(Long id) {
         return SQLite.select()
                 .from(StandardRound.class)
@@ -76,12 +80,13 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
                 .queryList();
     }
 
-    public void insert(RoundTemplate template) {
+    public void insert(@NonNull RoundTemplate template) {
         template.index = getRounds().size();
         template.standardRound = id;
         getRounds().add(template);
     }
 
+    @Nullable
     public Long getId() {
         return id;
     }
@@ -90,6 +95,7 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
         this.id = id;
     }
 
+    @Nullable
     @Override
     public String getName() {
         if (name != null) {
@@ -98,7 +104,8 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
         return "";
     }
 
-    public String getDescription(Context context) {
+    @NonNull
+    public String getDescription(@NonNull Context context) {
         String desc = "";
         for (RoundTemplate r : getRounds()) {
             if (!desc.isEmpty()) {
@@ -125,11 +132,13 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
         this.rounds = rounds;
     }
 
+    @NonNull
     @Override
     public Drawable getDrawable(Context context) {
         return getTargetDrawable();
     }
 
+    @NonNull
     public Drawable getTargetDrawable() {
         List<TargetDrawable> targets = new ArrayList<>();
         for (RoundTemplate r : getRounds()) {
@@ -145,8 +154,9 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
                 id.equals(((StandardRound) another).id);
     }
 
+    @NonNull
     @Override
-    public String getDetails(Context context) {
+    public String getDetails(@NonNull Context context) {
         return getDescription(context);
     }
 

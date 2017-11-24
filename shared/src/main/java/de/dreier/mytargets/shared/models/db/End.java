@@ -16,6 +16,7 @@
 package de.dreier.mytargets.shared.models.db;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
 import com.annimon.stream.Collectors;
@@ -52,6 +53,7 @@ import de.dreier.mytargets.shared.utils.typeconverters.LocalTimeConverter;
 @Table(database = AppDatabase.class)
 public class End extends BaseModel implements IIdSettable, Comparable<End>, IRecursiveModel {
 
+    @Nullable
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     Long id;
@@ -61,6 +63,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
 
     public List<EndImage> images;
 
+    @Nullable
     @ForeignKey(tableClass = Round.class, references = {
             @ForeignKeyReference(columnName = "round", columnType = Long.class, foreignKeyColumnName = "_id")},
             onDelete = ForeignKeyAction.CASCADE)
@@ -69,9 +72,11 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
     @Column
     public boolean exact;
 
+    @Nullable
     @Column(typeConverter = LocalTimeConverter.class)
     public LocalTime saveTime;
 
+    @Nullable
     @Column
     public String comment = "";
 
@@ -88,7 +93,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
         }
     }
 
-    public End(End end) {
+    public End(@NonNull End end) {
         this.index = end.index;
         this.shots = new ArrayList<>(end.getShots());
     }
@@ -121,7 +126,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
     }
 
     @NonNull
-    private static Map<SelectableZone, Integer> getRoundScores(List<Round> rounds) {
+    private static Map<SelectableZone, Integer> getRoundScores(@NonNull List<Round> rounds) {
         final Target t = rounds.get(0).getTarget();
         Map<SelectableZone, Integer> scoreCount = getAllPossibleZones(t);
         for (Round round : rounds) {
@@ -145,7 +150,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
     }
 
     @NonNull
-    private static Map<SelectableZone, Integer> getAllPossibleZones(Target t) {
+    private static Map<SelectableZone, Integer> getAllPossibleZones(@NonNull Target t) {
         Map<SelectableZone, Integer> scoreCount = new HashMap<>();
         for (int arrow = 0; arrow < 3; arrow++) {
             final List<SelectableZone> zoneList = t.getSelectableZoneList(arrow);
@@ -159,7 +164,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
         return scoreCount;
     }
 
-    public static List<Pair<String, Integer>> getTopScoreDistribution(List<Map.Entry<SelectableZone, Integer>> sortedScore) {
+    public static List<Pair<String, Integer>> getTopScoreDistribution(@NonNull List<Map.Entry<SelectableZone, Integer>> sortedScore) {
         final List<Pair<String, Integer>> result = Stream.of(sortedScore)
                 .map(value -> new Pair<>(value.getKey().text, value.getValue()))
                 .collect(Collectors.toList());
@@ -180,13 +185,14 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
     /**
      * Compound 9ers are already collapsed to one SelectableZone.
      */
-    public static List<Map.Entry<SelectableZone, Integer>> getSortedScoreDistribution(List<Round> rounds) {
+    public static List<Map.Entry<SelectableZone, Integer>> getSortedScoreDistribution(@NonNull List<Round> rounds) {
         Map<SelectableZone, Integer> scoreCount = getRoundScores(rounds);
         return Stream.of(scoreCount)
                 .sorted((lhs, rhs) -> lhs.getKey().compareTo(rhs.getKey()))
                 .collect(Collectors.toList());
     }
 
+    @Nullable
     public Long getId() {
         return id;
     }

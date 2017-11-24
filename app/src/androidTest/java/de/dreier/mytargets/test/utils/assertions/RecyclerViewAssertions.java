@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.test.utils.assertions;
 
+import android.support.annotation.NonNull;
 import android.support.test.espresso.ViewAssertion;
 import android.support.v7.widget.RecyclerView;
 
@@ -23,7 +24,7 @@ import org.hamcrest.Matcher;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 
 public class RecyclerViewAssertions {
-    public static ViewAssertion itemCount(Matcher<Integer> matcher) {
+    public static ViewAssertion itemCount(@NonNull Matcher<Integer> matcher) {
         return (view, noViewFoundException) -> {
             if (noViewFoundException != null) {
                 throw noViewFoundException;

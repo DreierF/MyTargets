@@ -17,6 +17,8 @@ package de.dreier.mytargets.features.settings;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.preference.DialogPreference;
 import android.util.AttributeSet;
 
@@ -25,17 +27,18 @@ import org.threeten.bp.LocalDate;
 public class DatePreference extends DialogPreference {
     public LocalDate date = LocalDate.now();
 
-    public DatePreference(Context context, AttributeSet attrs) {
+    public DatePreference(@NonNull Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
+    @Nullable
     @Override
-    protected Object onGetDefaultValue(TypedArray a, int index) {
+    protected Object onGetDefaultValue(@NonNull TypedArray a, int index) {
         return a.getString(index);
     }
 
     @Override
-    protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
+    protected void onSetInitialValue(boolean restoreValue, @Nullable Object defaultValue) {
         String value;
         if (restoreValue) {
             if (defaultValue == null) {
@@ -50,7 +53,7 @@ public class DatePreference extends DialogPreference {
         date = LocalDate.parse(value);
     }
 
-    public void persistDateValue(LocalDate value) {
+    public void persistDateValue(@NonNull LocalDate value) {
         persistString(value.toString());
     }
 }

@@ -14,7 +14,10 @@
  */
 package de.dreier.mytargets.shared.models;
 
+import android.support.annotation.Nullable;
+
 public interface IIdProvider {
+    @Nullable
     Long getId();
 }
 

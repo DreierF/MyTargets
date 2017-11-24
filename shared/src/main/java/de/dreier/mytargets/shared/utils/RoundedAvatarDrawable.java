@@ -25,17 +25,20 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 /**
  * A Drawable that draws an oval with given {@link Bitmap}
  */
 public class RoundedAvatarDrawable extends Drawable {
+    @NonNull
     private final Paint mPaint;
+    @NonNull
     private final RectF mRectF;
     private final int mBitmapWidth;
     private final int mBitmapHeight;
 
-    public RoundedAvatarDrawable(Bitmap bitmap) {
+    public RoundedAvatarDrawable(@NonNull Bitmap bitmap) {
         mRectF = new RectF();
         mPaint = new Paint();
         mPaint.setAntiAlias(true);

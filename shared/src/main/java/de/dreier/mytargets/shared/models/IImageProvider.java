@@ -17,9 +17,11 @@ package de.dreier.mytargets.shared.models;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 
 public interface IImageProvider {
     Drawable getDrawable(Context context);
 
+    @Nullable
     String getName();
 }

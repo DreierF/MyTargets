@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.features.statistics;
 
+import android.support.annotation.NonNull;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -44,6 +45,7 @@ import static org.hamcrest.Matchers.allOf;
 @RunWith(AndroidJUnit4.class)
 public class StatisticsActivityTest extends UITestBase {
 
+    @NonNull
     private IntentsTestRule<StatisticsActivity> activityTestRule = new IntentsTestRule<>(
             StatisticsActivity.class, true, false);
 

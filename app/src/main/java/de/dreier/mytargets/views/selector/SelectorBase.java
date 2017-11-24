@@ -21,6 +21,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -46,6 +48,7 @@ public abstract class SelectorBase<T> extends LinearLayout {
     protected View view;
     protected int requestCode;
     protected Class<?> defaultActivity;
+    @Nullable
     @State(ParcelsBundler.class)
     protected T item = null;
     private Button addButton;
@@ -100,12 +103,14 @@ public abstract class SelectorBase<T> extends LinearLayout {
         return i;
     }
 
+    @Nullable
     protected IntentWrapper getAddIntent() {
         return null;
     }
 
     protected abstract void bindView();
 
+    @Nullable
     public T getSelectedItem() {
         return item;
     }
@@ -122,7 +127,7 @@ public abstract class SelectorBase<T> extends LinearLayout {
         this.updateListener = updateListener;
     }
 
-    public final void setOnActivityResultContext(Fragment fragment) {
+    public final void setOnActivityResultContext(@NonNull Fragment fragment) {
         if (addButton != null) {
             addIntent = getAddIntent().withContext(fragment);
         }
@@ -132,7 +137,7 @@ public abstract class SelectorBase<T> extends LinearLayout {
                 .start());
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
         if (resultCode == Activity.RESULT_OK && requestCode == this.requestCode) {
             Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
             if (index == -1 || (intentData != null && intentData.getInt(INDEX) == index)) {

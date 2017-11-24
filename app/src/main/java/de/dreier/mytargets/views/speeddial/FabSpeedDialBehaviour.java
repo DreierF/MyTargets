@@ -16,6 +16,7 @@
 package de.dreier.mytargets.views.speeddial;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
@@ -48,7 +49,7 @@ public class FabSpeedDialBehaviour extends CoordinatorLayout.Behavior<FabSpeedDi
     }
 
     @Override
-    public void onDependentViewRemoved(CoordinatorLayout parent, FabSpeedDial fab, View dependency) {
+    public void onDependentViewRemoved(CoordinatorLayout parent, @NonNull FabSpeedDial fab, View dependency) {
         super.onDependentViewRemoved(parent, fab, dependency);
 
         // Make sure that any current animation is cancelled
@@ -61,14 +62,14 @@ public class FabSpeedDialBehaviour extends CoordinatorLayout.Behavior<FabSpeedDi
     }
 
     @Override
-    public boolean onDependentViewChanged(CoordinatorLayout parent, FabSpeedDial child, View dependency) {
+    public boolean onDependentViewChanged(@NonNull CoordinatorLayout parent, @NonNull FabSpeedDial child, View dependency) {
         if (dependency instanceof Snackbar.SnackbarLayout) {
             updateFabTranslationForSnackbar(parent, child, dependency);
         }
         return false;
     }
 
-    private void updateFabTranslationForSnackbar(CoordinatorLayout parent, final FabSpeedDial fab, View snackbar) {
+    private void updateFabTranslationForSnackbar(@NonNull CoordinatorLayout parent, @NonNull final FabSpeedDial fab, View snackbar) {
         if (fab.getVisibility() != View.VISIBLE) {
             return;
         }
@@ -98,7 +99,7 @@ public class FabSpeedDialBehaviour extends CoordinatorLayout.Behavior<FabSpeedDi
         fabTranslationY = targetTransY;
     }
 
-    private float getFabTranslationYForSnackbar(CoordinatorLayout parent, FabSpeedDial fab) {
+    private float getFabTranslationYForSnackbar(@NonNull CoordinatorLayout parent, @NonNull FabSpeedDial fab) {
         float minOffset = 0;
         final List<View> dependencies = parent.getDependencies(fab);
         for (int i = 0; i < dependencies.size(); i++) {

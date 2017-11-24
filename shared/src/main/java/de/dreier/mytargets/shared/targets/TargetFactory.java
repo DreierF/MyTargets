@@ -14,6 +14,8 @@
  */
 package de.dreier.mytargets.shared.targets;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -52,6 +54,7 @@ import de.dreier.mytargets.shared.targets.models.Worcester;
 
 public class TargetFactory {
 
+    @NonNull
     private static final List<TargetModelBase> list;
 
     static {
@@ -96,11 +99,13 @@ public class TargetFactory {
         }
     }
 
+    @NonNull
     public static List<TargetModelBase> getList() {
         return list;
     }
 
-    public static List<TargetModelBase> getList(Target target) {
+    @NonNull
+    public static List<TargetModelBase> getList(@NonNull Target target) {
         List<TargetModelBase> out = new ArrayList<>();
         if (target.id < 7) {
             int til = target.size.value <= 60 ? 7 : 4;

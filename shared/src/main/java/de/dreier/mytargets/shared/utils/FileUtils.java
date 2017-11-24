@@ -31,7 +31,7 @@ import java.nio.channels.FileChannel;
 import timber.log.Timber;
 
 public class FileUtils {
-    public static void copy(File src, File dst) throws IOException {
+    public static void copy(@NonNull File src, @NonNull File dst) throws IOException {
         FileInputStream inStream = new FileInputStream(src);
         FileOutputStream outStream = new FileOutputStream(dst);
         FileChannel inChannel = inStream.getChannel();
@@ -41,11 +41,11 @@ public class FileUtils {
         outStream.close();
     }
 
-    public static void copy(InputStream in, File dst) throws IOException {
+    public static void copy(@NonNull InputStream in, @NonNull File dst) throws IOException {
         copy(in, new FileOutputStream(dst));
     }
 
-    public static void copy(InputStream in, OutputStream out) throws IOException {
+    public static void copy(@NonNull InputStream in, @NonNull OutputStream out) throws IOException {
         byte[] buf = new byte[1024];
         int len;
         while ((len = in.read(buf)) > 0) {
@@ -55,7 +55,7 @@ public class FileUtils {
         out.close();
     }
 
-    public static Uri getUriForFile(Context context, File file) {
+    public static Uri getUriForFile(@NonNull Context context, @NonNull File file) {
         String packageName = context.getPackageName();
         String authority = packageName + ".fileprovider";
         return FileProvider.getUriForFile(context, authority, file);

@@ -15,6 +15,8 @@
 
 package de.dreier.mytargets.base.fragments;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.PluralsRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -30,6 +32,7 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 
 public class ItemActionModeCallback implements ActionMode.Callback {
 
+    @Nullable
     private ActionMode actionMode = null;
     private final MultiSelector selector;
     private final ListFragmentBase fragment;
@@ -40,6 +43,7 @@ public class ItemActionModeCallback implements ActionMode.Callback {
      */
     private EditCallback editCallback;
     private DeleteCallback deleteCallback;
+    @Nullable
     private StatisticsCallback statisticsCallback;
 
     /**
@@ -57,7 +61,7 @@ public class ItemActionModeCallback implements ActionMode.Callback {
     }
 
     @Override
-    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+    public boolean onPrepareActionMode(ActionMode mode, @NonNull Menu menu) {
         MenuItem edit = menu.findItem(R.id.action_edit);
         edit.setVisible(selector.getSelectedIds().size() == 1);
         menu.findItem(R.id.action_statistics).setVisible(statisticsCallback != null);
@@ -66,7 +70,7 @@ public class ItemActionModeCallback implements ActionMode.Callback {
     }
 
     @Override
-    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+    public boolean onCreateActionMode(@NonNull ActionMode mode, Menu menu) {
         selector.setSelectable(true);
         actionMode = mode;
         MenuInflater inflater = mode.getMenuInflater();
@@ -75,7 +79,7 @@ public class ItemActionModeCallback implements ActionMode.Callback {
     }
 
     @Override
-    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+    public boolean onActionItemClicked(@NonNull ActionMode mode, @NonNull MenuItem item) {
         List<Long> ids = selector.getSelectedIds();
         switch (item.getItemId()) {
             case R.id.action_edit:

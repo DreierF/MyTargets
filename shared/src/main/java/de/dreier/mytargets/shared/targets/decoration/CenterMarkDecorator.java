@@ -16,6 +16,7 @@
 package de.dreier.mytargets.shared.targets.decoration;
 
 import android.graphics.Paint;
+import android.support.annotation.NonNull;
 
 import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper;
 
@@ -40,7 +41,7 @@ public class CenterMarkDecorator implements TargetDecorator {
     }
 
     @Override
-    public void drawDecoration(CanvasWrapper canvas) {
+    public void drawDecoration(@NonNull CanvasWrapper canvas) {
         if (paintStroke == null) {
             initPaint();
         }

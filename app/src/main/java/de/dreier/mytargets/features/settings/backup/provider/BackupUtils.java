@@ -52,7 +52,7 @@ public class BackupUtils {
 
     private static final int BUFFER = 1024;
 
-    public static void copy(File src, File dst) throws IOException {
+    public static void copy(@NonNull File src, @NonNull File dst) throws IOException {
         FileInputStream inStream = new FileInputStream(src);
         FileOutputStream outStream = new FileOutputStream(dst);
         FileChannel inChannel = inStream.getChannel();
@@ -63,7 +63,7 @@ public class BackupUtils {
         outStream.close();
     }
 
-    public static void copy(InputStream in, OutputStream out) throws IOException {
+    public static void copy(@NonNull InputStream in, @NonNull OutputStream out) throws IOException {
         byte[] buf = new byte[1024];
         int len;
         while ((len = in.read(buf)) > 0) {
@@ -80,7 +80,7 @@ public class BackupUtils {
         return "MyTargets_backup_" + format.format(new Date()) + ".zip";
     }
 
-    public static void importZip(Context context, InputStream in) throws IOException {
+    public static void importZip(@NonNull Context context, InputStream in) throws IOException {
         // Unzip all images and database
         File file = unzip(context, in);
 
@@ -112,7 +112,7 @@ public class BackupUtils {
         return list.toArray(new String[list.size()]);
     }
 
-    public static void zip(Context context, OutputStream dest) throws IOException {
+    public static void zip(@NonNull Context context, @NonNull OutputStream dest) throws IOException {
         ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
         try {
             BufferedInputStream origin;
@@ -164,7 +164,8 @@ public class BackupUtils {
         }
     }
 
-    private static File unzip(Context context, InputStream in) throws IOException {
+    @Nullable
+    private static File unzip(@NonNull Context context, InputStream in) throws IOException {
         File tmpDb = null;
         int dbFiles = 0;
         try {

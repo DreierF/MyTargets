@@ -17,6 +17,7 @@ package de.dreier.mytargets.utils.transitions;
 
 import android.graphics.Path;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.transition.ArcMotion;
 
@@ -99,6 +100,7 @@ public class GravityArcMotion extends ArcMotion {
         return (float) Math.tan(Math.toRadians(arcInDegrees / 2));
     }
 
+    @NonNull
     @Override
     public Path getPath(float startX, float startY, float endX, float endY) {
         // Here's a little ascii art to show how this is calculated:

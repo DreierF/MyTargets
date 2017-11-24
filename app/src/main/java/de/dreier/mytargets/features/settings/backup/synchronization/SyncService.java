@@ -18,6 +18,7 @@ package de.dreier.mytargets.features.settings.backup.synchronization;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 /**
@@ -35,6 +36,7 @@ import android.util.Log;
 public class SyncService extends Service {
 
     private static final Object sSyncAdapterLock = new Object();
+    @Nullable
     private static SyncAdapter sSyncAdapter = null;
 
     /**

@@ -14,6 +14,8 @@
  */
 package de.dreier.mytargets.shared.models.db;
 
+import android.support.annotation.Nullable;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
@@ -35,21 +37,26 @@ import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
 @Table(database = AppDatabase.class)
 public class SightMark extends BaseModel implements IIdSettable {
 
+    @Nullable
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     Long id;
 
+    @Nullable
     @ForeignKey(tableClass = Bow.class, references = {
             @ForeignKeyReference(columnName = "bow", columnType = Long.class, foreignKeyColumnName = "_id")},
             onDelete = ForeignKeyAction.CASCADE)
     public Long bowId;
 
+    @Nullable
     @Column(typeConverter = DimensionConverter.class)
     public Dimension distance = new Dimension(18, METER);
 
+    @Nullable
     @Column
     public String value = "";
 
+    @Nullable
     public Long getId() {
         return id;
     }

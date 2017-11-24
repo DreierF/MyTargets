@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.settings;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.support.v7.preference.ListPreference;
 import android.util.AttributeSet;
@@ -33,6 +34,7 @@ import im.delight.android.languages.LanguageList;
  */
 public class LanguagePreference extends ListPreference {
 
+    @NonNull
     private static List<String> SUPPORTED_LOCALES = Arrays.asList(
             "",
             "ca",
@@ -65,12 +67,12 @@ public class LanguagePreference extends ListPreference {
             "uk"
     );
 
-    public LanguagePreference(Context context) {
+    public LanguagePreference(@NonNull Context context) {
         super(context);
         init();
     }
 
-    public LanguagePreference(Context context, AttributeSet attrs) {
+    public LanguagePreference(@NonNull Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }

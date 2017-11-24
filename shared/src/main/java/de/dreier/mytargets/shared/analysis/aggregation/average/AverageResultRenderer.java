@@ -19,6 +19,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.support.annotation.NonNull;
 
 import com.annimon.stream.Stream;
 
@@ -94,7 +95,7 @@ public class AverageResultRenderer implements IAggregationResultRenderer {
     }
 
     @Override
-    public void onDraw(CanvasWrapper canvas) {
+    public void onDraw(@NonNull CanvasWrapper canvas) {
         if (average.getDataPointCount() >= 3) {
             canvas.drawPath(stdDevPath, stdDevPaint);
             canvas.drawPath(symbolPath, symbolPaint);

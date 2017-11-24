@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.features.training.standardround;
 
+import android.support.annotation.NonNull;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -47,6 +48,7 @@ import static de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher.withRe
 @RunWith(AndroidJUnit4.class)
 public class StandardRoundActivityTest extends UITestBase {
 
+    @NonNull
     @Rule
     public IntentsTestRule<StandardRoundActivity> activityTestRule = new IntentsTestRule<>(
             StandardRoundActivity.class, true, false);

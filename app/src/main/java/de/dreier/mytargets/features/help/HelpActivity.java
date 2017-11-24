@@ -15,12 +15,14 @@
 
 package de.dreier.mytargets.features.help;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
 
 public class HelpActivity extends SimpleFragmentActivityBase {
 
+    @NonNull
     @Override
     public Fragment instantiateFragment() {
         return new HelpFragment();

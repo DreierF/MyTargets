@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.distance;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -35,10 +36,11 @@ public class DistanceTabsFragmentPagerAdapter extends FragmentPagerAdapter {
 
     public static final List<Unit> UNITS = Arrays.asList(METER, YARDS, FEET);
 
+    @NonNull
     private final Context context;
     private final DistanceGridFragment[] fragments = new DistanceGridFragment[3];
 
-    public DistanceTabsFragmentPagerAdapter(FragmentActivity context, Dimension distance) {
+    public DistanceTabsFragmentPagerAdapter(@NonNull FragmentActivity context, Dimension distance) {
         super(context.getSupportFragmentManager());
         this.context = context;
         fragments[0] = DistanceGridFragment.newInstance(distance, UNITS.get(0));

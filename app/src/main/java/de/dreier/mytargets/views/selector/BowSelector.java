@@ -18,6 +18,8 @@ package de.dreier.mytargets.views.selector;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 import java.util.List;
@@ -43,6 +45,7 @@ public class BowSelector extends ImageSelectorBase<Bow> {
         requestCode = BOW_REQUEST_CODE;
     }
 
+    @NonNull
     @Override
     protected IntentWrapper getAddIntent() {
         return EditBowFragment.createIntent(EBowType.RECURVE_BOW)
@@ -57,7 +60,7 @@ public class BowSelector extends ImageSelectorBase<Bow> {
         }
     }
 
-    public void setItemId(Long bow) {
+    public void setItemId(@Nullable Long bow) {
         Bow item = null;
         if (bow != null) {
             item = Bow.get(bow);

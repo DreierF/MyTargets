@@ -55,6 +55,7 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
         this.size = diameter;
     }
 
+    @NonNull
     public Long getId() {
         return (long) id;
     }
@@ -129,6 +130,7 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
         return getModel().toString();
     }
 
+    @NonNull
     public Set<SelectableZone> getAllPossibleSelectableZones() {
         return getModel().getAllPossibleSelectableZones(scoringStyle);
     }

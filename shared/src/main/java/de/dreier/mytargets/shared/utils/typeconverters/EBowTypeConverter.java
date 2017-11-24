@@ -15,14 +15,17 @@
 
 package de.dreier.mytargets.shared.utils.typeconverters;
 
+import android.support.annotation.Nullable;
+
 import com.raizlabs.android.dbflow.converter.TypeConverter;
 
 import de.dreier.mytargets.shared.models.EBowType;
 
 public final class EBowTypeConverter extends TypeConverter<Integer, EBowType> {
 
+    @Nullable
     @Override
-    public Integer getDBValue(EBowType model) {
+    public Integer getDBValue(@Nullable EBowType model) {
         if (model != null) {
             return model.getId();
         }
@@ -30,8 +33,9 @@ public final class EBowTypeConverter extends TypeConverter<Integer, EBowType> {
         return null;
     }
 
+    @Nullable
     @Override
-    public EBowType getModelValue(Integer data) {
+    public EBowType getModelValue(@Nullable Integer data) {
         if (data != null) {
             return EBowType.fromId(data);
         }

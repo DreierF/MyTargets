@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.bows;
 
 import android.databinding.DataBindingUtil;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,8 +42,9 @@ class BowAdapter extends SimpleListAdapterBase<Bow> {
         this.clickListener = clickListener;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_image_details, parent, false);
         return new ViewHolder(itemView);
@@ -52,7 +54,7 @@ class BowAdapter extends SimpleListAdapterBase<Bow> {
 
         final ItemImageDetailsBinding binding;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView, selector, clickListener);
             binding = DataBindingUtil.bind(itemView);
         }

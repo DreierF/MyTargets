@@ -15,12 +15,14 @@
 
 package de.dreier.mytargets.features.bows;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import de.dreier.mytargets.base.activities.ItemSelectActivity;
 
 public class BowListActivity extends ItemSelectActivity {
 
+    @NonNull
     @Override
     public Fragment instantiateFragment() {
         return new BowListFragment();
