@@ -55,7 +55,7 @@ ext {
             iab                  : '1.0.44',
             icepick              : '3.2.0',
             jUnit                : '4.12',
-            materialDialogs      : '0.9.4.7',
+            materialDialogs      : '0.9.5.0',
             materialIntroScreen  : '0.0.5',
             mpAndroidChart       : 'v3.0.2',
             mockito              : '2.11.0',

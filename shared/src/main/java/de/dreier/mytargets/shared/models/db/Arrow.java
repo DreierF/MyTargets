@@ -50,7 +50,7 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
     @Nullable
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
-    public Long id = -1L;
+    private Long id = -1L;
 
     @Nullable
     @Column

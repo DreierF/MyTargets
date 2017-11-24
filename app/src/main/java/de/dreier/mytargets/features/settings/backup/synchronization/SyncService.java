@@ -19,7 +19,8 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
+
+import timber.log.Timber;
 
 /**
  * Service to handle sync requests.
@@ -45,7 +46,7 @@ public class SyncService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i("SyncService", "Service created");
+        Timber.i("Service created");
         synchronized (sSyncAdapterLock) {
             if (sSyncAdapter == null) {
                 sSyncAdapter = new SyncAdapter(getApplicationContext(), true);
@@ -53,13 +54,13 @@ public class SyncService extends Service {
         }
     }
 
-    @Override
     /**
      * Logging-only destructor.
      */
+    @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i("SyncService", "Service destroyed");
+        Timber.i("Service destroyed");
     }
 
     /**

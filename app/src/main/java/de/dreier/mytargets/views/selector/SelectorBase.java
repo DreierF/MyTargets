@@ -69,8 +69,7 @@ public abstract class SelectorBase<T> extends LinearLayout {
         if (addButton != null) {
             addButton.setOnClickListener(v -> addIntent.start());
         }
-        LayoutInflater inflater = (LayoutInflater) getContext()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(getContext());
         progress = inflater.inflate(R.layout.selector_item_process, this, false);
         view = inflater.inflate(layout, this, false);
         addView(progress);

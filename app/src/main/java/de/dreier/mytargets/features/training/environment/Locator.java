@@ -23,7 +23,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
-import android.util.Log;
+
+import timber.log.Timber;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -70,12 +71,11 @@ public class Locator implements LocationListener {
                 Location networkLocation = locationManager
                         .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                 if (networkLocation != null) {
-                    Log.d(LOG_TAG,
-                            "Last known location found for network provider : " + networkLocation
-                                    .toString());
+                    Timber.d("Last known location found for network provider : %s", networkLocation
+                            .toString());
                     this.callback.onLocationFound(networkLocation);
                 } else {
-                    Log.d(LOG_TAG, "Request updates from network provider.");
+                    Timber.d("Request updates from network provider.");
                     this.requestUpdates(LocationManager.NETWORK_PROVIDER);
                 }
                 break;
@@ -83,11 +83,11 @@ public class Locator implements LocationListener {
                 Location gpsLocation = this.locationManager
                         .getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 if (gpsLocation != null) {
-                    Log.d(LOG_TAG, "Last known location found for GPS provider : " + gpsLocation
+                    Timber.d("Last known location found for GPS provider : %s", gpsLocation
                             .toString());
                     this.callback.onLocationFound(gpsLocation);
                 } else {
-                    Log.d(LOG_TAG, "Request updates from GPS provider.");
+                    Timber.d("Request updates from GPS provider.");
                     this.requestUpdates(LocationManager.GPS_PROVIDER);
                 }
                 break;
@@ -99,16 +99,16 @@ public class Locator implements LocationListener {
         if (this.locationManager.isProviderEnabled(provider)) {
             if (provider.contentEquals(LocationManager.NETWORK_PROVIDER)
                     && Connectivity.isConnected(this.context)) {
-                Log.d(LOG_TAG, "Network connected, start listening : " + provider);
+                Timber.d("Network connected, start listening : %s", provider);
                 this.locationManager
                         .requestLocationUpdates(provider, TIME_INTERVAL, DISTANCE_INTERVAL, this);
             } else if (provider.contentEquals(LocationManager.GPS_PROVIDER)
                     && Connectivity.isConnectedMobile(this.context)) {
-                Log.d(LOG_TAG, "Mobile network connected, start listening : " + provider);
+                Timber.d("Mobile network connected, start listening : %s", provider);
                 this.locationManager
                         .requestLocationUpdates(provider, TIME_INTERVAL, DISTANCE_INTERVAL, this);
             } else {
-                Log.d(LOG_TAG, "Proper network not connected for provider : " + provider);
+                Timber.d("Proper network not connected for provider : %s", provider);
                 this.onProviderDisabled(provider);
             }
         } else {
@@ -118,14 +118,14 @@ public class Locator implements LocationListener {
 
     @SuppressWarnings("MissingPermission")
     public void cancel() {
-        Log.d(LOG_TAG, "Locating canceled.");
+        Timber.d("Locating canceled.");
         locationManager.removeUpdates(this);
     }
 
     @SuppressWarnings("MissingPermission")
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        Log.d(LOG_TAG, "Location found : " + location.getLatitude() + ", " + location
+        Timber.d("Location found : " + location.getLatitude() + ", " + location
                 .getLongitude() + (location.hasAccuracy() ? " : +- " + location
                 .getAccuracy() + " meters" : ""));
         locationManager.removeUpdates(this);
@@ -135,11 +135,11 @@ public class Locator implements LocationListener {
     @SuppressWarnings("MissingPermission")
     @Override
     public void onProviderDisabled(@NonNull String provider) {
-        Log.d(LOG_TAG, "Provider disabled : " + provider);
+        Timber.d("Provider disabled : %s", provider);
         if (this.method == Locator.Method.NETWORK_THEN_GPS
                 && provider.contentEquals(LocationManager.NETWORK_PROVIDER)) {
             // Network provider disabled, try GPS
-            Log.d(LOG_TAG, "Request updates from GPS provider, network provider disabled.");
+            Timber.d("Request updates from GPS provider, network provider disabled.");
             this.requestUpdates(LocationManager.GPS_PROVIDER);
         } else {
             this.locationManager.removeUpdates(this);
@@ -149,12 +149,12 @@ public class Locator implements LocationListener {
 
     @Override
     public void onProviderEnabled(String provider) {
-        Log.d(LOG_TAG, "Provider enabled : " + provider);
+        Timber.d("Provider enabled : %s", provider);
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-        Log.d(LOG_TAG, "Provided status changed : " + provider + " : status : " + status);
+        Timber.d("Provided status changed : " + provider + " : status : " + status);
     }
 
     public interface Listener {

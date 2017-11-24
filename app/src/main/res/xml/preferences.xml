@@ -139,25 +139,22 @@
         android:title="@string/scoreboard">
         <PreferenceCategory android:title="@string/profile">
             <EditTextPreference
-                android:defaultValue=""
                 android:inputType="textAutoComplete"
                 android:key="profile_first_name"
                 android:title="@string/first_name"/>
             <EditTextPreference
-                android:defaultValue=""
                 android:inputType="textAutoComplete"
                 android:key="profile_last_name"
                 android:title="@string/last_name"/>
+            <!--suppress AndroidElementNotAllowed -->
             <de.dreier.mytargets.features.settings.DatePreference
                 android:key="profile_birthday"
                 android:title="@string/birthday"/>
             <EditTextPreference
-                android:defaultValue=""
                 android:inputType="textAutoComplete"
                 android:key="profile_club"
                 android:title="@string/club"/>
             <EditTextPreference
-                android:defaultValue=""
                 android:inputType="textAutoComplete"
                 android:key="profile_target_captain"
                 android:title="@string/target_captain"/>
@@ -286,11 +283,10 @@
         android:key="backup"
         android:summary="@string/backup_restore_desc"
         android:title="@string/backup_action">
-        <SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="automatic_backup"
-            android:title="@string/automatic_backup"/>
+        <Preference
+            android:key="dummy"/>
     </PreferenceScreen>
+    <!--suppress AndroidElementNotAllowed -->
     <de.dreier.mytargets.features.settings.LanguagePreference
         android:icon="@drawable/ic_language_grey600_24dp"
         android:key="language"

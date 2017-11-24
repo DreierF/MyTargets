@@ -26,10 +26,11 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
+
+import timber.log.Timber;
 
 public class GenericAccountService extends Service {
-    private static final String TAG = "GenericAccountService";
+
     public static final String ACCOUNT_NAME = "MyTargets";
     private static final String ACCOUNT_TYPE = "mytargets.dreier.de";
     private Authenticator mAuthenticator;
@@ -46,13 +47,13 @@ public class GenericAccountService extends Service {
 
     @Override
     public void onCreate() {
-        Log.i(TAG, "Service created");
+        Timber.i("Service created");
         mAuthenticator = new Authenticator(this);
     }
 
     @Override
     public void onDestroy() {
-        Log.i(TAG, "Service destroyed");
+        Timber.i("Service destroyed");
     }
 
     @Override

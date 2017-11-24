@@ -19,7 +19,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,6 +32,7 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.features.settings.backup.BackupEntry;
 import de.dreier.mytargets.features.settings.backup.BackupException;
+import timber.log.Timber;
 
 import static de.dreier.mytargets.features.settings.backup.provider.BackupUtils.getBackupName;
 import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
@@ -61,11 +61,11 @@ public class ExternalStorageBackup {
             if (strSDCardPath.contains(":")) {
                 strSDCardPath = strSDCardPath.substring(0, strSDCardPath.indexOf(":"));
             }
-            Log.d("External", "getMicroSdCardPath: " + strSDCardPath);
+            Timber.d("getMicroSdCardPath: %s", strSDCardPath);
             File externalFilePath = new File(strSDCardPath);
 
             if (externalFilePath.exists() && externalFilePath.canWrite()) {
-                Log.d("External", "getMicroSdCardPath: " + externalFilePath.getAbsolutePath());
+                Timber.d("getMicroSdCardPath: %s", externalFilePath.getAbsolutePath());
                 //do what you need here
                 return externalFilePath;
             }

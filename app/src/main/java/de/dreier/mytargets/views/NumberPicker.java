@@ -84,8 +84,7 @@ public class NumberPicker extends LinearLayout {
     public NumberPicker(@NonNull Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
 
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(context);
         binding = DataBindingUtil.inflate(inflater, R.layout.layout_number_picker, this, true);
 
         // init the individual elements

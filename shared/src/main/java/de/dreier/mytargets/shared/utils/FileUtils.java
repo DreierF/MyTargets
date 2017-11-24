@@ -67,7 +67,7 @@ public class FileUtils {
             directory.mkdir();
         }
         if (!from.renameTo(to)) {
-            Timber.e("Couldn't rename file to " + to.getAbsolutePath());
+            Timber.e("Couldn't rename file to %s", to.getAbsolutePath());
             copy(from, to);
             from.delete();
         }

@@ -33,11 +33,9 @@ public class ClusterStrategy extends AggregationStrategyBase {
     private static final double EPS = 0.4;
     private static final int MINIMUM_POINTS_FOR_CLUSTER = 2;
     @NonNull
-    private final ArrayList<Cluster> clusters;
+    private final ArrayList<Cluster> clusters = new ArrayList<>();
 
     public ClusterStrategy() {
-        super();
-        this.clusters = new ArrayList<>();
         this.isDirty = false;
     }
 
@@ -47,9 +45,12 @@ public class ClusterStrategy extends AggregationStrategyBase {
         clusters.clear();
     }
 
+    /**
+     * DBSCAN
+     */
+    @NonNull
     @Override
     protected IAggregationResultRenderer compute(@NonNull List<Shot> shots) {
-        // DBSCAN
         clusters.clear();
         final Map<Shot, PointStatus> visited = new HashMap<>();
 

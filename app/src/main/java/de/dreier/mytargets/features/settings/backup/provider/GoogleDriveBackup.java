@@ -21,7 +21,6 @@ import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -50,9 +49,10 @@ import java.util.ArrayList;
 
 import de.dreier.mytargets.features.settings.backup.BackupEntry;
 import de.dreier.mytargets.features.settings.backup.BackupException;
+import timber.log.Timber;
 
 public class GoogleDriveBackup {
-    private static final String TAG = "GoogleDriveBackup";
+
     private static final String MYTARGETS_MIME_TYPE = "application/zip";
 
     public static class AsyncRestore implements IAsyncBackupRestore {
@@ -87,7 +87,7 @@ public class GoogleDriveBackup {
                             }
                         })
                         .addOnConnectionFailedListener(result -> {
-                            Log.i(TAG, "GoogleApiClient connection failed: " + result.toString());
+                            Timber.i("GoogleApiClient connection failed: %s", result.toString());
                             if (!result.hasResolution()) {
                                 GoogleApiAvailability.getInstance()
                                         .getErrorDialog(activity, result.getErrorCode(), 0)
@@ -98,7 +98,7 @@ public class GoogleDriveBackup {
                             try {
                                 result.startResolutionForResult(activity, REQUEST_CODE_RESOLUTION);
                             } catch (IntentSender.SendIntentException e) {
-                                Log.e(TAG, "Exception while starting resolution activity", e);
+                                Timber.e(e, "Exception while starting resolution activity");
                             }
                         })
                         .build();

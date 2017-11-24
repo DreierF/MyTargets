@@ -44,10 +44,10 @@ public class AppDatabase {
     public static final String DATABASE_FILE_NAME = "database.db";
     public static final String DATABASE_IMPORT_FILE_NAME = "database";
 
-    public static final int VERSION = 24;
+    private static final int VERSION = 24;
 
     @Migration(version = 0, database = AppDatabase.class)
-    public static class Migration0 extends BaseMigration {
+    private static class Migration0 extends BaseMigration {
 
         @Override
         public void migrate(DatabaseWrapper database) {
@@ -56,7 +56,7 @@ public class AppDatabase {
     }
 
     @Migration(version = 22, database = AppDatabase.class)
-    public static class Migration22 extends BaseMigration {
+    private static class Migration22 extends BaseMigration {
 
         @Override
         public void migrate(DatabaseWrapper database) {
@@ -117,7 +117,7 @@ public class AppDatabase {
     }
 
     @Migration(version = 3, database = AppDatabase.class)
-    public static class Migration3 extends BaseMigration {
+    private static class Migration3 extends BaseMigration {
 
         @Override
         public void migrate(@NonNull DatabaseWrapper database) {
@@ -138,7 +138,7 @@ public class AppDatabase {
     }
 
     @Migration(version = 4, database = AppDatabase.class)
-    public static class Migration4 extends BaseMigration {
+    private static class Migration4 extends BaseMigration {
 
         @Override
         public void migrate(@NonNull DatabaseWrapper database) {
@@ -159,7 +159,7 @@ public class AppDatabase {
     }
 
     @Migration(version = 6, database = AppDatabase.class)
-    public static class Migration6 extends BaseMigration {
+    private static class Migration6 extends BaseMigration {
 
         @Override
         public void migrate(@NonNull DatabaseWrapper database) {

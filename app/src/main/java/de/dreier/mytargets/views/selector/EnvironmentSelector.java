@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.views.selector;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -86,6 +87,7 @@ public class EnvironmentSelector extends ImageSelectorBase<Environment> {
         }
     }
 
+    @SuppressLint("MissingPermission")
     public void onPermissionResult(Activity activity, @NonNull int[] grantResult) {
         if (grantResult.length > 0 && grantResult[0] == PackageManager.PERMISSION_GRANTED) {
             //noinspection MissingPermission
