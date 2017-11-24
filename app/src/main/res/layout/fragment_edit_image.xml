@@ -83,6 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:clickable="true"
+                android:focusable="true"
                 app:layout_anchor="@id/appBarLayout"
                 app:layout_anchorGravity="bottom|right|end"
                 app:srcCompat="@drawable/ic_photo_camera_white_24dp"/>

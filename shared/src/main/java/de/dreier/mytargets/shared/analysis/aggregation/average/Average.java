@@ -24,15 +24,17 @@ import java.util.List;
 import de.dreier.mytargets.shared.models.db.Shot;
 
 public class Average {
-    int dataPointCount;
+    private int dataPointCount;
     @NonNull
+    private
     PointF average = new PointF(0.0F, 0.0F);
     @NonNull
     PointF weightedAverage = new PointF(0.0F, 0.0F);
     @NonNull
+    private
     RectF nonUniformStdDev = new RectF(-1.0F, -1.0F, -1.0F, -1.0F);
-    double stdDevX = -1.0D;
-    double stdDevY = -1.0D;
+    private double stdDevX = -1.0D;
+    private double stdDevY = -1.0D;
 
     public void computeAll(@NonNull List<Shot> shots) {
         dataPointCount = shots.size();

@@ -65,7 +65,7 @@ public abstract class TimerFragmentBase extends Fragment implements View.OnClick
         wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK |
                 PowerManager.ACQUIRE_CAUSES_WAKEUP |
                 PowerManager.ON_AFTER_RELEASE, "WakeLock");
-        wakeLock.acquire();
+        wakeLock.acquire((settings.shootTime + settings.waitTime + 120) * 1000);
         horn = MediaPlayer.create(getActivity(), R.raw.horn);
 
         changeStatus(currentStatus);

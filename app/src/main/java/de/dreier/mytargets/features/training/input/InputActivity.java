@@ -397,11 +397,11 @@ public class InputActivity extends ChildActivityBase
         final int totalEnds = data.getCurrentRound().maxEndCount == null
                 ? data.getEnds().size()
                 : data.getCurrentRound().maxEndCount;
-        binding.endTitle.setText(
-                getString(R.string.passe) + " " + (data.endIndex + 1) + "/" + totalEnds);
+        binding.endTitle.setText(getString(R.string.end_x_of_y, data.endIndex + 1, totalEnds));
         binding.roundTitle.setText(getString(
-                R.string.round) + " " + (data.getCurrentRound().index + 1) + "/" + data.training
-                .getRounds().size());
+                R.string.round_x_of_y,
+                data.getCurrentRound().index + 1,
+                data.training.getRounds().size()));
         updateNavigationButtons();
         updateWearNotification();
     }

@@ -31,16 +31,16 @@ import de.dreier.mytargets.shared.models.db.Shot;
 
 public abstract class AggregationStrategyBase implements IAggregationStrategy {
     @NonNull
-    protected final ArrayList<Shot> data;
+    private final ArrayList<Shot> data; //TODO investigate why this is unused
     @NonNull
-    protected IAggregationResultRenderer result = new NOPResultRenderer();
+    private IAggregationResultRenderer result = new NOPResultRenderer();
     protected boolean isDirty;
     @Nullable
     private OnAggregationResult resultListener;
     private AsyncTask<List<Shot>, Integer, IAggregationResultRenderer> computeTask;
     private int color;
 
-    public AggregationStrategyBase() {
+    protected AggregationStrategyBase() {
         this.data = new ArrayList<>();
     }
 
@@ -72,7 +72,7 @@ public abstract class AggregationStrategyBase implements IAggregationStrategy {
     }
 
     @WorkerThread
-    @Nullable
+    @NonNull
     protected abstract IAggregationResultRenderer compute(List<Shot> shots);
 
     @Override
@@ -94,16 +94,14 @@ public abstract class AggregationStrategyBase implements IAggregationStrategy {
 
     private class ComputeTask extends AsyncTask<List<Shot>, Integer, IAggregationResultRenderer> {
 
-        @Nullable
+        @NonNull
         protected IAggregationResultRenderer doInBackground(final List<Shot>... array) {
             return compute(array[0]);
         }
 
-        protected void onPostExecute(@Nullable final IAggregationResultRenderer clusterResultRenderer) {
+        protected void onPostExecute(@NonNull final IAggregationResultRenderer clusterResultRenderer) {
             super.onPostExecute(clusterResultRenderer);
-            if (clusterResultRenderer != null) {
-                clusterResultRenderer.setColor(color);
-            }
+            clusterResultRenderer.setColor(color);
             result = clusterResultRenderer;
             isDirty = false;
             if (resultListener != null) {

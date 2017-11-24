@@ -43,7 +43,7 @@ public class IntentMatcher {
             @Override
             protected boolean matchesSafely(@NonNull Intent intent) {
                 long[] items = intent.getLongArrayExtra(key);
-                return items != null && new TreeSet(LongUtils.toList(items)).equals(values);
+                return items != null && new TreeSet<>(LongUtils.toList(items)).equals(values);
             }
         };
     }

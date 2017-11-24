@@ -13,4 +13,9 @@
   ~ GNU General Public License for more details.
   -->
 
-<manifest package="de.dreier.mytargets.shared"/>
+<manifest package="de.dreier.mytargets.shared"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
+</manifest>

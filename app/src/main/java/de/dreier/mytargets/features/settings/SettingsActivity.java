@@ -57,7 +57,6 @@ public class SettingsActivity extends SimpleFragmentActivityBase implements
                     if (manager != null) {
                         SettingsFragmentBase currFrag = (SettingsFragmentBase) manager
                                 .findFragmentById(android.R.id.content);
-
                         currFrag.onFragmentResume();
                     }
                 });
