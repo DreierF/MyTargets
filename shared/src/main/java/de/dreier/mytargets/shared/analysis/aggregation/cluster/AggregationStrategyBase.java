@@ -21,7 +21,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.analysis.aggregation.IAggregationResultRenderer;
@@ -30,8 +29,7 @@ import de.dreier.mytargets.shared.analysis.aggregation.NOPResultRenderer;
 import de.dreier.mytargets.shared.models.db.Shot;
 
 public abstract class AggregationStrategyBase implements IAggregationStrategy {
-    @NonNull
-    private final ArrayList<Shot> data; //TODO investigate why this is unused
+
     @NonNull
     private IAggregationResultRenderer result = new NOPResultRenderer();
     protected boolean isDirty;
@@ -40,13 +38,8 @@ public abstract class AggregationStrategyBase implements IAggregationStrategy {
     private AsyncTask<List<Shot>, Integer, IAggregationResultRenderer> computeTask;
     private int color;
 
-    protected AggregationStrategyBase() {
-        this.data = new ArrayList<>();
-    }
-
     @CallSuper
     protected void reset() {
-        data.clear();
         result = new NOPResultRenderer();
         if (computeTask != null) {
             computeTask.cancel(true);
