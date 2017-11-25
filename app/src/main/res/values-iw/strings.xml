@@ -303,11 +303,11 @@
   <string name="backup_location">מיקום הגיבוי</string>
   <string name="internal_storage">אחסון פנימי</string>
   <string name="automatic_backup">גיבוי אוטומטי</string>
-  <string name="restoring">משחזר גיבוי...</string>
+  <string name="restoring">משחזר גיבוי…</string>
   <string name="restore_failed">שחזור נכשל</string>
   <string name="delete_failed">מחיקה נכשלה</string>
   <string name="backup_restore_desc">גבה ושחזר נתוני אפליקציה</string>
-  <string name="exporting">מייצא...</string>
+  <string name="exporting">מייצא…</string>
   <string name="loading_backups_failed">טעינת גיבויים נכשלה!</string>
   <string name="external_storage">אחסון חיצוני</string>
   <string name="backup_interval">מרווח זמן הגיבוי</string>
@@ -375,4 +375,6 @@
   <string name="diameters">Diameters</string>
   <string name="bows">Bows</string>
   <string name="reset">Reset</string>
+  <string name="end_x_of_y">End %1$d/%2$d</string>
+  <string name="round_x_of_y">Round %1$d/%2$d</string>
 </resources>

@@ -347,4 +347,6 @@
   <string name="diameters">Diameters</string>
   <string name="bows">Bows</string>
   <string name="reset">Reset</string>
+  <string name="end_x_of_y">Tirada %1$d/%2$d</string>
+  <string name="round_x_of_y">Ronda %1$d/%2$d</string>
 </resources>

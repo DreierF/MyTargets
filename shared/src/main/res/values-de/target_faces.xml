@@ -50,7 +50,7 @@
   <string name="wa_danage_6_spot">WA Danage 6 Spot</string>
   <string name="dbsc_blowpipe">DBSC Blasrohr</string>
   <!-- Scoring styles -->
-  <string name="fcfs_color_reversed">FCFS Farbe (10–1 umgekehrt)</string>
+  <string name="fcfs_color_reversed">FCFS Farbe (10-1 umgekehrt)</string>
   <string name="recurve_style_x_1">Recurve-Stil (X-1)</string>
   <string name="recurve_style_10_1">Recurve-Stil (10-1)</string>
   <string name="recurve_style_x_5">Recurve-Stil (X-5)</string>
