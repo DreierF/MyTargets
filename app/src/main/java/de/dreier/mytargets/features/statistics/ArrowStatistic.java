@@ -45,7 +45,7 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
     public Average average = new Average();
     public Target target;
     public List<Shot> shots = new ArrayList<>();
-    private Integer reachedScore;
+    public Integer reachedScore;
     public Dimension arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
 
     public ArrowStatistic() {
