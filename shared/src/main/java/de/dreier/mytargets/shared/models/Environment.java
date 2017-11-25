@@ -18,7 +18,6 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import de.dreier.mytargets.shared.R;
@@ -26,16 +25,17 @@ import de.dreier.mytargets.shared.SharedApplicationInstance;
 
 public class Environment implements IImageProvider, IDetailProvider {
     public boolean indoor;
-    @Nullable
-    public EWeather weather;
+    @NonNull
+    public EWeather weather = EWeather.SUNNY;
     public int windSpeed;
     public int windDirection;
     public String location;
 
+    //TODO: Replace with Kotlin builder
     public Environment() {
     }
 
-    public Environment(boolean indoor, @Nullable EWeather weather, int windSpeed, int windDirection, String location) {
+    public Environment(boolean indoor, @NonNull EWeather weather, int windSpeed, int windDirection, String location) {
         this.indoor = indoor;
         this.weather = weather;
         this.windSpeed = windSpeed;

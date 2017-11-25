@@ -62,7 +62,7 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
     public final Unit unit;
 
     @ParcelConstructor
-    public Dimension(float value, @Nullable Unit unit) {
+    public Dimension(float value, @SuppressWarnings("NullableProblems") Unit unit) {
         this.value = value;
         if (value < 0) {
             this.unit = null;
