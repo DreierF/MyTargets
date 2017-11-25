@@ -229,7 +229,7 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
         ItemTrainingBinding binding;
 
         public ViewHolder(@NonNull View itemView) {
-            super(itemView, selector, TrainingsFragment.this);
+            super(itemView, selector, TrainingsFragment.this, TrainingsFragment.this);
             binding = DataBindingUtil.bind(itemView);
         }
 

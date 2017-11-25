@@ -54,11 +54,6 @@ public abstract class SelectPureListItemFragmentBase<T extends IIdProvider & IIm
         return binding.getRoot();
     }
 
-    @Override
-    public void onLongClick(@NonNull SelectableViewHolder<T> holder) {
-        onClick(holder, holder.getItem());
-    }
-
     private class ListAdapter extends SimpleListAdapterBase<T> {
 
         @NonNull

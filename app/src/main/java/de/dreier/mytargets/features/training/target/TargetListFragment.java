@@ -203,12 +203,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
         return list;
     }
 
-    @Override
-    public void onLongClick(@NonNull SelectableViewHolder<Target> holder) {
-        onClick(holder, holder.getItem());
-    }
-
-    @Nullable
+    @NonNull
     @Override
     protected Target onSave() {
         Target target = super.onSave();
