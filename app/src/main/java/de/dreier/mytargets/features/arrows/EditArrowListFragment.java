@@ -49,7 +49,7 @@ public class EditArrowListFragment extends EditableListFragment<Arrow> {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.fab.setOnClickListener(
                 view1 -> EditArrowFragment.createIntent()
@@ -60,7 +60,7 @@ public class EditArrowListFragment extends EditableListFragment<Arrow> {
 
     @Override
     @CallSuper
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_arrows, container, false);
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.addItemDecoration(

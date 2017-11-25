@@ -50,9 +50,9 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
     @Nullable
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
-    private Long id = -1L;
+    Long id = -1L;
 
-    @Nullable
+    @NonNull
     @Column
     public String name = "";
 
@@ -131,7 +131,7 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(@Nullable Long id) {
         this.id = id;
     }
 
@@ -144,7 +144,7 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
         return getDrawable();
     }
 
-    @Nullable
+    @NonNull
     @Override
     public String getName() {
         return name;

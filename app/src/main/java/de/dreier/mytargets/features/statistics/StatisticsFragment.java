@@ -146,7 +146,7 @@ public class StatisticsFragment extends FragmentBase {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_statistics, container, false);
 
         target = Parcels.unwrap(getArguments().getParcelable(ARG_TARGET));

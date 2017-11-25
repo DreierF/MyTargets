@@ -111,7 +111,7 @@ public class EditArrowTest extends UITestBase {
         onView(withId(R.id.diameter))
                 .perform(nestedScrollTo(), replaceText("0.5"), closeSoftKeyboard());
 
-        // TODO
+        // TODO Fix camera test
 //        onView(withId(R.id.coordinatorLayout)).perform(swipeDown());
 //        onView(supportFab()).perform(click());
 //        intendingImageCapture(getInstrumentation().getContext(),

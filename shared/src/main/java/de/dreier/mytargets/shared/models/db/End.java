@@ -197,7 +197,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(@Nullable Long id) {
         this.id = id;
     }
 

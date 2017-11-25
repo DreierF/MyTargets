@@ -119,7 +119,7 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
      *
      * @return The selected item
      */
-    @Nullable
+    @NonNull
     protected T onSave() {
         return adapter.getItemById(selector.getSelectedId());
     }

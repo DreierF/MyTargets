@@ -48,7 +48,7 @@ public abstract class FragmentBase extends Fragment implements LoaderManager.Loa
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         Icepick.saveInstanceState(this, outState);
     }

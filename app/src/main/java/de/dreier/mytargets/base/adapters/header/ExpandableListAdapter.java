@@ -41,7 +41,7 @@ public abstract class ExpandableListAdapter<P extends IIdProvider, C extends IId
     }
 
     @Override
-    public final void onBindViewHolder(ItemBindingHolder<IIdProvider> viewHolder, int position) {
+    public final void onBindViewHolder(@NonNull ItemBindingHolder<IIdProvider> viewHolder, int position) {
         super.onBindViewHolder(viewHolder, position);
         if (viewHolder instanceof ExpandableHeaderBindingHolder) {
             ExpandableHeaderHolder<P, C> header = getHeaderForPosition(position);
@@ -90,7 +90,7 @@ public abstract class ExpandableListAdapter<P extends IIdProvider, C extends IId
     }
 
     @Override
-    public void setList(List<C> children) {
+    public void setList(@NonNull List<C> children) {
         List<Long> oldExpanded = getExpandedIds();
         fillChildMap(children);
         setExpandedIds(oldExpanded);

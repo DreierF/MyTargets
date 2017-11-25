@@ -120,7 +120,7 @@ public class DonateActivity extends AppCompatActivity implements BillingProcesso
     }
 
     @Override
-    public void onProductPurchased(String productId, TransactionDetails details) {
+    public void onProductPurchased(@NonNull String productId, TransactionDetails details) {
         bp.consumePurchase(productId);
 
         SettingsManager.setDonated(true);

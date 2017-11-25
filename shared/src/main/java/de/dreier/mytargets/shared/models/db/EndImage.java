@@ -48,7 +48,7 @@ public class EndImage extends BaseModel implements Image {
     public EndImage() {
     }
 
-    public EndImage(String imageFile) {
+    public EndImage(@Nullable String imageFile) {
         fileName = imageFile;
     }
 
@@ -63,7 +63,7 @@ public class EndImage extends BaseModel implements Image {
     /**
      * @param fileName The name of the image file, which is placed inside the files directory of the app
      */
-    public void setFileName(String fileName) {
+    public void setFileName(@Nullable String fileName) {
         this.fileName = fileName;
     }
 }

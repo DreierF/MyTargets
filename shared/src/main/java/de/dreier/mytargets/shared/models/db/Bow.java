@@ -55,7 +55,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
     @PrimaryKey(autoincrement = true)
     public Long id = -1L;
 
-    @Nullable
+    @NonNull
     @Column
     public String name = "";
 
@@ -192,7 +192,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(@Nullable Long id) {
         this.id = id;
     }
 
@@ -205,7 +205,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
         return getDrawable();
     }
 
-    @Nullable
+    @NonNull
     @Override
     public String getName() {
         return name;

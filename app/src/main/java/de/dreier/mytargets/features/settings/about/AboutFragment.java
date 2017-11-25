@@ -43,7 +43,7 @@ public class AboutFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return new AboutPage(getContext())
                 .isRTL(false)
                 .setImage(R.drawable.product_logo_144dp)

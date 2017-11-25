@@ -48,7 +48,7 @@ public abstract class SettingsFragmentBase extends PreferenceFragmentCompat
 
     @SuppressLint("PrivateResource")
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         // Set the default white background in the view so as to avoid transparency

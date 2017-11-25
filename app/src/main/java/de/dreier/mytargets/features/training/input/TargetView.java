@@ -197,7 +197,7 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    public void setEnd(End end) {
+    public void setEnd(@NonNull End end) {
         EInputMethod inputMethod;
         if (!end.isEmpty()) {
             inputMethod = end.exact ? PLOTTING : KEYBOARD;
@@ -431,7 +431,7 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    protected void collectAnimations(List<Animator> animations) {
+    protected void collectAnimations(@NonNull List<Animator> animations) {
         Matrix initFullMatrix = new Matrix(fullMatrix);
         updateLayout();
         Matrix endMatrix = getSpotEndMatrix();
@@ -552,7 +552,7 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
+    public boolean onTouch(View view, @NonNull MotionEvent motionEvent) {
         // Cancel animation
         if (animator != null) {
             cancelPendingAnimations();
