@@ -56,6 +56,9 @@
   <string name="right_back">fra bak til høyre</string>
   <string name="stop">STOP</string>
   <string name="end_n">End %d</string>
+  <string name="miss">Miss</string>
+  <string name="backspace">Backspace</string>
+  <string name="accessibility_description_shot_n_score">Shot %d: %s</string>
   <plurals name="rounds">
     <item quantity="one">%d round</item>
     <item quantity="other">%d rounds</item>

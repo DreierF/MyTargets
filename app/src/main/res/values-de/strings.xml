@@ -343,8 +343,10 @@
   <string name="version_info">Versionsinfo</string>
   <string name="version_prefix">Version</string>
   <string name="max_arrow_number">Höchste Pfeil-Nummer</string>
-  <string name="distances">Distances</string>
-  <string name="diameters">Diameters</string>
-  <string name="bows">Bows</string>
-  <string name="reset">Reset</string>
+  <string name="distances">Entfernungen</string>
+  <string name="diameters">Durchmesser</string>
+  <string name="bows">Bögen</string>
+  <string name="reset">Zurücksetzen</string>
+  <string name="end_x_of_y">Passe %1$d/%2$d</string>
+  <string name="round_x_of_y">Runde %1$d/%2$d</string>
 </resources>

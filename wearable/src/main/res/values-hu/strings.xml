@@ -15,12 +15,12 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-    <string name="saved">Mentve</string>
-    <string name="start_phone_app">A folytatáshoz a fő eszközön is indítsd el a MyTargets-t</string>
-    <string name="add_end">Sorozat hozzáadása</string>
-    <string name="toggle_timer">Időzítő ki-/ bekapcsolása</string>
-    <string name="start_timer">Időzítés indítása</string>
-    <string name="vibration">Rezgés</string>
-    <string name="sound">Hang</string>
-    <string name="today">Ma</string>
+  <string name="saved">Mentve</string>
+  <string name="start_phone_app">A folytatáshoz a fő eszközön is indítsd el a MyTargets-t</string>
+  <string name="add_end">Sorozat hozzáadása</string>
+  <string name="toggle_timer">Időzítő ki-/ bekapcsolása</string>
+  <string name="start_timer">Időzítés indítása</string>
+  <string name="vibration">Rezgés</string>
+  <string name="sound">Hang</string>
+  <string name="today">Ma</string>
 </resources>
