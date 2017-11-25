@@ -16,7 +16,6 @@
 package de.dreier.mytargets.utils.multiselector;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.View;
 
 /**
@@ -43,38 +42,60 @@ import android.view.View;
  */
 public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
         implements View.OnClickListener, View.OnLongClickListener {
-    @Nullable
-    private final SelectorBase multiSelector;
-    private OnItemClickListener<T> listener;
+    @NonNull
+    private final SelectorBase selector;
+    private OnItemClickListener<T> clickListener;
+    private OnItemLongClickListener<T> longClickListener;
     private boolean isSelectable = false;
 
     /**
-     * Construct a new SelectableHolder hooked up to be controlled by a MultiSelector.
-     * <p/>
-     * If the Selector is not null, the SelectableHolder can be selected by
-     * calling {@link SelectorBase#setSelected(SelectableHolder, boolean)}.
-     * <p/>
-     * If the MultiSelector is null, the SelectableHolder acts as a standalone
-     * ViewHolder that you can control manually by setting {@link #setSelectable(boolean)}
-     * and {@link #setActivated(boolean)}
+     * Construct a new SelectableHolder hooked up to be controlled by a SingleSelector.
      *
      * @param itemView Item view for this ViewHolder
      * @param selector A selector set to bind this holder to
      */
-    public SelectableViewHolder(@NonNull View itemView, @Nullable SelectorBase selector, OnItemClickListener<T> listener) {
+    public SelectableViewHolder(@NonNull View itemView, @NonNull SingleSelector selector, OnItemClickListener<T> listener) {
         super(itemView);
-        this.multiSelector = selector;
+        this.selector = selector;
         itemView.setOnClickListener(this);
-        if (selector != null) {
-            itemView.setLongClickable(true);
-            itemView.setOnLongClickListener(this);
-            this.listener = listener;
-        }
+        this.clickListener = listener;
+    }
+
+    /**
+     * Construct a new SelectableHolder hooked up to be controlled by a SingleSelector.
+     *
+     * @param itemView Item view for this ViewHolder
+     * @param selector A selector set to bind this holder to
+     */
+    public SelectableViewHolder(@NonNull View itemView, @NonNull SingleSelector selector, OnItemClickListener<T> listener,  OnItemLongClickListener<T> longClickListener) {
+        super(itemView);
+        this.selector = selector;
+        itemView.setLongClickable(true);
+        itemView.setOnClickListener(this);
+        itemView.setOnLongClickListener(this);
+        this.clickListener = listener;
+        this.longClickListener = longClickListener;
+    }
+
+    /**
+     * Construct a new SelectableHolder hooked up to be controlled by a MultiSelector.
+     *
+     * @param itemView Item view for this ViewHolder
+     * @param selector A selector set to bind this holder to
+     */
+    public SelectableViewHolder(@NonNull View itemView, @NonNull MultiSelector selector, OnItemClickListener<T> clickListener,  OnItemLongClickListener<T> longClickListener) {
+        super(itemView);
+        this.selector = selector;
+        itemView.setLongClickable(true);
+        itemView.setOnClickListener(this);
+        itemView.setOnLongClickListener(this);
+        this.clickListener = clickListener;
+        this.longClickListener = longClickListener;
     }
 
     @Override
     protected void onRebind() {
-        multiSelector.bindHolder(this, getItemId());
+        selector.bindHolder(this, getItemId());
     }
 
     /**
@@ -106,14 +127,14 @@ public abstract class SelectableViewHolder<T> extends ItemBindingHolder<T>
 
     @Override
     public void onClick(View v) {
-        if (listener != null) {
-            listener.onClick(this, item);
+        if (clickListener != null) {
+            clickListener.onClick(this, item);
         }
     }
 
     @Override
     public boolean onLongClick(View v) {
-        listener.onLongClick(this);
+        longClickListener.onLongClick(this);
         return true;
     }
 

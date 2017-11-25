@@ -15,6 +15,6 @@
 
 package de.dreier.mytargets.utils.multiselector;
 
-public interface OnItemClickListener<T> {
-    void onClick(SelectableViewHolder<T> holder, T item);
+public interface OnItemLongClickListener<T> {
+    void onLongClick(SelectableViewHolder<T> holder);
 }

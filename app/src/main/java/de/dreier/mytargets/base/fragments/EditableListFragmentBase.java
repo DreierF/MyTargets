@@ -31,6 +31,7 @@ import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IRecursiveModel;
 import de.dreier.mytargets.utils.MultiSelectorBundler;
 import de.dreier.mytargets.utils.multiselector.MultiSelector;
+import de.dreier.mytargets.utils.multiselector.OnItemLongClickListener;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import icepick.State;
 
@@ -38,7 +39,8 @@ import icepick.State;
  * @param <T> Model of the item which is managed within the fragment.
  */
 public abstract class EditableListFragmentBase<T extends IIdSettable & IRecursiveModel,
-        U extends ListAdapterBase<?, T>> extends ListFragmentBase<T, U> {
+        U extends ListAdapterBase<?, T>> extends ListFragmentBase<T, U>
+        implements OnItemLongClickListener<T> {
 
     public static final String ITEM_ID = "id";
 
@@ -102,7 +104,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & IRecursiv
     }
 
     @Override
-    public void onLongClick(SelectableViewHolder<T> holder) {
+    public final void onLongClick(SelectableViewHolder<T> holder) {
         actionModeCallback.longClick(holder);
     }
 

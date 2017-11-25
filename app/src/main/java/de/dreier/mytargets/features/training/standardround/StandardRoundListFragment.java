@@ -139,7 +139,6 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
         super.onClick(holder, item);
     }
 
-    @Override
     public void onLongClick(@NonNull SelectableViewHolder<StandardRound> holder) {
         StandardRound item = holder.getItem();
         if (item.club == StandardRoundFactory.CUSTOM) {
@@ -264,7 +263,8 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
         private final ItemStandardRoundBinding binding;
 
         public ViewHolder(@NonNull ItemStandardRoundBinding binding) {
-            super(binding.getRoot(), selector, StandardRoundListFragment.this);
+            super(binding.getRoot(), selector, StandardRoundListFragment.this,
+                    StandardRoundListFragment.this::onLongClick);
             this.binding = binding;
         }
 

@@ -91,11 +91,6 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension, Simp
         finish();
     }
 
-    @Override
-    public void onLongClick(@NonNull SelectableViewHolder<Dimension> holder) {
-        onClick(holder, holder.getItem());
-    }
-
     @NonNull
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
