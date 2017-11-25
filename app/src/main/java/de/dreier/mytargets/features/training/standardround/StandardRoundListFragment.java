@@ -85,7 +85,7 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
@@ -211,7 +211,7 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
         }
     }
 
-    @Nullable
+    @NonNull
     @Override
     protected StandardRound onSave() {
         persistSelection(currentSelection);

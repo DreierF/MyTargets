@@ -48,7 +48,7 @@ public class BowImage extends BaseModel implements Image {
     public BowImage() {
     }
 
-    public BowImage(String imageFilePath) {
+    public BowImage(@Nullable String imageFilePath) {
         fileName = imageFilePath;
     }
 
@@ -59,7 +59,7 @@ public class BowImage extends BaseModel implements Image {
     }
 
     @Override
-    public void setFileName(String fileName) {
+    public void setFileName(@Nullable String fileName) {
         this.fileName = fileName;
     }
 }

@@ -17,6 +17,7 @@ package de.dreier.mytargets.features.distance;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +33,7 @@ import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
 
 public class DistanceFragment extends Fragment {
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FragmentDistanceBinding binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_distance, container, false);
         Dimension distance = Parcels.unwrap(getArguments().getParcelable(ITEM));

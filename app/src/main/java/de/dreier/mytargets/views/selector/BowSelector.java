@@ -53,7 +53,7 @@ public class BowSelector extends ImageSelectorBase<Bow> {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && requestCode == BOW_ADD_REQUEST_CODE) {
             setItemId(null);

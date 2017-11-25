@@ -126,7 +126,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(@Nullable Long id) {
         this.id = id;
     }
 

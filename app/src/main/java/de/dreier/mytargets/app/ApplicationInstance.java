@@ -18,6 +18,7 @@ package de.dreier.mytargets.app;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -144,7 +145,7 @@ public class ApplicationInstance extends SharedApplicationInstance {
 
     private static class CrashReportingTree extends Timber.Tree {
         @Override
-        protected void log(int priority, String tag, String message, @Nullable Throwable t) {
+        protected void log(int priority, String tag, @NonNull String message, @Nullable Throwable t) {
             if (priority == Log.VERBOSE || priority == Log.DEBUG) {
                 return;
             }

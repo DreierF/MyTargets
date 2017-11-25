@@ -48,7 +48,7 @@ public class ArrowImage extends BaseModel implements Image {
     public ArrowImage() {
     }
 
-    public ArrowImage(String imageFilePath) {
+    public ArrowImage(@Nullable String imageFilePath) {
         fileName = imageFilePath;
     }
 
@@ -57,7 +57,7 @@ public class ArrowImage extends BaseModel implements Image {
         return fileName;
     }
 
-    public void setFileName(String fileName) {
+    public void setFileName(@Nullable String fileName) {
         this.fileName = fileName;
     }
 }

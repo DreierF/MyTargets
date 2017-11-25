@@ -91,7 +91,7 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(@Nullable Long id) {
         this.id = id;
     }
 

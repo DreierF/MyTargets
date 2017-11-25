@@ -150,7 +150,7 @@ public class ItemActionModeCallback implements ActionMode.Callback {
         this.deleteCallback = deleteCallback;
     }
 
-    public void setStatisticsCallback(StatisticsCallback statisticsCallback) {
+    public void setStatisticsCallback(@Nullable StatisticsCallback statisticsCallback) {
         this.statisticsCallback = statisticsCallback;
     }
 

@@ -64,7 +64,7 @@ public class EditRoundFragment extends EditFragmentBase {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_edit_round, container, false);
 

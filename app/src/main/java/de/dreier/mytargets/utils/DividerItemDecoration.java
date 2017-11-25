@@ -62,7 +62,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         mShowLastDivider = showLastDivider;
     }
 
-    private DividerItemDecoration(Drawable divider) {
+    private DividerItemDecoration(@Nullable Drawable divider) {
         mDivider = divider;
     }
 

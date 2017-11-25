@@ -35,7 +35,7 @@ public class Environment implements IImageProvider, IDetailProvider {
     public Environment() {
     }
 
-    public Environment(boolean indoor, EWeather weather, int windSpeed, int windDirection, String location) {
+    public Environment(boolean indoor, @Nullable EWeather weather, int windSpeed, int windDirection, String location) {
         this.indoor = indoor;
         this.weather = weather;
         this.windSpeed = windSpeed;

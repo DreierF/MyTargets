@@ -110,7 +110,7 @@ public class EnvironmentSelector extends ImageSelectorBase<Environment> {
                         .fetchCurrentWeather(location.getLongitude(), location.getLatitude());
                 weatherCall.enqueue(new Callback<CurrentWeather>() {
                     @Override
-                    public void onResponse(Call<CurrentWeather> call, Response<CurrentWeather> response) {
+                    public void onResponse(@NonNull Call<CurrentWeather> call, @NonNull Response<CurrentWeather> response) {
                         if (response.isSuccessful() && response.body().httpCode == 200) {
                             setItem(response.body().toEnvironment());
                         } else {
@@ -119,7 +119,7 @@ public class EnvironmentSelector extends ImageSelectorBase<Environment> {
                     }
 
                     @Override
-                    public void onFailure(Call<CurrentWeather> call, Throwable t) {
+                    public void onFailure(@NonNull Call<CurrentWeather> call, @NonNull Throwable t) {
                         setDefaultWeather();
                     }
                 });

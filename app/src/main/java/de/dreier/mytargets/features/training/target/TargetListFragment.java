@@ -79,7 +79,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_target_select, container, false);
         adapter = new TargetAdapter();
