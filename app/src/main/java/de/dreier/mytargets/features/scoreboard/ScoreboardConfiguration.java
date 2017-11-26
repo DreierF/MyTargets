@@ -21,13 +21,13 @@ import android.support.annotation.NonNull;
 import de.dreier.mytargets.app.ApplicationInstance;
 
 public class ScoreboardConfiguration {
-    boolean showTitle;
-    boolean showProperties;
-    boolean showTable;
-    boolean showStatistics;
-    boolean showComments;
-    boolean showPointsColored;
-    boolean showSignature;
+    public boolean showTitle;
+    public boolean showProperties;
+    public boolean showTable;
+    public boolean showStatistics;
+    public boolean showComments;
+    public boolean showPointsColored;
+    public boolean showSignature;
 
     private ScoreboardConfiguration() {
     }

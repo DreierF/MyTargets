@@ -166,8 +166,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
             // Set round info
             binding.weatherIcon.setImageResource(training.getEnvironment().getColorDrawable());
             binding.detailRoundInfo.setText(Utils
-                    .fromHtml(HtmlUtils.getTrainingInfoHTML(Utils
-                            .getCurrentLocale(getContext()), training, rounds, equals, false)));
+                    .fromHtml(HtmlUtils.getTrainingInfoHTML(getContext(), training, rounds, equals)));
             adapter.setList(rounds);
 
             getActivity().invalidateOptionsMenu();
