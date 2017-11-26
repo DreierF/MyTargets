@@ -18,11 +18,6 @@ package de.dreier.mytargets.shared.models;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.annimon.stream.Collector;
-import com.annimon.stream.function.BiConsumer;
-import com.annimon.stream.function.Function;
-import com.annimon.stream.function.Supplier;
-
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
 
@@ -34,7 +29,7 @@ public class Score {
     public int totalScore;
     public int shotCount;
 
-    private Score() {
+    public Score() {
         this.reachedScore = 0;
         this.totalScore = 0;
         this.shotCount = 0;
@@ -51,26 +46,6 @@ public class Score {
         this.reachedScore = 0;
         this.totalScore = totalScore;
         this.shotCount = 0;
-    }
-
-    public static Collector<Score, Score, Score> sum() {
-        return new Collector<Score, Score, Score>() {
-            @Override
-            public Supplier<Score> supplier() {
-                return Score::new;
-            }
-
-            @Override
-            public BiConsumer<Score, Score> accumulator() {
-                return Score::add;
-            }
-
-            @NonNull
-            @Override
-            public Function<Score, Score> finisher() {
-                return score -> score;
-            }
-        };
     }
 
     @NonNull

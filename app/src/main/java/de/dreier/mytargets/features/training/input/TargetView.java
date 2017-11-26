@@ -38,8 +38,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
+
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -490,7 +490,7 @@ public class TargetView extends TargetViewBase {
 
             List<String> numbers = Stream.rangeClosed(1, maxArrowNumber)
                     .map(String::valueOf)
-                    .collect(Collectors.toList());
+                    .toList();
             gridView.setAdapter(
                     new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, numbers));
             gridView.setNumColumns(4);

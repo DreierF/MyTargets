@@ -17,9 +17,6 @@ package de.dreier.mytargets.shared.models.db;
 
 import android.support.annotation.NonNull;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
-
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -27,6 +24,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 
 public class ShotTest {
 
@@ -47,6 +46,6 @@ public class ShotTest {
         Collections.sort(shots);
         return Stream.of(shots)
                 .map(s -> String.valueOf(s.scoringRing))
-                .collect(Collectors.joining(","));
+                .joining(",");
     }
 }

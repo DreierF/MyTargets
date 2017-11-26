@@ -19,8 +19,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
@@ -47,6 +45,7 @@ import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IRecursiveModel;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.shared.utils.typeconverters.LocalTimeConverter;
 
 @Parcel
@@ -167,7 +166,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
     public static List<Pair<String, Integer>> getTopScoreDistribution(@NonNull List<Map.Entry<SelectableZone, Integer>> sortedScore) {
         final List<Pair<String, Integer>> result = Stream.of(sortedScore)
                 .map(value -> new Pair<>(value.getKey().text, value.getValue()))
-                .collect(Collectors.toList());
+                .toList();
 
         // Collapse first two entries if they yield the same score points,
         // e.g. 10 and X => {X, 10+X, 9, ...}
@@ -189,7 +188,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
         Map<SelectableZone, Integer> scoreCount = getRoundScores(rounds);
         return Stream.of(scoreCount)
                 .sorted((lhs, rhs) -> lhs.getKey().compareTo(rhs.getKey()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Nullable

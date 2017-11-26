@@ -36,11 +36,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
 import com.evernote.android.state.State;
 import com.evernote.android.state.StateSaver;
 
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -63,6 +62,8 @@ import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.SharedUtils;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 import static android.support.v4.view.GravityCompat.END;
 
@@ -121,10 +122,10 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 Stream.of(rounds).map(round -> round.trainingId)
                         .distinct()
                         .map(Training::get)
-                        .forEach(training -> trainingsMap.append(training.getId(), training));
+                        .forEach(training -> {trainingsMap.append(training.getId(), training);return null;});
                 return Stream.of(rounds)
                         .map(round -> new Pair<>(trainingsMap.get(round.trainingId), round))
-                        .collect(Collectors.toList());
+                        .toList();
             }
         };
     }
@@ -152,17 +153,29 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
 
     private void restoreCheckedStates() {
         Stream.of(binding.distanceTags.getTags())
-                .forEach(tag -> tag.isChecked = Stream.of(distanceTags)
-                        .anyMatch(d -> SharedUtils.equals(d, tag.text)));
+                .forEach(tag -> {
+                    tag.isChecked = Stream.of(distanceTags)
+                            .anyMatch(d -> SharedUtils.equals(d, tag.text));
+                    return null;
+                });
         Stream.of(binding.diameterTags.getTags())
-                .forEach(tag -> tag.isChecked = Stream.of(diameterTags)
-                        .anyMatch(d -> SharedUtils.equals(d, tag.text)));
+                .forEach(tag -> {
+                    tag.isChecked = Stream.of(diameterTags)
+                            .anyMatch(d -> SharedUtils.equals(d, tag.text));
+                    return null;
+                });
         Stream.of(binding.arrowTags.getTags())
-                .forEach(tag -> tag.isChecked = Stream.of(arrowTags)
-                        .anyMatch(a -> SharedUtils.equals(a, tag.id)));
+                .forEach(tag -> {
+                    tag.isChecked = Stream.of(arrowTags)
+                            .anyMatch(a -> SharedUtils.equals(a, tag.id));
+                    return null;
+                });
         Stream.of(binding.bowTags.getTags())
-                .forEach(tag -> tag.isChecked = Stream.of(bowTags)
-                        .anyMatch(b -> SharedUtils.equals(b, tag.id)));
+                .forEach(tag -> {
+                    tag.isChecked = Stream.of(bowTags)
+                            .anyMatch(b -> SharedUtils.equals(b, tag.id));
+                    return null;
+                });
         binding.distanceTags.setTags(binding.distanceTags.getTags());
         binding.diameterTags.setTags(binding.diameterTags.getTags());
         binding.arrowTags.setTags(binding.arrowTags.getTags());
@@ -210,13 +223,25 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
 
     private void resetFilter() {
         Stream.of(binding.distanceTags.getTags())
-                .forEach(tag -> tag.isChecked = true);
+                .forEach(tag -> {
+                    tag.isChecked = true;
+                    return null;
+                });
         Stream.of(binding.diameterTags.getTags())
-                .forEach(tag -> tag.isChecked = true);
+                .forEach(tag -> {
+                    tag.isChecked = true;
+                    return null;
+                });
         Stream.of(binding.arrowTags.getTags())
-                .forEach(tag -> tag.isChecked = true);
+                .forEach(tag -> {
+                    tag.isChecked = true;
+                    return null;
+                });
         Stream.of(binding.bowTags.getTags())
-                .forEach(tag -> tag.isChecked = true);
+                .forEach(tag -> {
+                    tag.isChecked = true;
+                    return null;
+                });
         binding.distanceTags.setTags(binding.distanceTags.getTags());
         binding.diameterTags.setTags(binding.diameterTags.getTags());
         binding.arrowTags.setTags(binding.arrowTags.getTags());
@@ -226,13 +251,13 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
 
     private void applyFilter() {
         distanceTags = Stream.of(binding.distanceTags.getCheckedTags())
-                .map(t -> t.text).collect(Collectors.toList());
+                .map(t -> t.text).toList();
         diameterTags = Stream.of(binding.diameterTags.getCheckedTags())
-                .map(t -> t.text).collect(Collectors.toList());
+                .map(t -> t.text).toList();
         arrowTags = Stream.of(binding.arrowTags.getCheckedTags())
-                .map(t -> t.id).collect(Collectors.toList());
+                .map(t -> t.id).toList();
         bowTags = Stream.of(binding.bowTags.getCheckedTags())
-                .map(t -> t.id).collect(Collectors.toList());
+                .map(t -> t.id).toList();
         filteredRounds = Stream.of(rounds)
                 .filter(pair -> distanceTags.contains(pair.second.distance.toString())
                         && diameterTags.contains(pair.second.getTarget().diameter.toString())
@@ -242,7 +267,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 .groupBy(value -> new Pair<>(value.getTarget().getId(),
                         value.getTarget().scoringStyle))
                 .map(value1 -> new Pair<>(value1.getValue().get(0).getTarget(), value1.getValue()))
-                .collect(Collectors.toList());
+                .toList();
         boolean animate = binding.viewPager.getAdapter() == null;
         final StatisticsPagerAdapter adapter = new StatisticsPagerAdapter(
                 getSupportFragmentManager(), filteredRounds, animate);
@@ -265,7 +290,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                         return new ChipGroup.Tag(null, getString(R.string.unknown));
                     }
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private List<ChipGroup.Tag> getArrowTags() {
@@ -284,7 +309,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                         return new ChipGroup.Tag(null, getString(R.string.unknown));
                     }
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private List<ChipGroup.Tag> getDistanceTags() {
@@ -293,7 +318,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 .distinct()
                 .sorted()
                 .map(d -> new ChipGroup.Tag(d.getId(), d.toString()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private List<ChipGroup.Tag> getDiameterTags() {
@@ -302,7 +327,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 .distinct()
                 .sorted()
                 .map(d -> new ChipGroup.Tag(d.getId(), d.toString()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -332,7 +357,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                             .exportAll(f, Stream.of(filteredRounds)
                                     .flatMap(p -> Stream.of(p.second))
                                     .map(Round::getId)
-                                    .collect(Collectors.toList()));
+                                    .toList());
                     return FileUtils.getUriForFile(StatisticsActivity.this, f);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -379,7 +404,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
             final Pair<Target, List<Round>> item = targets.get(position);
             final List<Long> roundIds = Stream.of(item.second)
                     .map(Round::getId)
-                    .collect(Collectors.toList());
+                    .toList();
             return StatisticsFragment.newInstance(roundIds, item.first, animate);
         }
 

@@ -31,8 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 
 import java.util.Collections;
 import java.util.List;
@@ -162,7 +161,7 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
                         .getIntent(Stream.of(Training.getAll())
                                 .flatMap((training) -> Stream.of(training.getRounds()))
                                 .map(Round::getId)
-                                .collect(Collectors.toList())).withContext(this)
+                                .toList()).withContext(this)
                         .start();
                 return true;
             default:
@@ -182,7 +181,7 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
                 .map(Training::get)
                 .flatMap(t -> Stream.of(t.getRounds()))
                 .map(Round::getId)
-                .collect(Collectors.toList()))
+                .toList())
                 .withContext(this)
                 .start();
     }

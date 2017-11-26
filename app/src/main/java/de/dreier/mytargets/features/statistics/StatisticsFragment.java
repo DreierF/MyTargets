@@ -31,8 +31,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
+
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -177,7 +177,7 @@ public class StatisticsFragment extends FragmentBase {
         rounds = Stream.of(LongUtils.toList(roundIds))
                 .map(Round::get)
                 .withoutNulls()
-                .collect(Collectors.toList());
+                .toList();
 
         List<ArrowStatistic> data = ArrowStatistic.getAll(target, rounds);
 
@@ -200,7 +200,7 @@ public class StatisticsFragment extends FragmentBase {
                 .filter(p -> p.exact)
                 .flatMap(p -> Stream.of(p.getShots()))
                 .filter(p -> p.scoringRing != Shot.NOTHING_SELECTED)
-                .collect(Collectors.toList());
+                .toList();
         if (exactShots.isEmpty()) {
             binding.dispersionPatternLayout.setVisibility(View.GONE);
             return;
@@ -357,7 +357,7 @@ public class StatisticsFragment extends FragmentBase {
                 .flatMap(p -> Stream.of(p.getShots()))
                 .filter(p -> p.scoringRing !=
                         Shot.NOTHING_SELECTED) //TODO: Refactor to not save NOTHING_SELECTED at all
-                .collect(Collectors.toList());
+                .toList();
         long missCount = Stream.of(shots).filter(s -> s.scoringRing == Shot.MISS).count();
         long hitCount = shots.size() - missCount;
 
@@ -377,7 +377,7 @@ public class StatisticsFragment extends FragmentBase {
                 .map(r -> r.trainingId)
                 .distinct()
                 .map(Training::get)
-                .collect(Collectors.toMap(Training::getId));
+                .toMap(Training::getId, t->t);
 
         List<Pair<Float, LocalDateTime>> values = Stream.of(rounds)
                 .map(r -> new Pair<>(trainingsMap.get(r.trainingId).date, r))
@@ -385,7 +385,7 @@ public class StatisticsFragment extends FragmentBase {
                         .map(end -> new Pair<>(roundIdPair.first, end)))
                 .map(endPair -> getPairEndSummary(target, endPair.second, endPair.first))
                 .sortBy(pair -> pair.second)
-                .collect(Collectors.toList());
+                .toList();
         if (values.isEmpty()) {
             return null;
         }
@@ -465,7 +465,7 @@ public class StatisticsFragment extends FragmentBase {
         }
 
         LineDataSet series = new LineDataSet(seriesEntries, "");
-        final int color = ApplicationInstance.getContext().getResources()
+        final int color = ApplicationInstance.Companion.getContext().getResources()
                 .getColor(R.color.colorPrimary);
         series.setColors(color);
         series.setLineWidth(2);

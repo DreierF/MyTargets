@@ -80,7 +80,7 @@ public class TrainingActivityTest extends UITestBase {
 //        intended(allOf(hasClass(StatisticsActivity.class),
 //                hasLongArrayExtra(StatisticsActivity.ROUND_IDS, Stream.of(training.getRounds())
 //                        .map(Round::getId)
-//                        .collect(Collectors.toSet()))));
+//                        .toSet())));
 
         // TODO investigate why this crashes on travis
 //        clickActionBarItem(R.id.action_scoreboard, R.string.scoreboard);

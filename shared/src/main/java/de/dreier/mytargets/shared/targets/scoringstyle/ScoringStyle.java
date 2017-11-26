@@ -19,7 +19,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
-import com.annimon.stream.Stream;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 
 import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.models.Score;
@@ -138,6 +138,6 @@ public class ScoringStyle {
     public Score getReachedScore(@NonNull End end) {
         return Stream.of(end.getShots())
                 .map(this::getReachedScore)
-                .collect(Score.sum());
+                .scoreSum();
     }
 }

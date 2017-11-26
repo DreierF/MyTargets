@@ -18,7 +18,7 @@ package de.dreier.mytargets.shared.models.db;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.annimon.stream.Stream;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
@@ -239,7 +239,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     public Score getReachedScore() {
         return Stream.of(getRounds())
                 .map(Round::getReachedScore)
-                .collect(Score.sum());
+                .scoreSum();
     }
 
     @Override

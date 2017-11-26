@@ -32,8 +32,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
+
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 
 import junit.framework.Assert;
 
@@ -200,7 +200,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
                 StatisticsActivity.getIntent(
                         Stream.of(training.getRounds())
                                 .map(Round::getId)
-                                .collect(Collectors.toList()))
+                                .toList())
                         .withContext(this)
                         .start();
                 return true;

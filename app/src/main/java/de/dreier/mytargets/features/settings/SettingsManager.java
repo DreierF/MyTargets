@@ -19,9 +19,6 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
-
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.Period;
 import org.threeten.bp.format.DateTimeFormatter;
@@ -43,6 +40,7 @@ import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.TimerSettings;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
@@ -537,14 +535,14 @@ public class SettingsManager {
         return Stream.of(Arrays.asList(split))
                 .filterNot(String::isEmpty)
                 .map(entry -> entry.split(":"))
-                .collect(Collectors.toMap(a -> Long.valueOf(a[0]), a -> Integer.valueOf(a[1])));
+                .toMap(a -> Long.valueOf(a[0]), a -> Integer.valueOf(a[1]));
     }
 
     public static void setStandardRoundsLastUsed(@NonNull Map<Long, Integer> ids) {
         lastUsed.edit()
                 .putString(KEY_STANDARD_ROUNDS_LAST_USED, Stream.of(ids)
                         .map(id -> id.getKey() + ":" + id.getValue())
-                        .collect(Collectors.joining(",")))
+                        .joining(","))
                 .apply();
     }
 

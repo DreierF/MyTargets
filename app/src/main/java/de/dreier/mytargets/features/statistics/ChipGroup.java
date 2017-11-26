@@ -29,8 +29,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
+
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
@@ -186,7 +186,7 @@ public class ChipGroup extends ViewGroup {
     public List<Tag> getCheckedTags() {
         return Stream.of(tagList)
                 .filter(value -> value.isChecked)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**

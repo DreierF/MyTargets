@@ -37,7 +37,7 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.annimon.stream.Stream;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
@@ -487,14 +487,14 @@ public class InputActivity extends ChildActivityBase
         // Set current round score
         Score reachedRoundScore = Stream.of(data.getEnds())
                 .map(end -> data.getCurrentRound().getTarget().getReachedScore(end))
-                .collect(Score.sum());
+                .scoreSum();
         binding.roundScore.setText(reachedRoundScore.toString());
 
         // Set current training score
         Score reachedTrainingScore = Stream.of(data.training.getRounds())
                 .flatMap(r -> Stream.of(r.getEnds())
                         .map(end -> r.getTarget().getReachedScore(end)))
-                .collect(Score.sum());
+                .scoreSum();
         binding.trainingScore.setText(reachedTrainingScore.toString());
 
         switch (summaryShowScope) {

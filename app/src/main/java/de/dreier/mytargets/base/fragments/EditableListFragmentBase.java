@@ -19,8 +19,8 @@ import android.support.annotation.PluralsRes;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
+
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.List;
@@ -77,7 +77,7 @@ public abstract class EditableListFragmentBase<T extends IIdSettable & IRecursiv
         List<T> deleted = Stream.of(deletedIds)
                 .map(id -> adapter.getItemById(id))
                 .filter(item -> item != null)
-                .collect(Collectors.toList());
+                .toList();
         for (T item : deleted) {
             adapter.removeItem(item);
             item.delete();
