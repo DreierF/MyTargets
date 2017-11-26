@@ -27,7 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 
-import com.annimon.stream.Stream;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 import org.parceler.Parcels;
@@ -326,7 +326,10 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             Target target = Parcels.unwrap(parcelable);
             final StandardRound item = binding.standardRound.getSelectedItem();
             Stream.of(item.getRounds())
-                    .forEach(r -> r.setTargetTemplate(target));
+                    .forEach(r -> {
+                        r.setTargetTemplate(target);
+                        return null;
+                    });
             binding.standardRound.setItem(item);
         }
     }

@@ -18,7 +18,6 @@ package de.dreier.mytargets.shared.models.db;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.annimon.stream.Stream;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
@@ -42,6 +41,7 @@ import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IRecursiveModel;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.shared.utils.LongUtils;
 import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter;
 
@@ -211,7 +211,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round>, 
         final Target target = getTarget();
         return Stream.of(getEnds())
                 .map(target::getReachedScore)
-                .collect(Score.sum());
+                .scoreSum();
     }
 
     @Override

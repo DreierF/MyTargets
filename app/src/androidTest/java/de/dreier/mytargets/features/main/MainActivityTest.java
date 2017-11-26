@@ -25,9 +25,6 @@ import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -57,6 +54,7 @@ import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.shared.targets.models.WAFull;
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
 import de.dreier.mytargets.test.base.UITestBase;
@@ -132,7 +130,7 @@ public class MainActivityTest extends UITestBase {
 
         final Training firstTraining = Stream.of(Training.getAll())
                 .sorted(Collections.reverseOrder())
-                .findFirst().get();
+                .findFirstOrNull();
 
         intended(allOf(hasClass(TrainingActivity.class),
                 hasExtra(ITEM_ID, firstTraining.getId())));
@@ -144,7 +142,7 @@ public class MainActivityTest extends UITestBase {
         Set<Long> expectedRoundIds = Stream.of(Training.getAll())
                 .flatMap(t -> Stream.of(t.getRounds()))
                 .map(Round::getId)
-                .collect(Collectors.toSet());
+                .toSet();
         intended(allOf(hasClass(StatisticsActivity.class),
                 hasLongArrayExtra(ROUND_IDS, expectedRoundIds)));
 
@@ -171,11 +169,11 @@ public class MainActivityTest extends UITestBase {
 
         final List<Training> trainings = Stream.of(Training.getAll())
                 .sorted(Collections.reverseOrder())
-                .collect(Collectors.toList());
+                .toList();
         expectedRoundIds = Stream.of(trainings.get(1), trainings.get(2))
                 .flatMap(t -> Stream.of(t.getRounds()))
                 .map(Round::getId)
-                .collect(Collectors.toSet());
+                .toSet();
 
         intended(allOf(hasClass(StatisticsActivity.class),
                 hasLongArrayExtra(ROUND_IDS, expectedRoundIds)));
@@ -189,7 +187,7 @@ public class MainActivityTest extends UITestBase {
         // openBow
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
                 .perform(click());
-        final Bow firstBow = Stream.of(Bow.getAll()).sorted().findFirst().get();
+        final Bow firstBow = Stream.of(Bow.getAll()).sorted().findFirstOrNull();
         intended(allOf(hasClass(EditBowActivity.class),
                 hasExtra(EditBowFragment.BOW_ID, firstBow.getId())));
 
@@ -201,7 +199,7 @@ public class MainActivityTest extends UITestBase {
         // openArrow
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
                 .perform(click());
-        final Arrow firstArrow = Stream.of(Arrow.getAll()).sorted().findFirst().get();
+        final Arrow firstArrow = Stream.of(Arrow.getAll()).sorted().findFirstOrNull();
         intended(allOf(hasClass(EditArrowActivity.class),
                 hasExtra(EditArrowFragment.ARROW_ID, firstArrow.getId())));
 

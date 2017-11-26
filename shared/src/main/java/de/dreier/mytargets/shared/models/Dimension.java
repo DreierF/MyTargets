@@ -18,8 +18,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.parceler.Parcel;
@@ -37,6 +35,7 @@ import de.dreier.mytargets.shared.models.db.RoundTemplate_Table;
 import de.dreier.mytargets.shared.models.db.Round_Table;
 import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.shared.models.db.SightMark_Table;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 
 @Parcel
 public class Dimension implements IIdProvider, Comparable<Dimension> {
@@ -104,7 +103,7 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
                 .queryList())
                 .map(sightSetting -> sightSetting.distance)
                 .filter(d -> d.unit == unit)
-                .collect(Collectors.toSet()));
+                .toSet());
 
         distances.addAll(Stream.of(SQLite
                 .select(RoundTemplate_Table.distance)
@@ -112,7 +111,7 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
                 .queryList())
                 .map(round -> round.distance)
                 .filter(d -> d.unit == unit)
-                .collect(Collectors.toSet()));
+                .toSet());
 
         distances.addAll(Stream.of(SQLite
                 .select(Round_Table.distance)
@@ -120,7 +119,7 @@ public class Dimension implements IIdProvider, Comparable<Dimension> {
                 .queryList())
                 .map(round -> round.distance)
                 .filter(d -> d.unit == unit)
-                .collect(Collectors.toSet()));
+                .toSet());
 
         return new ArrayList<>(distances);
     }

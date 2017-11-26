@@ -19,8 +19,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
+
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.io.BufferedInputStream;
@@ -98,17 +98,17 @@ public class BackupUtils {
                 .from(BowImage.class)
                 .queryList())
                 .flatMap(bow -> Stream.of(bow.fileName))
-                .collect(Collectors.toList()));
+                .toList());
         list.addAll(Stream.of(SQLite.select()
                 .from(EndImage.class)
                 .queryList())
                 .flatMap(end -> Stream.of(end.fileName))
-                .collect(Collectors.toList()));
+                .toList());
         list.addAll(Stream.of(SQLite.select()
                 .from(ArrowImage.class)
                 .queryList())
                 .flatMap(arrow -> Stream.of(arrow.fileName))
-                .collect(Collectors.toList()));
+                .toList());
         return list.toArray(new String[list.size()]);
     }
 

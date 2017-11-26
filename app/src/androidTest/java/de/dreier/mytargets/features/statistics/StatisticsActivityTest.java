@@ -19,8 +19,8 @@ import android.support.annotation.NonNull;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
+
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -59,7 +59,7 @@ public class StatisticsActivityTest extends UITestBase {
         final List<Long> roundIds = Stream.of(Training.getAll())
                 .flatMap(t -> Stream.of(t.getRounds()))
                 .map(Round::getId)
-                .collect(Collectors.toList());
+                .toList();
         activityTestRule.launchActivity(StatisticsActivity.getIntent(roundIds).build());
 
         onView(allOf(withId(R.id.dispersionViewOverlay),

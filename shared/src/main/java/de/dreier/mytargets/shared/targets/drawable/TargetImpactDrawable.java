@@ -22,9 +22,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextPaint;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +29,7 @@ import java.util.Map;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Shot;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 
 import static de.dreier.mytargets.shared.utils.Color.WHITE;
 
@@ -142,7 +140,7 @@ public class TargetImpactDrawable extends TargetDrawable {
             this.shots.get(i).clear();
         }
         Map<Integer, List<Shot>> map = Stream.of(shots)
-                .collect(Collectors.groupingBy(shot -> shot.index % model.getFaceCount()));
+                .groupingBy(shot -> shot.index % model.getFaceCount());
         for (Map.Entry<Integer, List<Shot>> entry : map.entrySet()) {
             this.shots.set(entry.getKey(), entry.getValue());
         }
@@ -154,7 +152,7 @@ public class TargetImpactDrawable extends TargetDrawable {
             @Override
             protected Map<Integer, List<Shot>> doInBackground(Void... objects) {
                 return shots
-                        .collect(Collectors.groupingBy(shot -> shot.index % model.getFaceCount()));
+                        .groupingBy(shot -> shot.index % model.getFaceCount());
             }
 
             @Override

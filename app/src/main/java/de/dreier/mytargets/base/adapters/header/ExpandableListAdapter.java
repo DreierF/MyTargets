@@ -21,8 +21,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
+
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 
 import java.util.Comparator;
 import java.util.List;
@@ -107,7 +107,7 @@ public abstract class ExpandableListAdapter<P extends IIdProvider, C extends IId
         return Stream.of(headersList)
                 .filter(h -> h.expanded)
                 .map(h -> h.item.getId())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public void setExpandedIds(@NonNull List<Long> expanded) {

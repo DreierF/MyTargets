@@ -18,9 +18,6 @@ package de.dreier.mytargets.features.statistics;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
-
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,6 +29,7 @@ import java.util.List;
 
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.test.base.InstrumentedTestBase;
 import de.dreier.mytargets.test.utils.rules.MiniDbTestRule;
 
@@ -89,7 +87,7 @@ public class ExportTest extends InstrumentedTestBase {
                 .flatMap(t -> Stream.of(t.getRounds()))
                 .map(Round::getId)
                 .sorted()
-                .collect(Collectors.toList());
+                .toList();
         roundIds.remove(0);
         new CsvExporter(getInstrumentation().getTargetContext())
                 .writeExportData(writer, roundIds);

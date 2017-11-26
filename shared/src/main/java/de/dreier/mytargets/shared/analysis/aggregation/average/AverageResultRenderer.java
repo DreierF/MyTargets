@@ -21,7 +21,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
 
-import com.annimon.stream.Stream;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 
 import de.dreier.mytargets.shared.analysis.aggregation.IAggregationResultRenderer;
 import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper;
@@ -75,7 +75,7 @@ public class AverageResultRenderer implements IAggregationResultRenderer {
                 average.weightedAverage.y + nUniStdDev.bottom), 180.0f, 90.0f);
 
         float smallestNonUniStdDev = Stream.of(nUniStdDev.top, nUniStdDev.bottom,
-                nUniStdDev.left, nUniStdDev.right).min(Float::compare).get();
+                nUniStdDev.left, nUniStdDev.right).min(Float::compare);
 
         float tmp = smallestNonUniStdDev / 4.0f;
         symbolPath.rewind();

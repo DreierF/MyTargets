@@ -35,7 +35,7 @@ import de.dreier.mytargets.features.settings.backup.BackupException;
 import timber.log.Timber;
 
 import static de.dreier.mytargets.features.settings.backup.provider.BackupUtils.getBackupName;
-import static de.dreier.mytargets.shared.SharedApplicationInstance.Companion.getStr;
+import static de.dreier.mytargets.shared.SharedApplicationInstance.Companion;
 
 public class ExternalStorageBackup {
     private static final String FOLDER_NAME = "MyTargets";

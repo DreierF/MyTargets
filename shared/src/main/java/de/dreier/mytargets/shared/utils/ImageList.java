@@ -17,9 +17,6 @@ package de.dreier.mytargets.shared.utils;
 
 import android.support.annotation.NonNull;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
-
 import org.parceler.ParcelConstructor;
 
 import java.util.ArrayList;
@@ -27,6 +24,7 @@ import java.util.List;
 
 import de.dreier.mytargets.shared.models.db.EndImage;
 import de.dreier.mytargets.shared.models.db.Image;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 
 public class ImageList {
     List<String> images = new ArrayList<>();
@@ -69,6 +67,6 @@ public class ImageList {
     }
 
     public List<EndImage> toEndImageList() {
-        return Stream.of(images).map(EndImage::new).collect(Collectors.toList());
+        return Stream.of(images).map(EndImage::new).toList();
     }
 }

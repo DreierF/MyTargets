@@ -35,7 +35,7 @@ import de.dreier.mytargets.features.settings.backup.BackupEntry;
 import de.dreier.mytargets.features.settings.backup.BackupException;
 
 import static de.dreier.mytargets.features.settings.backup.provider.BackupUtils.getBackupName;
-import static de.dreier.mytargets.shared.SharedApplicationInstance.Companion.getStr;
+import static de.dreier.mytargets.shared.SharedApplicationInstance.Companion;
 
 public class InternalStorageBackup {
     private static final String FOLDER_NAME = "MyTargets";

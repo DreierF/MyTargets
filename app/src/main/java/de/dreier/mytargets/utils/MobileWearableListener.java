@@ -17,8 +17,6 @@ package de.dreier.mytargets.utils;
 
 import android.support.annotation.NonNull;
 
-import com.annimon.stream.Optional;
-import com.annimon.stream.Stream;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
 
@@ -38,6 +36,7 @@ import de.dreier.mytargets.shared.models.db.End$$Parcelable;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.models.db.Training$$Parcelable;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.wearable.WearableClientBase;
 
@@ -80,11 +79,11 @@ public class MobileWearableListener extends WearableListenerService {
     }
 
     public void trainingTemplate() {
-        Optional<Training> lastTraining = Stream.of(Training.getAll())
+        Training lastTraining = Stream.of(Training.getAll())
                 .sorted(Collections.reverseOrder())
-                .findFirst();
-        if (lastTraining.isPresent() && lastTraining.get().date.isEqual(LocalDate.now())) {
-            ApplicationInstance.wearableClient.updateTraining(lastTraining.get().ensureLoaded());
+                .findFirstOrNull();
+        if (lastTraining != null && lastTraining.date.isEqual(LocalDate.now())) {
+            ApplicationInstance.wearableClient.updateTraining(lastTraining.ensureLoaded());
         } else {
             Training training = new Training();
             training.title = getString(R.string.training);
@@ -94,8 +93,8 @@ public class MobileWearableListener extends WearableListenerService {
             training.arrowId = SettingsManager.getArrow();
             training.arrowNumbering = false;
 
-            boolean freeTraining = !(lastTraining.isPresent() &&
-                    lastTraining.get().standardRoundId != null);
+            boolean freeTraining = !(lastTraining != null &&
+                    lastTraining.standardRoundId != null);
             if (freeTraining) {
                 Round round = new Round();
                 round.setTarget(SettingsManager.getTarget());
@@ -105,7 +104,7 @@ public class MobileWearableListener extends WearableListenerService {
                 training.rounds = new ArrayList<>();
                 training.rounds.add(round);
             } else {
-                training.initRoundsFromTemplate(lastTraining.get().getStandardRound());
+                training.initRoundsFromTemplate(lastTraining.getStandardRound());
             }
             ApplicationInstance.wearableClient.sendTrainingTemplate(training.ensureLoaded());
         }

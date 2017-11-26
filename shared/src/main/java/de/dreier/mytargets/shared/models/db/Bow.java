@@ -21,8 +21,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -43,6 +41,7 @@ import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IImageProvider;
 import de.dreier.mytargets.shared.models.IRecursiveModel;
 import de.dreier.mytargets.shared.models.Thumbnail;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.shared.utils.typeconverters.EBowTypeConverter;
 import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter;
 
@@ -171,7 +170,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
                     .where(SightMark_Table.bow.eq(id))
                     .queryList())
                     .sortBy(sightMark -> sightMark.distance)
-                    .collect(Collectors.toList());
+                    .toList();
         }
         return sightMarks;
     }
@@ -221,8 +220,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
     public SightMark getSightSetting(Dimension distance) {
         return Stream.of(getSightMarks())
                 .filter(s -> s.distance.equals(distance))
-                .findFirst()
-                .orElse(null);
+                .findFirstOrNull();
     }
 
     @Override

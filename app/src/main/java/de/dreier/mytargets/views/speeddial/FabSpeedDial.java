@@ -54,12 +54,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.annimon.stream.Stream;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import timber.log.Timber;
 
 /**
@@ -294,7 +293,7 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
     public FloatingActionButton getFabFromMenuId(@IdRes int id) {
         return Stream.of(fabMenuItemMap.entrySet())
                 .filter(entry -> entry.getValue().getItemId() == id)
-                .map(Map.Entry::getKey).findFirst().orElse(null);
+                .map(Map.Entry::getKey).findFirstOrNull();
     }
 
     private void newNavigationMenu() {

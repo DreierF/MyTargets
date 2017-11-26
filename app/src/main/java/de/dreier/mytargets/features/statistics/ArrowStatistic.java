@@ -17,9 +17,6 @@ package de.dreier.mytargets.features.statistics;
 
 import android.support.annotation.NonNull;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
-
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
@@ -33,8 +30,9 @@ import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 
-import static de.dreier.mytargets.shared.SharedApplicationInstance.Companion.getStr;
+import static de.dreier.mytargets.shared.SharedApplicationInstance.Companion;
 import static java.lang.Math.ceil;
 
 @Parcel
@@ -82,7 +80,7 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
                             .filter(entry -> entry.getValue().size() > 1)
                             .map(stringListEntry -> new ArrowStatistic(name,
                                     stringListEntry.getKey(), target, stringListEntry.getValue()));
-                }).collect(Collectors.toList());
+                }).toList();
     }
 
     public int getAppropriateBgColor() {

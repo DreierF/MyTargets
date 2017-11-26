@@ -22,7 +22,7 @@ import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.annimon.stream.Stream;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 
 import org.parceler.Parcels;
 

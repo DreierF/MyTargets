@@ -30,8 +30,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
+
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 
 import junit.framework.Assert;
 
@@ -117,7 +117,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
         }
         List<Target> targets = Stream.of(list)
                 .map(value -> new Target((int) (long) value.getId(), 0))
-                .collect(Collectors.toList());
+                .toList();
         adapter.setList(targets);
         selectItem(binding.recyclerView, target);
 

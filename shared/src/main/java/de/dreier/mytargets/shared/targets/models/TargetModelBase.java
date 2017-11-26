@@ -19,9 +19,6 @@ import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +28,7 @@ import de.dreier.mytargets.shared.models.ETargetType;
 import de.dreier.mytargets.shared.models.IIdProvider;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.db.Shot;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.shared.targets.decoration.TargetDecorator;
 import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle;
 import de.dreier.mytargets.shared.targets.zone.CircularZone;
@@ -106,7 +104,7 @@ public class TargetModelBase implements IIdProvider {
     public List<String> getScoringStyles() {
         return Stream.of(scoringStyles)
                 .map(ScoringStyle::toString)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public ScoringStyle getScoringStyle(int scoringStyle) {
