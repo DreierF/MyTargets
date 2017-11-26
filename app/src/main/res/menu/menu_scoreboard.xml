@@ -27,11 +27,11 @@
         android:icon="@drawable/ic_print_white_24dp"
         android:title="@string/action_print"
         app:showAsAction="ifRoom"/>
-    <item
-        android:id="@+id/action_pdf"
-        android:icon="@drawable/ic_export_pdf_white_24_dp"
-        android:title="@string/action_pdf"
-        app:showAsAction="ifRoom"/>
+    <!--<item-->
+        <!--android:id="@+id/action_pdf"-->
+        <!--android:icon="@drawable/ic_export_pdf_white_24_dp"-->
+        <!--android:title="@string/action_pdf"-->
+        <!--app:showAsAction="ifRoom"/>-->
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_settings_white_24dp"

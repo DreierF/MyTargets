@@ -165,7 +165,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
     @Override
     public void onCreateOptionsMenu(Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.backup_import, menu);
+        inflater.inflate(R.menu.settings_backup, menu);
     }
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

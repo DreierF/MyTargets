@@ -76,8 +76,8 @@ public class DispersionPatternActivity extends ChildActivityBase {
         menu.findItem(R.id.action_settings).setVisible(false);
         menu.findItem(R.id.action_print).setVisible(Build.VERSION.SDK_INT >=
                         Build.VERSION_CODES.KITKAT);
-        menu.findItem(R.id.action_pdf).setVisible(Build.VERSION.SDK_INT >=
-                        Build.VERSION_CODES.KITKAT);
+//        menu.findItem(R.id.action_pdf).setVisible(Build.VERSION.SDK_INT >=
+//                        Build.VERSION_CODES.KITKAT);
         return true;
     }
 
@@ -90,9 +90,9 @@ public class DispersionPatternActivity extends ChildActivityBase {
             case R.id.action_print:
                 print();
                 return true;
-            case R.id.action_pdf:
-                //TODO
-                return true;
+//            case R.id.action_pdf:
+//                //TODO
+//                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
