@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.scoreboard.builder;
+package de.dreier.mytargets.features.scoreboard.layout;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -27,7 +27,7 @@ import java.util.Map;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.app.ApplicationInstance;
-import de.dreier.mytargets.features.scoreboard.HTMLBuilder;
+import de.dreier.mytargets.features.scoreboard.ScoreboardBuilder;
 import de.dreier.mytargets.features.scoreboard.ScoreboardConfiguration;
 import de.dreier.mytargets.features.scoreboard.builder.model.Table;
 import de.dreier.mytargets.features.settings.SettingsManager;
@@ -53,7 +53,7 @@ public class DefaultScoreboardLayout {
     private final Locale locale;
     @NonNull
     private final ScoreboardConfiguration configuration;
-    private HTMLBuilder builder;
+    private ScoreboardBuilder builder;
 
     public DefaultScoreboardLayout(@NonNull Context context, @NonNull Locale locale, @NonNull ScoreboardConfiguration configuration) {
         this.context = context;
@@ -61,7 +61,7 @@ public class DefaultScoreboardLayout {
         this.configuration = configuration;
     }
 
-    public void generateWithBuilder(HTMLBuilder builder, Training training, List<Round> rounds) {
+    public void generateWithBuilder(ScoreboardBuilder builder, Training training, List<Round> rounds) {
         this.builder = builder;
 
         if (configuration.showTitle) {
@@ -70,8 +70,7 @@ public class DefaultScoreboardLayout {
 
         boolean[] equals = new boolean[2];
         if (configuration.showProperties) {
-            builder.table(getTrainingInfoTable(training, rounds, equals, true));
-            builder.space();
+            builder.table(getTrainingInfoTable(training, rounds, equals));
         }
 
         if (configuration.showTable) {
@@ -79,7 +78,6 @@ public class DefaultScoreboardLayout {
                 builder.space();
                 builder.subtitle(context.getString(R.string.round) + " " + (round.index + 1));
                 if (configuration.showProperties) {
-                    builder.space();
                     builder.table(getRoundInfo(round, equals));
                 }
                 builder.table(getRoundTable(round));
@@ -99,17 +97,15 @@ public class DefaultScoreboardLayout {
         }
     }
 
-    private Table getTrainingInfoTable(@NonNull Training training, @NonNull List<Round> rounds, boolean[] equals, boolean scoreboard) {
+    private Table getTrainingInfoTable(@NonNull Training training, @NonNull List<Round> rounds, boolean[] equals) {
         InfoTableBuilder info = new InfoTableBuilder();
-        addStaticTrainingHeaderInfo(info, training, rounds, scoreboard);
+        addStaticTrainingHeaderInfo(info, training, rounds);
         addDynamicTrainingHeaderInfo(rounds, equals, info);
         return info.info;
     }
 
-    private void addStaticTrainingHeaderInfo(@NonNull InfoTableBuilder info, @NonNull Training training, @NonNull List<Round> rounds, boolean scoreboard) {
-        if (scoreboard) {
-            getScoreboardOnlyHeaderInfo(info, training, rounds);
-        }
+    private void addStaticTrainingHeaderInfo(@NonNull InfoTableBuilder info, @NonNull Training training, @NonNull List<Round> rounds) {
+        getScoreboardOnlyHeaderInfo(info, training, rounds);
 
         if (training.indoor) {
             info.addLine(R.string.environment, context.getString(R.string.indoor));
@@ -125,9 +121,7 @@ public class DefaultScoreboardLayout {
         Bow bow = Bow.get(training.bowId);
         if (bow != null) {
             info.addLine(R.string.bow, bow.name);
-            if (scoreboard) {
-                info.addLine(R.string.bow_type, bow.type);
-            }
+            info.addLine(R.string.bow_type, bow.type);
         }
 
         Arrow arrow = Arrow.get(training.arrowId);
@@ -176,7 +170,7 @@ public class DefaultScoreboardLayout {
         Round round = rounds.get(0);
         for (Round r : rounds) {
             equals[0] = SharedUtils.equals(r.distance, round.distance) && equals[0];
-            equals[1] = r.getTarget().equals(round.getTarget()) && equals[1];
+            equals[1] = SharedUtils.equals(r.getTarget(), round.getTarget()) && equals[1];
         }
     }
 
@@ -212,7 +206,7 @@ public class DefaultScoreboardLayout {
         Table table = new Table();
         Table.Row row = table.startRow();
         for (Pair<String, Integer> topScore : topScores) {
-            row.addBoldCell(topScore.first );
+            row.addBoldCell(topScore.first);
         }
         row.addBoldCell(context.getString(R.string.hits));
         row.addBoldCell(context.getString(R.string.average));
@@ -254,7 +248,7 @@ public class DefaultScoreboardLayout {
                 Collections.sort(shots);
             }
             for (Shot shot : shots) {
-                row.addCell(getPoints(shot, round.getTarget()));
+                appendPointsCell(row, shot, round.getTarget());
                 int points = round.getTarget().getScoreByZone(shot.scoringRing, shot.index);
                 sum += points;
                 carry += points;
@@ -267,33 +261,31 @@ public class DefaultScoreboardLayout {
 
     private void appendTableHeader(Table table, int arrowsPerEnd) {
         Table.Row row = table.startRow();
-        row.addCell(context.getString(R.string.passe), true, 1, 2);
-        row.addCell(context.getString(R.string.arrows), true, arrowsPerEnd, 1);
-        row.addCell(context.getString(R.string.sum), true, 1, 2);
-        row.addCell(context.getString(R.string.carry), true, 1, 2);
-        row = table.startRow();
+        row.addBoldCell(context.getString(R.string.passe));
+        Table sectioned = new Table();
+        sectioned.startRow().addBoldCell(context.getString(R.string.arrows), arrowsPerEnd);
+        Table.Row sectionedRow = sectioned.startRow();
         for (int i = 1; i <= arrowsPerEnd; i++) {
-            row.addBoldCell(String.valueOf(i));
+            sectionedRow.addBoldCell(String.valueOf(i));
         }
+        sectioned.columnSpan = arrowsPerEnd;
+        row.addCell(sectioned);
+        row.addBoldCell(context.getString(R.string.sum));
+        row.addBoldCell(context.getString(R.string.carry));
     }
 
-    @NonNull
-    private String getPoints(@NonNull Shot shot, @NonNull Target target) {
+    private void appendPointsCell(Table.Row row, @NonNull Shot shot, @NonNull Target target) {
         if (shot.scoringRing == Shot.NOTHING_SELECTED) {
-            return "";
+            row.addCell("");
+            return;
         }
         final String points = target.zoneToString(shot.scoringRing, shot.index);
         if (configuration.showPointsColored) {
             int fillColor = target.getModel().getZone(shot.scoringRing).getFillColor();
             int color = target.getModel().getZone(shot.scoringRing).getTextColor();
-            final String pointsDiv = String.format(
-                    "<div class=\"circle\" style='background: #%06X; color: #%06X'>%s",
-                    fillColor & 0xFFFFFF, color & 0xFFFFFF, points);
-            final String arrowDiv = shot.arrowNumber == null ? "" : String.format(
-                    "<div class=\"circle_arrow\">%s</div>", shot.arrowNumber);
-            return pointsDiv + arrowDiv + "</div>";
+            row.addEndCell(points, fillColor, color, shot.arrowNumber);
         } else {
-            return points;
+            row.addCell(points);
         }
     }
 

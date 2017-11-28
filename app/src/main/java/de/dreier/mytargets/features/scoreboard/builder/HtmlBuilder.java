@@ -13,13 +13,15 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.scoreboard;
+package de.dreier.mytargets.features.scoreboard.builder;
 
 import android.text.TextUtils;
 
+import de.dreier.mytargets.features.scoreboard.ScoreboardBuilder;
+import de.dreier.mytargets.features.scoreboard.builder.model.Cell;
 import de.dreier.mytargets.features.scoreboard.builder.model.Table;
 
-public class HTMLBuilder {
+public class HtmlBuilder implements ScoreboardBuilder {
 
     public static final String BR = "<br>";
     private static final String CSS = "<style type=\"text/css\">\n" +
@@ -37,21 +39,24 @@ public class HTMLBuilder {
 
     private StringBuilder html = new StringBuilder();
 
-    public HTMLBuilder() {
+    public HtmlBuilder() {
         html.append("<html>");
         html.append(CSS);
     }
 
+    @Override
     public void title(String title) {
         html.append("<h3>");
         html.append(TextUtils.htmlEncode(title));
         html.append("</h3>");
     }
 
+    @Override
     public void subtitle(String subtitle) {
         html.append("<b>");
         html.append(TextUtils.htmlEncode(subtitle));
         html.append("</b>");
+        html.append(BR);
     }
 
     public String build() {
@@ -59,38 +64,51 @@ public class HTMLBuilder {
         return html.toString();
     }
 
+    @Override
     public void table(Table table) {
-        html.append(BR);
         html.append("<table class=\"myTable\">");
         for (Table.Row row : table.rows) {
             html.append("<tr class=\"align_center\">");
-            for (Table.Row.Cell cell : row.cells) {
-                html.append("<td");
-                if (cell.rowSpan > 1) {
-                    html.append(" rowspan=\"").append(cell.rowSpan).append("\"");
+            for (Cell cell : row.cells) {
+
+                if (cell instanceof Table.Row.EndCell) {
+                    Table.Row.EndCell endCell = (Table.Row.EndCell) cell;
+                    html.append("<td>");
+                    html.append(String.format(
+                            "<div class=\"circle\" style='background: #%06X; color: #%06X'>%s",
+                            endCell.fillColor & 0xFFFFFF,
+                            endCell.textColor & 0xFFFFFF, endCell.score));
+                    html.append(endCell.arrowNumber == null ? "" : String.format(
+                            "<div class=\"circle_arrow\">%s</div>", endCell.arrowNumber));
+                    html.append("</div>");
+                    html.append("</td>");
+                } else if (cell instanceof Table) {
+                    table((Table) cell);
+                } else {
+                    Table.Row.TextCell textCell = (Table.Row.TextCell) cell;
+                    html.append("<td>");
+                    if (textCell.bold) {
+                        html.append("<b>");
+                    }
+                    html.append(TextUtils.htmlEncode(textCell.content).replace("\n", BR));
+                    if (textCell.bold) {
+                        html.append("</b>");
+                    }
+                    html.append("</td>");
                 }
-                if (cell.columnSpan > 1) {
-                    html.append(" colspan=\"").append(cell.columnSpan).append("\"");
-                }
-                html.append(">");
-                if (cell.bold) {
-                    html.append("<b>");
-                }
-                html.append(TextUtils.htmlEncode(cell.content).replace("\n", BR));
-                if (cell.bold) {
-                    html.append("</b>");
-                }
-                html.append("</td>");
             }
             html.append("</tr>");
         }
         html.append("</table>");
+        html.append(BR);
     }
 
+    @Override
     public void space() {
         html.append(BR);
     }
 
+    @Override
     public void signature(String archer, String targetCaptain) {
         html.append("<div style=\"border-top: 2px solid black; width: 30%;margin-right: 5%;margin-top: 100px;float:left;\">");
         html.append(targetCaptain);

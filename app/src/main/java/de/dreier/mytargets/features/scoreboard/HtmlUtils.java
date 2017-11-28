@@ -18,6 +18,8 @@ package de.dreier.mytargets.features.scoreboard;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.widget.LinearLayout;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +27,9 @@ import java.util.Locale;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.app.ApplicationInstance;
-import de.dreier.mytargets.features.scoreboard.builder.DefaultScoreboardLayout;
+import de.dreier.mytargets.features.scoreboard.builder.ViewBuilder;
+import de.dreier.mytargets.features.scoreboard.layout.DefaultScoreboardLayout;
+import de.dreier.mytargets.features.scoreboard.builder.HtmlBuilder;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.Round;
@@ -36,7 +40,7 @@ import de.dreier.mytargets.shared.utils.SharedUtils;
 public class HtmlUtils {
 
     @NonNull
-    public static String getScoreboard(Locale locale, long trainingId, long roundId, @NonNull ScoreboardConfiguration configuration) {
+    public static String getHtmlScoreboard(Context context, Locale locale, long trainingId, long roundId, @NonNull ScoreboardConfiguration configuration) {
         Training training = Training.get(trainingId);
         List<Round> rounds;
         if (roundId == -1) {
@@ -45,11 +49,23 @@ public class HtmlUtils {
             rounds = Collections.singletonList(Round.get(roundId));
         }
 
-        DefaultScoreboardLayout scoreboardLayout = new DefaultScoreboardLayout(ApplicationInstance
-                .getContext(), locale, configuration);
-        HTMLBuilder html = new HTMLBuilder();
+        DefaultScoreboardLayout scoreboardLayout = new DefaultScoreboardLayout(context, locale, configuration);
+        HtmlBuilder html = new HtmlBuilder();
         scoreboardLayout.generateWithBuilder(html, training, rounds);
         return html.build();
+    }
+
+    public static void getScoreboardView(Context context, Locale locale, Training training, long roundId, @NonNull ScoreboardConfiguration configuration, LinearLayout container) {
+        List<Round> rounds;
+        if (roundId == -1) {
+            rounds = training.getRounds();
+        } else {
+            rounds = Collections.singletonList(Round.get(roundId));
+        }
+
+        DefaultScoreboardLayout scoreboardLayout = new DefaultScoreboardLayout(context, locale, configuration);
+        ViewBuilder html = new ViewBuilder(context, LayoutInflater.from(context), container);
+        scoreboardLayout.generateWithBuilder(html, training, rounds);
     }
 
     public static String getTrainingInfoHTML(Context context, @NonNull Training training, @NonNull List<Round> rounds, boolean[] equals) {

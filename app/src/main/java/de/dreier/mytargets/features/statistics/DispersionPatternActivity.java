@@ -37,6 +37,7 @@ import de.dreier.mytargets.base.activities.ChildActivityBase;
 import de.dreier.mytargets.databinding.ActivityArrowRankingDetailsBinding;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.Utils;
 
 import static de.dreier.mytargets.shared.utils.FileUtils.getUriForFile;
 
@@ -74,10 +75,8 @@ public class DispersionPatternActivity extends ChildActivityBase {
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.menu_scoreboard, menu);
         menu.findItem(R.id.action_settings).setVisible(false);
-        menu.findItem(R.id.action_print).setVisible(Build.VERSION.SDK_INT >=
-                        Build.VERSION_CODES.KITKAT);
-//        menu.findItem(R.id.action_pdf).setVisible(Build.VERSION.SDK_INT >=
-//                        Build.VERSION_CODES.KITKAT);
+        menu.findItem(R.id.action_print).setVisible(Utils.isKitKat());
+//        menu.findItem(R.id.action_pdf).setVisible(Utils.isKitKat());
         return true;
     }
 

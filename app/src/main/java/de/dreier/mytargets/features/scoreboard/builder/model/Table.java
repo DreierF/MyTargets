@@ -15,57 +15,70 @@
 
 package de.dreier.mytargets.features.scoreboard.builder.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Table {
+public class Table extends Cell {
+
+    public List<Row> rows = new ArrayList<>();
 
     public class Row {
-        public List<Row.Cell> cells;
 
-        public class Cell {
-            public int columnSpan = 1;
-            public int rowSpan = 1;
+        public List<Cell> cells = new ArrayList<>();
+
+        public class TextCell extends Cell {
             public final String content;
-            public final boolean bold;
+            public boolean bold;
 
-            public Cell(String content, boolean bold) {
+            public TextCell(String content, boolean bold) {
                 this.content = content;
                 this.bold = bold;
             }
+        }
 
-            public Cell(String content, boolean bold, int columnSpan, int rowSpan) {
-                this.content = content;
-                this.bold = bold;
-                this.columnSpan = columnSpan;
-                this.rowSpan = rowSpan;
+        public class EndCell extends Cell {
+            public final String score;
+            public final int fillColor;
+            public final int textColor;
+            public final String arrowNumber;
+
+            public EndCell(String score, int fillColor, int textColor, String arrowNumber) {
+                this.score = score;
+                this.fillColor = fillColor;
+                this.textColor = textColor;
+                this.arrowNumber = arrowNumber;
             }
+        }
+
+        public void addCell(Cell cell) {
+            cells.add(cell);
         }
 
         public Row addCell(String content) {
-            cells.add(new Row.Cell(content, false));
+            cells.add(new TextCell(content, false));
             return this;
-        }
-
-        public Row addBoldCell(String content) {
-            return addCell(content, true, 1,1);
         }
 
         public Row addCell(int number) {
-            cells.add(new Row.Cell(String.valueOf(number), false));
+            return addCell(String.valueOf(number));
+        }
+
+        public Row addBoldCell(String content) {
+            cells.add(new TextCell(content, true));
             return this;
         }
 
-        public Row addCell(String content, boolean bold, int columnSpan, int rowSpan) {
-            cells.add(new Row.Cell(content, bold, columnSpan, rowSpan));
+        public Row addBoldCell(String content, int columnSpan) {
+            TextCell textCell = new TextCell(content, true);
+            textCell.columnSpan = columnSpan;
+            cells.add(textCell);
             return this;
         }
 
-        public Row nextRow() {
-            return Table.this.startRow();
+        public void addEndCell(String content, int fillColor, int textColor, String arrowNumber) {
+            cells.add(new Row.EndCell(content, fillColor, textColor, arrowNumber));
         }
     }
-
-    public List<Row> rows;
 
     public Row startRow() {
         Row row = new Row();

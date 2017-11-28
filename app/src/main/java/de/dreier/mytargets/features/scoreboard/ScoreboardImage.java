@@ -38,7 +38,7 @@ public class ScoreboardImage {
 
         // Generate html content
         final String content = HtmlUtils
-                .getScoreboard(Utils
+                .getHtmlScoreboard(context, Utils
                         .getCurrentLocale(context), training, round, ScoreboardConfiguration
                         .fromShareSettings());
 

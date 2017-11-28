@@ -13,12 +13,14 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils;
+package de.dreier.mytargets.features.scoreboard;
 
-import android.support.annotation.Nullable;
+import de.dreier.mytargets.features.scoreboard.builder.model.Table;
 
-public class SharedUtils {
-    public static boolean equals(@Nullable Object a, @Nullable Object b) {
-        return (a == b) || (a != null && a.equals(b));
-    }
+public interface ScoreboardBuilder {
+    void title(String title);
+    void subtitle(String subtitle);
+    void table(Table table);
+    void space();
+    void signature(String archer, String targetCaptain);
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 Florian Dreier
+  ~
+  ~ This file is part of MyTargets.
+  ~
+  ~ MyTargets is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License version 2
+  ~ as published by the Free Software Foundation.
+  ~
+  ~ MyTargets is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  -->
+
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:background="@drawable/table_cell_border"
+          android:gravity="center"
+          android:minHeight="20dp"
+          android:minWidth="20dp"
+          android:padding="4dp"
+          android:textColor="@color/md_black_1000"/>

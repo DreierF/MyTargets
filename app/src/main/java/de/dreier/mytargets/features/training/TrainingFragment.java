@@ -263,7 +263,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
         public void bindItem() {
             binding.title.setText(String.format(Locale.US, "%s %d",
                     getContext().getString(R.string.round),
-                    item.index + 1));
+                    item.index + 1)); //TODO create string round_n
             binding.subtitle.setText(Utils.fromHtml(HtmlUtils.getRoundInfo(item, equals)));
             if (binding.subtitle.getText().toString().isEmpty()) {
                 binding.subtitle.setVisibility(View.GONE);
