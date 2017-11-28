@@ -78,10 +78,6 @@ public class Utils {
         return VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP;
     }
 
-    public static boolean supportsFabTransform() {
-        return isLollipop() && VERSION.SDK_INT < VERSION_CODES.O_MR1;
-    }
-
     public static String humanReadableByteCount(long bytes, boolean si) {
         int unit = si ? 1000 : 1024;
         if (bytes < unit) {
