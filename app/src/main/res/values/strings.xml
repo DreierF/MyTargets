@@ -27,6 +27,7 @@
     <string name="bow">Bow</string>
     <string name="arrow">Arrow</string>
     <string name="round">Round</string>
+    <string name="round_n">Round %d</string>
     <string name="points">Points</string>
     <string name="passe">End</string>
     <string name="passe_n">End %d</string>

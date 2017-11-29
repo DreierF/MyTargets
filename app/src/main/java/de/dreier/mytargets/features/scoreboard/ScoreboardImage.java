@@ -17,77 +17,61 @@ package de.dreier.mytargets.features.scoreboard;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.os.Build;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.widget.FrameLayout;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
-import java.util.concurrent.CountDownLatch;
 
-import de.dreier.mytargets.shared.utils.BitmapUtils;
+import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.utils.Utils;
+
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class ScoreboardImage {
 
-    public void generateBitmap(@NonNull final Activity context, final long training, final long round, @NonNull final File f) {
+    private static final int PAGE_WIDTH = 600;
+    private static final int MARGIN = 50;
 
-        // Generate html content
-        final String content = HtmlUtils
-                .getHtmlScoreboard(context, Utils
+    public void generateBitmap(@NonNull final Activity context, final Training training, final long round, @NonNull final File f) throws IOException {
+        final View content = HtmlUtils
+                .getScoreboardView(context, Utils
                         .getCurrentLocale(context), training, round, ScoreboardConfiguration
                         .fromShareSettings());
 
-        final CountDownLatch signal = new CountDownLatch(1);
-        context.runOnUiThread(() -> {
-            // Enable the drawing of the whole document for Lollipop to get the whole WebView
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-                WebView.enableSlowWholeDocumentDraw();
-            }
-            // Attach WebView to activity
-            final WebView webView = new WebView(context);
-            webView.setVisibility(View.INVISIBLE);
-            final FrameLayout container = context
-                    .findViewById(android.R.id.content);
-            ViewGroup.LayoutParams p = new ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-            webView.setLayoutParams(p);
-            container.addView(webView);
+        float density = context.getResources().getDisplayMetrics().density;
+        int pageWidth = (int) (PAGE_WIDTH * density);
+        int margin = (int) (MARGIN * density);
 
-            // Render html to bitmap
-            webView.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8", "");
-            webView.setPictureListener((view, picture) -> {
-                picture = webView.capturePicture();
+        content.measure(pageWidth - 2 * margin, WRAP_CONTENT);
+        int width = content.getMeasuredWidth();
+        int height = content.getMeasuredHeight();
+        content.layout(0, 0, width, height);
 
-                // Write bitmap to stream
-                try {
-                    Bitmap b = BitmapUtils.pictureDrawable2Bitmap(picture);
-                    OutputStream fOut = new FileOutputStream(f);
-                    b.compress(Bitmap.CompressFormat.PNG, 50, fOut);
-                    fOut.flush();
-                    fOut.close();
-                    b.recycle();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        Bitmap b = Bitmap
+                .createBitmap(width + 2 * margin, height + 2 * margin, Bitmap.Config.ARGB_8888);
 
-                signal.countDown();
+        Canvas canvas = new Canvas(b);
 
-                // Remove WebView from layout
-                container.removeView(webView);
-            });
-        });
+        Paint paint = new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawPaint(paint);
 
-        // Wait for thread to complete
-        try {
-            signal.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        canvas.save();
+        canvas.translate(margin, margin);
+        content.draw(canvas);
+        canvas.restore();
+
+        OutputStream fOut = new FileOutputStream(f);
+        b.compress(Bitmap.CompressFormat.JPEG, 90, fOut);
+        fOut.flush();
+        fOut.close();
+        b.recycle();
     }
 }

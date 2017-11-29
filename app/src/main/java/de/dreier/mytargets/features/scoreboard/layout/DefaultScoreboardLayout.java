@@ -75,12 +75,13 @@ public class DefaultScoreboardLayout {
 
         if (configuration.showTable) {
             for (Round round : rounds) {
-                builder.space();
-                builder.subtitle(context.getString(R.string.round) + " " + (round.index + 1));
+                builder.openSection();
+                builder.subtitle(context.getString(R.string.round_n, round.index + 1));
                 if (configuration.showProperties) {
                     builder.table(getRoundInfo(round, equals));
                 }
                 builder.table(getRoundTable(round));
+                builder.closeSection();
             }
         }
 
@@ -140,13 +141,15 @@ public class DefaultScoreboardLayout {
             builder.table(getStatisticsForRound(rounds));
         } else if (rounds.size() > 1) {
             for (Round round : rounds) {
-                builder.space();
-                builder.subtitle(context.getString(R.string.round) + " " + (round.index + 1));
+                builder.openSection();
+                builder.subtitle(context.getString(R.string.round_n, round.index + 1));
                 builder.table(getStatisticsForRound(Collections.singletonList(round)));
+                builder.closeSection();
             }
-            builder.space();
+            builder.openSection();
             builder.subtitle(context.getString(R.string.training));
             builder.table(getStatisticsForRound(rounds));
+            builder.closeSection();
         }
     }
 
@@ -203,7 +206,7 @@ public class DefaultScoreboardLayout {
 
         List<Pair<String, Integer>> topScores = End.getTopScoreDistribution(scoreDistribution);
 
-        Table table = new Table();
+        Table table = new Table(false);
         Table.Row row = table.startRow();
         for (Pair<String, Integer> topScore : topScores) {
             row.addBoldCell(topScore.first);
@@ -236,7 +239,7 @@ public class DefaultScoreboardLayout {
 
     @NonNull
     private Table getRoundTable(@NonNull Round round) {
-        Table table = new Table();
+        Table table = new Table(false);
         appendTableHeader(table, round.shotsPerEnd);
         int carry = 0;
         for (End end : round.getEnds()) {
@@ -262,7 +265,7 @@ public class DefaultScoreboardLayout {
     private void appendTableHeader(Table table, int arrowsPerEnd) {
         Table.Row row = table.startRow();
         row.addBoldCell(context.getString(R.string.passe));
-        Table sectioned = new Table();
+        Table sectioned = new Table(false);
         sectioned.startRow().addBoldCell(context.getString(R.string.arrows), arrowsPerEnd);
         Table.Row sectionedRow = sectioned.startRow();
         for (int i = 1; i <= arrowsPerEnd; i++) {
@@ -290,7 +293,7 @@ public class DefaultScoreboardLayout {
     }
 
     private void appendComments(@NonNull List<Round> rounds) {
-        Table comments = new Table();
+        Table comments = new Table(false);
         comments.startRow().addBoldCell(context.getString(R.string.round))
                 .addBoldCell(context.getString(R.string.passe))
                 .addBoldCell(context.getString(R.string.comment));

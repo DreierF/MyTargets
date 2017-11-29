@@ -22,7 +22,7 @@ import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.features.scoreboard.builder.model.Table;
 
 public class InfoTableBuilder {
-    public final Table info = new Table();
+    public final Table info = new Table(true);
 
     public void addLine(int key, @NonNull Object value) {
         getKeyValueLine(info.startRow(), key, value);

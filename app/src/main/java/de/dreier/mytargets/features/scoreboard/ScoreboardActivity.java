@@ -21,18 +21,15 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
+import android.graphics.Canvas;
 import android.graphics.pdf.PdfDocument;
 import android.graphics.pdf.PdfDocument.PageInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CancellationSignal;
-import android.os.ParcelFileDescriptor;
-import android.print.PageRange;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
-import android.print.PrintDocumentInfo;
 import android.print.PrintManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -43,9 +40,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Locale;
@@ -53,6 +50,7 @@ import java.util.Locale;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.activities.ChildActivityBase;
 import de.dreier.mytargets.databinding.ActivityScoreboardBinding;
+import de.dreier.mytargets.features.scoreboard.pdf.ViewPrintDocumentAdapter;
 import de.dreier.mytargets.features.settings.ESettingsScreens;
 import de.dreier.mytargets.features.settings.SettingsActivity;
 import de.dreier.mytargets.shared.models.db.End;
@@ -62,6 +60,8 @@ import de.dreier.mytargets.utils.MobileWearableClient;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static de.dreier.mytargets.shared.utils.FileUtils.getUriForFile;
 import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE;
 
@@ -74,9 +74,25 @@ public class ScoreboardActivity extends ChildActivityBase {
 
     private long trainingId;
     private long roundId;
-    private boolean pageLoaded = true;
     private ActivityScoreboardBinding binding;
     private Training training;
+
+    /**
+     * TODO:
+     * v Make multi pages work
+     * v Make properties tables not span whole page
+     * - Add PDF export/share option (#21)
+     * - File name should contain date (#43)
+     * - Fix image share option (Always share PDF! Make it adjustable in settings!)
+     * - Reimplement signature lines
+     * - Add handwritten signature (#321)
+     * - Add progress indicator when opening scoreboard
+     * - Add progress dialog when hitting print
+     * - Implement other scoreboard layout (#246)
+     * - Add settings screen to switch between them (compare google keyboard layout chooser?) (+#322?)
+     * v Remove HTMLBuilder
+     * v Fixes #288
+     */
 
     @NonNull
     public static IntentWrapper getIntent(long trainingId) {
@@ -110,18 +126,6 @@ public class ScoreboardActivity extends ChildActivityBase {
         trainingId = intent.getLongExtra(TRAINING_ID, -1);
         roundId = intent.getLongExtra(ROUND_ID, -1);
 
-//        binding.webView.setWebViewClient(new WebViewClient() {
-//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onPageFinished(WebView view, String url) {
-//                pageLoaded = true;
-//                supportInvalidateOptionsMenu();
-//            }
-//        });
-
         ToolbarUtils.showHomeAsUp(this);
 
         LocalBroadcastManager.getInstance(this).registerReceiver(updateReceiver,
@@ -143,34 +147,33 @@ public class ScoreboardActivity extends ChildActivityBase {
     @SuppressLint("StaticFieldLeak")
     private void reloadData() {
         binding.container.removeAllViews();
-        training = Training.get(trainingId);
-        HtmlUtils.getScoreboardView(this, Utils.getCurrentLocale(this),
-                training, roundId, ScoreboardConfiguration.fromPrintSettings(), binding.container);
 
-//        new AsyncTask<Void, Void, String>() {
-//
-//            @NonNull
-//            @Override
-//            protected String doInBackground(Void... params) {
-//                return HtmlUtils.getHtmlScoreboard(ScoreboardActivity.this, Utils
-//                                .getCurrentLocale(ScoreboardActivity.this), trainingId, roundId,
-//                        ScoreboardConfiguration.fromDisplaySettings());
-//            }
-//
-//            @Override
-//            protected void onPostExecute(String s) {
-//                binding.webView
-//                        .loadDataWithBaseURL("file:///android_asset/", s, "text/html", "UTF-8", "");
-//            }
-//        }.execute();
+        new AsyncTask<Void, Void, View>() {
+
+            @NonNull
+            @Override
+            protected View doInBackground(Void... params) {
+                training = Training.get(trainingId);
+                return HtmlUtils.getScoreboardView(ScoreboardActivity.this, Utils
+                                .getCurrentLocale(ScoreboardActivity.this),
+                        training, roundId, ScoreboardConfiguration.fromDisplaySettings());
+            }
+
+            @Override
+            protected void onPostExecute(View scoreboard) {
+                scoreboard
+                        .setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+                binding.container.addView(scoreboard);
+            }
+        }.execute();
     }
 
     @Override
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_scoreboard, menu);
-        menu.findItem(R.id.action_print).setVisible(pageLoaded && Utils.isKitKat());
-//        menu.findItem(R.id.action_pdf).setVisible(pageLoaded && Utils.isKitKat());
+        menu.findItem(R.id.action_print).setVisible(Utils.isKitKat());
+//        menu.findItem(R.id.action_pdf).setVisible(Utils.isKitKat());
         return true;
     }
 
@@ -181,7 +184,9 @@ public class ScoreboardActivity extends ChildActivityBase {
                 shareImage();
                 return true;
             case R.id.action_print:
-                print();
+                if (Utils.isKitKat()) {
+                    print();
+                }
                 return true;
 //            case R.id.action_pdf:
 //                exportPdf();
@@ -211,9 +216,9 @@ public class ScoreboardActivity extends ChildActivityBase {
             protected Uri doInBackground(Void... objects) {
                 try {
                     File dir = getCacheDir();
-                    final File f = File.createTempFile("scoreboard", ".png", dir);
+                    final File f = File.createTempFile("scoreboard", ".jpg", dir);
                     new ScoreboardImage()
-                            .generateBitmap(ScoreboardActivity.this, trainingId, roundId, f);
+                            .generateBitmap(ScoreboardActivity.this, training, roundId, f);
                     return getUriForFile(ScoreboardActivity.this, f);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -243,44 +248,18 @@ public class ScoreboardActivity extends ChildActivityBase {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void print() {
         String fileName = String
-                .format(Locale.US, "%04d-%02d-%02d-%s", training.date.getYear(), training.date
+                .format(Locale.US, "%04d-%02d-%02d-%s.pdf", training.date.getYear(), training.date
                         .getMonthValue(), training.date
                         .getDayOfMonth(), getString(R.string.scoreboard));
+
+        LinearLayout content = HtmlUtils.getScoreboardView(this, Utils
+                .getCurrentLocale(this), training, roundId, ScoreboardConfiguration
+                .fromPrintSettings());
+
+        float density = getResources().getDisplayMetrics().density * 72;
+
         String jobName = getString(R.string.scoreboard) + " Document";
-        PrintDocumentAdapter pda = new PrintDocumentAdapter() {
-
-            @Override
-            public void onWrite(PageRange[] pages, ParcelFileDescriptor destination, CancellationSignal cancellationSignal, WriteResultCallback callback) {
-                OutputStream output = null;
-
-                try {
-                    output = new FileOutputStream(destination.getFileDescriptor());
-                    getDocument(output);
-                    callback.onWriteFinished(new PageRange[]{PageRange.ALL_PAGES});
-                } catch (Exception e) {
-                    //Catch exception
-                } finally {
-                    try {
-                        output.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onLayout(PrintAttributes oldAttributes, PrintAttributes newAttributes, CancellationSignal cancellationSignal, LayoutResultCallback callback, Bundle extras) {
-                if (cancellationSignal.isCanceled()) {
-                    callback.onLayoutCancelled();
-                    return;
-                }
-
-                PrintDocumentInfo pdi = new PrintDocumentInfo.Builder(fileName)
-                        .setContentType(PrintDocumentInfo.CONTENT_TYPE_DOCUMENT).build();
-
-                callback.onLayoutFinished(pdi, true);
-            }
-        };
+        PrintDocumentAdapter pda = new ViewPrintDocumentAdapter(content, fileName);
 
         // Create a print job with name and adapter instance
         PrintManager printManager = (PrintManager) getSystemService(PRINT_SERVICE);
@@ -288,15 +267,30 @@ public class ScoreboardActivity extends ChildActivityBase {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private void getDocument(OutputStream outputStream) throws IOException {
+    private void getDocument(LinearLayout content, OutputStream outputStream) throws IOException {
+        double density = getResources().getDisplayMetrics().density;
+        int a4Width = (int) (210 * density);
+        int a4Height = (int) (297 * density);
+        int margin = (int) density;
+
+
+
+        content.measure(a4Width - 2 * margin, a4Height - 2 * margin);
+        content.layout(margin, margin, a4Width - 2 * margin, a4Height - 2 * margin);
+
+        PageInfo pageInfo = new PageInfo.Builder(a4Width, a4Height, 1).create();
         PdfDocument document = new PdfDocument();
-        PageInfo pageInfo = new PageInfo.Builder(1500, 3000, 1).create();
         PdfDocument.Page page = document.startPage(pageInfo);
-        View content = binding.container;
-        content.draw(page.getCanvas());
+
+        Canvas canvas = page.getCanvas();
+        canvas.save();
+        canvas.translate(margin, margin);
+        content.draw(canvas);
+        canvas.restore();
 
         document.finishPage(page);
         document.writeTo(outputStream);
         document.close();
     }
+
 }

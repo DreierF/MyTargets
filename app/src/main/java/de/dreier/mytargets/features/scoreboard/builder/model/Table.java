@@ -21,6 +21,11 @@ import java.util.List;
 public class Table extends Cell {
 
     public List<Row> rows = new ArrayList<>();
+    public final boolean wrapContent;
+
+    public Table(boolean wrapContent) {
+        this.wrapContent = wrapContent;
+    }
 
     public class Row {
 
