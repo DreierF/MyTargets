@@ -24,7 +24,7 @@ import android.view.ViewGroup;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
-import de.dreier.mytargets.features.scoreboard.HtmlInfoBuilder;
+import de.dreier.mytargets.features.training.details.HtmlInfoBuilder;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.utils.Utils;

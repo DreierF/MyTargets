@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import de.dreier.mytargets.app.ApplicationInstance;
+import de.dreier.mytargets.features.scoreboard.EFileType;
 import de.dreier.mytargets.features.settings.backup.EBackupInterval;
 import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
 import de.dreier.mytargets.features.training.input.ETrainingScope;
@@ -67,6 +68,7 @@ public class SettingsManager {
     private static final String KEY_INPUT_SUMMARY_SHOW_ROUND = "input_summary_show_round";
     private static final String KEY_INPUT_SUMMARY_SHOW_TRAINING = "input_summary_show_training";
     private static final String KEY_INPUT_SUMMARY_SHOW_AVERAGE = "input_summary_show_average";
+    public static final String KEY_SCOREBOARD_SHARE_FILE_TYPE = "scoreboard_share_file_type";
     private static final String KEY_BACKUP_INTERVAL = "backup_interval";
     private static final String KEY_DONATED = "donated";
     private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
@@ -420,6 +422,18 @@ public class SettingsManager {
         preferences
                 .edit()
                 .putString(KEY_INPUT_KEYBOARD_TYPE, type.name())
+                .apply();
+    }
+
+    public static EFileType getScoreboardShareFileType() {
+        return EFileType.valueOf(preferences
+                .getString(KEY_SCOREBOARD_SHARE_FILE_TYPE, EFileType.PDF.name()));
+    }
+
+    public static void setScoreboardShareFileType(@NonNull EFileType fileType) {
+        preferences
+                .edit()
+                .putString(KEY_SCOREBOARD_SHARE_FILE_TYPE, fileType.name())
                 .apply();
     }
 

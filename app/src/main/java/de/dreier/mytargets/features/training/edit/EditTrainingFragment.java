@@ -44,7 +44,7 @@ import de.dreier.mytargets.databinding.FragmentEditTrainingBinding;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.training.ETrainingType;
 import de.dreier.mytargets.features.training.RoundFragment;
-import de.dreier.mytargets.features.training.TrainingFragment;
+import de.dreier.mytargets.features.training.details.TrainingFragment;
 import de.dreier.mytargets.features.training.input.InputActivity;
 import de.dreier.mytargets.features.training.target.TargetListFragment;
 import de.dreier.mytargets.shared.models.EBowType;

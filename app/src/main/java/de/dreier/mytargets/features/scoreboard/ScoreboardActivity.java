@@ -21,9 +21,6 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
-import android.graphics.Canvas;
-import android.graphics.pdf.PdfDocument;
-import android.graphics.pdf.PdfDocument.PageInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -44,7 +41,6 @@ import android.widget.LinearLayout;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Locale;
 
 import de.dreier.mytargets.R;
@@ -53,6 +49,7 @@ import de.dreier.mytargets.databinding.ActivityScoreboardBinding;
 import de.dreier.mytargets.features.scoreboard.pdf.ViewPrintDocumentAdapter;
 import de.dreier.mytargets.features.settings.ESettingsScreens;
 import de.dreier.mytargets.features.settings.SettingsActivity;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.utils.IntentWrapper;
@@ -81,9 +78,9 @@ public class ScoreboardActivity extends ChildActivityBase {
      * TODO:
      * v Make multi pages work
      * v Make properties tables not span whole page
-     * - Add PDF export/share option (#21)
-     * - File name should contain date (#43)
-     * - Fix image share option (Always share PDF! Make it adjustable in settings!)
+     * v Add PDF export/share option (#21)
+     * v File name should contain date (#43)
+     * v Fix image share option (Always share PDF! Make it adjustable in settings!)
      * - Reimplement signature lines
      * - Add handwritten signature (#321)
      * - Add progress indicator when opening scoreboard
@@ -155,7 +152,7 @@ public class ScoreboardActivity extends ChildActivityBase {
             @Override
             protected View doInBackground(Void... params) {
                 training = Training.get(trainingId);
-                return HtmlUtils.getScoreboardView(ScoreboardActivity.this, Utils
+                return ScoreboardUtils.getScoreboardView(ScoreboardActivity.this, Utils
                                 .getCurrentLocale(ScoreboardActivity.this),
                         training, roundId, ScoreboardConfiguration.fromDisplaySettings());
             }
@@ -216,11 +213,19 @@ public class ScoreboardActivity extends ChildActivityBase {
             @Override
             protected Uri doInBackground(Void... objects) {
                 try {
-                    File dir = getCacheDir();
-                    final File f = File.createTempFile("scoreboard", ".jpg", dir);
-                    new ScoreboardImage()
-                            .generateBitmap(ScoreboardActivity.this, training, roundId, f);
-                    return getUriForFile(ScoreboardActivity.this, f);
+                    EFileType fileType = SettingsManager.getScoreboardShareFileType();
+                    File scoreboardFile = new File(getCacheDir(), getDefaultFileName(fileType));
+                    LinearLayout content = ScoreboardUtils
+                            .getScoreboardView(ScoreboardActivity.this, Utils
+                                    .getCurrentLocale(ScoreboardActivity.this), training, roundId, ScoreboardConfiguration
+                                    .fromShareSettings());
+                    if(fileType == EFileType.PDF && Utils.isKitKat()) {
+                        ScoreboardUtils.generatePdf(content, scoreboardFile);
+                    } else {
+                        ScoreboardUtils.generateBitmap(ScoreboardActivity.this, content, scoreboardFile);
+                    }
+
+                    return getUriForFile(ScoreboardActivity.this, scoreboardFile);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return null;
@@ -248,16 +253,11 @@ public class ScoreboardActivity extends ChildActivityBase {
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void print() {
-        String fileName = String
-                .format(Locale.US, "%04d-%02d-%02d-%s.pdf", training.date.getYear(), training.date
-                        .getMonthValue(), training.date
-                        .getDayOfMonth(), getString(R.string.scoreboard));
+        String fileName = getDefaultFileName(EFileType.PDF);
 
-        LinearLayout content = HtmlUtils.getScoreboardView(this, Utils
+        LinearLayout content = ScoreboardUtils.getScoreboardView(this, Utils
                 .getCurrentLocale(this), training, roundId, ScoreboardConfiguration
                 .fromPrintSettings());
-
-        float density = getResources().getDisplayMetrics().density * 72;
 
         String jobName = getString(R.string.scoreboard) + " Document";
         PrintDocumentAdapter pda = new ViewPrintDocumentAdapter(content, fileName);
@@ -267,31 +267,10 @@ public class ScoreboardActivity extends ChildActivityBase {
         printManager.print(jobName, pda, new PrintAttributes.Builder().build());
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private void getDocument(LinearLayout content, OutputStream outputStream) throws IOException {
-        double density = getResources().getDisplayMetrics().density;
-        int a4Width = (int) (210 * density);
-        int a4Height = (int) (297 * density);
-        int margin = (int) density;
-
-
-
-        content.measure(a4Width - 2 * margin, a4Height - 2 * margin);
-        content.layout(margin, margin, a4Width - 2 * margin, a4Height - 2 * margin);
-
-        PageInfo pageInfo = new PageInfo.Builder(a4Width, a4Height, 1).create();
-        PdfDocument document = new PdfDocument();
-        PdfDocument.Page page = document.startPage(pageInfo);
-
-        Canvas canvas = page.getCanvas();
-        canvas.save();
-        canvas.translate(margin, margin);
-        content.draw(canvas);
-        canvas.restore();
-
-        document.finishPage(page);
-        document.writeTo(outputStream);
-        document.close();
+    public String getDefaultFileName(EFileType extension) {
+        return String
+                .format(Locale.US, "%04d-%02d-%02d-%s.%s", training.date.getYear(), training.date
+                        .getMonthValue(), training.date
+                        .getDayOfMonth(), getString(R.string.scoreboard), extension.name().toLowerCase());
     }
-
 }

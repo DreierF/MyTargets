@@ -13,21 +13,16 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.scoreboard;
+package de.dreier.mytargets.features.training.details;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.widget.LinearLayout;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.app.ApplicationInstance;
-import de.dreier.mytargets.features.scoreboard.builder.ViewBuilder;
-import de.dreier.mytargets.features.scoreboard.layout.DefaultScoreboardLayout;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.Round;
@@ -36,20 +31,6 @@ import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.SharedUtils;
 
 public class HtmlUtils {
-
-    public static LinearLayout getScoreboardView(Context context, Locale locale, Training training, long roundId, @NonNull ScoreboardConfiguration configuration) {
-        List<Round> rounds;
-        if (roundId == -1) {
-            rounds = training.getRounds();
-        } else {
-            rounds = Collections.singletonList(Round.get(roundId));
-        }
-
-        DefaultScoreboardLayout scoreboardLayout = new DefaultScoreboardLayout(context, locale, configuration);
-        ViewBuilder html = new ViewBuilder(context);
-        scoreboardLayout.generateWithBuilder(html, training, rounds);
-        return html.build();
-    }
 
     public static String getTrainingInfoHTML(Context context, @NonNull Training training, @NonNull List<Round> rounds, boolean[] equals) {
         HtmlInfoBuilder info = new HtmlInfoBuilder();

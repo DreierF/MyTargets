@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.scoreboard;
+package de.dreier.mytargets.features.training.details;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;

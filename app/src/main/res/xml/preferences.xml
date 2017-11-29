@@ -166,8 +166,15 @@
         android:key="scoreboard"
         android:summary="@string/settings_summary_scoreboard"
         android:title="@string/scoreboard">
-        <!--<PreferenceCategory android:title="@string/general">-->
-        <!--</PreferenceCategory>-->
+        <PreferenceCategory android:key="scoreboard_share" android:title="@string/share">
+            <ListPreference
+                android:defaultValue="PDF"
+                android:entries="@array/file_type_entries"
+                android:entryValues="@array/file_type_values"
+                android:icon="@drawable/ic_file_grey600_24dp"
+                android:key="scoreboard_share_file_type"
+                android:title="@string/file_type"/>
+        </PreferenceCategory>
         <PreferenceCategory android:title="@string/display">
             <CheckBoxPreference
                 android:defaultValue="true"

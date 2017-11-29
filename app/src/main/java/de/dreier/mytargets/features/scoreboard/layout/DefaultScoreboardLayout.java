@@ -347,9 +347,9 @@ public class DefaultScoreboardLayout {
         if (archer.trim().isEmpty()) {
             archer = context.getString(R.string.archer);
         }
-        //String targetCaptain = SettingsManager.getProfileTargetCaptain();
+//        String targetCaptain = SettingsManager.getProfileTargetCaptain();
 //        if (targetCaptain.trim().isEmpty()) {
-            String targetCaptain = context.getString(R.string.target_captain);
+        String targetCaptain = context.getString(R.string.target_captain);
 //        }
         builder.signature(archer, targetCaptain);
     }

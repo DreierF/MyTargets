@@ -13,20 +13,9 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training;
+package de.dreier.mytargets.features.scoreboard;
 
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-
-import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
-import de.dreier.mytargets.features.training.details.TrainingFragment;
-
-public class TrainingActivity extends SimpleFragmentActivityBase {
-
-    @NonNull
-    @Override
-    public Fragment instantiateFragment() {
-        return new TrainingFragment();
-    }
-
+public enum EFileType {
+    PDF,
+    JPG
 }

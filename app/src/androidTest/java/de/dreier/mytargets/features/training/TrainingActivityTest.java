@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.features.training.details.TrainingFragment;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.test.base.UITestBase;
 import de.dreier.mytargets.test.utils.rules.SimpleDbTestRule;

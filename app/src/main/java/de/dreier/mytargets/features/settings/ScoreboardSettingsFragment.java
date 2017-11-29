@@ -15,10 +15,24 @@
 
 package de.dreier.mytargets.features.settings;
 
+import android.support.v7.preference.Preference;
+
+import de.dreier.mytargets.utils.Utils;
+
+import static de.dreier.mytargets.features.settings.SettingsManager.KEY_SCOREBOARD_SHARE_FILE_TYPE;
+
 public class ScoreboardSettingsFragment extends SettingsFragmentBase {
+
+    public static final String KEY_SCOREBOARD_SHARE = "scoreboard_share";
 
     @Override
     public void updateItemSummaries() {
-        //setSummary(KEY_PROFILE_TARGET_CAPTAIN, SettingsManager.getProfileTargetCaptain());
+        // Disable file type selection for pre-Kitkat, since they do not support PDF generation
+        Preference shareCategory = getPreferenceManager().findPreference(KEY_SCOREBOARD_SHARE);
+        shareCategory.setVisible(Utils.isKitKat());
+        Preference shareFileType = getPreferenceManager().findPreference(KEY_SCOREBOARD_SHARE_FILE_TYPE);
+        shareFileType.setVisible(Utils.isKitKat());
+
+        setDefaultSummary(KEY_SCOREBOARD_SHARE_FILE_TYPE);
     }
 }

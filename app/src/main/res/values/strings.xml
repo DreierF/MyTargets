@@ -382,4 +382,5 @@
     <string name="settings_summary_overview">Personalize information shown for trainings, rounds and ends</string>
     <string name="settings_summary_profile">Enter personal information</string>
     <string name="licence_number">Licence number</string>
+    <string name="file_type">File type</string>
 </resources>
