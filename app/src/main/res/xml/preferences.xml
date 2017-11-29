@@ -18,8 +18,35 @@
                   android:key="main"
                   android:title="@string/preferences">
     <PreferenceScreen
+        android:icon="@drawable/ic_person_grey600_24dp"
+        android:key="profile"
+        android:summary="@string/settings_summary_profile"
+        android:title="@string/profile">
+        <EditTextPreference
+            android:inputType="textAutoComplete"
+            android:key="profile_first_name"
+            android:title="@string/first_name"/>
+        <EditTextPreference
+            android:inputType="textAutoComplete"
+            android:key="profile_last_name"
+            android:title="@string/last_name"/>
+        <!--suppress AndroidElementNotAllowed -->
+        <de.dreier.mytargets.features.settings.DatePreference
+            android:key="profile_birthday"
+            android:title="@string/birthday"/>
+        <EditTextPreference
+            android:inputType="textAutoComplete"
+            android:key="profile_club"
+            android:title="@string/club"/>
+        <EditTextPreference
+            android:inputType="textNoSuggestions"
+            android:key="profile_licence_number"
+            android:title="@string/licence_number"/>
+    </PreferenceScreen>
+    <PreferenceScreen
         android:icon="@drawable/ic_view_list_grey600_24dp"
         android:key="overview"
+        android:summary="@string/settings_summary_overview"
         android:title="@string/overview">
         <PreferenceCategory android:title="@string/score">
             <CheckBoxPreference
@@ -61,6 +88,7 @@
     <PreferenceScreen
         android:icon="@drawable/ic_input_grey600_24dp"
         android:key="input"
+        android:summary="@string/settings_summary_input"
         android:title="@string/input">
         <PreferenceCategory android:title="@string/summary">
             <CheckBoxPreference
@@ -136,29 +164,10 @@
     <PreferenceScreen
         android:icon="@drawable/ic_description_grey600_24dp"
         android:key="scoreboard"
+        android:summary="@string/settings_summary_scoreboard"
         android:title="@string/scoreboard">
-        <PreferenceCategory android:title="@string/profile">
-            <EditTextPreference
-                android:inputType="textAutoComplete"
-                android:key="profile_first_name"
-                android:title="@string/first_name"/>
-            <EditTextPreference
-                android:inputType="textAutoComplete"
-                android:key="profile_last_name"
-                android:title="@string/last_name"/>
-            <!--suppress AndroidElementNotAllowed -->
-            <de.dreier.mytargets.features.settings.DatePreference
-                android:key="profile_birthday"
-                android:title="@string/birthday"/>
-            <EditTextPreference
-                android:inputType="textAutoComplete"
-                android:key="profile_club"
-                android:title="@string/club"/>
-            <EditTextPreference
-                android:inputType="textAutoComplete"
-                android:key="profile_target_captain"
-                android:title="@string/target_captain"/>
-        </PreferenceCategory>
+        <!--<PreferenceCategory android:title="@string/general">-->
+        <!--</PreferenceCategory>-->
         <PreferenceCategory android:title="@string/display">
             <CheckBoxPreference
                 android:defaultValue="true"
@@ -253,6 +262,7 @@
     <PreferenceScreen
         android:icon="@drawable/ic_timer_grey600_24dp"
         android:key="timer"
+        android:summary="@string/settings_summary_timer"
         android:title="@string/timer">
         <EditTextPreference
             android:defaultValue="20"

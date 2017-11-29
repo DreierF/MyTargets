@@ -89,7 +89,8 @@ public class ScoreboardActivity extends ChildActivityBase {
      * - Add progress indicator when opening scoreboard
      * - Add progress dialog when hitting print
      * - Implement other scoreboard layout (#246)
-     * - Add settings screen to switch between them (compare google keyboard layout chooser?) (+#322?)
+     * - Add settings screen to switch between them (compare google keyboard layout chooser?)
+     * v #322
      * v Remove HTMLBuilder
      * v Fixes #288
      */

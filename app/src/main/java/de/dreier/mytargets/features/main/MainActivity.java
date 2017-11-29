@@ -37,7 +37,6 @@ import de.dreier.mytargets.databinding.ActivityMainBinding;
 import de.dreier.mytargets.features.arrows.EditArrowListFragment;
 import de.dreier.mytargets.features.bows.EditBowListFragment;
 import de.dreier.mytargets.features.help.HelpFragment;
-import de.dreier.mytargets.features.settings.ESettingsScreens;
 import de.dreier.mytargets.features.settings.SettingsActivity;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.timer.TimerFragment;
@@ -46,7 +45,8 @@ import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.Utils;
 import im.delight.android.languages.Language;
 
-import static de.dreier.mytargets.features.settings.ESettingsScreens.SCOREBOARD;
+import static de.dreier.mytargets.features.settings.ESettingsScreens.MAIN;
+import static de.dreier.mytargets.features.settings.ESettingsScreens.PROFILE;
 import static de.dreier.mytargets.utils.Utils.getCurrentLocale;
 
 /**
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                             closeDrawerAndStart(TimerFragment.getIntent(false));
                             break;
                         case R.id.nav_settings:
-                            closeDrawerAndStart(SettingsActivity.getIntent(ESettingsScreens.MAIN));
+                            closeDrawerAndStart(SettingsActivity.getIntent(MAIN));
                             break;
                         case R.id.nav_help_and_feedback:
                             closeDrawerAndStart(HelpFragment.getIntent());
@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
         }
         userDetails.setText(SettingsManager.getProfileClub());
         headerLayout.setOnClickListener(view -> {
-            closeDrawerAndStart(SettingsActivity.getIntent(SCOREBOARD));
+            closeDrawerAndStart(SettingsActivity.getIntent(PROFILE));
         });
     }
 

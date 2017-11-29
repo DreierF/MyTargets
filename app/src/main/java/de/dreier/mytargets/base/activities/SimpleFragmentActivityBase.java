@@ -23,8 +23,7 @@ import android.support.v4.app.FragmentTransaction;
 
 public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
 
-    private static final String FRAGMENT_TAG = "fragment";
-    Fragment childFragment;
+    protected static final String FRAGMENT_TAG = "fragment";
 
     protected abstract Fragment instantiateFragment();
 
@@ -35,7 +34,7 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
         if (savedInstanceState == null) {
             // Create the fragment only when the activity is created for the first time.
             // ie. not after orientation changes
-            childFragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+            Fragment childFragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
             if (childFragment == null) {
                 childFragment = instantiateFragment();
                 Bundle bundle = getIntent() != null ? getIntent().getExtras() : null;
@@ -56,7 +55,7 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
     protected void onNewIntent(@Nullable Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        childFragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+        Fragment childFragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
         if (childFragment == null && intent != null && intent.getExtras() != null) {
             childFragment = instantiateFragment();
             childFragment.setArguments(intent.getExtras());

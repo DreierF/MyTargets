@@ -58,7 +58,7 @@ public class SettingsManager {
     public static final String KEY_PROFILE_LAST_NAME = "profile_last_name";
     public static final String KEY_PROFILE_BIRTHDAY = "profile_birthday";
     public static final String KEY_PROFILE_CLUB = "profile_club";
-    public static final String KEY_PROFILE_TARGET_CAPTAIN = "profile_target_captain";
+    public static final String KEY_PROFILE_LICENCE_NUMBER = "licence_number";
     public static final String KEY_INPUT_SUMMARY_AVERAGE_OF = "input_summary_average_of";
     public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
     public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
@@ -346,15 +346,15 @@ public class SettingsManager {
     }
 
     @Nullable
-    public static String getProfileTargetCaptain() {
+    public static String getProfileLicenceNumber() {
         return preferences
-                .getString(KEY_PROFILE_TARGET_CAPTAIN, "");
+                .getString(KEY_PROFILE_LICENCE_NUMBER, "");
     }
 
-    public static void setProfileTargetCaptain(String targetCaptain) {
+    public static void setProfileLicenceNumber(String licenceNumber) {
         preferences
                 .edit()
-                .putString(KEY_PROFILE_TARGET_CAPTAIN, targetCaptain)
+                .putString(KEY_PROFILE_LICENCE_NUMBER, licenceNumber)
                 .apply();
     }
 

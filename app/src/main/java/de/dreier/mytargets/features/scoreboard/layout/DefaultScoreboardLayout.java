@@ -331,6 +331,10 @@ public class DefaultScoreboardLayout {
         if (!TextUtils.isEmpty(club)) {
             info.addLine(R.string.club, club);
         }
+        final String licenceNumber = SettingsManager.getProfileLicenceNumber();
+        if (!TextUtils.isEmpty(licenceNumber)) {
+            info.addLine(R.string.licence_number, licenceNumber);
+        }
         if (rounds.size() > 1) {
             info.addLine(R.string.points, training.getReachedScore()
                     .format(locale, SettingsManager.getScoreConfiguration()));
@@ -343,10 +347,10 @@ public class DefaultScoreboardLayout {
         if (archer.trim().isEmpty()) {
             archer = context.getString(R.string.archer);
         }
-        String targetCaptain = SettingsManager.getProfileTargetCaptain();
-        if (targetCaptain.trim().isEmpty()) {
-            targetCaptain = context.getString(R.string.target_captain);
-        }
+        //String targetCaptain = SettingsManager.getProfileTargetCaptain();
+//        if (targetCaptain.trim().isEmpty()) {
+            String targetCaptain = context.getString(R.string.target_captain);
+//        }
         builder.signature(archer, targetCaptain);
     }
 }

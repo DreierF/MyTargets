@@ -376,4 +376,10 @@
     <string name="reset">Reset</string>
     <string name="end_x_of_y">End %1$d/%2$d</string>
     <string name="round_x_of_y">Round %1$d/%2$d</string>
+    <string name="settings_summary_timer">Adjust archery timer\' behaviour</string>
+    <string name="settings_summary_scoreboard">Change scoreboard appearance</string>
+    <string name="settings_summary_input">Customize input screen</string>
+    <string name="settings_summary_overview">Personalize information shown for trainings, rounds and ends</string>
+    <string name="settings_summary_profile">Enter personal information</string>
+    <string name="licence_number">Licence number</string>
 </resources>

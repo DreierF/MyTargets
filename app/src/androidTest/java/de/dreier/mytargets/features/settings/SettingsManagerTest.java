@@ -190,6 +190,12 @@ public class SettingsManagerTest extends InstrumentedTestBase {
     }
 
     @Test
+    public void setProfileLicenceNumber() {
+        SettingsManager.setProfileLicenceNumber("12345");
+        assertThat(SettingsManager.getProfileLicenceNumber()).isEqualTo("12345");
+    }
+
+    @Test
     public void setProfileBirthDay() {
         assertThat(SettingsManager.getProfileBirthDay()).isEqualTo(null);
         assertThat(SettingsManager.getProfileBirthDayFormatted()).isEqualTo(null);
