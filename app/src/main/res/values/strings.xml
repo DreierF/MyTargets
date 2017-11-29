@@ -383,4 +383,5 @@
     <string name="settings_summary_profile">Enter personal information</string>
     <string name="licence_number">Licence number</string>
     <string name="file_type">File type</string>
+    <string name="clear">Clear</string>
 </resources>

@@ -157,6 +157,8 @@ dependencies {
 
     implementation "uk.co.hassie:version-info-material-dialog:$libraryVersion.versionInfoDialog"
 
+    implementation "com.simplify:ink:1.0.0"
+
     implementation project(':shared')
     wearApp project(':wearable')
 

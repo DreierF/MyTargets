@@ -16,8 +16,11 @@
 package de.dreier.mytargets.features.scoreboard.builder;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -179,20 +182,24 @@ public class ViewBuilder implements ScoreboardBuilder {
         container.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
         container.setLayoutParams(params);
-        container.setWeightSum(3);
-        appendSignature(archer);
-        appendSignature(targetCaptain);
+        container.setWeightSum(2);
+        appendSignature(R.id.signature_archer, archer, null);
+        appendSignature(R.id.signature_witness, targetCaptain, null);
         closeSection();
     }
 
-    private void appendSignature(String name) {
+    private void appendSignature(int id, String name, @Nullable Bitmap signatureImage) {
         LinearLayout layout = new LinearLayout(context);
-        layout.setPadding(dp(10), dp(60), dp(10), 0);
+        layout.setPadding(dp(10), dp(50), dp(10), 0);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, WRAP_CONTENT);
         params.weight = 1;
         layout.setLayoutParams(params);
         layout.setOrientation(LinearLayout.VERTICAL);
         ImageView signature = new ImageView(context);
+        signature.setId(id);
+        signature.setImageBitmap(signatureImage);
+        signature.setAdjustViewBounds(true);
+        signature.setScaleType(ImageView.ScaleType.FIT_CENTER);
         signature.setBackgroundResource(R.drawable.signature_line);
         params = new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
         signature.setLayoutParams(params);
@@ -204,6 +211,9 @@ public class ViewBuilder implements ScoreboardBuilder {
         signer.setLayoutParams(params);
         signer.setText(name);
         layout.addView(signer);
+        TypedValue outValue = new TypedValue();
+        context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+        layout.setBackgroundResource(outValue.resourceId);
         container.addView(layout);
     }
 

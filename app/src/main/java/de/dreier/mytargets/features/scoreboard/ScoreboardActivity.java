@@ -21,6 +21,7 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -37,6 +38,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import java.io.File;
@@ -57,6 +59,8 @@ import de.dreier.mytargets.utils.MobileWearableClient;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static de.dreier.mytargets.shared.utils.FileUtils.getUriForFile;
@@ -157,12 +161,49 @@ public class ScoreboardActivity extends ChildActivityBase {
 
             @Override
             protected void onPostExecute(View scoreboard) {
-                binding.progressBar.setVisibility(View.GONE);
-                scoreboard.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+                binding.progressBar.setVisibility(GONE);
+                scoreboard
+                        .setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
                 binding.container.removeAllViews();
                 binding.container.addView(scoreboard);
+
+                ImageView archerSignature = scoreboard.findViewById(R.id.signature_archer);
+                if (archerSignature != null) {
+                    archerSignature.setOnClickListener(view -> onSignatureClicked((ImageView) view));
+                }
+                ImageView witnessSignature = scoreboard.findViewById(R.id.signature_witness);
+                if (witnessSignature != null) {
+                    witnessSignature.setOnClickListener(view -> onSignatureClicked((ImageView) view));
+                }
             }
         }.execute();
+    }
+
+    private void onSignatureClicked(ImageView view) {
+        binding.signatureLayout.setVisibility(VISIBLE);
+        Bitmap oldBitmap;
+        if(view.getId() == R.id.signature_archer) {
+            oldBitmap = training.archerSignature;
+        } else {
+            oldBitmap = training.witnessSignature;
+        }
+        if(oldBitmap == null) {
+            binding.signatureView.clear();
+        } else {
+            binding.signatureView.drawBitmap(training.archerSignature, 0.0F, 0.0F, null);
+        }
+        binding.save.setOnClickListener(v -> {
+            binding.signatureLayout.setVisibility(GONE);
+            Bitmap bitmap = binding.signatureView.getBitmap();
+            view.setImageBitmap(bitmap);
+            if(view.getId() == R.id.signature_archer) {
+                training.archerSignature = bitmap;
+            } else {
+                training.witnessSignature = bitmap;
+            }
+            training.save();
+        });
+        binding.clear.setOnClickListener(v -> binding.signatureView.clear());
     }
 
     @Override
@@ -209,10 +250,11 @@ public class ScoreboardActivity extends ChildActivityBase {
                             .getScoreboardView(ScoreboardActivity.this, Utils
                                     .getCurrentLocale(ScoreboardActivity.this), training, roundId, ScoreboardConfiguration
                                     .fromShareSettings());
-                    if(fileType == EFileType.PDF && Utils.isKitKat()) {
+                    if (fileType == EFileType.PDF && Utils.isKitKat()) {
                         ScoreboardUtils.generatePdf(content, scoreboardFile);
                     } else {
-                        ScoreboardUtils.generateBitmap(ScoreboardActivity.this, content, scoreboardFile);
+                        ScoreboardUtils
+                                .generateBitmap(ScoreboardActivity.this, content, scoreboardFile);
                     }
 
                     return getUriForFile(ScoreboardActivity.this, scoreboardFile);
@@ -261,6 +303,7 @@ public class ScoreboardActivity extends ChildActivityBase {
         return String
                 .format(Locale.US, "%04d-%02d-%02d-%s.%s", training.date.getYear(), training.date
                         .getMonthValue(), training.date
-                        .getDayOfMonth(), getString(R.string.scoreboard), extension.name().toLowerCase());
+                        .getDayOfMonth(), getString(R.string.scoreboard), extension.name()
+                        .toLowerCase());
     }
 }

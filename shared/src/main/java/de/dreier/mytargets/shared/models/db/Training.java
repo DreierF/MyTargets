@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.shared.models.db;
 
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -45,6 +46,7 @@ import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IRecursiveModel;
 import de.dreier.mytargets.shared.models.Score;
+import de.dreier.mytargets.shared.utils.typeconverters.BitmapConverter;
 import de.dreier.mytargets.shared.utils.typeconverters.EWeatherConverter;
 import de.dreier.mytargets.shared.utils.typeconverters.LocalDateConverter;
 
@@ -106,6 +108,14 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     @Nullable
     @Column
     public String comment = "";
+
+    @Nullable
+    @Column(typeConverter = BitmapConverter.class)
+    public Bitmap archerSignature;
+
+    @Nullable
+    @Column(typeConverter = BitmapConverter.class)
+    public Bitmap witnessSignature;
 
     public List<Round> rounds;
 

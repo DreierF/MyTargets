@@ -18,8 +18,6 @@ package de.dreier.mytargets.shared.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Picture;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -97,15 +95,6 @@ public class BitmapUtils {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
         return outputStream.toByteArray();
-    }
-
-    // Convert Picture to Bitmap
-    public static Bitmap pictureDrawable2Bitmap(@NonNull Picture picture) {
-        Bitmap bitmap = Bitmap
-                .createBitmap(picture.getWidth(), picture.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        picture.draw(canvas);
-        return bitmap;
     }
 
     public static int animateColor(int from, int to, float percent) {
