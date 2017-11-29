@@ -83,7 +83,7 @@ public class ScoreboardActivity extends ChildActivityBase {
      * v Fix image share option (Always share PDF! Make it adjustable in settings!)
      * - Reimplement signature lines
      * - Add handwritten signature (#321)
-     * - Add progress indicator when opening scoreboard
+     * v Add progress indicator when opening scoreboard
      * - Add progress dialog when hitting print
      * - Implement other scoreboard layout (#246)
      * - Add settings screen to switch between them (compare google keyboard layout chooser?)
@@ -144,8 +144,6 @@ public class ScoreboardActivity extends ChildActivityBase {
 
     @SuppressLint("StaticFieldLeak")
     private void reloadData() {
-        binding.container.removeAllViews();
-
         new AsyncTask<Void, Void, View>() {
 
             @NonNull
@@ -159,8 +157,9 @@ public class ScoreboardActivity extends ChildActivityBase {
 
             @Override
             protected void onPostExecute(View scoreboard) {
-                scoreboard
-                        .setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+                binding.progressBar.setVisibility(View.GONE);
+                scoreboard.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+                binding.container.removeAllViews();
                 binding.container.addView(scoreboard);
             }
         }.execute();
