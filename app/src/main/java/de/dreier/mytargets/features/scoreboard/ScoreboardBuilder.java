@@ -23,6 +23,5 @@ public interface ScoreboardBuilder {
     void closeSection();
     void subtitle(String subtitle);
     void table(Table table);
-    void space();
     void signature(String archer, String targetCaptain);
 }

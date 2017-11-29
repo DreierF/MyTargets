@@ -58,8 +58,7 @@ public class ViewBuilder implements ScoreboardBuilder {
         TextView titleView = new TextView(context);
         titleView.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
         titleView.setTextColor(0xFF000000);
-        int dp8 = (int) (8 * density);
-        titleView.setPadding(0, dp8, 0, dp8);
+        titleView.setPadding(0, dp(8), 0, dp(8));
         titleView.setTextSize(COMPLEX_UNIT_SP, 16);
         titleView.setTypeface(null, Typeface.BOLD);
         titleView.setText(title);
@@ -83,8 +82,7 @@ public class ViewBuilder implements ScoreboardBuilder {
         TextView subtitleView = new TextView(context);
         subtitleView.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
         subtitleView.setTextColor(0xFF000000);
-        int dp8 = (int) (8 * density);
-        subtitleView.setPadding(0, dp8, 0, dp8);
+        subtitleView.setPadding(0, dp(8), 0, dp(8));
         subtitleView.setTextSize(COMPLEX_UNIT_SP, 14);
         subtitleView.setTypeface(null, Typeface.BOLD);
         subtitleView.setText(subtitle);
@@ -94,7 +92,11 @@ public class ViewBuilder implements ScoreboardBuilder {
     @Override
     public void table(Table table) {
         TableLayout tableLayout = createTableLayout(table);
-        tableLayout.setLayoutParams(new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
+        if (table.wrapContent) {
+            params.setMargins(0, 0, 0, dp(-2));
+        }
+        tableLayout.setLayoutParams(params);
         container.addView(tableLayout);
     }
 
@@ -102,7 +104,7 @@ public class ViewBuilder implements ScoreboardBuilder {
     private TableLayout createTableLayout(Table table) {
         TableLayout tableLayout = new TableLayout(context);
         tableLayout.setBackgroundResource(R.drawable.table_cell_border);
-        if(!table.wrapContent) {
+        if (!table.wrapContent) {
             tableLayout.setShrinkAllColumns(true);
             tableLayout.setStretchAllColumns(true);
         }
@@ -145,10 +147,9 @@ public class ViewBuilder implements ScoreboardBuilder {
     private ImageView createEndCell(Table.Row.EndCell endCell) {
         ImageView imageView = new ImageView(context);
         imageView.setBackgroundResource(R.drawable.table_cell_border);
-        imageView.setMinimumWidth((int) (20 * density));
-        imageView.setMinimumHeight((int) (20 * density));
-        int dp4 = (int) (4 * density);
-        imageView.setPadding(dp4, dp4, dp4, dp4);
+        imageView.setMinimumWidth(dp(20));
+        imageView.setMinimumHeight(dp(20));
+        imageView.setPadding(dp(4), dp(4), dp(4), dp(4));
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageView
                 .setImageDrawable(new CircleDrawable(density, endCell.score, endCell.arrowNumber, endCell.fillColor, endCell.textColor));
@@ -159,12 +160,11 @@ public class ViewBuilder implements ScoreboardBuilder {
     private TextView createTextCell(Table.Row.TextCell textCell) {
         TextView textView = new TextView(context);
         textView.setBackgroundResource(R.drawable.table_cell_border);
-        textView.setMinimumWidth((int) (20 * density));
-        textView.setMinimumHeight((int) (20 * density));
+        textView.setMinimumWidth(dp(20));
+        textView.setMinimumHeight(dp(20));
         textView.setGravity(Gravity.CENTER);
         textView.setTextColor(0xFF000000);
-        int dp4 = (int) (4 * density);
-        textView.setPadding(dp4, dp4, dp4, dp4);
+        textView.setPadding(dp(4), dp(4), dp(4), dp(4));
         textView.setText(textCell.content);
 
         if (textCell.bold) {
@@ -174,13 +174,41 @@ public class ViewBuilder implements ScoreboardBuilder {
     }
 
     @Override
-    public void space() {
-
+    public void signature(String archer, String targetCaptain) {
+        openSection();
+        container.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
+        container.setLayoutParams(params);
+        container.setWeightSum(3);
+        appendSignature(archer);
+        appendSignature(targetCaptain);
+        closeSection();
     }
 
-    @Override
-    public void signature(String archer, String targetCaptain) {
+    private void appendSignature(String name) {
+        LinearLayout layout = new LinearLayout(context);
+        layout.setPadding(dp(10), dp(60), dp(10), 0);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, WRAP_CONTENT);
+        params.weight = 1;
+        layout.setLayoutParams(params);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        ImageView signature = new ImageView(context);
+        signature.setBackgroundResource(R.drawable.signature_line);
+        params = new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
+        signature.setLayoutParams(params);
+        signature.setMinimumHeight(dp(48));
+        layout.addView(signature);
+        TextView signer = new TextView(context);
+        signer.setTextColor(0xFF000000);
+        params = new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
+        signer.setLayoutParams(params);
+        signer.setText(name);
+        layout.addView(signer);
+        container.addView(layout);
+    }
 
+    private int dp(int dips) {
+        return (int) (dips * density);
     }
 
     public LinearLayout build() {

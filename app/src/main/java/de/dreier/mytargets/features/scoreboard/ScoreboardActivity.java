@@ -81,10 +81,10 @@ public class ScoreboardActivity extends ChildActivityBase {
      * v Add PDF export/share option (#21)
      * v File name should contain date (#43)
      * v Fix image share option (Always share PDF! Make it adjustable in settings!)
-     * - Reimplement signature lines
+     * v Reimplement signature lines
      * - Add handwritten signature (#321)
      * v Add progress indicator when opening scoreboard
-     * - Add progress dialog when hitting print
+     * x Add progress dialog when hitting print
      * - Implement other scoreboard layout (#246)
      * - Add settings screen to switch between them (compare google keyboard layout chooser?)
      * v #322
@@ -170,7 +170,6 @@ public class ScoreboardActivity extends ChildActivityBase {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_scoreboard, menu);
         menu.findItem(R.id.action_print).setVisible(Utils.isKitKat());
-//        menu.findItem(R.id.action_pdf).setVisible(Utils.isKitKat());
         return true;
     }
 
@@ -178,16 +177,13 @@ public class ScoreboardActivity extends ChildActivityBase {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
-                shareImage();
+                share();
                 return true;
             case R.id.action_print:
                 if (Utils.isKitKat()) {
                     print();
                 }
                 return true;
-//            case R.id.action_pdf:
-//                exportPdf();
-//                return true;
             case R.id.action_settings:
                 SettingsActivity.getIntent(ESettingsScreens.SCOREBOARD)
                         .withContext(this)
@@ -198,14 +194,9 @@ public class ScoreboardActivity extends ChildActivityBase {
         }
     }
 
-    private void exportPdf() {
-
-    }
-
     /* Called after the user selected with items he wants to share */
     @SuppressLint("StaticFieldLeak")
-    private void shareImage() {
-        // Construct share intent
+    private void share() {
         new AsyncTask<Void, Void, Uri>() {
 
             @Nullable
