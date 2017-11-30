@@ -35,36 +35,34 @@ public class ScoreboardConfiguration {
     //TODO Use default values from xml
     @NonNull
     public static ScoreboardConfiguration fromDisplaySettings() {
-        return getFromSettingsForPrefix("scoreboard_display_", true, true, true, true, true, true,
-                false);
+        return getFromSettingsForPrefix("scoreboard_display_", true
+        );
     }
 
     @NonNull
     public static ScoreboardConfiguration fromPrintSettings() {
-        return getFromSettingsForPrefix("scoreboard_print_", true, true, true, true, true, false,
-                true);
+        return getFromSettingsForPrefix("scoreboard_print_", false
+        );
     }
 
     @NonNull
     static ScoreboardConfiguration fromShareSettings() {
-        return getFromSettingsForPrefix("scoreboard_share_", true, true, true, true, true, true,
-                false);
+        return getFromSettingsForPrefix("scoreboard_share_", true
+        );
     }
 
     @NonNull
     private static ScoreboardConfiguration getFromSettingsForPrefix(String prefix,
-                                                                    boolean title, boolean properties,
-                                                                    boolean table, boolean statistics, boolean comments,
-                                                                    boolean pointsColored, boolean signature) {
+                                                                    boolean pointsColored) {
         SharedPreferences prefs = ApplicationInstance.getSharedPreferences();
         ScoreboardConfiguration config = new ScoreboardConfiguration();
-        config.showTitle = prefs.getBoolean(prefix + "title", title);
-        config.showProperties = prefs.getBoolean(prefix + "properties", properties);
-        config.showTable = prefs.getBoolean(prefix + "table", table);
-        config.showStatistics = prefs.getBoolean(prefix + "statistics", statistics);
-        config.showComments = prefs.getBoolean(prefix + "comments", comments);
+        config.showTitle = prefs.getBoolean(prefix + "title", true);
+        config.showProperties = prefs.getBoolean(prefix + "properties", true);
+        config.showTable = prefs.getBoolean(prefix + "table", true);
+        config.showStatistics = prefs.getBoolean(prefix + "statistics", true);
+        config.showComments = prefs.getBoolean(prefix + "comments", true);
         config.showPointsColored = prefs.getBoolean(prefix + "points_colored", pointsColored);
-        config.showSignature = prefs.getBoolean(prefix + "signature", signature);
+        config.showSignature = prefs.getBoolean(prefix + "signature", true);
         return config;
     }
 }

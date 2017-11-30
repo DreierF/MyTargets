@@ -118,7 +118,7 @@ public class EnvironmentFragment extends FragmentBase {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         environment = saveItem();
         super.onSaveInstanceState(outState);
     }

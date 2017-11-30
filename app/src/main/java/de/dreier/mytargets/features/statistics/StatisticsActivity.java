@@ -166,7 +166,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.statistics, menu);
+        getMenuInflater().inflate(R.menu.export_filter, menu);
         return true;
     }
 

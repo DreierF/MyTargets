@@ -109,6 +109,20 @@ public class AppDatabase {
         }
     }
 
+    @Migration(version = 24, database = AppDatabase.class)
+    public static class Migration24 extends BaseMigration {
+
+        @Override
+        public void migrate(DatabaseWrapper database) {
+            SharedApplicationInstance.getSharedPreferences()
+                    .edit()
+                    .putBoolean("scoreboard_display_signature", true)
+                    .putBoolean("scoreboard_print_signature", true)
+                    .putBoolean("scoreboard_share_signature", true)
+                    .apply();
+        }
+    }
+
     private static void fillStandardRound(DatabaseWrapper db) {
         List<StandardRound> rounds = StandardRoundFactory.initTable();
         for (StandardRound round : rounds) {

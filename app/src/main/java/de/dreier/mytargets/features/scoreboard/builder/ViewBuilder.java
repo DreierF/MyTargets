@@ -16,12 +16,10 @@
 package de.dreier.mytargets.features.scoreboard.builder;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,6 +31,8 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.features.scoreboard.ScoreboardBuilder;
 import de.dreier.mytargets.features.scoreboard.builder.model.Cell;
 import de.dreier.mytargets.features.scoreboard.builder.model.Table;
+import de.dreier.mytargets.features.settings.SettingsManager;
+import de.dreier.mytargets.shared.models.db.Signature;
 import de.dreier.mytargets.shared.utils.CircleDrawable;
 
 import static android.util.TypedValue.COMPLEX_UNIT_SP;
@@ -177,44 +177,22 @@ public class ViewBuilder implements ScoreboardBuilder {
     }
 
     @Override
-    public void signature(String archer, String targetCaptain, Bitmap archerSignature, Bitmap witnessSignature) {
-        openSection();
-        container.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
-        container.setLayoutParams(params);
-        container.setWeightSum(2);
-        appendSignature(R.id.signature_archer, archer, archerSignature);
-        appendSignature(R.id.signature_witness, targetCaptain, witnessSignature);
-        closeSection();
-    }
+    public void signature(Signature archerSignature, Signature witnessSignature) {
+        String archer = SettingsManager.getProfileFullName();
+        if (archer.trim().isEmpty()) {
+            archer = context.getString(R.string.archer);
+        }
+        String targetCaptain = context.getString(R.string.target_captain);
 
-    private void appendSignature(int id, String name, @Nullable Bitmap signatureImage) {
-        LinearLayout layout = new LinearLayout(context);
-        layout.setPadding(dp(10), dp(50), dp(10), 0);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, WRAP_CONTENT);
-        params.weight = 1;
-        layout.setLayoutParams(params);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        ImageView signature = new ImageView(context);
-        signature.setId(id);
-        signature.setImageBitmap(signatureImage);
-        signature.setAdjustViewBounds(true);
-        signature.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        signature.setBackgroundResource(R.drawable.signature_line);
-        params = new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
-        signature.setLayoutParams(params);
-        signature.setMinimumHeight(dp(48));
-        layout.addView(signature);
-        TextView signer = new TextView(context);
-        signer.setTextColor(0xFF000000);
-        params = new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
-        signer.setLayoutParams(params);
-        signer.setText(name);
-        layout.addView(signer);
-        TypedValue outValue = new TypedValue();
-        context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
-        layout.setBackgroundResource(outValue.resourceId);
-        container.addView(layout);
+        View v = LayoutInflater.from(context).inflate(R.layout.partial_scoreboard_signatures, container, true);
+        TextView archerDescriptionView = v.findViewById(R.id.archer_description);
+        archerDescriptionView.setText(archerSignature.getName(archer));
+        TextView witnessDescriptionView = v.findViewById(R.id.witness_description);
+        witnessDescriptionView.setText(witnessSignature.getName(targetCaptain));
+        ImageView archerSignatureView = v.findViewById(R.id.signature_archer);
+        archerSignatureView.setImageBitmap(archerSignature.getBitmap());
+        ImageView witnessSignatureView = v.findViewById(R.id.signature_witness);
+        witnessSignatureView.setImageBitmap(witnessSignature.getBitmap());
     }
 
     private int dp(int dips) {

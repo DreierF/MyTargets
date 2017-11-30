@@ -59,7 +59,7 @@ public class SettingsManager {
     public static final String KEY_PROFILE_LAST_NAME = "profile_last_name";
     public static final String KEY_PROFILE_BIRTHDAY = "profile_birthday";
     public static final String KEY_PROFILE_CLUB = "profile_club";
-    public static final String KEY_PROFILE_LICENCE_NUMBER = "licence_number";
+    public static final String KEY_PROFILE_LICENCE_NUMBER = "profile_licence_number";
     public static final String KEY_INPUT_SUMMARY_AVERAGE_OF = "input_summary_average_of";
     public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
     public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
@@ -304,7 +304,7 @@ public class SettingsManager {
                 .apply();
     }
 
-    @Nullable
+    @NonNull
     public static String getProfileFirstName() {
         return preferences
                 .getString(KEY_PROFILE_FIRST_NAME, "");
@@ -317,7 +317,7 @@ public class SettingsManager {
                 .apply();
     }
 
-    @Nullable
+    @NonNull
     public static String getProfileLastName() {
         return preferences
                 .getString(KEY_PROFILE_LAST_NAME, "");
@@ -331,10 +331,10 @@ public class SettingsManager {
     }
 
     public static String getProfileFullName() {
-        return String.format("%s %s", getProfileFirstName(), getProfileLastName());
+        return String.format("%s %s", getProfileFirstName(), getProfileLastName()).trim();
     }
 
-    @Nullable
+    @NonNull
     public static String getProfileClub() {
         return preferences
                 .getString(KEY_PROFILE_CLUB, "");
@@ -347,7 +347,7 @@ public class SettingsManager {
                 .apply();
     }
 
-    @Nullable
+    @NonNull
     public static String getProfileLicenceNumber() {
         return preferences
                 .getString(KEY_PROFILE_LICENCE_NUMBER, "");

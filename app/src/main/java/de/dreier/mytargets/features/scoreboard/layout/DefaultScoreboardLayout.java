@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.text.TextUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -246,7 +247,7 @@ public class DefaultScoreboardLayout {
             Table.Row row = table.startRow();
             row.addCell(end.index + 1);
             int sum = 0;
-            final List<Shot> shots = end.getShots();
+            final List<Shot> shots = new ArrayList<>(end.getShots());
             if (SettingsManager.shouldSortTarget(round.getTarget())) {
                 Collections.sort(shots);
             }
@@ -343,14 +344,6 @@ public class DefaultScoreboardLayout {
     }
 
     private void appendSignature(Training training) {
-        String archer = SettingsManager.getProfileFullName();
-        if (archer.trim().isEmpty()) {
-            archer = context.getString(R.string.archer);
-        }
-//        String targetCaptain = SettingsManager.getProfileTargetCaptain();
-//        if (targetCaptain.trim().isEmpty()) {
-        String targetCaptain = context.getString(R.string.target_captain);
-//        }
-        builder.signature(archer, targetCaptain, training.archerSignature, training.witnessSignature);
+        builder.signature(training.getOrCreateArcherSignature(), training.getOrCreateWitnessSignature());
     }
 }

@@ -23,6 +23,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
@@ -265,7 +266,7 @@ public class StatisticsFragment extends FragmentBase {
     private void showPieChart() {
         // enable hole and configure
         binding.distributionChart.setTransparentCircleRadius(15);
-        binding.distributionChart.setHoleColor(0xFFFFFFFF);
+        binding.distributionChart.setHoleColor(ContextCompat.getColor(getContext(), R.color.md_grey_50));
         binding.distributionChart.getLegend().setEnabled(false);
         binding.distributionChart.setDescription(EMPTY_DESCRIPTION);
 
@@ -275,7 +276,7 @@ public class StatisticsFragment extends FragmentBase {
 
         binding.distributionChart.setUsePercentValues(false);
         binding.distributionChart.highlightValues(null);
-        binding.distributionChart.setBackgroundColor(0xFFFFFFFF);
+        binding.distributionChart.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.md_grey_50));
         binding.distributionChart.invalidate();
         addPieData();
     }

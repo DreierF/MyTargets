@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.shared.models.db;
 
-import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -46,7 +45,6 @@ import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IRecursiveModel;
 import de.dreier.mytargets.shared.models.Score;
-import de.dreier.mytargets.shared.utils.typeconverters.BitmapConverter;
 import de.dreier.mytargets.shared.utils.typeconverters.EWeatherConverter;
 import de.dreier.mytargets.shared.utils.typeconverters.LocalDateConverter;
 
@@ -110,12 +108,14 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     public String comment = "";
 
     @Nullable
-    @Column(typeConverter = BitmapConverter.class)
-    public Bitmap archerSignature;
+    @ForeignKey(tableClass = Signature.class, references = {
+            @ForeignKeyReference(columnName = "archerSignature", columnType = Long.class, foreignKeyColumnName = "_id")}, onDelete = ForeignKeyAction.SET_NULL)
+    public Long archerSignatureId;
 
     @Nullable
-    @Column(typeConverter = BitmapConverter.class)
-    public Bitmap witnessSignature;
+    @ForeignKey(tableClass = Signature.class, references = {
+            @ForeignKeyReference(columnName = "witnessSignature", columnType = Long.class, foreignKeyColumnName = "_id")}, onDelete = ForeignKeyAction.SET_NULL)
+    public Long witnessSignatureId;
 
     public List<Round> rounds;
 
@@ -194,6 +194,42 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
                 .from(Arrow.class)
                 .where(Arrow_Table._id.eq(arrowId))
                 .querySingle();
+    }
+
+    @NonNull
+    public Signature getOrCreateArcherSignature() {
+        if (archerSignatureId != null) {
+            Signature signature = SQLite.select()
+                    .from(Signature.class)
+                    .where(Signature_Table._id.eq(archerSignatureId))
+                    .querySingle();
+            if (signature != null) {
+                return signature;
+            }
+        }
+        Signature signature = new Signature();
+        signature.save();
+        archerSignatureId = signature._id;
+        save();
+        return signature;
+    }
+
+    @NonNull
+    public Signature getOrCreateWitnessSignature() {
+        if (witnessSignatureId != null) {
+            Signature signature = SQLite.select()
+                    .from(Signature.class)
+                    .where(Signature_Table._id.eq(witnessSignatureId))
+                    .querySingle();
+            if (signature != null) {
+                return signature;
+            }
+        }
+        Signature signature = new Signature();
+        signature.save();
+        witnessSignatureId = signature._id;
+        save();
+        return signature;
     }
 
     public String getFormattedDate() {

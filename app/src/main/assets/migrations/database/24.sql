@@ -1,3 +1,10 @@
+-- Add signature table
+CREATE TABLE IF NOT EXISTS `Signature`(
+    `_id` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `name` TEXT,
+    `bitmap` BLOB
+);
+
 -- Rename existing tables
 ALTER TABLE `Shot` RENAME TO SHOT_OLD;
 ALTER TABLE `End` RENAME TO END_OLD;
@@ -18,9 +25,13 @@ CREATE TABLE IF NOT EXISTS `Training`(
     `windSpeed` INTEGER,
     `location` TEXT,
     `comment` TEXT,
+    `archerSignature` INTEGER,
+    `witnessSignature` INTEGER,
     FOREIGN KEY(`standardRound`) REFERENCES StandardRound(`_id`) ON UPDATE NO ACTION ON DELETE SET NULL,
     FOREIGN KEY(`bow`) REFERENCES Bow(`_id`) ON UPDATE NO ACTION ON DELETE SET NULL,
-    FOREIGN KEY(`arrow`) REFERENCES Arrow(`_id`) ON UPDATE NO ACTION ON DELETE SET NULL
+    FOREIGN KEY(`arrow`) REFERENCES Arrow(`_id`) ON UPDATE NO ACTION ON DELETE SET NULL,
+    FOREIGN KEY(`archerSignature`) REFERENCES Signature(`_id`) ON UPDATE NO ACTION ON DELETE SET NULL,
+    FOREIGN KEY(`witnessSignature`) REFERENCES Signature(`_id`) ON UPDATE NO ACTION ON DELETE SET NULL
 );
 
 INSERT INTO `Training`

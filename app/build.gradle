@@ -157,7 +157,7 @@ dependencies {
 
     implementation "uk.co.hassie:version-info-material-dialog:$libraryVersion.versionInfoDialog"
 
-    implementation 'com.kyanogen.signatureview:signature-view:1.1@aar'
+    implementation "com.github.gcacace:signature-pad:$libraryVersion.signaturePad"
 
     implementation project(':shared')
     wearApp project(':wearable')

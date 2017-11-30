@@ -14,7 +14,6 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         tools:context="de.dreier.mytargets.features.scoreboard.ScoreboardActivity">
 
@@ -41,46 +40,6 @@
                 android:padding="8dp"/>
 
         </ScrollView>
-
-        <RelativeLayout
-            android:id="@+id/signature_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#AA000000"
-            android:visibility="gone">
-
-            <com.kyanogen.signatureview.SignatureView
-                android:id="@+id/signatureView"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_centerInParent="true"
-                android:elevation="6dp"
-                app:enableSignature="true"
-                app:penColor="#000000"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/signatureView"
-                android:weightSum="2">
-
-                <Button
-                    android:id="@+id/clear"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/clear"/>
-
-                <Button
-                    android:id="@+id/save"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/save"/>
-
-            </LinearLayout>
-
-        </RelativeLayout>
 
     </FrameLayout>
 

@@ -201,7 +201,7 @@
                 android:key="scoreboard_display_points_colored"
                 android:title="@string/show_points_colored"/>
             <CheckBoxPreference
-                android:defaultValue="false"
+                android:defaultValue="true"
                 android:key="scoreboard_display_signature"
                 android:title="@string/show_signature"/>
         </PreferenceCategory>
@@ -261,7 +261,7 @@
                 android:key="scoreboard_share_points_colored"
                 android:title="@string/show_points_colored"/>
             <CheckBoxPreference
-                android:defaultValue="false"
+                android:defaultValue="true"
                 android:key="scoreboard_share_signature"
                 android:title="@string/show_signature"/>
         </PreferenceCategory>
