@@ -49,13 +49,14 @@
             android:background="#AA000000"
             android:visibility="gone">
 
-            <com.simplify.ink.InkView
+            <com.kyanogen.signatureview.SignatureView
                 android:id="@+id/signatureView"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_centerInParent="true"
-                android:background="@color/md_white_1000"
-                app:inkFlags="interpolation|responsiveWeight"/>
+                android:elevation="6dp"
+                app:enableSignature="true"
+                app:penColor="#000000"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

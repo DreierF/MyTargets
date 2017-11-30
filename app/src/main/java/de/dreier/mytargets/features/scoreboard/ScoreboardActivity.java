@@ -188,13 +188,13 @@ public class ScoreboardActivity extends ChildActivityBase {
             oldBitmap = training.witnessSignature;
         }
         if(oldBitmap == null) {
-            binding.signatureView.clear();
+            binding.signatureView.clearCanvas();
         } else {
-            binding.signatureView.drawBitmap(training.archerSignature, 0.0F, 0.0F, null);
+            binding.signatureView.setBitmap(oldBitmap);
         }
         binding.save.setOnClickListener(v -> {
             binding.signatureLayout.setVisibility(GONE);
-            Bitmap bitmap = binding.signatureView.getBitmap();
+            Bitmap bitmap = binding.signatureView.getSignatureBitmap();
             view.setImageBitmap(bitmap);
             if(view.getId() == R.id.signature_archer) {
                 training.archerSignature = bitmap;
@@ -203,7 +203,7 @@ public class ScoreboardActivity extends ChildActivityBase {
             }
             training.save();
         });
-        binding.clear.setOnClickListener(v -> binding.signatureView.clear());
+        binding.clear.setOnClickListener(v -> binding.signatureView.clearCanvas());
     }
 
     @Override

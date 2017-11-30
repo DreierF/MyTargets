@@ -64,7 +64,8 @@
         android:label="@string/my_targets"
         android:restoreAnyVersion="false"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:label">
         <meta-data
             android:name="android.max_aspect"
             android:value="2.1"/>

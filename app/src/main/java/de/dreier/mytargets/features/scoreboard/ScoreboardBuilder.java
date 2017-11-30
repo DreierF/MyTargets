@@ -15,6 +15,8 @@
 
 package de.dreier.mytargets.features.scoreboard;
 
+import android.graphics.Bitmap;
+
 import de.dreier.mytargets.features.scoreboard.builder.model.Table;
 
 public interface ScoreboardBuilder {
@@ -23,5 +25,5 @@ public interface ScoreboardBuilder {
     void closeSection();
     void subtitle(String subtitle);
     void table(Table table);
-    void signature(String archer, String targetCaptain);
+    void signature(String archer, String targetCaptain, Bitmap archerSignature, Bitmap witnessSignature);
 }

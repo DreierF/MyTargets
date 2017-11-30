@@ -94,7 +94,7 @@ public class DefaultScoreboardLayout {
         }
 
         if (configuration.showSignature) {
-            appendSignature();
+            appendSignature(training);
         }
     }
 
@@ -342,7 +342,7 @@ public class DefaultScoreboardLayout {
         info.addLine(R.string.date, training.getFormattedDate());
     }
 
-    private void appendSignature() {
+    private void appendSignature(Training training) {
         String archer = SettingsManager.getProfileFullName();
         if (archer.trim().isEmpty()) {
             archer = context.getString(R.string.archer);
@@ -351,6 +351,6 @@ public class DefaultScoreboardLayout {
 //        if (targetCaptain.trim().isEmpty()) {
         String targetCaptain = context.getString(R.string.target_captain);
 //        }
-        builder.signature(archer, targetCaptain);
+        builder.signature(archer, targetCaptain, training.archerSignature, training.witnessSignature);
     }
 }

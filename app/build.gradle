@@ -157,7 +157,7 @@ dependencies {
 
     implementation "uk.co.hassie:version-info-material-dialog:$libraryVersion.versionInfoDialog"
 
-    implementation "com.simplify:ink:1.0.0"
+    implementation 'com.kyanogen.signatureview:signature-view:1.1@aar'
 
     implementation project(':shared')
     wearApp project(':wearable')

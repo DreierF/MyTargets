@@ -177,14 +177,14 @@ public class ViewBuilder implements ScoreboardBuilder {
     }
 
     @Override
-    public void signature(String archer, String targetCaptain) {
+    public void signature(String archer, String targetCaptain, Bitmap archerSignature, Bitmap witnessSignature) {
         openSection();
         container.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
         container.setLayoutParams(params);
         container.setWeightSum(2);
-        appendSignature(R.id.signature_archer, archer, null);
-        appendSignature(R.id.signature_witness, targetCaptain, null);
+        appendSignature(R.id.signature_archer, archer, archerSignature);
+        appendSignature(R.id.signature_witness, targetCaptain, witnessSignature);
         closeSection();
     }
 
