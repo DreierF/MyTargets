@@ -79,11 +79,35 @@ public class SettingsActivityTest extends UITestBase {
         matchToolbarTitle(getActivity().getString(R.string.preferences));
 
         clickOnPreference(0);
+        matchToolbarTitle(getActivity().getString(R.string.profile));
+
+        clickOnPreference(0);
+        enterText("Joe");
+        matchPreferenceSummary(0, "Joe");
+        assertEquals(SettingsManager.getProfileFirstName(), "Joe");
+
+        clickOnPreference(1);
+        enterText("Doe");
+        matchPreferenceSummary(1, "Doe");
+        assertEquals(SettingsManager.getProfileLastName(), "Doe");
+
+        clickOnPreference(2);
+        enterDate(1990, 2, 11);
+        matchPreferenceSummary(2, DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+                .format(LocalDate.of(1990, 2, 11)));
+
+        clickOnPreference(3);
+        enterText("Archery Club");
+        matchPreferenceSummary(3, "Archery Club");
+        assertEquals(SettingsManager.getProfileClub(), "Archery Club");
+        pressBack();
+
+        clickOnPreference(1);
 
         matchToolbarTitle(getActivity().getString(R.string.overview));
         pressBack();
 
-        clickOnPreference(1);
+        clickOnPreference(2);
 
         matchToolbarTitle(getActivity().getString(R.string.input));
 
@@ -102,47 +126,15 @@ public class SettingsActivityTest extends UITestBase {
         pressBack();
         matchToolbarTitle(getActivity().getString(R.string.preferences));
 
-        clickOnPreference(2);
+        clickOnPreference(3);
         matchToolbarTitle(getActivity().getString(R.string.scoreboard));
 
-        clickOnPreference(1);
-        enterText("Joe");
-        matchPreferenceSummary(1, "Joe");
-        assertEquals(SettingsManager.getProfileFirstName(), "Joe");
-
-        clickOnPreference(2);
-        enterText("Doe");
-        matchPreferenceSummary(2, "Doe");
-        assertEquals(SettingsManager.getProfileLastName(), "Doe");
-
-        clickOnPreference(3);
-        enterDate(1990, 2, 11);
-        matchPreferenceSummary(3, DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-                .format(LocalDate.of(1990, 2, 11)));
-
-        clickOnPreference(4);
-        enterText("Archery Club");
-        matchPreferenceSummary(4, "Archery Club");
-        assertEquals(SettingsManager.getProfileClub(), "Archery Club");
-
         clickOnPreference(6);
-
-        clickOnPreference(6);
-
-        clickOnPreference(12);
-
-        clickOnPreference(14);
-
-        clickOnPreference(20);
-
-        clickOnPreference(22);
-
-        clickOnPreference(28);
 
         pressBack();
         matchToolbarTitle(getActivity().getString(R.string.preferences));
 
-        clickOnPreference(3);
+        clickOnPreference(4);
         matchToolbarTitle(getActivity().getString(R.string.timer));
 
         matchPreferenceSummary(0, getActivity()
@@ -162,7 +154,7 @@ public class SettingsActivityTest extends UITestBase {
 //        matchToolbarTitle(getActivity().getString(R.string.backup_action));
 //        pressBack();
 
-        clickOnPreference(5);
+        clickOnPreference(6);
         selectFromList("Spanish (Español)");
         matchToolbarTitle("Opciones");
     }

@@ -38,7 +38,7 @@ INSERT INTO `Training`
     SELECT `_id`, `title`, date(`date`/1000, 'unixepoch', 'localtime'),
     `standardRound`, `bow`, `arrow`,
     `arrowNumbering`, `indoor`,
-    `weather`, `windDirection`, `windSpeed`, `location`, ''
+    `weather`, `windDirection`, `windSpeed`, `location`, '', NULL, NULL
     FROM TRAINING_OLD;
 
 -- End migration
