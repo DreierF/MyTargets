@@ -31,6 +31,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -140,20 +142,29 @@ public class ScoreboardFragment extends FragmentBase {
             ImageView archerSignatureView = scoreboard.findViewById(R.id.signature_archer);
             String finalArcher = archer;
             archerSignatureView
-                    .setOnClickListener(view -> onSignatureClicked(archerSignature, finalArcher, (View) view.getParent()));
+                    .setOnClickListener(view -> onSignatureClicked(archerSignature, finalArcher));
             ImageView witnessSignatureView = scoreboard.findViewById(R.id.signature_witness);
             witnessSignatureView
-                    .setOnClickListener(view -> onSignatureClicked(witnessSignature, getString(R.string.target_captain), (View) view.getParent()));
+                    .setOnClickListener(view -> onSignatureClicked(witnessSignature, getString(R.string.target_captain)));
 
             archerPlaceHolder.setVisibility(archerSignature.isSigned() ? GONE : VISIBLE);
             witnessPlaceHolder.setVisibility(witnessSignature.isSigned() ? GONE : VISIBLE);
         };
     }
 
-    private void onSignatureClicked(Signature signature, String defaultName, View sharedElement) {
-        ScoreboardActivity activity = (ScoreboardActivity) getActivity();
-        if(activity != null) {
-            activity.sign(signature, defaultName, sharedElement);
+    private void onSignatureClicked(Signature signature, String defaultName) {
+        FragmentManager fm = getFragmentManager();
+        if (fm != null) {
+            SignatureDialogFragment signatureDialogFragment = SignatureDialogFragment
+                    .newInstance(signature, defaultName);
+            signatureDialogFragment.show(fm, "signature");
+            fm.registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
+                @Override
+                public void onFragmentViewDestroyed(FragmentManager fm, Fragment f) {
+                    fm.unregisterFragmentLifecycleCallbacks(this);
+                    reloadData();
+                }
+            }, false);
         }
     }
 
@@ -250,7 +261,8 @@ public class ScoreboardFragment extends FragmentBase {
         PrintDocumentAdapter pda = new ViewPrintDocumentAdapter(content, fileName);
 
         // Create a print job with name and adapter instance
-        PrintManager printManager = (PrintManager) getContext().getSystemService(Context.PRINT_SERVICE);
+        PrintManager printManager = (PrintManager) getContext()
+                .getSystemService(Context.PRINT_SERVICE);
         printManager.print(jobName, pda, new PrintAttributes.Builder().build());
     }
 

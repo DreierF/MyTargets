@@ -20,10 +20,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.Fragment;
-import android.view.View;
 
 import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
-import de.dreier.mytargets.shared.models.db.Signature;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
@@ -42,7 +40,7 @@ public class ScoreboardActivity extends SimpleFragmentActivityBase {
      * v File name should contain date (#43)
      * v Fix image share option (Always share PDF! Make it adjustable in settings!)
      * v Reimplement signature lines
-     * - Add handwritten signature (#321)
+     * v Add handwritten signature (#321)
      * v Add progress indicator when opening scoreboard
      * x Add progress dialog when hitting print
      * - Implement other scoreboard layout (#246)
@@ -73,18 +71,5 @@ public class ScoreboardActivity extends SimpleFragmentActivityBase {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ToolbarUtils.showHomeAsUp(this);
-    }
-
-    public void sign(Signature signature, String defaultName, View sharedElement) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(android.R.id.content, SignatureFragment
-                        .newInstance(signature, defaultName))
-                .addToBackStack(null)
-                .commit();
-    }
-
-    public void back() {
-        getSupportFragmentManager().popBackStack();
     }
 }

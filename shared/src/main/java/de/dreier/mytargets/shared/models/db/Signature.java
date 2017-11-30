@@ -25,9 +25,15 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.parceler.Parcel;
+import org.parceler.ParcelConstructor;
+import org.parceler.ParcelPropertyConverter;
+
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.utils.typeconverters.BitmapConverter;
+import de.dreier.mytargets.shared.utils.typeconverters.BitmapParcelConverter;
 
+@Parcel
 @Table(database = AppDatabase.class)
 public class Signature extends BaseModel {
 
@@ -42,8 +48,10 @@ public class Signature extends BaseModel {
 
     @Nullable
     @Column(typeConverter = BitmapConverter.class)
+    @ParcelPropertyConverter(BitmapParcelConverter.class)
     public Bitmap bitmap;
 
+    @ParcelConstructor
     public Signature() {
     }
 
@@ -53,7 +61,7 @@ public class Signature extends BaseModel {
 
     /**
      * Returns a bitmap of the signature or null if no signature has been set.
-     * */
+     */
     @Nullable
     public Bitmap getBitmap() {
         return bitmap;
