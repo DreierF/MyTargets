@@ -55,9 +55,12 @@ public class RecyclerViewAssertions {
             ArrayList<View> outviews = new ArrayList<>();
             String title = view.getContext().getString(item);
             for (int index = 0; index < rv.getAdapter().getItemCount(); index++) {
-                View itemView = rv.findViewHolderForAdapterPosition(index).itemView;
-                itemView.findViewsWithText(outviews, title,
-                        FIND_VIEWS_WITH_TEXT);
+                RecyclerView.ViewHolder viewHolder = rv.findViewHolderForAdapterPosition(index);
+                if (viewHolder == null) {
+                    continue;
+                }
+                View itemView = viewHolder.itemView;
+                itemView.findViewsWithText(outviews, title, FIND_VIEWS_WITH_TEXT);
                 if (outviews.size() > 0) {
                     TextView summaryView = itemView.findViewById(android.R.id.summary);
                     Truth.assertThat(summaryView.getText()).isEqualTo(summary);
