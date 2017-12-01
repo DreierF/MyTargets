@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.features.scoreboard.pdf;
 
+import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.graphics.pdf.PdfDocument;
@@ -28,6 +29,9 @@ import android.widget.LinearLayout;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import static android.view.View.MeasureSpec.EXACTLY;
+import static android.view.View.MeasureSpec.makeMeasureSpec;
+
 /**
  * Handles printing the content view to a PDF stream.
  * It is responsible for laying out pages by traversing the children of the content view and
@@ -40,12 +44,12 @@ public class ViewToPdfWriter {
     /**
      * Left and Right page margin in inches
      */
-    private static final int MARGIN_HORIZONTAL = 1;
+    private static final float MARGIN_HORIZONTAL = 0.78f;
 
     /**
      * Top and Bottom page margin in inches
      */
-    private static final int MARGIN_VERTICAL = 1;
+    private static final float MARGIN_VERTICAL = 0.78f;
 
     private final LinearLayout content;
     private RectF contentRect;
@@ -59,16 +63,18 @@ public class ViewToPdfWriter {
      * Calculates the number of pages it takes to print the content to the given print medium.
      * MUST be called before {@link #writePdfDocument(PageRange[], OutputStream)}.
      */
+    @SuppressLint("Range")
     public int layoutPages(PrintAttributes.Resolution resolution, PrintAttributes.MediaSize mediaSize) {
         fullPage = new RectF(0, 0,
                 mediaSize.getWidthMils() * resolution.getHorizontalDpi() / 1000,
                 mediaSize.getHeightMils() * resolution.getVerticalDpi() / 1000);
 
         contentRect = new RectF(fullPage);
-        contentRect.inset(MARGIN_HORIZONTAL * resolution.getHorizontalDpi(),
-                MARGIN_VERTICAL * resolution.getVerticalDpi());
+        contentRect.inset(resolution.getHorizontalDpi() * MARGIN_HORIZONTAL,
+                resolution.getVerticalDpi() * MARGIN_VERTICAL);
 
-        content.measure((int) contentRect.width(), (int) contentRect.height());
+        content.measure(makeMeasureSpec((int) (contentRect.width()), EXACTLY),
+                makeMeasureSpec((int) (contentRect.height()), View.MeasureSpec.UNSPECIFIED));
         content.layout(0, 0, (int) contentRect.width(), (int) contentRect.height());
 
         int sumHeight = 0;
@@ -96,8 +102,7 @@ public class ViewToPdfWriter {
         PdfDocument.Page page = null;
         if (containsPage(pages, pageNumber)) {
             PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder((int) fullPage
-                    .width(), (int) fullPage
-                    .height(), pageNumber).create();
+                    .width(), (int) fullPage.height(), pageNumber).create();
             page = document.startPage(pageInfo);
         }
 
@@ -116,9 +121,7 @@ public class ViewToPdfWriter {
 
                 if (containsPage(pages, pageNumber)) {
                     PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder((int) fullPage
-                            .width(), (int) fullPage
-                            .height(), pageNumber)
-                            .create();
+                            .width(), (int) fullPage.height(), pageNumber).create();
                     page = document.startPage(pageInfo);
                 }
             }
@@ -126,8 +129,7 @@ public class ViewToPdfWriter {
             if (page != null) {
                 Canvas canvas = page.getCanvas();
                 canvas.save();
-                canvas.translate(contentRect.left,
-                        contentRect.top + view.getTop() - topAnchor);
+                canvas.translate(contentRect.left, contentRect.top + view.getTop() - topAnchor);
                 view.draw(canvas);
                 canvas.restore();
             }
