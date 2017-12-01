@@ -385,4 +385,6 @@
     <string name="file_type">File type</string>
     <string name="clear">Clear</string>
     <string name="tap_to_sign">Tap to sign</string>
+    <string name="pdf_file">PDF file</string>
+    <string name="image_file">Image file</string>
 </resources>
