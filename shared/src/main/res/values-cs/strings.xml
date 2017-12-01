@@ -57,8 +57,8 @@
   <string name="stop">STOP</string>
   <string name="end_n">Sada %d</string>
   <string name="miss">Miss</string>
-  <string name="backspace">Backspace</string>
-  <string name="accessibility_description_shot_n_score">Shot %d: %s</string>
+  <string name="backspace">Vymazat</string>
+  <string name="accessibility_description_shot_n_score">Výstřel %d: %s</string>
   <plurals name="rounds">
     <item quantity="one">%d kolo</item>
     <item quantity="few">%d kola</item>

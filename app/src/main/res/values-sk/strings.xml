@@ -28,7 +28,6 @@
   <string name="round">Kolo</string>
   <string name="points">Body</string>
   <string name="passe">Sada</string>
-  <string name="passe_n">Sada %d</string>
   <!-- Overview -->
   <string name="new_training">Nový tréning</string>
   <string name="new_bow">Nový luk</string>
@@ -266,6 +265,7 @@
   <string name="diameter">Priemer</string>
   <string name="input">Vstup</string>
   <string name="target_zoom">Cieľová úroveň priblíženia</string>
+  <string name="action_pdf">Export as PDF</string>
   <string name="arrow_diameter_scale">Stupnica priemerov šípov</string>
   <string name="timestamp">Časová značka</string>
   <string name="change_target_face">Zmeniť vzhľad terča</string>
@@ -363,4 +363,15 @@
   <string name="reset">Reset</string>
   <string name="end_x_of_y">Sada %1$d/%2$d</string>
   <string name="round_x_of_y">Kolo %1$d/%2$d</string>
+  <string name="settings_summary_timer">Adjust archery timer\' behaviour</string>
+  <string name="settings_summary_scoreboard">Change scoreboard appearance</string>
+  <string name="settings_summary_input">Customize input screen</string>
+  <string name="settings_summary_overview">Personalize information shown for trainings, rounds and ends</string>
+  <string name="settings_summary_profile">Enter personal information</string>
+  <string name="licence_number">Licence number</string>
+  <string name="file_type">File type</string>
+  <string name="clear">Clear</string>
+  <string name="tap_to_sign">Tap to sign</string>
+  <string name="pdf_file">PDF file</string>
+  <string name="image_file">Image file</string>
 </resources>

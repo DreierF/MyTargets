@@ -77,7 +77,7 @@ public class DefaultScoreboardLayout {
         if (configuration.showTable) {
             for (Round round : rounds) {
                 builder.openSection();
-                builder.subtitle(context.getString(R.string.round_n, round.index + 1));
+                builder.subtitle(context.getResources().getQuantityString(R.plurals.rounds, round.index + 1, round.index + 1));
                 if (configuration.showProperties) {
                     builder.table(getRoundInfo(round, equals));
                 }
@@ -143,7 +143,7 @@ public class DefaultScoreboardLayout {
         } else if (rounds.size() > 1) {
             for (Round round : rounds) {
                 builder.openSection();
-                builder.subtitle(context.getString(R.string.round_n, round.index + 1));
+                builder.subtitle(context.getResources().getQuantityString(R.plurals.rounds, round.index + 1, round.index + 1));
                 builder.table(getStatisticsForRound(Collections.singletonList(round)));
                 builder.closeSection();
             }

@@ -28,7 +28,6 @@
   <string name="round">回合</string>
   <string name="points">得分</string>
   <string name="passe">结束</string>
-  <string name="passe_n">结束 %d</string>
   <!-- Overview -->
   <string name="new_training">新的训练</string>
   <string name="new_bow">新弓</string>
@@ -238,6 +237,7 @@
   <string name="diameter">Diameter</string>
   <string name="input">Input</string>
   <string name="target_zoom">Target zoom level</string>
+  <string name="action_pdf">Export as PDF</string>
   <string name="arrow_diameter_scale">Arrow diameter scale</string>
   <string name="timestamp">Timestamp</string>
   <string name="change_target_face">Change target face</string>
@@ -335,4 +335,15 @@
   <string name="reset">Reset</string>
   <string name="end_x_of_y">结束 %1$d/%2$d</string>
   <string name="round_x_of_y">回合 %1$d/%2$d</string>
+  <string name="settings_summary_timer">Adjust archery timer\' behaviour</string>
+  <string name="settings_summary_scoreboard">Change scoreboard appearance</string>
+  <string name="settings_summary_input">Customize input screen</string>
+  <string name="settings_summary_overview">Personalize information shown for trainings, rounds and ends</string>
+  <string name="settings_summary_profile">Enter personal information</string>
+  <string name="licence_number">Licence number</string>
+  <string name="file_type">File type</string>
+  <string name="clear">Clear</string>
+  <string name="tap_to_sign">Tap to sign</string>
+  <string name="pdf_file">PDF file</string>
+  <string name="image_file">Image file</string>
 </resources>

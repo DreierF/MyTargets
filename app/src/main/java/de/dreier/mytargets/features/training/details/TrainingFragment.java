@@ -38,7 +38,6 @@ import com.annimon.stream.Stream;
 import junit.framework.Assert;
 
 import java.util.List;
-import java.util.Locale;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
@@ -262,7 +261,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
 
         @Override
         public void bindItem() {
-            binding.title.setText(getString(R.string.round_n, item.index + 1));
+            binding.title.setText(getResources().getQuantityString(R.plurals.rounds, item.index + 1, item.index + 1));
             binding.subtitle.setText(Utils.fromHtml(HtmlUtils.getRoundInfo(item, equals)));
             if (binding.subtitle.getText().toString().isEmpty()) {
                 binding.subtitle.setVisibility(View.GONE);
