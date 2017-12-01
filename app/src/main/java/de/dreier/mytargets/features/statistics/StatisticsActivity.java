@@ -39,9 +39,13 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.activities.ChildActivityBase;
@@ -51,6 +55,7 @@ import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.utils.FileUtils;
 import de.dreier.mytargets.shared.utils.LongUtils;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.SharedUtils;
@@ -322,10 +327,13 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
             @Override
             protected Uri doInBackground(Void... params) {
                 try {
-                    return CsvExporter.export(getApplicationContext(), Stream.of(filteredRounds)
-                            .flatMap(p -> Stream.of(p.second))
-                            .map(Round::getId)
-                            .collect(Collectors.toList()));
+                    final File f = new File(getCacheDir(), getExportFileName());
+                    new CsvExporter(getApplicationContext())
+                            .exportAll(f, Stream.of(filteredRounds)
+                                    .flatMap(p -> Stream.of(p.second))
+                                    .map(Round::getId)
+                                    .collect(Collectors.toList()));
+                    return FileUtils.getUriForFile(StatisticsActivity.this, f);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return null;
@@ -347,6 +355,12 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 }
             }
         }.execute();
+    }
+
+    @NonNull
+    private static String getExportFileName() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
+        return "MyTargets_exported_data_" + format.format(new Date()) + ".csv";
     }
 
     private class StatisticsPagerAdapter extends FragmentStatePagerAdapter {

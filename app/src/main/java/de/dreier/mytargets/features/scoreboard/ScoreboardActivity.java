@@ -32,24 +32,6 @@ public class ScoreboardActivity extends SimpleFragmentActivityBase {
     @VisibleForTesting
     public static final String ROUND_ID = "round_id";
 
-    /**
-     * TODO:
-     * v Make multi pages work
-     * v Make properties tables not span whole page
-     * v Add PDF export/share option (#21)
-     * v File name should contain date (#43)
-     * v Fix image share option (Always share PDF! Make it adjustable in settings!)
-     * v Reimplement signature lines
-     * v Add handwritten signature (#321)
-     * v Add progress indicator when opening scoreboard
-     * x Add progress dialog when hitting print
-     * - Implement other scoreboard layout (#246)
-     * - Add settings screen to switch between them (compare google keyboard layout chooser?)
-     * v #322
-     * v Remove HTMLBuilder
-     * v Fixes #288
-     */
-
     @NonNull
     public static IntentWrapper getIntent(long trainingId) {
         return getIntent(trainingId, -1);

@@ -99,7 +99,7 @@ public class ScoreboardUtils {
         canvas.restore();
 
         OutputStream fileOutputStream = new FileOutputStream(file);
-        b.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream);
+        b.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
         fileOutputStream.flush();
         fileOutputStream.close();
         b.recycle();

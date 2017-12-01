@@ -52,6 +52,7 @@ public class ViewBuilder implements ScoreboardBuilder {
     public ViewBuilder(@NonNull Context context) {
         this.context = context;
         this.root = new LinearLayout(context);
+        this.root.setOrientation(LinearLayout.VERTICAL);
         this.container = root;
         this.density = context.getResources().getDisplayMetrics().density;
     }
@@ -200,7 +201,6 @@ public class ViewBuilder implements ScoreboardBuilder {
     }
 
     public LinearLayout build() {
-        container.setOrientation(LinearLayout.VERTICAL);
         return container;
     }
 }
