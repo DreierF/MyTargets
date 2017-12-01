@@ -76,7 +76,6 @@ public class DispersionPatternActivity extends ChildActivityBase {
         getMenuInflater().inflate(R.menu.menu_scoreboard, menu);
         menu.findItem(R.id.action_settings).setVisible(false);
         menu.findItem(R.id.action_print).setVisible(Utils.isKitKat());
-//        menu.findItem(R.id.action_pdf).setVisible(Utils.isKitKat());
         return true;
     }
 
