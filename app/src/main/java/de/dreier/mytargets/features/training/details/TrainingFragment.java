@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training;
+package de.dreier.mytargets.features.training.details;
 
 import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
@@ -38,7 +38,6 @@ import com.annimon.stream.Stream;
 import junit.framework.Assert;
 
 import java.util.List;
-import java.util.Locale;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
@@ -47,10 +46,11 @@ import de.dreier.mytargets.base.fragments.ItemActionModeCallback;
 import de.dreier.mytargets.databinding.FragmentTrainingBinding;
 import de.dreier.mytargets.databinding.ItemRoundBinding;
 import de.dreier.mytargets.features.rounds.EditRoundFragment;
-import de.dreier.mytargets.features.scoreboard.HtmlUtils;
 import de.dreier.mytargets.features.scoreboard.ScoreboardActivity;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.statistics.StatisticsActivity;
+import de.dreier.mytargets.features.training.RoundFragment;
+import de.dreier.mytargets.features.training.TrainingActivity;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
@@ -166,8 +166,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
             // Set round info
             binding.weatherIcon.setImageResource(training.getEnvironment().getColorDrawable());
             binding.detailRoundInfo.setText(Utils
-                    .fromHtml(HtmlUtils.getTrainingInfoHTML(Utils
-                            .getCurrentLocale(getContext()), training, rounds, equals, false)));
+                    .fromHtml(HtmlUtils.getTrainingInfoHTML(getContext(), training, rounds, equals)));
             adapter.setList(rounds);
 
             getActivity().invalidateOptionsMenu();
@@ -262,9 +261,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
 
         @Override
         public void bindItem() {
-            binding.title.setText(String.format(Locale.US, "%s %d",
-                    getContext().getString(R.string.round),
-                    item.index + 1));
+            binding.title.setText(getResources().getQuantityString(R.plurals.rounds, item.index + 1, item.index + 1));
             binding.subtitle.setText(Utils.fromHtml(HtmlUtils.getRoundInfo(item, equals)));
             if (binding.subtitle.getText().toString().isEmpty()) {
                 binding.subtitle.setVisibility(View.GONE);

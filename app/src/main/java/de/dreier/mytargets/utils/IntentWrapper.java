@@ -113,7 +113,7 @@ public class IntentWrapper {
 
     @NonNull
     public IntentWrapper fromFab(@NonNull View fab, @ColorRes int color, int icon) {
-        if (Utils.supportsFabTransform()) {
+        if (Utils.isLollipop()) {
             fab.setTransitionName(fab.getContext().getString(R.string.transition_root_view));
             FabTransform.addExtras(intent, color, icon);
             ActivityOptions options = ActivityOptions

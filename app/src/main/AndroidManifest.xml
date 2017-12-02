@@ -177,6 +177,7 @@
             android:theme="@style/AppTheme.CustomToolbar.Translucent"/>
         <activity
             android:name=".features.scoreboard.ScoreboardActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/scoreboard"/>
         <activity
             android:name=".features.statistics.StatisticsActivity"

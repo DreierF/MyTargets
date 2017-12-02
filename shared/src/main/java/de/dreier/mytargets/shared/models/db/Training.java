@@ -103,9 +103,19 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     @Column
     public String location = "";
 
-    @Nullable
+    @NonNull
     @Column
     public String comment = "";
+
+    @Nullable
+    @ForeignKey(tableClass = Signature.class, references = {
+            @ForeignKeyReference(columnName = "archerSignature", columnType = Long.class, foreignKeyColumnName = "_id")}, onDelete = ForeignKeyAction.SET_NULL)
+    public Long archerSignatureId;
+
+    @Nullable
+    @ForeignKey(tableClass = Signature.class, references = {
+            @ForeignKeyReference(columnName = "witnessSignature", columnType = Long.class, foreignKeyColumnName = "_id")}, onDelete = ForeignKeyAction.SET_NULL)
+    public Long witnessSignatureId;
 
     public List<Round> rounds;
 
@@ -184,6 +194,42 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
                 .from(Arrow.class)
                 .where(Arrow_Table._id.eq(arrowId))
                 .querySingle();
+    }
+
+    @NonNull
+    public Signature getOrCreateArcherSignature() {
+        if (archerSignatureId != null) {
+            Signature signature = SQLite.select()
+                    .from(Signature.class)
+                    .where(Signature_Table._id.eq(archerSignatureId))
+                    .querySingle();
+            if (signature != null) {
+                return signature;
+            }
+        }
+        Signature signature = new Signature();
+        signature.save();
+        archerSignatureId = signature._id;
+        save();
+        return signature;
+    }
+
+    @NonNull
+    public Signature getOrCreateWitnessSignature() {
+        if (witnessSignatureId != null) {
+            Signature signature = SQLite.select()
+                    .from(Signature.class)
+                    .where(Signature_Table._id.eq(witnessSignatureId))
+                    .querySingle();
+            if (signature != null) {
+                return signature;
+            }
+        }
+        Signature signature = new Signature();
+        signature.save();
+        witnessSignatureId = signature._id;
+        save();
+        return signature;
     }
 
     public String getFormattedDate() {

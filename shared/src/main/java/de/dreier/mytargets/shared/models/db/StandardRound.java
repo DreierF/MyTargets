@@ -53,9 +53,9 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
     @Column
     public int club;
 
-    @Nullable
+    @NonNull
     @Column
-    public String name;
+    public String name = "";
 
     List<RoundTemplate> rounds;
 
@@ -95,13 +95,10 @@ public class StandardRound extends BaseModel implements IIdSettable, IImageProvi
         this.id = id;
     }
 
-    @Nullable
+    @NonNull
     @Override
     public String getName() {
-        if (name != null) {
-            return name;
-        }
-        return "";
+        return name;
     }
 
     @NonNull

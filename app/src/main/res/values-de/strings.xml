@@ -28,7 +28,6 @@
   <string name="round">Runde</string>
   <string name="points">Punkte</string>
   <string name="passe">Passe</string>
-  <string name="passe_n">Passe %d</string>
   <!-- Overview -->
   <string name="new_training">Neues Training</string>
   <string name="new_bow">Neuer Bogen</string>
@@ -252,6 +251,7 @@
   <string name="diameter">Durchmesser</string>
   <string name="input">Eingabe</string>
   <string name="target_zoom">Zoomstufe für Zielscheibe</string>
+  <string name="action_pdf">Als PDF exportieren</string>
   <string name="arrow_diameter_scale">Pfeildurchmesser Skalierung</string>
   <string name="timestamp">Uhrzeit</string>
   <string name="change_target_face">Auflage ändern</string>
@@ -349,4 +349,15 @@
   <string name="reset">Zurücksetzen</string>
   <string name="end_x_of_y">Passe %1$d/%2$d</string>
   <string name="round_x_of_y">Runde %1$d/%2$d</string>
+  <string name="settings_summary_timer">Verhalten der Schießuhr anpassen</string>
+  <string name="settings_summary_scoreboard">Aussehen des Schießzettels ändern</string>
+  <string name="settings_summary_input">Personalisierung des Eingabe-Bildschirms</string>
+  <string name="settings_summary_overview">Anpassen der angezeigten Infos für Trainings, Runden und Passen</string>
+  <string name="settings_summary_profile">Persönliche Informationen bearbeiten</string>
+  <string name="licence_number">Lizenz-Nummer</string>
+  <string name="file_type">Dateityp</string>
+  <string name="clear">Löschen</string>
+  <string name="tap_to_sign">Tippen zum Unterschreiben</string>
+  <string name="pdf_file">PDF-Datei</string>
+  <string name="image_file">Bild-Datei</string>
 </resources>

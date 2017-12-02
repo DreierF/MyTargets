@@ -88,7 +88,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         arrow = buildArrow();
         super.onSaveInstanceState(outState);
     }

@@ -24,6 +24,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import de.dreier.mytargets.features.settings.SettingsManager;
+import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
 
 public class ArrowDispersionView extends View implements View.OnTouchListener {
@@ -75,10 +76,9 @@ public class ArrowDispersionView extends View implements View.OnTouchListener {
         return true;
     }
 
-    public void setShots(@NonNull ArrowStatistic statistic) {
+    public void setShots(@NonNull ArrowStatistic statistic, EAggregationStrategy aggregationStrategy) {
         this.target = statistic.target.getImpactAggregationDrawable();
-        // TODO merge all these setters into a single setArrowStatistic(stats)
-        this.target.setAggregationStrategy(SettingsManager.getAggregationStrategy());
+        this.target.setAggregationStrategy(aggregationStrategy);
         this.target.setShots(statistic.shots);
         this.target.setArrowDiameter(statistic.arrowDiameter,
                 SettingsManager.getInputArrowDiameterScale());

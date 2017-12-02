@@ -76,19 +76,19 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         round2.trainingId = training.getId();
         round2.save();
 
-        randomEnd(training, round1, 6, generator, 0).save();
-        randomEnd(training, round1, 6, generator, 1).save();
-        randomEnd(training, round1, 6, generator, 2).save();
-        randomEnd(training, round1, 6, generator, 3).save();
-        randomEnd(training, round1, 6, generator, 4).save();
-        randomEnd(training, round1, 6, generator, 5).save();
+        randomEnd(round1, 6, generator, 0).save();
+        randomEnd(round1, 6, generator, 1).save();
+        randomEnd(round1, 6, generator, 2).save();
+        randomEnd(round1, 6, generator, 3).save();
+        randomEnd(round1, 6, generator, 4).save();
+        randomEnd(round1, 6, generator, 5).save();
 
-        randomEnd(training, round2, 6, generator, 0).save();
-        randomEnd(training, round2, 6, generator, 1).save();
-        randomEnd(training, round2, 6, generator, 2).save();
-        randomEnd(training, round2, 6, generator, 3).save();
-        randomEnd(training, round2, 6, generator, 4).save();
-        randomEnd(training, round2, 6, generator, 5).save();
+        randomEnd(round2, 6, generator, 0).save();
+        randomEnd(round2, 6, generator, 1).save();
+        randomEnd(round2, 6, generator, 2).save();
+        randomEnd(round2, 6, generator, 3).save();
+        randomEnd(round2, 6, generator, 4).save();
+        randomEnd(round2, 6, generator, 5).save();
     }
 
     @NonNull
@@ -122,19 +122,19 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         round2.trainingId = training.getId();
         round2.save();
 
-        randomEnd(training, round1, 6, generator, 0).save();
-        randomEnd(training, round1, 6, generator, 1).save();
-        randomEnd(training, round1, 6, generator, 2).save();
-        randomEnd(training, round1, 6, generator, 3).save();
-        randomEnd(training, round1, 6, generator, 4).save();
-        randomEnd(training, round1, 6, generator, 5).save();
+        randomEnd(round1, 6, generator, 0).save();
+        randomEnd(round1, 6, generator, 1).save();
+        randomEnd(round1, 6, generator, 2).save();
+        randomEnd(round1, 6, generator, 3).save();
+        randomEnd(round1, 6, generator, 4).save();
+        randomEnd(round1, 6, generator, 5).save();
 
-        randomEnd(training, round2, 6, generator, 0).save();
-        randomEnd(training, round2, 6, generator, 1).save();
-        randomEnd(training, round2, 6, generator, 2).save();
-        randomEnd(training, round2, 6, generator, 3).save();
-        randomEnd(training, round2, 6, generator, 4).save();
-        randomEnd(training, round2, 6, generator, 5).save();
+        randomEnd(round2, 6, generator, 0).save();
+        randomEnd(round2, 6, generator, 1).save();
+        randomEnd(round2, 6, generator, 2).save();
+        randomEnd(round2, 6, generator, 3).save();
+        randomEnd(round2, 6, generator, 4).save();
+        randomEnd(round2, 6, generator, 5).save();
     }
 
     private void addFullTraining(@NonNull Bow bow) {

@@ -77,7 +77,7 @@ public abstract class DbTestRuleBase implements TestRule {
     }
 
     @NonNull
-    protected End randomEnd(Training training, @NonNull Round round, int arrowsPerEnd, @NonNull Random gen, int index) {
+    protected End randomEnd(@NonNull Round round, int arrowsPerEnd, @NonNull Random gen, int index) {
         End end = new End(arrowsPerEnd, index);
         end.roundId = round.getId();
         end.exact = true;

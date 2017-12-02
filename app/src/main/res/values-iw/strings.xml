@@ -28,7 +28,6 @@
   <string name="round">סבב</string>
   <string name="points">נקודות</string>
   <string name="passe">פסה</string>
-  <string name="passe_n">פסה %d</string>
   <!-- Overview -->
   <string name="new_training">אימון חדש</string>
   <string name="new_bow">קשת חדשה</string>
@@ -208,9 +207,9 @@
     <item quantity="other">מקצה נמחק</item>
   </plurals>
   <plurals name="rounds">
-    <item quantity="one">סבב</item>
+    <item quantity="one">סבב%d</item>
     <item quantity="two">סבב</item>
-    <item quantity="many">סבב</item>
+    <item quantity="many">סבב%d</item>
     <item quantity="other">סבב</item>
   </plurals>
   <plurals name="round_selected">
@@ -280,6 +279,7 @@
   <string name="diameter">קוטר</string>
   <string name="input">קלט</string>
   <string name="target_zoom">רמת התמקדות במטרה</string>
+  <string name="action_pdf">Export as PDF</string>
   <string name="arrow_diameter_scale">קנה מידה של קוטר החץ</string>
   <string name="timestamp">זמן</string>
   <string name="change_target_face">שנה את חזית המטרה</string>
@@ -377,4 +377,15 @@
   <string name="reset">Reset</string>
   <string name="end_x_of_y">End %1$d/%2$d</string>
   <string name="round_x_of_y">Round %1$d/%2$d</string>
+  <string name="settings_summary_timer">Adjust archery timer\' behaviour</string>
+  <string name="settings_summary_scoreboard">Change scoreboard appearance</string>
+  <string name="settings_summary_input">Customize input screen</string>
+  <string name="settings_summary_overview">Personalize information shown for trainings, rounds and ends</string>
+  <string name="settings_summary_profile">Enter personal information</string>
+  <string name="licence_number">Licence number</string>
+  <string name="file_type">File type</string>
+  <string name="clear">Clear</string>
+  <string name="tap_to_sign">Tap to sign</string>
+  <string name="pdf_file">PDF file</string>
+  <string name="image_file">Image file</string>
 </resources>

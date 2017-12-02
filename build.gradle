@@ -68,6 +68,7 @@ ext {
             screengrab           : '1.1.0',
             retrofit             : '2.3.0',
             roundedImageView     : '2.3.0',
+            signaturePad         : '1.2.1',
             support              : '27.0.1',
             supportWearable      : '2.1.0',
             testSupport          : '1.0.1',

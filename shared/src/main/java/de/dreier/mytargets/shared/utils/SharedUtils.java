@@ -18,7 +18,7 @@ package de.dreier.mytargets.shared.utils;
 import android.support.annotation.Nullable;
 
 public class SharedUtils {
-    public static boolean equals(@Nullable Object a, Object b) {
+    public static boolean equals(@Nullable Object a, @Nullable Object b) {
         return (a == b) || (a != null && a.equals(b));
     }
 }

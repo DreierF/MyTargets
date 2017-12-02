@@ -28,7 +28,6 @@
   <string name="round">Kierros</string>
   <string name="points">Pisteet</string>
   <string name="passe">Sarja</string>
-  <string name="passe_n">Sarja %d</string>
   <!-- Overview -->
   <string name="new_training">New training</string>
   <string name="new_bow">Uusi jousi</string>
@@ -186,8 +185,8 @@
     <item quantity="other">%d ends deleted</item>
   </plurals>
   <plurals name="rounds">
-    <item quantity="one">Round %d</item>
-    <item quantity="other">Round %d</item>
+    <item quantity="one">Kierros %d</item>
+    <item quantity="other">Kierros %d</item>
   </plurals>
   <plurals name="round_selected">
     <item quantity="one">%d kierros valittu</item>
@@ -252,6 +251,7 @@
   <string name="diameter">Diameter</string>
   <string name="input">Input</string>
   <string name="target_zoom">Target zoom level</string>
+  <string name="action_pdf">Export as PDF</string>
   <string name="arrow_diameter_scale">Arrow diameter scale</string>
   <string name="timestamp">Timestamp</string>
   <string name="change_target_face">Vaihda maalitaulu</string>
@@ -349,4 +349,15 @@
   <string name="reset">Reset</string>
   <string name="end_x_of_y">Sarja %1$d/%2$d</string>
   <string name="round_x_of_y">Kierros %1$d/%2$d</string>
+  <string name="settings_summary_timer">Adjust archery timer\' behaviour</string>
+  <string name="settings_summary_scoreboard">Change scoreboard appearance</string>
+  <string name="settings_summary_input">Customize input screen</string>
+  <string name="settings_summary_overview">Personalize information shown for trainings, rounds and ends</string>
+  <string name="settings_summary_profile">Enter personal information</string>
+  <string name="licence_number">Licence number</string>
+  <string name="file_type">File type</string>
+  <string name="clear">Clear</string>
+  <string name="tap_to_sign">Tap to sign</string>
+  <string name="pdf_file">PDF file</string>
+  <string name="image_file">Image file</string>
 </resources>

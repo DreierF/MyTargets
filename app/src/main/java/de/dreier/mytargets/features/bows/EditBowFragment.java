@@ -122,7 +122,7 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         bow = buildBow();
         super.onSaveInstanceState(outState);
     }

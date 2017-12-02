@@ -29,12 +29,13 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
-import java.util.Locale;
 
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.test.base.InstrumentedTestBase;
 import de.dreier.mytargets.test.utils.rules.MiniDbTestRule;
+
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
 @SmallTest
 @RunWith(AndroidJUnit4.class)
@@ -83,7 +84,6 @@ public class ExportTest extends InstrumentedTestBase {
 
     @Test
     public void testDataExport() throws IOException {
-        setLocale(Locale.US);
         final StringWriter writer = new StringWriter();
         List<Long> roundIds = Stream.of(Training.getAll())
                 .flatMap(t -> Stream.of(t.getRounds()))
@@ -91,7 +91,8 @@ public class ExportTest extends InstrumentedTestBase {
                 .sorted()
                 .collect(Collectors.toList());
         roundIds.remove(0);
-        CsvExporter.writeExportData(writer, roundIds);
+        new CsvExporter(getInstrumentation().getTargetContext())
+                .writeExportData(writer, roundIds);
         Assert.assertEquals(EXPECTED, writer.toString());
     }
 }

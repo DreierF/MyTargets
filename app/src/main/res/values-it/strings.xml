@@ -28,7 +28,6 @@
   <string name="round">Round</string>
   <string name="points">Punti</string>
   <string name="passe">Volée</string>
-  <string name="passe_n">Volée %d</string>
   <!-- Overview -->
   <string name="new_training">Nuovo allenamento</string>
   <string name="new_bow">Nuovo arco</string>
@@ -252,6 +251,7 @@
   <string name="diameter">Diameter</string>
   <string name="input">Input</string>
   <string name="target_zoom">Target zoom level</string>
+  <string name="action_pdf">Export as PDF</string>
   <string name="arrow_diameter_scale">Arrow diameter scale</string>
   <string name="timestamp">Timestamp</string>
   <string name="change_target_face">Cambia targa</string>
@@ -349,4 +349,15 @@
   <string name="reset">Reset</string>
   <string name="end_x_of_y">Volée %1$d/%2$d</string>
   <string name="round_x_of_y">Sessione %1$d/%2$d</string>
+  <string name="settings_summary_timer">Adjust archery timer\' behaviour</string>
+  <string name="settings_summary_scoreboard">Change scoreboard appearance</string>
+  <string name="settings_summary_input">Customize input screen</string>
+  <string name="settings_summary_overview">Personalize information shown for trainings, rounds and ends</string>
+  <string name="settings_summary_profile">Enter personal information</string>
+  <string name="licence_number">Licence number</string>
+  <string name="file_type">File type</string>
+  <string name="clear">Clear</string>
+  <string name="tap_to_sign">Tap to sign</string>
+  <string name="pdf_file">PDF file</string>
+  <string name="image_file">Image file</string>
 </resources>

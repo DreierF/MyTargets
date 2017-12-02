@@ -35,8 +35,13 @@ import java.io.IOException;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.activities.ChildActivityBase;
 import de.dreier.mytargets.databinding.ActivityArrowRankingDetailsBinding;
+import de.dreier.mytargets.features.scoreboard.EFileType;
+import de.dreier.mytargets.features.settings.ESettingsScreens;
+import de.dreier.mytargets.features.settings.SettingsActivity;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.utils.Utils;
 
 import static de.dreier.mytargets.shared.utils.FileUtils.getUriForFile;
 
@@ -59,7 +64,6 @@ public class DispersionPatternActivity extends ChildActivityBase {
                 .setContentView(this, R.layout.activity_arrow_ranking_details);
 
         statistic = Parcels.unwrap(getIntent().getParcelableExtra(ITEM));
-        binding.dispersionView.setShots(statistic);
 
         ToolbarUtils.showHomeAsUp(this);
         if (statistic.arrowName != null) {
@@ -71,9 +75,16 @@ public class DispersionPatternActivity extends ChildActivityBase {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        binding.dispersionView.setShots(statistic,
+                SettingsManager.getStatisticsDispersionPatternAggregationStrategy());
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.menu_scoreboard, menu);
-        menu.findItem(R.id.action_settings).setVisible(false);
+        menu.findItem(R.id.action_print).setVisible(Utils.isKitKat());
         return true;
     }
 
@@ -86,6 +97,11 @@ public class DispersionPatternActivity extends ChildActivityBase {
             case R.id.action_print:
                 print();
                 return true;
+            case R.id.action_settings:
+                SettingsActivity.getIntent(ESettingsScreens.STATISTICS)
+                        .withContext(this)
+                        .start();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -93,16 +109,21 @@ public class DispersionPatternActivity extends ChildActivityBase {
 
     /* Called after the user selected with items he wants to share */
     private void shareImage() {
-        // Construct share intent
         new Thread(() -> {
             try {
                 File dir = getCacheDir();
-                final File f = File.createTempFile("dispersion_pattern", ".png", dir);
-                DispersionPatternUtils.createDispersionPatternImageFile(800, f, statistic);
+                EFileType fileType = SettingsManager.getStatisticsDispersionPatternFileType();
+                final File f = File.createTempFile("dispersion_pattern",
+                        "." + fileType.name().toLowerCase(), dir);
+                if (fileType == EFileType.PDF && Utils.isKitKat()) {
+                    DispersionPatternUtils.generatePdf(f, statistic);
+                } else {
+                    DispersionPatternUtils.createDispersionPatternImageFile(800, f, statistic);
+                }
 
                 // Build and fire intent to ask for share provider
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("image/png");
+                shareIntent.setType(fileType.mimeType);
                 shareIntent.putExtra(Intent.EXTRA_STREAM,
                         getUriForFile(DispersionPatternActivity.this, f));
                 startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
@@ -123,7 +144,7 @@ public class DispersionPatternActivity extends ChildActivityBase {
         Bitmap image = DispersionPatternUtils.getDispersionPatternBitmap(800, statistic);
         if (image != null) {
             // Send it to the print helper
-            printHelper.printBitmap("MyTargets", image);
+            printHelper.printBitmap("Dispersion Pattern", image);
         }
     }
 }

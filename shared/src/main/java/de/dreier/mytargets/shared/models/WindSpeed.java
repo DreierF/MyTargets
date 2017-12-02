@@ -81,6 +81,7 @@ public class WindSpeed implements IIdProvider, IImageProvider, Comparable<WindSp
         return context.getResources().getDrawable(drawable);
     }
 
+    @NonNull
     @Override
     public String getName() {
         return name;

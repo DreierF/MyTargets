@@ -54,6 +54,7 @@ import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.SightMark;
+import de.dreier.mytargets.shared.models.db.Signature;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.EndRenderer;
@@ -84,6 +85,7 @@ import timber.log.Timber;
         @ParcelClass(RoundTemplate.class),
         @ParcelClass(Shot.class),
         @ParcelClass(SightMark.class),
+        @ParcelClass(Signature.class),
         @ParcelClass(StandardRound.class),
         @ParcelClass(TrainingInfo.class),
         @ParcelClass(Target.class),

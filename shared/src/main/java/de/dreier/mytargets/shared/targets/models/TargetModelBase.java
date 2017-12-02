@@ -48,8 +48,8 @@ public class TargetModelBase implements IIdProvider {
     public float faceRadius;
     public PointF[] facePositions;
     protected ZoneBase[] zones;
-    @Nullable
-    protected Dimension[] diameters;
+    @NonNull
+    protected Dimension[] diameters = new Dimension[0];
     protected ScoringStyle[] scoringStyles;
     protected TargetDecorator decorator;
     @NonNull
@@ -92,7 +92,7 @@ public class TargetModelBase implements IIdProvider {
         return zones[zone];
     }
 
-    @Nullable
+    @NonNull
     public Dimension[] getDiameters() {
         return diameters;
     }

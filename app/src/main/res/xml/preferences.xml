@@ -18,8 +18,35 @@
                   android:key="main"
                   android:title="@string/preferences">
     <PreferenceScreen
+        android:icon="@drawable/ic_person_grey600_24dp"
+        android:key="profile"
+        android:summary="@string/settings_summary_profile"
+        android:title="@string/profile">
+        <EditTextPreference
+            android:inputType="textAutoComplete"
+            android:key="profile_first_name"
+            android:title="@string/first_name"/>
+        <EditTextPreference
+            android:inputType="textAutoComplete"
+            android:key="profile_last_name"
+            android:title="@string/last_name"/>
+        <!--suppress AndroidElementNotAllowed -->
+        <de.dreier.mytargets.features.settings.DatePreference
+            android:key="profile_birthday"
+            android:title="@string/birthday"/>
+        <EditTextPreference
+            android:inputType="textAutoComplete"
+            android:key="profile_club"
+            android:title="@string/club"/>
+        <EditTextPreference
+            android:inputType="textNoSuggestions"
+            android:key="profile_licence_number"
+            android:title="@string/licence_number"/>
+    </PreferenceScreen>
+    <PreferenceScreen
         android:icon="@drawable/ic_view_list_grey600_24dp"
         android:key="overview"
+        android:summary="@string/settings_summary_overview"
         android:title="@string/overview">
         <PreferenceCategory android:title="@string/score">
             <CheckBoxPreference
@@ -61,6 +88,7 @@
     <PreferenceScreen
         android:icon="@drawable/ic_input_grey600_24dp"
         android:key="input"
+        android:summary="@string/settings_summary_input"
         android:title="@string/input">
         <PreferenceCategory android:title="@string/summary">
             <CheckBoxPreference
@@ -134,125 +162,77 @@
         </PreferenceCategory>
     </PreferenceScreen>
     <PreferenceScreen
+        android:icon="@drawable/ic_show_chart_grey600_24dp"
+        android:key="statistics"
+        android:summary="@string/settings_summary_statistics"
+        android:title="@string/statistic">
+        <PreferenceCategory android:key="statistics_dispersion_pattern" android:title="@string/dispersion_pattern">
+            <ListPreference
+                android:defaultValue="JPG"
+                android:entries="@array/file_type_entries"
+                android:entryValues="@array/file_type_values"
+                android:icon="@drawable/ic_file_grey600_24dp"
+                android:key="statistics_dispersion_pattern_file_type"
+                android:title="@string/file_type"/>
+
+            <ListPreference
+                android:defaultValue="AVERAGE"
+                android:entries="@array/target_aggregation_strategy_entries"
+                android:entryValues="@array/target_aggregation_strategy_values"
+                android:icon="@drawable/ic_bubble_chart_grey600_24dp"
+                android:key="statistics_dispersion_pattern_aggregation_strategy"
+                android:title="@string/grouping"/>
+        </PreferenceCategory>
+    </PreferenceScreen>
+    <PreferenceScreen
         android:icon="@drawable/ic_description_grey600_24dp"
         android:key="scoreboard"
+        android:summary="@string/settings_summary_scoreboard"
         android:title="@string/scoreboard">
-        <PreferenceCategory android:title="@string/profile">
-            <EditTextPreference
-                android:inputType="textAutoComplete"
-                android:key="profile_first_name"
-                android:title="@string/first_name"/>
-            <EditTextPreference
-                android:inputType="textAutoComplete"
-                android:key="profile_last_name"
-                android:title="@string/last_name"/>
-            <!--suppress AndroidElementNotAllowed -->
-            <de.dreier.mytargets.features.settings.DatePreference
-                android:key="profile_birthday"
-                android:title="@string/birthday"/>
-            <EditTextPreference
-                android:inputType="textAutoComplete"
-                android:key="profile_club"
-                android:title="@string/club"/>
-            <EditTextPreference
-                android:inputType="textAutoComplete"
-                android:key="profile_target_captain"
-                android:title="@string/target_captain"/>
+        <PreferenceCategory android:key="scoreboard_share" android:title="@string/share">
+            <ListPreference
+                android:defaultValue="PDF"
+                android:entries="@array/file_type_entries"
+                android:entryValues="@array/file_type_values"
+                android:icon="@drawable/ic_file_grey600_24dp"
+                android:key="scoreboard_share_file_type"
+                android:title="@string/file_type"/>
         </PreferenceCategory>
         <PreferenceCategory android:title="@string/display">
             <CheckBoxPreference
                 android:defaultValue="true"
-                android:key="scoreboard_display_title"
+                android:key="scoreboard_title"
                 android:title="@string/title"/>
             <CheckBoxPreference
                 android:defaultValue="true"
-                android:key="scoreboard_display_properties"
+                android:key="scoreboard_properties"
                 android:title="@string/properties"/>
             <CheckBoxPreference
                 android:defaultValue="true"
-                android:key="scoreboard_display_table"
+                android:key="scoreboard_table"
                 android:title="@string/table"/>
             <CheckBoxPreference
                 android:defaultValue="true"
-                android:key="scoreboard_display_statistics"
+                android:key="scoreboard_statistics"
                 android:title="@string/statistic"/>
             <CheckBoxPreference
                 android:defaultValue="true"
-                android:key="scoreboard_display_comments"
+                android:key="scoreboard_comments"
                 android:title="@string/comments"/>
             <CheckBoxPreference
                 android:defaultValue="true"
-                android:key="scoreboard_display_points_colored"
-                android:title="@string/show_points_colored"/>
-            <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="scoreboard_display_signature"
-                android:title="@string/show_signature"/>
-        </PreferenceCategory>
-        <PreferenceCategory android:title="@string/print">
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_print_title"
-                android:title="@string/title"/>
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_print_properties"
-                android:title="@string/properties"/>
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_print_table"
-                android:title="@string/table"/>
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_print_statistics"
-                android:title="@string/statistic"/>
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_print_comments"
-                android:title="@string/comments"/>
-            <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="scoreboard_print_points_colored"
+                android:key="scoreboard_points_colored"
                 android:title="@string/show_points_colored"/>
             <CheckBoxPreference
                 android:defaultValue="true"
-                android:key="scoreboard_print_signature"
-                android:title="@string/show_signature"/>
-        </PreferenceCategory>
-        <PreferenceCategory android:title="@string/share">
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_share_title"
-                android:title="@string/title"/>
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_share_properties"
-                android:title="@string/properties"/>
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_share_table"
-                android:title="@string/table"/>
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_share_statistics"
-                android:title="@string/statistic"/>
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_share_comments"
-                android:title="@string/comments"/>
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_share_points_colored"
-                android:title="@string/show_points_colored"/>
-            <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="scoreboard_share_signature"
+                android:key="scoreboard_signature"
                 android:title="@string/show_signature"/>
         </PreferenceCategory>
     </PreferenceScreen>
     <PreferenceScreen
         android:icon="@drawable/ic_timer_grey600_24dp"
         android:key="timer"
+        android:summary="@string/settings_summary_timer"
         android:title="@string/timer">
         <EditTextPreference
             android:defaultValue="20"

@@ -157,6 +157,8 @@ dependencies {
 
     implementation "uk.co.hassie:version-info-material-dialog:$libraryVersion.versionInfoDialog"
 
+    implementation "com.github.gcacace:signature-pad:$libraryVersion.signaturePad"
+
     implementation project(':shared')
     wearApp project(':wearable')
 

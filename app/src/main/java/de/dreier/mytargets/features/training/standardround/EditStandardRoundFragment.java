@@ -208,7 +208,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
             item = roundTemplate;
 
             // Set title of round
-            binding.roundNumber.setText(fragment.getContext().getResources()
+            binding.roundNumber.setText(fragment.getResources()
                     .getQuantityString(R.plurals.rounds, position + 1, position + 1));
             item.index = position;
 

@@ -15,36 +15,24 @@
 
 package de.dreier.mytargets.features.settings;
 
-import android.support.v4.app.DialogFragment;
 import android.support.v7.preference.Preference;
 
-import static de.dreier.mytargets.features.settings.SettingsManager.KEY_PROFILE_BIRTHDAY;
-import static de.dreier.mytargets.features.settings.SettingsManager.KEY_PROFILE_CLUB;
-import static de.dreier.mytargets.features.settings.SettingsManager.KEY_PROFILE_FIRST_NAME;
-import static de.dreier.mytargets.features.settings.SettingsManager.KEY_PROFILE_LAST_NAME;
-import static de.dreier.mytargets.features.settings.SettingsManager.KEY_PROFILE_TARGET_CAPTAIN;
+import de.dreier.mytargets.utils.Utils;
+
+import static de.dreier.mytargets.features.settings.SettingsManager.KEY_SCOREBOARD_SHARE_FILE_TYPE;
 
 public class ScoreboardSettingsFragment extends SettingsFragmentBase {
 
-    private static final String DIALOG_FRAGMENT_TAG = "android.support.v7.preference.PreferenceFragment.DIALOG";
+    public static final String KEY_SCOREBOARD_SHARE = "scoreboard_share";
 
     @Override
     public void updateItemSummaries() {
-        setSummary(KEY_PROFILE_FIRST_NAME, SettingsManager.getProfileFirstName());
-        setSummary(KEY_PROFILE_LAST_NAME, SettingsManager.getProfileLastName());
-        setSummary(KEY_PROFILE_BIRTHDAY, SettingsManager.getProfileBirthDayFormatted());
-        setSummary(KEY_PROFILE_CLUB, SettingsManager.getProfileClub());
-        setSummary(KEY_PROFILE_TARGET_CAPTAIN, SettingsManager.getProfileTargetCaptain());
-    }
+        // Disable file type selection for pre-Kitkat, since they do not support PDF generation
+        Preference shareCategory = getPreferenceManager().findPreference(KEY_SCOREBOARD_SHARE);
+        shareCategory.setVisible(Utils.isKitKat());
+        Preference shareFileType = getPreferenceManager().findPreference(KEY_SCOREBOARD_SHARE_FILE_TYPE);
+        shareFileType.setVisible(Utils.isKitKat());
 
-    @Override
-    public void onDisplayPreferenceDialog(Preference preference) {
-        if (!(preference instanceof DatePreference)) {
-            super.onDisplayPreferenceDialog(preference);
-            return;
-        }
-        DialogFragment f = DatePreferenceDialogFragmentCompat.newInstance(preference.getKey());
-        f.setTargetFragment(this, 0);
-        f.show(getFragmentManager(), DIALOG_FRAGMENT_TAG);
+        setDefaultSummary(KEY_SCOREBOARD_SHARE_FILE_TYPE);
     }
 }

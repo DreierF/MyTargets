@@ -80,6 +80,7 @@ public class InputActivityTest extends UITestBase {
     @Before
     public void setUp() {
         SettingsManager.setInputMethod(TargetViewBase.EInputMethod.KEYBOARD);
+        SettingsManager.setTimerEnabled(false);
     }
 
     @Test
@@ -99,7 +100,7 @@ public class InputActivityTest extends UITestBase {
         assertVirtualViewExists("Shot 1: 10");
 
         clickActionBarItem(R.id.action_settings, R.string.preferences);
-        clickOnPreference(12); //Keyboard
+        clickOnPreference(R.string.keyboard_enabled);
         pressBack();
         // Wait for keyboard animation to finish
         try {

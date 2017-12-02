@@ -17,6 +17,7 @@ package de.dreier.mytargets.features.settings;
 
 
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -33,7 +34,6 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
 import de.dreier.mytargets.test.base.UITestBase;
-import de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -41,11 +41,12 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
+import static android.support.test.espresso.contrib.RecyclerViewActions.scrollTo;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static de.dreier.mytargets.test.utils.assertions.RecyclerViewAssertions.itemHasSummary;
 import static de.dreier.mytargets.test.utils.matchers.MatcherUtils.matchToolbarTitle;
 import static de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isOnForegroundFragment;
 import static de.dreier.mytargets.test.utils.matchers.ViewMatcher.clickOnPreference;
@@ -78,80 +79,70 @@ public class SettingsActivityTest extends UITestBase {
     public void settingsActivityTest() {
         matchToolbarTitle(getActivity().getString(R.string.preferences));
 
-        clickOnPreference(0);
+        clickOnPreference(R.string.profile);
+        matchToolbarTitle(getActivity().getString(R.string.profile));
+
+        clickOnPreference(R.string.first_name);
+        enterText("Joe");
+        matchPreferenceSummary(R.string.first_name, "Joe");
+        assertEquals(SettingsManager.getProfileFirstName(), "Joe");
+
+        clickOnPreference(R.string.last_name);
+        enterText("Doe");
+        matchPreferenceSummary(R.string.last_name, "Doe");
+        assertEquals(SettingsManager.getProfileLastName(), "Doe");
+
+        clickOnPreference(R.string.birthday);
+        enterDate(1990, 2, 11);
+        matchPreferenceSummary(R.string.birthday, DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+                .format(LocalDate.of(1990, 2, 11)));
+
+        clickOnPreference(R.string.club);
+        enterText("Archery Club");
+        matchPreferenceSummary(R.string.club, "Archery Club");
+        assertEquals(SettingsManager.getProfileClub(), "Archery Club");
+        pressBack();
+
+        clickOnPreference(R.string.overview);
 
         matchToolbarTitle(getActivity().getString(R.string.overview));
         pressBack();
 
-        clickOnPreference(1);
+        clickOnPreference(R.string.input);
 
         matchToolbarTitle(getActivity().getString(R.string.input));
 
-        matchPreferenceSummary(9, "3.0x");
-        clickOnPreference(9);
+        matchPreferenceSummary(R.string.target_zoom, "3.0x");
+        clickOnPreference(R.string.target_zoom);
         selectFromList("5.0x");
-        matchPreferenceSummary(9, "5.0x");
+        matchPreferenceSummary(R.string.target_zoom, "5.0x");
         assertEquals(SettingsManager.getInputTargetZoom(), 5.0f);
 
-        matchPreferenceSummary(10, "1.0x");
-        clickOnPreference(10);
+        matchPreferenceSummary(R.string.arrow_diameter_scale, "1.0x");
+        clickOnPreference(R.string.arrow_diameter_scale);
         selectFromList("3.5x");
-        matchPreferenceSummary(10, "3.5x");
+        matchPreferenceSummary(R.string.arrow_diameter_scale, "3.5x");
         assertEquals(SettingsManager.getInputArrowDiameterScale(), 3.5f);
 
         pressBack();
         matchToolbarTitle(getActivity().getString(R.string.preferences));
 
-        clickOnPreference(2);
+        clickOnPreference(R.string.scoreboard);
         matchToolbarTitle(getActivity().getString(R.string.scoreboard));
-
-        clickOnPreference(1);
-        enterText("Joe");
-        matchPreferenceSummary(1, "Joe");
-        assertEquals(SettingsManager.getProfileFirstName(), "Joe");
-
-        clickOnPreference(2);
-        enterText("Doe");
-        matchPreferenceSummary(2, "Doe");
-        assertEquals(SettingsManager.getProfileLastName(), "Doe");
-
-        clickOnPreference(3);
-        enterDate(1990, 2, 11);
-        matchPreferenceSummary(3, DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-                .format(LocalDate.of(1990, 2, 11)));
-
-        clickOnPreference(4);
-        enterText("Archery Club");
-        matchPreferenceSummary(4, "Archery Club");
-        assertEquals(SettingsManager.getProfileClub(), "Archery Club");
-
-        clickOnPreference(6);
-
-        clickOnPreference(6);
-
-        clickOnPreference(12);
-
-        clickOnPreference(14);
-
-        clickOnPreference(20);
-
-        clickOnPreference(22);
-
-        clickOnPreference(28);
 
         pressBack();
         matchToolbarTitle(getActivity().getString(R.string.preferences));
 
-        clickOnPreference(3);
+        clickOnPreference(R.string.timer);
         matchToolbarTitle(getActivity().getString(R.string.timer));
 
-        matchPreferenceSummary(0, getActivity()
+        matchPreferenceSummary(R.string.timer_waiting_time, getActivity()
                 .getResources().getQuantityString(R.plurals.second, 20, 20));
 
-        matchPreferenceSummary(1, getActivity()
+        matchPreferenceSummary(R.string.timer_shooting_time, getActivity()
                 .getResources().getQuantityString(R.plurals.second, 120, 120));
 
-        matchPreferenceSummary(2, getActivity()
+        matchPreferenceSummary(R.string.timer_warning_time, getActivity()
                 .getResources().getQuantityString(R.plurals.second, 30, 30));
 
         pressBack();
@@ -162,7 +153,7 @@ public class SettingsActivityTest extends UITestBase {
 //        matchToolbarTitle(getActivity().getString(R.string.backup_action));
 //        pressBack();
 
-        clickOnPreference(5);
+        clickOnPreference(R.string.language);
         selectFromList("Spanish (Español)");
         matchToolbarTitle("Opciones");
     }
@@ -193,11 +184,9 @@ public class SettingsActivityTest extends UITestBase {
                 .perform(click());
     }
 
-    private void matchPreferenceSummary(int position, String expectedSummary) {
+    private void matchPreferenceSummary(@StringRes int text, String expectedSummary) {
         onView(allOf(withId(R.id.list), isOnForegroundFragment()))
-                .perform(scrollToPosition(position));
-        onView(RecyclerViewMatcher.withRecyclerView(allOf(withId(R.id.list),
-                isOnForegroundFragment())).atPositionOnView(position, android.R.id.summary))
-                .check(matches(withText(expectedSummary)));
+                .perform(scrollTo(hasDescendant(withText(text))))
+                .check(itemHasSummary(text, expectedSummary));
     }
 }

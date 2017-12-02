@@ -28,7 +28,6 @@
   <string name="round">Krog</string>
   <string name="points">Toèke</string>
   <string name="passe">Serija</string>
-  <string name="passe_n">Serija %d</string>
   <!-- Overview -->
   <string name="new_training">Nov trening</string>
   <string name="new_bow">Nov lok</string>
@@ -211,13 +210,13 @@
     <item quantity="one">Round %d</item>
     <item quantity="two">Round %d</item>
     <item quantity="few">Round %d</item>
-    <item quantity="other">Round %d</item>
+    <item quantity="other">Krog %d</item>
   </plurals>
   <plurals name="round_selected">
-    <item quantity="one">%d round selected</item>
-    <item quantity="two">%d rounds selected</item>
-    <item quantity="few">%d rounds selected</item>
-    <item quantity="other">%d rounds selected</item>
+    <item quantity="one">Krog %d</item>
+    <item quantity="two">Krog %d</item>
+    <item quantity="few">Krog %d</item>
+    <item quantity="other">Krog %d</item>
   </plurals>
   <plurals name="round_deleted">
     <item quantity="one">%d round deleted</item>
@@ -280,6 +279,7 @@
   <string name="diameter">Diameter</string>
   <string name="input">Input</string>
   <string name="target_zoom">Target zoom level</string>
+  <string name="action_pdf">Export as PDF</string>
   <string name="arrow_diameter_scale">Arrow diameter scale</string>
   <string name="timestamp">Timestamp</string>
   <string name="change_target_face">Change target face</string>
@@ -377,4 +377,15 @@
   <string name="reset">Reset</string>
   <string name="end_x_of_y">Serija %1$d/%2$d</string>
   <string name="round_x_of_y">Krog %1$d/%2$d</string>
+  <string name="settings_summary_timer">Adjust archery timer\' behaviour</string>
+  <string name="settings_summary_scoreboard">Change scoreboard appearance</string>
+  <string name="settings_summary_input">Customize input screen</string>
+  <string name="settings_summary_overview">Personalize information shown for trainings, rounds and ends</string>
+  <string name="settings_summary_profile">Enter personal information</string>
+  <string name="licence_number">Licence number</string>
+  <string name="file_type">File type</string>
+  <string name="clear">Clear</string>
+  <string name="tap_to_sign">Tap to sign</string>
+  <string name="pdf_file">PDF file</string>
+  <string name="image_file">Image file</string>
 </resources>

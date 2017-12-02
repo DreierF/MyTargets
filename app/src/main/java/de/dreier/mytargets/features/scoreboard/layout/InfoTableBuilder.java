@@ -13,39 +13,33 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.scoreboard;
+package de.dreier.mytargets.features.scoreboard.layout;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.text.TextUtils;
 
 import de.dreier.mytargets.app.ApplicationInstance;
+import de.dreier.mytargets.features.scoreboard.builder.model.Table;
 
-public class HtmlInfoBuilder {
-    private final StringBuilder info = new StringBuilder();
+public class InfoTableBuilder {
+    public final Table info = new Table(true);
 
     public void addLine(int key, @NonNull Object value) {
-        if (info.length() != 0) {
-            info.append("<br>");
-        }
-        info.append(getKeyValueLine(key, value));
+        getKeyValueLine(info.startRow(), key, value);
     }
 
     public void addLine(String key, @NonNull Object value) {
-        if (info.length() != 0) {
-            info.append("<br>");
-        }
-        info.append(getKeyValueLine(key, value));
+        getKeyValueLine(info.startRow(), key, value);
     }
 
     @NonNull
-    private String getKeyValueLine(String key, @NonNull Object value) {
-        return String.format("%s: <b>%s</b>", key, TextUtils.htmlEncode(value.toString()));
+    private void getKeyValueLine(Table.Row row, String key, @NonNull Object value) {
+        row.addCell(key).addBoldCell(value.toString());
     }
 
     @NonNull
-    private String getKeyValueLine(@StringRes int key, @NonNull Object value) {
-        return getKeyValueLine(ApplicationInstance.get(key), value);
+    private void getKeyValueLine(Table.Row row, @StringRes int key, @NonNull Object value) {
+        getKeyValueLine(row, ApplicationInstance.get(key), value);
     }
 
     @NonNull

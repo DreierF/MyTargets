@@ -22,7 +22,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Process;
 import android.support.annotation.NonNull;
 import android.text.Html;
@@ -36,6 +35,9 @@ import java.util.Locale;
 
 import de.dreier.mytargets.features.main.MainActivity;
 import de.dreier.mytargets.features.training.overview.Header;
+
+import static android.os.Build.VERSION;
+import static android.os.Build.VERSION_CODES;
 
 public class Utils {
 
@@ -68,12 +70,12 @@ public class Utils {
         Process.killProcess(Process.myPid());
     }
 
-    public static boolean isLollipop() {
-        return android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP;
+    public static boolean isKitKat() {
+        return VERSION.SDK_INT >= VERSION_CODES.KITKAT;
     }
 
-    public static boolean supportsFabTransform() {
-        return isLollipop() && android.os.Build.VERSION.SDK_INT < 27;
+    public static boolean isLollipop() {
+        return VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP;
     }
 
     public static String humanReadableByteCount(long bytes, boolean si) {
@@ -112,7 +114,7 @@ public class Utils {
 
     @SuppressWarnings("deprecation")
     public static Spanned fromHtml(String html) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
             return Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
         } else {
             return Html.fromHtml(html);
@@ -125,7 +127,7 @@ public class Utils {
     }
 
     public static Locale getCurrentLocale(@NonNull Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
             return context.getResources().getConfiguration().getLocales().get(0);
         } else {
             //noinspection deprecation

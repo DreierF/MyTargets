@@ -23,7 +23,7 @@ import de.dreier.mytargets.utils.Utils;
 
 public class FabTransformUtil {
     public static void setup(@NonNull Activity activity, View root) {
-        if (Utils.supportsFabTransform()) {
+        if (Utils.isLollipop()) {
             FabTransform.setup(activity, root);
         }
     }

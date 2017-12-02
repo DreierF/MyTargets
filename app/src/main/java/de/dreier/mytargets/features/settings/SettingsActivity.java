@@ -22,12 +22,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
+import android.view.MenuItem;
 
 import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.utils.IntentWrapper;
 import im.delight.android.languages.Language;
 
 import static android.support.v7.preference.PreferenceFragmentCompat.ARG_PREFERENCE_ROOT;
+import static de.dreier.mytargets.features.settings.ESettingsScreens.MAIN;
 
 public class SettingsActivity extends SimpleFragmentActivityBase implements
         PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
@@ -44,7 +46,7 @@ public class SettingsActivity extends SimpleFragmentActivityBase implements
         if (key != null) {
             return ESettingsScreens.from(key).create();
         }
-        return ESettingsScreens.MAIN.create();
+        return MAIN.create();
     }
 
     @Override
@@ -81,5 +83,23 @@ public class SettingsActivity extends SimpleFragmentActivityBase implements
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(0, 0);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if(getChildFragment() instanceof MainSettingsFragment) {
+                    onBackPressed();
+                } else {
+                    getIntent().putExtra(ARG_PREFERENCE_ROOT, MAIN.getKey());
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.replace(android.R.id.content, instantiateFragment(), FRAGMENT_TAG);
+                    ft.commit();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

@@ -31,6 +31,8 @@ import java.util.Arrays;
 import java.util.Map;
 
 import de.dreier.mytargets.app.ApplicationInstance;
+import de.dreier.mytargets.features.scoreboard.EFileType;
+import de.dreier.mytargets.features.scoreboard.ScoreboardConfiguration;
 import de.dreier.mytargets.features.settings.backup.EBackupInterval;
 import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
 import de.dreier.mytargets.features.training.input.ETrainingScope;
@@ -58,7 +60,7 @@ public class SettingsManager {
     public static final String KEY_PROFILE_LAST_NAME = "profile_last_name";
     public static final String KEY_PROFILE_BIRTHDAY = "profile_birthday";
     public static final String KEY_PROFILE_CLUB = "profile_club";
-    public static final String KEY_PROFILE_TARGET_CAPTAIN = "profile_target_captain";
+    public static final String KEY_PROFILE_LICENCE_NUMBER = "profile_licence_number";
     public static final String KEY_INPUT_SUMMARY_AVERAGE_OF = "input_summary_average_of";
     public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
     public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
@@ -67,6 +69,7 @@ public class SettingsManager {
     private static final String KEY_INPUT_SUMMARY_SHOW_ROUND = "input_summary_show_round";
     private static final String KEY_INPUT_SUMMARY_SHOW_TRAINING = "input_summary_show_training";
     private static final String KEY_INPUT_SUMMARY_SHOW_AVERAGE = "input_summary_show_average";
+    public static final String KEY_SCOREBOARD_SHARE_FILE_TYPE = "scoreboard_share_file_type";
     private static final String KEY_BACKUP_INTERVAL = "backup_interval";
     private static final String KEY_DONATED = "donated";
     private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
@@ -98,6 +101,8 @@ public class SettingsManager {
     private static final String KEY_OVERVIEW_SHOT_SORTING = "overview_shot_sorting";
     private static final String KEY_OVERVIEW_SHOT_SORTING_SPOT = "overview_shot_sorting_spot";
     public static final String KEY_LANGUAGE = "language";
+    public static final String KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE = "statistics_dispersion_pattern_file_type";
+    public static final String KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY = "statistics_dispersion_pattern_aggregation_strategy";
 
     @NonNull
     public static Long getStandardRound() {
@@ -302,7 +307,7 @@ public class SettingsManager {
                 .apply();
     }
 
-    @Nullable
+    @NonNull
     public static String getProfileFirstName() {
         return preferences
                 .getString(KEY_PROFILE_FIRST_NAME, "");
@@ -315,7 +320,7 @@ public class SettingsManager {
                 .apply();
     }
 
-    @Nullable
+    @NonNull
     public static String getProfileLastName() {
         return preferences
                 .getString(KEY_PROFILE_LAST_NAME, "");
@@ -329,10 +334,10 @@ public class SettingsManager {
     }
 
     public static String getProfileFullName() {
-        return String.format("%s %s", getProfileFirstName(), getProfileLastName());
+        return String.format("%s %s", getProfileFirstName(), getProfileLastName()).trim();
     }
 
-    @Nullable
+    @NonNull
     public static String getProfileClub() {
         return preferences
                 .getString(KEY_PROFILE_CLUB, "");
@@ -345,16 +350,16 @@ public class SettingsManager {
                 .apply();
     }
 
-    @Nullable
-    public static String getProfileTargetCaptain() {
+    @NonNull
+    public static String getProfileLicenceNumber() {
         return preferences
-                .getString(KEY_PROFILE_TARGET_CAPTAIN, "");
+                .getString(KEY_PROFILE_LICENCE_NUMBER, "");
     }
 
-    public static void setProfileTargetCaptain(String targetCaptain) {
+    public static void setProfileLicenceNumber(String licenceNumber) {
         preferences
                 .edit()
-                .putString(KEY_PROFILE_TARGET_CAPTAIN, targetCaptain)
+                .putString(KEY_PROFILE_LICENCE_NUMBER, licenceNumber)
                 .apply();
     }
 
@@ -420,6 +425,42 @@ public class SettingsManager {
         preferences
                 .edit()
                 .putString(KEY_INPUT_KEYBOARD_TYPE, type.name())
+                .apply();
+    }
+
+    public static EFileType getScoreboardShareFileType() {
+        return EFileType.valueOf(preferences
+                .getString(KEY_SCOREBOARD_SHARE_FILE_TYPE, EFileType.PDF.name()));
+    }
+
+    public static void setScoreboardShareFileType(@NonNull EFileType fileType) {
+        preferences
+                .edit()
+                .putString(KEY_SCOREBOARD_SHARE_FILE_TYPE, fileType.name())
+                .apply();
+    }
+
+    public static EFileType getStatisticsDispersionPatternFileType() {
+        return EFileType.valueOf(preferences
+                .getString(KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE, EFileType.JPG.name()));
+    }
+
+    public static void setStatisticsDispersionPatternFileType(@NonNull EFileType fileType) {
+        preferences
+                .edit()
+                .putString(KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE, fileType.name())
+                .apply();
+    }
+
+    public static EAggregationStrategy getStatisticsDispersionPatternAggregationStrategy() {
+        return EAggregationStrategy.valueOf(preferences
+                .getString(KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY, EAggregationStrategy.AVERAGE.toString()));
+    }
+
+    public static void setStatisticsDispersionPatternAggregationStrategy(@NonNull EAggregationStrategy aggregationStrategy) {
+        preferences
+                .edit()
+                .putString(KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY, aggregationStrategy.toString())
                 .apply();
     }
 
@@ -526,5 +567,18 @@ public class SettingsManager {
         return preferences.getBoolean(KEY_OVERVIEW_SHOT_SORTING, true) &&
                 (target.getModel().getFaceCount() == 1 ||
                         preferences.getBoolean(KEY_OVERVIEW_SHOT_SORTING_SPOT, false));
+    }
+
+    @NonNull
+    public static ScoreboardConfiguration getScoreboardConfiguration() {
+        ScoreboardConfiguration config = new ScoreboardConfiguration();
+        config.showTitle = preferences.getBoolean("scoreboard_title", true);
+        config.showProperties = preferences.getBoolean("scoreboard_properties", true);
+        config.showTable = preferences.getBoolean("scoreboard_table", true);
+        config.showStatistics = preferences.getBoolean("scoreboard_statistics", true);
+        config.showComments = preferences.getBoolean("scoreboard_comments", true);
+        config.showPointsColored = preferences.getBoolean("scoreboard_points_colored", true);
+        config.showSignature = preferences.getBoolean("scoreboard_signature", true);
+        return config;
     }
 }
