@@ -33,7 +33,7 @@ public abstract class SettingsFragmentBase extends PreferenceFragmentCompat
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     @NonNull
-    private String rootKey;
+    private String rootKey = "main";
 
     @Override
     public final void onCreatePreferences(Bundle bundle, @Nullable String rootKey) {

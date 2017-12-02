@@ -135,22 +135,8 @@ public class DefaultScoreboardLayout {
             StandardRound standardRound = StandardRound.get(training.standardRoundId);
             info.addLine(R.string.standard_round, standardRound.name);
         }
-    }
-
-    private void appendStatistics(@NonNull List<Round> rounds) {
-        if (rounds.size() == 1) {
-            builder.table(getStatisticsForRound(rounds));
-        } else if (rounds.size() > 1) {
-            for (Round round : rounds) {
-                builder.openSection();
-                builder.subtitle(context.getResources().getQuantityString(R.plurals.rounds, round.index + 1, round.index + 1));
-                builder.table(getStatisticsForRound(Collections.singletonList(round)));
-                builder.closeSection();
-            }
-            builder.openSection();
-            builder.subtitle(context.getString(R.string.training));
-            builder.table(getStatisticsForRound(rounds));
-            builder.closeSection();
+        if (!training.comment.isEmpty() && configuration.showComments) {
+            info.addLine(R.string.comment, training.comment);
         }
     }
 
@@ -178,6 +164,23 @@ public class DefaultScoreboardLayout {
         }
     }
 
+    private void appendStatistics(@NonNull List<Round> rounds) {
+        if (rounds.size() == 1) {
+            builder.table(getStatisticsForRound(rounds));
+        } else if (rounds.size() > 1) {
+            for (Round round : rounds) {
+                builder.openSection();
+                builder.subtitle(context.getResources().getQuantityString(R.plurals.rounds, round.index + 1, round.index + 1));
+                builder.table(getStatisticsForRound(Collections.singletonList(round)));
+                builder.closeSection();
+            }
+            builder.openSection();
+            builder.subtitle(context.getString(R.string.training));
+            builder.table(getStatisticsForRound(rounds));
+            builder.closeSection();
+        }
+    }
+
     private Table getRoundInfo(@NonNull Round round, boolean[] equals) {
         InfoTableBuilder info = new InfoTableBuilder();
         if (!equals[0]) {
@@ -186,7 +189,7 @@ public class DefaultScoreboardLayout {
         if (!equals[1]) {
             info.addLine(R.string.target_face, round.getTarget().getName());
         }
-        if (!round.comment.isEmpty()) {
+        if (!round.comment.isEmpty() && configuration.showComments) {
             info.addLine(R.string.comment, round.comment);
         }
         return info.info;

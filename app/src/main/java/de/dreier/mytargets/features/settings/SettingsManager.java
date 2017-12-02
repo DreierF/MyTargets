@@ -32,6 +32,7 @@ import java.util.Map;
 
 import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.features.scoreboard.EFileType;
+import de.dreier.mytargets.features.scoreboard.ScoreboardConfiguration;
 import de.dreier.mytargets.features.settings.backup.EBackupInterval;
 import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
 import de.dreier.mytargets.features.training.input.ETrainingScope;
@@ -100,6 +101,8 @@ public class SettingsManager {
     private static final String KEY_OVERVIEW_SHOT_SORTING = "overview_shot_sorting";
     private static final String KEY_OVERVIEW_SHOT_SORTING_SPOT = "overview_shot_sorting_spot";
     public static final String KEY_LANGUAGE = "language";
+    public static final String KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE = "statistics_dispersion_pattern_file_type";
+    public static final String KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY = "statistics_dispersion_pattern_aggregation_strategy";
 
     @NonNull
     public static Long getStandardRound() {
@@ -437,6 +440,30 @@ public class SettingsManager {
                 .apply();
     }
 
+    public static EFileType getStatisticsDispersionPatternFileType() {
+        return EFileType.valueOf(preferences
+                .getString(KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE, EFileType.JPG.name()));
+    }
+
+    public static void setStatisticsDispersionPatternFileType(@NonNull EFileType fileType) {
+        preferences
+                .edit()
+                .putString(KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE, fileType.name())
+                .apply();
+    }
+
+    public static EAggregationStrategy getStatisticsDispersionPatternAggregationStrategy() {
+        return EAggregationStrategy.valueOf(preferences
+                .getString(KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY, EAggregationStrategy.AVERAGE.toString()));
+    }
+
+    public static void setStatisticsDispersionPatternAggregationStrategy(@NonNull EAggregationStrategy aggregationStrategy) {
+        preferences
+                .edit()
+                .putString(KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY, aggregationStrategy.toString())
+                .apply();
+    }
+
     public static EBackupLocation getBackupLocation() {
         final String defaultLocation = EBackupLocation.INTERNAL_STORAGE.name();
         String location = preferences.getString(KEY_BACKUP_LOCATION, defaultLocation);
@@ -540,5 +567,18 @@ public class SettingsManager {
         return preferences.getBoolean(KEY_OVERVIEW_SHOT_SORTING, true) &&
                 (target.getModel().getFaceCount() == 1 ||
                         preferences.getBoolean(KEY_OVERVIEW_SHOT_SORTING_SPOT, false));
+    }
+
+    @NonNull
+    public static ScoreboardConfiguration getScoreboardConfiguration() {
+        ScoreboardConfiguration config = new ScoreboardConfiguration();
+        config.showTitle = preferences.getBoolean("scoreboard_title", true);
+        config.showProperties = preferences.getBoolean("scoreboard_properties", true);
+        config.showTable = preferences.getBoolean("scoreboard_table", true);
+        config.showStatistics = preferences.getBoolean("scoreboard_statistics", true);
+        config.showComments = preferences.getBoolean("scoreboard_comments", true);
+        config.showPointsColored = preferences.getBoolean("scoreboard_points_colored", true);
+        config.showSignature = preferences.getBoolean("scoreboard_signature", true);
+        return config;
     }
 }

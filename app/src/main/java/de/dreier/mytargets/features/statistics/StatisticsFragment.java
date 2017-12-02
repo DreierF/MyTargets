@@ -65,6 +65,7 @@ import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.base.fragments.FragmentBase;
 import de.dreier.mytargets.databinding.FragmentStatisticsBinding;
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.SelectableZone;
@@ -199,7 +200,7 @@ public class StatisticsFragment extends FragmentBase {
         }
         ArrowStatistic stats = new ArrowStatistic(target, exactShots);
         stats.arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
-        binding.dispersionView.setShots(stats);
+        binding.dispersionView.setShots(stats, SettingsManager.getAggregationStrategy());
         binding.dispersionView.setEnabled(false);
         binding.dispersionViewOverlay.setOnClickListener(view -> {
             ArrowStatistic statistics = new ArrowStatistic(target, exactShots);

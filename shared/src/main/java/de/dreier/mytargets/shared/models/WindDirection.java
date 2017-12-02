@@ -77,6 +77,7 @@ public class WindDirection implements IIdProvider, IImageProvider, Comparable<Wi
         return context.getResources().getDrawable(drawable);
     }
 
+    @NonNull
     @Override
     public String getName() {
         return name;

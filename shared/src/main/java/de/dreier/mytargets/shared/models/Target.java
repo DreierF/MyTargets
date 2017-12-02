@@ -22,7 +22,6 @@ import android.support.annotation.NonNull;
 import org.parceler.Parcel;
 
 import java.util.List;
-import java.util.Set;
 
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.targets.TargetFactory;
@@ -87,6 +86,7 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
                 scoringStyle == ((Target) another).scoringStyle;
     }
 
+    @NonNull
     public TargetModelBase getModel() {
         if (model == null) {
             model = TargetFactory.getTarget(id);
@@ -103,6 +103,7 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
         return getDrawable();
     }
 
+    @NonNull
     @Override
     public String getName() {
         return String.format("%s (%s)", toString(), size.toString());
@@ -128,11 +129,6 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
     @Override
     public String toString() {
         return getModel().toString();
-    }
-
-    @NonNull
-    public Set<SelectableZone> getAllPossibleSelectableZones() {
-        return getModel().getAllPossibleSelectableZones(scoringStyle);
     }
 
     @Override

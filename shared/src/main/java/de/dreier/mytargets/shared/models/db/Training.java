@@ -103,7 +103,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     @Column
     public String location = "";
 
-    @Nullable
+    @NonNull
     @Column
     public String comment = "";
 

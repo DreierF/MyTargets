@@ -162,6 +162,29 @@
         </PreferenceCategory>
     </PreferenceScreen>
     <PreferenceScreen
+        android:icon="@drawable/ic_show_chart_grey600_24dp"
+        android:key="statistics"
+        android:summary="@string/settings_summary_statistics"
+        android:title="@string/statistic">
+        <PreferenceCategory android:key="statistics_dispersion_pattern" android:title="@string/dispersion_pattern">
+            <ListPreference
+                android:defaultValue="JPG"
+                android:entries="@array/file_type_entries"
+                android:entryValues="@array/file_type_values"
+                android:icon="@drawable/ic_file_grey600_24dp"
+                android:key="statistics_dispersion_pattern_file_type"
+                android:title="@string/file_type"/>
+
+            <ListPreference
+                android:defaultValue="AVERAGE"
+                android:entries="@array/target_aggregation_strategy_entries"
+                android:entryValues="@array/target_aggregation_strategy_values"
+                android:icon="@drawable/ic_bubble_chart_grey600_24dp"
+                android:key="statistics_dispersion_pattern_aggregation_strategy"
+                android:title="@string/grouping"/>
+        </PreferenceCategory>
+    </PreferenceScreen>
+    <PreferenceScreen
         android:icon="@drawable/ic_description_grey600_24dp"
         android:key="scoreboard"
         android:summary="@string/settings_summary_scoreboard"
@@ -178,91 +201,31 @@
         <PreferenceCategory android:title="@string/display">
             <CheckBoxPreference
                 android:defaultValue="true"
-                android:key="scoreboard_display_title"
+                android:key="scoreboard_title"
                 android:title="@string/title"/>
             <CheckBoxPreference
                 android:defaultValue="true"
-                android:key="scoreboard_display_properties"
+                android:key="scoreboard_properties"
                 android:title="@string/properties"/>
             <CheckBoxPreference
                 android:defaultValue="true"
-                android:key="scoreboard_display_table"
+                android:key="scoreboard_table"
                 android:title="@string/table"/>
             <CheckBoxPreference
                 android:defaultValue="true"
-                android:key="scoreboard_display_statistics"
+                android:key="scoreboard_statistics"
                 android:title="@string/statistic"/>
             <CheckBoxPreference
                 android:defaultValue="true"
-                android:key="scoreboard_display_comments"
+                android:key="scoreboard_comments"
                 android:title="@string/comments"/>
             <CheckBoxPreference
                 android:defaultValue="true"
-                android:key="scoreboard_display_points_colored"
+                android:key="scoreboard_points_colored"
                 android:title="@string/show_points_colored"/>
             <CheckBoxPreference
                 android:defaultValue="true"
-                android:key="scoreboard_display_signature"
-                android:title="@string/show_signature"/>
-        </PreferenceCategory>
-        <PreferenceCategory android:title="@string/print">
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_print_title"
-                android:title="@string/title"/>
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_print_properties"
-                android:title="@string/properties"/>
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_print_table"
-                android:title="@string/table"/>
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_print_statistics"
-                android:title="@string/statistic"/>
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_print_comments"
-                android:title="@string/comments"/>
-            <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="scoreboard_print_points_colored"
-                android:title="@string/show_points_colored"/>
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_print_signature"
-                android:title="@string/show_signature"/>
-        </PreferenceCategory>
-        <PreferenceCategory android:title="@string/share">
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_share_title"
-                android:title="@string/title"/>
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_share_properties"
-                android:title="@string/properties"/>
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_share_table"
-                android:title="@string/table"/>
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_share_statistics"
-                android:title="@string/statistic"/>
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_share_comments"
-                android:title="@string/comments"/>
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_share_points_colored"
-                android:title="@string/show_points_colored"/>
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="scoreboard_share_signature"
+                android:key="scoreboard_signature"
                 android:title="@string/show_signature"/>
         </PreferenceCategory>
     </PreferenceScreen>

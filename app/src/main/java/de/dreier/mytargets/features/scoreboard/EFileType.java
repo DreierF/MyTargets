@@ -16,6 +16,12 @@
 package de.dreier.mytargets.features.scoreboard;
 
 public enum EFileType {
-    PDF,
-    JPG
+    PDF("application/pdf"),
+    JPG("image/jpeg");
+
+    public final String mimeType;
+
+    EFileType(String mimeType) {
+        this.mimeType = mimeType;
+    }
 }

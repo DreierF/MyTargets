@@ -40,9 +40,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,6 +49,7 @@ import java.util.Locale;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.fragments.FragmentBase;
 import de.dreier.mytargets.databinding.FragmentScoreboardBinding;
+import de.dreier.mytargets.databinding.PartialScoreboardSignaturesBinding;
 import de.dreier.mytargets.features.scoreboard.pdf.ViewPrintDocumentAdapter;
 import de.dreier.mytargets.features.settings.ESettingsScreens;
 import de.dreier.mytargets.features.settings.SettingsActivity;
@@ -120,9 +119,10 @@ public class ScoreboardFragment extends FragmentBase {
         training = Training.get(trainingId);
         Signature archerSignature = training.getOrCreateArcherSignature();
         Signature witnessSignature = training.getOrCreateWitnessSignature();
+
         View scoreboard = ScoreboardUtils
                 .getScoreboardView(getContext(), Utils.getCurrentLocale(getContext()),
-                        training, roundId, ScoreboardConfiguration.fromDisplaySettings());
+                        training, roundId, SettingsManager.getScoreboardConfiguration());
         return () -> {
             binding.progressBar.setVisibility(GONE);
             scoreboard
@@ -130,25 +130,24 @@ public class ScoreboardFragment extends FragmentBase {
             binding.container.removeAllViews();
             binding.container.addView(scoreboard);
 
-            TextView archerPlaceHolder = scoreboard.findViewById(R.id.archer_signature_placeholder);
-            TextView witnessPlaceHolder = scoreboard
-                    .findViewById(R.id.witness_signature_placeholder);
+            PartialScoreboardSignaturesBinding signatures = PartialScoreboardSignaturesBinding
+                    .bind(scoreboard.findViewById(R.id.signatures_layout));
 
             String archer = SettingsManager.getProfileFullName();
             if (archer.trim().isEmpty()) {
                 archer = getString(R.string.archer);
             }
-
-            ImageView archerSignatureView = scoreboard.findViewById(R.id.signature_archer);
             String finalArcher = archer;
-            archerSignatureView
+
+            signatures.editSignatureArcher
                     .setOnClickListener(view -> onSignatureClicked(archerSignature, finalArcher));
-            ImageView witnessSignatureView = scoreboard.findViewById(R.id.signature_witness);
-            witnessSignatureView
+            signatures.editSignatureWitness
                     .setOnClickListener(view -> onSignatureClicked(witnessSignature, getString(R.string.target_captain)));
 
-            archerPlaceHolder.setVisibility(archerSignature.isSigned() ? GONE : VISIBLE);
-            witnessPlaceHolder.setVisibility(witnessSignature.isSigned() ? GONE : VISIBLE);
+            signatures.archerSignaturePlaceholder
+                    .setVisibility(archerSignature.isSigned() ? GONE : VISIBLE);
+            signatures.witnessSignaturePlaceholder
+                    .setVisibility(witnessSignature.isSigned() ? GONE : VISIBLE);
         };
     }
 
@@ -204,19 +203,19 @@ public class ScoreboardFragment extends FragmentBase {
     /* Called after the user selected with items he wants to share */
     @SuppressLint("StaticFieldLeak")
     private void share() {
+        EFileType fileType = SettingsManager.getScoreboardShareFileType();
         new AsyncTask<Void, Void, Uri>() {
 
             @Nullable
             @Override
             protected Uri doInBackground(Void... objects) {
                 try {
-                    EFileType fileType = SettingsManager.getScoreboardShareFileType();
                     File scoreboardFile = new File(getContext()
                             .getCacheDir(), getDefaultFileName(fileType));
                     LinearLayout content = ScoreboardUtils
                             .getScoreboardView(getContext(), Utils
-                                    .getCurrentLocale(getContext()), training, roundId, ScoreboardConfiguration
-                                    .fromShareSettings());
+                                    .getCurrentLocale(getContext()), training, roundId, SettingsManager
+                                    .getScoreboardConfiguration());
                     if (fileType == EFileType.PDF && Utils.isKitKat()) {
                         ScoreboardUtils.generatePdf(content, scoreboardFile);
                     } else {
@@ -240,7 +239,7 @@ public class ScoreboardFragment extends FragmentBase {
                 } else {
                     // Build and fire intent to ask for share provider
                     Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                    shareIntent.setType("*/*");
+                    shareIntent.setType(fileType.mimeType);
                     shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
                     startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
                 }
@@ -254,8 +253,8 @@ public class ScoreboardFragment extends FragmentBase {
         String fileName = getDefaultFileName(EFileType.PDF);
 
         LinearLayout content = ScoreboardUtils.getScoreboardView(getContext(), Utils
-                .getCurrentLocale(getContext()), training, roundId, ScoreboardConfiguration
-                .fromPrintSettings());
+                .getCurrentLocale(getContext()), training, roundId, SettingsManager
+                .getScoreboardConfiguration());
 
         String jobName = getString(R.string.scoreboard) + " Document";
         PrintDocumentAdapter pda = new ViewPrintDocumentAdapter(content, fileName);
