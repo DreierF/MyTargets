@@ -20,7 +20,6 @@ import com.annimon.stream.Stream;
 
 import org.parceler.ParcelConstructor;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,12 +57,12 @@ public class ImageList {
         removed.add(images.remove(i));
     }
 
-    public void addAll(List<File> files) {
-        images.addAll(Stream.of(files).map(File::getPath).collect(Collectors.toList()));
+    public void addAll(List<String> images) {
+        this.images.addAll(images);
     }
 
-    public List<File> getRemovedImages() {
-        return Stream.of(removed).map(File::new).collect(Collectors.toList());
+    public List<String> getRemovedImages() {
+        return removed;
     }
 
     public List<EndImage> toEndImageList() {

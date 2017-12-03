@@ -172,11 +172,11 @@ public class InputActivity extends ChildActivityBase
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
             ImageList imageList = GalleryActivity.getResult(data);
             this.data.getCurrentEnd().images = imageList.toEndImageList();
-            for (File image : imageList.getRemovedImages()) {
-                image.delete();
+            for (String image : imageList.getRemovedImages()) {
+                new File(getFilesDir(), image).delete();
             }
             this.data.getCurrentEnd().save();
             updateEnd();
@@ -334,7 +334,8 @@ public class InputActivity extends ChildActivityBase
                         .start();
                 return true;
             case R.id.action_photo:
-                GalleryActivity.getIntent(new ImageList(data.getCurrentEnd().getImages()), getString(R.string.end_n, data.endIndex + 1))
+                GalleryActivity.getIntent(new ImageList(data.getCurrentEnd()
+                        .getImages()), getString(R.string.end_n, data.endIndex + 1))
                         .withContext(this)
                         .forResult(GALLERY_REQUEST_CODE)
                         .start();

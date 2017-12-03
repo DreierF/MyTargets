@@ -260,16 +260,15 @@ public class GalleryActivity extends ChildActivityBase {
     }
 
     protected void loadImages(final List<File> imageFile) {
-        new AsyncTask<Void, Void, List<File>>() {
+        new AsyncTask<Void, Void, List<String>>() {
 
             @Override
-            protected List<File> doInBackground(Void... params) {
-                List<File> internalFiles = new ArrayList<>();
+            protected List<String> doInBackground(Void... params) {
+                List<String> internalFiles = new ArrayList<>();
                 for (File file : imageFile) {
                     try {
-                        File internal = File
-                                .createTempFile("img", file.getName(), getFilesDir());
-                        internalFiles.add(internal);
+                        File internal = File.createTempFile("img", file.getName(), getFilesDir());
+                        internalFiles.add(internal.getName());
                         FileUtils.move(file, internal);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -279,7 +278,7 @@ public class GalleryActivity extends ChildActivityBase {
             }
 
             @Override
-            protected void onPostExecute(List<File> files) {
+            protected void onPostExecute(List<String> files) {
                 super.onPostExecute(files);
                 imageList.addAll(files);
                 updateResult();
