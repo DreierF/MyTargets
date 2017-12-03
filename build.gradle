@@ -27,7 +27,7 @@ buildscript {
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.2'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.4'
         classpath 'com.google.gms:google-services:3.1.1'
-        classpath 'com.google.firebase:firebase-plugins:1.1.0-alpha1'
+        classpath 'com.google.firebase:firebase-plugins:1.1.5'
     }
 }
 
