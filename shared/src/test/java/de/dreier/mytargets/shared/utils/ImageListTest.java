@@ -17,7 +17,6 @@ package de.dreier.mytargets.shared.utils;
 
 import org.junit.Test;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -46,13 +45,13 @@ public class ImageListTest {
     @Test
     public void testMultiImage() {
         ImageList list = new ImageList(Collections.singletonList(new EndImage("someImage")));
-        list.addAll(Arrays.asList(new File("myImage"), new File("oneMore")));
+        list.addAll(Arrays.asList("myImage", "oneMore"));
         list.remove(0);
         assertEquals(false, list.isEmpty());
         assertEquals(2, list.size());
         assertEquals(2, list.toEndImageList().size());
         assertEquals("myImage", list.toEndImageList().get(0).getFileName());
         assertEquals("oneMore", list.toEndImageList().get(1).getFileName());
-        assertEquals("someImage", list.getRemovedImages().get(0).getPath());
+        assertEquals("someImage", list.getRemovedImages().get(0));
     }
 }

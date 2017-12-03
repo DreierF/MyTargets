@@ -28,8 +28,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 
-import timber.log.Timber;
-
 public class FileUtils {
     public static void copy(@NonNull File src, @NonNull File dst) throws IOException {
         FileInputStream inStream = new FileInputStream(src);
@@ -66,10 +64,7 @@ public class FileUtils {
         if (!directory.exists()) {
             directory.mkdir();
         }
-        if (!from.renameTo(to)) {
-            Timber.e("Couldn't rename file to %s", to.getAbsolutePath());
-            copy(from, to);
-            from.delete();
-        }
+        copy(from, to);
+        from.delete();
     }
 }

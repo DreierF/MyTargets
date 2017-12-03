@@ -186,8 +186,8 @@ public class InputActivity extends ChildActivityBase
         if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
             ImageList imageList = GalleryActivity.getResult(data);
             this.data.getCurrentEnd().images = imageList.toEndImageList();
-            for (File image : imageList.getRemovedImages()) {
-                image.delete();
+            for (String image : imageList.getRemovedImages()) {
+                new File(getFilesDir(), image).delete();
             }
             this.data.getCurrentEnd().save();
             updateEnd();
@@ -294,7 +294,9 @@ public class InputActivity extends ChildActivityBase
                         .start();
                 return true;
             case R.id.action_new_round:
-                EditRoundFragment.createIntent(data.training);
+                EditRoundFragment.createIntent(data.training)
+                        .withContext(this)
+                        .start();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
