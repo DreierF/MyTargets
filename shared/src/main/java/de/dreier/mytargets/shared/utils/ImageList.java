@@ -60,7 +60,7 @@ public class ImageList {
         removed.add(images.remove(i));
     }
 
-    public void addAll(@NonNull List<String> files) {
+    public void addAll(@NonNull List<String> images) {
         this.images.addAll(images);
     }
 
