@@ -79,5 +79,4 @@ dependencies {
     annotationProcessor "frankiesardo:icepick-processor:$libraryVersion.icepick"
 
     implementation project(':shared')
-    implementation 'com.android.support:support-annotations:27.0.1'
 }
