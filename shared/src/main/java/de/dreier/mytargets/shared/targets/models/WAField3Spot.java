@@ -30,4 +30,9 @@ public class WAField3Spot extends WAField {
                 new PointF(0.0f, 0.68f)
         };
     }
+
+    @Override
+    public long getSingleSpotTargetId() {
+        return WAField.ID;
+    }
 }

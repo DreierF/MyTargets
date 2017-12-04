@@ -137,7 +137,7 @@ public final class MigrationTest extends InstrumentedTestBase {
         Truth.assertThat(rounds.get(1).comment).isEqualTo("Kommentar");
         Truth.assertThat(rounds.get(1).getTarget().getId()).isEqualTo(0);
         Truth.assertThat(rounds.get(1).getTarget().scoringStyle).isEqualTo(0);
-        Truth.assertThat(rounds.get(1).getTarget().size).isEqualTo(new Dimension(60, CENTIMETER));
+        Truth.assertThat(rounds.get(1).getTarget().diameter).isEqualTo(new Dimension(60, CENTIMETER));
         Truth.assertThat(rounds.get(1).getEnds()).hasSize(2);
     }
 
@@ -152,7 +152,7 @@ public final class MigrationTest extends InstrumentedTestBase {
         Truth.assertThat(round1.comment).isEqualTo("");
         Truth.assertThat(round1.getTarget().getId()).isEqualTo(1);
         Truth.assertThat(round1.getTarget().scoringStyle).isEqualTo(2);
-        Truth.assertThat(round1.getTarget().size).isEqualTo(new Dimension(40, CENTIMETER));
+        Truth.assertThat(round1.getTarget().diameter).isEqualTo(new Dimension(40, CENTIMETER));
         final List<End> ends = round1.getEnds();
         Truth.assertThat(ends).hasSize(3);
         Truth.assertThat(ends.get(0).getId()).isEqualTo(1L);

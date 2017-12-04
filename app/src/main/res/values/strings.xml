@@ -386,4 +386,5 @@
     <string name="pdf_file">PDF file</string>
     <string name="image_file">Image file</string>
     <string name="settings_summary_statistics">Adjust statistics screen</string>
+    <string name="settings_statistics_spots_to_single_target">Aggregate spots to single target</string>
 </resources>

@@ -151,7 +151,12 @@ public class StatisticsFragment extends FragmentBase {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_statistics, container, false);
 
-        target = Parcels.unwrap(getArguments().getParcelable(ARG_TARGET));
+        Target target = Parcels.unwrap(getArguments().getParcelable(ARG_TARGET));
+        if(SettingsManager.getStatisticsDispersionPatternMergeSpot()) {
+            this.target = Target.singleSpotTargetFrom(target);
+        } else {
+            this.target = target;
+        }
         roundIds = getArguments().getLongArray(ARG_ROUND_IDS);
         animate = getArguments().getBoolean(ARG_ANIMATE);
 

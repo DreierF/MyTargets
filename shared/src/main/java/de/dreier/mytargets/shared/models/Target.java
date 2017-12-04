@@ -30,28 +30,40 @@ import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawab
 import de.dreier.mytargets.shared.targets.models.TargetModelBase;
 import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle;
 
+/**
+ * Represents a target face, which is in contrast to a {@link TargetModelBase} bound to a specific
+ * scoring style and diameter.
+ */
 @Parcel
 public class Target implements IIdProvider, IImageProvider, IDetailProvider, Comparable<Target> {
     public int id;
     public int scoringStyle;
-    public Dimension size;
+    public Dimension diameter;
     private transient TargetModelBase model;
     private transient TargetDrawable drawable;
     private transient TargetImpactAggregationDrawable targetImpactAggregationDrawable;
+
+    public static Target singleSpotTargetFrom(Target spotTarget) {
+        if (spotTarget.getModel().getFaceCount() == 1) {
+            return spotTarget;
+        }
+        int singleSpotTargetId = (int) spotTarget.getModel().getSingleSpotTargetId();
+        return new Target(singleSpotTargetId, spotTarget.scoringStyle, spotTarget.diameter);
+    }
 
     public Target() {
     }
 
     public Target(int target, int scoringStyle) {
         this(target, scoringStyle, null);
-        this.size = getModel().getDiameters()[0];
+        this.diameter = getModel().getDiameters()[0];
     }
 
     public Target(int target, int scoringStyle, Dimension diameter) {
         this.id = target;
         this.model = TargetFactory.getTarget(target);
         this.scoringStyle = scoringStyle;
-        this.size = diameter;
+        this.diameter = diameter;
     }
 
     @NonNull
@@ -82,7 +94,7 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
         return another instanceof Target &&
                 getClass().equals(another.getClass()) &&
                 id == ((Target) another).id &&
-                size.equals(((Target) another).size) &&
+                diameter.equals(((Target) another).diameter) &&
                 scoringStyle == ((Target) another).scoringStyle;
     }
 
@@ -106,7 +118,7 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
     @NonNull
     @Override
     public String getName() {
-        return String.format("%s (%s)", toString(), size.toString());
+        return String.format("%s (%s)", toString(), diameter.toString());
     }
 
     @Override

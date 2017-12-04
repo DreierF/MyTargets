@@ -755,7 +755,7 @@ public class StandardRoundFactory {
         StandardRound standardRound = build(institution, name, distanceUnit,
                 targetUnit, target, scoringStyle, shotsPerEnd, roundDetails);
         RoundTemplate round2 = standardRound.getRounds().get(1);
-        target2.size = round2.getTargetTemplate().size;
+        target2.diameter = round2.getTargetTemplate().diameter;
         round2.setTargetTemplate(target2);
         return standardRound;
     }

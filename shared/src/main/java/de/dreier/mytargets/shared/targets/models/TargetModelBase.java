@@ -24,9 +24,7 @@ import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.models.Dimension;
@@ -178,16 +176,7 @@ public class TargetModelBase implements IIdProvider {
         return list;
     }
 
-    @NonNull
-    public Set<SelectableZone> getAllPossibleSelectableZones(int scoringStyleIndex) {
-        Set<SelectableZone> scoreCount = new HashSet<>();
-        for (int arrow = 0; arrow < 3; arrow++) {
-            scoreCount.addAll(getSelectableZoneList(scoringStyleIndex, arrow));
-            if (!dependsOnArrowIndex()) {
-                break;
-            }
-        }
-        return scoreCount;
+    public long getSingleSpotTargetId() {
+        return id;
     }
-
 }

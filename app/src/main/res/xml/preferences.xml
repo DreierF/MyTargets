@@ -182,6 +182,13 @@
                 android:icon="@drawable/ic_bubble_chart_grey600_24dp"
                 android:key="statistics_dispersion_pattern_aggregation_strategy"
                 android:title="@string/grouping"/>
+
+            <SwitchPreference
+                android:defaultValue="@bool/preference_false"
+                android:icon="@drawable/ic_target_spot_face_grey600_24dp"
+                android:key="statistics_dispersion_pattern_merge_spot"
+                android:title="@string/settings_statistics_spots_to_single_target"/>
+
         </PreferenceCategory>
     </PreferenceScreen>
     <PreferenceScreen
