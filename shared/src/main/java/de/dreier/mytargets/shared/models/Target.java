@@ -118,7 +118,7 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
         return getModel().getSelectableZoneList(scoringStyle, arrow);
     }
 
-    private ScoringStyle getScoringStyle() {
+    public ScoringStyle getScoringStyle() {
         return getModel().getScoringStyle(scoringStyle);
     }
 

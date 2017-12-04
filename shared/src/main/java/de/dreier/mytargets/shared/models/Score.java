@@ -23,8 +23,11 @@ import com.annimon.stream.function.BiConsumer;
 import com.annimon.stream.function.Function;
 import com.annimon.stream.function.Supplier;
 
+import org.parceler.Parcel;
+
 import java.util.Locale;
 
+@Parcel
 public class Score {
     public int reachedScore;
     public int totalScore;
@@ -94,7 +97,7 @@ public class Score {
         if ((config.showPercentage || config.showAverage) && totalScore > 0) {
             score += " (";
             if (config.showPercentage) {
-                score += getPercent();
+                score += getPercentString();
                 if (config.showAverage) {
                     score += ", ";
                 }
@@ -121,7 +124,17 @@ public class Score {
         return String.format(locale, "%.2f", getShotAverage());
     }
 
-    private String getPercent() {
+    /**
+     * @return The percent of points reached relative to the total reachable score.
+     */
+    public float getPercent() {
+        if (totalScore > 0) {
+            return reachedScore / (float) totalScore;
+        }
+        return 0;
+    }
+
+    private String getPercentString() {
         if (totalScore > 0) {
             return String.valueOf(reachedScore * 100 / totalScore) + "%";
         }

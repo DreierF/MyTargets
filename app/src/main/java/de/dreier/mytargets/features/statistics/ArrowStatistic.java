@@ -28,12 +28,14 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.analysis.aggregation.average.Average;
 import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 
 import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
+import static java.lang.Math.ceil;
 
 @Parcel
 public class ArrowStatistic implements Comparable<ArrowStatistic> {
@@ -45,7 +47,7 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
     public Average average = new Average();
     public Target target;
     public List<Shot> shots = new ArrayList<>();
-    public Integer reachedScore;
+    public Score totalScore;
     public Dimension arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
 
     public ArrowStatistic() {
@@ -55,14 +57,14 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
         this(null, null, target, shots);
     }
 
-    private ArrowStatistic(String arrow, String arrowNumber, @NonNull Target target, @NonNull List<Shot> shots) {
-        this.arrowName = arrow;
+    private ArrowStatistic(String arrowName, String arrowNumber, @NonNull Target target, @NonNull List<Shot> shots) {
+        this.arrowName = arrowName;
         this.arrowNumber = arrowNumber;
         this.target = target;
         this.average.computeAll(shots);
         this.shots.addAll(shots);
-        this.reachedScore = Stream.of(shots).reduce(0,
-                (sum, shot) -> sum + target.getScoreByZone(shot.scoringRing, shot.index));
+        this.totalScore = Stream.of(shots)
+                .map(shot -> target.getScoringStyle().getReachedScore(shot)).collect(Score.sum());
     }
 
     public static List<ArrowStatistic> getAll(@NonNull Target target, @NonNull List<Round> rounds) {
@@ -84,17 +86,15 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
     }
 
     public int getAppropriateBgColor() {
-        return BG_COLORS[0/*((int) Math
-                .ceil(reachedPointsSum * (BG_COLORS.length - 1) / maxPointsSum))*/];
+        return BG_COLORS[((int) ceil((BG_COLORS.length - 1) * totalScore.getPercent()))];
     }
 
     public int getAppropriateTextColor() {
-        return TEXT_COLORS[0/*((int) Math
-                .ceil(reachedPointsSum * (TEXT_COLORS.length - 1) / maxPointsSum))*/];
+        return TEXT_COLORS[((int) ceil((TEXT_COLORS.length - 1) * totalScore.getPercent()))];
     }
 
     @Override
     public int compareTo(@NonNull ArrowStatistic another) {
-        return Double.compare(average.getStdDev(), another.average.getStdDev());
+        return Float.compare(another.totalScore.getShotAverage(), totalScore.getShotAverage());
     }
 }
