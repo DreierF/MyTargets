@@ -38,6 +38,7 @@ import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.analysis.aggregation.average.Average;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Environment;
+import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.models.TimerSettings;
@@ -83,6 +84,7 @@ import timber.log.Timber;
         @ParcelClass(ImageList.class),
         @ParcelClass(Round.class),
         @ParcelClass(RoundTemplate.class),
+        @ParcelClass(Score.class),
         @ParcelClass(Shot.class),
         @ParcelClass(SightMark.class),
         @ParcelClass(Signature.class),

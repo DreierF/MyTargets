@@ -79,7 +79,7 @@ public class Circle {
         if (arrowNumber != null) {
             circleColorPaint.setStyle(Paint.Style.FILL_AND_STROKE);
             circleColorPaint.setColor(0xFF333333);
-            canvas.drawCircle(x + radius * 0.8f, y + radius * 0.8f, 8, circleColorPaint);
+            canvas.drawCircle(x + radius * 0.8f, y + radius * 0.8f, radius * 0.5f, circleColorPaint);
             textPaint.setTextSize(fontSize * 0.5f);
             textPaint.setColor(0xFFFFFFFF);
             canvas.drawText(arrowNumber, x + radius * 0.8f, y + radius * 1.05f, textPaint);
