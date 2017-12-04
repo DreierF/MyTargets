@@ -35,4 +35,9 @@ public class WAVegas3Spot extends WA5Ring {
         diameters = new Dimension[]{new Dimension(40, CENTIMETER),
                 new Dimension(60, CENTIMETER)};
     }
+
+    @Override
+    public long getSingleSpotTargetId() {
+        return WA5Ring.ID;
+    }
 }

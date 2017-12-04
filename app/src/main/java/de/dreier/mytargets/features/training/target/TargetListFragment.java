@@ -127,7 +127,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
         int diameterIndex = -1;
         Dimension[] diameters = target.getModel().getDiameters();
         for (int i = 0; i < diameters.length; i++) {
-            if (diameters[i].equals(target.size)) {
+            if (diameters[i].equals(target.diameter)) {
                 diameterIndex = i;
                 break;
             }
@@ -209,7 +209,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
         Target target = super.onSave();
         target.scoringStyle = binding.scoringStyle.getSelectedItemPosition();
         Dimension[] diameters = target.getModel().getDiameters();
-        target.size = diameters[binding.targetSize.getSelectedItemPosition()];
+        target.diameter = diameters[binding.targetSize.getSelectedItemPosition()];
         getArguments().putParcelable(ITEM, Parcels.wrap(target));
         return target;
     }

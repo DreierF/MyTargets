@@ -103,6 +103,7 @@ public class SettingsManager {
     public static final String KEY_LANGUAGE = "language";
     public static final String KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE = "statistics_dispersion_pattern_file_type";
     public static final String KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY = "statistics_dispersion_pattern_aggregation_strategy";
+    public static final String KEY_STATISTICS_DISPERSION_PATTERN_MERGE_SPOT = "statistics_dispersion_pattern_merge_spot";
 
     @NonNull
     public static Long getStandardRound() {
@@ -176,9 +177,9 @@ public class SettingsManager {
         lastUsed.edit()
                 .putInt(KEY_TARGET, (int) (long) target.getId())
                 .putInt(KEY_SCORING_STYLE, target.scoringStyle)
-                .putInt(KEY_TARGET_DIAMETER_VALUE, (int) target.size.value)
+                .putInt(KEY_TARGET_DIAMETER_VALUE, (int) target.diameter.value)
                 .putString(KEY_TARGET_DIAMETER_UNIT,
-                        Dimension.Unit.toStringHandleNull(target.size.unit))
+                        Dimension.Unit.toStringHandleNull(target.diameter.unit))
                 .apply();
     }
 
@@ -461,6 +462,18 @@ public class SettingsManager {
         preferences
                 .edit()
                 .putString(KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY, aggregationStrategy.toString())
+                .apply();
+    }
+
+    public static boolean getStatisticsDispersionPatternMergeSpot() {
+        return preferences
+                .getBoolean(KEY_STATISTICS_DISPERSION_PATTERN_MERGE_SPOT, false);
+    }
+
+    public static void setStatisticsDispersionPatternMergeSpot(boolean mergeSpot) {
+        preferences
+                .edit()
+                .putBoolean(KEY_STATISTICS_DISPERSION_PATTERN_MERGE_SPOT, mergeSpot)
                 .apply();
     }
 

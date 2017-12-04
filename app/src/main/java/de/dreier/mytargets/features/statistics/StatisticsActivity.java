@@ -235,7 +235,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 .map(t -> t.id).collect(Collectors.toList());
         filteredRounds = Stream.of(rounds)
                 .filter(pair -> distanceTags.contains(pair.second.distance.toString())
-                        && diameterTags.contains(pair.second.getTarget().size.toString())
+                        && diameterTags.contains(pair.second.getTarget().diameter.toString())
                         && arrowTags.contains(pair.first.arrowId)
                         && bowTags.contains(pair.first.bowId))
                 .map(p -> p.second)
@@ -298,7 +298,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
 
     private List<ChipGroup.Tag> getDiameterTags() {
         return Stream.of(rounds)
-                .map(p -> p.second.getTarget().size)
+                .map(p -> p.second.getTarget().diameter)
                 .distinct()
                 .sorted()
                 .map(d -> new ChipGroup.Tag(d.getId(), d.toString()))
