@@ -27,8 +27,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 import org.parceler.Parcels;
 import org.threeten.bp.LocalDate;
@@ -53,6 +51,7 @@ import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.shared.targets.models.WA3Ring3Spot;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -153,10 +152,10 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                             R.string.training));
             setTrainingDate();
             loadRoundDefaultValues();
-            binding.bow.setItemId(SettingsManager.getBow());
-            binding.arrow.setItemId(SettingsManager.getArrow());
-            binding.standardRound.setItemId(SettingsManager.getStandardRound());
-            binding.numberArrows.setChecked(SettingsManager.getArrowNumbersEnabled());
+            binding.bow.setItemId(SettingsManager.INSTANCE.getBow());
+            binding.arrow.setItemId(SettingsManager.INSTANCE.getArrow());
+            binding.standardRound.setItemId(SettingsManager.INSTANCE.getStandardRound());
+            binding.numberArrows.setChecked(SettingsManager.INSTANCE.getArrowNumbersEnabled());
             if (savedInstanceState == null) {
                 binding.environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
             }
@@ -255,7 +254,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                 training.rounds.add(getRound());
             } else {
                 StandardRound standardRound = binding.standardRound.getSelectedItem();
-                SettingsManager.setStandardRound(standardRound.getId());
+                SettingsManager.INSTANCE.setStandardRound(standardRound.getId());
                 if (standardRound.getId() == null) {
                     standardRound.save();
                 }
@@ -305,10 +304,10 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                 .getSelectedItem().getId();
         training.arrowNumbering = binding.numberArrows.isChecked();
 
-        SettingsManager.setBow(training.bowId);
-        SettingsManager.setArrow(training.arrowId);
-        SettingsManager.setArrowNumbersEnabled(training.arrowNumbering);
-        SettingsManager.setIndoor(training.indoor);
+        SettingsManager.INSTANCE.setBow(training.bowId);
+        SettingsManager.INSTANCE.setArrow(training.arrowId);
+        SettingsManager.INSTANCE.setArrowNumbersEnabled(training.arrowNumbering);
+        SettingsManager.INSTANCE.setIndoor(training.indoor);
         return training;
     }
 
@@ -335,9 +334,9 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     }
 
     private void loadRoundDefaultValues() {
-        binding.distance.setItem(SettingsManager.getDistance());
-        binding.arrows.setProgress(SettingsManager.getShotsPerEnd());
-        binding.target.setItem(SettingsManager.getTarget());
+        binding.distance.setItem(SettingsManager.INSTANCE.getDistance());
+        binding.arrows.setProgress(SettingsManager.INSTANCE.getShotsPerEnd());
+        binding.target.setItem(SettingsManager.INSTANCE.getTarget());
     }
 
     @NonNull
@@ -348,9 +347,9 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         round.maxEndCount = null;
         round.distance = binding.distance.getSelectedItem();
 
-        SettingsManager.setTarget(binding.target.getSelectedItem());
-        SettingsManager.setDistance(round.distance);
-        SettingsManager.setShotsPerEnd(round.shotsPerEnd);
+        SettingsManager.INSTANCE.setTarget(binding.target.getSelectedItem());
+        SettingsManager.INSTANCE.setDistance(round.distance);
+        SettingsManager.INSTANCE.setShotsPerEnd(round.shotsPerEnd);
         return round;
     }
 }

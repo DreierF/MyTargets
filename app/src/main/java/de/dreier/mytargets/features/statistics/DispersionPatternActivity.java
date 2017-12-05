@@ -80,12 +80,12 @@ public class DispersionPatternActivity extends ChildActivityBase {
     protected void onResume() {
         super.onResume();
 
-        EAggregationStrategy strategy = SettingsManager
+        EAggregationStrategy strategy = SettingsManager.INSTANCE
                 .getStatisticsDispersionPatternAggregationStrategy();
         TargetImpactAggregationDrawable drawable = statistic.target.getImpactAggregationDrawable();
         drawable.setAggregationStrategy(strategy);
         drawable.setShots(statistic.shots);
-        drawable.setArrowDiameter(statistic.arrowDiameter, SettingsManager
+        drawable.setArrowDiameter(statistic.arrowDiameter, SettingsManager.INSTANCE
                 .getInputArrowDiameterScale());
 
         binding.dispersionView.setImageDrawable(drawable);
@@ -122,7 +122,7 @@ public class DispersionPatternActivity extends ChildActivityBase {
         new Thread(() -> {
             try {
                 File dir = getCacheDir();
-                EFileType fileType = SettingsManager.getStatisticsDispersionPatternFileType();
+                EFileType fileType = SettingsManager.INSTANCE.getStatisticsDispersionPatternFileType();
                 final File f = File.createTempFile("dispersion_pattern",
                         "." + fileType.name().toLowerCase(), dir);
                 if (fileType == EFileType.PDF && Utils.isKitKat()) {

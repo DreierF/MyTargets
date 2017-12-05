@@ -90,13 +90,13 @@ public class MainActivityTest extends UITestBase {
 
     @Before
     public void setUp() {
-        SettingsManager
+        SettingsManager.INSTANCE
                 .setTarget(new Target(WAFull.ID, 0, new Dimension(122, Dimension.Unit.CENTIMETER)));
-        SettingsManager.setDistance(new Dimension(50, Dimension.Unit.METER));
-        SettingsManager.setIndoor(false);
-        SettingsManager.setInputMethod(EInputMethod.PLOTTING);
-        SettingsManager.setTimerEnabled(false);
-        SettingsManager.setShotsPerEnd(3);
+        SettingsManager.INSTANCE.setDistance(new Dimension(50, Dimension.Unit.METER));
+        SettingsManager.INSTANCE.setIndoor(false);
+        SettingsManager.INSTANCE.setInputMethod(EInputMethod.PLOTTING);
+        SettingsManager.INSTANCE.setTimerEnabled(false);
+        SettingsManager.INSTANCE.setShotsPerEnd(3);
 
         intending(isInternal())
                 .respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));

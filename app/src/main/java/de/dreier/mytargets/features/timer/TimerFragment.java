@@ -51,7 +51,7 @@ public class TimerFragment extends TimerFragmentBase {
         return new IntentWrapper(TimerActivity.class)
                 .with(TimerFragmentBase.ARG_EXIT_AFTER_STOP, exitAfterStop)
                 .with(TimerFragmentBase.ARG_TIMER_SETTINGS,
-                        Parcels.wrap(SettingsManager.getTimerSettings()));
+                        Parcels.wrap(SettingsManager.INSTANCE.getTimerSettings()));
     }
 
     @Override

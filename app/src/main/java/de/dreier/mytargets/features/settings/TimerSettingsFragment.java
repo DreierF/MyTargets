@@ -26,9 +26,6 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.shared.models.TimerSettings;
 
-import static de.dreier.mytargets.features.settings.SettingsManager.KEY_TIMER_SHOOT_TIME;
-import static de.dreier.mytargets.features.settings.SettingsManager.KEY_TIMER_WAIT_TIME;
-import static de.dreier.mytargets.features.settings.SettingsManager.KEY_TIMER_WARN_TIME;
 import static de.dreier.mytargets.shared.wearable.WearableClientBase.BROADCAST_TIMER_SETTINGS_FROM_REMOTE;
 
 public class TimerSettingsFragment extends SettingsFragmentBase {
@@ -55,10 +52,10 @@ public class TimerSettingsFragment extends SettingsFragmentBase {
 
     @Override
     protected void updateItemSummaries() {
-        TimerSettings settings = SettingsManager.getTimerSettings();
-        setSecondsSummary(KEY_TIMER_WAIT_TIME, settings.waitTime);
-        setSecondsSummary(KEY_TIMER_SHOOT_TIME, settings.shootTime);
-        setSecondsSummary(KEY_TIMER_WARN_TIME, settings.warnTime);
+        TimerSettings settings = SettingsManager.INSTANCE.getTimerSettings();
+        setSecondsSummary(SettingsManager.KEY_TIMER_WAIT_TIME, settings.waitTime);
+        setSecondsSummary(SettingsManager.KEY_TIMER_SHOOT_TIME, settings.shootTime);
+        setSecondsSummary(SettingsManager.KEY_TIMER_WARN_TIME, settings.warnTime);
         ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(settings);
     }
 

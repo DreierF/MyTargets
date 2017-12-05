@@ -72,14 +72,14 @@ public class EditTrainingActivityTest extends UITestBase {
 
     @Before
     public void setUp() {
-        SettingsManager.setStandardRound(93L);
-        SettingsManager.setTarget(new Target(WAFull.ID, 0, new Dimension(122, CENTIMETER)));
-        SettingsManager.setDistance(new Dimension(50, METER));
-        SettingsManager.setIndoor(false);
-        SettingsManager.setInputMethod(EInputMethod.PLOTTING);
-        SettingsManager.setTimerEnabled(false);
-        SettingsManager.setShotsPerEnd(3);
-        SettingsManager.setDistance(new Dimension(10, METER));
+        SettingsManager.INSTANCE.setStandardRound(93L);
+        SettingsManager.INSTANCE.setTarget(new Target(WAFull.ID, 0, new Dimension(122, CENTIMETER)));
+        SettingsManager.INSTANCE.setDistance(new Dimension(50, METER));
+        SettingsManager.INSTANCE.setIndoor(false);
+        SettingsManager.INSTANCE.setInputMethod(EInputMethod.PLOTTING);
+        SettingsManager.INSTANCE.setTimerEnabled(false);
+        SettingsManager.INSTANCE.setShotsPerEnd(3);
+        SettingsManager.INSTANCE.setDistance(new Dimension(10, METER));
     }
 
     @Test
@@ -160,8 +160,9 @@ public class EditTrainingActivityTest extends UITestBase {
         // Change standard round
         onView(withId(R.id.standardRound)).perform(nestedScrollTo(), click());
         onView(withId(R.id.recyclerView))
-                .perform(actionOnItem(hasDescendant(withText(R.string.wa_standard)), click()),
-                        actionOnItem(hasDescendant(withText(R.string.wa_standard)), click()));
+                .perform(actionOnItem(hasDescendant(withText(R.string.wa_standard)), click()));
+        onView(withId(R.id.recyclerView))
+                .perform(actionOnItem(hasDescendant(withText(R.string.wa_standard)), click()));
         onView(withId(R.id.standardRound))
                 .check(matches(hasDescendant(withText(R.string.wa_standard))));
 

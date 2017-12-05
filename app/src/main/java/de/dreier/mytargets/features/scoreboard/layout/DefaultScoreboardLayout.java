@@ -250,7 +250,7 @@ public class DefaultScoreboardLayout {
             row.addCell(end.index + 1);
             int sum = 0;
             final List<Shot> shots = new ArrayList<>(end.getShots());
-            if (SettingsManager.shouldSortTarget(round.getTarget())) {
+            if (SettingsManager.INSTANCE.shouldSortTarget(round.getTarget())) {
                 Collections.sort(shots);
             }
             for (Shot shot : shots) {
@@ -322,25 +322,25 @@ public class DefaultScoreboardLayout {
     }
 
     private void getScoreboardOnlyHeaderInfo(@NonNull InfoTableBuilder info, @NonNull Training training, @NonNull List<Round> rounds) {
-        final String fullName = SettingsManager.getProfileFullName();
+        final String fullName = SettingsManager.INSTANCE.getProfileFullName();
         if (!fullName.trim().isEmpty()) {
             info.addLine(R.string.name, fullName);
         }
-        final int age = SettingsManager.getProfileAge();
-        if (age > 0 && age < 18) {
+        final Integer age = SettingsManager.INSTANCE.getProfileAge();
+        if (age != null && age < 18) {
             info.addLine(R.string.age, age);
         }
-        final String club = SettingsManager.getProfileClub();
+        final String club = SettingsManager.INSTANCE.getProfileClub();
         if (!TextUtils.isEmpty(club)) {
             info.addLine(R.string.club, club);
         }
-        final String licenceNumber = SettingsManager.getProfileLicenceNumber();
+        final String licenceNumber = SettingsManager.INSTANCE.getProfileLicenceNumber();
         if (!TextUtils.isEmpty(licenceNumber)) {
             info.addLine(R.string.licence_number, licenceNumber);
         }
         if (rounds.size() > 1) {
             info.addLine(R.string.points, training.getReachedScore()
-                    .format(locale, SettingsManager.getScoreConfiguration()));
+                    .format(locale, SettingsManager.INSTANCE.getScoreConfiguration()));
         }
         info.addLine(R.string.date, training.getFormattedDate());
     }

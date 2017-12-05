@@ -79,8 +79,8 @@ public class InputActivityTest extends UITestBase {
 
     @Before
     public void setUp() {
-        SettingsManager.setInputMethod(TargetViewBase.EInputMethod.KEYBOARD);
-        SettingsManager.setTimerEnabled(false);
+        SettingsManager.INSTANCE.setInputMethod(TargetViewBase.EInputMethod.KEYBOARD);
+        SettingsManager.INSTANCE.setTimerEnabled(false);
     }
 
     @Test

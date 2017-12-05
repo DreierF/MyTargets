@@ -17,31 +17,30 @@ package de.dreier.mytargets.features.settings;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.features.training.input.SummaryConfiguration;
+import de.dreier.mytargets.utils.Utils;
 
-import static de.dreier.mytargets.features.settings.SettingsManager.KEY_AGGREGATION_STRATEGY;
-import static de.dreier.mytargets.features.settings.SettingsManager.KEY_INPUT_ARROW_DIAMETER_SCALE;
-import static de.dreier.mytargets.features.settings.SettingsManager.KEY_INPUT_KEYBOARD_TYPE;
-import static de.dreier.mytargets.features.settings.SettingsManager.KEY_INPUT_SUMMARY_AVERAGE_OF;
-import static de.dreier.mytargets.features.settings.SettingsManager.KEY_INPUT_TARGET_ZOOM;
-import static de.dreier.mytargets.features.settings.SettingsManager.KEY_SHOW_MODE;
 import static de.dreier.mytargets.features.training.input.TargetView.EKeyboardType.LEFT;
 
 public class InputSettingsFragment extends SettingsFragmentBase {
 
     @Override
     protected void updateItemSummaries() {
-        setSummary(KEY_INPUT_SUMMARY_AVERAGE_OF, getAverageOf());
-        setSummary(KEY_INPUT_ARROW_DIAMETER_SCALE,
-                SettingsManager.getInputArrowDiameterScale() + "x");
-        setSummary(KEY_INPUT_TARGET_ZOOM, SettingsManager.getInputTargetZoom() + "x");
-        setSummary(KEY_INPUT_KEYBOARD_TYPE, SettingsManager.getInputKeyboardType() == LEFT
-                ? getString(R.string.left_handed) : getString(R.string.right_handed));
-        setDefaultSummary(KEY_AGGREGATION_STRATEGY);
-        setDefaultSummary(KEY_SHOW_MODE);
+        setSummary(SettingsManager.KEY_INPUT_SUMMARY_AVERAGE_OF, getAverageOf());
+        setSummary(SettingsManager.KEY_INPUT_ARROW_DIAMETER_SCALE, String.format(Utils
+                .getCurrentLocale(getContext()), "%.1fx", SettingsManager.INSTANCE
+                .getInputArrowDiameterScale()));
+        setSummary(SettingsManager.KEY_INPUT_TARGET_ZOOM, String.format(Utils
+                .getCurrentLocale(getContext()), "%.1fx", SettingsManager.INSTANCE
+                .getInputTargetZoom()));
+        setSummary(SettingsManager.KEY_INPUT_KEYBOARD_TYPE,
+                SettingsManager.INSTANCE.getInputKeyboardType() == LEFT
+                        ? getString(R.string.left_handed) : getString(R.string.right_handed));
+        setDefaultSummary(SettingsManager.KEY_AGGREGATION_STRATEGY);
+        setDefaultSummary(SettingsManager.KEY_SHOW_MODE);
     }
 
     private String getAverageOf() {
-        final SummaryConfiguration configuration = SettingsManager
+        final SummaryConfiguration configuration = SettingsManager.INSTANCE
                 .getInputSummaryConfiguration();
         switch (configuration.averageScope) {
             case END:

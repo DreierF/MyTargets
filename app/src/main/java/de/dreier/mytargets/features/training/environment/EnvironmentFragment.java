@@ -137,7 +137,7 @@ public class EnvironmentFragment extends FragmentBase {
         Environment e = saveItem();
         listener.onItemSelected(Parcels.wrap(e));
         finish();
-        SettingsManager.setIndoor(e.indoor);
+        SettingsManager.INSTANCE.setIndoor(e.indoor);
     }
 
     @NonNull

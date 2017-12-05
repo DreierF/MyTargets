@@ -109,7 +109,7 @@ public class MobileWearableClient extends WearableClientBase {
                         .allMatch(s -> s.scoringRing != Shot.NOTHING_SELECTED))
                 .map(end -> {
                     End newEnd = new End(end);
-                    if (SettingsManager.shouldSortTarget(target)) {
+                    if (SettingsManager.INSTANCE.shouldSortTarget(target)) {
                         Collections.sort(newEnd.getShots());
                     }
                     return newEnd;
@@ -117,7 +117,7 @@ public class MobileWearableClient extends WearableClientBase {
                 .toList();
         TrainingInfo trainingInfo = new TrainingInfo(training, round);
         sendTrainingInfo(trainingInfo);
-        sendTimerSettings(SettingsManager.getTimerSettings());
+        sendTimerSettings(SettingsManager.INSTANCE.getTimerSettings());
     }
 
     private void sendTrainingInfo(TrainingInfo trainingInfo) {

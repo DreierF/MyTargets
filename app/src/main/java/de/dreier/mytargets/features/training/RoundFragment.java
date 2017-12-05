@@ -232,7 +232,7 @@ public class RoundFragment extends EditableListFragment<End> {
         @Override
         public void bindItem() {
             List<Shot> shots = item.getShots();
-            if (SettingsManager.shouldSortTarget(round.getTarget())) {
+            if (SettingsManager.INSTANCE.shouldSortTarget(round.getTarget())) {
                 Collections.sort(shots);
             }
             binding.shoots.setShots(round.getTarget(), shots);

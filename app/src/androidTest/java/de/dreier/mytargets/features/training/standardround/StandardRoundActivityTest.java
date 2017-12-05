@@ -18,15 +18,13 @@ package de.dreier.mytargets.features.training.standardround;
 import android.support.annotation.NonNull;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v4.util.LongSparseArray;
 
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.features.settings.SettingsManager;
@@ -55,10 +53,10 @@ public class StandardRoundActivityTest extends UITestBase {
 
     @Before
     public void setUp() {
-        Map<Long, Integer> map = new HashMap<>();
+        LongSparseArray<Integer> map = new LongSparseArray<>();
         map.put(32L, 3);
         map.put(31L, 2);
-        SettingsManager.setStandardRoundsLastUsed(map);
+        SettingsManager.INSTANCE.setStandardRoundsLastUsed(map);
     }
 
     @Test

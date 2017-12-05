@@ -202,7 +202,7 @@ public class TargetView extends TargetViewBase {
         if (!end.isEmpty()) {
             inputMethod = end.exact ? PLOTTING : KEYBOARD;
         } else {
-            inputMethod = SettingsManager.getInputMethod();
+            inputMethod = SettingsManager.INSTANCE.getInputMethod();
         }
         setInputMethod(inputMethod);
         super.setEnd(end);
@@ -212,7 +212,7 @@ public class TargetView extends TargetViewBase {
         this.arrowNumbering = numbers;
         this.arrowDiameter = diameter;
         this.maxArrowNumber = maxArrowNumber;
-        targetDrawable.setArrowDiameter(diameter, SettingsManager.getInputArrowDiameterScale());
+        targetDrawable.setArrowDiameter(diameter, SettingsManager.INSTANCE.getInputArrowDiameterScale());
     }
 
     public void setAggregationStrategy(EAggregationStrategy aggregationStrategy) {
@@ -571,10 +571,10 @@ public class TargetView extends TargetViewBase {
     }
 
     public void reloadSettings() {
-        this.targetZoomFactor = SettingsManager.getInputTargetZoom();
-        this.keyboardType = SettingsManager.getInputKeyboardType();
+        this.targetZoomFactor = SettingsManager.INSTANCE.getInputTargetZoom();
+        this.keyboardType = SettingsManager.INSTANCE.getInputKeyboardType();
         targetDrawable
-                .setArrowDiameter(arrowDiameter, SettingsManager.getInputArrowDiameterScale());
+                .setArrowDiameter(arrowDiameter, SettingsManager.INSTANCE.getInputArrowDiameterScale());
     }
 
     public void setTransparentShots(@NonNull Stream<Shot> shotStream) {

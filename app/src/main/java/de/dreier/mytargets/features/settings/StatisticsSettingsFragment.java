@@ -19,9 +19,6 @@ import android.support.v7.preference.Preference;
 
 import de.dreier.mytargets.utils.Utils;
 
-import static de.dreier.mytargets.features.settings.SettingsManager.KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY;
-import static de.dreier.mytargets.features.settings.SettingsManager.KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE;
-
 public class StatisticsSettingsFragment extends SettingsFragmentBase {
 
     public static final String KEY_STATISTICS = "statistics";
@@ -32,7 +29,7 @@ public class StatisticsSettingsFragment extends SettingsFragmentBase {
         Preference shareCategory = getPreferenceManager().findPreference(KEY_STATISTICS);
         shareCategory.setVisible(Utils.isKitKat());
 
-        setDefaultSummary(KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE);
-        setDefaultSummary(KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY);
+        setDefaultSummary(SettingsManager.KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE);
+        setDefaultSummary(SettingsManager.KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY);
     }
 }

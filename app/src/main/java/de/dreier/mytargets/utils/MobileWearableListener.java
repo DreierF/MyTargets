@@ -74,7 +74,7 @@ public class MobileWearableListener extends WearableListenerService {
         byte[] data = messageEvent.getData();
         TimerSettings settings = unwrap(ParcelableUtil
                 .unmarshall(data, TimerSettings$$Parcelable.CREATOR));
-        SettingsManager.setTimerSettings(settings);
+        SettingsManager.INSTANCE.setTimerSettings(settings);
         ApplicationInstance.wearableClient.sendTimerSettingsFromRemote();
     }
 
@@ -88,19 +88,19 @@ public class MobileWearableListener extends WearableListenerService {
             Training training = new Training();
             training.title = getString(R.string.training);
             training.date = LocalDate.now();
-            training.setEnvironment(Environment.getDefault(SettingsManager.getIndoor()));
-            training.bowId = SettingsManager.getBow();
-            training.arrowId = SettingsManager.getArrow();
+            training.setEnvironment(Environment.getDefault(SettingsManager.INSTANCE.getIndoor()));
+            training.bowId = SettingsManager.INSTANCE.getBow();
+            training.arrowId = SettingsManager.INSTANCE.getArrow();
             training.arrowNumbering = false;
 
             boolean freeTraining = !(lastTraining != null &&
                     lastTraining.standardRoundId != null);
             if (freeTraining) {
                 Round round = new Round();
-                round.setTarget(SettingsManager.getTarget());
-                round.shotsPerEnd = SettingsManager.getShotsPerEnd();
+                round.setTarget(SettingsManager.INSTANCE.getTarget());
+                round.shotsPerEnd = SettingsManager.INSTANCE.getShotsPerEnd();
                 round.maxEndCount = null;
-                round.distance = SettingsManager.getDistance();
+                round.distance = SettingsManager.INSTANCE.getDistance();
                 training.rounds = new ArrayList<>();
                 training.rounds.add(round);
             } else {

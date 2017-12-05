@@ -133,14 +133,14 @@ public class EnvironmentSelector extends ImageSelectorBase<Environment> {
     }
 
     private void setDefaultWeather() {
-        setItem(Environment.getDefault(SettingsManager.getIndoor()));
+        setItem(Environment.getDefault(SettingsManager.INSTANCE.getIndoor()));
     }
 
     @Nullable
     @Override
     public Environment getSelectedItem() {
         if (item == null) {
-            return Environment.getDefault(SettingsManager.getIndoor());
+            return Environment.getDefault(SettingsManager.INSTANCE.getIndoor());
         }
         return item;
     }

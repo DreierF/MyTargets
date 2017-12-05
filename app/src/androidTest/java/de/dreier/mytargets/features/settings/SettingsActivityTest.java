@@ -69,9 +69,9 @@ public class SettingsActivityTest extends UITestBase {
                 .edit()
                 .clear()
                 .apply();
-        SettingsManager.setInputTargetZoom(3.0f);
-        SettingsManager.setInputArrowDiameterScale(1.0f);
-        SettingsManager.setBackupLocation(EBackupLocation.INTERNAL_STORAGE);
+        SettingsManager.INSTANCE.setInputTargetZoom(3.0f);
+        SettingsManager.INSTANCE.setInputArrowDiameterScale(1.0f);
+        SettingsManager.INSTANCE.setBackupLocation(EBackupLocation.INTERNAL_STORAGE);
     }
 
 
@@ -85,12 +85,12 @@ public class SettingsActivityTest extends UITestBase {
         clickOnPreference(R.string.first_name);
         enterText("Joe");
         matchPreferenceSummary(R.string.first_name, "Joe");
-        assertEquals(SettingsManager.getProfileFirstName(), "Joe");
+        assertEquals(SettingsManager.INSTANCE.getProfileFirstName(), "Joe");
 
         clickOnPreference(R.string.last_name);
         enterText("Doe");
         matchPreferenceSummary(R.string.last_name, "Doe");
-        assertEquals(SettingsManager.getProfileLastName(), "Doe");
+        assertEquals(SettingsManager.INSTANCE.getProfileLastName(), "Doe");
 
         clickOnPreference(R.string.birthday);
         enterDate(1990, 2, 11);
@@ -100,7 +100,7 @@ public class SettingsActivityTest extends UITestBase {
         clickOnPreference(R.string.club);
         enterText("Archery Club");
         matchPreferenceSummary(R.string.club, "Archery Club");
-        assertEquals(SettingsManager.getProfileClub(), "Archery Club");
+        assertEquals(SettingsManager.INSTANCE.getProfileClub(), "Archery Club");
         pressBack();
 
         clickOnPreference(R.string.overview);
@@ -116,13 +116,13 @@ public class SettingsActivityTest extends UITestBase {
         clickOnPreference(R.string.target_zoom);
         selectFromList("5.0x");
         matchPreferenceSummary(R.string.target_zoom, "5.0x");
-        assertEquals(SettingsManager.getInputTargetZoom(), 5.0f);
+        assertEquals(SettingsManager.INSTANCE.getInputTargetZoom(), 5.0f);
 
         matchPreferenceSummary(R.string.arrow_diameter_scale, "1.0x");
         clickOnPreference(R.string.arrow_diameter_scale);
         selectFromList("3.5x");
         matchPreferenceSummary(R.string.arrow_diameter_scale, "3.5x");
-        assertEquals(SettingsManager.getInputArrowDiameterScale(), 3.5f);
+        assertEquals(SettingsManager.INSTANCE.getInputArrowDiameterScale(), 3.5f);
 
         pressBack();
         matchToolbarTitle(getActivity().getString(R.string.preferences));

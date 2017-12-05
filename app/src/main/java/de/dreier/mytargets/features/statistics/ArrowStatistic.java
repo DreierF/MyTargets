@@ -62,7 +62,7 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
         this.average.computeAll(shots);
         this.shots.addAll(shots);
         this.totalScore = Stream.of(shots)
-                .map(shot -> target.getScoringStyle().getReachedScore(shot)).collect(Score.sum());
+                .map(shot -> target.getScoringStyle().getReachedScore(shot)).scoreSum();
     }
 
     public static List<ArrowStatistic> getAll(@NonNull Target target, @NonNull List<Round> rounds) {

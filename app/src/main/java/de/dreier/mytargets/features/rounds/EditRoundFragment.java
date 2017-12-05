@@ -164,9 +164,9 @@ public class EditRoundFragment extends EditFragmentBase {
     }
 
     private void loadRoundDefaultValues() {
-        binding.distance.setItem(SettingsManager.getDistance());
-        binding.arrows.setProgress(SettingsManager.getShotsPerEnd());
-        binding.target.setItem(SettingsManager.getTarget());
+        binding.distance.setItem(SettingsManager.INSTANCE.getDistance());
+        binding.arrows.setProgress(SettingsManager.INSTANCE.getShotsPerEnd());
+        binding.target.setItem(SettingsManager.INSTANCE.getTarget());
     }
 
     @Override
