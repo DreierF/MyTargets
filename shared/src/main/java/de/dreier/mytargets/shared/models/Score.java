@@ -24,6 +24,7 @@ import com.annimon.stream.function.Function;
 import com.annimon.stream.function.Supplier;
 
 import org.parceler.Parcel;
+import org.parceler.ParcelConstructor;
 
 import java.util.Locale;
 
@@ -39,6 +40,7 @@ public class Score {
         this.shotCount = 0;
     }
 
+    @ParcelConstructor
     public Score(int reachedScore, int totalScore) {
         this.reachedScore = reachedScore;
         this.totalScore = totalScore;

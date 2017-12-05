@@ -34,6 +34,7 @@ import android.text.InputType;
 import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Stream;
@@ -177,6 +178,12 @@ public class InputActivity extends ChildActivityBase
         if (data != null) {
             onDataLoadFinished();
             updateEnd();
+        }
+        boolean keepAboveLockscreen = SettingsManager.getInputKeepAboveLockscreen();
+        if (keepAboveLockscreen) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         }
     }
 

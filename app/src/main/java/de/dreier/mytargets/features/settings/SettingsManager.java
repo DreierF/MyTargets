@@ -61,6 +61,7 @@ public class SettingsManager {
     public static final String KEY_PROFILE_BIRTHDAY = "profile_birthday";
     public static final String KEY_PROFILE_CLUB = "profile_club";
     public static final String KEY_PROFILE_LICENCE_NUMBER = "profile_licence_number";
+    private static final String KEY_INPUT_KEEP_ABOVE_LOCKSCREEN = "input_keep_above_lockscreen";
     public static final String KEY_INPUT_SUMMARY_AVERAGE_OF = "input_summary_average_of";
     public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
     public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
@@ -72,6 +73,7 @@ public class SettingsManager {
     public static final String KEY_SCOREBOARD_SHARE_FILE_TYPE = "scoreboard_share_file_type";
     private static final String KEY_BACKUP_INTERVAL = "backup_interval";
     private static final String KEY_DONATED = "donated";
+    private static final String KEY_TIMER_KEEP_ABOVE_LOCKSCREEN = "timer_keep_above_lockscreen";
     private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
     private static final String KEY_TIMER_SOUND = "timer_sound";
     private static final String KEY_STANDARD_ROUND = "standard_round";
@@ -190,6 +192,17 @@ public class SettingsManager {
     public static void setTimerEnabled(boolean enabled) {
         lastUsed.edit()
                 .putBoolean(KEY_TIMER, enabled)
+                .apply();
+    }
+
+    public static boolean getTimerKeepAboveLockscreen() {
+        return preferences.getBoolean(KEY_TIMER_KEEP_ABOVE_LOCKSCREEN, true);
+    }
+
+    public static void setTimerKeepAboveLockscreen(boolean keepAboveLockscreen) {
+        preferences
+                .edit()
+                .putBoolean(KEY_TIMER_KEEP_ABOVE_LOCKSCREEN, keepAboveLockscreen)
                 .apply();
     }
 
@@ -393,6 +406,17 @@ public class SettingsManager {
             return -1;
         }
         return Period.between(birthDay, LocalDate.now()).getYears();
+    }
+
+    public static boolean getInputKeepAboveLockscreen() {
+        return preferences.getBoolean(KEY_INPUT_KEEP_ABOVE_LOCKSCREEN, true);
+    }
+
+    public static void setInputKeepAboveLockscreen(boolean keepAboveLockscreen) {
+        preferences
+                .edit()
+                .putBoolean(KEY_INPUT_KEEP_ABOVE_LOCKSCREEN, keepAboveLockscreen)
+                .apply();
     }
 
     public static float getInputArrowDiameterScale() {
