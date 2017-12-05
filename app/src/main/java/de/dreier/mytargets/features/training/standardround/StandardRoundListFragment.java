@@ -21,6 +21,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.LongSparseArray;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,7 +37,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import org.parceler.Parcels;
 
 import java.util.List;
-import java.util.Map;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.header.HeaderListAdapter;
@@ -45,6 +45,7 @@ import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemStandardRoundBinding;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.db.StandardRound;
+import de.dreier.mytargets.shared.utils.LongSparseArrayUtilsKt;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.IntentWrapper;
@@ -89,7 +90,7 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
-        Map<Long, Integer> usedRounds = SettingsManager.getStandardRoundsLastUsed();
+        LongSparseArray<Integer> usedRounds = SettingsManager.INSTANCE.getStandardRoundsLastUsed();
         adapter = new StandardRoundListAdapter(getContext(), usedRounds);
         binding.recyclerView.setAdapter(adapter);
         binding.fab.setVisibility(View.GONE);
@@ -218,22 +219,22 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
     }
 
     private void persistSelection(@NonNull StandardRound standardRound) {
-        Map<Long, Integer> map = SettingsManager.getStandardRoundsLastUsed();
+        LongSparseArray<Integer> map = SettingsManager.INSTANCE.getStandardRoundsLastUsed();
         Integer counter = map.get(standardRound.getId());
         if (counter == null) {
             map.put(standardRound.getId(), 1);
         } else {
             map.put(standardRound.getId(), counter + 1);
         }
-        SettingsManager.setStandardRoundsLastUsed(map);
+        SettingsManager.INSTANCE.setStandardRoundsLastUsed(map);
     }
 
     private class StandardRoundListAdapter extends HeaderListAdapter<StandardRound> {
-        StandardRoundListAdapter(@NonNull Context context, @NonNull Map<Long, Integer> usedIds) {
+        StandardRoundListAdapter(@NonNull Context context, @NonNull LongSparseArray<Integer> usedIds) {
             super(child -> {
-                if (usedIds.containsKey(child.getId())) {
+                if (LongSparseArrayUtilsKt.contains(usedIds, child.getId())) {
                     return new SimpleHeader(0L, context.getString(R.string.recently_used));
-                } else {
+                } else{
                     return new SimpleHeader(1L, "");
                 }
             }, (r1, r2) -> {

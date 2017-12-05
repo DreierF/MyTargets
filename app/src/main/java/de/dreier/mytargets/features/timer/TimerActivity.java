@@ -53,7 +53,7 @@ public class TimerActivity extends ChildActivityBase {
     @Override
     protected void onResume() {
         super.onResume();
-        Utils.setShowWhenLocked(this, SettingsManager.getTimerKeepAboveLockscreen());
+        Utils.setShowWhenLocked(this, SettingsManager.INSTANCE.getTimerKeepAboveLockscreen());
     }
 
     @NonNull

@@ -154,7 +154,7 @@ public class StatisticsFragment extends FragmentBase {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_statistics, container, false);
 
         Target target = Parcels.unwrap(getArguments().getParcelable(ARG_TARGET));
-        if(SettingsManager.getStatisticsDispersionPatternMergeSpot()) {
+        if(SettingsManager.INSTANCE.getStatisticsDispersionPatternMergeSpot()) {
             this.target = Target.singleSpotTargetFrom(target);
         } else {
             this.target = target;
@@ -208,11 +208,11 @@ public class StatisticsFragment extends FragmentBase {
         ArrowStatistic stats = new ArrowStatistic(target, exactShots);
         stats.arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
 
-        EAggregationStrategy strategy = SettingsManager.getStatisticsDispersionPatternAggregationStrategy();
+        EAggregationStrategy strategy = SettingsManager.INSTANCE.getStatisticsDispersionPatternAggregationStrategy();
         TargetImpactAggregationDrawable drawable = stats.target.getImpactAggregationDrawable();
         drawable.setAggregationStrategy(strategy);
         drawable.setShots(stats.shots);
-        drawable.setArrowDiameter(stats.arrowDiameter, SettingsManager.getInputArrowDiameterScale());
+        drawable.setArrowDiameter(stats.arrowDiameter, SettingsManager.INSTANCE.getInputArrowDiameterScale());
         binding.dispersionView.setImageDrawable(drawable);
 
         binding.dispersionViewOverlay.setOnClickListener(view -> {

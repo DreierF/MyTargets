@@ -65,7 +65,7 @@ class SyncAdapter extends AbstractThreadedSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, @NonNull SyncResult syncResult) {
         Timber.e("Beginning network synchronization");
-        IBlockingBackup backup = SettingsManager.getBackupLocation().createBackup();
+        IBlockingBackup backup = SettingsManager.INSTANCE.getBackupLocation().createBackup();
         try {
             backup.performBackup(getContext());
         } catch (BackupException e) {

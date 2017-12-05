@@ -41,13 +41,13 @@ public class SimpleDbTestRule extends DbTestRuleBase {
 
     @Override
     protected void addDatabaseContent() {
-        SettingsManager.setTarget(
+        SettingsManager.INSTANCE.setTarget(
                 new Target(WAFull.ID, 0, new Dimension(122, Dimension.Unit.CENTIMETER)));
-        SettingsManager.setDistance(new Dimension(50, Dimension.Unit.METER));
-        SettingsManager.setIndoor(false);
-        SettingsManager.setInputMethod(TargetViewBase.EInputMethod.PLOTTING);
-        SettingsManager.setTimerEnabled(true);
-        SettingsManager.setShotsPerEnd(6);
+        SettingsManager.INSTANCE.setDistance(new Dimension(50, Dimension.Unit.METER));
+        SettingsManager.INSTANCE.setIndoor(false);
+        SettingsManager.INSTANCE.setInputMethod(TargetViewBase.EInputMethod.PLOTTING);
+        SettingsManager.INSTANCE.setTimerEnabled(true);
+        SettingsManager.INSTANCE.setShotsPerEnd(6);
         Bow bow = addBow("PSE Fever");
         addBow("PSE Something");
         addArrow("Arrow 1");

@@ -50,7 +50,7 @@ public class CurrentWeather {
     public Environment toEnvironment() {
         Environment e = new Environment();
         int code = Integer.parseInt(weather.get(0).icon.substring(0, 2));
-        e.indoor = SettingsManager.getIndoor();
+        e.indoor = SettingsManager.INSTANCE.getIndoor();
         e.weather = imageCodeToWeather(code);
         e.windDirection = 0;
         e.location = cityName;

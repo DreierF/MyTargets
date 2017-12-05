@@ -119,10 +119,10 @@ public class EditStandardRoundFragment extends EditFragmentBase {
 
     private void addDefaultRound() {
         RoundTemplate round = new RoundTemplate();
-        round.shotsPerEnd = SettingsManager.getShotsPerEnd();
-        round.endCount = SettingsManager.getEndCount();
-        round.setTargetTemplate(SettingsManager.getTarget());
-        round.distance = SettingsManager.getDistance();
+        round.shotsPerEnd = SettingsManager.INSTANCE.getShotsPerEnd();
+        round.endCount = SettingsManager.INSTANCE.getEndCount();
+        round.setTargetTemplate(SettingsManager.INSTANCE.getTarget());
+        round.distance = SettingsManager.INSTANCE.getDistance();
         standardRound.getRounds().add(round);
     }
 
@@ -161,10 +161,10 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         standardRound.save();
 
         RoundTemplate round = standardRound.getRounds().get(0); //FIXME how is this possible?
-        SettingsManager.setShotsPerEnd(round.shotsPerEnd);
-        SettingsManager.setEndCount(round.endCount);
-        SettingsManager.setTarget(round.getTargetTemplate());
-        SettingsManager.setDistance(round.distance);
+        SettingsManager.INSTANCE.setShotsPerEnd(round.shotsPerEnd);
+        SettingsManager.INSTANCE.setEndCount(round.endCount);
+        SettingsManager.INSTANCE.setTarget(round.getTargetTemplate());
+        SettingsManager.INSTANCE.setDistance(round.distance);
 
         Intent data = new Intent();
         data.putExtra(ITEM, Parcels.wrap(standardRound));

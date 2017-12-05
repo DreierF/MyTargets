@@ -179,7 +179,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
     @Override
     public void onResume() {
         super.onResume();
-        applyBackupLocationWithPermissionCheck(SettingsManager.getBackupLocation());
+        applyBackupLocationWithPermissionCheck(SettingsManager.INSTANCE.getBackupLocation());
         updateAutomaticBackupSwitch();
 
         syncStatusObserver.onStatusChanged(0);
@@ -230,9 +230,9 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
                 .title(R.string.backup_interval)
                 .items(backupIntervals)
                 .itemsCallbackSingleChoice(
-                        backupIntervals.indexOf(SettingsManager.getBackupInterval()),
+                        backupIntervals.indexOf(SettingsManager.INSTANCE.getBackupInterval()),
                         (dialog, v, index, text) -> {
-                            SettingsManager.setBackupInterval(EBackupInterval.values()[index]);
+                            SettingsManager.INSTANCE.setBackupInterval(EBackupInterval.values()[index]);
                             updateInterval();
                             return true;
                         })
@@ -243,11 +243,11 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         boolean autoBackupEnabled = SyncUtils.isSyncAutomaticallyEnabled();
         binding.backupIntervalLayout.setVisibility(autoBackupEnabled ? VISIBLE : GONE);
         binding.backupIntervalPreference.summary
-                .setText(SettingsManager.getBackupInterval().toString());
+                .setText(SettingsManager.INSTANCE.getBackupInterval().toString());
     }
 
     private void onBackupLocationClicked() {
-        EBackupLocation item = SettingsManager.getBackupLocation();
+        EBackupLocation item = SettingsManager.INSTANCE.getBackupLocation();
         new MaterialDialog.Builder(getContext())
                 .title(R.string.backup_location)
                 .items(EBackupLocation.getList())
@@ -264,7 +264,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
     }
 
     private void updateBackupLocation() {
-        EBackupLocation backupLocation = SettingsManager.getBackupLocation();
+        EBackupLocation backupLocation = SettingsManager.INSTANCE.getBackupLocation();
         binding.backupLocation.image.setImageResource(backupLocation.getDrawableRes());
         binding.backupLocation.name.setText(R.string.backup_location);
         binding.backupLocation.summary.setText(backupLocation.toString());
@@ -281,7 +281,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
 
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     void applyBackupLocation(@NonNull EBackupLocation item) {
-        SettingsManager.setBackupLocation(item);
+        SettingsManager.INSTANCE.setBackupLocation(item);
         backup = item.createAsyncRestore();
         binding.recentBackupsProgress.setVisibility(VISIBLE);
         binding.recentBackupsList.setVisibility(GONE);

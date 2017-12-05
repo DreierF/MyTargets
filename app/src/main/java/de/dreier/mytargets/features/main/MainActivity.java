@@ -77,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
         Language.setFromPreference(this, SettingsManager.KEY_LANGUAGE);
         countryCode = getCountryCode();
         super.onCreate(savedInstanceState);
-        if (SettingsManager.shouldShowIntroActivity()) {
-            SettingsManager.setShouldShowIntroActivity(false);
+        if (SettingsManager.INSTANCE.getShouldShowIntroActivity()) {
+            SettingsManager.INSTANCE.setShouldShowIntroActivity(false);
             Intent intent = new Intent(this, IntroActivity.class);
             startActivity(intent);
         }
@@ -187,13 +187,13 @@ public class MainActivity extends AppCompatActivity {
         View headerLayout = binding.navigationView.getHeaderView(0);
         TextView userName = headerLayout.findViewById(R.id.username);
         TextView userDetails = headerLayout.findViewById(R.id.user_details);
-        String profileFullName = SettingsManager.getProfileFullName();
+        String profileFullName = SettingsManager.INSTANCE.getProfileFullName();
         if (profileFullName.trim().isEmpty()) {
             userName.setText(R.string.click_to_enter_profile);
         } else {
             userName.setText(profileFullName);
         }
-        userDetails.setText(SettingsManager.getProfileClub());
+        userDetails.setText(SettingsManager.INSTANCE.getProfileClub());
         headerLayout.setOnClickListener(view -> {
             closeDrawerAndStart(SettingsActivity.getIntent(PROFILE));
         });

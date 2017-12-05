@@ -18,11 +18,7 @@ package de.dreier.mytargets.features.settings;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.preference.Preference;
 
-import static de.dreier.mytargets.features.settings.SettingsManager.KEY_PROFILE_BIRTHDAY;
-import static de.dreier.mytargets.features.settings.SettingsManager.KEY_PROFILE_CLUB;
-import static de.dreier.mytargets.features.settings.SettingsManager.KEY_PROFILE_FIRST_NAME;
-import static de.dreier.mytargets.features.settings.SettingsManager.KEY_PROFILE_LAST_NAME;
-import static de.dreier.mytargets.features.settings.SettingsManager.KEY_PROFILE_LICENCE_NUMBER;
+import static de.dreier.mytargets.features.settings.SettingsManager.INSTANCE;
 
 public class ProfileSettingsFragment extends SettingsFragmentBase {
 
@@ -30,11 +26,11 @@ public class ProfileSettingsFragment extends SettingsFragmentBase {
 
     @Override
     public void updateItemSummaries() {
-        setSummary(KEY_PROFILE_FIRST_NAME, SettingsManager.getProfileFirstName());
-        setSummary(KEY_PROFILE_LAST_NAME, SettingsManager.getProfileLastName());
-        setSummary(KEY_PROFILE_BIRTHDAY, SettingsManager.getProfileBirthDayFormatted());
-        setSummary(KEY_PROFILE_CLUB, SettingsManager.getProfileClub());
-        setSummary(KEY_PROFILE_LICENCE_NUMBER, SettingsManager.getProfileLicenceNumber());
+        setSummary(SettingsManager.KEY_PROFILE_FIRST_NAME, INSTANCE.getProfileFirstName());
+        setSummary(SettingsManager.KEY_PROFILE_LAST_NAME, INSTANCE.getProfileLastName());
+        setSummary(SettingsManager.KEY_PROFILE_BIRTHDAY, INSTANCE.getProfileBirthDayFormatted());
+        setSummary(SettingsManager.KEY_PROFILE_CLUB, INSTANCE.getProfileClub());
+        setSummary(SettingsManager.KEY_PROFILE_LICENCE_NUMBER, INSTANCE.getProfileLicenceNumber());
     }
 
     @Override

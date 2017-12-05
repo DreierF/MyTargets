@@ -122,7 +122,7 @@ public class ScoreboardFragment extends FragmentBase {
 
         View scoreboard = ScoreboardUtils
                 .getScoreboardView(getContext(), Utils.getCurrentLocale(getContext()),
-                        training, roundId, SettingsManager.getScoreboardConfiguration());
+                        training, roundId, SettingsManager.INSTANCE.getScoreboardConfiguration());
         return () -> {
             binding.progressBar.setVisibility(GONE);
             scoreboard
@@ -133,7 +133,7 @@ public class ScoreboardFragment extends FragmentBase {
             PartialScoreboardSignaturesBinding signatures = PartialScoreboardSignaturesBinding
                     .bind(scoreboard.findViewById(R.id.signatures_layout));
 
-            String archer = SettingsManager.getProfileFullName();
+            String archer = SettingsManager.INSTANCE.getProfileFullName();
             if (archer.trim().isEmpty()) {
                 archer = getString(R.string.archer);
             }
@@ -203,7 +203,7 @@ public class ScoreboardFragment extends FragmentBase {
     /* Called after the user selected with items he wants to share */
     @SuppressLint("StaticFieldLeak")
     private void share() {
-        EFileType fileType = SettingsManager.getScoreboardShareFileType();
+        EFileType fileType = SettingsManager.INSTANCE.getScoreboardShareFileType();
         new AsyncTask<Void, Void, Uri>() {
 
             @Nullable
@@ -214,7 +214,7 @@ public class ScoreboardFragment extends FragmentBase {
                             .getCacheDir(), getDefaultFileName(fileType));
                     LinearLayout content = ScoreboardUtils
                             .getScoreboardView(getContext(), Utils
-                                    .getCurrentLocale(getContext()), training, roundId, SettingsManager
+                                    .getCurrentLocale(getContext()), training, roundId, SettingsManager.INSTANCE
                                     .getScoreboardConfiguration());
                     if (fileType == EFileType.PDF && Utils.isKitKat()) {
                         ScoreboardUtils.generatePdf(content, scoreboardFile);
@@ -253,7 +253,7 @@ public class ScoreboardFragment extends FragmentBase {
         String fileName = getDefaultFileName(EFileType.PDF);
 
         LinearLayout content = ScoreboardUtils.getScoreboardView(getContext(), Utils
-                .getCurrentLocale(getContext()), training, roundId, SettingsManager
+                .getCurrentLocale(getContext()), training, roundId, SettingsManager.INSTANCE
                 .getScoreboardConfiguration());
 
         String jobName = getString(R.string.scoreboard) + " Document";

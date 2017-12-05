@@ -270,7 +270,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
             }
             binding.points.setText(
                     item.getReachedScore()
-                            .format(Utils.getCurrentLocale(getContext()), SettingsManager
+                            .format(Utils.getCurrentLocale(getContext()), SettingsManager.INSTANCE
                                     .getScoreConfiguration()));
         }
     }

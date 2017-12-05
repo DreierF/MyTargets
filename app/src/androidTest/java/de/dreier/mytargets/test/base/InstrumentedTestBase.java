@@ -22,6 +22,6 @@ import de.dreier.mytargets.features.settings.SettingsManager;
 public class InstrumentedTestBase {
     @BeforeClass
     public static void setLanguage() {
-        SettingsManager.setLanguage("en");
+        SettingsManager.INSTANCE.setLanguage("en");
     }
 }

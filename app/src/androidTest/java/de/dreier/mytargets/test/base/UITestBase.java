@@ -49,7 +49,7 @@ public abstract class UITestBase extends InstrumentedTestBase {
 
     @BeforeClass
     public static void disableIntro() {
-        SettingsManager.setShouldShowIntroActivity(false);
+        SettingsManager.INSTANCE.setShouldShowIntroActivity(false);
     }
 
     protected static void navigateUp() {

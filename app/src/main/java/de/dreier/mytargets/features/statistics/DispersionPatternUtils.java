@@ -66,7 +66,7 @@ public class DispersionPatternUtils {
             TargetImpactDrawable target = new TargetImpactAggregationDrawable(statistic.target);
             target.setShots(statistic.shots);
             target.setArrowDiameter(statistic.arrowDiameter,
-                    SettingsManager.getInputArrowDiameterScale());
+                    SettingsManager.INSTANCE.getInputArrowDiameterScale());
 
             PdfDocument document = new PdfDocument();
 
@@ -105,7 +105,7 @@ public class DispersionPatternUtils {
         TargetImpactDrawable target = new TargetImpactAggregationDrawable(statistic.target);
         target.setShots(statistic.shots);
         target.setArrowDiameter(statistic.arrowDiameter,
-                SettingsManager.getInputArrowDiameterScale());
+                SettingsManager.INSTANCE.getInputArrowDiameterScale());
         target.setBounds(new Rect(0, 0, size, size));
         target.draw(canvas);
         return b;

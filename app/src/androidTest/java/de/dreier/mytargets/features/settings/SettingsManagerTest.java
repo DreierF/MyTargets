@@ -17,6 +17,7 @@ package de.dreier.mytargets.features.settings;
 
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v4.util.LongSparseArray;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,10 +26,6 @@ import org.threeten.bp.LocalDate;
 import org.threeten.bp.Period;
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.FormatStyle;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.features.settings.backup.EBackupInterval;
@@ -60,99 +57,99 @@ public class SettingsManagerTest extends InstrumentedTestBase {
 
     @Test
     public void setStandardRound() {
-        SettingsManager.setStandardRound(34);
-        assertThat(SettingsManager.getStandardRound()).isEqualTo(34);
+        SettingsManager.INSTANCE.setStandardRound(34);
+        assertThat(SettingsManager.INSTANCE.getStandardRound()).isEqualTo(34);
     }
 
     @Test
     public void setArrow() {
-        SettingsManager.setArrow(null);
-        assertThat(SettingsManager.getArrow()).isEqualTo(null);
-        SettingsManager.setArrow(1L);
-        assertThat(SettingsManager.getArrow()).isEqualTo(1L);
+        SettingsManager.INSTANCE.setArrow(null);
+        assertThat(SettingsManager.INSTANCE.getArrow()).isEqualTo(null);
+        SettingsManager.INSTANCE.setArrow(1L);
+        assertThat(SettingsManager.INSTANCE.getArrow()).isEqualTo(1L);
     }
 
     @Test
     public void setBow() {
-        SettingsManager.setBow(null);
-        assertThat(SettingsManager.getBow()).isEqualTo(null);
-        SettingsManager.setBow(2L);
-        assertThat(SettingsManager.getBow()).isEqualTo(2L);
+        SettingsManager.INSTANCE.setBow(null);
+        assertThat(SettingsManager.INSTANCE.getBow()).isEqualTo(null);
+        SettingsManager.INSTANCE.setBow(2L);
+        assertThat(SettingsManager.INSTANCE.getBow()).isEqualTo(2L);
     }
 
     @Test
     public void setDistance() {
-        SettingsManager.setDistance(new Dimension(30, Dimension.Unit.METER));
-        assertThat(SettingsManager.getDistance())
+        SettingsManager.INSTANCE.setDistance(new Dimension(30, Dimension.Unit.METER));
+        assertThat(SettingsManager.INSTANCE.getDistance())
                 .isEqualTo(new Dimension(30, Dimension.Unit.METER));
-        SettingsManager.setDistance(new Dimension(-1, Dimension.Unit.METER));
-        assertThat(SettingsManager.getDistance())
+        SettingsManager.INSTANCE.setDistance(new Dimension(-1, Dimension.Unit.METER));
+        assertThat(SettingsManager.INSTANCE.getDistance())
                 .isEqualTo(new Dimension(-1, Dimension.Unit.METER));
     }
 
     @Test
     public void setShotsPerEnd() {
-        SettingsManager.setShotsPerEnd(12);
-        assertThat(SettingsManager.getShotsPerEnd()).isEqualTo(12);
+        SettingsManager.INSTANCE.setShotsPerEnd(12);
+        assertThat(SettingsManager.INSTANCE.getShotsPerEnd()).isEqualTo(12);
     }
 
     @Test
     public void setTarget() {
         final Target targetWA = new Target(WAFull.ID, 0,
                 new Dimension(40, Dimension.Unit.CENTIMETER));
-        SettingsManager.setTarget(targetWA);
-        assertThat(SettingsManager.getTarget()).isEqualTo(targetWA);
+        SettingsManager.INSTANCE.setTarget(targetWA);
+        assertThat(SettingsManager.INSTANCE.getTarget()).isEqualTo(targetWA);
         final Target target3d = new Target(NFAAAnimal.ID, 0, Dimension.LARGE);
-        SettingsManager.setTarget(target3d);
-        assertThat(SettingsManager.getTarget()).isEqualTo(target3d);
+        SettingsManager.INSTANCE.setTarget(target3d);
+        assertThat(SettingsManager.INSTANCE.getTarget()).isEqualTo(target3d);
     }
 
     @Test
     public void setTimerEnabled() {
-        SettingsManager.setTimerEnabled(true);
-        assertThat(SettingsManager.getTimerEnabled()).isEqualTo(true);
+        SettingsManager.INSTANCE.setTimerEnabled(true);
+        assertThat(SettingsManager.INSTANCE.getTimerEnabled()).isEqualTo(true);
     }
 
     @Test
     public void setArrowNumbersEnabled() {
-        SettingsManager.setArrowNumbersEnabled(true);
-        assertThat(SettingsManager.getArrowNumbersEnabled()).isEqualTo(true);
+        SettingsManager.INSTANCE.setArrowNumbersEnabled(true);
+        assertThat(SettingsManager.INSTANCE.getArrowNumbersEnabled()).isEqualTo(true);
     }
 
     @Test
     public void setIndoor() {
-        SettingsManager.setIndoor(false);
-        assertThat(SettingsManager.getIndoor()).isEqualTo(false);
+        SettingsManager.INSTANCE.setIndoor(false);
+        assertThat(SettingsManager.INSTANCE.getIndoor()).isEqualTo(false);
     }
 
     @Test
     public void setEndCount() {
-        SettingsManager.setEndCount(10);
-        assertThat(SettingsManager.getEndCount()).isEqualTo(10);
+        SettingsManager.INSTANCE.setEndCount(10);
+        assertThat(SettingsManager.INSTANCE.getEndCount()).isEqualTo(10);
     }
 
     @Test
     public void setInputMethod() {
-        SettingsManager.setInputMethod(KEYBOARD);
-        assertThat(SettingsManager.getInputMethod()).isEqualTo(KEYBOARD);
+        SettingsManager.INSTANCE.setInputMethod(KEYBOARD);
+        assertThat(SettingsManager.INSTANCE.getInputMethod()).isEqualTo(KEYBOARD);
     }
 
     @Test
     public void setDonated() {
-        SettingsManager.setDonated(true);
-        assertThat(SettingsManager.hasDonated()).isEqualTo(true);
+        SettingsManager.INSTANCE.setDonated(true);
+        assertThat(SettingsManager.INSTANCE.getDonated()).isEqualTo(true);
     }
 
     @Test
     public void setShowMode() {
-        SettingsManager.setShowMode(ETrainingScope.TRAINING);
-        assertThat(SettingsManager.getShowMode()).isEqualTo(ETrainingScope.TRAINING);
+        SettingsManager.INSTANCE.setShowMode(ETrainingScope.TRAINING);
+        assertThat(SettingsManager.INSTANCE.getShowMode()).isEqualTo(ETrainingScope.TRAINING);
     }
 
     @Test
     public void setAggregationStrategy() {
-        SettingsManager.setAggregationStrategy(EAggregationStrategy.CLUSTER);
-        assertThat(SettingsManager.getAggregationStrategy())
+        SettingsManager.INSTANCE.setAggregationStrategy(EAggregationStrategy.CLUSTER);
+        assertThat(SettingsManager.INSTANCE.getAggregationStrategy())
                 .isEqualTo(EAggregationStrategy.CLUSTER);
     }
 
@@ -165,102 +162,105 @@ public class SettingsManagerTest extends InstrumentedTestBase {
         settings.waitTime = 5;
         settings.shootTime = 90;
         settings.warnTime = 30;
-        SettingsManager.setTimerSettings(settings);
-        assertThat(SettingsManager.getTimerSettings()).isEqualTo(settings);
+        SettingsManager.INSTANCE.setTimerSettings(settings);
+        assertThat(SettingsManager.INSTANCE.getTimerSettings()).isEqualTo(settings);
         ApplicationInstance.Companion.getSharedPreferences()
                 .edit()
                 .putString(SettingsManager.KEY_TIMER_WAIT_TIME, "")
                 .apply();
-        assertThat(SettingsManager.getTimerSettings().waitTime).isEqualTo(10);
+        assertThat(SettingsManager.INSTANCE.getTimerSettings().waitTime).isEqualTo(10);
     }
 
     @Test
     public void setProfileFullName() {
-        SettingsManager.setProfileFirstName("Joe");
-        SettingsManager.setProfileLastName("Doe");
-        assertThat(SettingsManager.getProfileFirstName()).isEqualTo("Joe");
-        assertThat(SettingsManager.getProfileLastName()).isEqualTo("Doe");
-        assertThat(SettingsManager.getProfileFullName()).isEqualTo("Joe Doe");
+        SettingsManager.INSTANCE.setProfileFirstName("Joe");
+        SettingsManager.INSTANCE.setProfileLastName("Doe");
+        assertThat(SettingsManager.INSTANCE.getProfileFirstName()).isEqualTo("Joe");
+        assertThat(SettingsManager.INSTANCE.getProfileLastName()).isEqualTo("Doe");
+        assertThat(SettingsManager.INSTANCE.getProfileFullName()).isEqualTo("Joe Doe");
     }
 
     @Test
     public void setProfileClub() {
-        SettingsManager.setProfileClub("My Club");
-        assertThat(SettingsManager.getProfileClub()).isEqualTo("My Club");
+        SettingsManager.INSTANCE.setProfileClub("My Club");
+        assertThat(SettingsManager.INSTANCE.getProfileClub()).isEqualTo("My Club");
     }
 
     @Test
     public void setProfileLicenceNumber() {
-        SettingsManager.setProfileLicenceNumber("12345");
-        assertThat(SettingsManager.getProfileLicenceNumber()).isEqualTo("12345");
+        SettingsManager.INSTANCE.setProfileLicenceNumber("12345");
+        assertThat(SettingsManager.INSTANCE.getProfileLicenceNumber()).isEqualTo("12345");
     }
 
     @Test
     public void setProfileBirthDay() {
-        assertThat(SettingsManager.getProfileBirthDay()).isEqualTo(null);
-        assertThat(SettingsManager.getProfileBirthDayFormatted()).isEqualTo(null);
-        assertThat(SettingsManager.getProfileAge()).isEqualTo(-1);
+        assertThat(SettingsManager.INSTANCE.getProfileBirthDay()).isEqualTo(null);
+        assertThat(SettingsManager.INSTANCE.getProfileBirthDayFormatted()).isEqualTo(null);
+        assertThat(SettingsManager.INSTANCE.getProfileAge()).isEqualTo(null);
 
         final LocalDate birthDay = LocalDate.of(1993, 5, 4);
-        SettingsManager.setProfileBirthDay(birthDay);
-        assertThat(SettingsManager.getProfileBirthDay()).isEqualTo(birthDay);
-        assertThat(SettingsManager.getProfileBirthDayFormatted()).isEqualTo(
+        SettingsManager.INSTANCE.setProfileBirthDay(birthDay);
+        assertThat(SettingsManager.INSTANCE.getProfileBirthDay()).isEqualTo(birthDay);
+        assertThat(SettingsManager.INSTANCE.getProfileBirthDayFormatted()).isEqualTo(
                 DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(birthDay));
-        assertThat(SettingsManager.getProfileAge())
+        assertThat(SettingsManager.INSTANCE.getProfileAge())
                 .isEqualTo(Period.between(birthDay, LocalDate.now()).getYears());
     }
 
     @Test
     public void setInputArrowDiameterScale() {
-        SettingsManager.setInputArrowDiameterScale(2.5f);
-        assertThat(SettingsManager.getInputArrowDiameterScale()).isWithin(0f).of(2.5f);
+        SettingsManager.INSTANCE.setInputArrowDiameterScale(2.5f);
+        assertThat(SettingsManager.INSTANCE.getInputArrowDiameterScale()).isWithin(0f).of(2.5f);
     }
 
     @Test
     public void setInputTargetZoom() {
-        SettingsManager.setInputTargetZoom(4.5f);
-        assertThat(SettingsManager.getInputTargetZoom()).isWithin(0f).of(4.5f);
+        SettingsManager.INSTANCE.setInputTargetZoom(4.5f);
+        assertThat(SettingsManager.INSTANCE.getInputTargetZoom()).isWithin(0f).of(4.5f);
     }
 
     @Test
     public void setInputKeyboardType() {
-        SettingsManager.setInputKeyboardType(TargetView.EKeyboardType.LEFT);
-        assertThat(SettingsManager.getInputKeyboardType()).isEqualTo(TargetView.EKeyboardType.LEFT);
+        SettingsManager.INSTANCE.setInputKeyboardType(TargetView.EKeyboardType.LEFT);
+        assertThat(SettingsManager.INSTANCE.getInputKeyboardType()).isEqualTo(TargetView.EKeyboardType.LEFT);
     }
 
     @Test
     public void setBackupLocation() {
-        SettingsManager.setBackupLocation(EBackupLocation.GOOGLE_DRIVE);
-        assertThat(SettingsManager.getBackupLocation()).isEqualTo(EBackupLocation.GOOGLE_DRIVE);
+        SettingsManager.INSTANCE.setBackupLocation(EBackupLocation.GOOGLE_DRIVE);
+        assertThat(SettingsManager.INSTANCE.getBackupLocation()).isEqualTo(EBackupLocation.GOOGLE_DRIVE);
     }
 
     @Test
     public void setBackupInterval() {
-        SettingsManager.setBackupInterval(EBackupInterval.MONTHLY);
-        assertThat(SettingsManager.getBackupInterval()).isEqualTo(EBackupInterval.MONTHLY);
+        SettingsManager.INSTANCE.setBackupInterval(EBackupInterval.MONTHLY);
+        assertThat(SettingsManager.INSTANCE.getBackupInterval()).isEqualTo(EBackupInterval.MONTHLY);
     }
 
     @Test
     public void setStandardRoundsLastUsedEmpty() {
-        SettingsManager.setStandardRoundsLastUsed(Collections.emptyMap());
-        assertThat(SettingsManager.getStandardRoundsLastUsed()).isEqualTo(Collections.emptyMap());
+        SettingsManager.INSTANCE.setStandardRoundsLastUsed(new LongSparseArray<>());
+        assertThat(SettingsManager.INSTANCE.getStandardRoundsLastUsed().toString())
+                .isEqualTo(new LongSparseArray<>().toString());
     }
 
     @Test
     public void setStandardRoundsLastUsed() {
-        Map<Long, Integer> map = new HashMap<>();
+        LongSparseArray<Integer> map = new LongSparseArray<>();
         map.put(2L, 3);
-        SettingsManager.setStandardRoundsLastUsed(map);
-        assertThat(SettingsManager.getStandardRoundsLastUsed()).isEqualTo(map);
+        SettingsManager.INSTANCE.setStandardRoundsLastUsed(map);
+        assertThat(SettingsManager.INSTANCE.getStandardRoundsLastUsed().toString())
+                .isEqualTo(map.toString());
         map.put(4L, 5);
-        SettingsManager.setStandardRoundsLastUsed(map);
-        assertThat(SettingsManager.getStandardRoundsLastUsed()).isEqualTo(map);
+        SettingsManager.INSTANCE.setStandardRoundsLastUsed(map);
+        assertThat(SettingsManager.INSTANCE.getStandardRoundsLastUsed().toString())
+                .isEqualTo(map.toString());
     }
 
     @Test
     public void setShouldShowIntroActivity() {
-        SettingsManager.setShouldShowIntroActivity(false);
-        assertThat(SettingsManager.shouldShowIntroActivity()).isEqualTo(false);
+        SettingsManager.INSTANCE.setShouldShowIntroActivity(false);
+        assertThat(SettingsManager.INSTANCE.getShouldShowIntroActivity()).isEqualTo(false);
     }
 
     @Test
@@ -271,8 +271,8 @@ public class SettingsManagerTest extends InstrumentedTestBase {
         config.showTraining = true;
         config.showAverage = true;
         config.averageScope = ETrainingScope.TRAINING;
-        SettingsManager.setInputSummaryConfiguration(config);
-        assertThat(SettingsManager.getInputSummaryConfiguration()).isEqualTo(config);
+        SettingsManager.INSTANCE.setInputSummaryConfiguration(config);
+        assertThat(SettingsManager.INSTANCE.getInputSummaryConfiguration()).isEqualTo(config);
     }
 
     @Test
@@ -282,7 +282,7 @@ public class SettingsManagerTest extends InstrumentedTestBase {
         config.showTotalScore = true;
         config.showPercentage = false;
         config.showAverage = true;
-        SettingsManager.setScoreConfiguration(config);
-        assertThat(SettingsManager.getScoreConfiguration()).isEqualTo(config);
+        SettingsManager.INSTANCE.setScoreConfiguration(config);
+        assertThat(SettingsManager.INSTANCE.getScoreConfiguration()).isEqualTo(config);
     }
 }

@@ -123,7 +123,7 @@ public class DonateActivity extends AppCompatActivity implements BillingProcesso
     public void onProductPurchased(@NonNull String productId, TransactionDetails details) {
         bp.consumePurchase(productId);
 
-        SettingsManager.setDonated(true);
+        SettingsManager.INSTANCE.setDonated(true);
 
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.donation_thank))

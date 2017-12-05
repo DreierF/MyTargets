@@ -58,11 +58,11 @@ public class ScreenshotTest extends UITestBase {
     @Before
     public void setUp() {
         Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
-        SettingsManager.setArrowNumbersEnabled(false);
-        SettingsManager.setShotsPerEnd(6);
-        SettingsManager.setTarget(new Target(WAFull.ID, 2,
+        SettingsManager.INSTANCE.setArrowNumbersEnabled(false);
+        SettingsManager.INSTANCE.setShotsPerEnd(6);
+        SettingsManager.INSTANCE.setTarget(new Target(WAFull.ID, 2,
                 new Dimension(60, Dimension.Unit.CENTIMETER)));
-        SettingsManager.setTimerEnabled(true);
+        SettingsManager.INSTANCE.setTimerEnabled(true);
     }
 
     @Test

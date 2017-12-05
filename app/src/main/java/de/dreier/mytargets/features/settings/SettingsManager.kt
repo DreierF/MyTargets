@@ -13,607 +13,353 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings;
+package de.dreier.mytargets.features.settings
 
-import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.v4.util.LongSparseArray
+import de.dreier.mytargets.app.ApplicationInstance
+import de.dreier.mytargets.features.scoreboard.EFileType
+import de.dreier.mytargets.features.scoreboard.ScoreboardConfiguration
+import de.dreier.mytargets.features.settings.backup.EBackupInterval
+import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation
+import de.dreier.mytargets.features.training.input.ETrainingScope
+import de.dreier.mytargets.features.training.input.SummaryConfiguration
+import de.dreier.mytargets.features.training.input.TargetView.EKeyboardType
+import de.dreier.mytargets.shared.SharedApplicationInstance
+import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy
+import de.dreier.mytargets.shared.models.Dimension
+import de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER
+import de.dreier.mytargets.shared.models.Score
+import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.models.TimerSettings
+import de.dreier.mytargets.shared.utils.map
+import de.dreier.mytargets.shared.utils.toSparseArray
+import de.dreier.mytargets.shared.views.TargetViewBase
+import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod.KEYBOARD
+import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod.PLOTTING
+import org.threeten.bp.LocalDate
+import org.threeten.bp.Period
+import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.format.FormatStyle
 
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.Period;
-import org.threeten.bp.format.DateTimeFormatter;
-import org.threeten.bp.format.FormatStyle;
+object SettingsManager {
+    private val lastUsed = ApplicationInstance
+            .getLastSharedPreferences()
+    private val preferences = SharedApplicationInstance.sharedPreferences
 
-import java.util.Arrays;
-import java.util.Map;
+    const val KEY_TIMER_WARN_TIME = "timer_warn_time"
+    const val KEY_TIMER_WAIT_TIME = "timer_wait_time"
+    const val KEY_TIMER_SHOOT_TIME = "timer_shoot_time"
+    const val KEY_PROFILE_FIRST_NAME = "profile_first_name"
+    const val KEY_PROFILE_LAST_NAME = "profile_last_name"
+    const val KEY_PROFILE_BIRTHDAY = "profile_birthday"
+    const val KEY_PROFILE_CLUB = "profile_club"
+    const val KEY_PROFILE_LICENCE_NUMBER = "profile_licence_number"
+    const val KEY_INPUT_SUMMARY_AVERAGE_OF = "input_summary_average_of"
+    const val KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale"
+    const val KEY_INPUT_TARGET_ZOOM = "input_target_zoom"
+    const val KEY_INPUT_KEYBOARD_TYPE = "input_keyboard_type"
+    private const val KEY_INPUT_KEEP_ABOVE_LOCKSCREEN = "input_keep_above_lockscreen"
+    private const val KEY_INPUT_SUMMARY_SHOW_END = "input_summary_show_end"
+    private const val KEY_INPUT_SUMMARY_SHOW_ROUND = "input_summary_show_round"
+    private const val KEY_INPUT_SUMMARY_SHOW_TRAINING = "input_summary_show_training"
+    private const val KEY_INPUT_SUMMARY_SHOW_AVERAGE = "input_summary_show_average"
+    const val KEY_SCOREBOARD_SHARE_FILE_TYPE = "scoreboard_share_file_type"
+    private const val KEY_BACKUP_INTERVAL = "backup_interval"
+    private const val KEY_DONATED = "donated"
+    private const val KEY_TIMER_KEEP_ABOVE_LOCKSCREEN = "timer_keep_above_lockscreen"
+    private const val KEY_TIMER_VIBRATE = "timer_vibrate"
+    private const val KEY_TIMER_SOUND = "timer_sound"
+    private const val KEY_STANDARD_ROUND = "standard_round"
+    private const val KEY_ARROW = "arrow"
+    private const val KEY_BOW = "bow"
+    private const val KEY_DISTANCE_VALUE = "distance"
+    private const val KEY_DISTANCE_UNIT = "unit"
+    private const val KEY_ARROWS_PER_END = "ppp"
+    private const val KEY_TARGET = "target"
+    private const val KEY_SCORING_STYLE = "scoring_style"
+    private const val KEY_TARGET_DIAMETER_VALUE = "size_target"
+    private const val KEY_TARGET_DIAMETER_UNIT = "unit_target"
+    private const val KEY_TIMER = "timer"
+    private const val KEY_NUMBERING_ENABLED = "numbering"
+    private const val KEY_INDOOR = "indoor"
+    private const val KEY_END_COUNT = "rounds"
+    private const val KEY_INPUT_MODE = "target_mode"
+    const val KEY_SHOW_MODE = "show_mode"
+    private const val KEY_BACKUP_LOCATION = "backup_location"
+    const val KEY_AGGREGATION_STRATEGY = "aggregation_strategy"
+    private const val KEY_STANDARD_ROUNDS_LAST_USED = "standard_round_last_used"
+    private const val KEY_INTRO_SHOWED = "intro_showed"
+    private const val KEY_OVERVIEW_SHOW_REACHED_SCORE = "overview_show_reached_score"
+    private const val KEY_OVERVIEW_SHOW_TOTAL_SCORE = "overview_show_total_score"
+    private const val KEY_OVERVIEW_SHOW_PERCENTAGE = "overview_show_percentage"
+    private const val KEY_OVERVIEW_SHOW_ARROW_AVERAGE = "overview_show_arrow_average"
+    private const val KEY_OVERVIEW_SHOT_SORTING = "overview_shot_sorting"
+    private const val KEY_OVERVIEW_SHOT_SORTING_SPOT = "overview_shot_sorting_spot"
+    const val KEY_LANGUAGE = "language"
+    const val KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE = "statistics_dispersion_pattern_file_type"
+    const val KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY = "statistics_dispersion_pattern_aggregation_strategy"
+    private const val KEY_STATISTICS_DISPERSION_PATTERN_MERGE_SPOT = "statistics_dispersion_pattern_merge_spot"
 
-import de.dreier.mytargets.app.ApplicationInstance;
-import de.dreier.mytargets.features.scoreboard.EFileType;
-import de.dreier.mytargets.features.scoreboard.ScoreboardConfiguration;
-import de.dreier.mytargets.features.settings.backup.EBackupInterval;
-import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
-import de.dreier.mytargets.features.training.input.ETrainingScope;
-import de.dreier.mytargets.features.training.input.SummaryConfiguration;
-import de.dreier.mytargets.features.training.input.TargetView.EKeyboardType;
-import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.Score;
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.TimerSettings;
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-import de.dreier.mytargets.shared.views.TargetViewBase;
+    var standardRound: Long
+        get() = lastUsed[KEY_STANDARD_ROUND, 32].toLong()
+        set(value) = lastUsed.set(KEY_STANDARD_ROUND, value.toInt())
 
-import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
+    var arrow: Long?
+        get() = lastUsed.get<Int>(KEY_ARROW)?.toLong()
+        set(value) = lastUsed.set(KEY_ARROW, value?.toInt())
 
-public class SettingsManager {
-    private static final SharedPreferences lastUsed = ApplicationInstance
-            .getLastSharedPreferences();
-    private static final SharedPreferences preferences = ApplicationInstance.Companion
-            .getSharedPreferences();
+    var bow: Long?
+        get() = lastUsed.get<Int>(KEY_BOW)?.toLong()
+        set(value) = lastUsed.set(KEY_BOW, value?.toInt())
 
-    public static final String KEY_TIMER_WARN_TIME = "timer_warn_time";
-    public static final String KEY_TIMER_WAIT_TIME = "timer_wait_time";
-    public static final String KEY_TIMER_SHOOT_TIME = "timer_shoot_time";
-    public static final String KEY_PROFILE_FIRST_NAME = "profile_first_name";
-    public static final String KEY_PROFILE_LAST_NAME = "profile_last_name";
-    public static final String KEY_PROFILE_BIRTHDAY = "profile_birthday";
-    public static final String KEY_PROFILE_CLUB = "profile_club";
-    public static final String KEY_PROFILE_LICENCE_NUMBER = "profile_licence_number";
-    private static final String KEY_INPUT_KEEP_ABOVE_LOCKSCREEN = "input_keep_above_lockscreen";
-    public static final String KEY_INPUT_SUMMARY_AVERAGE_OF = "input_summary_average_of";
-    public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
-    public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
-    public static final String KEY_INPUT_KEYBOARD_TYPE = "input_keyboard_type";
-    private static final String KEY_INPUT_SUMMARY_SHOW_END = "input_summary_show_end";
-    private static final String KEY_INPUT_SUMMARY_SHOW_ROUND = "input_summary_show_round";
-    private static final String KEY_INPUT_SUMMARY_SHOW_TRAINING = "input_summary_show_training";
-    private static final String KEY_INPUT_SUMMARY_SHOW_AVERAGE = "input_summary_show_average";
-    public static final String KEY_SCOREBOARD_SHARE_FILE_TYPE = "scoreboard_share_file_type";
-    private static final String KEY_BACKUP_INTERVAL = "backup_interval";
-    private static final String KEY_DONATED = "donated";
-    private static final String KEY_TIMER_KEEP_ABOVE_LOCKSCREEN = "timer_keep_above_lockscreen";
-    private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
-    private static final String KEY_TIMER_SOUND = "timer_sound";
-    private static final String KEY_STANDARD_ROUND = "standard_round";
-    private static final String KEY_ARROW = "arrow";
-    private static final String KEY_BOW = "bow";
-    private static final String KEY_DISTANCE_VALUE = "distance";
-    private static final String KEY_DISTANCE_UNIT = "unit";
-    private static final String KEY_ARROWS_PER_END = "ppp";
-    private static final String KEY_TARGET = "target";
-    private static final String KEY_SCORING_STYLE = "scoring_style";
-    private static final String KEY_TARGET_DIAMETER_VALUE = "size_target";
-    private static final String KEY_TARGET_DIAMETER_UNIT = "unit_target";
-    private static final String KEY_TIMER = "timer";
-    private static final String KEY_NUMBERING_ENABLED = "numbering";
-    private static final String KEY_INDOOR = "indoor";
-    private static final String KEY_END_COUNT = "rounds";
-    private static final String KEY_INPUT_MODE = "target_mode";
-    public static final String KEY_SHOW_MODE = "show_mode";
-    private static final String KEY_BACKUP_LOCATION = "backup_location";
-    public static final String KEY_AGGREGATION_STRATEGY = "aggregation_strategy";
-    private static final String KEY_STANDARD_ROUNDS_LAST_USED = "standard_round_last_used";
-    private static final String KEY_INTRO_SHOWED = "intro_showed";
-    private static final String KEY_OVERVIEW_SHOW_REACHED_SCORE = "overview_show_reached_score";
-    private static final String KEY_OVERVIEW_SHOW_TOTAL_SCORE = "overview_show_total_score";
-    private static final String KEY_OVERVIEW_SHOW_PERCENTAGE = "overview_show_percentage";
-    private static final String KEY_OVERVIEW_SHOW_ARROW_AVERAGE = "overview_show_arrow_average";
-    private static final String KEY_OVERVIEW_SHOT_SORTING = "overview_shot_sorting";
-    private static final String KEY_OVERVIEW_SHOT_SORTING_SPOT = "overview_shot_sorting_spot";
-    public static final String KEY_LANGUAGE = "language";
-    public static final String KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE = "statistics_dispersion_pattern_file_type";
-    public static final String KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY = "statistics_dispersion_pattern_aggregation_strategy";
-    public static final String KEY_STATISTICS_DISPERSION_PATTERN_MERGE_SPOT = "statistics_dispersion_pattern_merge_spot";
+    var distance: Dimension
+        get() {
+            val distance = lastUsed.getInt(KEY_DISTANCE_VALUE, 10)
+            val unit = lastUsed.getString(KEY_DISTANCE_UNIT, "m")
+            return Dimension(distance.toFloat(), unit)
+        }
+        set(value) = lastUsed.edit()
+                .putInt(KEY_DISTANCE_VALUE, value.value.toInt())
+                .putString(KEY_DISTANCE_UNIT, Dimension.Unit.toStringHandleNull(value.unit))
+                .apply()
 
-    @NonNull
-    public static Long getStandardRound() {
-        return (long) lastUsed.getInt(KEY_STANDARD_ROUND, 32);
-    }
+    var shotsPerEnd: Int
+        get() = lastUsed[KEY_ARROWS_PER_END, 3]
+        set(value) = lastUsed.set(KEY_ARROWS_PER_END, value)
 
-    public static void setStandardRound(long id) {
-        lastUsed.edit()
-                .putInt(KEY_STANDARD_ROUND, (int) id)
-                .apply();
-    }
-
-    @Nullable
-    public static Long getArrow() {
-        final int arrow = lastUsed.getInt(KEY_ARROW, -1);
-        return arrow <= 0 ? null : (long) arrow;
-    }
-
-    public static void setArrow(@Nullable Long id) {
-        lastUsed.edit()
-                .putInt(KEY_ARROW, id == null ? -1 : (int) (long) id)
-                .apply();
-    }
-
-    @Nullable
-    public static Long getBow() {
-        final int bow = lastUsed.getInt(KEY_BOW, -1);
-        return bow <= 0 ? null : (long) bow;
-    }
-
-    public static void setBow(@Nullable Long id) {
-        lastUsed.edit()
-                .putInt(KEY_BOW, id == null ? -1 : (int) (long) id)
-                .apply();
-    }
-
-    public static Dimension getDistance() {
-        int distance = lastUsed.getInt(KEY_DISTANCE_VALUE, 10);
-        String unit = lastUsed.getString(KEY_DISTANCE_UNIT, "m");
-        return new Dimension(distance, unit);
-    }
-
-    public static void setDistance(@NonNull Dimension distance) {
-        lastUsed.edit()
-                .putInt(KEY_DISTANCE_VALUE, (int) distance.value)
-                .putString(KEY_DISTANCE_UNIT, Dimension.Unit.toStringHandleNull(distance.unit))
-                .apply();
-    }
-
-    public static int getShotsPerEnd() {
-        return lastUsed.getInt(KEY_ARROWS_PER_END, 3);
-    }
-
-    public static void setShotsPerEnd(int shotsPerEnd) {
-        lastUsed.edit()
-                .putInt(KEY_ARROWS_PER_END, shotsPerEnd)
-                .apply();
-    }
-
-    public static Target getTarget() {
-        final int targetId = lastUsed.getInt(KEY_TARGET, 0);
-        final int scoringStyle = lastUsed.getInt(KEY_SCORING_STYLE, 0);
-        final int diameterValue = lastUsed.getInt(KEY_TARGET_DIAMETER_VALUE, 60);
-        final String diameterUnit = lastUsed
-                .getString(KEY_TARGET_DIAMETER_UNIT, CENTIMETER.toString());
-        final Dimension diameter = new Dimension(diameterValue, diameterUnit);
-        return new Target(targetId, scoringStyle, diameter);
-    }
-
-    public static void setTarget(@NonNull Target target) {
-        lastUsed.edit()
-                .putInt(KEY_TARGET, (int) (long) target.getId())
-                .putInt(KEY_SCORING_STYLE, target.scoringStyle)
-                .putInt(KEY_TARGET_DIAMETER_VALUE, (int) target.diameter.value)
+    var target: Target
+        get() {
+            val targetId = lastUsed[KEY_TARGET, 0]
+            val scoringStyle = lastUsed[KEY_SCORING_STYLE, 0]
+            val diameterValue = lastUsed[KEY_TARGET_DIAMETER_VALUE, 60]
+            val diameterUnit = lastUsed[KEY_TARGET_DIAMETER_UNIT, CENTIMETER.toString()]
+            val diameter = Dimension(diameterValue.toFloat(), diameterUnit)
+            return Target(targetId, scoringStyle, diameter)
+        }
+        set(value) = lastUsed.edit()
+                .putInt(KEY_TARGET, value.getId().toInt())
+                .putInt(KEY_SCORING_STYLE, value.scoringStyle)
+                .putInt(KEY_TARGET_DIAMETER_VALUE, value.diameter.value.toInt())
                 .putString(KEY_TARGET_DIAMETER_UNIT,
-                        Dimension.Unit.toStringHandleNull(target.diameter.unit))
-                .apply();
-    }
+                        Dimension.Unit.toStringHandleNull(value.diameter.unit))
+                .apply()
 
-    public static boolean getTimerEnabled() {
-        return lastUsed.getBoolean(KEY_TIMER, false);
-    }
+    var timerEnabled: Boolean
+        get() = lastUsed[KEY_TIMER, false]
+        set(value) = lastUsed.set(KEY_TIMER, value)
 
-    public static void setTimerEnabled(boolean enabled) {
-        lastUsed.edit()
-                .putBoolean(KEY_TIMER, enabled)
-                .apply();
-    }
+    var timerKeepAboveLockscreen: Boolean
+        get() = preferences[KEY_TIMER_KEEP_ABOVE_LOCKSCREEN, true]
+        set(value) = preferences.set(KEY_TIMER_KEEP_ABOVE_LOCKSCREEN, value)
 
-    public static boolean getTimerKeepAboveLockscreen() {
-        return preferences.getBoolean(KEY_TIMER_KEEP_ABOVE_LOCKSCREEN, true);
-    }
+    var timerSettings: TimerSettings
+        get() {
+            fun getPrefTime(key: String, def: Int): Int {
+                return preferences.getString(key, def.toString()).toIntOrNull() ?: def
+            }
 
-    public static void setTimerKeepAboveLockscreen(boolean keepAboveLockscreen) {
-        preferences
-                .edit()
-                .putBoolean(KEY_TIMER_KEEP_ABOVE_LOCKSCREEN, keepAboveLockscreen)
-                .apply();
-    }
-
-    @NonNull
-    public static TimerSettings getTimerSettings() {
-        TimerSettings settings = new TimerSettings();
-        settings.enabled = lastUsed.getBoolean(KEY_TIMER, false);
-        settings.vibrate = preferences.getBoolean(KEY_TIMER_VIBRATE, false);
-        settings.sound = preferences.getBoolean(KEY_TIMER_SOUND, true);
-        settings.waitTime = getPrefTime(KEY_TIMER_WAIT_TIME, 10);
-        settings.shootTime = getPrefTime(KEY_TIMER_SHOOT_TIME, 120);
-        settings.warnTime = getPrefTime(KEY_TIMER_WARN_TIME, 30);
-        return settings;
-    }
-
-    private static int getPrefTime(String key, int def) {
-        try {
-            return Integer.parseInt(preferences.getString(key, String.valueOf(def)));
-        } catch (NumberFormatException e) {
-            return def;
+            val settings = TimerSettings()
+            settings.enabled = lastUsed.getBoolean(KEY_TIMER, false)
+            settings.vibrate = preferences.getBoolean(KEY_TIMER_VIBRATE, false)
+            settings.sound = preferences.getBoolean(KEY_TIMER_SOUND, true)
+            settings.waitTime = getPrefTime(KEY_TIMER_WAIT_TIME, 10)
+            settings.shootTime = getPrefTime(KEY_TIMER_SHOOT_TIME, 120)
+            settings.warnTime = getPrefTime(KEY_TIMER_WARN_TIME, 30)
+            return settings
         }
-    }
-
-    public static void setTimerSettings(@NonNull TimerSettings settings) {
-        lastUsed.edit()
-                .putBoolean(KEY_TIMER, settings.enabled)
-                .apply();
-        preferences
-                .edit()
-                .putBoolean(KEY_TIMER_VIBRATE, settings.vibrate)
-                .putBoolean(KEY_TIMER_SOUND, settings.sound)
-                .putString(KEY_TIMER_WAIT_TIME, String.valueOf(settings.waitTime))
-                .putString(KEY_TIMER_SHOOT_TIME, String.valueOf(settings.shootTime))
-                .putString(KEY_TIMER_WARN_TIME, String.valueOf(settings.warnTime))
-                .apply();
-    }
-
-    public static boolean getArrowNumbersEnabled() {
-        return lastUsed.getBoolean(KEY_NUMBERING_ENABLED, false);
-    }
-
-    public static void setArrowNumbersEnabled(boolean enabled) {
-        lastUsed.edit()
-                .putBoolean(KEY_NUMBERING_ENABLED, enabled)
-                .apply();
-    }
-
-    public static boolean getIndoor() {
-        return lastUsed.getBoolean(KEY_INDOOR, false);
-    }
-
-    public static void setIndoor(boolean indoor) {
-        lastUsed.edit()
-                .putBoolean(KEY_INDOOR, indoor)
-                .apply();
-    }
-
-    public static int getEndCount() {
-        return lastUsed.getInt(KEY_END_COUNT, 10);
-    }
-
-    public static void setEndCount(int endCount) {
-        lastUsed.edit()
-                .putInt(KEY_END_COUNT, endCount)
-                .apply();
-    }
-
-    @NonNull
-    public static TargetViewBase.EInputMethod getInputMethod() {
-        return preferences
-                .getBoolean(KEY_INPUT_MODE, false)
-                ? TargetViewBase.EInputMethod.KEYBOARD
-                : TargetViewBase.EInputMethod.PLOTTING;
-    }
-
-    public static void setInputMethod(TargetViewBase.EInputMethod inputMethod) {
-        preferences
-                .edit()
-                .putBoolean(KEY_INPUT_MODE, inputMethod == TargetViewBase.EInputMethod.KEYBOARD)
-                .apply();
-    }
-
-    public static boolean hasDonated() {
-        return preferences
-                .getBoolean(KEY_DONATED, false);
-    }
-
-    public static void setDonated(boolean donated) {
-        preferences
-                .edit()
-                .putBoolean(KEY_DONATED, donated)
-                .apply();
-    }
-
-    public static ETrainingScope getShowMode() {
-        return ETrainingScope.valueOf(preferences
-                .getString(KEY_SHOW_MODE, ETrainingScope.END.toString()));
-    }
-
-    public static void setShowMode(@NonNull ETrainingScope showMode) {
-        preferences
-                .edit()
-                .putString(KEY_SHOW_MODE, showMode.toString())
-                .apply();
-    }
-
-    public static EAggregationStrategy getAggregationStrategy() {
-        return EAggregationStrategy.valueOf(preferences
-                .getString(KEY_AGGREGATION_STRATEGY, EAggregationStrategy.AVERAGE.toString()));
-    }
-
-    public static void setAggregationStrategy(@NonNull EAggregationStrategy aggregationStrategy) {
-        preferences
-                .edit()
-                .putString(KEY_AGGREGATION_STRATEGY, aggregationStrategy.toString())
-                .apply();
-    }
-
-    @NonNull
-    public static String getProfileFirstName() {
-        return preferences
-                .getString(KEY_PROFILE_FIRST_NAME, "");
-    }
-
-    public static void setProfileFirstName(String firstName) {
-        preferences
-                .edit()
-                .putString(KEY_PROFILE_FIRST_NAME, firstName)
-                .apply();
-    }
-
-    @NonNull
-    public static String getProfileLastName() {
-        return preferences
-                .getString(KEY_PROFILE_LAST_NAME, "");
-    }
-
-    public static void setProfileLastName(String lastName) {
-        preferences
-                .edit()
-                .putString(KEY_PROFILE_LAST_NAME, lastName)
-                .apply();
-    }
-
-    public static String getProfileFullName() {
-        return String.format("%s %s", getProfileFirstName(), getProfileLastName()).trim();
-    }
-
-    @NonNull
-    public static String getProfileClub() {
-        return preferences
-                .getString(KEY_PROFILE_CLUB, "");
-    }
-
-    public static void setProfileClub(String club) {
-        preferences
-                .edit()
-                .putString(KEY_PROFILE_CLUB, club)
-                .apply();
-    }
-
-    @NonNull
-    public static String getProfileLicenceNumber() {
-        return preferences
-                .getString(KEY_PROFILE_LICENCE_NUMBER, "");
-    }
-
-    public static void setProfileLicenceNumber(String licenceNumber) {
-        preferences
-                .edit()
-                .putString(KEY_PROFILE_LICENCE_NUMBER, licenceNumber)
-                .apply();
-    }
-
-    public static LocalDate getProfileBirthDay() {
-        String date = preferences
-                .getString(KEY_PROFILE_BIRTHDAY, "");
-        if (date.isEmpty()) {
-            return null;
+        set(value) {
+            lastUsed[KEY_TIMER] = value.enabled
+            preferences
+                    .edit()
+                    .putBoolean(KEY_TIMER_VIBRATE, value.vibrate)
+                    .putBoolean(KEY_TIMER_SOUND, value.sound)
+                    .putString(KEY_TIMER_WAIT_TIME, value.waitTime.toString())
+                    .putString(KEY_TIMER_SHOOT_TIME, value.shootTime.toString())
+                    .putString(KEY_TIMER_WARN_TIME, value.warnTime.toString())
+                    .apply()
         }
-        return LocalDate.parse(date);
-    }
 
-    public static void setProfileBirthDay(@NonNull LocalDate birthDay) {
-        preferences.edit()
-                .putString(KEY_PROFILE_BIRTHDAY, birthDay.toString())
-                .apply();
-    }
+    var arrowNumbersEnabled: Boolean
+        get() = lastUsed[KEY_NUMBERING_ENABLED, false]
+        set(value) = lastUsed.set(KEY_NUMBERING_ENABLED, value)
 
-    public static String getProfileBirthDayFormatted() {
-        final LocalDate birthDay = getProfileBirthDay();
-        if (birthDay == null) {
-            return null;
+    var indoor: Boolean
+        get() = lastUsed[KEY_INDOOR, false]
+        set(value) = lastUsed.set(KEY_INDOOR, value)
+
+    var endCount: Int
+        get() = lastUsed[KEY_END_COUNT, 10]
+        set(value) = lastUsed.set(KEY_END_COUNT, value)
+
+    var inputMethod: TargetViewBase.EInputMethod
+        get() = if (preferences[KEY_INPUT_MODE, false]) KEYBOARD else PLOTTING
+        set(value) = preferences.set(KEY_INPUT_MODE, value == KEYBOARD)
+
+    var showMode: ETrainingScope
+        get() = ETrainingScope.valueOf(preferences
+                .getString(KEY_SHOW_MODE, ETrainingScope.END.toString()))
+        set(value) = preferences.set(KEY_SHOW_MODE, value.toString())
+
+    var aggregationStrategy: EAggregationStrategy
+        get() = EAggregationStrategy.valueOf(preferences
+                .getString(KEY_AGGREGATION_STRATEGY, EAggregationStrategy.AVERAGE.toString()))
+        set(value) = preferences.set(KEY_AGGREGATION_STRATEGY, value.toString())
+
+    var profileFirstName: String
+        get() = preferences[KEY_PROFILE_FIRST_NAME, ""]
+        set(value) = preferences.set(KEY_PROFILE_FIRST_NAME, value)
+
+    var profileLastName: String
+        get() = preferences[KEY_PROFILE_LAST_NAME, ""]
+        set(value) = preferences.set(KEY_PROFILE_LAST_NAME, value)
+
+    val profileFullName: String
+        get() = "%s %s".format(profileFirstName, profileLastName).trim()
+
+    var profileClub: String
+        get() = preferences[KEY_PROFILE_CLUB, ""]
+        set(value) = preferences.set(KEY_PROFILE_CLUB, value)
+
+    var profileLicenceNumber: String
+        get() = preferences[KEY_PROFILE_LICENCE_NUMBER, ""]
+        set(value) = preferences.set(KEY_PROFILE_LICENCE_NUMBER, value)
+
+    var profileBirthDay: LocalDate?
+        get() {
+            val date = preferences.get<String>(KEY_PROFILE_BIRTHDAY) ?: return null
+            return LocalDate.parse(date)
         }
-        return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(birthDay);
-    }
+        set(value) = preferences.set(KEY_PROFILE_BIRTHDAY, value.toString())
 
-    public static int getProfileAge() {
-        final LocalDate birthDay = getProfileBirthDay();
-        if (birthDay == null) {
-            return -1;
+    val profileBirthDayFormatted: String?
+        get() {
+            val birthDay = profileBirthDay ?: return null
+            return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(birthDay)
         }
-        return Period.between(birthDay, LocalDate.now()).getYears();
-    }
 
-    public static boolean getInputKeepAboveLockscreen() {
-        return preferences.getBoolean(KEY_INPUT_KEEP_ABOVE_LOCKSCREEN, true);
-    }
+    val profileAge: Int?
+        get() {
+            val birthDay = profileBirthDay ?: return null
+            return Period.between(birthDay, LocalDate.now()).years
+        }
 
-    public static void setInputKeepAboveLockscreen(boolean keepAboveLockscreen) {
-        preferences
-                .edit()
-                .putBoolean(KEY_INPUT_KEEP_ABOVE_LOCKSCREEN, keepAboveLockscreen)
-                .apply();
-    }
+    var inputArrowDiameterScale: Float
+        get() = preferences[KEY_INPUT_ARROW_DIAMETER_SCALE, "1.0"].toFloat()
+        set(value) = preferences.set(KEY_INPUT_ARROW_DIAMETER_SCALE, value.toString())
 
-    public static float getInputArrowDiameterScale() {
-        return Float.parseFloat(preferences
-                .getString(KEY_INPUT_ARROW_DIAMETER_SCALE, "1.0"));
-    }
+    var inputTargetZoom: Float
+        get() = preferences[KEY_INPUT_TARGET_ZOOM, "3.0"].toFloat()
+        set(value) = preferences.set(KEY_INPUT_TARGET_ZOOM, value.toString())
 
-    public static void setInputArrowDiameterScale(float diameterScale) {
-        preferences.edit()
-                .putString(KEY_INPUT_ARROW_DIAMETER_SCALE, String.valueOf(diameterScale))
-                .apply();
-    }
+    var inputKeyboardType: EKeyboardType
+        get() = EKeyboardType.valueOf(preferences[KEY_INPUT_KEYBOARD_TYPE, EKeyboardType.RIGHT.name])
+        set(value) = preferences.set(KEY_INPUT_KEYBOARD_TYPE, value.name)
 
-    public static float getInputTargetZoom() {
-        return Float.parseFloat(preferences
-                .getString(KEY_INPUT_TARGET_ZOOM, "3.0"));
-    }
+    var scoreboardShareFileType: EFileType
+        get() = EFileType.valueOf(preferences[KEY_SCOREBOARD_SHARE_FILE_TYPE, EFileType.PDF.name])
+        set(value) = preferences.set(KEY_SCOREBOARD_SHARE_FILE_TYPE, value.name)
 
-    public static void setInputTargetZoom(float targetZoom) {
-        preferences.edit()
-                .putString(KEY_INPUT_TARGET_ZOOM, String.valueOf(targetZoom))
-                .apply();
-    }
+    var statisticsDispersionPatternFileType: EFileType
+        get() = EFileType.valueOf(preferences[KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE, EFileType.JPG.name])
+        set(value) = preferences.set(KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE, value.name)
 
-    public static EKeyboardType getInputKeyboardType() {
-        return EKeyboardType.valueOf(preferences
-                .getString(KEY_INPUT_KEYBOARD_TYPE, EKeyboardType.RIGHT.name()));
-    }
+    var statisticsDispersionPatternAggregationStrategy: EAggregationStrategy
+        get() = EAggregationStrategy.valueOf(preferences[KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY, EAggregationStrategy.AVERAGE.toString()])
+        set(value) = preferences.set(KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY, value.toString())
 
-    public static void setInputKeyboardType(@NonNull EKeyboardType type) {
-        preferences
-                .edit()
-                .putString(KEY_INPUT_KEYBOARD_TYPE, type.name())
-                .apply();
-    }
+    var statisticsDispersionPatternMergeSpot: Boolean
+        get() = preferences[KEY_STATISTICS_DISPERSION_PATTERN_MERGE_SPOT, false]
+        set(value) = preferences.set(KEY_STATISTICS_DISPERSION_PATTERN_MERGE_SPOT, value)
 
-    public static EFileType getScoreboardShareFileType() {
-        return EFileType.valueOf(preferences
-                .getString(KEY_SCOREBOARD_SHARE_FILE_TYPE, EFileType.PDF.name()));
-    }
+    var backupLocation: EBackupLocation
+        get() = EBackupLocation.valueOf(preferences[KEY_BACKUP_LOCATION, EBackupLocation.INTERNAL_STORAGE.name])
+        set(value) = preferences.set(KEY_BACKUP_LOCATION, value.name)
 
-    public static void setScoreboardShareFileType(@NonNull EFileType fileType) {
-        preferences
-                .edit()
-                .putString(KEY_SCOREBOARD_SHARE_FILE_TYPE, fileType.name())
-                .apply();
-    }
+    var backupInterval: EBackupInterval
+        get() = EBackupInterval.valueOf(preferences[KEY_BACKUP_INTERVAL, EBackupInterval.WEEKLY.name])
+        set(value) = preferences.set(KEY_BACKUP_INTERVAL, value.name)
 
-    public static EFileType getStatisticsDispersionPatternFileType() {
-        return EFileType.valueOf(preferences
-                .getString(KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE, EFileType.JPG.name()));
-    }
+    var standardRoundsLastUsed: LongSparseArray<Int>
+        get() {
+            return lastUsed[KEY_STANDARD_ROUNDS_LAST_USED, ""]
+                    .split(",")
+                    .filterNot { it.isEmpty() }
+                    .map { it.split(":") }
+                    .map { (a, b) -> Pair(a.toLong(), b.toInt()) }
+                    .toSparseArray()
+        }
+        set(value) = lastUsed.set(KEY_STANDARD_ROUNDS_LAST_USED, value
+                .map { (key, value) -> "$key:$value" }
+                .joinToString(","))
 
-    public static void setStatisticsDispersionPatternFileType(@NonNull EFileType fileType) {
-        preferences
-                .edit()
-                .putString(KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE, fileType.name())
-                .apply();
-    }
+    var inputSummaryConfiguration: SummaryConfiguration
+        get() {
+            val config = SummaryConfiguration()
+            config.showEnd = preferences[KEY_INPUT_SUMMARY_SHOW_END, true]
+            config.showRound = preferences[KEY_INPUT_SUMMARY_SHOW_ROUND, true]
+            config.showTraining = preferences[KEY_INPUT_SUMMARY_SHOW_TRAINING, false]
+            config.showAverage = preferences[KEY_INPUT_SUMMARY_SHOW_AVERAGE, true]
+            config.averageScope = ETrainingScope.valueOf(preferences[KEY_INPUT_SUMMARY_AVERAGE_OF, "ROUND"])
+            return config
+        }
+        set(value) {
+            preferences.edit()
+                    .putBoolean(KEY_INPUT_SUMMARY_SHOW_END, value.showEnd)
+                    .putBoolean(KEY_INPUT_SUMMARY_SHOW_ROUND, value.showRound)
+                    .putBoolean(KEY_INPUT_SUMMARY_SHOW_TRAINING, value.showTraining)
+                    .putBoolean(KEY_INPUT_SUMMARY_SHOW_AVERAGE, value.showAverage)
+                    .putString(KEY_INPUT_SUMMARY_AVERAGE_OF, value.averageScope.name)
+                    .apply()
+        }
 
-    public static EAggregationStrategy getStatisticsDispersionPatternAggregationStrategy() {
-        return EAggregationStrategy.valueOf(preferences
-                .getString(KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY, EAggregationStrategy.AVERAGE.toString()));
-    }
+    var scoreConfiguration: Score.Configuration
+        get() {
+            val config = Score.Configuration()
+            config.showReachedScore = preferences[KEY_OVERVIEW_SHOW_REACHED_SCORE, true]
+            config.showTotalScore = preferences[KEY_OVERVIEW_SHOW_TOTAL_SCORE, true]
+            config.showPercentage = preferences[KEY_OVERVIEW_SHOW_PERCENTAGE, false]
+            config.showAverage = preferences[KEY_OVERVIEW_SHOW_ARROW_AVERAGE, false]
+            return config
+        }
+        set(value) {
+            preferences.edit()
+                    .putBoolean(KEY_OVERVIEW_SHOW_REACHED_SCORE, value.showReachedScore)
+                    .putBoolean(KEY_OVERVIEW_SHOW_TOTAL_SCORE, value.showTotalScore)
+                    .putBoolean(KEY_OVERVIEW_SHOW_PERCENTAGE, value.showPercentage)
+                    .putBoolean(KEY_OVERVIEW_SHOW_ARROW_AVERAGE, value.showAverage)
+                    .apply()
+        }
 
-    public static void setStatisticsDispersionPatternAggregationStrategy(@NonNull EAggregationStrategy aggregationStrategy) {
-        preferences
-                .edit()
-                .putString(KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY, aggregationStrategy.toString())
-                .apply();
-    }
+    val scoreboardConfiguration: ScoreboardConfiguration
+        get() {
+            val config = ScoreboardConfiguration()
+            config.showTitle = preferences["scoreboard_title", true]
+            config.showProperties = preferences["scoreboard_properties", true]
+            config.showTable = preferences["scoreboard_table", true]
+            config.showStatistics = preferences["scoreboard_statistics", true]
+            config.showComments = preferences["scoreboard_comments", true]
+            config.showPointsColored = preferences["scoreboard_points_colored", true]
+            config.showSignature = preferences["scoreboard_signature", true]
+            return config
+        }
 
-    public static boolean getStatisticsDispersionPatternMergeSpot() {
-        return preferences
-                .getBoolean(KEY_STATISTICS_DISPERSION_PATTERN_MERGE_SPOT, false);
-    }
+    var inputKeepAboveLockscreen: Boolean
+        get() = preferences[KEY_INPUT_KEEP_ABOVE_LOCKSCREEN, true]
+        set(value) = preferences.set(KEY_INPUT_KEEP_ABOVE_LOCKSCREEN, value)
 
-    public static void setStatisticsDispersionPatternMergeSpot(boolean mergeSpot) {
-        preferences
-                .edit()
-                .putBoolean(KEY_STATISTICS_DISPERSION_PATTERN_MERGE_SPOT, mergeSpot)
-                .apply();
-    }
+    var donated: Boolean
+        get() = preferences[KEY_DONATED, false]
+        set(value) = preferences.set(KEY_DONATED, value)
 
-    public static EBackupLocation getBackupLocation() {
-        final String defaultLocation = EBackupLocation.INTERNAL_STORAGE.name();
-        String location = preferences.getString(KEY_BACKUP_LOCATION, defaultLocation);
-        return EBackupLocation.valueOf(location);
-    }
+    var language: String
+        get() = preferences[KEY_LANGUAGE, ""]
+        set(value) = preferences.set(KEY_LANGUAGE, language)
 
-    public static void setBackupLocation(@NonNull EBackupLocation location) {
-        preferences
-                .edit()
-                .putString(KEY_BACKUP_LOCATION, location.name())
-                .apply();
-    }
+    var shouldShowIntroActivity: Boolean
+        get() = preferences[KEY_INTRO_SHOWED, true]
+        set(value) = preferences.set(KEY_INTRO_SHOWED, value)
 
-    public static EBackupInterval getBackupInterval() {
-        return EBackupInterval.valueOf(preferences.getString(KEY_BACKUP_INTERVAL,
-                EBackupInterval.WEEKLY.name()));
-    }
-
-    public static void setBackupInterval(@NonNull EBackupInterval interval) {
-        preferences.edit()
-                .putString(KEY_BACKUP_INTERVAL, interval.name())
-                .apply();
-    }
-
-    public static void setLanguage(String language) {
-        preferences
-                .edit()
-                .putString(KEY_LANGUAGE, language)
-                .apply();
-    }
-
-    public static Map<Long, Integer> getStandardRoundsLastUsed() {
-        String[] split = lastUsed.getString(KEY_STANDARD_ROUNDS_LAST_USED, "").split(",");
-        return Stream.of(Arrays.asList(split))
-                .filterNot(String::isEmpty)
-                .map(entry -> entry.split(":"))
-                .toMap(a -> Long.valueOf(a[0]), a -> Integer.valueOf(a[1]));
-    }
-
-    public static void setStandardRoundsLastUsed(@NonNull Map<Long, Integer> ids) {
-        lastUsed.edit()
-                .putString(KEY_STANDARD_ROUNDS_LAST_USED, Stream.of(ids)
-                        .map(id -> id.getKey() + ":" + id.getValue())
-                        .joining(","))
-                .apply();
-    }
-
-    public static boolean shouldShowIntroActivity() {
-        return preferences
-                .getBoolean(KEY_INTRO_SHOWED, true);
-    }
-
-    public static void setShouldShowIntroActivity(boolean shouldShow) {
-        preferences.edit()
-                .putBoolean(KEY_INTRO_SHOWED, shouldShow)
-                .apply();
-    }
-
-    @NonNull
-    public static SummaryConfiguration getInputSummaryConfiguration() {
-        SummaryConfiguration config = new SummaryConfiguration();
-        config.showEnd = preferences.getBoolean(KEY_INPUT_SUMMARY_SHOW_END, true);
-        config.showRound = preferences.getBoolean(KEY_INPUT_SUMMARY_SHOW_ROUND, true);
-        config.showTraining = preferences.getBoolean(KEY_INPUT_SUMMARY_SHOW_TRAINING, false);
-        config.showAverage = preferences.getBoolean(KEY_INPUT_SUMMARY_SHOW_AVERAGE, true);
-        config.averageScope = ETrainingScope
-                .valueOf(preferences.getString(KEY_INPUT_SUMMARY_AVERAGE_OF, "ROUND"));
-        return config;
-    }
-
-    public static void setInputSummaryConfiguration(@NonNull SummaryConfiguration configuration) {
-        preferences.edit()
-                .putBoolean(KEY_INPUT_SUMMARY_SHOW_END, configuration.showEnd)
-                .putBoolean(KEY_INPUT_SUMMARY_SHOW_ROUND, configuration.showRound)
-                .putBoolean(KEY_INPUT_SUMMARY_SHOW_TRAINING, configuration.showTraining)
-                .putBoolean(KEY_INPUT_SUMMARY_SHOW_AVERAGE, configuration.showAverage)
-                .putString(KEY_INPUT_SUMMARY_AVERAGE_OF, configuration.averageScope.name())
-                .apply();
-    }
-
-    @NonNull
-    public static Score.Configuration getScoreConfiguration() {
-        Score.Configuration config = new Score.Configuration();
-        config.showReachedScore = preferences.getBoolean(KEY_OVERVIEW_SHOW_REACHED_SCORE, true);
-        config.showTotalScore = preferences.getBoolean(KEY_OVERVIEW_SHOW_TOTAL_SCORE, true);
-        config.showPercentage = preferences.getBoolean(KEY_OVERVIEW_SHOW_PERCENTAGE, false);
-        config.showAverage = preferences.getBoolean(KEY_OVERVIEW_SHOW_ARROW_AVERAGE, false);
-        return config;
-    }
-
-    public static void setScoreConfiguration(@NonNull Score.Configuration configuration) {
-        preferences.edit()
-                .putBoolean(KEY_OVERVIEW_SHOW_REACHED_SCORE, configuration.showReachedScore)
-                .putBoolean(KEY_OVERVIEW_SHOW_TOTAL_SCORE, configuration.showTotalScore)
-                .putBoolean(KEY_OVERVIEW_SHOW_PERCENTAGE, configuration.showPercentage)
-                .putBoolean(KEY_OVERVIEW_SHOW_ARROW_AVERAGE, configuration.showAverage)
-                .apply();
-    }
-
-    public static boolean shouldSortTarget(@NonNull Target target) {
-        return preferences.getBoolean(KEY_OVERVIEW_SHOT_SORTING, true) &&
-                (target.getModel().getFaceCount() == 1 ||
-                        preferences.getBoolean(KEY_OVERVIEW_SHOT_SORTING_SPOT, false));
-    }
-
-    @NonNull
-    public static ScoreboardConfiguration getScoreboardConfiguration() {
-        ScoreboardConfiguration config = new ScoreboardConfiguration();
-        config.showTitle = preferences.getBoolean("scoreboard_title", true);
-        config.showProperties = preferences.getBoolean("scoreboard_properties", true);
-        config.showTable = preferences.getBoolean("scoreboard_table", true);
-        config.showStatistics = preferences.getBoolean("scoreboard_statistics", true);
-        config.showComments = preferences.getBoolean("scoreboard_comments", true);
-        config.showPointsColored = preferences.getBoolean("scoreboard_points_colored", true);
-        config.showSignature = preferences.getBoolean("scoreboard_signature", true);
-        return config;
+    fun shouldSortTarget(target: Target): Boolean {
+        return preferences.getBoolean(KEY_OVERVIEW_SHOT_SORTING, true) && (target.model.faceCount == 1 || preferences.getBoolean(KEY_OVERVIEW_SHOT_SORTING_SPOT, false))
     }
 }

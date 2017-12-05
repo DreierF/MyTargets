@@ -61,7 +61,7 @@ public class SyncUtils {
         ContentResolver.setSyncAutomatically(account, CONTENT_AUTHORITY, enabled);
         if (enabled) {
             ContentResolver.addPeriodicSync(account, CONTENT_AUTHORITY,
-                    new Bundle(), SettingsManager.getBackupInterval().getDays() * ONE_DAY);
+                    new Bundle(), SettingsManager.INSTANCE.getBackupInterval().getDays() * ONE_DAY);
         } else {
             ContentResolver.removePeriodicSync(account, CONTENT_AUTHORITY, new Bundle());
         }

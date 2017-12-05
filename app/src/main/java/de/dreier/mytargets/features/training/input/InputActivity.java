@@ -34,10 +34,8 @@ import android.text.InputType;
 import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowManager;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import de.dreier.mytargets.shared.streamwrapper.Stream;
 
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
@@ -66,6 +64,7 @@ import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.shared.utils.ImageList;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.SharedUtils;
@@ -179,7 +178,7 @@ public class InputActivity extends ChildActivityBase
             onDataLoadFinished();
             updateEnd();
         }
-        Utils.setShowWhenLocked(this, SettingsManager.getInputKeepAboveLockscreen());
+        Utils.setShowWhenLocked(this, SettingsManager.INSTANCE.getInputKeepAboveLockscreen());
     }
 
     @Override
@@ -205,7 +204,7 @@ public class InputActivity extends ChildActivityBase
     }
 
     private void updateSummaryVisibility() {
-        SummaryConfiguration config = SettingsManager.getInputSummaryConfiguration();
+        SummaryConfiguration config = SettingsManager.INSTANCE.getInputSummaryConfiguration();
         binding.endSummary.setVisibility(config.showEnd ? VISIBLE : GONE);
         binding.roundSummary.setVisibility(config.showRound ? VISIBLE : GONE);
         binding.trainingSummary.setVisibility(config.showTraining ? VISIBLE : GONE);
@@ -247,11 +246,11 @@ public class InputActivity extends ChildActivityBase
             newRound.setVisible(false);
         } else {
             takePicture.setVisible(Utils.hasCameraHardware(this));
-            timer.setIcon(SettingsManager.getTimerEnabled()
+            timer.setIcon(SettingsManager.INSTANCE.getTimerEnabled()
                     ? R.drawable.ic_timer_off_white_24dp
                     : R.drawable.ic_timer_white_24dp);
             timer.setVisible(true);
-            timer.setChecked(SettingsManager.getTimerEnabled());
+            timer.setChecked(SettingsManager.INSTANCE.getTimerEnabled());
             newRound.setVisible(data.training.standardRoundId == null);
             takePicture.setVisible(Utils.hasCameraHardware(this));
             takePicture.setIcon(data.getCurrentEnd().getImages().isEmpty() ?
@@ -282,10 +281,10 @@ public class InputActivity extends ChildActivityBase
                         .show();
                 return true;
             case R.id.action_timer:
-                boolean timerEnabled = !SettingsManager.getTimerEnabled();
-                SettingsManager.setTimerEnabled(timerEnabled);
+                boolean timerEnabled = !SettingsManager.INSTANCE.getTimerEnabled();
+                SettingsManager.INSTANCE.setTimerEnabled(timerEnabled);
                 ApplicationInstance.wearableClient
-                        .sendTimerSettingsFromLocal(SettingsManager.getTimerSettings());
+                        .sendTimerSettingsFromLocal(SettingsManager.INSTANCE.getTimerSettings());
                 openTimer();
                 item.setChecked(timerEnabled);
                 supportInvalidateOptionsMenu();
@@ -332,8 +331,8 @@ public class InputActivity extends ChildActivityBase
         targetView.setOnTargetSetListener(InputActivity.this);
         targetView.setUpdateListener(InputActivity.this);
         targetView.reloadSettings();
-        targetView.setAggregationStrategy(SettingsManager.getAggregationStrategy());
-        targetView.setInputMethod(SettingsManager.getInputMethod());
+        targetView.setAggregationStrategy(SettingsManager.INSTANCE.getAggregationStrategy());
+        targetView.setInputMethod(SettingsManager.INSTANCE.getInputMethod());
         updateOldShoots();
     }
 
@@ -347,7 +346,7 @@ public class InputActivity extends ChildActivityBase
         data.endIndex = endIndex;
         if (endIndex >= data.getEnds().size()) {
             End end = data.getCurrentRound().addEnd();
-            end.exact = SettingsManager.getInputMethod() == EInputMethod.PLOTTING;
+            end.exact = SettingsManager.INSTANCE.getInputMethod() == EInputMethod.PLOTTING;
             updateOldShoots();
         }
 
@@ -361,7 +360,7 @@ public class InputActivity extends ChildActivityBase
         final End currentEnd = data.getCurrentEnd();
         final Long currentRoundId = data.getCurrentRound().getId();
         final Long currentEndId = currentEnd.getId();
-        final ETrainingScope shotShowScope = SettingsManager.getShowMode();
+        final ETrainingScope shotShowScope = SettingsManager.INSTANCE.getShowMode();
         final LoaderResult data = this.data;
         final Stream<Shot> shotStream = Stream.of(data.training.getRounds())
                 .filter((r) -> shouldShowRound(r, shotShowScope, currentRoundId))
@@ -372,7 +371,7 @@ public class InputActivity extends ChildActivityBase
     }
 
     private void openTimer() {
-        if (data.getCurrentEnd().isEmpty() && SettingsManager.getTimerEnabled()) {
+        if (data.getCurrentEnd().isEmpty() && SettingsManager.INSTANCE.getTimerEnabled()) {
             if (transitionFinished) {
                 TimerFragment.getIntent(true)
                         .withContext(this)
@@ -621,7 +620,7 @@ public class InputActivity extends ChildActivityBase
             if (ends.size() <= endIndex || endIndex < 0 || ends.size() == 0) {
                 endIndex = ends.size();
                 End end = getCurrentRound().addEnd();
-                end.exact = SettingsManager.getInputMethod() == EInputMethod.PLOTTING;
+                end.exact = SettingsManager.INSTANCE.getInputMethod() == EInputMethod.PLOTTING;
                 ends = getEnds();
             }
             return ends.get(endIndex);

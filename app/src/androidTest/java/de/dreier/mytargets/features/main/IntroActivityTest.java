@@ -52,7 +52,7 @@ public class IntroActivityTest extends UITestBase {
 
     @BeforeClass
     public static void setUp() {
-        SettingsManager.setShouldShowIntroActivity(true);
+        SettingsManager.INSTANCE.setShouldShowIntroActivity(true);
     }
 
     @Test

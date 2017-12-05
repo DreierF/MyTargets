@@ -179,7 +179,7 @@ public class ViewBuilder implements ScoreboardBuilder {
 
     @Override
     public void signature(Signature archerSignature, Signature witnessSignature) {
-        String archer = SettingsManager.getProfileFullName();
+        String archer = SettingsManager.INSTANCE.getProfileFullName();
         if (archer.trim().isEmpty()) {
             archer = context.getString(R.string.archer);
         }
