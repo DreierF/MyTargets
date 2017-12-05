@@ -20,8 +20,10 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.WindowManager;
 
 import de.dreier.mytargets.base.activities.ChildActivityBase;
+import de.dreier.mytargets.features.settings.SettingsManager;
 
 public class TimerActivity extends ChildActivityBase {
 
@@ -45,6 +47,17 @@ public class TimerActivity extends ChildActivityBase {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(android.R.id.content, childFragment, FRAGMENT_TAG);
             ft.commit();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        boolean keepAboveLockscreen = SettingsManager.getTimerKeepAboveLockscreen();
+        if (keepAboveLockscreen) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         }
     }
 
