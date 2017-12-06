@@ -46,7 +46,7 @@ ext {
             dbFlow               : '3.1.1',
             dexmaker             : '2.2.0',
             discreteSeekbar      : '1.0.1',
-            easyImage            : '1.4.2',
+            easyImage            : '2.0.4',
             espresso             : '3.0.1',
             findbugs             : '3.0.2',
             gson                 : '2.8.0',

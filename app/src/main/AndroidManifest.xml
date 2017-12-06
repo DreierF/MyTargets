@@ -14,41 +14,40 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="de.dreier.mytargets"
-    android:installLocation="auto">
+          package="de.dreier.mytargets"
+          android:installLocation="auto">
 
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
-    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
-    <uses-permission android:name="com.android.vending.BILLING" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_STATS"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+    <uses-permission android:name="com.android.vending.BILLING"/>
 
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false" />
+        android:required="false"/>
     <uses-feature
         android:name="android.hardware.camera.any"
-        android:required="false" />
+        android:required="false"/>
     <uses-feature
         android:name="android.hardware.camera.autofocus"
-        android:required="false" />
+        android:required="false"/>
     <uses-feature
         android:name="android.hardware.camera.flash"
-        android:required="false" />
+        android:required="false"/>
     <uses-feature
         android:name="android.hardware.location"
-        android:required="false" />
+        android:required="false"/>
     <uses-feature
         android:name="android.hardware.location.network"
         android:required="false"/>
@@ -68,13 +67,13 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="android.max_aspect"
-            android:value="2.1" />
+            android:value="2.1"/>
         <meta-data
             android:name="com.google.android.backup.api_key"
-            android:value="AEdPqrEAAAAIy_jZMyyGuh5M-ICvUll4H1WyF1R9M8cUcN5wVw" />
+            android:value="AEdPqrEAAAAIy_jZMyyGuh5M-ICvUll4H1WyF1R9M8cUcN5wVw"/>
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version"/>
 
         <activity
             android:name=".features.main.MainActivity"
@@ -82,18 +81,18 @@
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.CustomToolbar.Launcher">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts" />
+                android:resource="@xml/shortcuts"/>
         </activity>
         <activity
             android:name=".features.main.IntroActivity"
-            android:theme="@style/Theme.Intro" />
+            android:theme="@style/Theme.Intro"/>
         <activity
             android:name=".features.training.TrainingActivity"
             android:launchMode="singleTop"
@@ -101,7 +100,7 @@
             android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.main.MainActivity" />
+                android:value=".features.main.MainActivity"/>
         </activity>
         <activity
             android:name=".features.training.RoundActivity"
@@ -109,7 +108,7 @@
             android:parentActivityName=".features.training.TrainingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.training.TrainingActivity" />
+                android:value=".features.training.TrainingActivity"/>
         </activity>
         <activity
             android:name=".features.timer.TimerActivity"
@@ -120,7 +119,7 @@
             android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.training.input.InputActivity" />
+                android:value=".features.training.input.InputActivity"/>
         </activity>
         <activity
             android:name=".features.training.input.InputActivity"
@@ -129,7 +128,7 @@
             android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.training.RoundActivity" />
+                android:value=".features.training.RoundActivity"/>
         </activity>
         <activity
             android:name=".features.training.edit.EditTrainingActivity"
@@ -139,7 +138,7 @@
             android:windowSoftInputMode="stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.training.TrainingActivity" />
+                android:value=".features.training.TrainingActivity"/>
         </activity>
         <activity
             android:name=".features.training.EditRoundActivity"
@@ -149,7 +148,7 @@
             android:windowSoftInputMode="stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.training.TrainingActivity" />
+                android:value=".features.training.TrainingActivity"/>
         </activity>
         <activity
             android:name=".features.training.standardround.EditStandardRoundActivity"
@@ -159,7 +158,7 @@
             android:windowSoftInputMode="stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.training.standardround.StandardRoundActivity" />
+                android:value=".features.training.standardround.StandardRoundActivity"/>
         </activity>
         <activity
             android:name=".features.bows.EditBowActivity"
@@ -168,7 +167,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.main.MainActivity" />
+                android:value=".features.main.MainActivity"/>
         </activity>
         <activity
             android:name=".features.arrows.EditArrowActivity"
@@ -177,18 +176,18 @@
             android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.main.MainActivity" />
+                android:value=".features.main.MainActivity"/>
         </activity>
         <activity
             android:name=".base.gallery.GalleryActivity"
-            android:theme="@style/AppTheme.CustomToolbar.Translucent" />
+            android:theme="@style/AppTheme.CustomToolbar.Translucent"/>
         <activity
             android:name=".features.scoreboard.ScoreboardActivity"
-            android:label="@string/scoreboard" />
+            android:label="@string/scoreboard"/>
         <activity
             android:name=".features.statistics.StatisticsActivity"
             android:label="@string/statistic"
-            android:theme="@style/AppTheme.CustomToolbar" />
+            android:theme="@style/AppTheme.CustomToolbar"/>
         <activity
             android:name=".features.arrows.ArrowListActivity"
             android:label="@string/arrow"
@@ -196,7 +195,7 @@
             android:parentActivityName=".features.training.standardround.EditStandardRoundActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.training.standardround.EditStandardRoundActivity" />
+                android:value=".features.training.standardround.EditStandardRoundActivity"/>
         </activity>
         <activity
             android:name=".features.bows.BowListActivity"
@@ -205,7 +204,7 @@
             android:parentActivityName=".features.training.standardround.EditStandardRoundActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.training.standardround.EditStandardRoundActivity" />
+                android:value=".features.training.standardround.EditStandardRoundActivity"/>
         </activity>
         <activity
             android:name=".features.training.environment.EnvironmentActivity"
@@ -215,7 +214,7 @@
             android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.training.standardround.EditStandardRoundActivity" />
+                android:value=".features.training.standardround.EditStandardRoundActivity"/>
         </activity>
         <activity
             android:name=".features.training.target.TargetActivity"
@@ -225,7 +224,7 @@
             android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.training.standardround.EditStandardRoundActivity" />
+                android:value=".features.training.standardround.EditStandardRoundActivity"/>
         </activity>
         <activity
             android:name=".features.distance.DistanceActivity"
@@ -235,7 +234,7 @@
             android:theme="@style/AppTheme.CustomToolbar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.training.standardround.EditStandardRoundActivity" />
+                android:value=".features.training.standardround.EditStandardRoundActivity"/>
         </activity>
         <activity
             android:name=".features.training.environment.WindSpeedActivity"
@@ -244,7 +243,7 @@
             android:parentActivityName=".features.training.environment.EnvironmentActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.training.environment.EnvironmentActivity" />
+                android:value=".features.training.environment.EnvironmentActivity"/>
         </activity>
         <activity
             android:name=".features.training.environment.WindDirectionActivity"
@@ -253,7 +252,7 @@
             android:parentActivityName=".features.training.environment.EnvironmentActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.training.environment.EnvironmentActivity" />
+                android:value=".features.training.environment.EnvironmentActivity"/>
         </activity>
         <activity
             android:name=".features.training.standardround.StandardRoundActivity"
@@ -262,7 +261,7 @@
             android:parentActivityName=".features.training.edit.EditTrainingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.training.edit.EditTrainingActivity" />
+                android:value=".features.training.edit.EditTrainingActivity"/>
         </activity>
 
         <!-- Preferences activity -->
@@ -273,7 +272,7 @@
             android:parentActivityName=".features.main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.main.MainActivity" />
+                android:value=".features.main.MainActivity"/>
         </activity>
         <activity
             android:name=".features.settings.about.AboutActivity"
@@ -281,7 +280,7 @@
             android:parentActivityName=".features.settings.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.settings.SettingsActivity" />
+                android:value=".features.settings.SettingsActivity"/>
         </activity>
         <activity
             android:name=".features.settings.licences.LicencesActivity"
@@ -289,7 +288,7 @@
             android:parentActivityName=".features.settings.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.settings.SettingsActivity" />
+                android:value=".features.settings.SettingsActivity"/>
         </activity>
         <activity
             android:name=".features.settings.about.DonateActivity"
@@ -297,55 +296,53 @@
             android:theme="@style/AppTheme.Translucent">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.settings.about.AboutActivity" />
+                android:value=".features.settings.about.AboutActivity"/>
         </activity>
-        <activity android:name=".features.statistics.DispersionPatternActivity" />
+        <activity android:name=".features.statistics.DispersionPatternActivity"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="${applicationId}.easyphotopicker.fileprovider"
+            android:authorities="${applicationId}.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true"
-            tools:replace="android:authorities">
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"
-                tools:replace="android:resource" />
+                android:resource="@xml/my_file_paths"/>
         </provider>
         <provider
             android:name=".features.settings.backup.synchronization.StubProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
-            android:syncable="true" />
+            android:syncable="true"/>
 
         <service
             android:name=".features.settings.backup.synchronization.SyncService"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.content.SyncAdapter" />
+                <action android:name="android.content.SyncAdapter"/>
             </intent-filter>
             <meta-data
                 android:name="android.content.SyncAdapter"
-                android:resource="@xml/sync_adapter" />
+                android:resource="@xml/sync_adapter"/>
         </service>
 
         <service android:name=".features.settings.backup.synchronization.GenericAccountService">
             <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator" />
+                <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator" />
+                android:resource="@xml/authenticator"/>
         </service>
 
         <service android:name=".utils.MobileWearableListener">
             <intent-filter>
-                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED"/>
 
                 <data
-                    android:pathPrefix="/de/dreier/mytargets/"
                     android:host="*"
-                    android:scheme="wear" />
+                    android:pathPrefix="/de/dreier/mytargets/"
+                    android:scheme="wear"/>
             </intent-filter>
         </service>
 

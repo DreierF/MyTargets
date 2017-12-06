@@ -55,7 +55,7 @@ public class FileUtils {
 
     public static Uri getUriForFile(Context context, File file) {
         String packageName = context.getPackageName();
-        String authority = packageName + ".easyphotopicker.fileprovider";
+        String authority = packageName + ".fileprovider";
         return FileProvider.getUriForFile(context, authority, file);
     }
 
