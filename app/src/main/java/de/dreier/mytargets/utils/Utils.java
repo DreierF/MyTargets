@@ -27,6 +27,7 @@ import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.View;
+import android.view.WindowManager;
 
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.format.DateTimeFormatter;
@@ -110,6 +111,19 @@ public class Utils {
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+    }
+
+    @SuppressWarnings("deprecation")
+    public static void setShowWhenLocked(Activity activity, boolean showWhenLocked) {
+        if (VERSION.SDK_INT >= VERSION_CODES.O_MR1) {
+            activity.setShowWhenLocked(showWhenLocked);
+        } else {
+            if (showWhenLocked) {
+                activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+            } else {
+                activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+            }
+        }
     }
 
     @SuppressWarnings("deprecation")

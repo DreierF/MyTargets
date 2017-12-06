@@ -179,12 +179,7 @@ public class InputActivity extends ChildActivityBase
             onDataLoadFinished();
             updateEnd();
         }
-        boolean keepAboveLockscreen = SettingsManager.getInputKeepAboveLockscreen();
-        if (keepAboveLockscreen) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-        } else {
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-        }
+        Utils.setShowWhenLocked(this, SettingsManager.getInputKeepAboveLockscreen());
     }
 
     @Override

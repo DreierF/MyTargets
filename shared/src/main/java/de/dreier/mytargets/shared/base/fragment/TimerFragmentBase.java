@@ -20,11 +20,11 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.WindowManager;
 
 import org.parceler.Parcels;
 
@@ -43,11 +43,15 @@ public abstract class TimerFragmentBase extends Fragment implements View.OnClick
 
     private ETimerState currentStatus = WAIT_FOR_START;
     private CountDownTimer countdown;
-    @Nullable
     private MediaPlayer horn;
-    private PowerManager.WakeLock wakeLock;
     public TimerSettings settings;
     private boolean exitAfterStop = true;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        horn = MediaPlayer.create(context, R.raw.horn);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,31 +61,30 @@ public abstract class TimerFragmentBase extends Fragment implements View.OnClick
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        getView().setOnClickListener(this);
-        PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
-        //noinspection deprecation
-        wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK |
-                PowerManager.ACQUIRE_CAUSES_WAKEUP |
-                PowerManager.ON_AFTER_RELEASE, "WakeLock");
-        wakeLock.acquire((settings.shootTime + settings.waitTime + 120) * 1000);
-        horn = MediaPlayer.create(getActivity(), R.raw.horn);
-
-        changeStatus(currentStatus);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        wakeLock.release();
-        horn.release();
-        horn = null;
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        view.setOnClickListener(this);
+        changeStatus(currentStatus);
     }
 
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if(horn.isPlaying()) {
+            horn.stop();
+        }
+        horn.release();
         if (countdown != null) {
             countdown.cancel();
         }
@@ -139,10 +142,6 @@ public abstract class TimerFragmentBase extends Fragment implements View.OnClick
         }
     }
 
-    public abstract void applyTime(String text);
-
-    protected abstract void applyStatus(ETimerState status);
-
     protected int getDuration(@NonNull ETimerState status) {
         switch (status) {
             case PREPARATION:
@@ -190,4 +189,9 @@ public abstract class TimerFragmentBase extends Fragment implements View.OnClick
             }
         });
     }
+
+    public abstract void applyTime(String text);
+
+    protected abstract void applyStatus(ETimerState status);
+
 }
