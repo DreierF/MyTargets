@@ -14,7 +14,6 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
           package="de.dreier.mytargets"
           android:installLocation="auto">
 
@@ -305,7 +304,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/my_file_paths"/>
         </provider>
         <provider
             android:name=".features.settings.backup.synchronization.StubProvider"

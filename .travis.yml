@@ -65,7 +65,7 @@ after_success:
   if [[ "$TRAVIS_TAG" ]]; then
     ./gradlew bootstrapRegularReleasePlayResources publishRegularRelease
     ./gradlew -PFirebaseServiceAccountFilePath=$PWD/app/src/release/google-services.json :app:firebaseUploadRegularReleaseProguardMapping
-    ./dropbox_uploader.sh upload app/build/outputs/apk/app-regular-release.apk /Release/$TRAVIS_TAG/MyTargets.apk
+    ./dropbox_uploader.sh upload app/build/outputs/apk/regular/release/app-regular-release.apk /Release/$TRAVIS_TAG/MyTargets.apk
     ./dropbox_uploader.sh upload app/build/outputs/mapping/regular/release/mapping.txt /Release/$TRAVIS_TAG/mapping.txt
   fi
 - bash <(curl -s https://codecov.io/bash)
@@ -83,7 +83,7 @@ deploy:
   skip_cleanup: true
   api_key:
     secure: Iz8i8L5YlrCq7KdkKNenb4wKQR0TrtR3eoJ/e0U/jsZb3CGqNru0HtatJTCvggR/Md5FGCmk6LD2Wl9usbIv6rn2F5T4GSSYxRtYZ4124zt+GyEU3jAlgJt72AJEIAVFjTtWAcM9mUc8QME/iOeDbbZUt6LV+IP1UbY472K6+R4sd/ChRq4tRAlK/kMjGgoBjXH9iV+RZkjrGvHwHc8UsOUPnl/4PhqLBda+SYDsjZWOQCnNUv8G2dTlHnbgF6eIKjHR4NpAIHYEqkTE5YV7aWjKQy4UGFZStkqhiaMpfntJ+KJWr/fOaKwwxIq3JuBUC0fbyj81q5Yf/zvGOmkeejU3K28+sWfYKD016JbWh58GuOY5OCXRd8SmnMG3kndhAZ3GmgmJClvK+cW8wtF1xOmnoSHaeB48y2VIDrZ1yZm5aZ/dgUUTxaKzVfZpqo1JL4PWm6l1vU4+tp89ds3oynpVowkZxjgH5kr9f10fe+oOtTY6lrUIvZbDIL74/EEV2YFMe2ittjRlBm2En3cOvpisEqYGZwm4yFrZ45fhSQui12NiUrXHBfrAbX/qT+VSH0OCmYxm6muPz/XJCXIcl1zTwj6kiFF0Dw3paTsYbkaDQRXHvdJIr8PBDcSZSrP9kyyQjaog0HtS7OqXbugw6qDaya9+zkHVy4LWVDOpEYM=
-  file: app/build/outputs/apk/app-regular-release.apk
+  file: app/build/outputs/apk/regular/release/app-regular-release.apk
   on:
     tags: true
     repo: DreierF/MyTargets
