@@ -87,7 +87,6 @@ deploy:
   on:
     tags: true
     repo: DreierF/MyTargets
-    branch: develop
 notifications:
   webhooks: https://fathomless-fjord-24024.herokuapp.com/notify
   email: false
