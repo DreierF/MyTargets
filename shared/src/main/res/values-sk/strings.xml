@@ -26,7 +26,7 @@
   <string name="cloudy">Zamračené</string>
   <string name="light_rain">Slabý dážď</string>
   <string name="rain">Daždivo</string>
-  <string name="round_desc">%1$s: %2$d × %3$d šípy (%4$s terč)</string>
+  <string name="round_desc">%1$s: %2$d &#215; %3$d šípy (%4$s terč)</string>
   <string name="mini">Mini</string>
   <string name="small">Malá</string>
   <string name="medium">Stredná</string>
@@ -54,4 +54,21 @@
   <string name="right_front">spredu z prava</string>
   <string name="left_back">zozadu z ľava</string>
   <string name="right_back">zozadu z prava</string>
+  <string name="stop">Zastaviť</string>
+  <string name="end_n">Sada %d</string>
+  <plurals name="rounds">
+    <item quantity="one">%d kolo</item>
+    <item quantity="few">%d kôl</item>
+    <item quantity="other">%d kôl</item>
+  </plurals>
+  <plurals name="ends_arrow">
+    <item quantity="one">%1$d \u00D7 %2$d šíp</item>
+    <item quantity="few">%1$d \u00D7 %2$d šípov</item>
+    <item quantity="other">%1$d \u00D7 %2$d šípov</item>
+  </plurals>
+  <plurals name="arrows_per_end">
+    <item quantity="one">%d šíp za sadu</item>
+    <item quantity="few">%d šípov za sadu</item>
+    <item quantity="other">%d šípov za sadu</item>
+  </plurals>
 </resources>

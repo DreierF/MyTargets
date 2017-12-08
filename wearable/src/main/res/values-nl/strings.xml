@@ -16,5 +16,11 @@
   -->
 <resources>
   <string name="saved">Opgeslagen</string>
-  <string name="start_training_on_phone">Start een training op uw telefoon om te starten&#8230;</string>
+  <string name="start_phone_app">Start de app op uw telefoon om verder te gaan…</string>
+  <string name="add_end">Beurt toevoegen</string>
+  <string name="toggle_timer">Toggle timer</string>
+  <string name="start_timer">Start timer</string>
+  <string name="vibration">Trillen</string>
+  <string name="sound">Geluid</string>
+  <string name="today">vandaag</string>
 </resources>

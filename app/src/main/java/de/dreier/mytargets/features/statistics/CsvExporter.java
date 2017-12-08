@@ -36,8 +36,8 @@ import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.utils.FileUtils;
 
-import static android.support.v4.content.FileProvider.getUriForFile;
 import static de.dreier.mytargets.shared.SharedApplicationInstance.get;
 
 public class CsvExporter {
@@ -45,12 +45,9 @@ public class CsvExporter {
     private static DateFormat timeInstance = new SimpleDateFormat("HH:mm:ss", Locale.US);
 
     public static Uri export(Context context, List<Long> roundIds) throws IOException {
-        String packageName = context.getPackageName();
-        String authority = packageName + ".easyphotopicker.fileprovider";
-
         final File f = new File(context.getCacheDir(), getExportFileName());
         exportAll(f, roundIds);
-        return getUriForFile(context, authority, f);
+        return FileUtils.getUriForFile(context, f);
     }
 
     @NonNull

@@ -120,10 +120,9 @@
   <string name="donate_10">Donner une grande pizza</string>
   <string name="donate_20">Donner de l\'essence</string>
   <string name="donation_thank">Merci pour votre soutient!</string>
-  <string name="donate_text">Les montants inclus la TVA et 30% de commission pour Google. Si vous préférez, vous pouvez également faire un don PayPal sur le compte dreier.florian@gmail.com.</string>
+  <string name="donate_text" formatted="false">Les montants inclus la TVA et 30% de commission pour Google. Si vous préférez, vous pouvez également faire un don PayPal sur le compte dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Chronomètre</string>
-  <string name="stop">STOP</string>
   <string name="touch_to_start">Appuyer pour démarrer</string>
   <string name="preparation">Préparation</string>
   <string name="shooting">Tir</string>
@@ -170,11 +169,11 @@
   <string name="edit_training">Modifier la séance</string>
   <string name="edit_standard_round">Modifier l\'épreuve standard</string>
   <plurals name="arrow_deleted">
-    <item quantity="one">Une flèche effacée</item>
+    <item quantity="one">%d flèche effacée</item>
     <item quantity="other">%d flèches supprimés</item>
   </plurals>
   <plurals name="bow_deleted">
-    <item quantity="one">Un arc effacé</item>
+    <item quantity="one">%d arc effacé</item>
     <item quantity="other">%d arcs supprimés</item>
   </plurals>
   <plurals name="training_deleted">
@@ -182,7 +181,7 @@
     <item quantity="other">%d séances effacées</item>
   </plurals>
   <plurals name="passe_deleted">
-    <item quantity="one">Une extrémité supprimée</item>
+    <item quantity="one">%d extrémité supprimée</item>
     <item quantity="other">extrémités %d supprimées</item>
   </plurals>
   <plurals name="rounds">
@@ -243,7 +242,7 @@
   <string name="last_name">Nom</string>
   <string name="age">Age</string>
   <string name="show_signature">Signature</string>
-  <string name="witness">Témoin</string>
+  <string name="witness">Witness</string>
   <string name="archer">Archer</string>
   <string name="hits">Marquées</string>
   <string name="misses">Manquées</string>
@@ -276,11 +275,11 @@
   <string name="backup_location">Emplacement de la sauvegarde</string>
   <string name="internal_storage">Disque dur interne</string>
   <string name="automatic_backup">Sauvegarde automatique</string>
-  <string name="restoring">Restauration de la sauvegarde&#8230;</string>
+  <string name="restoring">Restauration de la sauvegarde…</string>
   <string name="restore_failed">Echec de la restauration</string>
   <string name="delete_failed">Echec de la suppression</string>
   <string name="backup_restore_desc">Sauvegarde et restauration des données de l\'app</string>
-  <string name="exporting">Exportation&#8230;</string>
+  <string name="exporting">Exportation…</string>
   <string name="loading_backups_failed">Échec de chargement des sauvegardes !</string>
   <string name="external_storage">Disque dur externe</string>
   <string name="backup_interval">Intervalle de sauvegarde</string>
@@ -304,7 +303,7 @@
   <string name="intro_title_track_training_progress">Oublier la feuille de scores !</string>
   <string name="intro_description_track_training_progress">With exact arrow plotting,\nyou can get more useful insights\nout of your training data.</string>
   <string name="intro_title_everything_in_one_place">Tout ce qu\'il vous faut\nen un endroit</string>
-  <string name="intro_description_everything_in_one_place">Including bow-, arrow-\nand sightmark-management,\narchery timer, statistics \nand much more&#8230;</string>
+  <string name="intro_description_everything_in_one_place">Including bow-, arrow-\nand sightmark-management,\narchery timer, statistics \nand much more…</string>
   <string name="average_arrow_score_per_end">Average arrow score per end</string>
   <string name="show_end">Affichage sur la volée</string>
   <string name="show_round">Affichage sur la serie</string>
@@ -324,4 +323,7 @@
   <string name="show_total_score">Voir le score total</string>
   <string name="show_percentage">Voir le pourcentage</string>
   <string name="show_arrow_average">Afficher la moyenne par flèche</string>
+  <string name="image_deleted">Image deleted</string>
+  <string name="delete_image">Delete image?</string>
+  <string name="warning_backup_experimental">Warning: This feature is still experimental! Please check in regular intervals if the backup was really successful!</string>
 </resources>

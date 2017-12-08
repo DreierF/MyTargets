@@ -16,7 +16,7 @@
   -->
 <resources>
   <!-- Indoor -->
-  <string name="australian_combined_indoor">Australian combinada Indoor</string>
+  <string name="australian_combined_indoor">Australiana combinada Indoor</string>
   <string name="australian_indoor_1">Australian Indoor 1</string>
   <string name="australian_indoor_2">Australian Indoor 2</string>
   <string name="dair_380">DAIR 380</string>
@@ -57,7 +57,7 @@
   <string name="wa_compound_qualification">WA Compuesto Calificación</string>
   <string name="wa_cub">WA Cub</string>
   <string name="wa_standard">WA Estandar</string>
-  <string name="olympic_round">Serie Olimpica</string>
+  <string name="olympic_round">Serie Olímpica</string>
   <string name="wa_1440_junior_men">WA 1440 Junior Masculino</string>
   <string name="wa_1440_junior_women">WA 1440 Junior Femenino</string>
   <string name="wa_1440_men_master_50">WA 1440 Junior Masculino +50</string>

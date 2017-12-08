@@ -47,7 +47,7 @@ public class ScoreboardImage {
             // Attach WebView to activity
             final WebView webView = new WebView(context);
             webView.setVisibility(View.INVISIBLE);
-            final FrameLayout container = (FrameLayout) context
+            final FrameLayout container = context
                     .findViewById(android.R.id.content);
             ViewGroup.LayoutParams p = new ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,

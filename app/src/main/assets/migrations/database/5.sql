@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS ARROW;
 CREATE TABLE IF NOT EXISTS ARROW (
   _id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT,
@@ -5,7 +6,7 @@ CREATE TABLE IF NOT EXISTS ARROW (
   material TEXT,
   spine TEXT,
   weight TEXT,
-  tip_weight TEXT,
+  tip_wight TEXT,
   vanes TEXT,
   nock TEXT,
   comment TEXT,
@@ -23,4 +24,4 @@ UPDATE ROUND SET target=6 WHERE target=10;
 UPDATE SHOOT SET points=2 WHERE _id IN (SELECT s._id
   FROM ROUND r, PASSE p, SHOOT s LEFT JOIN BOW b ON b._id=r.bow
   WHERE r._id=p.round AND s.passe=p._id
-  AND (r.bow=-2 OR b.type=1) AND s.points=1 AND r.target=3)");
+  AND (r.bow=-2 OR b.type=1) AND s.points=1 AND r.target=3);

@@ -2,6 +2,7 @@
   <profile version="1.0">
     <option name="myName" value="Project Default" />
     <inspection_tool class="AndroidLintGoogleAppIndexingWarning" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="AndroidLintMissingQuantity" enabled="true" level="INFO" enabled_by_default="true" />
     <inspection_tool class="ControlFlowStatementWithoutBraces" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="IgnoreResultOfCall" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="m_reportAllNonLibraryCalls" value="false" />

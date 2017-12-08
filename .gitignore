@@ -34,6 +34,9 @@ captures/
 gen-external-apklibs
 
 ### Intellij ###
+app/app.iml
+shared/shared.iml
+wearable/wearable.iml
 
 # User-specific stuff:
 .idea/**/workspace.xml
@@ -46,7 +49,10 @@ gen-external-apklibs
 
 ### Specific files ###
 ## Play store artifacts
-app/src/main/play
+**/play/**
+!app/src/regular/play/en-US/listing/title
+!app/src/regular/play/en-US/listing/shortdescription
+!app/src/regular/play/en-US/listing/fulldescription
 
 ## Secrets
 .dropbox_uploader

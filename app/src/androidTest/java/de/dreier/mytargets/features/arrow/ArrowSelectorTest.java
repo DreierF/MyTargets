@@ -26,14 +26,13 @@ import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 
 import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.arrows.ArrowActivity;
+import de.dreier.mytargets.features.arrows.ArrowListActivity;
 import de.dreier.mytargets.features.arrows.EditArrowActivity;
 import de.dreier.mytargets.features.training.edit.EditTrainingActivity;
 import de.dreier.mytargets.features.training.edit.EditTrainingFragment;
 import de.dreier.mytargets.test.base.UITestBase;
 import de.dreier.mytargets.test.utils.rules.EmptyDbTestRule;
 
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -43,7 +42,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static de.dreier.mytargets.test.utils.PermissionGranter.allowPermissionsIfNeeded;
 import static de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isNestedChildOfView;
 import static de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher.withRecyclerView;
 import static org.hamcrest.Matchers.allOf;
@@ -83,7 +81,7 @@ public class ArrowSelectorTest extends UITestBase {
 
         // Check if arrow selection opens
         onView(withId(R.id.arrow)).perform(nestedScrollTo(), click());
-        intended(hasComponent(ArrowActivity.class.getName()));
+        intended(hasComponent(ArrowListActivity.class.getName()));
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
                 .check(matches(hasDescendant(withText(R.string.my_arrow))));
         navigateUp();

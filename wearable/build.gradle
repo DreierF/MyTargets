@@ -14,7 +14,6 @@
  */
 
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileOptions {
@@ -23,37 +22,36 @@ android {
     }
 
     compileSdkVersion compileSdkVersionCode
-    buildToolsVersion buildToolsVersionCode
 
     defaultConfig {
         applicationId 'de.dreier.mytargets'
-        minSdkVersion 20
-        targetSdkVersion 25
+        minSdkVersion 21
+        targetSdkVersion 26
         versionCode gitVersionCode
         versionName gitVersionName
+    }
+
+    dataBinding {
+        enabled = true
     }
 
     signingConfigs {
         debug {
         }
         release {
-            try {
-                storeFile file('../keystore.jks')
-                storePassword project.hasProperty('KEYSTORE_PASSWORD') ? KEYSTORE_PASSWORD : System.getenv('KEYSTORE_PASSWORD')
-                keyAlias 'mytargets'
-                keyPassword project.hasProperty('KEY_PASSWORD') ? KEY_PASSWORD : System.getenv('KEY_PASSWORD')
-            } catch (ignored) {
-                throw new Exception('You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.')
-            }
+            storeFile file(KEYSTORE_NAME)
+            storePassword KEYSTORE_PASSWORD
+            keyAlias KEY_ALIAS
+            keyPassword KEY_PASSWORD
         }
     }
 
     buildTypes {
         debug {
             applicationIdSuffix '.debug'
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
             minifyEnabled false
-            testCoverageEnabled = true
+            testCoverageEnabled true
         }
         release {
             signingConfig signingConfigs.release
@@ -65,13 +63,21 @@ android {
 }
 
 dependencies {
-    compile "com.google.android.support:wearable:$libraryVersion.supportWearable"
-    provided "com.google.android.wearable:wearable:$libraryVersion.supportWearable"
+    implementation "com.google.android.support:wearable:$libraryVersion.supportWearable"
+    compileOnly "com.google.android.wearable:wearable:$libraryVersion.supportWearable"
+    implementation "com.android.support:percent:$libraryVersion.support"
+    implementation "com.android.support:recyclerview-v7:$libraryVersion.support"
+    implementation "com.android.support:support-v4:$libraryVersion.support"
 
-    compile "com.google.android.gms:play-services-wearable:$libraryVersion.playService"
+    annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$libraryVersion.dbFlow"
+    implementation "com.github.Raizlabs.DBFlow:dbflow-core:$libraryVersion.dbFlow"
+    implementation "com.github.Raizlabs.DBFlow:dbflow:$libraryVersion.dbFlow"
 
-    compile "org.parceler:parceler-api:$libraryVersion.parceler"
+    implementation "org.parceler:parceler-api:$libraryVersion.parceler"
     annotationProcessor "org.parceler:parceler:$libraryVersion.parceler"
 
-    compile project(':shared')
+    implementation "frankiesardo:icepick:$libraryVersion.icepick"
+    annotationProcessor "frankiesardo:icepick-processor:$libraryVersion.icepick"
+
+    implementation project(':shared')
 }

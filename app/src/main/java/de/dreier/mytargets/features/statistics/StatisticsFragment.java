@@ -15,12 +15,15 @@
 
 package de.dreier.mytargets.features.statistics;
 
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -70,9 +73,13 @@ import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.Color;
 import de.dreier.mytargets.shared.utils.LongUtils;
+import de.dreier.mytargets.shared.utils.SharedUtils;
+import de.dreier.mytargets.utils.MobileWearableClient;
 import de.dreier.mytargets.utils.RoundedTextDrawable;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
+
+import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE;
 
 public class StatisticsFragment extends FragmentBase {
 
@@ -98,6 +105,17 @@ public class StatisticsFragment extends FragmentBase {
     private Target target;
     private boolean animate;
 
+    private BroadcastReceiver updateReceiver = new MobileWearableClient.EndUpdateReceiver() {
+
+        @Override
+        protected void onUpdate(Long trainingId, Long roundId, End end) {
+            if (Stream.of(LongUtils.toList(roundIds))
+                    .anyMatch(r -> SharedUtils.equals(r, roundId))) {
+                reloadData();
+            }
+        }
+    };
+
     public static StatisticsFragment newInstance(List<Long> roundIds, Target item, boolean animate) {
         StatisticsFragment fragment = new StatisticsFragment();
         Bundle bundle = new Bundle();
@@ -106,6 +124,19 @@ public class StatisticsFragment extends FragmentBase {
         bundle.putBoolean(StatisticsFragment.ARG_ANIMATE, animate);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(updateReceiver,
+                new IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(updateReceiver);
     }
 
     @Nullable
@@ -131,23 +162,21 @@ public class StatisticsFragment extends FragmentBase {
     protected LoaderUICallback onLoad(Bundle args) {
         rounds = Stream.of(LongUtils.toList(roundIds))
                 .map(Round::get)
+                .withoutNulls()
                 .collect(Collectors.toList());
 
         List<ArrowStatistic> data = ArrowStatistic.getAll(target, rounds);
 
-        return new LoaderUICallback() {
-            @Override
-            public void applyData() {
-                showLineChart();
-                showPieChart();
-                showDispersionView();
-                binding.distributionChart.invalidate();
-                binding.chartView.invalidate();
+        return () -> {
+            showLineChart();
+            showPieChart();
+            showDispersionView();
+            binding.distributionChart.invalidate();
+            binding.chartView.invalidate();
 
-                binding.arrowRankingLabel.setVisibility(data.isEmpty() ? View.GONE : View.VISIBLE);
-                Collections.sort(data);
-                adapter.setData(data);
-            }
+            binding.arrowRankingLabel.setVisibility(data.isEmpty() ? View.GONE : View.VISIBLE);
+            Collections.sort(data);
+            adapter.setData(data);
         };
     }
 
@@ -156,6 +185,7 @@ public class StatisticsFragment extends FragmentBase {
                 .flatMap(r -> Stream.of(r.getEnds()))
                 .filter(p -> p.exact)
                 .flatMap(p -> Stream.of(p.getShots()))
+                .filter(p -> p.scoringRing != Shot.NOTHING_SELECTED)
                 .collect(Collectors.toList());
         if (exactShots.isEmpty()) {
             binding.dispersionPatternLayout.setVisibility(View.GONE);
@@ -230,7 +260,7 @@ public class StatisticsFragment extends FragmentBase {
     private void showPieChart() {
         // enable hole and configure
         binding.distributionChart.setTransparentCircleRadius(15);
-        binding.distributionChart.setHoleColor(0x00EEEEEE);
+        binding.distributionChart.setHoleColor(0xFFEEEEEE);
         binding.distributionChart.getLegend().setEnabled(false);
         binding.distributionChart.setDescription(EMPTY_DESCRIPTION);
 
@@ -240,7 +270,7 @@ public class StatisticsFragment extends FragmentBase {
 
         binding.distributionChart.setUsePercentValues(false);
         binding.distributionChart.highlightValues(null);
-        binding.distributionChart.setBackgroundColor(0x00EEEEEE);
+        binding.distributionChart.setBackgroundColor(0xFFEEEEEE);
         binding.distributionChart.invalidate();
         addPieData();
     }
@@ -305,6 +335,8 @@ public class StatisticsFragment extends FragmentBase {
         final List<Shot> shots = Stream.of(rounds)
                 .flatMap(r -> Stream.of(r.getEnds()))
                 .flatMap(p -> Stream.of(p.getShots()))
+                .filter(p -> p.scoringRing !=
+                        Shot.NOTHING_SELECTED) //TODO: Refactor to not save NOTHING_SELECTED at all
                 .collect(Collectors.toList());
         long missCount = Stream.of(shots).filter(s -> s.scoringRing == Shot.MISS).count();
         long hitCount = shots.size() - missCount;
@@ -387,7 +419,8 @@ public class StatisticsFragment extends FragmentBase {
 
                 @Override
                 public String getXValueFormatted(float value) {
-                    return dateFormat.format(values.get((int) value).second.toDate());
+                    int index = Math.max(Math.min((int) value, values.size() - 1), 0);
+                    return dateFormat.format(values.get(index).second.toDate());
                 }
             };
         }

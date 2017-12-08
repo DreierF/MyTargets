@@ -120,10 +120,9 @@
   <string name="donate_10">Doner meg en stor pizza</string>
   <string name="donate_20">Doner meg litt drivstoff</string>
   <string name="donation_thank">Takk for din støtte!</string>
-  <string name="donate_text">Beløpene er inkl. mva. og 30% gebyr for Google. Alternativt kan du gledelig donere til PayPal brukeren min: dreier.florian@gmail.com.</string>
+  <string name="donate_text" formatted="false">Beløpene er inkl. mva. og 30% gebyr for Google. Alternativt kan du gledelig donere til PayPal brukeren min: dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Tidtaker</string>
-  <string name="stop">STOP</string>
   <string name="touch_to_start">Trykk for å starte</string>
   <string name="preparation">Gjør deg klar</string>
   <string name="shooting">Skyting</string>
@@ -243,7 +242,7 @@
   <string name="last_name">Etternavn</string>
   <string name="age">Alder</string>
   <string name="show_signature">Signatur</string>
-  <string name="witness">Vitne</string>
+  <string name="witness">Norwegian</string>
   <string name="archer">Skytter</string>
   <string name="hits">Treff</string>
   <string name="misses">Bom</string>
@@ -276,11 +275,11 @@
   <string name="backup_location">Sikkerhetskopiplassering</string>
   <string name="internal_storage">Intern lagring</string>
   <string name="automatic_backup">Automatisk sikkerhetskopiering</string>
-  <string name="restoring">Gjenoppretter sikkerhetskopi&#8230;</string>
+  <string name="restoring">Gjenoppretter sikkerhetskopi…</string>
   <string name="restore_failed">Gjenoppretting mislyktes</string>
   <string name="delete_failed">Sletting mislyktes</string>
   <string name="backup_restore_desc">Sikkerhetskopier og gjenopprett app data</string>
-  <string name="exporting">Eksporterer&#8230;</string>
+  <string name="exporting">Eksporterer…</string>
   <string name="loading_backups_failed">Gjenoppretting av sikkerhetskopiering mislyktes!</string>
   <string name="external_storage">Ekstern lagring</string>
   <string name="backup_interval">Sikkerhetskopieringsintervall</string>
@@ -304,7 +303,7 @@
   <string name="intro_title_track_training_progress">Glem papir scorekort!</string>
   <string name="intro_description_track_training_progress">Med nøyaktig pil plotting, kan \ndu få mer nyttig insikt\nut av treningsdataene.</string>
   <string name="intro_title_everything_in_one_place">Alt du trenger\npå ett sted</string>
-  <string name="intro_description_everything_in_one_place">Inkludert bue - pil-\nog håntering av siktemerker \nklasse, statistikk \nog mye mer&#8230;</string>
+  <string name="intro_description_everything_in_one_place">Inkludert bue - pil-\nog håntering av siktemerker \nklasse, statistikk \nog mye mer…</string>
   <string name="average_arrow_score_per_end">Gjennomsnittlig poeng per pil, per runde</string>
   <string name="show_end">Vis runde</string>
   <string name="show_round">Vis runde</string>
@@ -324,4 +323,7 @@
   <string name="show_total_score">Vis total poengsum</string>
   <string name="show_percentage">Vis prosent</string>
   <string name="show_arrow_average">Vis pil gjennomsnitt</string>
+  <string name="image_deleted">Norwegian</string>
+  <string name="delete_image">Norwegian</string>
+  <string name="warning_backup_experimental">Warning: This feature is still experimental! Please check in regular intervals if the backup was really successful!</string>
 </resources>

@@ -24,8 +24,8 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.utils.Circle;
 import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.views.TargetViewBase;
@@ -33,11 +33,14 @@ import de.dreier.mytargets.shared.views.TargetViewBase;
 
 public class TargetSelectView extends TargetViewBase {
 
+    public static final int RADIUS_SELECTED = 23;
+    public static final int RADIUS_UNSELECTED = 17;
     private int radius;
     private int chinHeight;
     private double circleRadius;
     private Circle circle;
     private float chinBound;
+    private boolean ambientMode = false;
 
     public TargetSelectView(Context context) {
         super(context);
@@ -67,8 +70,10 @@ public class TargetSelectView extends TargetViewBase {
         int curZone = getCurrentlySelectedZone();
         for (int i = 0; i < selectableZones.size(); i++) {
             PointF coordinate = getCircularCoordinates(i);
-            circle.draw(canvas, coordinate.x, coordinate.y, selectableZones.get(i).index,
-                    i == curZone ? 23 : 17, false, getCurrentShotIndex(), null);
+            if(i != curZone) {
+                circle.draw(canvas, coordinate.x, coordinate.y, selectableZones.get(i).index,
+                        17, false, getCurrentShotIndex(), null, ambientMode);
+            }
         }
 
         // Draw all points of this end in the center
@@ -109,8 +114,8 @@ public class TargetSelectView extends TargetViewBase {
     @Override
     protected RectF getEndRect() {
         RectF endRect = new RectF();
-        endRect.left = radius - 35 * density;
-        endRect.right = radius + 35 * density;
+        endRect.left = radius - 45 * density;
+        endRect.right = radius + 45 * density;
         endRect.top = radius / 2;
         endRect.bottom = radius;
         return endRect;
@@ -120,7 +125,7 @@ public class TargetSelectView extends TargetViewBase {
     @Override
     protected Rect getSelectableZonePosition(int i) {
         PointF coordinate = getCircularCoordinates(i);
-        final int rad = i == getCurrentlySelectedZone() ? 23 : 17;
+        final int rad = i == getCurrentlySelectedZone() ? RADIUS_SELECTED : RADIUS_UNSELECTED;
         final Rect rect = new Rect();
         rect.left = (int) (coordinate.x - rad);
         rect.top = (int) (coordinate.y - rad);
@@ -158,5 +163,16 @@ public class TargetSelectView extends TargetViewBase {
     @Override
     protected boolean selectPreviousShots(MotionEvent motionEvent, float x, float y) {
         return false;
+    }
+
+    @Override
+    protected int getSelectedShotCircleRadius() {
+        return RADIUS_SELECTED;
+    }
+
+    public void setAmbientMode(boolean ambientMode) {
+        this.ambientMode = ambientMode;
+        endRenderer.setAmbientMode(ambientMode);
+        invalidate();
     }
 }

@@ -1,0 +1,39 @@
+/*
+ * Copyright (C) 2017 Florian Dreier
+ *
+ * This file is part of MyTargets.
+ *
+ * MyTargets is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * MyTargets is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+ext {
+    HAS_PLAY_STORE_SECRET = new File('googlePlayAndroidDeveloper.json').exists()
+    HAS_GMS_SECRET = new File('google-services.json').exists()
+}
+
+if (hasProperty('CROWDIN_API_KEY')) {
+    tasks.whenTaskAdded { task ->
+        if (task.name == "generateRegularReleasePlayResources") {
+            task.dependsOn ':crowdinDownload'
+        }
+    }
+
+    task generateLocalizedScreenshots(type: Exec, group: 'play store', dependsOn: [':crowdinDownload', 'assembleScreengrabDebugAndroidTest', 'assembleScreengrabDebug']) {
+        commandLine '../make_screenshots.sh'
+    }
+
+    if (HAS_PLAY_STORE_SECRET) {
+        play {
+            track 'beta'
+            untrackOld true
+            // uploadImages true
+        }
+    }
+}

@@ -26,8 +26,10 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import org.parceler.Parcel;
 
@@ -38,13 +40,14 @@ import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IImageProvider;
+import de.dreier.mytargets.shared.models.IRecursiveModel;
 import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.utils.typeconverters.EBowTypeConverter;
 import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter;
 
 @Parcel
 @Table(database = AppDatabase.class)
-public class Bow extends BaseModel implements IImageProvider, IIdSettable, Comparable<Bow> {
+public class Bow extends BaseModel implements IImageProvider, IIdSettable, Comparable<Bow>, IRecursiveModel {
 
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
@@ -134,7 +137,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
                 .querySingle();
     }
 
-    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "sightMarks")
+    @OneToMany(methods = {}, variableName = "sightMarks")
     public List<SightMark> getSightMarks() {
         if (sightMarks == null) {
             sightMarks = Stream.of(SQLite.select()
@@ -147,7 +150,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
         return sightMarks;
     }
 
-    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "images")
+    @OneToMany(methods = {}, variableName = "images")
     public List<BowImage> getImages() {
         if (images == null) {
             images = SQLite.select()
@@ -196,27 +199,48 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
 
     @Override
     public void save() {
-        super.save();
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::save);
+    }
+
+    @Override
+    public void save(DatabaseWrapper databaseWrapper) {
+        super.save(databaseWrapper);
         if (images != null) {
             SQLite.delete(BowImage.class)
                     .where(BowImage_Table.bow.eq(id))
-                    .execute();
+                    .execute(databaseWrapper);
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
             for (BowImage image : images) {
                 image.bowId = id;
-                image.save();
+                image.save(databaseWrapper);
             }
         }
         if (sightMarks != null) {
             SQLite.delete(SightMark.class)
                     .where(SightMark_Table.bow.eq(id))
-                    .execute();
+                    .execute(databaseWrapper);
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
             for (SightMark sightMark : sightMarks) {
                 sightMark.bowId = id;
-                sightMark.save();
+                sightMark.save(databaseWrapper);
             }
         }
+    }
+
+    @Override
+    public void delete() {
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::delete);
+    }
+
+    @Override
+    public void delete(DatabaseWrapper databaseWrapper) {
+        for (SightMark sightMark : getSightMarks()) {
+            sightMark.delete(databaseWrapper);
+        }
+        for (BowImage bowImage : getImages()) {
+            bowImage.delete(databaseWrapper);
+        }
+        super.delete(databaseWrapper);
     }
 
     @Override
@@ -245,5 +269,15 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
                 !TextUtils.isEmpty(string) &&
                 (!type.showButton() || !TextUtils.isEmpty(button)) &&
                 !TextUtils.isEmpty(description);
+    }
+
+    @Override
+    public void saveRecursively() {
+        save();
+    }
+
+    @Override
+    public void saveRecursively(DatabaseWrapper databaseWrapper) {
+        save(databaseWrapper);
     }
 }

@@ -17,7 +17,7 @@
 <resources>
   <string name="recurve_bow">Olimpiai/Reflex íj</string>
   <string name="compound_bow">Csigás íj</string>
-  <string name="bare_bow">Csupasz íj  - BB</string>
+  <string name="bare_bow">Iránzék nélküli reflex íj - BB</string>
   <string name="long_bow">Hosszúíj - Longbow</string>
   <string name="horse_bow">Lovas/hagyományos íj</string>
   <string name="yumi">Yumi</string>
@@ -36,14 +36,14 @@
   <string name="indoor">Terem</string>
   <string name="wind">Szél</string>
   <string name="location">Helyszín</string>
-  <string name="bft_0">0 Bft: szélcsendes</string>
+  <string name="bft_0">0 Bft: szélcsend</string>
   <string name="bft_1">1 Bft: a falevelek mozdulatlanok</string>
-  <string name="bft_2">2 Bft: a falaevelek mozogni kezdenek</string>
-  <string name="bft_3">3 Bft: könnyű zászlók megmozdulnaki</string>
-  <string name="bft_4">4 Bft: a kis ágak megmozdulnak</string>
+  <string name="bft_2">2 Bft: a falevelek megmozdulnak</string>
+  <string name="bft_3">3 Bft: könnyű zászlók megmozdulnak</string>
+  <string name="bft_4">4 Bft: a vékony ágak megmozdulnak</string>
   <string name="bft_5">5 Bft: a kis fák megmozdulnak</string>
   <string name="bft_6">6 Bft: a nagy ágak is mozdulnak</string>
-  <string name="bft_7">7 Bft: a fák koronái mozdulnak</string>
+  <string name="bft_7">7 Bft: a fák teljes lombozata mozdul</string>
   <string name="bft_8">8 Bft: a kis ágak töredeznek</string>
   <string name="bft_9">9 Bft: VIHAR</string>
   <string name="front">szemből</string>
@@ -54,4 +54,18 @@
   <string name="right_front">szemből jobb oldalról</string>
   <string name="left_back">hátulról balról</string>
   <string name="right_back">hátulról  jobbról</string>
+  <string name="stop">ÁLLJ!</string>
+  <string name="end_n">%d sorozat</string>
+  <plurals name="rounds">
+    <item quantity="one">%d. forduló</item>
+    <item quantity="other">%d. forduló</item>
+  </plurals>
+  <plurals name="ends_arrow">
+    <item quantity="one">%1$d \u00D7 %2$d vessző</item>
+    <item quantity="other">%1$d \u00D7 %2$d arrows</item>
+  </plurals>
+  <plurals name="arrows_per_end">
+    <item quantity="one">%d. vessző/sorozat</item>
+    <item quantity="other">%d arrows per end</item>
+  </plurals>
 </resources>

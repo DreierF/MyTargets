@@ -17,8 +17,9 @@ package de.dreier.mytargets.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.StrictMode;
+import android.util.Log;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
@@ -33,9 +34,10 @@ import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.analysis.aggregation.average.Average;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Environment;
-import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Thumbnail;
+import de.dreier.mytargets.shared.models.TimerSettings;
+import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.WindDirection;
 import de.dreier.mytargets.shared.models.WindSpeed;
 import de.dreier.mytargets.shared.models.db.Arrow;
@@ -51,7 +53,10 @@ import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.EndRenderer;
+import de.dreier.mytargets.shared.utils.ImageList;
+import de.dreier.mytargets.utils.MobileWearableClient;
 import de.dreier.mytargets.utils.backup.MyBackupAgent;
+import timber.log.Timber;
 
 /**
  * Application singleton. Gets instantiated exactly once and is used
@@ -69,13 +74,15 @@ import de.dreier.mytargets.utils.backup.MyBackupAgent;
         @ParcelClass(End.class),
         @ParcelClass(EndImage.class),
         @ParcelClass(EndRenderer.class),
+        @ParcelClass(ImageList.class),
         @ParcelClass(Round.class),
         @ParcelClass(RoundTemplate.class),
         @ParcelClass(Shot.class),
         @ParcelClass(SightMark.class),
         @ParcelClass(StandardRound.class),
-        @ParcelClass(NotificationInfo.class),
+        @ParcelClass(TrainingInfo.class),
         @ParcelClass(Target.class),
+        @ParcelClass(TimerSettings.class),
         @ParcelClass(Training.class),
         @ParcelClass(Thumbnail.class),
         @ParcelClass(WindDirection.class),
@@ -83,24 +90,26 @@ import de.dreier.mytargets.utils.backup.MyBackupAgent;
 })
 public class ApplicationInstance extends SharedApplicationInstance {
 
+    public static MobileWearableClient wearableClient;
+
     public static SharedPreferences getLastSharedPreferences() {
-        return mContext.getSharedPreferences(MyBackupAgent.PREFS, 0);
+        return context.getSharedPreferences(MyBackupAgent.PREFS, 0);
     }
 
     @Override
     public void onCreate() {
         if (BuildConfig.DEBUG) {
-            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                    .detectAll()
-                    .penaltyLog()
-                    .build());
-            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                    .detectLeakedSqlLiteObjects()
-                    .detectLeakedClosableObjects()
-                    .penaltyLog()
-                    .build());
+            enableDebugLogging();
+        } else {
+            Timber.plant(new CrashReportingTree());
         }
         super.onCreate();
+        handleDatabaseImport();
+        initFlowManager(this);
+        wearableClient = new MobileWearableClient(this);
+    }
+
+    private void handleDatabaseImport() {
         final File newDatabasePath = getDatabasePath(AppDatabase.DATABASE_FILE_NAME);
         final File oldDatabasePath = getDatabasePath(AppDatabase.DATABASE_IMPORT_FILE_NAME);
         if (oldDatabasePath.exists()) {
@@ -109,8 +118,6 @@ public class ApplicationInstance extends SharedApplicationInstance {
             }
             oldDatabasePath.renameTo(newDatabasePath);
         }
-        final ApplicationInstance context = this;
-        initFlowManager(context);
     }
 
     public static void initFlowManager(Context context) {
@@ -119,7 +126,28 @@ public class ApplicationInstance extends SharedApplicationInstance {
 
     @Override
     public void onTerminate() {
-        super.onTerminate();
         FlowManager.destroy();
+        wearableClient.disconnect();
+        super.onTerminate();
     }
+
+    private static class CrashReportingTree extends Timber.Tree {
+        @Override
+        protected void log(int priority, String tag, String message, Throwable t) {
+            if (priority == Log.VERBOSE || priority == Log.DEBUG) {
+                return;
+            }
+
+            FirebaseCrash.log(message);
+
+            if (t != null) {
+                if (priority == Log.ERROR) {
+                    FirebaseCrash.report(t);
+                } else if (priority == Log.WARN) {
+                    FirebaseCrash.report(t);
+                }
+            }
+        }
+    }
+
 }

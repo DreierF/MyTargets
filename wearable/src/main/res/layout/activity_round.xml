@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2017 Florian Dreier
+  ~
+  ~ This file is part of MyTargets.
+  ~
+  ~ MyTargets is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License version 2
+  ~ as published by the Free Software Foundation.
+  ~
+  ~ MyTargets is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.wearable.view.drawer.WearableDrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/md_wear_green_dark_background"
+        tools:context=".RoundActivity"
+        tools:deviceIds="wear">
+
+        <android.support.wearable.view.WearableRecyclerView
+            android:id="@+id/recyclerViewEnds"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="48dp"
+            android:scrollbars="vertical"/>
+
+        <android.support.wearable.view.drawer.WearableDrawerView
+            android:id="@+id/wearableDrawerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:background="@color/md_wear_green_lighter_ui_element"
+            app:peek_view="@+id/peek_view">
+
+            <LinearLayout
+                android:id="@id/peek_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp">
+
+                <ImageView
+                    android:id="@+id/primaryActionTimer"
+                    android:layout_width="@dimen/peek_drawer_icon_size"
+                    android:layout_height="@dimen/peek_drawer_icon_size"
+                    android:src="@drawable/ic_traffic_white_24dp"/>
+
+            </LinearLayout>
+
+        </android.support.wearable.view.drawer.WearableDrawerView>
+
+        <include
+            android:id="@+id/clock"
+            layout="@layout/layout_clock"/>
+
+    </android.support.wearable.view.drawer.WearableDrawerLayout>
+
+</layout>

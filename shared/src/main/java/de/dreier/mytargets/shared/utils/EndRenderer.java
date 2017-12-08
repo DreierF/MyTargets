@@ -62,6 +62,8 @@ public class EndRenderer {
     private transient int oldRadius;
     private transient int oldSelected;
     private transient int oldSelectedRadius;
+    @SuppressWarnings("WeakerAccess")
+    boolean ambientMode = false;
 
     public void init(View parent, float density, Target target) {
         this.parent = parent;
@@ -87,7 +89,7 @@ public class EndRenderer {
         } while (neededRows > maxRows);
         radius -= MIN_PADDING;
         int numRows = Math.max(neededRows, 1);
-        shotsPerRow = (int) Math.ceil(shotList.size() / numRows);
+        shotsPerRow = (int) Math.ceil(shotList.size() / (float)numRows);
         rowHeight = rect.height() / numRows;
         columnWidth = rect.width() / shotsPerRow;
     }
@@ -126,7 +128,7 @@ public class EndRenderer {
                 // Draw circle
                 circle.draw(canvas, coordinate.x, coordinate.y, shot.scoringRing, radius,
                         !TextUtils.isEmpty(shot.comment) && i != selected, shot.index,
-                        shot.arrowNumber);
+                        shot.arrowNumber, ambientMode);
             }
         }
     }
@@ -236,5 +238,9 @@ public class EndRenderer {
     public void setPressed(int pressed) {
         this.pressed = pressed;
         parent.invalidate();
+    }
+
+    public void setAmbientMode(boolean ambientMode) {
+        this.ambientMode = ambientMode;
     }
 }

@@ -15,188 +15,133 @@
 
 package de.dreier.mytargets;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.wearable.activity.ConfirmationActivity;
-import android.support.wearable.view.DelayedConfirmationView;
-import android.support.wearable.view.WatchViewStub;
-import android.util.Log;
+import android.support.wearable.activity.WearableActivity;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.TextView;
-
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.NodeApi;
-import com.google.android.gms.wearable.Wearable;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import org.parceler.Parcels;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.text.DateFormat;
+import java.util.Date;
 
-import de.dreier.mytargets.shared.models.db.End;
+import de.dreier.mytargets.databinding.ActivityMainBinding;
+import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.Shot;
-import de.dreier.mytargets.shared.utils.ParcelableUtil;
-import de.dreier.mytargets.shared.utils.WearableUtils;
-import de.dreier.mytargets.shared.views.TargetViewBase;
+import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.utils.WearWearableClient;
 
-public class MainActivity extends Activity implements TargetViewBase.OnEndFinishedListener,
-        GoogleApiClient.ConnectionCallbacks, WatchViewStub.OnLayoutInflatedListener {
+import static de.dreier.mytargets.utils.WearWearableClient.BROADCAST_TRAINING_TEMPLATE;
+import static de.dreier.mytargets.utils.WearWearableClient.BROADCAST_TRAINING_UPDATED;
 
-    public static final String EXTRA_ROUND = "round";
-    private TargetSelectView mTarget;
-    private DelayedConfirmationView confirm;
-    private Round round;
-    private GoogleApiClient mGoogleApiClient;
-    private WatchViewStub stub;
-    private TextView startTrainingHint;
+public class MainActivity extends WearableActivity {
 
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            round = Parcels.unwrap(intent.getExtras().getParcelable(EXTRA_ROUND));
-            stub.setOnLayoutInflatedListener(MainActivity.this);
-            setUpTargetView();
+            switch (intent.getAction()) {
+                case BROADCAST_TRAINING_TEMPLATE:
+                    Training training = Parcels.unwrap(intent.getParcelableExtra(WearWearableClient.EXTRA_TRAINING));
+                    setTraining(training);
+                    binding.root.setClickable(false);
+                    binding.wearableDrawerView.setVisibility(View.VISIBLE);
+
+                    // Replaces the on click behaviour that open the (empty) drawer
+                    LinearLayout peekView = ((LinearLayout) binding.primaryActionAdd.getParent());
+                    ViewGroup peekContainer = ((ViewGroup) peekView.getParent());
+                    peekContainer.setOnClickListener(view -> ApplicationInstance.wearableClient.sendCreateTraining(training));
+                    binding.drawerLayout.peekDrawer(Gravity.BOTTOM);
+                    break;
+                case BROADCAST_TRAINING_UPDATED:
+                    TrainingInfo info = Parcels.unwrap(intent.getParcelableExtra(WearWearableClient.EXTRA_INFO));
+                    setTrainingInfo(info);
+                    binding.root.setClickable(true);
+                    binding.root.setOnClickListener(v -> {
+                        Intent i = new Intent(MainActivity.this, RoundActivity.class);
+                        i.putExtra(RoundActivity.EXTRA_ROUND, Parcels.wrap(info.round));
+                        startActivity(i);
+                    });
+                    binding.wearableDrawerView.setVisibility(View.GONE);
+                    break;
+                default:
+                    break;
+            }
         }
     };
+
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        Intent intent = getIntent();
-        if (intent != null && intent.getExtras() != null) {
-            round = Parcels.unwrap(intent.getExtras().getParcelable(EXTRA_ROUND));
-        }
+        setAmbientEnabled();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Wearable.API)
-                .addConnectionCallbacks(this)
-                .build();
-        mGoogleApiClient.connect();
+        final IntentFilter filter = new IntentFilter();
+        filter.addAction(BROADCAST_TRAINING_TEMPLATE);
+        filter.addAction(BROADCAST_TRAINING_UPDATED);
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, filter);
+        ApplicationInstance.wearableClient.requestNewTrainingTemplate();
+    }
 
-        startTrainingHint = (TextView) findViewById(R.id.start_training_hint);
-        stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
-        stub.setOnLayoutInflatedListener(this);
+    @Override
+    public void onEnterAmbient(Bundle ambientDetails) {
+        super.onEnterAmbient(ambientDetails);
+        binding.drawerLayout.setBackgroundResource(R.color.md_black_1000);
+        binding.wearableDrawerView.setBackgroundResource(R.color.md_black_1000);
+        binding.date.setTextColor(getResources().getColor(R.color.md_white_1000));
+        binding.icon.setVisibility(View.INVISIBLE);
+        binding.clock.time.setVisibility(View.VISIBLE);
+        binding.clock.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
+    }
 
-        final IntentFilter intentFilter = new IntentFilter(WearableListener.TRAINING_STARTED);
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
+    @Override
+    public void onUpdateAmbient() {
+        super.onUpdateAmbient();
+        binding.clock.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
+    }
+
+    @Override
+    public void onExitAmbient() {
+        super.onExitAmbient();
+        binding.drawerLayout.setBackgroundResource(R.color.md_wear_green_dark_background);
+        binding.wearableDrawerView.setBackgroundResource(R.color.md_wear_green_lighter_ui_element);
+        binding.date.setTextColor(getResources().getColor(R.color.md_wear_green_lighter_ui_element));
+        binding.icon.setVisibility(View.VISIBLE);
+        binding.clock.time.setVisibility(View.GONE);
+    }
+
+    public void setTrainingInfo(TrainingInfo info) {
+        setCommonTrainingInfo(info);
+        binding.date.setText(R.string.today);
+    }
+
+    private void setTraining(Training training) {
+        Round round = training.getRounds().get(0);
+        TrainingInfo info = new TrainingInfo(training, round);
+        setCommonTrainingInfo(info);
+        binding.date.setText("");
+    }
+
+    private void setCommonTrainingInfo(TrainingInfo info) {
+        binding.title.setText(info.title);
+        binding.rounds.setText(info.getRoundDetails(this));
+        binding.ends.setText(info.getEndDetails(this));
+        binding.distance.setText(info.round.distance.toString());
     }
 
     @Override
     protected void onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
         super.onDestroy();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-    }
-
-    @Override
-    public void onLayoutInflated(WatchViewStub stub1) {
-        mTarget = (TargetSelectView) stub1.findViewById(R.id.target);
-        confirm = (DelayedConfirmationView) stub1.findViewById(R.id.delayed_confirm);
-
-        // Workaround to avoid crash happening when setting invisible via xml layout
-        confirm.setVisibility(View.INVISIBLE);
-
-        // Set up target view
-        setUpTargetView();
-
-        // Ensure Moto 360 is not cut off at the bottom
-        stub1.setOnApplyWindowInsetsListener((v, insets) -> {
-            int chinHeight = insets.getSystemWindowInsetBottom();
-            mTarget.setChinHeight(chinHeight);
-            return insets;
-        });
-    }
-
-    private void setUpTargetView() {
-        if (round != null && mTarget != null) {
-            mTarget.setTarget(round.getTarget());
-            mTarget.setEnd(new End(round.shotsPerEnd, 0));
-            mTarget.setOnTargetSetListener(MainActivity.this);
-            stub.setVisibility(View.VISIBLE);
-            startTrainingHint.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void onEndFinished(final List<Shot> shotList, boolean remote) {
-        confirm.setVisibility(View.VISIBLE);
-        confirm.setTotalTimeMs(2500);
-        confirm.start();
-        confirm.setListener(new DelayedConfirmationView.DelayedConfirmationListener() {
-            @Override
-            public void onTimerSelected(View view) {
-                mTarget.setEnd(new End(round.shotsPerEnd, 0));
-                confirm.setVisibility(View.INVISIBLE);
-                confirm.reset();
-            }
-
-            @Override
-            public void onTimerFinished(View view) {
-                Intent intent = new Intent(MainActivity.this, ConfirmationActivity.class);
-                intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
-                        ConfirmationActivity.SUCCESS_ANIMATION);
-                intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, getString(R.string.saved));
-                startActivity(intent);
-                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                v.vibrate(200);
-                finish();
-                sendMessage(shotList);
-            }
-        });
-    }
-
-    private Collection<String> getNodes() {
-        HashSet<String> results = new HashSet<>();
-        NodeApi.GetConnectedNodesResult nodes =
-                Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
-        for (Node node : nodes.getNodes()) {
-            results.add(node.getId());
-        }
-        return results;
-    }
-
-    private void sendMessage(List<Shot> shots) {
-        End e = new End();
-        e.setShots(shots);
-        final byte[] data = ParcelableUtil.marshall(Parcels.wrap(e));
-        new Thread(() -> {
-            sendMessage(WearableUtils.FINISHED_INPUT, data);
-        }).start();
-    }
-
-    private void sendMessage(String path, byte[] data) {
-        // Send message to all available nodes
-        final Collection<String> nodes = getNodes();
-        for (String nodeId : nodes) {
-            Wearable.MessageApi.sendMessage(
-                    mGoogleApiClient, nodeId, path, data).setResultCallback(
-                    sendMessageResult -> {
-                        if (!sendMessageResult.getStatus().isSuccess()) {
-                            Log.e("", "Failed to send message with status code: "
-                                    + sendMessageResult.getStatus().getStatusCode());
-                        }
-                    }
-            );
-        }
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
     }
 }

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 Florian Dreier
+  ~
+  ~ This file is part of MyTargets.
+  ~
+  ~ MyTargets is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License version 2
+  ~ as published by the Free Software Foundation.
+  ~
+  ~ MyTargets is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  -->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="112dp"
+    android:background="@color/md_wear_green_darker_ui_element"
+    android:paddingEnd="@dimen/padding_list_horizontal"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:paddingStart="@dimen/padding_list_horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="16dp"
+            android:background="@drawable/shape_round_active"
+            android:scaleType="center"
+            android:src="@drawable/ic_add_white_24dp" />
+
+        <TextView
+            android:id="@+id/end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/add_end"
+            android:textColor="@color/md_white_1000"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+</FrameLayout>

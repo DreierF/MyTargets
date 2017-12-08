@@ -120,10 +120,9 @@
   <string name="donate_10">Spende mir eine große Pizza</string>
   <string name="donate_20">Spende mir ein bisschen Benzin</string>
   <string name="donation_thank">Vielen Dank für Ihre Unterstützung!</string>
-  <string name="donate_text">Die Beträge sind inkl. Mehrwertsteuer und 30% Gebühren für Google. Alternativ kannst du mir auch gerne auf das PayPal Konto dreier.florian@gmail.com spenden.</string>
+  <string name="donate_text" formatted="false">Die Beträge sind inkl. Mehrwertsteuer und 30% Gebühren für Google. Alternativ kannst du mir auch gerne auf das PayPal Konto dreier.florian@gmail.com spenden.</string>
   <!-- Timer -->
   <string name="timer">Schießuhr</string>
-  <string name="stop">STOP</string>
   <string name="touch_to_start">Berühren zum starten</string>
   <string name="preparation">Fertig machen</string>
   <string name="shooting">Schießen</string>
@@ -276,11 +275,11 @@
   <string name="backup_location">Speicherort für Sicherung</string>
   <string name="internal_storage">Interner Speicher</string>
   <string name="automatic_backup">Automatische Sicherung</string>
-  <string name="restoring">Sicherung wiederherstellen&#8230;</string>
+  <string name="restoring">Sicherung wiederherstellen…</string>
   <string name="restore_failed">Wiederherstellen fehlgeschlagen</string>
   <string name="delete_failed">Löschen fehlgeschlagen</string>
   <string name="backup_restore_desc">Sicherungen erstellen und wiederherstellen</string>
-  <string name="exporting">Exportieren&#8230;</string>
+  <string name="exporting">Exportieren…</string>
   <string name="loading_backups_failed">Abrufen der Sicherungen fehlgeschlagen!</string>
   <string name="external_storage">Externe Speicherkarte</string>
   <string name="backup_interval">Sicherungsintervall</string>
@@ -304,7 +303,7 @@
   <string name="intro_title_track_training_progress">Vergiss Schießzettel aus Papier!</string>
   <string name="intro_description_track_training_progress">Durch exakte Pfeilaufnahme\nkannst du nützlichere Erkenntnisse\naus deinen Trainingsdaten gewinnen.</string>
   <string name="intro_title_everything_in_one_place">Alles was du brauchst\nan einem Ort</string>
-  <string name="intro_description_everything_in_one_place">Einschließlich Bogen-, Pfeil-\nund Visier-Verwaltung, \nSchießuhr, Statistiken \nund vieles mehr&#8230;</string>
+  <string name="intro_description_everything_in_one_place">Einschließlich Bogen-, Pfeil-\nund Visier-Verwaltung, \nSchießuhr, Statistiken \nund vieles mehr…</string>
   <string name="average_arrow_score_per_end">Ringdurchschnitt pro Passe</string>
   <string name="show_end">Passe anzeigen</string>
   <string name="show_round">Runde anzeigen</string>
@@ -324,4 +323,7 @@
   <string name="show_total_score">Maximal erreichbare Ringzahl anzeigen</string>
   <string name="show_percentage">Prozent anzeigen</string>
   <string name="show_arrow_average">Pfeildurchschnitt anzeigen</string>
+  <string name="image_deleted">Bild gelöscht</string>
+  <string name="delete_image">Bild löschen?</string>
+  <string name="warning_backup_experimental">Achtung: Dieses Feature ist noch experimentell! Bitte überprüfen Sie in regelmäßigen Abständen, ob die Sicherung erfolgreich war!</string>
 </resources>

@@ -25,18 +25,19 @@ import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import org.parceler.Parcel;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.IIdSettable;
+import de.dreier.mytargets.shared.models.IRecursiveModel;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.utils.LongUtils;
@@ -44,7 +45,7 @@ import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter;
 
 @Parcel
 @Table(database = AppDatabase.class)
-public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
+public class Round extends BaseModel implements IIdSettable, Comparable<Round>, IRecursiveModel {
 
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
@@ -93,6 +94,20 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
         setTarget(info.getTargetTemplate());
     }
 
+    public Round(Round round) {
+        this.id = round.id;
+        this.trainingId = round.trainingId;
+        this.index = round.index;
+        this.shotsPerEnd = round.shotsPerEnd;
+        this.maxEndCount = round.maxEndCount;
+        this.distance = round.distance;
+        this.comment = round.comment;
+        this.targetId = round.targetId;
+        this.targetScoringStyle = round.targetScoringStyle;
+        this.targetDiameter = round.targetDiameter;
+        this.ends = round.ends;
+    }
+
     public static Round get(Long id) {
         return SQLite.select()
                 .from(Round.class)
@@ -109,20 +124,28 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
 
     @Override
     public void delete() {
-        super.delete();
-        updateRoundIndicesForTraining();
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::delete);
     }
 
-    private void updateRoundIndicesForTraining() {
+    @Override
+    public void delete(DatabaseWrapper databaseWrapper) {
+        for (End end : getEnds()) {
+            end.delete(databaseWrapper);
+        }
+        super.delete(databaseWrapper);
+        updateRoundIndicesForTraining(databaseWrapper);
+    }
+
+    private void updateRoundIndicesForTraining(DatabaseWrapper databaseWrapper) {
         // TODO very inefficient
         int i = 0;
         Training training = Training.get(trainingId);
-        if(training == null) {
+        if (training == null) {
             return; //FIXME This should not happen, but does for some users
         }
         for (Round r : training.getRounds()) {
             r.index = i;
-            r.save();
+            r.save(databaseWrapper);
             i++;
         }
     }
@@ -152,7 +175,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
                 id.equals(((Round) another).id);
     }
 
-    @OneToMany(methods = {OneToMany.Method.DELETE}, variableName = "ends")
+    @OneToMany(methods = {}, variableName = "ends")
     public List<End> getEnds() {
         if (ends == null) {
             ends = SQLite.select()
@@ -183,11 +206,26 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round> {
     public End addEnd() {
         End end = new End(shotsPerEnd, getEnds().size());
         end.roundId = id;
+        end.save();
         getEnds().add(end);
         return end;
     }
 
     public Training getTraining() {
         return Training.get(trainingId);
+    }
+
+    @Override
+    public void saveRecursively() {
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::saveRecursively);
+    }
+
+    @Override
+    public void saveRecursively(DatabaseWrapper databaseWrapper) {
+        save(databaseWrapper);
+        for (End end : getEnds()) {
+            end.roundId = id;
+            end.save(databaseWrapper);
+        }
     }
 }

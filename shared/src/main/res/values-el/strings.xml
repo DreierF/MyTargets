@@ -26,7 +26,7 @@
   <string name="cloudy">Cloudy</string>
   <string name="light_rain">Light rain</string>
   <string name="rain">Rainy</string>
-  <string name="round_desc">%1$s: %2$d × %3$d arrows (%4$s face)</string>
+  <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
   <string name="mini">Mini</string>
   <string name="small">Small</string>
   <string name="medium">Medium</string>
@@ -54,4 +54,18 @@
   <string name="right_front">from front right</string>
   <string name="left_back">from back left</string>
   <string name="right_back">from back right</string>
+  <string name="stop">STOP</string>
+  <string name="end_n">End %d</string>
+  <plurals name="rounds">
+    <item quantity="one">%d round</item>
+    <item quantity="other">%d rounds</item>
+  </plurals>
+  <plurals name="ends_arrow">
+    <item quantity="one">%1$d \u00D7 %2$d arrow</item>
+    <item quantity="other">%1$d \u00D7 %2$d arrows</item>
+  </plurals>
+  <plurals name="arrows_per_end">
+    <item quantity="one">%d arrow per end</item>
+    <item quantity="other">%d arrows per end</item>
+  </plurals>
 </resources>

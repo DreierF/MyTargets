@@ -126,10 +126,9 @@
   <string name="donate_10">Darujte mi veľkú pizzu</string>
   <string name="donate_20">Darujte mi nejaké palivo</string>
   <string name="donation_thank">Vďaka za Vašu podporu!</string>
-  <string name="donate_text">Suma je vrátane DPH a 30% poplatkov pre Google. Prípadne ma môžete obdarovať cez PayPal účet dreier.florian@gmail.com.</string>
+  <string name="donate_text" formatted="false">Suma je vrátane DPH a 30% poplatkov pre Google. Prípadne ma môžete obdarovať cez PayPal účet dreier.florian@gmail.com.</string>
   <!-- Timer -->
   <string name="timer">Časovač</string>
-  <string name="stop">STOP</string>
   <string name="touch_to_start">Stlačiť pre štart</string>
   <string name="preparation">Pripravte sa</string>
   <string name="shooting">Streľba</string>
@@ -290,11 +289,11 @@
   <string name="backup_location">Umiestnenie zálohy</string>
   <string name="internal_storage">Vnútorné úložisko</string>
   <string name="automatic_backup">Automatické zálohovanie</string>
-  <string name="restoring">Obnova zo zálohy&#8230;</string>
+  <string name="restoring">Obnova zo zálohy…</string>
   <string name="restore_failed">Obnova zlyhala</string>
   <string name="delete_failed">Zmazanie zlyhalo</string>
   <string name="backup_restore_desc">Zálohovanie a obnovenie údajov aplikácie</string>
-  <string name="exporting">Exportuje&#8230;</string>
+  <string name="exporting">Exportuje…</string>
   <string name="loading_backups_failed">Načítanie záloh zlyhalo!</string>
   <string name="external_storage">Externé úložisko</string>
   <string name="backup_interval">Interval zálohovania</string>
@@ -318,7 +317,7 @@
   <string name="intro_title_track_training_progress">Zabudnite na papierové bodovačky!</string>
   <string name="intro_description_track_training_progress">S presným vykreslením polohy šípu,\nmôžete získať väčší prehľad\nz vašich tréningových údajov.</string>
   <string name="intro_title_everything_in_one_place">Všetko, čo potrebujete\nna jednom mieste</string>
-  <string name="intro_description_everything_in_one_place">Vrátane správy - luku\n - šípov a zameriavača,\nlukostreleckých hodín, štatistiky \na oveľa viac&#8230;</string>
+  <string name="intro_description_everything_in_one_place">Vrátane správy - luku\n - šípov a zameriavača,\nlukostreleckých hodín, štatistiky \na oveľa viac…</string>
   <string name="average_arrow_score_per_end">Priemerné skóre šípov za sadu</string>
   <string name="show_end">Zobraziť sadu</string>
   <string name="show_round">Zobraziť kolo</string>
@@ -338,4 +337,7 @@
   <string name="show_total_score">Zobraziť celkové skóre</string>
   <string name="show_percentage">Zobraziť percento</string>
   <string name="show_arrow_average">Zobraziť priemer na šíp</string>
+  <string name="image_deleted">Obrázok vymazaný</string>
+  <string name="delete_image">Odstrániť obrázok?</string>
+  <string name="warning_backup_experimental">Upozornenie: Táto funkcia je stále experimentálna! Prosím, kontrolujte v pravidelných intervaloch či bola záloha skutočne úspešná!</string>
 </resources>

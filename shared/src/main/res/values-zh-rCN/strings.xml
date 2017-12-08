@@ -26,7 +26,7 @@
   <string name="cloudy">阴天</string>
   <string name="light_rain">小雨</string>
   <string name="rain">雨</string>
-  <string name="round_desc">%1$s: %2$d × %3$d 箭支 (%4$s 脸)</string>
+  <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
   <string name="mini">迷你</string>
   <string name="small">小</string>
   <string name="medium">中</string>
@@ -54,4 +54,15 @@
   <string name="right_front">从右前方</string>
   <string name="left_back">从左后方</string>
   <string name="right_back">从右后方</string>
+  <string name="stop">STOP</string>
+  <string name="end_n">End %d</string>
+  <plurals name="rounds">
+    <item quantity="other">%d rounds</item>
+  </plurals>
+  <plurals name="ends_arrow">
+    <item quantity="other">%1$d \u00D7 %2$d arrows</item>
+  </plurals>
+  <plurals name="arrows_per_end">
+    <item quantity="other">%d arrows per end</item>
+  </plurals>
 </resources>

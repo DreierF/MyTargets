@@ -216,11 +216,8 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
         } else {
             imageFile = new File(getContext().getFilesDir(), images.get(0).getFileName());
             if (!imageFile.exists()) {
-                imageFile = new File(images.get(0).getFileName());
-                if (!imageFile.exists()) {
-                    imageFile = null;
-                    binding.imageView.setImageResource(defaultDrawable);
-                }
+                imageFile = null;
+                binding.imageView.setImageResource(defaultDrawable);
             }
         }
     }
@@ -239,11 +236,7 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
                 e.printStackTrace();
                 return Collections.emptyList();
             }
-            if (imageFile.getParentFile().equals(getContext().getFilesDir())) {
-                image.setFileName(imageFile.getName());
-            } else {
-                image.setFileName(imageFile.getPath());
-            }
+            image.setFileName(imageFile.getName());
             return Collections.singletonList(image);
         }
     }

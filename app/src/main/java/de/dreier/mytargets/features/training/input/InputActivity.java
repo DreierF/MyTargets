@@ -15,7 +15,10 @@
 
 package de.dreier.mytargets.features.training.input;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Build;
@@ -25,20 +28,23 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.annimon.stream.Stream;
 
-import org.joda.time.DateTime;
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
 
+import java.io.File;
 import java.util.List;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.base.activities.ChildActivityBase;
+import de.dreier.mytargets.base.gallery.GalleryActivity;
 import de.dreier.mytargets.databinding.ActivityInputBinding;
 import de.dreier.mytargets.features.rounds.EditRoundFragment;
 import de.dreier.mytargets.features.settings.SettingsManager;
@@ -46,7 +52,6 @@ import de.dreier.mytargets.features.timer.TimerFragment;
 import de.dreier.mytargets.features.training.RoundFragment;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.NotificationInfo;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
@@ -56,14 +61,15 @@ import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.utils.ImageList;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.SharedUtils;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
 import de.dreier.mytargets.utils.IntentWrapper;
+import de.dreier.mytargets.utils.MobileWearableClient;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
-import de.dreier.mytargets.utils.WearMessageManager;
 import de.dreier.mytargets.utils.transitions.FabTransform;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import de.dreier.mytargets.utils.transitions.TransitionAdapter;
@@ -72,6 +78,8 @@ import icepick.State;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static de.dreier.mytargets.shared.wearable.WearableClientBase.BROADCAST_TIMER_SETTINGS_FROM_REMOTE;
+import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE;
 
 public class InputActivity extends ChildActivityBase
         implements TargetViewBase.OnEndFinishedListener, TargetView.OnEndUpdatedListener,
@@ -80,16 +88,35 @@ public class InputActivity extends ChildActivityBase
     static final String TRAINING_ID = "training_id";
     static final String ROUND_ID = "round_id";
     static final String END_INDEX = "end_ind";
+    private static final int GALLERY_REQUEST_CODE = 1;
 
     @State(ParcelsBundler.class)
     LoaderResult data;
 
-    private WearMessageManager manager;
     private ActivityInputBinding binding;
     private boolean transitionFinished = true;
     private ETrainingScope shotShowScope = ETrainingScope.END;
     private ETrainingScope summaryShowScope = null;
     private TargetView targetView;
+
+    private BroadcastReceiver updateReceiver = new MobileWearableClient.EndUpdateReceiver() {
+
+        @Override
+        protected void onUpdate(Long trainingId, Long roundId, End end) {
+            Bundle extras = getIntent().getExtras();
+            extras.putLong(TRAINING_ID, trainingId);
+            extras.putLong(ROUND_ID, roundId);
+            extras.putInt(END_INDEX, end.index);
+            getSupportLoaderManager().restartLoader(0, extras, InputActivity.this).forceLoad();
+        }
+    };
+
+    private final BroadcastReceiver timerReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            supportInvalidateOptionsMenu();
+        }
+    };
 
     @NonNull
     public static IntentWrapper createIntent(Round round) {
@@ -101,10 +128,6 @@ public class InputActivity extends ChildActivityBase
                 .with(TRAINING_ID, round.trainingId)
                 .with(ROUND_ID, round.getId())
                 .with(END_INDEX, endIndex);
-    }
-
-    private static <T> T lastItem(List<T> list) {
-        return list.isEmpty() ? null : list.get(list.size() - 1);
     }
 
     private static boolean shouldShowRound(Round r, ETrainingScope shotShowScope, Long roundId) {
@@ -140,6 +163,32 @@ public class InputActivity extends ChildActivityBase
         } else {
             getSupportLoaderManager().initLoader(0, getIntent().getExtras(), this).forceLoad();
         }
+        LocalBroadcastManager.getInstance(this).registerReceiver(updateReceiver,
+                new IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE));
+        LocalBroadcastManager.getInstance(this).registerReceiver(timerReceiver,
+                new IntentFilter(BROADCAST_TIMER_SETTINGS_FROM_REMOTE));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
+            ImageList imageList = GalleryActivity.getResult(data);
+            this.data.getCurrentEnd().images = imageList.toEndImageList();
+            for (String image : imageList.getRemovedImages()) {
+                new File(getFilesDir(), image).delete();
+            }
+            this.data.getCurrentEnd().save();
+            updateEnd();
+            supportInvalidateOptionsMenu();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(updateReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(timerReceiver);
+        super.onDestroy();
     }
 
     private void updateSummaryVisibility() {
@@ -155,7 +204,8 @@ public class InputActivity extends ChildActivityBase
     private void setupTransitionListener() {
         final Transition sharedElementEnterTransition = getWindow()
                 .getSharedElementEnterTransition();
-        if (sharedElementEnterTransition != null && sharedElementEnterTransition instanceof FabTransform) {
+        if (sharedElementEnterTransition != null &&
+                sharedElementEnterTransition instanceof FabTransform) {
             transitionFinished = false;
             getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
                 @Override
@@ -180,12 +230,14 @@ public class InputActivity extends ChildActivityBase
         final MenuItem grouping = menu.findItem(R.id.action_grouping);
         final MenuItem timer = menu.findItem(R.id.action_timer);
         final MenuItem newRound = menu.findItem(R.id.action_new_round);
+        final MenuItem takePicture = menu.findItem(R.id.action_photo);
         if (targetView == null || data.getEnds().size() == 0) {
             eye.setVisible(false);
             keyboard.setVisible(false);
             grouping.setVisible(false);
             timer.setVisible(false);
             newRound.setVisible(false);
+            takePicture.setVisible(false);
         } else {
             final boolean plotting = targetView.getInputMode() == EInputMethod.PLOTTING;
             eye.setVisible(plotting);
@@ -194,13 +246,16 @@ public class InputActivity extends ChildActivityBase
                     ? R.drawable.ic_keyboard_white_24dp
                     : R.drawable.ic_keyboard_white_off_24dp);
             keyboard.setChecked(!plotting);
-            keyboard.setVisible(data.getCurrentEnd().getId() == null);
+            keyboard.setVisible(data.getCurrentEnd().isEmpty());
             timer.setIcon(SettingsManager.getTimerEnabled()
                     ? R.drawable.ic_timer_off_white_24dp
                     : R.drawable.ic_timer_white_24dp);
             timer.setVisible(true);
             timer.setChecked(SettingsManager.getTimerEnabled());
             newRound.setVisible(data.training.standardRoundId == null);
+            takePicture.setVisible(Utils.hasCameraHardware(this));
+            takePicture.setIcon(data.getCurrentEnd().getImages().isEmpty() ?
+                    R.drawable.ic_photo_camera_white_24dp : R.drawable.ic_image_white_24dp);
         }
 
         switch (SettingsManager.getShowMode()) {
@@ -265,14 +320,24 @@ public class InputActivity extends ChildActivityBase
                 supportInvalidateOptionsMenu();
                 return true;
             case R.id.action_timer:
-                SettingsManager.setTimerEnabled(!SettingsManager.getTimerEnabled());
+                boolean timerEnabled = !SettingsManager.getTimerEnabled();
+                SettingsManager.setTimerEnabled(timerEnabled);
+                ApplicationInstance.wearableClient
+                        .sendTimerSettingsFromLocal(SettingsManager.getTimerSettings());
                 openTimer();
-                item.setChecked(SettingsManager.getTimerEnabled());
+                item.setChecked(timerEnabled);
                 supportInvalidateOptionsMenu();
                 return true;
             case R.id.action_new_round:
                 EditRoundFragment.createIntent(data.training)
                         .withContext(this)
+                        .start();
+                return true;
+            case R.id.action_photo:
+                GalleryActivity.getIntent(new ImageList(data.getCurrentEnd()
+                        .getImages()), getString(R.string.end_n, data.endIndex + 1))
+                        .withContext(this)
+                        .forResult(GALLERY_REQUEST_CODE)
                         .start();
                 return true;
             default:
@@ -324,19 +389,12 @@ public class InputActivity extends ChildActivityBase
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (manager != null) {
-            manager.close();
-        }
-    }
-
     private void showEnd(int endIndex) {
         // Create a new end
         data.endIndex = endIndex;
         if (endIndex >= data.getEnds().size()) {
-            data.getCurrentRound().addEnd();
+            End end = data.getCurrentRound().addEnd();
+            end.exact = SettingsManager.getInputMethod() == EInputMethod.PLOTTING;
             updateOldShoots();
         }
 
@@ -361,9 +419,7 @@ public class InputActivity extends ChildActivityBase
     }
 
     private void openTimer() {
-        if (data.getCurrentEnd().getId() == null
-                && data.getCurrentEnd().getShots().get(0).scoringRing == Shot.NOTHING_SELECTED
-                && SettingsManager.getTimerEnabled()) {
+        if (data.getCurrentEnd().isEmpty() && SettingsManager.getTimerEnabled()) {
             if (transitionFinished) {
                 TimerFragment.getIntent()
                         .withContext(this)
@@ -402,39 +458,7 @@ public class InputActivity extends ChildActivityBase
     }
 
     private void updateWearNotification() {
-        NotificationInfo info = buildInfo();
-        if (manager == null) {
-            manager = new WearMessageManager(this, info);
-        } else {
-            manager.sendMessageUpdate(info);
-        }
-    }
-
-    private NotificationInfo buildInfo() {
-        String title = getString(R.string.my_targets);
-        String text = "";
-
-        // Initialize message text
-        if (data.getEnds().size() > 0) {
-            End lastEnd = lastItem(data.getEnds());
-            if (lastEnd != null && lastEnd.getId() == null && data.getEnds().size() > 1) {
-                lastEnd = data.getEnds().get(data.getEnds().size() - 2);
-            }
-            if (lastEnd != null && lastEnd.getId() != null) { //TODO change when merging with #4
-                title = getString(R.string.passe) + " " + (lastEnd.index + 1);
-                for (Shot shot : lastEnd.getShots()) {
-                    text += data.getCurrentRound().getTarget()
-                            .zoneToString(shot.scoringRing, shot.index) + " ";
-                }
-                text += "\n";
-            }
-        }
-
-        // Load bow settings
-        if (data.sightMark != null) {
-            text += String.format("%s: %s", data.getCurrentRound().distance, data.sightMark.value);
-        }
-        return new NotificationInfo(data.getCurrentRound(), title, text);
+        ApplicationInstance.wearableClient.sendUpdateTrainingFromLocalBroadcast(data.training);
     }
 
     private void updateNavigationButtons() {
@@ -463,7 +487,7 @@ public class InputActivity extends ChildActivityBase
     }
 
     private void updateNextButton() {
-        final boolean endFinished = data != null && data.getCurrentEnd().getId() != null;
+        final boolean endFinished = data != null && !data.getCurrentEnd().isEmpty();
         boolean isLastEnd = data != null &&
                 data.getCurrentRound().maxEndCount != null &&
                 data.endIndex + 1 == data.getCurrentRound().maxEndCount;
@@ -500,6 +524,7 @@ public class InputActivity extends ChildActivityBase
     @Override
     public void onEndUpdated(List<Shot> changedEnd) {
         data.getCurrentEnd().setShots(changedEnd);
+        data.getCurrentEnd().save();
 
         // Set current end score
         Score reachedEndScore = data.getCurrentRound().getTarget()
@@ -535,26 +560,12 @@ public class InputActivity extends ChildActivityBase
     }
 
     @Override
-    public void onEndFinished(List<Shot> shots, boolean remote) {
-        if (remote) {
-            data.endIndex = data.getCurrentRound().getEnds().size() - 1;
-            if (data.getCurrentEnd().getId() != null) {
-                data.endIndex = data.getCurrentRound().getEnds().size();
-            }
-        }
+    public void onEndFinished(List<Shot> shots) {
         data.getCurrentEnd().setShots(shots);
-        data.getCurrentEnd().exact = targetView.getInputMode() == EInputMethod.PLOTTING && !remote;
-        if (data.getCurrentEnd().getId() == null) {
-            data.getCurrentEnd().saveTime = new DateTime();
-        }
-
+        data.getCurrentEnd().exact = targetView.getInputMode() == EInputMethod.PLOTTING;
         data.getCurrentEnd().save();
 
-        if (remote) {
-            showEnd(data.getEnds().size() - 1);
-        } else {
-            updateWearNotification();
-        }
+        updateWearNotification();
         updateNavigationButtons();
         supportInvalidateOptionsMenu();
     }
@@ -609,7 +620,7 @@ public class InputActivity extends ChildActivityBase
 
         @ParcelConstructor
         public LoaderResult(Training training) {
-            this.training = training;
+            this.training = training.ensureLoaded();
             this.standardRound = training.getStandardRound();
         }
 
@@ -619,8 +630,8 @@ public class InputActivity extends ChildActivityBase
             for (int i = 0; i < rounds.size(); i++) {
                 if (rounds.get(i).getId() == roundId) {
                     roundIndex = i;
+                    break;
                 }
-                rounds.get(i).getEnds();
             }
         }
 
@@ -647,7 +658,8 @@ public class InputActivity extends ChildActivityBase
             List<End> ends = getEnds();
             if (ends.size() <= endIndex || endIndex < 0 || ends.size() == 0) {
                 endIndex = ends.size();
-                getCurrentRound().addEnd();
+                End end = getCurrentRound().addEnd();
+                end.exact = SettingsManager.getInputMethod() == EInputMethod.PLOTTING;
                 ends = getEnds();
             }
             return ends.get(endIndex);

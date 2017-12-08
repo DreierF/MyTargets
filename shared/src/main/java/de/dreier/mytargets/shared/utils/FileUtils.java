@@ -15,6 +15,11 @@
 
 package de.dreier.mytargets.shared.utils;
 
+import android.content.Context;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -46,5 +51,20 @@ public class FileUtils {
         }
         in.close();
         out.close();
+    }
+
+    public static Uri getUriForFile(Context context, File file) {
+        String packageName = context.getPackageName();
+        String authority = packageName + ".fileprovider";
+        return FileProvider.getUriForFile(context, authority, file);
+    }
+
+    public static void move(@NonNull File from, @NonNull File to) throws IOException {
+        File directory = to.getParentFile();
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+        copy(from, to);
+        from.delete();
     }
 }

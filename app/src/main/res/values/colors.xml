@@ -20,11 +20,6 @@
     <color name="colorPrimaryDark">@color/md_green_700</color>
     <color name="colorAccent">@color/md_orange_A400</color>
 
-    <!-- Timer -->
-    <color name="timer_green">@color/md_green_600</color>
-    <color name="timer_orange">@color/md_orange_600</color>
-    <color name="timer_red">@color/md_red_600</color>
-
     <color name="dividerColor">#1F000000</color>
     <color name="dim_overlay">#55000000</color>
 
@@ -41,5 +36,8 @@
     <color name="fabTrainingWithStandardRound">@color/md_blue_500</color>
     <color name="fabBow">@color/colorPrimary</color>
     <color name="introBackground">#037205</color>
+
+    <color name="launcherBackground">#FFFFFF</color>
+    <color name="shortcut_background">#F5F5F5</color>
 
 </resources>

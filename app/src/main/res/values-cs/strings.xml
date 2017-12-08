@@ -71,7 +71,7 @@
   <string name="brand">Značka</string>
   <string name="size">Velikost</string>
   <string name="description">Popis</string>
-  <string name="height">Výška tetivy</string>
+  <string name="height">Výška tětivy</string>
   <string name="tiller">Tiller</string>
   <string name="sight_settings">Nastavení zaměřovače</string>
   <string name="add">Přidat</string>
@@ -126,10 +126,9 @@
   <string name="donate_10">Přispět na velkou pizzu</string>
   <string name="donate_20">Přispět na nějaké palivo</string>
   <string name="donation_thank">Děkuji vám za vaši podporu!</string>
-  <string name="donate_text">Částky jsou včetně DPH a 30% poplatku Googlu. Také můžete přispět na PayPal účet dreier.florian@gmail.com.</string>
+  <string name="donate_text" formatted="false">Částky jsou včetně DPH a 30% poplatku Googlu. Také můžete přispět na PayPal účet dreier.florian@gmail.com.</string>
   <!-- Timer -->
-  <string name="timer">Časovač</string>
-  <string name="stop">STOP</string>
+  <string name="timer">Časomíra</string>
   <string name="touch_to_start">Stiskem spustit</string>
   <string name="preparation">Připrav se</string>
   <string name="shooting">Střelba</string>
@@ -267,7 +266,7 @@
   <string name="diameter">Průměr</string>
   <string name="input">Vstup</string>
   <string name="target_zoom">Násobek zvětšení terče</string>
-  <string name="arrow_diameter_scale">Násobek průměru šípu</string>
+  <string name="arrow_diameter_scale">Zvětšení průměru šípu</string>
   <string name="timestamp">Časové razítko</string>
   <string name="change_target_face">Změnit typ terče</string>
   <string name="your_first_training">Váš první trénink</string>
@@ -290,11 +289,11 @@
   <string name="backup_location">Umístění záloh</string>
   <string name="internal_storage">Vnitřní úložiště</string>
   <string name="automatic_backup">Automatická záloha</string>
-  <string name="restoring">Obnovení zálohy&#8230;</string>
+  <string name="restoring">Obnovení zálohy…</string>
   <string name="restore_failed">Obnovení selhalo</string>
   <string name="delete_failed">Odstranění selhalo</string>
   <string name="backup_restore_desc">Záloha a obnovení dat aplikace</string>
-  <string name="exporting">Exportování&#8230;</string>
+  <string name="exporting">Exportování…</string>
   <string name="loading_backups_failed">Načtení zálohy selhalo!</string>
   <string name="external_storage">Externí úložiště</string>
   <string name="backup_interval">Plán zálohování</string>
@@ -304,21 +303,21 @@
   <string name="connection_failed">Připojení selhalo!</string>
   <string name="shooting_indoor">Halové střílení</string>
   <string name="bow_rest_vertical_position">Svislá pozice</string>
-  <string name="bow_rest">Odpočívat</string>
+  <string name="bow_rest">Zakládka</string>
   <string name="bow_rest_horizontal_position">Vodorovná pozice</string>
   <string name="bow_cam_settings">Nastavení foťáku</string>
   <string name="bow_letoff_weight">Celková váha</string>
   <string name="bow_nocking_point">Sedlo končíku</string>
-  <string name="bow_string">Řetězec</string>
+  <string name="bow_string">Tětiva</string>
   <string name="bow_scope_magnification">Rozsah zvětšení</string>
   <string name="bow_rest_stiffness">Tuhost</string>
   <string name="bow_button">Button</string>
-  <string name="more_fields">Další terén</string>
+  <string name="more_fields">Další podrobnosti</string>
   <string name="recently_used">Poslední použité</string>
   <string name="intro_title_track_training_progress">Zapomeňte na papírovou výsledkovou listinu!</string>
   <string name="intro_description_track_training_progress">S přesným průměrem zásahů,\nzískáte více užitečných informací\nz vašeho tréninku.</string>
   <string name="intro_title_everything_in_one_place">Vše, co potřebujete\nna jednom místě</string>
-  <string name="intro_description_everything_in_one_place">Včetně luku-, šípu-\na cíle-nastavení,\nlukostřelecké časomíry, statistiky \na mnoho dalšího&#8230;</string>
+  <string name="intro_description_everything_in_one_place">Včetně nastavení luku,\nšípu a zaměřovače,\nlukostřelecké časomíry, statistiky \na mnoho dalšího…</string>
   <string name="average_arrow_score_per_end">Průměr zásahů na sadu</string>
   <string name="show_end">Zobrazit sadu</string>
   <string name="show_round">Zobrazit kolo</string>
@@ -338,4 +337,7 @@
   <string name="show_total_score">Zobrazit celkové skóre</string>
   <string name="show_percentage">Zobrazit procenta</string>
   <string name="show_arrow_average">Zobrazit průměr na šíp</string>
+  <string name="image_deleted">Obrázek smazán</string>
+  <string name="delete_image">Smazat obrázek?</string>
+  <string name="warning_backup_experimental">Upozornění: Tato funkce je stále experimentální! Prosím, zkontrolujte pravidelně, jestli byla záloha skutečně úspěšná!</string>
 </resources>

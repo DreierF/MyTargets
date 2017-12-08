@@ -50,7 +50,6 @@ import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.targets.models.WA3Ring3Spot;
@@ -142,7 +141,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         binding.environment.setOnActivityResultContext(this);
         binding.trainingDate.setOnClickListener(view -> onDateClick());
 
-
         if (trainingId == null) {
             ToolbarUtils.setTitle(this, R.string.new_training);
             binding.training.setText(getString(
@@ -165,7 +163,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             date = train.date;
             binding.bow.setItemId(train.bowId);
             binding.arrow.setItemId(train.arrowId);
-            binding.standardRound.setItemId(train.standardRoundId);
             binding.environment.setItem(train.getEnvironment());
             setTrainingDate();
             binding.notEditable.setVisibility(GONE);
@@ -175,6 +172,12 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         updateArrowsLabel();
 
         return binding.getRoot();
+    }
+
+    private void updateArrowsLabel() {
+        binding.arrowsLabel.setText(getResources()
+                .getQuantityString(R.plurals.arrow, binding.arrows.getProgress(),
+                        binding.arrows.getProgress()));
     }
 
     protected void setScoringStyleForCompoundBow(Bow bow) {
@@ -241,6 +244,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         if (trainingId == null) {
             if (trainingType == FREE_TRAINING) {
                 training.standardRoundId = null;
+                training.rounds = new ArrayList<>();
                 training.rounds.add(getRound());
             } else {
                 StandardRound standardRound = binding.standardRound.getSelectedItem();
@@ -249,7 +253,10 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                     standardRound.save();
                 }
                 training.standardRoundId = standardRound.getId();
-                training.rounds.addAll(createRoundsFromTemplate(standardRound, training));
+                training.initRoundsFromTemplate(standardRound);
+                for (Round round : training.getRounds()) {
+                    round.setTarget(roundTarget);
+                }
             }
             training.save();
 
@@ -298,24 +305,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         return training;
     }
 
-    @NonNull
-    private ArrayList<Round> createRoundsFromTemplate(StandardRound standardRound, Training training) {
-        ArrayList<Round> rounds = new ArrayList<>();
-        for (RoundTemplate template : standardRound.getRounds()) {
-            Round round = new Round(template);
-            round.trainingId = training.getId();
-            if (trainingType == FREE_TRAINING) {
-                round.setTarget(binding.target.getSelectedItem());
-            } else {
-                round.setTarget(roundTarget);
-            }
-            round.comment = "";
-            round.save();
-            rounds.add(round);
-        }
-        return rounds;
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -333,12 +322,6 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                     .forEach(r -> r.setTargetTemplate(target));
             binding.standardRound.setItem(item);
         }
-    }
-
-    private void updateArrowsLabel() {
-        binding.arrowsLabel.setText(getResources()
-                .getQuantityString(R.plurals.arrow, binding.arrows.getProgress(),
-                        binding.arrows.getProgress()));
     }
 
     private void loadRoundDefaultValues() {
