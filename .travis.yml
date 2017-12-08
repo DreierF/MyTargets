@@ -14,6 +14,11 @@ env:
   - PWD=`pwd`
 android:
   components:
+  - tools
+  - platform-tools
+  - tools
+  - build-tools-$ANDROID_BUILD_TOOLS_VERSION
+  - android-$ANDROID_API_LEVEL
   - android-$EMULATOR_API_LEVEL
   # Google Play Services
   - extra-google-google_play_services
@@ -29,10 +34,6 @@ before_install:
 - tar xvf services.tar
 - wget https://raw.githubusercontent.com/JakeWharton/pidcat/master/pidcat.py
 install:
-- echo y | android update sdk -u -a -t tools
-- echo y | android update sdk -u -a -t platform-tools
-- echo y | android update sdk -u -a -t build-tools-$ANDROID_BUILD_TOOLS_VERSION
-- echo y | android update sdk -u -a -t android-$ANDROID_API_LEVEL
 # Converts the shallow clone to a full clone
 # This is necessary in order to determine the current app version code
 - git fetch --unshallow --tags
