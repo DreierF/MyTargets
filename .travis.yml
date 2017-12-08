@@ -33,12 +33,12 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_143bf53fc355_key -iv $encrypted_143bf53fc355_iv -in services.tar.enc -out services.tar -d
 - tar xvf services.tar
 - wget https://raw.githubusercontent.com/JakeWharton/pidcat/master/pidcat.py
-- yes | sudo sdkmanager --licenses
 install:
 # Converts the shallow clone to a full clone
 # This is necessary in order to determine the current app version code
 - git fetch --unshallow --tags
 before_script:
+- yes | sudo sdkmanager --licenses
 - echo no | android create avd -f -n test -t "android-"$EMULATOR_API_LEVEL --abi $ANDROID_ABI -s WVGA800 -c 128M
 - emulator -avd test -no-audio -no-window &
 - ./gradlew clean
