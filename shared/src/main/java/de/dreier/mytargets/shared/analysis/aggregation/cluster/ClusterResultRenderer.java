@@ -20,6 +20,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.support.annotation.NonNull;
 
 import java.util.List;
 
@@ -28,12 +29,16 @@ import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper;
 
 public class ClusterResultRenderer implements IAggregationResultRenderer {
 
+    @NonNull
     private final Path[] clusterPaths;
+    @NonNull
     private final Paint[] innerPaints;
+    @NonNull
     private final List<Cluster> clusters;
+    @NonNull
     private final Path[] outerClusterPaths;
 
-    public ClusterResultRenderer(List<Cluster> clusters) {
+    public ClusterResultRenderer(@NonNull List<Cluster> clusters) {
         this.clusters = clusters;
         clusterPaths = new Path[clusters.size()];
         outerClusterPaths = new Path[clusters.size()];
@@ -67,7 +72,7 @@ public class ClusterResultRenderer implements IAggregationResultRenderer {
     }
 
     @Override
-    public void onDraw(CanvasWrapper canvas) {
+    public void onDraw(@NonNull CanvasWrapper canvas) {
         for (int index = 0; index < clusters.size(); index++) {
             canvas.drawPath(outerClusterPaths[index], innerPaints[index]);
             canvas.drawPath(clusterPaths[index], innerPaints[index]);

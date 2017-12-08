@@ -15,9 +15,10 @@
 
 package de.dreier.mytargets.test.utils.matchers;
 
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -26,15 +27,21 @@ import org.hamcrest.Matchers;
 
 import de.dreier.mytargets.R;
 
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItem;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isOnForegroundFragment;
+import static de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.withSpeedDialItem;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.endsWith;
 
 public class ViewMatcher {
     public static Matcher<View> androidHomeMatcher() {
@@ -44,14 +51,17 @@ public class ViewMatcher {
     }
 
     @NonNull
-    public static Matcher<View> matchFabMenu() {
-        return Matchers.allOf(withParent(ViewMatchers.withId(R.id.fab)),
-                withClassName(endsWith("ImageView")),
-                isDisplayed());
-    }
-
-    @NonNull
     public static Matcher<View> supportFab() {
         return allOf(withId(R.id.fab), isDisplayed(), instanceOf(FloatingActionButton.class));
+    }
+
+    public static void clickFabSpeedDialItem(@IdRes int id) {
+        onView(ViewMatcher.supportFab()).perform(click());
+        onView(withSpeedDialItem(withId(R.id.fabSpeedDial), id)).perform(click());
+    }
+
+    public static void clickOnPreference(@StringRes int text) {
+        onView(Matchers.allOf(withId(R.id.list), isOnForegroundFragment()))
+                .perform(actionOnItem(hasDescendant(withText(text)),click()));
     }
 }

@@ -23,6 +23,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
@@ -31,12 +33,15 @@ import de.dreier.mytargets.utils.transitions.FabTransform;
 
 public class IntentWrapper {
 
+    @NonNull
     private final Intent intent;
     private final Class<?> intentTargetClass;
+    @Nullable
     private Bundle options = null;
     private Integer requestCode;
     private boolean animate = true;
     private Fragment fragment;
+    @Nullable
     private Activity activity;
 
     public IntentWrapper(Class<?> cls) {
@@ -44,60 +49,72 @@ public class IntentWrapper {
         intent = new Intent();
     }
 
-    public IntentWrapper withContext(Fragment fragment) {
+    @NonNull
+    public IntentWrapper withContext(@NonNull Fragment fragment) {
         this.fragment = fragment;
         activity = fragment.getActivity();
         intent.setClass(fragment.getContext(), intentTargetClass);
         return this;
     }
 
-    public IntentWrapper withContext(Activity activity) {
+    @NonNull
+    public IntentWrapper withContext(@NonNull Activity activity) {
         this.activity = activity;
         intent.setClass(activity, intentTargetClass);
         return this;
     }
 
+    @NonNull
     public IntentWrapper with(String key, long value) {
         intent.putExtra(key, value);
         return this;
     }
 
+    @NonNull
     public IntentWrapper with(String key, int value) {
         intent.putExtra(key, value);
         return this;
     }
 
+    @NonNull
     public IntentWrapper with(String key, boolean value) {
         intent.putExtra(key, value);
         return this;
     }
 
+    @NonNull
     public IntentWrapper with(String key, String value) {
         intent.putExtra(key, value);
         return this;
     }
 
+    @NonNull
     public IntentWrapper with(String key, Parcelable value) {
         intent.putExtra(key, value);
         return this;
     }
 
+    @NonNull
     public IntentWrapper with(String key, long[] values) {
         intent.putExtra(key, values);
         return this;
     }
 
+    @NonNull
     public IntentWrapper action(String action) {
         intent.setAction(action);
         return this;
     }
 
-    public IntentWrapper fromFab(View fab) {
+    @NonNull
+    public IntentWrapper fromFab(@NonNull View fab) {
         return fromFab(fab, R.color.colorAccent, R.drawable.ic_add_white_24dp);
     }
 
-    public IntentWrapper fromFab(View fab, @ColorRes int color, int icon) {
+    @NonNull
+    public IntentWrapper fromFab(@NonNull View fab, @ColorRes int color, int icon) {
         if (Utils.isLollipop()) {
+            fab.setTransitionName(fab.getContext().getString(R.string.transition_root_view));
             FabTransform.addExtras(intent, color, icon);
             ActivityOptions options = ActivityOptions
                     .makeSceneTransitionAnimation(getActivity(fab), fab,
@@ -107,7 +124,7 @@ public class IntentWrapper {
         return this;
     }
 
-    private Activity getActivity(View view) {
+    private Activity getActivity(@NonNull View view) {
         Context context = view.getContext();
         while (context instanceof ContextWrapper) {
             if (context instanceof Activity) {
@@ -118,19 +135,23 @@ public class IntentWrapper {
         return null;
     }
 
+    @NonNull
     public IntentWrapper forResult(int requestCode) {
         this.requestCode = requestCode;
         return this;
     }
 
+    @NonNull
     public IntentWrapper noAnimation() {
         intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_ANIMATION);
         animate = false;
         return this;
     }
 
+    @NonNull
     public IntentWrapper clearTopSingleTop() {
-        intent.addFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.addFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                Intent.FLAG_ACTIVITY_SINGLE_TOP);
         return this;
     }
 
@@ -143,7 +164,7 @@ public class IntentWrapper {
         animate(activity);
     }
 
-    private void start(Fragment fragment) {
+    private void start(@NonNull Fragment fragment) {
         if (requestCode == null) {
             fragment.startActivity(intent, options);
         } else {
@@ -151,7 +172,7 @@ public class IntentWrapper {
         }
     }
 
-    private void start(Activity activity) {
+    private void start(@NonNull Activity activity) {
         if (Utils.isLollipop()) {
             if (requestCode == null) {
                 activity.startActivity(intent, options);
@@ -167,12 +188,13 @@ public class IntentWrapper {
         }
     }
 
-    private void animate(Activity activity) {
+    private void animate(@NonNull Activity activity) {
         if (!Utils.isLollipop() && animate) {
             activity.overridePendingTransition(R.anim.right_in, R.anim.left_out);
         }
     }
 
+    @NonNull
     public Intent build() {
         return intent;
     }

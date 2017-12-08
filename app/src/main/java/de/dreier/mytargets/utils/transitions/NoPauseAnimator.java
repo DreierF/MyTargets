@@ -19,6 +19,7 @@ import android.animation.Animator;
 import android.animation.TimeInterpolator;
 import android.annotation.TargetApi;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 
 import java.util.ArrayList;
@@ -73,6 +74,7 @@ public class NoPauseAnimator extends Animator {
         mAnimator.setInterpolator(timeInterpolator);
     }
 
+    @NonNull
     @Override
     public ArrayList<AnimatorListener> getListeners() {
         return new ArrayList<>(mListeners.keySet());
@@ -126,6 +128,7 @@ public class NoPauseAnimator extends Animator {
         }
     }
 
+    @NonNull
     @Override
     public Animator setDuration(long durationMS) {
         mAnimator.setDuration(durationMS);

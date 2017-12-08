@@ -16,6 +16,7 @@
 package de.dreier.mytargets.base.activities;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
@@ -24,7 +25,9 @@ import android.view.MenuItem;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.utils.Utils;
+import im.delight.android.languages.Language;
 
 public abstract class ChildActivityBase extends AppCompatActivity {
 
@@ -34,16 +37,17 @@ public abstract class ChildActivityBase extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        Language.setFromPreference(this, SettingsManager.KEY_LANGUAGE);
         super.onCreate(savedInstanceState);
         logEvent(getClass().getSimpleName());
     }
 
-    protected void logEvent(String event) {
+    protected void logEvent(@NonNull String event) {
         FirebaseAnalytics.getInstance(this).logEvent(event, null);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();

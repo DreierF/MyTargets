@@ -17,6 +17,8 @@ package de.dreier.mytargets.features.settings.about;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
@@ -33,6 +35,7 @@ import java.util.List;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.features.settings.SettingsManager;
+import im.delight.android.languages.Language;
 
 public class DonateActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
 
@@ -40,7 +43,9 @@ public class DonateActivity extends AppCompatActivity implements BillingProcesso
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
+    @NonNull
     public static final ArrayList<String> donations;
+    @NonNull
     public static final HashMap<String, String> prices;
 
     static {
@@ -56,6 +61,7 @@ public class DonateActivity extends AppCompatActivity implements BillingProcesso
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Language.setFromPreference(this, SettingsManager.KEY_LANGUAGE);
         super.onCreate(savedInstanceState);
         bp = new BillingProcessor(this, getString(R.string.BASE64_PUB_KEY), this);
     }
@@ -114,7 +120,7 @@ public class DonateActivity extends AppCompatActivity implements BillingProcesso
     }
 
     @Override
-    public void onProductPurchased(String productId, TransactionDetails details) {
+    public void onProductPurchased(@NonNull String productId, TransactionDetails details) {
         bp.consumePurchase(productId);
 
         SettingsManager.setDonated(true);
@@ -128,7 +134,7 @@ public class DonateActivity extends AppCompatActivity implements BillingProcesso
     }
 
     @Override
-    public void onBillingError(int errorCode, Throwable error) {
+    public void onBillingError(int errorCode, @Nullable Throwable error) {
         /*
          * Called when some error occurred. See Constants class for more details
          */

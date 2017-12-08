@@ -79,7 +79,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_target_select, container, false);
         adapter = new TargetAdapter();
@@ -127,7 +127,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
         int diameterIndex = -1;
         Dimension[] diameters = target.getModel().getDiameters();
         for (int i = 0; i < diameters.length; i++) {
-            if (diameters[i].equals(target.size)) {
+            if (diameters[i].equals(target.diameter)) {
                 diameterIndex = i;
                 break;
             }
@@ -138,13 +138,13 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
     }
 
     @Override
-    protected void selectItem(RecyclerView recyclerView, Target item) {
+    protected void selectItem(@NonNull RecyclerView recyclerView, @NonNull Target item) {
         adapter.ensureItemIsExpanded(item);
         super.selectItem(recyclerView, item);
     }
 
     @Override
-    public void onClick(SelectableViewHolder<Target> holder, Target item) {
+    public void onClick(@NonNull SelectableViewHolder<Target> holder, @Nullable Target item) {
         super.onClick(holder, item);
         if (item == null) {
             return;
@@ -169,7 +169,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
         }
     }
 
-    private void updateAdapter(Spinner spinner, ArrayAdapter<String> spinnerAdapter, List<String> strings) {
+    private void updateAdapter(@NonNull Spinner spinner, @NonNull ArrayAdapter<String> spinnerAdapter, @NonNull List<String> strings) {
         int lastSelection = spinner.getSelectedItemPosition();
         spinnerAdapter.clear();
         spinnerAdapter.addAll(strings);
@@ -177,7 +177,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
         setSelectionWithoutEvent(spinner, position);
     }
 
-    private void setSelectionWithoutEvent(Spinner spinner, int position) {
+    private void setSelectionWithoutEvent(@NonNull Spinner spinner, int position) {
         spinner.setOnItemSelectedListener(null);
         spinner.setSelection(position, false);
         spinner.setOnItemSelectedListener(this);
@@ -194,7 +194,8 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
         return spinnerAdapter;
     }
 
-    private ArrayList<String> diameterToList(Dimension[] diameters) {
+    @NonNull
+    private ArrayList<String> diameterToList(@NonNull Dimension[] diameters) {
         ArrayList<String> list = new ArrayList<>();
         for (Dimension diameter : diameters) {
             list.add(diameter.toString());
@@ -202,17 +203,13 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
         return list;
     }
 
-    @Override
-    public void onLongClick(SelectableViewHolder<Target> holder) {
-        onClick(holder, holder.getItem());
-    }
-
+    @NonNull
     @Override
     protected Target onSave() {
         Target target = super.onSave();
         target.scoringStyle = binding.scoringStyle.getSelectedItemPosition();
         Dimension[] diameters = target.getModel().getDiameters();
-        target.size = diameters[binding.targetSize.getSelectedItemPosition()];
+        target.diameter = diameters[binding.targetSize.getSelectedItemPosition()];
         getArguments().putParcelable(ITEM, Parcels.wrap(target));
         return target;
     }
@@ -254,8 +251,9 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
             }, HeaderListAdapter.SimpleHeader::compareTo, TargetFactory.getComparator());
         }
 
+        @NonNull
         @Override
-        protected ViewHolder getSecondLevelViewHolder(ViewGroup parent) {
+        protected ViewHolder getSecondLevelViewHolder(@NonNull ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_image_simple, parent, false);
             return new ViewHolder(itemView);
@@ -265,7 +263,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
     private class ViewHolder extends SelectableViewHolder<Target> {
         private ItemImageSimpleBinding binding;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView, selector, TargetListFragment.this);
             binding = DataBindingUtil.bind(itemView);
         }

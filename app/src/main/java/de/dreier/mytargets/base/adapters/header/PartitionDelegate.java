@@ -15,6 +15,9 @@
 
 package de.dreier.mytargets.base.adapters.header;
 
+import android.support.annotation.NonNull;
+
 public interface PartitionDelegate<PARENT, CHILD> {
+    @NonNull
     PARENT getParent(CHILD child);
 }

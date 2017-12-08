@@ -17,16 +17,17 @@ package de.dreier.mytargets.features.training;
 
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.text.SimpleDateFormat;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.FormatStyle;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.features.settings.SettingsManager;
@@ -37,7 +38,6 @@ import de.dreier.mytargets.shared.targets.models.WAFull;
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
 import de.dreier.mytargets.test.base.UITestBase;
 
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
@@ -55,7 +55,6 @@ import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CR
 import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
-import static de.dreier.mytargets.test.utils.PermissionGranter.allowPermissionsIfNeeded;
 import static de.dreier.mytargets.test.utils.assertions.RecyclerViewAssertions.itemCount;
 import static de.dreier.mytargets.test.utils.matchers.MatcherUtils.containsStringRes;
 import static org.hamcrest.CoreMatchers.is;
@@ -66,6 +65,7 @@ import static org.hamcrest.Matchers.instanceOf;
 @RunWith(AndroidJUnit4.class)
 public class EditTrainingActivityTest extends UITestBase {
 
+    @NonNull
     @Rule
     public IntentsTestRule<EditTrainingActivity> activityTestRule = new IntentsTestRule<>(
             EditTrainingActivity.class, true, false);
@@ -113,7 +113,8 @@ public class EditTrainingActivityTest extends UITestBase {
         onView(withText("40cm")).perform(click());
         pressBack();
         onView(withId(R.id.target))
-                .check(matches(hasDescendant(withText(containsString(activityTestRule.getActivity().getString(R.string.vertical_3_spot))))))
+                .check(matches(hasDescendant(withText(containsString(activityTestRule.getActivity()
+                        .getString(R.string.vertical_3_spot))))))
                 .check(matches(hasDescendant(withText(containsString("40cm")))))
                 .check(matches(hasDescendant(withText(containsString("Compound")))));
 
@@ -135,8 +136,8 @@ public class EditTrainingActivityTest extends UITestBase {
 
         onView(withId(R.id.trainingDate)).perform(click());
         enterDate(2016, 8, 10);
-        final String formattedDate = SimpleDateFormat.getDateInstance()
-                .format(new LocalDate(2016, 8, 10).toDate());
+        final String formattedDate = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+                .format(LocalDate.of(2016, 8, 10));
         onView(withId(R.id.trainingDate)).check(matches(withText(formattedDate)));
 
         save();

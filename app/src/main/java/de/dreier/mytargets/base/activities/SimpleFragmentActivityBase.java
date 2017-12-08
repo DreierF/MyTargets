@@ -17,24 +17,24 @@ package de.dreier.mytargets.base.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
 public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
 
-    private static final String FRAGMENT_TAG = "fragment";
-    Fragment childFragment;
+    protected static final String FRAGMENT_TAG = "fragment";
 
     protected abstract Fragment instantiateFragment();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
             // Create the fragment only when the activity is created for the first time.
             // ie. not after orientation changes
-            childFragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+            Fragment childFragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
             if (childFragment == null) {
                 childFragment = instantiateFragment();
                 Bundle bundle = getIntent() != null ? getIntent().getExtras() : null;
@@ -52,11 +52,11 @@ public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@Nullable Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        childFragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
-        if (childFragment == null && intent!= null && intent.getExtras()!=null) {
+        Fragment childFragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+        if (childFragment == null && intent != null && intent.getExtras() != null) {
             childFragment = instantiateFragment();
             childFragment.setArguments(intent.getExtras());
         }

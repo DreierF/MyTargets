@@ -21,16 +21,15 @@ import android.animation.ValueAnimator;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import org.parceler.Parcel;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.shared.models.Target;
@@ -74,7 +73,7 @@ public class EndRenderer {
         grayBackground.setAntiAlias(true);
     }
 
-    public void setRect(RectF rect) {
+    public void setRect(@NonNull RectF rect) {
         this.rect = rect;
         if (shotList == null) {
             return;
@@ -89,22 +88,21 @@ public class EndRenderer {
         } while (neededRows > maxRows);
         radius -= MIN_PADDING;
         int numRows = Math.max(neededRows, 1);
-        shotsPerRow = (int) Math.ceil(shotList.size() / (float)numRows);
+        shotsPerRow = (int) Math.ceil(shotList.size() / (float) numRows);
         rowHeight = rect.height() / numRows;
         columnWidth = rect.width() / shotsPerRow;
     }
 
     public void setShots(List<Shot> shots) {
         boolean calcLayout = rect != null && shotList == null;
-        shotList = new ArrayList<>(shots);
+        shotList = shots;
         oldCoordinate = new PointF[shotList.size()];
-        Collections.sort(shotList);
         if (calcLayout) {
             setRect(rect);
         }
     }
 
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         if (rect == null || shotsPerRow == 0) {
             return;
         }
@@ -127,14 +125,14 @@ public class EndRenderer {
 
                 // Draw circle
                 circle.draw(canvas, coordinate.x, coordinate.y, shot.scoringRing, radius,
-                        !TextUtils.isEmpty(shot.comment) && i != selected, shot.index,
+                        shot.index,
                         shot.arrowNumber, ambientMode);
             }
         }
     }
 
     @NonNull
-    private PointF getPosition(int i, Shot shot) {
+    private PointF getPosition(int i, @NonNull Shot shot) {
         if (selected == shot.index && selectedPosition != null) {
             return new PointF(selectedPosition.x, selectedPosition.y);
         } else {
@@ -147,7 +145,8 @@ public class EndRenderer {
         }
     }
 
-    private PointF getAnimatedPosition(int i, Shot shot) {
+    @NonNull
+    private PointF getAnimatedPosition(int i, @NonNull Shot shot) {
         PointF coordinate = getPosition(i, shot);
         if (currentAnimationProgress != -1 && oldCoordinate[shot.index] != null) {
             float oldX = oldCoordinate[shot.index].x;
@@ -158,7 +157,7 @@ public class EndRenderer {
         return coordinate;
     }
 
-    private int getRadius(Shot shot) {
+    private int getRadius(@NonNull Shot shot) {
         int rad = radius;
         int oRad = oldRadius;
         if (selected == shot.index) {
@@ -173,7 +172,8 @@ public class EndRenderer {
         }
     }
 
-    public Animator getAnimationToSelection(int selectedShot, PointF c, int radius, RectF rect) {
+    @Nullable
+    public Animator getAnimationToSelection(int selectedShot, PointF c, int radius, @Nullable RectF rect) {
         if (rect == null) {
             setSelection(selectedShot, c, radius);
             return null;
@@ -184,7 +184,6 @@ public class EndRenderer {
         saveCoordinates();
         setRect(rect);
         setSelection(selectedShot, c, radius);
-        Collections.sort(shotList);
         return getAnimator();
     }
 
@@ -224,23 +223,30 @@ public class EndRenderer {
             int col = (int) Math.floor((x - rect.left) / columnWidth);
             int row = (int) Math.floor((y - rect.top) / rowHeight);
             final int arrow = row * shotsPerRow + col;
-            if (arrow < shotList.size() && shotList.get(arrow).scoringRing != Shot.NOTHING_SELECTED) {
+            if (arrow < shotList.size() &&
+                    shotList.get(arrow).scoringRing != Shot.NOTHING_SELECTED) {
                 return shotList.get(arrow).index == selected ? -1 : shotList.get(arrow).index;
             }
         }
         return -1;
     }
 
-    public int getPressed() {
-        return pressed;
-    }
-
     public void setPressed(int pressed) {
-        this.pressed = pressed;
-        parent.invalidate();
+        if (this.pressed != pressed) {
+            this.pressed = pressed;
+            parent.invalidate();
+        }
     }
 
     public void setAmbientMode(boolean ambientMode) {
         this.ambientMode = ambientMode;
+    }
+
+    @NonNull
+    public Rect getBoundsForShot(int index) {
+        PointF position = getPosition(index, shotList.get(index));
+        float radius = getRadius(shotList.get(index)) * density;
+        return new Rect((int) (position.x - radius), (int) (position.y - radius),
+                (int) (position.x + radius), (int) (position.y + radius));
     }
 }

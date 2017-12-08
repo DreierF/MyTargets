@@ -40,4 +40,9 @@ public class WADanage6Spot extends WA3Ring {
                 new Dimension(60, CENTIMETER)
         };
     }
+
+    @Override
+    public long getSingleSpotTargetId() {
+        return WA3Ring.ID;
+    }
 }

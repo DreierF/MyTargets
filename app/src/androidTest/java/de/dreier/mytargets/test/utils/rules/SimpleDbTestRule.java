@@ -18,7 +18,7 @@ package de.dreier.mytargets.test.utils.rules;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 
-import org.joda.time.LocalDate;
+import org.threeten.bp.LocalDate;
 
 import java.util.Arrays;
 import java.util.List;
@@ -76,19 +76,19 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         round2.trainingId = training.getId();
         round2.save();
 
-        randomEnd(training, round1, 6, generator, 0).save();
-        randomEnd(training, round1, 6, generator, 1).save();
-        randomEnd(training, round1, 6, generator, 2).save();
-        randomEnd(training, round1, 6, generator, 3).save();
-        randomEnd(training, round1, 6, generator, 4).save();
-        randomEnd(training, round1, 6, generator, 5).save();
+        randomEnd(round1, 6, generator, 0).save();
+        randomEnd(round1, 6, generator, 1).save();
+        randomEnd(round1, 6, generator, 2).save();
+        randomEnd(round1, 6, generator, 3).save();
+        randomEnd(round1, 6, generator, 4).save();
+        randomEnd(round1, 6, generator, 5).save();
 
-        randomEnd(training, round2, 6, generator, 0).save();
-        randomEnd(training, round2, 6, generator, 1).save();
-        randomEnd(training, round2, 6, generator, 2).save();
-        randomEnd(training, round2, 6, generator, 3).save();
-        randomEnd(training, round2, 6, generator, 4).save();
-        randomEnd(training, round2, 6, generator, 5).save();
+        randomEnd(round2, 6, generator, 0).save();
+        randomEnd(round2, 6, generator, 1).save();
+        randomEnd(round2, 6, generator, 2).save();
+        randomEnd(round2, 6, generator, 3).save();
+        randomEnd(round2, 6, generator, 4).save();
+        randomEnd(round2, 6, generator, 5).save();
     }
 
     @NonNull
@@ -122,27 +122,27 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         round2.trainingId = training.getId();
         round2.save();
 
-        randomEnd(training, round1, 6, generator, 0).save();
-        randomEnd(training, round1, 6, generator, 1).save();
-        randomEnd(training, round1, 6, generator, 2).save();
-        randomEnd(training, round1, 6, generator, 3).save();
-        randomEnd(training, round1, 6, generator, 4).save();
-        randomEnd(training, round1, 6, generator, 5).save();
+        randomEnd(round1, 6, generator, 0).save();
+        randomEnd(round1, 6, generator, 1).save();
+        randomEnd(round1, 6, generator, 2).save();
+        randomEnd(round1, 6, generator, 3).save();
+        randomEnd(round1, 6, generator, 4).save();
+        randomEnd(round1, 6, generator, 5).save();
 
-        randomEnd(training, round2, 6, generator, 0).save();
-        randomEnd(training, round2, 6, generator, 1).save();
-        randomEnd(training, round2, 6, generator, 2).save();
-        randomEnd(training, round2, 6, generator, 3).save();
-        randomEnd(training, round2, 6, generator, 4).save();
-        randomEnd(training, round2, 6, generator, 5).save();
+        randomEnd(round2, 6, generator, 0).save();
+        randomEnd(round2, 6, generator, 1).save();
+        randomEnd(round2, 6, generator, 2).save();
+        randomEnd(round2, 6, generator, 3).save();
+        randomEnd(round2, 6, generator, 4).save();
+        randomEnd(round2, 6, generator, 5).save();
     }
 
-    private void addFullTraining(Bow bow) {
+    private void addFullTraining(@NonNull Bow bow) {
         StandardRound standardRound = StandardRound.get(32L);
 
         Training training = new Training();
         training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training);
-        training.date = new LocalDate(2016, 7, 15);
+        training.date = LocalDate.of(2016, 7, 15);
         training.weather = EWeather.SUNNY;
         training.windSpeed = 1;
         training.windDirection = 0;

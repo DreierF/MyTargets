@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.training.environment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,7 @@ import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
 public class WindDirectionListFragment extends SelectPureListItemFragmentBase<WindDirection> {
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         adapter.setList(WindDirection.getList(getContext()));
         WindDirection windDirection = Parcels.unwrap(getArguments().getParcelable(ITEM));

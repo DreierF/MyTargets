@@ -23,12 +23,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,13 +40,16 @@ import java.util.Locale;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.base.fragments.EditableListFragment;
+import de.dreier.mytargets.base.fragments.ItemActionModeCallback;
 import de.dreier.mytargets.databinding.FragmentListBinding;
 import de.dreier.mytargets.databinding.ItemEndBinding;
 import de.dreier.mytargets.features.scoreboard.ScoreboardActivity;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.statistics.StatisticsActivity;
 import de.dreier.mytargets.features.training.input.InputActivity;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
+import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.MobileWearableClient;
@@ -63,25 +69,30 @@ public class RoundFragment extends EditableListFragment<End> {
 
     private long roundId;
     private FragmentListBinding binding;
+    @Nullable
     private Round round;
 
     public RoundFragment() {
-        itemTypeSelRes = R.plurals.passe_selected;
         itemTypeDelRes = R.plurals.passe_deleted;
+        actionModeCallback = new ItemActionModeCallback(this, selector,
+                R.plurals.passe_selected);
+        actionModeCallback.setEditCallback(this::onEdit);
+        actionModeCallback.setDeleteCallback(this::onDelete);
     }
 
     @NonNull
-    public static IntentWrapper getIntent(Round round) {
+    public static IntentWrapper getIntent(@NonNull Round round) {
         return new IntentWrapper(RoundActivity.class)
                 .with(ROUND_ID, round.getId())
                 .clearTopSingleTop();
     }
 
+    @NonNull
     private BroadcastReceiver updateReceiver = new MobileWearableClient.EndUpdateReceiver() {
 
         @Override
         protected void onUpdate(Long trainingId, Long round, End end) {
-            if(roundId == round) {
+            if (roundId == round) {
                 reloadData();
             }
         }
@@ -101,7 +112,7 @@ public class RoundFragment extends EditableListFragment<End> {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.addItemDecoration(
@@ -135,7 +146,7 @@ public class RoundFragment extends EditableListFragment<End> {
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
         round = Round.get(roundId);
-        final List<End> ends = round.getEnds(); //FIXME how!?
+        final List<End> ends = round.getEnds();
         final boolean showFab = round.maxEndCount == null || ends.size() < round.maxEndCount;
 
         return () -> {
@@ -150,22 +161,33 @@ public class RoundFragment extends EditableListFragment<End> {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.statistics_scoresheet, menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_scoreboard:
-                ScoreboardActivity
-                        .getIntent(round.trainingId, round.getId())
-                        .withContext(this)
-                        .start();
-                return true;
             case R.id.action_statistics:
                 StatisticsActivity
                         .getIntent(Collections.singletonList(round.getId()))
+                        .withContext(this)
+                        .start();
+                return true;
+            case R.id.action_comment:
+                new MaterialDialog.Builder(getContext())
+                        .title(R.string.comment)
+                        .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE)
+                        .input("", round.comment, (dialog, input) -> {
+                            round.comment = input.toString();
+                            round.save();
+                        })
+                        .negativeText(android.R.string.cancel)
+                        .show();
+                return true;
+            case R.id.action_scoreboard:
+                ScoreboardActivity
+                        .getIntent(round.trainingId, round.getId())
                         .withContext(this)
                         .start();
                 return true;
@@ -175,23 +197,23 @@ public class RoundFragment extends EditableListFragment<End> {
     }
 
     @Override
-    protected void onItemSelected(End item) {
+    protected void onItemSelected(@NonNull End item) {
         InputActivity.getIntent(round, item.index)
                 .withContext(this)
                 .start();
     }
 
-    @Override
-    protected void onEdit(End item) {
-        InputActivity.getIntent(round, item.index)
+    protected void onEdit(Long itemId) {
+        InputActivity.getIntent(round, adapter.getItemById(itemId).index)
                 .withContext(this)
                 .start();
     }
 
     private class EndAdapter extends SimpleListAdapterBase<End> {
 
+        @NonNull
         @Override
-        protected SelectableViewHolder<End> onCreateViewHolder(ViewGroup parent) {
+        protected SelectableViewHolder<End> onCreateViewHolder(@NonNull ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_end, parent, false);
             return new EndViewHolder(itemView);
@@ -202,16 +224,21 @@ public class RoundFragment extends EditableListFragment<End> {
 
         private final ItemEndBinding binding;
 
-        EndViewHolder(View itemView) {
-            super(itemView, selector, RoundFragment.this);
+        EndViewHolder(@NonNull View itemView) {
+            super(itemView, selector, RoundFragment.this, RoundFragment.this);
             binding = DataBindingUtil.bind(itemView);
         }
 
         @Override
         public void bindItem() {
-            binding.imageIndicator.setVisibility(item.getImages().isEmpty() ? View.INVISIBLE : View.VISIBLE);
-            binding.shoots.setShots(round.getTarget(), item.getShots());
-            binding.end.setText(getString(R.string.passe_n, (item.index + 1)));
+            List<Shot> shots = item.getShots();
+            if (SettingsManager.shouldSortTarget(round.getTarget())) {
+                Collections.sort(shots);
+            }
+            binding.shoots.setShots(round.getTarget(), shots);
+            binding.imageIndicator
+                    .setVisibility(item.getImages().isEmpty() ? View.INVISIBLE : View.VISIBLE);
+            binding.end.setText(getString(R.string.end_n, item.index + 1));
         }
     }
 }

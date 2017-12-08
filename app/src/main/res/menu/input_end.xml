@@ -23,65 +23,22 @@
         android:icon="@drawable/ic_photo_camera_white_24dp"
         android:title="@string/take_picture"
         app:showAsAction="ifRoom"/>
-
     <item
-        android:id="@+id/action_grouping"
-        android:icon="@drawable/ic_bubble_chart_white_24px"
-        android:title="@string/grouping"
-        app:showAsAction="ifRoom">
-        <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/action_grouping_none"
-                    android:checked="true"
-                    android:title="@string/show_none"
-                    app:showAsAction="never"/>
-                <item
-                    android:id="@+id/action_grouping_average"
-                    android:title="@string/show_average"
-                    app:showAsAction="never"/>
-                <item
-                    android:id="@+id/action_grouping_cluster"
-                    android:title="@string/show_clusters"
-                    app:showAsAction="never"/>
-            </group>
-        </menu>
-    </item>
-    <item
-        android:id="@+id/action_show"
-        android:icon="@drawable/ic_visibility_white_24dp"
-        android:title="@string/displayed_shots"
-        app:showAsAction="ifRoom">
-        <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/action_show_end"
-                    android:checked="true"
-                    android:title="@string/show_shots_end"
-                    app:showAsAction="never"/>
-                <item
-                    android:id="@+id/action_show_round"
-                    android:title="@string/show_shots_round"
-                    app:showAsAction="never"/>
-                <item
-                    android:id="@+id/action_show_training"
-                    android:title="@string/show_shots_training"
-                    app:showAsAction="never"/>
-            </group>
-        </menu>
-    </item>
+        android:id="@+id/action_comment"
+        android:icon="@drawable/ic_comment_white_24dp"
+        android:title="@string/comment"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_timer"
         android:checkable="true"
         android:icon="@drawable/ic_timer_white_24dp"
         android:title="@string/timer"
-        app:showAsAction="never"/>
+        app:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/action_keyboard"
-        android:checkable="true"
-        android:icon="@drawable/ic_keyboard_white_24dp"
-        android:title="@string/keyboard"
-        app:showAsAction="never"/>
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_settings_white_24dp"
+        android:title="@string/preferences"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_new_round"
         android:title="@string/new_round"

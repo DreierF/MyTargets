@@ -20,6 +20,8 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,38 +30,39 @@ import android.view.View;
 
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
+    @Nullable
     private final Drawable mDivider;
     private boolean mShowFirstDivider = false;
     private boolean mShowLastDivider = true;
 
     private int mOrientation = -1;
 
-    private DividerItemDecoration(Context context, AttributeSet attrs) {
+    private DividerItemDecoration(@NonNull Context context, AttributeSet attrs) {
         final TypedArray a = context
                 .obtainStyledAttributes(attrs, new int[]{android.R.attr.listDivider});
         mDivider = a.getDrawable(0);
         a.recycle();
     }
 
-    public DividerItemDecoration(Context context, AttributeSet attrs, boolean showFirstDivider,
+    public DividerItemDecoration(@NonNull Context context, AttributeSet attrs, boolean showFirstDivider,
                                  boolean showLastDivider) {
         this(context, attrs);
         mShowFirstDivider = showFirstDivider;
         mShowLastDivider = showLastDivider;
     }
 
-    public DividerItemDecoration(Context context, int resId) {
+    public DividerItemDecoration(@NonNull Context context, int resId) {
         mDivider = ContextCompat.getDrawable(context, resId);
     }
 
-    public DividerItemDecoration(Context context, int resId, boolean showFirstDivider,
+    public DividerItemDecoration(@NonNull Context context, int resId, boolean showFirstDivider,
                                  boolean showLastDivider) {
         this(context, resId);
         mShowFirstDivider = showFirstDivider;
         mShowLastDivider = showLastDivider;
     }
 
-    private DividerItemDecoration(Drawable divider) {
+    private DividerItemDecoration(@Nullable Drawable divider) {
         mDivider = divider;
     }
 
@@ -71,8 +74,8 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
-                               RecyclerView.State state) {
+    public void getItemOffsets(@NonNull Rect outRect, View view, @NonNull RecyclerView parent,
+                               @NonNull RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
         if (mDivider == null) {
             return;
@@ -101,7 +104,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     @Override
-    public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
+    public void onDrawOver(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         if (mDivider == null) {
             super.onDrawOver(c, parent, state);
             return;
@@ -160,7 +163,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
-    private int getOrientation(RecyclerView parent) {
+    private int getOrientation(@NonNull RecyclerView parent) {
         if (mOrientation == -1) {
             if (parent.getLayoutManager() instanceof LinearLayoutManager) {
                 LinearLayoutManager layoutManager = (LinearLayoutManager) parent.getLayoutManager();

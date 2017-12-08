@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.base.adapters;
 
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
@@ -25,8 +26,10 @@ public abstract class ListAdapterBase<S extends RecyclerView.ViewHolder, T>
 
     public abstract void addItem(T item);
 
+    @Nullable
     public abstract T getItem(int position);
 
+    @Nullable
     public abstract T getItemById(long id);
 
     public abstract int getItemPosition(T item);

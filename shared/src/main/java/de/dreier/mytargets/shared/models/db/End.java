@@ -16,6 +16,7 @@
 package de.dreier.mytargets.shared.models.db;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
 import com.annimon.stream.Collectors;
@@ -32,8 +33,8 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
-import org.joda.time.DateTime;
 import org.parceler.Parcel;
+import org.threeten.bp.LocalTime;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,12 +47,13 @@ import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IRecursiveModel;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.utils.typeconverters.DateTimeConverter;
+import de.dreier.mytargets.shared.utils.typeconverters.LocalTimeConverter;
 
 @Parcel
 @Table(database = AppDatabase.class)
 public class End extends BaseModel implements IIdSettable, Comparable<End>, IRecursiveModel {
 
+    @Nullable
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     Long id;
@@ -61,6 +63,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
 
     public List<EndImage> images;
 
+    @Nullable
     @ForeignKey(tableClass = Round.class, references = {
             @ForeignKeyReference(columnName = "round", columnType = Long.class, foreignKeyColumnName = "_id")},
             onDelete = ForeignKeyAction.CASCADE)
@@ -69,8 +72,13 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
     @Column
     public boolean exact;
 
-    @Column(typeConverter = DateTimeConverter.class)
-    public DateTime saveTime;
+    @Nullable
+    @Column(typeConverter = LocalTimeConverter.class)
+    public LocalTime saveTime;
+
+    @Nullable
+    @Column
+    public String comment = "";
 
     List<Shot> shots;
 
@@ -83,6 +91,11 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
         for (int i = 0; i < shotCount; i++) {
             shots.add(new Shot(i));
         }
+    }
+
+    public End(@NonNull End end) {
+        this.index = end.index;
+        this.shots = new ArrayList<>(end.getShots());
     }
 
     @NonNull
@@ -112,14 +125,8 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
         this.shots = shots;
     }
 
-    public List<Shot> getSortedShotList() {
-        final List<Shot> shots = getShots();
-        Collections.sort(shots);
-        return shots;
-    }
-
     @NonNull
-    private static Map<SelectableZone, Integer> getRoundScores(List<Round> rounds) {
+    private static Map<SelectableZone, Integer> getRoundScores(@NonNull List<Round> rounds) {
         final Target t = rounds.get(0).getTarget();
         Map<SelectableZone, Integer> scoreCount = getAllPossibleZones(t);
         for (Round round : rounds) {
@@ -143,7 +150,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
     }
 
     @NonNull
-    private static Map<SelectableZone, Integer> getAllPossibleZones(Target t) {
+    private static Map<SelectableZone, Integer> getAllPossibleZones(@NonNull Target t) {
         Map<SelectableZone, Integer> scoreCount = new HashMap<>();
         for (int arrow = 0; arrow < 3; arrow++) {
             final List<SelectableZone> zoneList = t.getSelectableZoneList(arrow);
@@ -157,7 +164,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
         return scoreCount;
     }
 
-    public static List<Pair<String, Integer>> getTopScoreDistribution(List<Map.Entry<SelectableZone, Integer>> sortedScore) {
+    public static List<Pair<String, Integer>> getTopScoreDistribution(@NonNull List<Map.Entry<SelectableZone, Integer>> sortedScore) {
         final List<Pair<String, Integer>> result = Stream.of(sortedScore)
                 .map(value -> new Pair<>(value.getKey().text, value.getValue()))
                 .collect(Collectors.toList());
@@ -178,18 +185,19 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
     /**
      * Compound 9ers are already collapsed to one SelectableZone.
      */
-    public static List<Map.Entry<SelectableZone, Integer>> getSortedScoreDistribution(List<Round> rounds) {
+    public static List<Map.Entry<SelectableZone, Integer>> getSortedScoreDistribution(@NonNull List<Round> rounds) {
         Map<SelectableZone, Integer> scoreCount = getRoundScores(rounds);
         return Stream.of(scoreCount)
                 .sorted((lhs, rhs) -> lhs.getKey().compareTo(rhs.getKey()))
                 .collect(Collectors.toList());
     }
 
+    @Nullable
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(@Nullable Long id) {
         this.id = id;
     }
 
@@ -201,7 +209,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
     @Override
     public void save(DatabaseWrapper databaseWrapper) {
         if (saveTime == null) {
-            saveTime = new DateTime();
+            saveTime = LocalTime.now();
         }
         super.save(databaseWrapper);
         if (shots != null) {
@@ -240,19 +248,20 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
             endImage.delete(databaseWrapper);
         }
         super.delete(databaseWrapper);
-        updateEndIndicesForRound();
+        updateEndIndicesForRound(databaseWrapper);
     }
 
-    private void updateEndIndicesForRound() {
+    private void updateEndIndicesForRound(DatabaseWrapper databaseWrapper) {
         // FIXME very inefficient
-        int i = 0;
         Round round = Round.get(roundId);
         if (round == null) {
             return;
         }
-        for (End end : round.getEnds()) {
+
+        int i = 0;
+        for (End end : round.getEnds(databaseWrapper)) {
             end.index = i;
-            end.save();
+            end.save(databaseWrapper);
             i++;
         }
     }
@@ -276,11 +285,26 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
 
     @Override
     public void saveRecursively() {
-        save();
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::saveRecursively);
     }
 
     @Override
     public void saveRecursively(DatabaseWrapper databaseWrapper) {
-        save(databaseWrapper);
+        Round round = Round.get(roundId);
+        List<End> ends = round.getEnds(databaseWrapper);
+
+        int pos = Collections.binarySearch(ends, this);
+        if (pos < 0) {
+            ends.add(-pos - 1, this);
+        } else {
+            ends.add(pos, this);
+        }
+
+        int i = 0;
+        for (End end : ends) {
+            end.index = i;
+            end.save(databaseWrapper);
+            i++;
+        }
     }
 }

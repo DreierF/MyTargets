@@ -18,6 +18,7 @@ package de.dreier.mytargets.features.distance;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,9 +46,11 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension, Simp
     private static final String DISTANCE_UNIT = "distance_unit";
     protected FragmentListBinding binding;
     private Dimension distance;
+    @Nullable
     private Unit unit;
 
-    public static DistanceGridFragment newInstance(Dimension distance, Unit unit) {
+    @NonNull
+    public static DistanceGridFragment newInstance(Dimension distance, @NonNull Unit unit) {
         DistanceGridFragment fragment = new DistanceGridFragment();
         Bundle args = new Bundle();
         args.putParcelable(ITEM, Parcels.wrap(distance));
@@ -57,7 +60,7 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension, Simp
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
         binding.recyclerView.setHasFixedSize(true);
         Bundle bundle = getArguments();
@@ -76,7 +79,7 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension, Simp
     }
 
     @Override
-    public void onOkClickListener(String input) {
+    public void onOkClickListener(@NonNull String input) {
         Dimension distance = this.distance;
         try {
             int distanceVal = Integer.parseInt(input.replaceAll("[^0-9]", ""));
@@ -86,11 +89,6 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension, Simp
         }
         listener.onItemSelected(Parcels.wrap(distance));
         finish();
-    }
-
-    @Override
-    public void onLongClick(SelectableViewHolder<Dimension> holder) {
-        onClick(holder, holder.getItem());
     }
 
     @NonNull
@@ -105,8 +103,9 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension, Simp
 
     private class DistanceAdapter extends SimpleListAdapterBase<Dimension> {
 
+        @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent) {
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_distance, parent, false);
             return new ViewHolder(itemView);
@@ -117,7 +116,7 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension, Simp
 
         private final ItemDistanceBinding binding;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView, selector, DistanceGridFragment.this);
             binding = DataBindingUtil.bind(itemView);
         }

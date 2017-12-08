@@ -21,6 +21,8 @@ import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper;
 
 public interface IAggregationResultRenderer {
     void onPrepareDraw();
+
     void onDraw(CanvasWrapper canvas);
+
     void setColor(@ColorInt int color);
 }

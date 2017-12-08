@@ -52,8 +52,8 @@ import permissions.dispatcher.RuntimePermissions;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
-import static de.dreier.mytargets.base.fragments.EditWithImageFragmentBasePermissionsDispatcher.onSelectImageWithCheck;
-import static de.dreier.mytargets.base.fragments.EditWithImageFragmentBasePermissionsDispatcher.onTakePictureWithCheck;
+import static de.dreier.mytargets.base.fragments.EditWithImageFragmentBasePermissionsDispatcher.onSelectImageWithPermissionCheck;
+import static de.dreier.mytargets.base.fragments.EditWithImageFragmentBasePermissionsDispatcher.onTakePictureWithPermissionCheck;
 
 @RuntimePermissions
 public abstract class EditWithImageFragmentBase<T extends Image> extends EditFragmentBase implements View.OnFocusChangeListener {
@@ -63,9 +63,11 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
 
     protected FragmentEditImageBinding binding;
 
+    @Nullable
     @State
     protected File imageFile = null;
 
+    @Nullable
     @State
     File oldImageFile = null;
 
@@ -74,8 +76,9 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
         this.clazz = clazz;
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit_image, container, false);
         ToolbarUtils.setSupportActionBar(this, binding.toolbar);
         ToolbarUtils.showUpAsX(this);
@@ -103,7 +106,7 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
     }
 
     @Override
-    public void onFocusChange(View v, boolean hasFocus) {
+    public void onFocusChange(@NonNull View v, boolean hasFocus) {
         if (hasFocus) {
             CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) binding.appBarLayout
                     .getLayoutParams();
@@ -115,16 +118,16 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
         }
     }
 
-    private void onFabClicked(View v) {
+    private void onFabClicked(@NonNull View v) {
         PopupMenu popup = new PopupMenu(v.getContext(), v);
         popup.inflate(R.menu.context_menu_image);
         popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.action_from_gallery:
-                    onSelectImageWithCheck(this);
+                    onSelectImageWithPermissionCheck(this);
                     return true;
                 case R.id.action_take_picture:
-                    onTakePictureWithCheck(this);
+                    onTakePictureWithPermissionCheck(this);
                     return true;
                 default:
                     return false;
@@ -175,7 +178,7 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
                 });
     }
 
-    protected void loadImage(final File imageFile) {
+    protected void loadImage(@Nullable final File imageFile) {
         this.imageFile = imageFile;
         if (imageFile == null) {
             binding.imageView.setImageResource(defaultDrawable);
@@ -209,7 +212,7 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
         }
     }
 
-    protected void setImageFiles(List<T> images) {
+    protected void setImageFiles(@NonNull List<T> images) {
         if (images.isEmpty()) {
             imageFile = null;
             binding.imageView.setImageResource(defaultDrawable);
@@ -222,6 +225,7 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
         }
     }
 
+    @NonNull
     protected List<T> getImageFiles() {
         if (imageFile == null) {
             return Collections.emptyList();
@@ -241,6 +245,7 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
         }
     }
 
+    @Nullable
     protected Thumbnail getThumbnail() {
         if (imageFile == null) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), defaultDrawable);

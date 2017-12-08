@@ -24,15 +24,19 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.InputType;
 import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Stream;
 
 import org.parceler.Parcel;
@@ -47,10 +51,11 @@ import de.dreier.mytargets.base.activities.ChildActivityBase;
 import de.dreier.mytargets.base.gallery.GalleryActivity;
 import de.dreier.mytargets.databinding.ActivityInputBinding;
 import de.dreier.mytargets.features.rounds.EditRoundFragment;
+import de.dreier.mytargets.features.settings.ESettingsScreens;
+import de.dreier.mytargets.features.settings.SettingsActivity;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.timer.TimerFragment;
 import de.dreier.mytargets.features.training.RoundFragment;
-import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.db.Arrow;
@@ -80,6 +85,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static de.dreier.mytargets.shared.wearable.WearableClientBase.BROADCAST_TIMER_SETTINGS_FROM_REMOTE;
 import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE;
+import static de.dreier.mytargets.utils.Utils.getCurrentLocale;
 
 public class InputActivity extends ChildActivityBase
         implements TargetViewBase.OnEndFinishedListener, TargetView.OnEndUpdatedListener,
@@ -95,14 +101,15 @@ public class InputActivity extends ChildActivityBase
 
     private ActivityInputBinding binding;
     private boolean transitionFinished = true;
-    private ETrainingScope shotShowScope = ETrainingScope.END;
+    @Nullable
     private ETrainingScope summaryShowScope = null;
     private TargetView targetView;
 
+    @NonNull
     private BroadcastReceiver updateReceiver = new MobileWearableClient.EndUpdateReceiver() {
 
         @Override
-        protected void onUpdate(Long trainingId, Long roundId, End end) {
+        protected void onUpdate(Long trainingId, Long roundId, @NonNull End end) {
             Bundle extras = getIntent().getExtras();
             extras.putLong(TRAINING_ID, trainingId);
             extras.putLong(ROUND_ID, roundId);
@@ -119,23 +126,24 @@ public class InputActivity extends ChildActivityBase
     };
 
     @NonNull
-    public static IntentWrapper createIntent(Round round) {
+    public static IntentWrapper createIntent(@NonNull Round round) {
         return getIntent(round, 0);
     }
 
-    public static IntentWrapper getIntent(Round round, int endIndex) {
+    @NonNull
+    public static IntentWrapper getIntent(@NonNull Round round, int endIndex) {
         return new IntentWrapper(InputActivity.class)
                 .with(TRAINING_ID, round.trainingId)
                 .with(ROUND_ID, round.getId())
                 .with(END_INDEX, endIndex);
     }
 
-    private static boolean shouldShowRound(Round r, ETrainingScope shotShowScope, Long roundId) {
+    private static boolean shouldShowRound(@NonNull Round r, ETrainingScope shotShowScope, Long roundId) {
         return shotShowScope != ETrainingScope.END
                 && (shotShowScope == ETrainingScope.TRAINING || r.getId().equals(roundId));
     }
 
-    private static boolean shouldShowEnd(End end, Long currentEndId) {
+    private static boolean shouldShowEnd(@NonNull End end, Long currentEndId) {
         return !SharedUtils.equals(end.getId(), currentEndId) && end.exact;
     }
 
@@ -152,15 +160,10 @@ public class InputActivity extends ChildActivityBase
             setupTransitionListener();
         }
 
-        shotShowScope = SettingsManager.getShowMode();
-
         updateSummaryVisibility();
 
         Icepick.restoreInstanceState(this, savedInstanceState);
-        if (data != null) {
-            onDataLoadFinished();
-            updateEnd();
-        } else {
+        if (data == null) {
             getSupportLoaderManager().initLoader(0, getIntent().getExtras(), this).forceLoad();
         }
         LocalBroadcastManager.getInstance(this).registerReceiver(updateReceiver,
@@ -170,7 +173,17 @@ public class InputActivity extends ChildActivityBase
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onResume() {
+        super.onResume();
+        if (data != null) {
+            onDataLoadFinished();
+            updateEnd();
+        }
+        Utils.setShowWhenLocked(this, SettingsManager.getInputKeepAboveLockscreen());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
             ImageList imageList = GalleryActivity.getResult(data);
@@ -224,29 +237,16 @@ public class InputActivity extends ChildActivityBase
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        final MenuItem eye = menu.findItem(R.id.action_show);
-        final MenuItem keyboard = menu.findItem(R.id.action_keyboard);
-        final MenuItem grouping = menu.findItem(R.id.action_grouping);
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         final MenuItem timer = menu.findItem(R.id.action_timer);
         final MenuItem newRound = menu.findItem(R.id.action_new_round);
         final MenuItem takePicture = menu.findItem(R.id.action_photo);
         if (targetView == null || data.getEnds().size() == 0) {
-            eye.setVisible(false);
-            keyboard.setVisible(false);
-            grouping.setVisible(false);
+            takePicture.setVisible(false);
             timer.setVisible(false);
             newRound.setVisible(false);
-            takePicture.setVisible(false);
         } else {
-            final boolean plotting = targetView.getInputMode() == EInputMethod.PLOTTING;
-            eye.setVisible(plotting);
-            grouping.setVisible(plotting);
-            keyboard.setIcon(plotting
-                    ? R.drawable.ic_keyboard_white_24dp
-                    : R.drawable.ic_keyboard_white_off_24dp);
-            keyboard.setChecked(!plotting);
-            keyboard.setVisible(data.getCurrentEnd().isEmpty());
+            takePicture.setVisible(Utils.hasCameraHardware(this));
             timer.setIcon(SettingsManager.getTimerEnabled()
                     ? R.drawable.ic_timer_off_white_24dp
                     : R.drawable.ic_timer_white_24dp);
@@ -257,67 +257,29 @@ public class InputActivity extends ChildActivityBase
             takePicture.setIcon(data.getCurrentEnd().getImages().isEmpty() ?
                     R.drawable.ic_photo_camera_white_24dp : R.drawable.ic_image_white_24dp);
         }
-
-        switch (SettingsManager.getShowMode()) {
-            case END:
-                menu.findItem(R.id.action_show_end).setChecked(true);
-                break;
-            case ROUND:
-                menu.findItem(R.id.action_show_round).setChecked(true);
-                break;
-            case TRAINING:
-                menu.findItem(R.id.action_show_training).setChecked(true);
-                break;
-            default:
-                // Never called: All enum values are checked
-                break;
-        }
-        switch (SettingsManager.getAggregationStrategy()) {
-            case NONE:
-                menu.findItem(R.id.action_grouping_none).setChecked(true);
-                break;
-            case AVERAGE:
-                menu.findItem(R.id.action_grouping_average).setChecked(true);
-                break;
-            case CLUSTER:
-                menu.findItem(R.id.action_grouping_cluster).setChecked(true);
-                break;
-            default:
-                // Never called: All enum values are checked
-                break;
-        }
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_grouping_none:
-                targetView.setAggregationStrategy(EAggregationStrategy.NONE);
-                break;
-            case R.id.action_grouping_average:
-                targetView.setAggregationStrategy(EAggregationStrategy.AVERAGE);
-                break;
-            case R.id.action_grouping_cluster:
-                targetView.setAggregationStrategy(EAggregationStrategy.CLUSTER);
-                break;
-            case R.id.action_show_end:
-                setShotShowScope(ETrainingScope.END);
-                break;
-            case R.id.action_show_round:
-                setShotShowScope(ETrainingScope.ROUND);
-                break;
-            case R.id.action_show_training:
-                setShotShowScope(ETrainingScope.TRAINING);
-                break;
-            case R.id.action_keyboard:
-                final EInputMethod inputMethod = targetView.getInputMode() == EInputMethod.KEYBOARD
-                        ? EInputMethod.PLOTTING
-                        : EInputMethod.KEYBOARD;
-                targetView.setInputMethod(inputMethod, true);
-                SettingsManager.setInputMethod(inputMethod);
-                item.setChecked(inputMethod == EInputMethod.KEYBOARD);
-                supportInvalidateOptionsMenu();
+            case R.id.action_photo:
+                GalleryActivity.getIntent(new ImageList(data.getCurrentEnd()
+                        .getImages()), getString(R.string.end_n, data.endIndex + 1))
+                        .withContext(this)
+                        .forResult(GALLERY_REQUEST_CODE)
+                        .start();
+                return true;
+            case R.id.action_comment:
+                new MaterialDialog.Builder(this)
+                        .title(R.string.comment)
+                        .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE)
+                        .input("", data.getCurrentEnd().comment, (dialog, input) -> {
+                            data.getCurrentEnd().comment = input.toString();
+                            data.getCurrentEnd().save();
+                        })
+                        .negativeText(android.R.string.cancel)
+                        .show();
                 return true;
             case R.id.action_timer:
                 boolean timerEnabled = !SettingsManager.getTimerEnabled();
@@ -328,33 +290,24 @@ public class InputActivity extends ChildActivityBase
                 item.setChecked(timerEnabled);
                 supportInvalidateOptionsMenu();
                 return true;
+            case R.id.action_settings:
+                SettingsActivity.getIntent(ESettingsScreens.INPUT)
+                        .withContext(this)
+                        .start();
+                return true;
             case R.id.action_new_round:
                 EditRoundFragment.createIntent(data.training)
                         .withContext(this)
                         .start();
                 return true;
-            case R.id.action_photo:
-                GalleryActivity.getIntent(new ImageList(data.getCurrentEnd()
-                        .getImages()), getString(R.string.end_n, data.endIndex + 1))
-                        .withContext(this)
-                        .forResult(GALLERY_REQUEST_CODE)
-                        .start();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-        item.setChecked(true);
-        return true;
     }
 
-    private void setShotShowScope(ETrainingScope shotShowScope) {
-        this.shotShowScope = shotShowScope;
-        SettingsManager.setShowMode(shotShowScope);
-        updateOldShoots();
-    }
-
+    @NonNull
     @Override
-    public Loader<LoaderResult> onCreateLoader(int id, Bundle args) {
+    public Loader<LoaderResult> onCreateLoader(int id, @NonNull Bundle args) {
         long trainingId = args.getLong(TRAINING_ID);
         long roundId = args.getLong(ROUND_ID);
         int endIndex = args.getInt(END_INDEX);
@@ -362,7 +315,7 @@ public class InputActivity extends ChildActivityBase
     }
 
     @Override
-    public void onLoadFinished(Loader<LoaderResult> loader, LoaderResult data) {
+    public void onLoadFinished(Loader<LoaderResult> loader, @NonNull LoaderResult data) {
         this.data = data;
         onDataLoadFinished();
         showEnd(data.endIndex);
@@ -375,12 +328,12 @@ public class InputActivity extends ChildActivityBase
         }
         targetView = (TargetView) binding.targetViewStub.getBinding().getRoot();
         targetView.setTarget(data.getCurrentRound().getTarget());
-        targetView.setArrow(data.arrowDiameter, data.training.arrowNumbering);
+        targetView.setArrow(data.arrowDiameter, data.training.arrowNumbering, data.maxArrowNumber);
         targetView.setOnTargetSetListener(InputActivity.this);
         targetView.setUpdateListener(InputActivity.this);
         targetView.reloadSettings();
         targetView.setAggregationStrategy(SettingsManager.getAggregationStrategy());
-        targetView.setInputMethod(SettingsManager.getInputMethod(), false);
+        targetView.setInputMethod(SettingsManager.getInputMethod());
         updateOldShoots();
     }
 
@@ -408,7 +361,7 @@ public class InputActivity extends ChildActivityBase
         final End currentEnd = data.getCurrentEnd();
         final Long currentRoundId = data.getCurrentRound().getId();
         final Long currentEndId = currentEnd.getId();
-        final ETrainingScope shotShowScope = this.shotShowScope;
+        final ETrainingScope shotShowScope = SettingsManager.getShowMode();
         final LoaderResult data = this.data;
         final Stream<Shot> shotStream = Stream.of(data.training.getRounds())
                 .filter((r) -> shouldShowRound(r, shotShowScope, currentRoundId))
@@ -421,7 +374,7 @@ public class InputActivity extends ChildActivityBase
     private void openTimer() {
         if (data.getCurrentEnd().isEmpty() && SettingsManager.getTimerEnabled()) {
             if (transitionFinished) {
-                TimerFragment.getIntent()
+                TimerFragment.getIntent(true)
                         .withContext(this)
                         .start();
             } else if (Utils.isLollipop()) {
@@ -435,7 +388,7 @@ public class InputActivity extends ChildActivityBase
         getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
             @Override
             public void onTransitionEnd(Transition transition) {
-                TimerFragment.getIntent()
+                TimerFragment.getIntent(true)
                         .withContext(InputActivity.this)
                         .start();
                 getWindow().getSharedElementEnterTransition().removeListener(this);
@@ -448,11 +401,11 @@ public class InputActivity extends ChildActivityBase
         final int totalEnds = data.getCurrentRound().maxEndCount == null
                 ? data.getEnds().size()
                 : data.getCurrentRound().maxEndCount;
-        binding.endTitle.setText(
-                getString(R.string.passe) + " " + (data.endIndex + 1) + "/" + totalEnds);
+        binding.endTitle.setText(getString(R.string.end_x_of_y, data.endIndex + 1, totalEnds));
         binding.roundTitle.setText(getString(
-                R.string.round) + " " + (data.getCurrentRound().index + 1) + "/" + data.training
-                .getRounds().size());
+                R.string.round_x_of_y,
+                data.getCurrentRound().index + 1,
+                data.training.getRounds().size()));
         updateNavigationButtons();
         updateWearNotification();
     }
@@ -510,7 +463,7 @@ public class InputActivity extends ChildActivityBase
         binding.next.setEnabled(isEnabled);
     }
 
-    private void openRound(Round round, int endIndex) {
+    private void openRound(@NonNull Round round, int endIndex) {
         finish();
         RoundFragment.getIntent(round)
                 .noAnimation()
@@ -546,13 +499,16 @@ public class InputActivity extends ChildActivityBase
 
         switch (summaryShowScope) {
             case END:
-                binding.averageScore.setText(reachedEndScore.getShotAverageFormatted());
+                binding.averageScore
+                        .setText(reachedEndScore.getShotAverageFormatted(getCurrentLocale(this)));
                 break;
             case ROUND:
-                binding.averageScore.setText(reachedRoundScore.getShotAverageFormatted());
+                binding.averageScore
+                        .setText(reachedRoundScore.getShotAverageFormatted(getCurrentLocale(this)));
                 break;
             case TRAINING:
-                binding.averageScore.setText(reachedTrainingScore.getShotAverageFormatted());
+                binding.averageScore.setText(reachedTrainingScore
+                        .getShotAverageFormatted(getCurrentLocale(this)));
                 break;
             default:
                 break;
@@ -581,7 +537,7 @@ public class InputActivity extends ChildActivityBase
         private final long roundId;
         private final int endIndex;
 
-        public UITaskAsyncTaskLoader(Context context, long trainingId, long roundId, int endIndex) {
+        public UITaskAsyncTaskLoader(@NonNull Context context, long trainingId, long roundId, int endIndex) {
             super(context);
             this.trainingId = trainingId;
             this.roundId = roundId;
@@ -598,7 +554,7 @@ public class InputActivity extends ChildActivityBase
             if (training.arrowId != null) {
                 Arrow arrow = training.getArrow();
                 if (arrow != null) {
-                    result.setArrowDiameter(arrow.diameter);
+                    result.setArrow(arrow);
                 }
             }
             final Bow bow = training.getBow();
@@ -611,15 +567,20 @@ public class InputActivity extends ChildActivityBase
 
     @Parcel
     static class LoaderResult {
+        @NonNull
         final Training training;
+        @Nullable
         StandardRound standardRound;
+        @Nullable
         Dimension arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
+        @Nullable
         SightMark sightMark = null;
         int roundIndex = 0;
         int endIndex = 0;
+        int maxArrowNumber = 12;
 
         @ParcelConstructor
-        public LoaderResult(Training training) {
+        public LoaderResult(@NonNull Training training) {
             this.training = training.ensureLoaded();
             this.standardRound = training.getStandardRound();
         }
@@ -639,6 +600,7 @@ public class InputActivity extends ChildActivityBase
             this.endIndex = Math.min(endIndex, getCurrentRound().getEnds().size());
         }
 
+        @Nullable
         public Dimension getDistance() {
             return getCurrentRound().distance;
         }
@@ -665,8 +627,9 @@ public class InputActivity extends ChildActivityBase
             return ends.get(endIndex);
         }
 
-        public void setArrowDiameter(Dimension arrowDiameter) {
-            this.arrowDiameter = arrowDiameter;
+        public void setArrow(@NonNull Arrow arrow) {
+            maxArrowNumber = arrow.maxArrowNumber;
+            arrowDiameter = arrow.diameter;
         }
     }
 }

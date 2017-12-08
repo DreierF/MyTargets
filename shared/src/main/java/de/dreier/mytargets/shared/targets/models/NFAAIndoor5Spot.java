@@ -29,8 +29,11 @@ import static de.dreier.mytargets.shared.utils.Color.SAPPHIRE_BLUE;
 import static de.dreier.mytargets.shared.utils.Color.WHITE;
 
 public class NFAAIndoor5Spot extends TargetModelBase {
+
+    public static final int ID = 11;
+
     public NFAAIndoor5Spot() {
-        super(11, R.string.nfaa_indoor_5_spot);
+        super(ID, R.string.nfaa_indoor_5_spot);
         zones = new ZoneBase[]{
                 new CircularZone(0.25f, WHITE, DARK_GRAY, 2),
                 new CircularZone(0.5f, WHITE, DARK_GRAY, 2),

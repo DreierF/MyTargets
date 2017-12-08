@@ -16,6 +16,8 @@
 package de.dreier.mytargets.utils.multiselector;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
  * <p>A Selector that only allows for one position at a time to be selected. </p>
@@ -44,16 +46,17 @@ public class SingleSelector extends SelectorBase {
     }
 
     @Override
-    protected void saveSelectionStates(Bundle bundle) {
+    protected void saveSelectionStates(@NonNull Bundle bundle) {
         bundle.putLong(SELECTION_ID, selectedId);
     }
 
     @Override
-    public void restoreSelectionStates(Bundle savedStates) {
+    public void restoreSelectionStates(@NonNull Bundle savedStates) {
         super.restoreSelectionStates(savedStates);
         selectedId = savedStates.getLong(SELECTION_ID);
     }
 
+    @Nullable
     public Long getSelectedId() {
         return selectedId == -1 ? null : selectedId;
     }

@@ -32,7 +32,7 @@ public class NFAAExpertField extends TargetModelBase {
 
     public NFAAExpertField() {
         super(ID, R.string.nfaa_expert_field);
-        zones = new ZoneBase[] {
+        zones = new ZoneBase[]{
                 new CircularZone(0.1f, DARK_GRAY, WHITE, 4),
                 new CircularZone(0.2f, DARK_GRAY, DARK_GRAY, 0),
                 new CircularZone(0.4f, WHITE, DARK_GRAY, 4),

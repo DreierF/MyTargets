@@ -38,7 +38,8 @@ public class WindDirection implements IIdProvider, IImageProvider, Comparable<Wi
         this.drawable = drawable;
     }
 
-    public static List<WindDirection> getList(Context context) {
+    @NonNull
+    public static List<WindDirection> getList(@NonNull Context context) {
         List<WindDirection> list = new ArrayList<>();
         list.add(new WindDirection(0, context.getString(R.string.front),
                 R.drawable.ic_arrow_downward_black_24dp));
@@ -72,10 +73,11 @@ public class WindDirection implements IIdProvider, IImageProvider, Comparable<Wi
     }
 
     @Override
-    public Drawable getDrawable(Context context) {
+    public Drawable getDrawable(@NonNull Context context) {
         return context.getResources().getDrawable(drawable);
     }
 
+    @NonNull
     @Override
     public String getName() {
         return name;

@@ -25,8 +25,8 @@ android {
 
     defaultConfig {
         applicationId 'de.dreier.mytargets'
-        minSdkVersion 21
-        targetSdkVersion 26
+        minSdkVersion 23
+        targetSdkVersion 27
         versionCode gitVersionCode
         versionName gitVersionName
     }
@@ -65,9 +65,8 @@ android {
 dependencies {
     implementation "com.google.android.support:wearable:$libraryVersion.supportWearable"
     compileOnly "com.google.android.wearable:wearable:$libraryVersion.supportWearable"
-    implementation "com.android.support:percent:$libraryVersion.support"
-    implementation "com.android.support:recyclerview-v7:$libraryVersion.support"
-    implementation "com.android.support:support-v4:$libraryVersion.support"
+    implementation "com.android.support:support-compat:$libraryVersion.support"
+    implementation "com.android.support:wear:$libraryVersion.support"
 
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$libraryVersion.dbFlow"
     implementation "com.github.Raizlabs.DBFlow:dbflow-core:$libraryVersion.dbFlow"

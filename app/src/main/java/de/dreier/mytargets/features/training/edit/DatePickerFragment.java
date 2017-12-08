@@ -23,12 +23,13 @@ import android.support.v4.app.DialogFragment;
 
 import junit.framework.Assert;
 
-import org.joda.time.LocalDate;
+import org.threeten.bp.LocalDate;
 
 public class DatePickerFragment extends DialogFragment {
 
     private static final String ARG_CURRENT_DATE = "current_date";
 
+    @NonNull
     public static DatePickerFragment newInstance(LocalDate date) {
         DatePickerFragment datePickerDialog = new DatePickerFragment();
         Bundle bundle = new Bundle();
@@ -47,6 +48,6 @@ public class DatePickerFragment extends DialogFragment {
         // Create a new instance of DatePickerDialog and return it
         DatePickerDialog.OnDateSetListener listener = (DatePickerDialog.OnDateSetListener) getTargetFragment();
         return new DatePickerDialog(getActivity(), listener, date.getYear(),
-                date.getMonthOfYear() - 1, date.getDayOfMonth());
+                date.getMonthValue() - 1, date.getDayOfMonth());
     }
 }

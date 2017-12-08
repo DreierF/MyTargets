@@ -17,6 +17,7 @@ package de.dreier.mytargets.base.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -71,7 +72,7 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
      * @param recyclerView RecyclerView instance
      * @param item         Currently selected item
      */
-    protected void selectItem(RecyclerView recyclerView, T item) {
+    protected void selectItem(@NonNull RecyclerView recyclerView, @NonNull T item) {
         selector.setSelected(item.getId(), true);
         recyclerView.post(() -> {
             LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
@@ -97,7 +98,7 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
      * {@inheritDoc}
      */
     @Override
-    public void onClick(SelectableViewHolder<T> holder, T item) {
+    public void onClick(@NonNull SelectableViewHolder<T> holder, T item) {
         boolean alreadySelected = selector.isSelected(holder.getItemId());
         selector.setSelected(holder, true);
         if (alreadySelected || !useDoubleClickSelection) {
@@ -118,6 +119,7 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
      *
      * @return The selected item
      */
+    @NonNull
     protected T onSave() {
         return adapter.getItemById(selector.getSelectedId());
     }

@@ -20,6 +20,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextPaint;
 
 public class CanvasWrapper {
@@ -30,12 +32,14 @@ public class CanvasWrapper {
     private final float[] tmpPts = new float[4];
     private final float[] tmpPt = new float[2];
     private final Path tmpPath = new Path();
+    @Nullable
     private Canvas canvas;
     private Matrix matrix;
     private float scale;
+    @NonNull
     private TextPaint tempTextPaint = new TextPaint();
 
-    public void setCanvas(Canvas canvas) {
+    public void setCanvas(@NonNull Canvas canvas) {
         this.canvas = canvas;
         canvas.save();
     }
@@ -56,7 +60,7 @@ public class CanvasWrapper {
                 .sqrt(Math.pow(tmpPts[0] - tmpPts[2], 2) + Math.pow(tmpPts[1] - tmpPts[3], 2));
     }
 
-    public void drawPath(Path path, final Paint pen) {
+    public void drawPath(@NonNull Path path, @NonNull final Paint pen) {
         // transform the path
         tmpPath.set(path);
         tmpPath.transform(matrix);
@@ -68,7 +72,7 @@ public class CanvasWrapper {
         canvas.drawPath(tmpPath, tempPen);
     }
 
-    public void drawCircle(float x, float y, float radius, Paint paintFill) {
+    public void drawCircle(float x, float y, float radius, @NonNull Paint paintFill) {
         // copy the existing Paint
         scalePaint(paintFill);
         tmpPt[0] = x;
@@ -77,7 +81,7 @@ public class CanvasWrapper {
         canvas.drawCircle(tmpPt[0], tmpPt[1], radius * scale, tempPen);
     }
 
-    public void drawLine(float startX, float startY, float endX, float endY, Paint paintStroke) {
+    public void drawLine(float startX, float startY, float endX, float endY, @NonNull Paint paintStroke) {
         // copy the existing Paint
         scalePaint(paintStroke);
         tmpPts[0] = startX;
@@ -88,7 +92,7 @@ public class CanvasWrapper {
         canvas.drawLine(tmpPts[0], tmpPts[1], tmpPts[2], tmpPts[3], tempPen);
     }
 
-    public void drawRect(RectF rect, Paint paint) {
+    public void drawRect(@NonNull RectF rect, @NonNull Paint paint) {
         scalePaint(paint);
         tmpPts[0] = rect.left;
         tmpPts[1] = rect.top;
@@ -98,13 +102,13 @@ public class CanvasWrapper {
         canvas.drawRect(tmpPts[0], tmpPts[1], tmpPts[2], tmpPts[3], tempPen);
     }
 
-    private void scalePaint(Paint paint) {
+    private void scalePaint(@NonNull Paint paint) {
         tempPen.set(paint);
         tempPen.setStrokeMiter(paint.getStrokeMiter() * scale);
         tempPen.setStrokeWidth(paint.getStrokeWidth() * scale);
     }
 
-    public void drawText(String text, RectF rect, TextPaint paintText) {
+    public void drawText(@NonNull String text, @NonNull RectF rect, TextPaint paintText) {
         tmpPts[0] = rect.left;
         tmpPts[1] = rect.top;
         tmpPts[2] = rect.right;

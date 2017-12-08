@@ -43,7 +43,7 @@ public class AboutFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return new AboutPage(getContext())
                 .isRTL(false)
                 .setImage(R.drawable.product_logo_144dp)
@@ -96,6 +96,7 @@ public class AboutFragment extends Fragment {
                 URL_LINKEDIN);
     }
 
+    @NonNull
     private Element getShareElement() {
         Element shareElement = new Element(getString(R.string.share_with_friends), R.drawable.about_icon_share);
         Intent sendIntent = new Intent();
@@ -107,6 +108,7 @@ public class AboutFragment extends Fragment {
         return shareElement;
     }
 
+    @NonNull
     private Element getDonateElement() {
         Element donateElement = new Element(getString(R.string.donate), R.drawable.about_icon_donate);
         donateElement.setIntent(new Intent(getContext(), DonateActivity.class));

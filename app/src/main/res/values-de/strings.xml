@@ -17,6 +17,7 @@
 <resources>
   <!-- General -->
   <string name="preferences">Einstellungen</string>
+  <string name="settings">Einstellungen</string>
   <string name="prev">Zurück</string>
   <string name="next">Weiter</string>
   <string name="save">Speichern</string>
@@ -27,7 +28,6 @@
   <string name="round">Runde</string>
   <string name="points">Punkte</string>
   <string name="passe">Passe</string>
-  <string name="passe_n">Passe %d</string>
   <!-- Overview -->
   <string name="new_training">Neues Training</string>
   <string name="new_bow">Neuer Bogen</string>
@@ -242,7 +242,6 @@
   <string name="last_name">Nachname</string>
   <string name="age">Alter</string>
   <string name="show_signature">Unterschrift</string>
-  <string name="witness">Zeuge</string>
   <string name="archer">Bogenschütze</string>
   <string name="hits">Treffer</string>
   <string name="misses">Nicht-Treffer</string>
@@ -252,6 +251,7 @@
   <string name="diameter">Durchmesser</string>
   <string name="input">Eingabe</string>
   <string name="target_zoom">Zoomstufe für Zielscheibe</string>
+  <string name="action_pdf">Als PDF exportieren</string>
   <string name="arrow_diameter_scale">Pfeildurchmesser Skalierung</string>
   <string name="timestamp">Uhrzeit</string>
   <string name="change_target_face">Auflage ändern</string>
@@ -325,5 +325,39 @@
   <string name="show_arrow_average">Pfeildurchschnitt anzeigen</string>
   <string name="image_deleted">Bild gelöscht</string>
   <string name="delete_image">Bild löschen?</string>
+  <string name="keyboard_type">Tastaturtyp</string>
+  <string name="keyboard_enabled">Tastatur aktiviert</string>
+  <string name="sort_shots">Schüsse sortieren</string>
+  <string name="sort_shots_for_spots">Schüsse bei Spot Auflagen sortieren</string>
+  <string name="target_captain">Schreiber</string>
+  <string name="language">Sprache</string>
   <string name="warning_backup_experimental">Achtung: Dieses Feature ist noch experimentell! Bitte überprüfen Sie in regelmäßigen Abständen, ob die Sicherung erfolgreich war!</string>
+  <string name="drawer_open">Navigationsleiste öffnen</string>
+  <string name="drawer_close">Navigationsleiste schließen</string>
+  <string name="help">Hilfe</string>
+  <string name="home">Startseite</string>
+  <string name="click_to_enter_profile">Tippen um das Profil anzupassen</string>
+  <string name="no_trainings">Du hast noch keine Trainings!</string>
+  <string name="no_bows">Keine Bögen</string>
+  <string name="no_arrows">Keine Pfeile</string>
+  <string name="version_info">Versionsinfo</string>
+  <string name="version_prefix">Version</string>
+  <string name="max_arrow_number">Höchste Pfeil-Nummer</string>
+  <string name="distances">Entfernungen</string>
+  <string name="diameters">Durchmesser</string>
+  <string name="bows">Bögen</string>
+  <string name="reset">Zurücksetzen</string>
+  <string name="end_x_of_y">Passe %1$d/%2$d</string>
+  <string name="round_x_of_y">Runde %1$d/%2$d</string>
+  <string name="settings_summary_timer">Verhalten der Schießuhr anpassen</string>
+  <string name="settings_summary_scoreboard">Aussehen des Schießzettels ändern</string>
+  <string name="settings_summary_input">Personalisierung des Eingabe-Bildschirms</string>
+  <string name="settings_summary_overview">Anpassen der angezeigten Infos für Trainings, Runden und Passen</string>
+  <string name="settings_summary_profile">Persönliche Informationen bearbeiten</string>
+  <string name="licence_number">Lizenz-Nummer</string>
+  <string name="file_type">Dateityp</string>
+  <string name="clear">Löschen</string>
+  <string name="tap_to_sign">Tippen zum Unterschreiben</string>
+  <string name="pdf_file">PDF-Datei</string>
+  <string name="image_file">Bild-Datei</string>
 </resources>

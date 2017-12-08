@@ -23,23 +23,38 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Process;
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.View;
+import android.view.WindowManager;
 
-import org.joda.time.LocalDate;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.format.DateTimeFormatter;
 
 import java.util.Locale;
 
 import de.dreier.mytargets.features.main.MainActivity;
+import de.dreier.mytargets.features.training.overview.Header;
+
+import static android.os.Build.VERSION;
+import static android.os.Build.VERSION_CODES;
 
 public class Utils {
 
-    public static long getMonthId(LocalDate date) {
-        return new LocalDate(date).withDayOfMonth(1).toDate().getTime();
+    public static Header getMonthHeader(@NonNull Context context, @NonNull LocalDate date) {
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMMM yyyy",
+                getCurrentLocale(context));
+        LocalDate month = getMonthStart(date);
+        return new Header(month.toEpochDay(), month.format(dateFormat));
     }
 
-    public static void doRestart(Context context) {
+    @NonNull
+    private static LocalDate getMonthStart(@NonNull LocalDate date) {
+        return LocalDate.from(date).withDayOfMonth(1);
+    }
+
+    public static void doRestart(@NonNull Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -56,8 +71,12 @@ public class Utils {
         Process.killProcess(Process.myPid());
     }
 
+    public static boolean isKitKat() {
+        return VERSION.SDK_INT >= VERSION_CODES.KITKAT;
+    }
+
     public static boolean isLollipop() {
-        return android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP;
+        return VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP;
     }
 
     public static String humanReadableByteCount(long bytes, boolean si) {
@@ -70,12 +89,12 @@ public class Utils {
         return String.format(Locale.US, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
-    public static boolean hasCameraHardware(Context context) {
+    public static boolean hasCameraHardware(@NonNull Context context) {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
     @SuppressLint("InlinedApi")
-    public static void hideSystemUI(Activity activity) {
+    public static void hideSystemUI(@NonNull Activity activity) {
         View decorView = activity.getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -86,7 +105,7 @@ public class Utils {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
     }
 
-    public static void showSystemUI(Activity activity) {
+    public static void showSystemUI(@NonNull Activity activity) {
         View decorView = activity.getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -95,8 +114,21 @@ public class Utils {
     }
 
     @SuppressWarnings("deprecation")
+    public static void setShowWhenLocked(Activity activity, boolean showWhenLocked) {
+        if (VERSION.SDK_INT >= VERSION_CODES.O_MR1) {
+            activity.setShowWhenLocked(showWhenLocked);
+        } else {
+            if (showWhenLocked) {
+                activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+            } else {
+                activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+            }
+        }
+    }
+
+    @SuppressWarnings("deprecation")
     public static Spanned fromHtml(String html) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
             return Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
         } else {
             return Html.fromHtml(html);
@@ -106,5 +138,14 @@ public class Utils {
     public static int argb(int alpha, int color) {
         return Color.argb(alpha, Color.red(color), Color.green(color),
                 Color.blue(color));
+    }
+
+    public static Locale getCurrentLocale(@NonNull Context context) {
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            return context.getResources().getConfiguration().getLocales().get(0);
+        } else {
+            //noinspection deprecation
+            return context.getResources().getConfiguration().locale;
+        }
     }
 }

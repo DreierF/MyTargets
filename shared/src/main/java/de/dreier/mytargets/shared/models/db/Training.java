@@ -16,6 +16,7 @@
 package de.dreier.mytargets.shared.models.db;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.annimon.stream.Stream;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -30,10 +31,11 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
-import org.joda.time.LocalDate;
 import org.parceler.Parcel;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.FormatStyle;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,27 +52,32 @@ import de.dreier.mytargets.shared.utils.typeconverters.LocalDateConverter;
 @Table(database = AppDatabase.class)
 public class Training extends BaseModel implements IIdSettable, Comparable<Training>, IRecursiveModel {
 
+    @Nullable
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     Long id;
 
+    @Nullable
     @Column
     public String title = "";
 
+    @Nullable
     @Column(typeConverter = LocalDateConverter.class)
-    public LocalDate date = new LocalDate();
+    public LocalDate date;
 
+    @Nullable
     @ForeignKey(tableClass = StandardRound.class, references = {
             @ForeignKeyReference(columnName = "standardRound", columnType = Long.class, foreignKeyColumnName = "_id")},
             onDelete = ForeignKeyAction.SET_NULL)
-    // FIXME old migrations still have NO ACTION in here
     public Long standardRoundId;
 
+    @Nullable
     @ForeignKey(tableClass = Bow.class, references = {
             @ForeignKeyReference(columnName = "bow", columnType = Long.class, foreignKeyColumnName = "_id")},
             onDelete = ForeignKeyAction.SET_NULL)
     public Long bowId;
 
+    @Nullable
     @ForeignKey(tableClass = Arrow.class, references = {
             @ForeignKeyReference(columnName = "arrow", columnType = Long.class, foreignKeyColumnName = "_id")},
             onDelete = ForeignKeyAction.SET_NULL)
@@ -82,6 +89,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     @Column
     public boolean indoor;
 
+    @Nullable
     @Column(typeConverter = EWeatherConverter.class)
     public EWeather weather;
 
@@ -91,11 +99,27 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     @Column
     public int windSpeed;
 
+    @Nullable
     @Column
     public String location = "";
 
+    @NonNull
+    @Column
+    public String comment = "";
+
+    @Nullable
+    @ForeignKey(tableClass = Signature.class, references = {
+            @ForeignKeyReference(columnName = "archerSignature", columnType = Long.class, foreignKeyColumnName = "_id")}, onDelete = ForeignKeyAction.SET_NULL)
+    public Long archerSignatureId;
+
+    @Nullable
+    @ForeignKey(tableClass = Signature.class, references = {
+            @ForeignKeyReference(columnName = "witnessSignature", columnType = Long.class, foreignKeyColumnName = "_id")}, onDelete = ForeignKeyAction.SET_NULL)
+    public Long witnessSignatureId;
+
     public List<Round> rounds;
 
+    @Nullable
     public static Training get(Long id) {
         return SQLite.select()
                 .from(Training.class)
@@ -107,11 +131,12 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
         return SQLite.select().from(Training.class).queryList();
     }
 
+    @Nullable
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(@Nullable Long id) {
         this.id = id;
     }
 
@@ -122,11 +147,12 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
                 id.equals(((Training) another).id);
     }
 
+    @Nullable
     public Environment getEnvironment() {
         return new Environment(indoor, weather, windSpeed, windDirection, location);
     }
 
-    public void setEnvironment(Environment env) {
+    public void setEnvironment(@NonNull Environment env) {
         indoor = env.indoor;
         weather = env.weather;
         windDirection = env.windDirection;
@@ -140,11 +166,13 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
             rounds = SQLite.select()
                     .from(Round.class)
                     .where(Round_Table.training.eq(id))
+                    .orderBy(Round_Table.index, true)
                     .queryList();
         }
         return rounds;
     }
 
+    @Nullable
     public StandardRound getStandardRound() {
         return SQLite.select()
                 .from(StandardRound.class)
@@ -152,6 +180,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
                 .querySingle();
     }
 
+    @Nullable
     public Bow getBow() {
         return SQLite.select()
                 .from(Bow.class)
@@ -159,6 +188,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
                 .querySingle();
     }
 
+    @Nullable
     public Arrow getArrow() {
         return SQLite.select()
                 .from(Arrow.class)
@@ -166,8 +196,44 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
                 .querySingle();
     }
 
+    @NonNull
+    public Signature getOrCreateArcherSignature() {
+        if (archerSignatureId != null) {
+            Signature signature = SQLite.select()
+                    .from(Signature.class)
+                    .where(Signature_Table._id.eq(archerSignatureId))
+                    .querySingle();
+            if (signature != null) {
+                return signature;
+            }
+        }
+        Signature signature = new Signature();
+        signature.save();
+        archerSignatureId = signature._id;
+        save();
+        return signature;
+    }
+
+    @NonNull
+    public Signature getOrCreateWitnessSignature() {
+        if (witnessSignatureId != null) {
+            Signature signature = SQLite.select()
+                    .from(Signature.class)
+                    .where(Signature_Table._id.eq(witnessSignatureId))
+                    .querySingle();
+            if (signature != null) {
+                return signature;
+            }
+        }
+        Signature signature = new Signature();
+        signature.save();
+        witnessSignatureId = signature._id;
+        save();
+        return signature;
+    }
+
     public String getFormattedDate() {
-        return DateFormat.getDateInstance().format(date.toDate());
+        return date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
     }
 
     public Score getReachedScore() {
@@ -213,6 +279,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
         super.delete(databaseWrapper);
     }
 
+    @NonNull
     public Training ensureLoaded() {
         for (Round round : getRounds()) {
             for (End end : round.getEnds()) {
@@ -222,7 +289,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
         return this;
     }
 
-    public void initRoundsFromTemplate(StandardRound standardRound) {
+    public void initRoundsFromTemplate(@NonNull StandardRound standardRound) {
         rounds = new ArrayList<>();
         for (RoundTemplate template : standardRound.getRounds()) {
             Round round = new Round(template);
@@ -247,5 +314,14 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
             s.trainingId = id;
             s.saveRecursively(databaseWrapper);
         }
+    }
+
+    @NonNull
+    public List<Round> getRounds(DatabaseWrapper databaseWrapper) {
+        return SQLite.select()
+                .from(Round.class)
+                .where(Round_Table.training.eq(id))
+                .orderBy(Round_Table.index, true)
+                .queryList(databaseWrapper);
     }
 }

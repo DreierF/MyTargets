@@ -18,6 +18,7 @@ package de.dreier.mytargets.base.fragments;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,8 +41,9 @@ public abstract class SelectPureListItemFragmentBase<T extends IIdProvider & IIm
 
     protected FragmentListBinding binding;
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
@@ -52,22 +54,18 @@ public abstract class SelectPureListItemFragmentBase<T extends IIdProvider & IIm
         return binding.getRoot();
     }
 
-    @Override
-    public void onLongClick(SelectableViewHolder<T> holder) {
-        onClick(holder, holder.getItem());
-    }
-
     private class ListAdapter extends SimpleListAdapterBase<T> {
 
+        @NonNull
         @Override
-        public SelectableViewHolder<T> onCreateViewHolder(ViewGroup parent) {
+        public SelectableViewHolder<T> onCreateViewHolder(@NonNull ViewGroup parent) {
             final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             return SelectPureListItemFragmentBase.this.onCreateViewHolder(inflater, parent);
         }
     }
 
     @NonNull
-    protected SelectableViewHolder<T> onCreateViewHolder(LayoutInflater inflater, ViewGroup parent) {
+    protected SelectableViewHolder<T> onCreateViewHolder(@NonNull LayoutInflater inflater, ViewGroup parent) {
         return new ViewHolder(inflater.inflate(R.layout.item_image_simple, parent, false));
     }
 

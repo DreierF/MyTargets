@@ -19,16 +19,19 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.support.v4.widget.ExploreByTouchHelper;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
@@ -37,6 +40,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.End;
@@ -45,6 +49,7 @@ import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
 import de.dreier.mytargets.shared.targets.models.WAFull;
 import de.dreier.mytargets.shared.utils.EndRenderer;
+import de.dreier.mytargets.shared.utils.RectUtils;
 
 public abstract class TargetViewBase extends View implements View.OnTouchListener {
     private final TargetAccessibilityTouchHelper touchHelper = new TargetAccessibilityTouchHelper(
@@ -54,17 +59,24 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
      * Zero-based index of the shot that is currently being changed.
      * If no shot is selected it is set to EndRenderer#NO_SELECTION.
      */
-    protected int currentShotIndex;
+    private int currentShotIndex;
+    @NonNull
     protected EndRenderer endRenderer = new EndRenderer();
     protected List<Shot> shots;
     protected RoundTemplate round;
+    @Nullable
     protected OnEndFinishedListener setListener = null;
     protected EInputMethod inputMethod = EInputMethod.KEYBOARD;
     protected float density;
     protected List<SelectableZone> selectableZones;
     protected Target target;
     protected TargetImpactAggregationDrawable targetDrawable;
+    @Nullable
     protected AnimatorSet animator;
+
+    protected Drawable backspaceSymbol;
+    private Rect backspaceButtonBounds;
+
     /**
      * The screen area reserved to show the already entered shots.
      */
@@ -91,6 +103,8 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     private void initForDesigner() {
         density = getResources().getDisplayMetrics().density;
         ViewCompat.setAccessibilityDelegate(this, touchHelper);
+        ViewCompat.setImportantForAccessibility(this, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES);
+        backspaceSymbol = getResources().getDrawable(R.drawable.ic_backspace_grey600_24dp);
         if (isInEditMode()) {
             shots = new ArrayList<>();
             for (int i = 0; i < 3; i++) {
@@ -124,7 +138,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         updateSelectableZones();
     }
 
-    public void setEnd(End end) {
+    public void setEnd(@NonNull End end) {
         shots = end.getShots();
         setCurrentShotIndex(getNextShotIndex(-1));
         endRenderer.setShots(shots);
@@ -139,8 +153,21 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         invalidate();
     }
 
-    public boolean dispatchHoverEvent(MotionEvent event) {
+    @Override
+    public boolean dispatchHoverEvent(@NonNull MotionEvent event) {
         return touchHelper.dispatchHoverEvent(event) || super.dispatchHoverEvent(event);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(@NonNull KeyEvent event) {
+        return touchHelper.dispatchKeyEvent(event) || super.dispatchKeyEvent(event);
+    }
+
+    @Override
+    public void onFocusChanged(boolean gainFocus, int direction,
+                               Rect previouslyFocusedRect) {
+        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+        touchHelper.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
     }
 
     @Override
@@ -153,28 +180,31 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     protected void updateLayout() {
         updateLayoutBounds(getWidth(), getHeight());
+        backspaceButtonBounds = getBackspaceButtonBounds();
         endRect = getEndRect();
+        applyBoundsToBackspaceSymbol();
     }
+
+    private void applyBoundsToBackspaceSymbol() {
+        Rect innerButtonBounds = new Rect(backspaceButtonBounds);
+        innerButtonBounds.inset((int) (8 * density), (int) (8 * density));
+        Rect bounds = new Rect(0, 0, backspaceSymbol.getIntrinsicWidth(), backspaceSymbol
+                .getIntrinsicHeight());
+        Rect backspaceSymbolBounds = RectUtils.fitRectWithin(bounds, innerButtonBounds);
+        backspaceSymbol.setBounds(backspaceSymbolBounds);
+    }
+
+    protected void drawBackspaceButton(@NonNull Canvas canvas) {
+        backspaceSymbol.draw(canvas);
+    }
+
+    protected abstract Rect getBackspaceButtonBounds();
 
     protected abstract void updateLayoutBounds(int width, int height);
 
     protected abstract RectF getEndRect();
 
-    private void updateVirtualViews() {
-        virtualViews.clear();
-        if (inputMethod == EInputMethod.KEYBOARD) {
-            for (int i = 0; i < selectableZones.size(); i++) {
-                VirtualView vv = new VirtualView();
-                vv.id = i;
-                vv.shot = false;
-                vv.description = selectableZones.get(i).text;
-                vv.rect = getSelectableZonePosition(i);
-                virtualViews.add(vv);
-            }
-        }
-    }
-
-    protected int getSelectableZoneIndexFromShot(Shot shot) {
+    protected int getSelectableZoneIndexFromShot(@NonNull Shot shot) {
         int i = 0;
         for (SelectableZone selectableZone : selectableZones) {
             if (shot.scoringRing == selectableZone.index) {
@@ -192,36 +222,30 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     @NonNull
     protected abstract Rect getSelectableZonePosition(int i);
 
-    public boolean onTouch(View view, MotionEvent motionEvent) {
+    public boolean onTouch(View view, @NonNull MotionEvent motionEvent) {
         float x = motionEvent.getX();
         float y = motionEvent.getY();
 
-        if (!isCurrentlySelecting() && selectPreviousShots(motionEvent, x, y)) {
+        if (!isCurrentlySelecting() &&
+                (selectPreviousShots(motionEvent, x, y) || pressBackspace(motionEvent, x, y))) {
             return true;
         }
 
-        Shot shot = getShotFromPos(x, y);
-        if (shot == null) {
+        if (getCurrentShotIndex() == EndRenderer.NO_SELECTION) {
             return true;
         }
 
-        // If a valid selection was made save it in the end
-        if (getCurrentShotIndex() != EndRenderer.NO_SELECTION
-                && (shots.get(getCurrentShotIndex()).scoringRing != shot.scoringRing
-                || inputMethod == EInputMethod.PLOTTING)) {
-            shots.get(getCurrentShotIndex()).scoringRing = shot.scoringRing;
-            shots.get(getCurrentShotIndex()).x = shot.x;
-            shots.get(getCurrentShotIndex()).y = shot.y;
+        Shot shot = shots.get(getCurrentShotIndex());
+        if (updateShotToPosition(shot, x, y)) {
             endRenderer.setSelection(
-                    getCurrentShotIndex(), initAnimationPositions(getCurrentShotIndex()),
+                    getCurrentShotIndex(), getShotCoordinates(shot),
                     getSelectedShotCircleRadius());
             invalidate();
-        }
 
-        // If finger is released go to next shoot
-        if (motionEvent.getAction() == MotionEvent.ACTION_UP && isCurrentlySelecting()) {
-            onArrowChanged();
-            return true;
+            // If finger is released go to next shoot
+            if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                onShotSelectionFinished();
+            }
         }
         return true;
     }
@@ -233,7 +257,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
                 && shots.get(getCurrentShotIndex()).scoringRing != Shot.NOTHING_SELECTED;
     }
 
-    protected void onArrowChanged() {
+    protected void onShotSelectionFinished() {
         setCurrentShotIndex(getNextShotIndex(currentShotIndex));
         animateToNewState();
         notifyTargetShotsChanged();
@@ -269,17 +293,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         }
     }
 
-    protected Animator getCircleAnimation() {
-        PointF pos = null;
-        if (isCurrentlySelecting()) {
-            pos = initAnimationPositions(getCurrentShotIndex());
-        }
-        int initialSize = getSelectedShotCircleRadius();
-        return endRenderer
-                .getAnimationToSelection(getCurrentShotIndex(), pos, initialSize, endRect);
-    }
-
-    protected abstract PointF initAnimationPositions(int i);
+    protected abstract PointF getShotCoordinates(Shot shot);
 
     protected void animateToNewState() {
         if (endRect == null) {
@@ -291,11 +305,22 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         playAnimations(animations);
     }
 
-    protected void collectAnimations(List<Animator> animations) {
+    protected void collectAnimations(@NonNull List<Animator> animations) {
         final Animator animation = getCircleAnimation();
         if (animation != null) {
             animations.add(animation);
         }
+    }
+
+    @Nullable
+    protected Animator getCircleAnimation() {
+        PointF pos = null;
+        if (isCurrentlySelecting()) {
+            pos = getShotCoordinates(shots.get(getCurrentShotIndex()));
+        }
+        int initialSize = getSelectedShotCircleRadius();
+        return endRenderer
+                .getAnimationToSelection(getCurrentShotIndex(), pos, initialSize, endRect);
     }
 
     protected void playAnimations(List<Animator> setList) {
@@ -329,15 +354,36 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     /**
-     * Creates a {@link Shot} object given a position
+     * Updates the given Shot to the given position.
      *
-     * @param x X-Coordinate
-     * @param y Y-Coordinate
-     * @return Returns a fully populated {@link Shot} object or null if the position is not a valid shot
+     * @param shot Shot to update
+     * @param x    X-Coordinate
+     * @param y    Y-Coordinate
+     * @return Returns true if the update was successful and false if the position is invalid
      */
-    protected abstract Shot getShotFromPos(float x, float y);
+    protected abstract boolean updateShotToPosition(Shot shot, float x, float y);
 
     protected abstract boolean selectPreviousShots(MotionEvent motionEvent, float x, float y);
+
+    private boolean pressBackspace(@NonNull MotionEvent motionEvent, float x, float y) {
+        if (backspaceButtonBounds.contains((int) x, (int) y)) {
+            if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                int currentShotIndex = getCurrentShotIndex();
+                if (currentShotIndex != 0) {
+                    if (currentShotIndex == EndRenderer.NO_SELECTION) {
+                        currentShotIndex = shots.size();
+                    }
+                    Shot shot = shots.get(currentShotIndex - 1);
+                    shot.scoringRing = Shot.NOTHING_SELECTED;
+                    setCurrentShotIndex(currentShotIndex - 1);
+                    notifyTargetShotsChanged();
+                    animateToNewState();
+                }
+            }
+            return true;
+        }
+        return false;
+    }
 
     protected int getCurrentShotIndex() {
         return currentShotIndex;
@@ -351,7 +397,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     protected void updateSelectableZones() {
-        if(getCurrentShotIndex() != EndRenderer.NO_SELECTION) {
+        if (getCurrentShotIndex() != EndRenderer.NO_SELECTION) {
             selectableZones = target.getSelectableZoneList(getCurrentShotIndex());
             if (virtualViews.size() > 0) {
                 updateVirtualViews();
@@ -367,11 +413,52 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         void onEndFinished(List<Shot> shotList);
     }
 
+    private void updateVirtualViews() {
+        virtualViews.clear();
+        VirtualView vv = new VirtualView();
+        vv.description = getResources().getString(R.string.backspace);
+        vv.rect = backspaceButtonBounds;
+        vv.id = 0;
+        vv.shot = false;
+        virtualViews.add(vv);
+        if (inputMethod == EInputMethod.KEYBOARD) {
+            for (int i = 0; i < selectableZones.size(); i++) {
+                vv = new VirtualView();
+                vv.id = i + 1;
+                vv.shot = false;
+                vv.description = selectableZones.get(i).text;
+                if ("M".equals(vv.description)) {
+                    vv.description = getResources().getString(R.string.miss);
+                }
+                vv.rect = getSelectableZonePosition(i);
+                virtualViews.add(vv);
+            }
+        }
+        int firstId = virtualViews.size();
+        for (Shot s : shots) {
+            if (s.scoringRing == Shot.NOTHING_SELECTED) {
+                continue;
+            }
+            vv = new VirtualView();
+            vv.id = firstId + s.index;
+            vv.shot = true;
+            String score = target.zoneToString(s.scoringRing, s.index);
+            if ("M".equals(score)) {
+                score = getResources().getString(R.string.miss);
+            }
+            vv.description = getResources()
+                    .getString(R.string.accessibility_description_shot_n_score, s.index + 1, score);
+            vv.rect = endRenderer.getBoundsForShot(s.index);
+            virtualViews.add(vv);
+        }
+    }
+
     private static class TargetAccessibilityTouchHelper extends ExploreByTouchHelper {
 
+        @NonNull
         private final TargetViewBase targetView;
 
-        TargetAccessibilityTouchHelper(TargetViewBase targetView) {
+        TargetAccessibilityTouchHelper(@NonNull TargetViewBase targetView) {
             super(targetView);
             this.targetView = targetView;
         }
@@ -395,14 +482,14 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         }
 
         @Override
-        protected void getVisibleVirtualViews(List<Integer> virtualViewIds) {
+        protected void getVisibleVirtualViews(@NonNull List<Integer> virtualViewIds) {
             for (int i = 0; i < targetView.virtualViews.size(); i++) {
                 virtualViewIds.add(targetView.virtualViews.get(i).id);
             }
         }
 
         @Override
-        protected void onPopulateEventForVirtualView(int virtualViewId, AccessibilityEvent event) {
+        protected void onPopulateEventForVirtualView(int virtualViewId, @NonNull AccessibilityEvent event) {
             final VirtualView vw = findVirtualViewById(virtualViewId);
             if (vw == null) {
                 return;
@@ -420,7 +507,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         }
 
         @Override
-        protected void onPopulateNodeForVirtualView(int virtualViewId, AccessibilityNodeInfoCompat node) {
+        protected void onPopulateNodeForVirtualView(int virtualViewId, @NonNull AccessibilityNodeInfoCompat node) {
             final VirtualView vw = findVirtualViewById(virtualViewId);
             if (vw == null) {
                 return;

@@ -56,6 +56,9 @@
   <string name="right_back">von hinten rechts</string>
   <string name="stop">STOP</string>
   <string name="end_n">Passe %d</string>
+  <string name="miss">Miss</string>
+  <string name="backspace">Löschen</string>
+  <string name="accessibility_description_shot_n_score">Schuss %d: %s</string>
   <plurals name="rounds">
     <item quantity="one">%d Runde</item>
     <item quantity="other">%d Runden</item>

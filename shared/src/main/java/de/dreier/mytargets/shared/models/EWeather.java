@@ -14,6 +14,8 @@
  */
 package de.dreier.mytargets.shared.models;
 
+import android.support.annotation.NonNull;
+
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.SharedApplicationInstance;
 
@@ -50,6 +52,7 @@ public enum EWeather {
         return outlineColorDrawable;
     }
 
+    @NonNull
     public static EWeather getOfValue(int value) {
         for (EWeather e : EWeather.values()) {
             if (e.getValue() == value) {

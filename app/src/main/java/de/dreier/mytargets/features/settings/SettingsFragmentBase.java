@@ -18,7 +18,10 @@ package de.dreier.mytargets.features.settings;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.View;
 
@@ -29,11 +32,12 @@ import de.dreier.mytargets.utils.ToolbarUtils;
 public abstract class SettingsFragmentBase extends PreferenceFragmentCompat
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private String rootKey;
+    @NonNull
+    private String rootKey = "main";
 
     @Override
-    public final void onCreatePreferences(Bundle bundle, String rootKey) {
-        this.rootKey = rootKey;
+    public final void onCreatePreferences(Bundle bundle, @Nullable String rootKey) {
+        this.rootKey = rootKey == null ? "main" : rootKey;
         onCreatePreferences();
     }
 
@@ -44,7 +48,7 @@ public abstract class SettingsFragmentBase extends PreferenceFragmentCompat
 
     @SuppressLint("PrivateResource")
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         // Set the default white background in the view so as to avoid transparency
@@ -76,11 +80,7 @@ public abstract class SettingsFragmentBase extends PreferenceFragmentCompat
     }
 
     protected void setActivityTitle() {
-        if (rootKey == null) {
-            getActivity().setTitle(R.string.preferences);
-        } else {
-            getActivity().setTitle(findPreference(rootKey).getTitle());
-        }
+        getActivity().setTitle(findPreference(rootKey).getTitle());
     }
 
     @Override
@@ -88,6 +88,10 @@ public abstract class SettingsFragmentBase extends PreferenceFragmentCompat
         super.onPause();
         ApplicationInstance.getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    protected void setDefaultSummary(String key) {
+        setSummary(key, ((ListPreference) findPreference(key)).getEntry().toString());
     }
 
     protected void setSummary(String key, String value) {

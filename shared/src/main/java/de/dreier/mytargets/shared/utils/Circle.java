@@ -17,6 +17,8 @@ package de.dreier.mytargets.shared.utils;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextPaint;
 
 import de.dreier.mytargets.shared.models.Target;
@@ -25,7 +27,9 @@ import de.dreier.mytargets.shared.targets.zone.ZoneBase;
 public class Circle {
     private final float density;
     private final Target target;
-    private final Paint circleColorP;
+    @NonNull
+    private final Paint circleColorPaint;
+    @NonNull
     private final Paint textPaint;
 
     public Circle(float density, Target target) {
@@ -33,8 +37,8 @@ public class Circle {
         this.target = target;
 
         // Set up default Paint object
-        circleColorP = new Paint();
-        circleColorP.setAntiAlias(true);
+        circleColorPaint = new Paint();
+        circleColorPaint.setAntiAlias(true);
 
         // Set up a default TextPaint object
         textPaint = new TextPaint();
@@ -42,48 +46,43 @@ public class Circle {
         textPaint.setTextAlign(Paint.Align.CENTER);
     }
 
-    public void draw(Canvas can, float x, float y, int zone, int rad, boolean comment, int arrow, String number, boolean ambientMode) {
+    public void draw(@NonNull Canvas can, float x, float y, int zone, int radius, int arrow, @Nullable String number, boolean ambientMode) {
         ZoneBase zoneBase = target.getModel().getZone(zone);
+        int fillColor = ambientMode ? Color.BLACK : zoneBase.getFillColor();
+        int borderColor = ambientMode ? Color.WHITE : Color.getStrokeColor(zoneBase.getFillColor());
+        int textColor = ambientMode ? Color.WHITE : zoneBase.getTextColor();
+        String score = target.zoneToString(zone, arrow);
+        drawScore(can, x, y,
+                radius * density, score,
+                ambientMode ? null : number, fillColor, borderColor, textColor);
+    }
+
+    public void drawScore(Canvas canvas, float x, float y, float radius, String score, String arrowNumber, int fillColor, int borderColor, int textColor) {
+        int fontSize = (int) (1.2323f * radius + 0.7953f);
 
         // Draw the circles background
-        circleColorP.setStrokeWidth(2 * density);
-        circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
-        circleColorP.setColor(ambientMode ? Color.BLACK : zoneBase.getFillColor());
-        can.drawCircle(x, y, rad * density, circleColorP);
+        circleColorPaint.setStrokeWidth(2);
+        circleColorPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        circleColorPaint.setColor(fillColor);
+        canvas.drawCircle(x, y, radius, circleColorPaint);
 
         // Draw the circles border
-        circleColorP.setStyle(Paint.Style.STROKE);
-        circleColorP.setColor(
-                ambientMode ? Color.WHITE : Color.getStrokeColor(zoneBase.getFillColor()));
-        can.drawCircle(x, y, rad * density, circleColorP);
+        circleColorPaint.setStyle(Paint.Style.STROKE);
+        circleColorPaint.setColor(borderColor);
+        canvas.drawCircle(x, y, radius, circleColorPaint);
 
         // Draw the text inside the circle
-        textPaint.setColor(ambientMode ? Color.WHITE : zoneBase.getTextColor());
-        int font_size = (int) (1.2323f * rad + 0.7953f);
-        textPaint.setTextSize(font_size * density);
-        can.drawText(target.zoneToString(zone, arrow), x, y + font_size * 7 * density / 22.0f,
-                textPaint);
+        textPaint.setColor(textColor);
+        textPaint.setTextSize(fontSize);
+        canvas.drawText(score, x, y + fontSize * 7 / 22.0f, textPaint);
 
-        if (!ambientMode) {
-            // Draw red circled + as indicator that this impact is commented
-            if (comment) {
-                circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
-                circleColorP.setColor(0xFFFF0000);
-                can.drawCircle(x + rad * 0.8f * density, y - rad * 0.8f * density, 8 * density,
-                        circleColorP);
-                textPaint.setColor(0xFFFFFFFF);
-                can.drawText("+", x + rad * 0.8f * density, y - rad * 0.4f * density, textPaint);
-            }
-            if (number != null) {
-                circleColorP.setStyle(Paint.Style.FILL_AND_STROKE);
-                circleColorP.setColor(0xFF333333);
-                can.drawCircle(x + rad * 0.8f * density, y + rad * 0.8f * density, 8 * density,
-                        circleColorP);
-                textPaint.setTextSize(font_size * density * 0.5f);
-                textPaint.setColor(0xFFFFFFFF);
-                can.drawText(number, x + rad * 0.8f * density, y + rad * 1.05f * density,
-                        textPaint);
-            }
+        if (arrowNumber != null) {
+            circleColorPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+            circleColorPaint.setColor(0xFF333333);
+            canvas.drawCircle(x + radius * 0.8f, y + radius * 0.8f, radius * 0.5f, circleColorPaint);
+            textPaint.setTextSize(fontSize * 0.5f);
+            textPaint.setColor(0xFFFFFFFF);
+            canvas.drawText(arrowNumber, x + radius * 0.8f, y + radius * 1.05f, textPaint);
         }
     }
 }

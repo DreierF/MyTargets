@@ -21,6 +21,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -57,6 +58,7 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
     @VisibleForTesting
     public static final String BOW_ID = "bow_id";
 
+    @Nullable
     @State(ParcelsBundler.class)
     Bow bow;
     private FragmentEditBowBinding contentBinding;
@@ -67,19 +69,19 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
     }
 
     @NonNull
-    public static IntentWrapper createIntent(EBowType bowType) {
+    public static IntentWrapper createIntent(@NonNull EBowType bowType) {
         return new IntentWrapper(EditBowActivity.class)
                 .with(EditBowFragment.BOW_TYPE, bowType.name());
     }
 
     @NonNull
-    public static IntentWrapper editIntent(Bow bow) {
+    public static IntentWrapper editIntent(long bowId) {
         return new IntentWrapper(EditBowActivity.class)
-                .with(BOW_ID, bow.getId());
+                .with(BOW_ID, bowId);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
         contentBinding = FragmentEditBowBinding.inflate(inflater, binding.content, true);
@@ -120,7 +122,7 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         bow = buildBow();
         super.onSaveInstanceState(outState);
     }
@@ -132,10 +134,11 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == Activity.RESULT_OK && requestCode == SimpleDistanceSelector.SIMPLE_DISTANCE_REQUEST_CODE) {
+        if (resultCode == Activity.RESULT_OK &&
+                requestCode == SimpleDistanceSelector.SIMPLE_DISTANCE_REQUEST_CODE) {
             Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
             final int index = intentData.getInt(SelectorBase.INDEX);
             final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
@@ -151,6 +154,7 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
         finish();
     }
 
+    @Nullable
     private Bow buildBow() {
         bow.name = contentBinding.name.getText().toString();
         bow.brand = contentBinding.brand.getText().toString();
@@ -182,7 +186,7 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
 
         private final ItemSightMarkBinding binding;
 
-        SightSettingHolder(View view) {
+        SightSettingHolder(@NonNull View view) {
             super(view);
             binding = DataBindingUtil.bind(view);
             binding.sightSetting.addTextChangedListener(new TextWatcher() {
@@ -192,7 +196,7 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
                 }
 
                 @Override
-                public void onTextChanged(CharSequence s, int i, int i1, int i2) {
+                public void onTextChanged(@NonNull CharSequence s, int i, int i1, int i2) {
                     item.value = s.toString();
                 }
 
@@ -204,7 +208,7 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
         }
 
         @Override
-        public void onBind(SightMark sightMark, int position, Fragment fragment, View.OnClickListener removeListener) {
+        public void onBind(@NonNull SightMark sightMark, int position, @NonNull Fragment fragment, View.OnClickListener removeListener) {
             item = sightMark;
             binding.distance.setOnActivityResultContext(fragment);
             binding.distance.setItemIndex(position);
@@ -215,10 +219,11 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
     }
 
     private class SightMarksAdapter extends DynamicItemAdapter<SightMark> {
-        SightMarksAdapter(Fragment fragment, List<SightMark> list) {
+        SightMarksAdapter(@NonNull Fragment fragment, List<SightMark> list) {
             super(fragment, list, R.string.sight_setting_removed);
         }
 
+        @NonNull
         @Override
         public DynamicItemHolder<SightMark> onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = inflater.inflate(R.layout.item_sight_mark, parent, false);

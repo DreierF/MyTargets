@@ -17,4 +17,5 @@
 <resources>
     <string name="my_targets" translatable="false">MyTargets</string>
     <string name="content_authority" translatable="false">de.dreier.mytargets.provider</string>
+    <string name="app_copyright" translatable="false">&#169;2017 Florian Dreier.</string>
 </resources>

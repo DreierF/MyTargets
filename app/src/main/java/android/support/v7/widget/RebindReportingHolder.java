@@ -15,6 +15,7 @@
 
 package android.support.v7.widget;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 
 /**
@@ -28,7 +29,7 @@ import android.view.View;
  */
 public abstract class RebindReportingHolder extends RecyclerView.ViewHolder {
 
-    public RebindReportingHolder(View itemView) {
+    public RebindReportingHolder(@NonNull View itemView) {
         super(itemView);
     }
 

@@ -16,6 +16,7 @@
 package de.dreier.mytargets.base.adapters.header;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public abstract class HeaderListAdapterBase<P extends IIdProvider, C extends IId
 
     private static final int ITEM_TYPE = 2;
     private static final int HEADER_TYPE = 1;
+    @NonNull
     protected List<H> headersList = new ArrayList<>();
     private PartitionDelegate<P, C> partitionDelegate;
     private Comparator<P> headerComparator;
@@ -47,6 +49,7 @@ public abstract class HeaderListAdapterBase<P extends IIdProvider, C extends IId
         setHasStableIds(true);
     }
 
+    @Nullable
     @Override
     public C getItem(int position) {
         H header = getHeaderForPosition(position);
@@ -82,6 +85,7 @@ public abstract class HeaderListAdapterBase<P extends IIdProvider, C extends IId
         return getHeaderRelativePosition(position) == 0 ? HEADER_TYPE : ITEM_TYPE;
     }
 
+    @NonNull
     @SuppressWarnings("unchecked")
     @Override
     public ItemBindingHolder<IIdProvider> onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -92,12 +96,13 @@ public abstract class HeaderListAdapterBase<P extends IIdProvider, C extends IId
         }
     }
 
+    @NonNull
     protected abstract HeaderBindingHolder<P> getTopLevelViewHolder(ViewGroup parent);
 
     protected abstract SelectableViewHolder<C> getSecondLevelViewHolder(ViewGroup parent);
 
     @Override
-    public void onBindViewHolder(ItemBindingHolder<IIdProvider> viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ItemBindingHolder<IIdProvider> viewHolder, int position) {
         H header = getHeaderForPosition(position);
         int pos = getHeaderRelativePosition(position);
         if (pos == 0) {
@@ -107,6 +112,7 @@ public abstract class HeaderListAdapterBase<P extends IIdProvider, C extends IId
         }
     }
 
+    @NonNull
     protected H getHeaderForPosition(int position) {
         int items = 0;
         for (H header : headersList) {
@@ -145,18 +151,18 @@ public abstract class HeaderListAdapterBase<P extends IIdProvider, C extends IId
         }
         H header = headersList.get(headerIndex);
         header.remove(item);
-        if(header.children.isEmpty()) {
+        if (header.children.isEmpty()) {
             headersList.remove(header);
         }
     }
 
     @Override
-    public void setList(List<C> children) {
+    public void setList(@NonNull List<C> children) {
         fillChildMap(children);
         notifyDataSetChanged();
     }
 
-    protected void fillChildMap(List<C> children) {
+    protected void fillChildMap(@NonNull List<C> children) {
         headersList.clear();
         for (C child : children) {
             addChildToMap(child);
@@ -174,6 +180,7 @@ public abstract class HeaderListAdapterBase<P extends IIdProvider, C extends IId
         }
     }
 
+    @NonNull
     protected H getHeaderHolderForChild(C child) {
         P parent = partitionDelegate.getParent(child);
         return getHeaderHolder(parent, childComparator);
@@ -182,6 +189,7 @@ public abstract class HeaderListAdapterBase<P extends IIdProvider, C extends IId
     @NonNull
     protected abstract H getHeaderHolder(P parent, Comparator<C> childComparator);
 
+    @Nullable
     @Override
     public C getItemById(long id) {
         for (H header : headersList) {

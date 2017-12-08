@@ -29,7 +29,7 @@ public class Beursault extends TargetModelBase {
 
     public Beursault() {
         super(23, R.string.beursault);
-        zones = new ZoneBase[] {
+        zones = new ZoneBase[]{
                 new CircularZone(0.062178f, WHITE, DARK_GRAY, 27, false),
                 new CircularZone(0.13934599f, WHITE, DARK_GRAY, 6, false),
                 new CircularZone(0.19715601f, WHITE, DARK_GRAY, 6, false),

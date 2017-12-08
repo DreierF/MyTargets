@@ -17,9 +17,8 @@ package de.dreier.mytargets;
 import android.app.FragmentManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.wearable.activity.WearableActivity;
-import android.support.wearable.view.drawer.WearableActionDrawer;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,8 +38,7 @@ import static android.view.View.VISIBLE;
 /**
  * Demonstrates use of Navigation and Action Drawers on Android Wear.
  */
-public class TimerActivity extends WearableActivity implements
-        WearableActionDrawer.OnMenuItemClickListener {
+public class TimerActivity extends WearableActivity implements MenuItem.OnMenuItemClickListener {
 
     public static final String EXTRA_TIMER_SETTINGS = "timer_settings";
 
@@ -53,12 +51,14 @@ public class TimerActivity extends WearableActivity implements
         binding = DataBindingUtil.setContentView(this, R.layout.activity_timer);
         setAmbientEnabled();
 
-        TimerSettings settings = Parcels.unwrap(getIntent().getParcelableExtra(EXTRA_TIMER_SETTINGS));
+        TimerSettings settings = Parcels
+                .unwrap(getIntent().getParcelableExtra(EXTRA_TIMER_SETTINGS));
         timerFragment = TimerFragment.getInstance(settings);
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, timerFragment).commit();
 
-        binding.primaryActionPeek.setOnClickListener(v -> binding.drawerLayout.openDrawer(Gravity.BOTTOM));
+        binding.primaryActionPeek
+                .setOnClickListener(v -> binding.bottomActionDrawer.getController().openDrawer());
         binding.bottomActionDrawer.setOnMenuItemClickListener(this);
         binding.bottomActionDrawer.getMenu().findItem(R.id.menu_vibrate)
                 .setIcon(settings.vibrate
@@ -68,37 +68,34 @@ public class TimerActivity extends WearableActivity implements
                 .setIcon(settings.sound
                         ? R.drawable.ic_volume_up_white_24dp
                         : R.drawable.ic_volume_off_white_24dp);
-        binding.drawerLayout.peekDrawer(Gravity.BOTTOM);
+        binding.bottomActionDrawer.getController().peekDrawer();
     }
 
     @Override
-    public boolean onMenuItemClick(MenuItem menuItem) {
-        final int itemId = menuItem.getItemId();
-
-        switch (itemId) {
+    public boolean onMenuItemClick(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
             case R.id.menu_stop:
                 finish();
-                break;
+                return true;
             case R.id.menu_vibrate:
                 timerFragment.settings.vibrate = !timerFragment.settings.vibrate;
                 menuItem.setIcon(timerFragment.settings.vibrate
                         ? R.drawable.ic_vibration_white_24dp
                         : R.drawable.ic_vibration_off_white_24dp);
-                ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(timerFragment.settings);
+                ApplicationInstance.wearableClient
+                        .sendTimerSettingsFromLocal(timerFragment.settings);
                 return true;
             case R.id.menu_sound:
                 timerFragment.settings.sound = !timerFragment.settings.sound;
                 menuItem.setIcon(timerFragment.settings.sound
                         ? R.drawable.ic_volume_up_white_24dp
                         : R.drawable.ic_volume_off_white_24dp);
-                ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(timerFragment.settings);
+                ApplicationInstance.wearableClient
+                        .sendTimerSettingsFromLocal(timerFragment.settings);
                 return true;
             default:
                 return false;
         }
-
-        binding.drawerLayout.closeDrawer(binding.bottomActionDrawer);
-        return true;
     }
 
     public void applyStatus(ETimerState status) {
@@ -116,6 +113,7 @@ public class TimerActivity extends WearableActivity implements
 
         private FragmentTimerBinding binding;
 
+        @NonNull
         public static TimerFragment getInstance(TimerSettings settings) {
             TimerFragment timer = new TimerFragment();
             Bundle bundle = new Bundle();
@@ -125,7 +123,7 @@ public class TimerActivity extends WearableActivity implements
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             binding = DataBindingUtil.inflate(inflater, R.layout.fragment_timer, container, false);
             binding.startTimer.setOnClickListener(this);
             return binding.getRoot();
@@ -137,7 +135,7 @@ public class TimerActivity extends WearableActivity implements
         }
 
         @Override
-        protected void applyStatus(ETimerState status) {
+        protected void applyStatus(@NonNull ETimerState status) {
             if (getActivity() != null) {
                 ((TimerActivity) getActivity()).applyStatus(status);
             }

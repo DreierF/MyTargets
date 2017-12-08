@@ -17,6 +17,11 @@ package de.dreier.mytargets.features.main;
 
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.support.annotation.NonNull;
+import android.support.test.espresso.IdlingRegistry;
+import android.support.test.espresso.contrib.DrawerActions;
+import android.support.test.espresso.contrib.NavigationViewActions;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -41,6 +46,7 @@ import de.dreier.mytargets.features.bows.EditBowFragment;
 import de.dreier.mytargets.features.settings.SettingsActivity;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.statistics.StatisticsActivity;
+import de.dreier.mytargets.features.timer.TimerActivity;
 import de.dreier.mytargets.features.training.TrainingActivity;
 import de.dreier.mytargets.features.training.edit.EditTrainingActivity;
 import de.dreier.mytargets.features.training.edit.EditTrainingFragment;
@@ -64,21 +70,20 @@ import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.isInternal;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.base.fragments.EditableListFragmentBase.ITEM_ID;
 import static de.dreier.mytargets.features.statistics.StatisticsActivity.ROUND_IDS;
 import static de.dreier.mytargets.test.utils.matchers.IntentMatcher.hasClass;
 import static de.dreier.mytargets.test.utils.matchers.IntentMatcher.hasLongArrayExtra;
-import static de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isNestedChildOfView;
 import static de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher.withRecyclerView;
-import static de.dreier.mytargets.test.utils.matchers.ViewMatcher.matchFabMenu;
+import static de.dreier.mytargets.test.utils.matchers.ViewMatcher.clickFabSpeedDialItem;
+import static de.dreier.mytargets.test.utils.matchers.ViewMatcher.supportFab;
 import static org.hamcrest.CoreMatchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest extends UITestBase {
 
+    @NonNull
     private IntentsTestRule<MainActivity> activityTestRule = new IntentsTestRule<>(
             MainActivity.class);
     @Rule
@@ -101,20 +106,25 @@ public class MainActivityTest extends UITestBase {
 
     @Test
     public void navigation() {
+        CountingIdlingResource mainActivityIdlingResource = activityTestRule.getActivity()
+                .getEspressoIdlingResourceForMainActivity();
+
+        IdlingRegistry.getInstance().register(mainActivityIdlingResource);
+
         // newTraining_freeTraining
-        switchToTab(R.string.training);
-        onView(matchFabMenu()).perform(click());
-        onView(withId(R.id.fab1)).perform(click());
+        onView(withId(R.id.action_trainings)).perform(click());
+
+        clickFabSpeedDialItem(R.id.fab1);
+
         intended(allOf(hasClass(EditTrainingActivity.class),
                 hasAction(EditTrainingFragment.CREATE_FREE_TRAINING_ACTION)));
-        switchToTab(R.string.training);
+        onView(withId(R.id.action_trainings)).perform(click());
 
         // newTraining_withStandardRound
-        onView(matchFabMenu()).perform(click());
-        onView(withId(R.id.fab2)).perform(click());
+        clickFabSpeedDialItem(R.id.fab2);
         intended(allOf(hasClass(EditTrainingActivity.class),
                 hasAction(EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)));
-        switchToTab(R.string.training);
+        onView(withId(R.id.action_trainings)).perform(click());
 
         // openTraining
         onView(withRecyclerView(R.id.recyclerView).atPosition(1))
@@ -171,9 +181,8 @@ public class MainActivityTest extends UITestBase {
                 hasLongArrayExtra(ROUND_IDS, expectedRoundIds)));
 
         // newBow_recurve
-        switchToTab(R.string.bow);
-        onView(matchFabMenu()).perform(click());
-        onView(withId(R.id.fabBowRecurve)).perform(click());
+        onView(withId(R.id.action_bows)).perform(click());
+        clickFabSpeedDialItem(R.id.fabBowRecurve);
         intended(allOf(hasClass(EditBowActivity.class),
                 hasExtra(EditBowFragment.BOW_TYPE, EBowType.RECURVE_BOW.name())));
 
@@ -185,8 +194,8 @@ public class MainActivityTest extends UITestBase {
                 hasExtra(EditBowFragment.BOW_ID, firstBow.getId())));
 
         // newArrow
-        switchToTab(R.string.arrow);
-        onView(allOf(withId(R.id.fab), isDisplayed())).perform(click());
+        onView(withId(R.id.action_arrows)).perform(click());
+        onView(supportFab()).perform(click());
         intended(hasClass(EditArrowActivity.class));
 
         // openArrow
@@ -196,13 +205,17 @@ public class MainActivityTest extends UITestBase {
         intended(allOf(hasClass(EditArrowActivity.class),
                 hasExtra(EditArrowFragment.ARROW_ID, firstArrow.getId())));
 
-        // openSettings
-        clickActionBarItem(R.id.action_preferences, R.string.preferences);
-        intended(hasClass(SettingsActivity.class));
-    }
+        // Open settings
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navigationView))
+                .perform(NavigationViewActions.navigateTo(R.id.nav_settings));
 
-    private void switchToTab(int title) {
-        onView(allOf(withText(title), isNestedChildOfView(withId(R.id.slidingTabs)), isDisplayed()))
-                .perform(click());
+        intended(hasClass(SettingsActivity.class));
+
+        // Open timer
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navigationView))
+                .perform(NavigationViewActions.navigateTo(R.id.nav_timer));
+        intended(hasClass(TimerActivity.class));
     }
 }

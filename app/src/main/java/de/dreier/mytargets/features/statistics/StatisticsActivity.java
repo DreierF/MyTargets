@@ -24,6 +24,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -33,15 +34,18 @@ import android.support.v4.util.LongSparseArray;
 import android.support.v4.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.activities.ChildActivityBase;
@@ -51,6 +55,7 @@ import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.utils.FileUtils;
 import de.dreier.mytargets.shared.utils.LongUtils;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.SharedUtils;
@@ -59,13 +64,13 @@ import de.dreier.mytargets.utils.ToolbarUtils;
 import icepick.Icepick;
 import icepick.State;
 
+import static android.support.v4.view.GravityCompat.END;
+
 public class StatisticsActivity extends ChildActivityBase implements LoaderManager.LoaderCallbacks<List<Pair<Training, Round>>> {
 
     @VisibleForTesting
     public static final String ROUND_IDS = "round_ids";
 
-    @State
-    boolean showFilter = false;
     private ActivityStatisticsBinding binding;
     private List<Pair<Training, Round>> rounds;
     private List<Pair<Target, List<Round>>> filteredRounds;
@@ -83,7 +88,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
     List<Long> bowTags;
 
     @NonNull
-    public static IntentWrapper getIntent(List<Long> roundIds) {
+    public static IntentWrapper getIntent(@NonNull List<Long> roundIds) {
         return new IntentWrapper(StatisticsActivity.class)
                 .with(ROUND_IDS, LongUtils.toArray(roundIds));
     }
@@ -94,6 +99,8 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         binding = DataBindingUtil.setContentView(this, R.layout.activity_statistics);
         setSupportActionBar(binding.toolbar);
 
+        binding.reset.setOnClickListener(v -> resetFilter());
+
         binding.progressBar.show();
 
         ToolbarUtils.showHomeAsUp(this);
@@ -102,6 +109,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         getLoaderManager().initLoader(0, getIntent().getExtras(), this).forceLoad();
     }
 
+    @NonNull
     @Override
     public Loader<List<Pair<Training, Round>>> onCreateLoader(int i, Bundle bundle) {
         final long[] roundIds = getIntent().getLongArrayExtra(ROUND_IDS);
@@ -138,7 +146,8 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
             restoreCheckedStates();
         }
 
-        updateFilter();
+        applyFilter();
+        invalidateOptionsMenu();
     }
 
     private void restoreCheckedStates() {
@@ -162,18 +171,15 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.filter, menu);
+        getMenuInflater().inflate(R.menu.export_filter, menu);
         return true;
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
         final MenuItem filter = menu.findItem(R.id.action_filter);
         final MenuItem export = menu.findItem(R.id.action_export);
-        filter.setIcon(showFilter ?
-                R.drawable.ic_clear_filter_white_24dp :
-                R.drawable.ic_filter_white_24dp);
         // only show filter if we have at least one category to filter by
         boolean filterAvailable = binding.distanceTags.getTags().size() > 1
                 || binding.diameterTags.getTags().size() > 1
@@ -185,27 +191,21 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_export:
                 export();
                 return true;
             case R.id.action_filter:
-                showFilter = !showFilter;
-                updateFilter();
+                if (!binding.drawerLayout.isDrawerOpen(END)) {
+                    binding.drawerLayout.openDrawer(END);
+                } else {
+                    binding.drawerLayout.closeDrawer(END);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    protected void updateFilter() {
-        if (!showFilter) {
-            resetFilter();
-        }
-        binding.filterView.setVisibility(showFilter ? View.VISIBLE : View.GONE);
-        applyFilter();
-        invalidateOptionsMenu();
     }
 
     private void resetFilter() {
@@ -221,6 +221,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         binding.diameterTags.setTags(binding.diameterTags.getTags());
         binding.arrowTags.setTags(binding.arrowTags.getTags());
         binding.bowTags.setTags(binding.bowTags.getTags());
+        applyFilter();
     }
 
     private void applyFilter() {
@@ -234,7 +235,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 .map(t -> t.id).collect(Collectors.toList());
         filteredRounds = Stream.of(rounds)
                 .filter(pair -> distanceTags.contains(pair.second.distance.toString())
-                        && diameterTags.contains(pair.second.getTarget().size.toString())
+                        && diameterTags.contains(pair.second.getTarget().diameter.toString())
                         && arrowTags.contains(pair.first.arrowId)
                         && bowTags.contains(pair.first.bowId))
                 .map(p -> p.second)
@@ -297,7 +298,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
 
     private List<ChipGroup.Tag> getDiameterTags() {
         return Stream.of(rounds)
-                .map(p -> p.second.getTarget().size)
+                .map(p -> p.second.getTarget().diameter)
                 .distinct()
                 .sorted()
                 .map(d -> new ChipGroup.Tag(d.getId(), d.toString()))
@@ -322,13 +323,17 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 .show();
         new AsyncTask<Void, Void, Uri>() {
 
+            @Nullable
             @Override
             protected Uri doInBackground(Void... params) {
                 try {
-                    return CsvExporter.export(getApplicationContext(), Stream.of(filteredRounds)
-                            .flatMap(p -> Stream.of(p.second))
-                            .map(Round::getId)
-                            .collect(Collectors.toList()));
+                    final File f = new File(getCacheDir(), getExportFileName());
+                    new CsvExporter(getApplicationContext())
+                            .exportAll(f, Stream.of(filteredRounds)
+                                    .flatMap(p -> Stream.of(p.second))
+                                    .map(Round::getId)
+                                    .collect(Collectors.toList()));
+                    return FileUtils.getUriForFile(StatisticsActivity.this, f);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return null;
@@ -336,7 +341,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
             }
 
             @Override
-            protected void onPostExecute(Uri uri) {
+            protected void onPostExecute(@Nullable Uri uri) {
                 super.onPostExecute(uri);
                 progress.dismiss();
                 if (uri != null) {
@@ -350,6 +355,12 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 }
             }
         }.execute();
+    }
+
+    @NonNull
+    private static String getExportFileName() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
+        return "MyTargets_exported_data_" + format.format(new Date()) + ".csv";
     }
 
     private class StatisticsPagerAdapter extends FragmentStatePagerAdapter {

@@ -15,6 +15,8 @@
 
 package de.dreier.mytargets.utils.multiselector;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.LongSparseArray;
 
 import java.lang.ref.WeakReference;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class WeakHolderTracker {
+    @NonNull
     private LongSparseArray<WeakReference<SelectableHolder>> holdersById =
             new LongSparseArray<>();
 
@@ -31,6 +34,7 @@ class WeakHolderTracker {
      * @param id
      * @return
      */
+    @Nullable
     public SelectableHolder getHolder(long id) {
         WeakReference<SelectableHolder> holderRef = holdersById.get(id);
         if (holderRef == null) {
@@ -43,6 +47,7 @@ class WeakHolderTracker {
         holdersById.put(id, new WeakReference<>(holder));
     }
 
+    @NonNull
     public List<SelectableHolder> getTrackedHolders() {
         List<SelectableHolder> holders = new ArrayList<>();
 

@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.shared.analysis.aggregation.average;
 
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 
 import java.util.List;
 
@@ -26,9 +26,9 @@ import de.dreier.mytargets.shared.models.db.Shot;
 
 public class AverageStrategy extends AggregationStrategyBase {
 
-    @Nullable
+    @NonNull
     @Override
-    protected IAggregationResultRenderer compute(List<Shot> shots) {
+    protected IAggregationResultRenderer compute(@NonNull List<Shot> shots) {
         if (shots.size() == 0) {
             return new NOPResultRenderer();
         }

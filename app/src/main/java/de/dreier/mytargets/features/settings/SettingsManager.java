@@ -16,19 +16,23 @@
 package de.dreier.mytargets.features.settings;
 
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
-import org.joda.time.LocalDate;
-import org.joda.time.Years;
-import org.joda.time.format.DateTimeFormat;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.Period;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.FormatStyle;
 
 import java.util.Arrays;
 import java.util.Map;
 
 import de.dreier.mytargets.app.ApplicationInstance;
+import de.dreier.mytargets.features.scoreboard.EFileType;
+import de.dreier.mytargets.features.scoreboard.ScoreboardConfiguration;
 import de.dreier.mytargets.features.settings.backup.EBackupInterval;
 import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
 import de.dreier.mytargets.features.training.input.ETrainingScope;
@@ -44,6 +48,11 @@ import de.dreier.mytargets.shared.views.TargetViewBase;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
 
 public class SettingsManager {
+    private static final SharedPreferences lastUsed = ApplicationInstance
+            .getLastSharedPreferences();
+    private static final SharedPreferences preferences = ApplicationInstance
+            .getSharedPreferences();
+
     public static final String KEY_TIMER_WARN_TIME = "timer_warn_time";
     public static final String KEY_TIMER_WAIT_TIME = "timer_wait_time";
     public static final String KEY_TIMER_SHOOT_TIME = "timer_shoot_time";
@@ -51,6 +60,8 @@ public class SettingsManager {
     public static final String KEY_PROFILE_LAST_NAME = "profile_last_name";
     public static final String KEY_PROFILE_BIRTHDAY = "profile_birthday";
     public static final String KEY_PROFILE_CLUB = "profile_club";
+    public static final String KEY_PROFILE_LICENCE_NUMBER = "profile_licence_number";
+    private static final String KEY_INPUT_KEEP_ABOVE_LOCKSCREEN = "input_keep_above_lockscreen";
     public static final String KEY_INPUT_SUMMARY_AVERAGE_OF = "input_summary_average_of";
     public static final String KEY_INPUT_ARROW_DIAMETER_SCALE = "input_arrow_diameter_scale";
     public static final String KEY_INPUT_TARGET_ZOOM = "input_target_zoom";
@@ -59,9 +70,10 @@ public class SettingsManager {
     private static final String KEY_INPUT_SUMMARY_SHOW_ROUND = "input_summary_show_round";
     private static final String KEY_INPUT_SUMMARY_SHOW_TRAINING = "input_summary_show_training";
     private static final String KEY_INPUT_SUMMARY_SHOW_AVERAGE = "input_summary_show_average";
-    private static final String KEY_FIRST_TRAINING_SHOWN = "first_training_shown";
+    public static final String KEY_SCOREBOARD_SHARE_FILE_TYPE = "scoreboard_share_file_type";
     private static final String KEY_BACKUP_INTERVAL = "backup_interval";
     private static final String KEY_DONATED = "donated";
+    private static final String KEY_TIMER_KEEP_ABOVE_LOCKSCREEN = "timer_keep_above_lockscreen";
     private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
     private static final String KEY_TIMER_SOUND = "timer_sound";
     private static final String KEY_STANDARD_ROUND = "standard_round";
@@ -79,20 +91,23 @@ public class SettingsManager {
     private static final String KEY_INDOOR = "indoor";
     private static final String KEY_END_COUNT = "rounds";
     private static final String KEY_INPUT_MODE = "target_mode";
-    private static final String KEY_SHOW_MODE = "show_mode";
-    private static final SharedPreferences lastUsed = ApplicationInstance
-            .getLastSharedPreferences();
-    private static final SharedPreferences preferences = ApplicationInstance
-            .getSharedPreferences();
+    public static final String KEY_SHOW_MODE = "show_mode";
     private static final String KEY_BACKUP_LOCATION = "backup_location";
-    private static final String KEY_AGGREGATION_STRATEGY = "aggregation_strategy";
+    public static final String KEY_AGGREGATION_STRATEGY = "aggregation_strategy";
     private static final String KEY_STANDARD_ROUNDS_LAST_USED = "standard_round_last_used";
     private static final String KEY_INTRO_SHOWED = "intro_showed";
     private static final String KEY_OVERVIEW_SHOW_REACHED_SCORE = "overview_show_reached_score";
     private static final String KEY_OVERVIEW_SHOW_TOTAL_SCORE = "overview_show_total_score";
     private static final String KEY_OVERVIEW_SHOW_PERCENTAGE = "overview_show_percentage";
     private static final String KEY_OVERVIEW_SHOW_ARROW_AVERAGE = "overview_show_arrow_average";
+    private static final String KEY_OVERVIEW_SHOT_SORTING = "overview_shot_sorting";
+    private static final String KEY_OVERVIEW_SHOT_SORTING_SPOT = "overview_shot_sorting_spot";
+    public static final String KEY_LANGUAGE = "language";
+    public static final String KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE = "statistics_dispersion_pattern_file_type";
+    public static final String KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY = "statistics_dispersion_pattern_aggregation_strategy";
+    public static final String KEY_STATISTICS_DISPERSION_PATTERN_MERGE_SPOT = "statistics_dispersion_pattern_merge_spot";
 
+    @NonNull
     public static Long getStandardRound() {
         return (long) lastUsed.getInt(KEY_STANDARD_ROUND, 32);
     }
@@ -133,7 +148,7 @@ public class SettingsManager {
         return new Dimension(distance, unit);
     }
 
-    public static void setDistance(Dimension distance) {
+    public static void setDistance(@NonNull Dimension distance) {
         lastUsed.edit()
                 .putInt(KEY_DISTANCE_VALUE, (int) distance.value)
                 .putString(KEY_DISTANCE_UNIT, Dimension.Unit.toStringHandleNull(distance.unit))
@@ -160,13 +175,13 @@ public class SettingsManager {
         return new Target(targetId, scoringStyle, diameter);
     }
 
-    public static void setTarget(Target target) {
+    public static void setTarget(@NonNull Target target) {
         lastUsed.edit()
                 .putInt(KEY_TARGET, (int) (long) target.getId())
                 .putInt(KEY_SCORING_STYLE, target.scoringStyle)
-                .putInt(KEY_TARGET_DIAMETER_VALUE, (int) target.size.value)
+                .putInt(KEY_TARGET_DIAMETER_VALUE, (int) target.diameter.value)
                 .putString(KEY_TARGET_DIAMETER_UNIT,
-                        Dimension.Unit.toStringHandleNull(target.size.unit))
+                        Dimension.Unit.toStringHandleNull(target.diameter.unit))
                 .apply();
     }
 
@@ -180,6 +195,18 @@ public class SettingsManager {
                 .apply();
     }
 
+    public static boolean getTimerKeepAboveLockscreen() {
+        return preferences.getBoolean(KEY_TIMER_KEEP_ABOVE_LOCKSCREEN, true);
+    }
+
+    public static void setTimerKeepAboveLockscreen(boolean keepAboveLockscreen) {
+        preferences
+                .edit()
+                .putBoolean(KEY_TIMER_KEEP_ABOVE_LOCKSCREEN, keepAboveLockscreen)
+                .apply();
+    }
+
+    @NonNull
     public static TimerSettings getTimerSettings() {
         TimerSettings settings = new TimerSettings();
         settings.enabled = lastUsed.getBoolean(KEY_TIMER, false);
@@ -199,7 +226,7 @@ public class SettingsManager {
         }
     }
 
-    public static void setTimerSettings(TimerSettings settings) {
+    public static void setTimerSettings(@NonNull TimerSettings settings) {
         lastUsed.edit()
                 .putBoolean(KEY_TIMER, settings.enabled)
                 .apply();
@@ -243,6 +270,7 @@ public class SettingsManager {
                 .apply();
     }
 
+    @NonNull
     public static TargetViewBase.EInputMethod getInputMethod() {
         return preferences
                 .getBoolean(KEY_INPUT_MODE, false)
@@ -274,7 +302,7 @@ public class SettingsManager {
                 .getString(KEY_SHOW_MODE, ETrainingScope.END.toString()));
     }
 
-    public static void setShowMode(ETrainingScope showMode) {
+    public static void setShowMode(@NonNull ETrainingScope showMode) {
         preferences
                 .edit()
                 .putString(KEY_SHOW_MODE, showMode.toString())
@@ -286,13 +314,14 @@ public class SettingsManager {
                 .getString(KEY_AGGREGATION_STRATEGY, EAggregationStrategy.AVERAGE.toString()));
     }
 
-    public static void setAggregationStrategy(EAggregationStrategy aggregationStrategy) {
+    public static void setAggregationStrategy(@NonNull EAggregationStrategy aggregationStrategy) {
         preferences
                 .edit()
                 .putString(KEY_AGGREGATION_STRATEGY, aggregationStrategy.toString())
                 .apply();
     }
 
+    @NonNull
     public static String getProfileFirstName() {
         return preferences
                 .getString(KEY_PROFILE_FIRST_NAME, "");
@@ -305,6 +334,7 @@ public class SettingsManager {
                 .apply();
     }
 
+    @NonNull
     public static String getProfileLastName() {
         return preferences
                 .getString(KEY_PROFILE_LAST_NAME, "");
@@ -318,9 +348,10 @@ public class SettingsManager {
     }
 
     public static String getProfileFullName() {
-        return String.format("%s %s", getProfileFirstName(), getProfileLastName());
+        return String.format("%s %s", getProfileFirstName(), getProfileLastName()).trim();
     }
 
+    @NonNull
     public static String getProfileClub() {
         return preferences
                 .getString(KEY_PROFILE_CLUB, "");
@@ -333,6 +364,19 @@ public class SettingsManager {
                 .apply();
     }
 
+    @NonNull
+    public static String getProfileLicenceNumber() {
+        return preferences
+                .getString(KEY_PROFILE_LICENCE_NUMBER, "");
+    }
+
+    public static void setProfileLicenceNumber(String licenceNumber) {
+        preferences
+                .edit()
+                .putString(KEY_PROFILE_LICENCE_NUMBER, licenceNumber)
+                .apply();
+    }
+
     public static LocalDate getProfileBirthDay() {
         String date = preferences
                 .getString(KEY_PROFILE_BIRTHDAY, "");
@@ -342,7 +386,7 @@ public class SettingsManager {
         return LocalDate.parse(date);
     }
 
-    public static void setProfileBirthDay(LocalDate birthDay) {
+    public static void setProfileBirthDay(@NonNull LocalDate birthDay) {
         preferences.edit()
                 .putString(KEY_PROFILE_BIRTHDAY, birthDay.toString())
                 .apply();
@@ -353,7 +397,7 @@ public class SettingsManager {
         if (birthDay == null) {
             return null;
         }
-        return DateTimeFormat.mediumDate().print(birthDay);
+        return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(birthDay);
     }
 
     public static int getProfileAge() {
@@ -361,7 +405,18 @@ public class SettingsManager {
         if (birthDay == null) {
             return -1;
         }
-        return Years.yearsBetween(birthDay, LocalDate.now()).getYears();
+        return Period.between(birthDay, LocalDate.now()).getYears();
+    }
+
+    public static boolean getInputKeepAboveLockscreen() {
+        return preferences.getBoolean(KEY_INPUT_KEEP_ABOVE_LOCKSCREEN, true);
+    }
+
+    public static void setInputKeepAboveLockscreen(boolean keepAboveLockscreen) {
+        preferences
+                .edit()
+                .putBoolean(KEY_INPUT_KEEP_ABOVE_LOCKSCREEN, keepAboveLockscreen)
+                .apply();
     }
 
     public static float getInputArrowDiameterScale() {
@@ -391,22 +446,58 @@ public class SettingsManager {
                 .getString(KEY_INPUT_KEYBOARD_TYPE, EKeyboardType.RIGHT.name()));
     }
 
-    public static void setInputKeyboardType(EKeyboardType type) {
+    public static void setInputKeyboardType(@NonNull EKeyboardType type) {
         preferences
                 .edit()
                 .putString(KEY_INPUT_KEYBOARD_TYPE, type.name())
                 .apply();
     }
 
-    public static boolean isFirstTrainingShown() {
-        return ApplicationInstance.getSharedPreferences()
-                .getBoolean(KEY_FIRST_TRAINING_SHOWN, false);
+    public static EFileType getScoreboardShareFileType() {
+        return EFileType.valueOf(preferences
+                .getString(KEY_SCOREBOARD_SHARE_FILE_TYPE, EFileType.PDF.name()));
     }
 
-    public static void setFirstTrainingShown(boolean shown) {
-        ApplicationInstance.getSharedPreferences()
+    public static void setScoreboardShareFileType(@NonNull EFileType fileType) {
+        preferences
                 .edit()
-                .putBoolean(KEY_FIRST_TRAINING_SHOWN, shown)
+                .putString(KEY_SCOREBOARD_SHARE_FILE_TYPE, fileType.name())
+                .apply();
+    }
+
+    public static EFileType getStatisticsDispersionPatternFileType() {
+        return EFileType.valueOf(preferences
+                .getString(KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE, EFileType.JPG.name()));
+    }
+
+    public static void setStatisticsDispersionPatternFileType(@NonNull EFileType fileType) {
+        preferences
+                .edit()
+                .putString(KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE, fileType.name())
+                .apply();
+    }
+
+    public static EAggregationStrategy getStatisticsDispersionPatternAggregationStrategy() {
+        return EAggregationStrategy.valueOf(preferences
+                .getString(KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY, EAggregationStrategy.AVERAGE.toString()));
+    }
+
+    public static void setStatisticsDispersionPatternAggregationStrategy(@NonNull EAggregationStrategy aggregationStrategy) {
+        preferences
+                .edit()
+                .putString(KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY, aggregationStrategy.toString())
+                .apply();
+    }
+
+    public static boolean getStatisticsDispersionPatternMergeSpot() {
+        return preferences
+                .getBoolean(KEY_STATISTICS_DISPERSION_PATTERN_MERGE_SPOT, false);
+    }
+
+    public static void setStatisticsDispersionPatternMergeSpot(boolean mergeSpot) {
+        preferences
+                .edit()
+                .putBoolean(KEY_STATISTICS_DISPERSION_PATTERN_MERGE_SPOT, mergeSpot)
                 .apply();
     }
 
@@ -416,7 +507,7 @@ public class SettingsManager {
         return EBackupLocation.valueOf(location);
     }
 
-    public static void setBackupLocation(EBackupLocation location) {
+    public static void setBackupLocation(@NonNull EBackupLocation location) {
         preferences
                 .edit()
                 .putString(KEY_BACKUP_LOCATION, location.name())
@@ -428,9 +519,16 @@ public class SettingsManager {
                 EBackupInterval.WEEKLY.name()));
     }
 
-    public static void setBackupInterval(EBackupInterval interval) {
+    public static void setBackupInterval(@NonNull EBackupInterval interval) {
         preferences.edit()
                 .putString(KEY_BACKUP_INTERVAL, interval.name())
+                .apply();
+    }
+
+    public static void setLanguage(String language) {
+        preferences
+                .edit()
+                .putString(KEY_LANGUAGE, language)
                 .apply();
     }
 
@@ -442,7 +540,7 @@ public class SettingsManager {
                 .collect(Collectors.toMap(a -> Long.valueOf(a[0]), a -> Integer.valueOf(a[1])));
     }
 
-    public static void setStandardRoundsLastUsed(Map<Long, Integer> ids) {
+    public static void setStandardRoundsLastUsed(@NonNull Map<Long, Integer> ids) {
         lastUsed.edit()
                 .putString(KEY_STANDARD_ROUNDS_LAST_USED, Stream.of(ids)
                         .map(id -> id.getKey() + ":" + id.getValue())
@@ -461,6 +559,7 @@ public class SettingsManager {
                 .apply();
     }
 
+    @NonNull
     public static SummaryConfiguration getInputSummaryConfiguration() {
         SummaryConfiguration config = new SummaryConfiguration();
         config.showEnd = preferences.getBoolean(KEY_INPUT_SUMMARY_SHOW_END, true);
@@ -472,7 +571,7 @@ public class SettingsManager {
         return config;
     }
 
-    public static void setInputSummaryConfiguration(SummaryConfiguration configuration) {
+    public static void setInputSummaryConfiguration(@NonNull SummaryConfiguration configuration) {
         preferences.edit()
                 .putBoolean(KEY_INPUT_SUMMARY_SHOW_END, configuration.showEnd)
                 .putBoolean(KEY_INPUT_SUMMARY_SHOW_ROUND, configuration.showRound)
@@ -482,6 +581,7 @@ public class SettingsManager {
                 .apply();
     }
 
+    @NonNull
     public static Score.Configuration getScoreConfiguration() {
         Score.Configuration config = new Score.Configuration();
         config.showReachedScore = preferences.getBoolean(KEY_OVERVIEW_SHOW_REACHED_SCORE, true);
@@ -491,12 +591,31 @@ public class SettingsManager {
         return config;
     }
 
-    public static void setScoreConfiguration(Score.Configuration configuration) {
+    public static void setScoreConfiguration(@NonNull Score.Configuration configuration) {
         preferences.edit()
                 .putBoolean(KEY_OVERVIEW_SHOW_REACHED_SCORE, configuration.showReachedScore)
                 .putBoolean(KEY_OVERVIEW_SHOW_TOTAL_SCORE, configuration.showTotalScore)
                 .putBoolean(KEY_OVERVIEW_SHOW_PERCENTAGE, configuration.showPercentage)
                 .putBoolean(KEY_OVERVIEW_SHOW_ARROW_AVERAGE, configuration.showAverage)
                 .apply();
+    }
+
+    public static boolean shouldSortTarget(@NonNull Target target) {
+        return preferences.getBoolean(KEY_OVERVIEW_SHOT_SORTING, true) &&
+                (target.getModel().getFaceCount() == 1 ||
+                        preferences.getBoolean(KEY_OVERVIEW_SHOT_SORTING_SPOT, false));
+    }
+
+    @NonNull
+    public static ScoreboardConfiguration getScoreboardConfiguration() {
+        ScoreboardConfiguration config = new ScoreboardConfiguration();
+        config.showTitle = preferences.getBoolean("scoreboard_title", true);
+        config.showProperties = preferences.getBoolean("scoreboard_properties", true);
+        config.showTable = preferences.getBoolean("scoreboard_table", true);
+        config.showStatistics = preferences.getBoolean("scoreboard_statistics", true);
+        config.showComments = preferences.getBoolean("scoreboard_comments", true);
+        config.showPointsColored = preferences.getBoolean("scoreboard_points_colored", true);
+        config.showSignature = preferences.getBoolean("scoreboard_signature", true);
+        return config;
     }
 }

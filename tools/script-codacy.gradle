@@ -21,16 +21,14 @@ repositories {
 }
 
 dependencies {
-    codacy 'com.github.codacy:codacy-coverage-reporter:1.0.13'
+    codacy 'com.github.codacy:codacy-coverage-reporter:2.0.1'
 }
 
 task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
     main = "com.codacy.CodacyCoverageReporter"
     classpath = configurations.codacy
     args = [
-            "-l",
-            "Java",
-            "-r",
-            "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+            "-l", "Java",
+            "-r", "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
     ]
 }

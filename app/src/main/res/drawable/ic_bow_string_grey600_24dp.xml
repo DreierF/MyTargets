@@ -14,11 +14,11 @@
   -->
 
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
-    android:viewportHeight="24.0"
-    android:viewportWidth="24.0">
+        android:width="24dp"
+        android:height="24dp"
+        android:viewportHeight="24.0"
+        android:viewportWidth="24.0">
     <path
         android:fillColor="@color/md_grey_600"
-        android:pathData="M11,0l0,3.7l0,7.6l0,12.7l2,0l0,-12.7l0,-7.6l0,-3.7z" />
+        android:pathData="M11,0l0,3.7l0,7.6l0,12.7l2,0l0,-12.7l0,-7.6l0,-3.7z"/>
 </vector>

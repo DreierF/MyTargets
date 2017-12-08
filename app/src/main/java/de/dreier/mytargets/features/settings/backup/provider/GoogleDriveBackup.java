@@ -21,7 +21,6 @@ import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -50,9 +49,10 @@ import java.util.ArrayList;
 
 import de.dreier.mytargets.features.settings.backup.BackupEntry;
 import de.dreier.mytargets.features.settings.backup.BackupException;
+import timber.log.Timber;
 
 public class GoogleDriveBackup {
-    private static final String TAG = "GoogleDriveBackup";
+
     private static final String MYTARGETS_MIME_TYPE = "application/zip";
 
     public static class AsyncRestore implements IAsyncBackupRestore {
@@ -62,11 +62,13 @@ public class GoogleDriveBackup {
          */
         public static final int REQUEST_CODE_RESOLUTION = 1;
 
+        @Nullable
         private GoogleApiClient googleApiClient;
+        @Nullable
         private Activity activity;
 
         @Override
-        public void connect(Activity activity, ConnectionListener listener) {
+        public void connect(@NonNull Activity activity, @NonNull ConnectionListener listener) {
             this.activity = activity;
             if (googleApiClient == null) {
                 googleApiClient = new GoogleApiClient.Builder(activity)
@@ -85,7 +87,7 @@ public class GoogleDriveBackup {
                             }
                         })
                         .addOnConnectionFailedListener(result -> {
-                            Log.i(TAG, "GoogleApiClient connection failed: " + result.toString());
+                            Timber.i("GoogleApiClient connection failed: %s", result.toString());
                             if (!result.hasResolution()) {
                                 GoogleApiAvailability.getInstance()
                                         .getErrorDialog(activity, result.getErrorCode(), 0)
@@ -96,7 +98,7 @@ public class GoogleDriveBackup {
                             try {
                                 result.startResolutionForResult(activity, REQUEST_CODE_RESOLUTION);
                             } catch (IntentSender.SendIntentException e) {
-                                Log.e(TAG, "Exception while starting resolution activity", e);
+                                Timber.e(e, "Exception while starting resolution activity");
                             }
                         })
                         .build();
@@ -105,7 +107,7 @@ public class GoogleDriveBackup {
         }
 
         @Override
-        public void getBackups(OnLoadFinishedListener listener) {
+        public void getBackups(@NonNull OnLoadFinishedListener listener) {
             Query query = new Query.Builder()
                     .addFilter(Filters.eq(SearchableField.MIME_TYPE, MYTARGETS_MIME_TYPE))
                     .addFilter(Filters.eq(SearchableField.TRASHED, false))
@@ -115,6 +117,7 @@ public class GoogleDriveBackup {
             Drive.DriveApi.getAppFolder(googleApiClient).queryChildren(googleApiClient, query)
                     .setResultCallback(new ResultCallback<DriveApi.MetadataBufferResult>() {
 
+                        @NonNull
                         private ArrayList<BackupEntry> backupsArray = new ArrayList<>();
 
                         @Override
@@ -138,7 +141,7 @@ public class GoogleDriveBackup {
          * Restores the given backup and restarts the app if the restore was successful.
          */
         @Override
-        public void restoreBackup(BackupEntry backup, BackupStatusListener listener) {
+        public void restoreBackup(@NonNull BackupEntry backup, @NonNull BackupStatusListener listener) {
             DriveId.decodeFromString(backup.getFileId())
                     .asDriveFile()
                     .open(googleApiClient, DriveFile.MODE_READ_ONLY, null)
@@ -162,7 +165,7 @@ public class GoogleDriveBackup {
         }
 
         @Override
-        public void deleteBackup(BackupEntry backup, BackupStatusListener listener) {
+        public void deleteBackup(@NonNull BackupEntry backup, @NonNull BackupStatusListener listener) {
             DriveId.decodeFromString(backup.getFileId())
                     .asDriveFile()
                     .delete(googleApiClient)
@@ -187,7 +190,7 @@ public class GoogleDriveBackup {
 
     public static class Backup implements IBlockingBackup {
         @Override
-        public void performBackup(Context context) throws BackupException {
+        public void performBackup(@NonNull Context context) throws BackupException {
             GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
                     .addApi(Drive.API)
                     .addScope(Drive.SCOPE_APPFOLDER)

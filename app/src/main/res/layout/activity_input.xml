@@ -14,8 +14,8 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
             android:layout_alignParentTop="true"
             android:background="?attr/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/details"
@@ -65,7 +65,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/passe"
                         android:textColor="@color/md_white_1000"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
 
                     <TextView
                         android:id="@+id/endScore"
@@ -73,7 +73,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
-                        tools:text="27/30" />
+                        tools:text="27/30"/>
 
                 </LinearLayout>
 
@@ -90,7 +90,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/round"
                         android:textColor="@color/md_white_1000"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
 
                     <TextView
                         android:id="@+id/roundScore"
@@ -98,7 +98,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
-                        tools:text="270/300" />
+                        tools:text="270/300"/>
 
                 </LinearLayout>
 
@@ -115,7 +115,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/training"
                         android:textColor="@color/md_white_1000"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
 
                     <TextView
                         android:id="@+id/trainingScore"
@@ -123,7 +123,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
-                        tools:text="560/600" />
+                        tools:text="560/600"/>
 
                 </LinearLayout>
 
@@ -140,7 +140,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/average"
                         android:textColor="@color/md_white_1000"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
 
                     <TextView
                         android:id="@+id/averageScore"
@@ -148,7 +148,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
-                        tools:text="9.1" />
+                        tools:text="9.1"/>
 
                 </LinearLayout>
 
@@ -169,17 +169,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inflatedId="@+id/targetViewContainer"
-                android:layout="@layout/partial_target_view" />
+                android:layout="@layout/partial_target_view"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_gravity="bottom"
-                android:background="?android:attr/listDivider" />
+                android:background="?android:attr/listDivider"/>
         </FrameLayout>
 
         <LinearLayout
             android:id="@+id/but_bar"
+            style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -191,21 +192,23 @@
 
             <Button
                 android:id="@+id/prev"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:minHeight="48dp"
-                android:text="@string/prev" />
+                android:text="@string/prev"/>
 
             <Button
                 android:id="@+id/next"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:minHeight="48dp"
-                android:text="@string/next" />
+                android:text="@string/next"/>
 
         </LinearLayout>
 

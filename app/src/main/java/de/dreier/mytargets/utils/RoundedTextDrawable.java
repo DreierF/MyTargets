@@ -31,10 +31,14 @@ import java.util.Locale;
 import de.dreier.mytargets.features.statistics.ArrowStatistic;
 
 public class RoundedTextDrawable extends Drawable {
+    @NonNull
     private final Paint mPaint;
+    @NonNull
     private final RectF mRectF;
     private final String mText;
+    @NonNull
     private final Paint mTextPaint;
+    @NonNull
     private final Rect mTextBounds;
 
     private RoundedTextDrawable(String text, int bgColor, int textColor) {
@@ -50,8 +54,8 @@ public class RoundedTextDrawable extends Drawable {
         mText = text;
     }
 
-    public RoundedTextDrawable(ArrowStatistic item) {
-        this(String.format(Locale.US, "%.3f", item.average.getStdDev()),
+    public RoundedTextDrawable(@NonNull ArrowStatistic item) {
+        this(String.format(Locale.US, "%.1f", item.totalScore.getShotAverage()),
                 item.getAppropriateBgColor(),
                 item.getAppropriateTextColor());
     }

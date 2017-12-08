@@ -17,6 +17,7 @@ package de.dreier.mytargets.features.arrows;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,11 +36,13 @@ import icepick.State;
 
 import static de.dreier.mytargets.shared.models.Dimension.Unit.INCH;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.MILLIMETER;
+import static java.lang.Integer.parseInt;
 
 public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
 
     @VisibleForTesting
     public static final String ARROW_ID = "arrow_id";
+    @Nullable
     @State(ParcelsBundler.class)
     Arrow arrow;
     private FragmentEditArrowBinding contentBinding;
@@ -54,13 +57,13 @@ public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
     }
 
     @NonNull
-    public static IntentWrapper editIntent(Arrow arrow) {
+    public static IntentWrapper editIntent(long arrowId) {
         return new IntentWrapper(EditArrowActivity.class)
-                .with(ARROW_ID, arrow.getId());
+                .with(ARROW_ID, arrowId);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         contentBinding = FragmentEditArrowBinding.inflate(inflater, binding.content, true);
         contentBinding.moreFields.setOnClickListener(v -> contentBinding.setShowAll(true));
@@ -85,7 +88,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         arrow = buildArrow();
         super.onSaveInstanceState(outState);
     }
@@ -128,8 +131,10 @@ public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
         return true;
     }
 
+    @Nullable
     private Arrow buildArrow() {
         arrow.name = contentBinding.name.getText().toString();
+        arrow.maxArrowNumber = parseInt(contentBinding.maxArrowNumber.getText().toString());
         arrow.length = contentBinding.length.getText().toString();
         arrow.material = contentBinding.material.getText().toString();
         arrow.spine = contentBinding.spine.getText().toString();

@@ -15,11 +15,13 @@
 
 package de.dreier.mytargets.features.training.target;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import de.dreier.mytargets.base.activities.ItemSelectActivity;
 
 public class TargetActivity extends ItemSelectActivity {
+    @NonNull
     @Override
     protected Fragment instantiateFragment() {
         return new TargetListFragment();

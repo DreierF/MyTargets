@@ -25,7 +25,7 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceDialogFragmentCompat;
 import android.widget.DatePicker;
 
-import org.joda.time.LocalDate;
+import org.threeten.bp.LocalDate;
 
 public class DatePreferenceDialogFragmentCompat extends PreferenceDialogFragmentCompat implements DialogPreference.TargetFragment, DatePickerDialog.OnDateSetListener {
 
@@ -44,7 +44,7 @@ public class DatePreferenceDialogFragmentCompat extends PreferenceDialogFragment
         DatePreference pref = (DatePreference) getPreference();
         return new DatePickerDialog(getContext(), this,
                 pref.date.getYear(),
-                pref.date.getMonthOfYear() - 1,
+                pref.date.getMonthValue() - 1,
                 pref.date.getDayOfMonth());
     }
 
@@ -61,7 +61,7 @@ public class DatePreferenceDialogFragmentCompat extends PreferenceDialogFragment
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         DatePreference pref = (DatePreference) getPreference();
-        pref.date = new LocalDate(year, monthOfYear + 1, dayOfMonth);
+        pref.date = LocalDate.of(year, monthOfYear + 1, dayOfMonth);
         if (pref.callChangeListener(pref.date)) {
             pref.persistDateValue(pref.date);
         }

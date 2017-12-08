@@ -22,6 +22,7 @@ import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.analysis.aggregation.average.Average;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Environment;
+import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.models.TimerSettings;
@@ -63,6 +64,7 @@ import de.dreier.mytargets.utils.WearWearableClient;
         @ParcelClass(ImageList.class),
         @ParcelClass(Round.class),
         @ParcelClass(RoundTemplate.class),
+        @ParcelClass(Score.class),
         @ParcelClass(Shot.class),
         @ParcelClass(SightMark.class),
         @ParcelClass(StandardRound.class),
@@ -83,6 +85,7 @@ public class ApplicationInstance extends SharedApplicationInstance {
         super.onCreate();
         wearableClient = new WearWearableClient(this);
     }
+
     @Override
     public void onTerminate() {
         wearableClient.disconnect();

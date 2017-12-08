@@ -15,27 +15,30 @@
 
 package de.dreier.mytargets.shared.utils.typeconverters;
 
+import android.support.annotation.Nullable;
+
 import com.raizlabs.android.dbflow.converter.TypeConverter;
 
-import org.joda.time.LocalDate;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.format.DateTimeFormatter;
 
-public final class LocalDateConverter extends TypeConverter<Long, LocalDate> {
+public final class LocalDateConverter extends TypeConverter<String, LocalDate> {
 
+    @Nullable
     @Override
-    public Long getDBValue(LocalDate model) {
+    public String getDBValue(@Nullable LocalDate model) {
         if (model != null) {
-            return model.toDate().getTime();
+            return model.format(DateTimeFormatter.ISO_LOCAL_DATE);
         }
-
         return null;
     }
 
+    @Nullable
     @Override
-    public LocalDate getModelValue(Long data) {
+    public LocalDate getModelValue(@Nullable String data) {
         if (data != null) {
-            return new LocalDate(data);
+            return LocalDate.parse(data);
         }
-
         return null;
     }
 

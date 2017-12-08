@@ -21,6 +21,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
 
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
@@ -45,7 +46,7 @@ public class WearWearableListener extends WearableListenerService {
     private static final int NOTIFICATION_ID = 1;
 
     @Override
-    public void onMessageReceived(MessageEvent messageEvent) {
+    public void onMessageReceived(@NonNull MessageEvent messageEvent) {
         super.onMessageReceived(messageEvent);
         byte[] data = messageEvent.getData();
         switch (messageEvent.getPath()) {
@@ -71,7 +72,7 @@ public class WearWearableListener extends WearableListenerService {
         }
     }
 
-    private void showNotification(TrainingInfo info) {
+    private void showNotification(@NonNull TrainingInfo info) {
         // Build the intent to display our custom notification
         Intent notificationIntent = new Intent(this, RoundActivity.class);
         notificationIntent.putExtra(RoundActivity.EXTRA_ROUND, Parcels.wrap(info.round));
@@ -96,7 +97,7 @@ public class WearWearableListener extends WearableListenerService {
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
     }
 
-    private String describe(TrainingInfo info) {
+    private String describe(@NonNull TrainingInfo info) {
         return info.getRoundDetails(this) + "\n" +
                 info.getEndDetails(this) + "\n" +
                 info.round.distance.toString();

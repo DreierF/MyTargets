@@ -15,17 +15,15 @@
 
 package de.dreier.mytargets.features.training;
 
+import android.support.annotation.NonNull;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
-
-import java.util.Locale;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.features.main.MainActivity;
@@ -49,16 +47,12 @@ import static org.hamcrest.Matchers.allOf;
 @RunWith(AndroidJUnit4.class)
 public class DeleteTest extends UITestBase {
 
+    @NonNull
     private ActivityTestRule activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Rule
     public final RuleChain rule = RuleChain.outerRule(new SimpleDbTestRule())
             .around(activityTestRule);
-
-    @Before
-    public void setUp() {
-        setLocale(Locale.US);
-    }
 
     @Test
     public void testDeleteRound() throws Exception {

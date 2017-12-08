@@ -63,6 +63,12 @@ if (hasProperty('CROWDIN_API_KEY')) {
                         translation: 'wearable/src/main/res/values-%android_code%/strings.xml'
                 ],
                 [
+                        title      : 'Help',
+                        name       : 'help.html',
+                        source     : 'app/src/main/res/raw/help.html',
+                        translation: 'app/src/main/res/raw-%android_code%/help.html'
+                ],
+                [
                         title      : 'Play Store Title',
                         name       : 'title.txt',
                         source     : 'app/src/regular/play/en-US/listing/title',
@@ -123,5 +129,4 @@ if (hasProperty('CROWDIN_API_KEY')) {
             }
         }
     }
-
 }

@@ -16,6 +16,7 @@
 package de.dreier.mytargets.shared;
 
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.annotation.Database;
 import com.raizlabs.android.dbflow.annotation.Migration;
@@ -43,7 +44,7 @@ public class AppDatabase {
     public static final String DATABASE_FILE_NAME = "database.db";
     public static final String DATABASE_IMPORT_FILE_NAME = "database";
 
-    public static final int VERSION = 23;
+    public static final int VERSION = 24;
 
     @Migration(version = 0, database = AppDatabase.class)
     public static class Migration0 extends BaseMigration {
@@ -75,7 +76,7 @@ public class AppDatabase {
 
         private <T extends BaseModel & Image> void removeFilePath(DatabaseWrapper database, Class<? extends T> clazz) {
             List<? extends T> images = SQLite.select().from(clazz).queryList(database);
-            for(T image : images) {
+            for (T image : images) {
                 File filesDir = SharedApplicationInstance.getContext().getFilesDir();
                 File imageFile = new File(filesDir, image.getFileName());
 
@@ -93,7 +94,8 @@ public class AppDatabase {
                 // In case the image is placed somewhere else, but still exists
                 if (imageFromSomewhere.exists()) {
                     try {
-                        imageFile = File.createTempFile("img", imageFromSomewhere.getName(), filesDir);
+                        imageFile = File
+                                .createTempFile("img", imageFromSomewhere.getName(), filesDir);
                         FileUtils.move(imageFromSomewhere, imageFile);
                         image.setFileName(imageFile.getName());
                         image.save(database);
@@ -118,7 +120,7 @@ public class AppDatabase {
     public static class Migration3 extends BaseMigration {
 
         @Override
-        public void migrate(DatabaseWrapper database) {
+        public void migrate(@NonNull DatabaseWrapper database) {
             database.execSQL("ALTER TABLE SHOOT ADD COLUMN x REAL");
             database.execSQL("ALTER TABLE SHOOT ADD COLUMN y REAL");
             Cursor cur = database.rawQuery("SELECT s._id, s.points, r.target " +
@@ -139,7 +141,7 @@ public class AppDatabase {
     public static class Migration4 extends BaseMigration {
 
         @Override
-        public void migrate(DatabaseWrapper database) {
+        public void migrate(@NonNull DatabaseWrapper database) {
             database.execSQL(
                     "CREATE TABLE IF NOT EXISTS VISIER ( _id INTEGER PRIMARY KEY AUTOINCREMENT," +
                             "bow REFERENCES BOW ON DELETE CASCADE," +
@@ -160,7 +162,7 @@ public class AppDatabase {
     public static class Migration6 extends BaseMigration {
 
         @Override
-        public void migrate(DatabaseWrapper database) {
+        public void migrate(@NonNull DatabaseWrapper database) {
             File filesDir = SharedApplicationInstance.getContext().getFilesDir();
 
             // Migrate all bow images

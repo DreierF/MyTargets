@@ -35,7 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="false"
-                android:text="@string/training" />
+                android:text="@string/training"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -50,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:clickable="false"
-                    android:text="@string/data" />
+                    android:text="@string/data"/>
 
                 <TextView
                     android:id="@+id/gesTraining"
@@ -58,7 +58,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="false"
-                    android:gravity="end" />
+                    android:gravity="end"/>
             </LinearLayout>
 
         </LinearLayout>

@@ -15,13 +15,20 @@
 
 package de.dreier.mytargets.shared.models;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.annimon.stream.Collector;
 import com.annimon.stream.function.BiConsumer;
 import com.annimon.stream.function.Function;
 import com.annimon.stream.function.Supplier;
 
+import org.parceler.Parcel;
+import org.parceler.ParcelConstructor;
+
 import java.util.Locale;
 
+@Parcel
 public class Score {
     public int reachedScore;
     public int totalScore;
@@ -33,6 +40,7 @@ public class Score {
         this.shotCount = 0;
     }
 
+    @ParcelConstructor
     public Score(int reachedScore, int totalScore) {
         this.reachedScore = reachedScore;
         this.totalScore = totalScore;
@@ -57,6 +65,7 @@ public class Score {
                 return Score::add;
             }
 
+            @NonNull
             @Override
             public Function<Score, Score> finisher() {
                 return score -> score;
@@ -64,27 +73,22 @@ public class Score {
         };
     }
 
-    public Score add(Score other) {
+    @NonNull
+    public Score add(@NonNull Score other) {
         reachedScore += other.reachedScore;
         totalScore += other.totalScore;
         shotCount += other.shotCount;
         return this;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return reachedScore + "/" + totalScore;
     }
 
-    public String format(boolean appendPercent) {
-        if (appendPercent && totalScore > 0) {
-            return reachedScore + "/" + totalScore + " (" + getPercent() + ")";
-        } else {
-            return toString();
-        }
-    }
-
-    public String format(Configuration config) {
+    @NonNull
+    public String format(Locale locale, @NonNull Configuration config) {
         if (!config.showReachedScore) {
             return "";
         }
@@ -95,13 +99,13 @@ public class Score {
         if ((config.showPercentage || config.showAverage) && totalScore > 0) {
             score += " (";
             if (config.showPercentage) {
-                score += getPercent();
+                score += getPercentString();
                 if (config.showAverage) {
                     score += ", ";
                 }
             }
             if (config.showAverage) {
-                score += getShotAverageFormatted() + "∅";
+                score += getShotAverageFormatted(locale) + "∅";
             }
             score += ")";
         }
@@ -115,14 +119,24 @@ public class Score {
         return reachedScore / (float) shotCount;
     }
 
-    public String getShotAverageFormatted() {
+    public String getShotAverageFormatted(Locale locale) {
         if (shotCount == 0) {
             return "-";
         }
-        return String.format(Locale.getDefault(), "%.2f", getShotAverage());
+        return String.format(locale, "%.2f", getShotAverage());
     }
 
-    private String getPercent() {
+    /**
+     * @return The percent of points reached relative to the total reachable score.
+     */
+    public float getPercent() {
+        if (totalScore > 0) {
+            return reachedScore / (float) totalScore;
+        }
+        return 0;
+    }
+
+    private String getPercentString() {
         if (totalScore > 0) {
             return String.valueOf(reachedScore * 100 / totalScore) + "%";
         }
@@ -136,7 +150,7 @@ public class Score {
         public boolean showAverage;
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }

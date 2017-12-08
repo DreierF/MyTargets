@@ -108,6 +108,7 @@ public class FabTransform extends Transition {
         return true;
     }
 
+    @NonNull
     @Override
     public String[] getTransitionProperties() {
         return TRANSITION_PROPERTIES;
@@ -123,10 +124,11 @@ public class FabTransform extends Transition {
         captureValues(transitionValues);
     }
 
+    @Nullable
     @Override
     public Animator createAnimator(@NonNull final ViewGroup sceneRoot,
-                                   final TransitionValues startValues,
-                                   final TransitionValues endValues) {
+                                   @Nullable final TransitionValues startValues,
+                                   @Nullable final TransitionValues endValues) {
         if (startValues == null || endValues == null) {
             return null;
         }
@@ -202,7 +204,7 @@ public class FabTransform extends Transition {
                 public void onAnimationEnd(Animator animation) {
                     view.setOutlineProvider(new ViewOutlineProvider() {
                         @Override
-                        public void getOutline(View view, Outline outline) {
+                        public void getOutline(@NonNull View view, @NonNull Outline outline) {
                             final int left = (view.getWidth() - fabBounds.width()) / 2;
                             final int top = (view.getHeight() - fabBounds.height()) / 2;
                             outline.setOval(
@@ -284,7 +286,7 @@ public class FabTransform extends Transition {
         return new NoPauseAnimator(transition);
     }
 
-    private void captureValues(TransitionValues transitionValues) {
+    private void captureValues(@NonNull TransitionValues transitionValues) {
         final View view = transitionValues.view;
         if (view == null || view.getWidth() <= 0 || view.getHeight() <= 0) {
             return;

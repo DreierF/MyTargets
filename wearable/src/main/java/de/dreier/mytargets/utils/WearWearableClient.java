@@ -19,6 +19,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
 import org.parceler.Parcels;
@@ -44,9 +45,10 @@ public class WearWearableClient extends WearableClientBase {
     private static final String EXTRA_END = "end";
     public static final String EXTRA_INFO = "info";
 
+    @NonNull
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context context, @NonNull Intent intent) {
             switch (intent.getAction()) {
                 case BROADCAST_REQUEST_TRAINING_TEMPLATE:
                     sendMessage(TRAINING_TEMPLATE, null);
@@ -65,7 +67,7 @@ public class WearWearableClient extends WearableClientBase {
         }
     };
 
-    public WearWearableClient(Context context) {
+    public WearWearableClient(@NonNull Context context) {
         super(context);
         IntentFilter filter = new IntentFilter();
         filter.addAction(BROADCAST_UPDATE_END_FROM_LOCAL);

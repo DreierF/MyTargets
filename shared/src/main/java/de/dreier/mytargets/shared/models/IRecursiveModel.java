@@ -20,5 +20,6 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 public interface IRecursiveModel extends Model {
     void saveRecursively();
+
     void saveRecursively(DatabaseWrapper databaseWrapper);
 }

@@ -18,6 +18,7 @@ package de.dreier.mytargets.shared.targets.zone;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.Region;
+import android.support.annotation.NonNull;
 
 import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper;
 import de.dreier.mytargets.shared.utils.RegionUtils;
@@ -25,6 +26,7 @@ import de.dreier.mytargets.shared.utils.RegionUtils;
 public class HeartZone extends ZoneBase {
 
     private static final float REGION_SCALE_FACTOR = 1000f;
+    @NonNull
     private static final Region HEART_REGION;
     private static final Path heart = new Path();
 
@@ -65,17 +67,18 @@ public class HeartZone extends ZoneBase {
 
     @Override
     public boolean isInZone(float ax, float ay, float arrowRadius) {
-        return HEART_REGION.contains((int) (ax * REGION_SCALE_FACTOR), (int) (ay * REGION_SCALE_FACTOR));
+        return HEART_REGION
+                .contains((int) (ax * REGION_SCALE_FACTOR), (int) (ay * REGION_SCALE_FACTOR));
     }
 
     @Override
-    public void drawFill(CanvasWrapper canvas) {
+    public void drawFill(@NonNull CanvasWrapper canvas) {
         initPaint();
         canvas.drawPath(heart, paintFill);
     }
 
     @Override
-    public void drawStroke(CanvasWrapper canvas) {
+    public void drawStroke(@NonNull CanvasWrapper canvas) {
         initPaint();
         canvas.drawPath(heart, paintStroke);
     }

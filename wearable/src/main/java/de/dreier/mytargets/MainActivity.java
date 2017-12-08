@@ -21,9 +21,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.wearable.activity.WearableActivity;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -44,12 +46,14 @@ import static de.dreier.mytargets.utils.WearWearableClient.BROADCAST_TRAINING_UP
 
 public class MainActivity extends WearableActivity {
 
+    @Nullable
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context context, @NonNull Intent intent) {
             switch (intent.getAction()) {
                 case BROADCAST_TRAINING_TEMPLATE:
-                    Training training = Parcels.unwrap(intent.getParcelableExtra(WearWearableClient.EXTRA_TRAINING));
+                    Training training = Parcels
+                            .unwrap(intent.getParcelableExtra(WearWearableClient.EXTRA_TRAINING));
                     setTraining(training);
                     binding.root.setClickable(false);
                     binding.wearableDrawerView.setVisibility(View.VISIBLE);
@@ -57,11 +61,13 @@ public class MainActivity extends WearableActivity {
                     // Replaces the on click behaviour that open the (empty) drawer
                     LinearLayout peekView = ((LinearLayout) binding.primaryActionAdd.getParent());
                     ViewGroup peekContainer = ((ViewGroup) peekView.getParent());
-                    peekContainer.setOnClickListener(view -> ApplicationInstance.wearableClient.sendCreateTraining(training));
-                    binding.drawerLayout.peekDrawer(Gravity.BOTTOM);
+                    peekContainer.setOnClickListener(view -> ApplicationInstance.wearableClient
+                            .sendCreateTraining(training));
+                    binding.wearableDrawerView.getController().peekDrawer();
                     break;
                 case BROADCAST_TRAINING_UPDATED:
-                    TrainingInfo info = Parcels.unwrap(intent.getParcelableExtra(WearWearableClient.EXTRA_INFO));
+                    TrainingInfo info = Parcels
+                            .unwrap(intent.getParcelableExtra(WearWearableClient.EXTRA_INFO));
                     setTrainingInfo(info);
                     binding.root.setClickable(true);
                     binding.root.setOnClickListener(v -> {
@@ -98,7 +104,7 @@ public class MainActivity extends WearableActivity {
         super.onEnterAmbient(ambientDetails);
         binding.drawerLayout.setBackgroundResource(R.color.md_black_1000);
         binding.wearableDrawerView.setBackgroundResource(R.color.md_black_1000);
-        binding.date.setTextColor(getResources().getColor(R.color.md_white_1000));
+        binding.date.setTextColor(ContextCompat.getColor(this, R.color.md_white_1000));
         binding.icon.setVisibility(View.INVISIBLE);
         binding.clock.time.setVisibility(View.VISIBLE);
         binding.clock.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
@@ -115,24 +121,25 @@ public class MainActivity extends WearableActivity {
         super.onExitAmbient();
         binding.drawerLayout.setBackgroundResource(R.color.md_wear_green_dark_background);
         binding.wearableDrawerView.setBackgroundResource(R.color.md_wear_green_lighter_ui_element);
-        binding.date.setTextColor(getResources().getColor(R.color.md_wear_green_lighter_ui_element));
+        binding.date.setTextColor(ContextCompat
+                .getColor(this, R.color.md_wear_green_lighter_ui_element));
         binding.icon.setVisibility(View.VISIBLE);
         binding.clock.time.setVisibility(View.GONE);
     }
 
-    public void setTrainingInfo(TrainingInfo info) {
+    public void setTrainingInfo(@NonNull TrainingInfo info) {
         setCommonTrainingInfo(info);
         binding.date.setText(R.string.today);
     }
 
-    private void setTraining(Training training) {
+    private void setTraining(@NonNull Training training) {
         Round round = training.getRounds().get(0);
         TrainingInfo info = new TrainingInfo(training, round);
         setCommonTrainingInfo(info);
         binding.date.setText("");
     }
 
-    private void setCommonTrainingInfo(TrainingInfo info) {
+    private void setCommonTrainingInfo(@NonNull TrainingInfo info) {
         binding.title.setText(info.title);
         binding.rounds.setText(info.getRoundDetails(this));
         binding.ends.setText(info.getEndDetails(this));

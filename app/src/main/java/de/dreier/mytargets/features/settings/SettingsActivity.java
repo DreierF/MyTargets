@@ -16,21 +16,26 @@
 package de.dreier.mytargets.features.settings;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
+import android.view.MenuItem;
 
 import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.utils.IntentWrapper;
+import im.delight.android.languages.Language;
 
 import static android.support.v7.preference.PreferenceFragmentCompat.ARG_PREFERENCE_ROOT;
+import static de.dreier.mytargets.features.settings.ESettingsScreens.MAIN;
 
 public class SettingsActivity extends SimpleFragmentActivityBase implements
         PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 
-    public static IntentWrapper getIntent(ESettingsScreens subScreen) {
+    @NonNull
+    public static IntentWrapper getIntent(@NonNull ESettingsScreens subScreen) {
         return new IntentWrapper(SettingsActivity.class)
                 .with(ARG_PREFERENCE_ROOT, subScreen.getKey());
     }
@@ -41,11 +46,12 @@ public class SettingsActivity extends SimpleFragmentActivityBase implements
         if (key != null) {
             return ESettingsScreens.from(key).create();
         }
-        return ESettingsScreens.MAIN.create();
+        return MAIN.create();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Language.setFromPreference(this, SettingsManager.KEY_LANGUAGE);
         super.onCreate(savedInstanceState);
         getSupportFragmentManager().addOnBackStackChangedListener(
                 () -> {
@@ -53,7 +59,6 @@ public class SettingsActivity extends SimpleFragmentActivityBase implements
                     if (manager != null) {
                         SettingsFragmentBase currFrag = (SettingsFragmentBase) manager
                                 .findFragmentById(android.R.id.content);
-
                         currFrag.onFragmentResume();
                     }
                 });
@@ -61,7 +66,7 @@ public class SettingsActivity extends SimpleFragmentActivityBase implements
 
     @Override
     public boolean onPreferenceStartScreen(PreferenceFragmentCompat preferenceFragmentCompat,
-                                           PreferenceScreen preferenceScreen) {
+                                           @NonNull PreferenceScreen preferenceScreen) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ESettingsScreens screen = ESettingsScreens.from(preferenceScreen.getKey());
         SettingsFragmentBase fragment = screen.create();
@@ -78,5 +83,23 @@ public class SettingsActivity extends SimpleFragmentActivityBase implements
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(0, 0);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if(getChildFragment() instanceof MainSettingsFragment) {
+                    onBackPressed();
+                } else {
+                    getIntent().putExtra(ARG_PREFERENCE_ROOT, MAIN.getKey());
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.replace(android.R.id.content, instantiateFragment(), FRAGMENT_TAG);
+                    ft.commit();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

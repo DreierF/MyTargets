@@ -20,57 +20,71 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.PowerManager;
 import android.os.Vibrator;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.WindowManager;
 
 import org.parceler.Parcels;
 
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.TimerSettings;
 
+import static de.dreier.mytargets.shared.base.fragment.ETimerState.COUNTDOWN;
+import static de.dreier.mytargets.shared.base.fragment.ETimerState.FINISHED;
+import static de.dreier.mytargets.shared.base.fragment.ETimerState.PREPARATION;
+import static de.dreier.mytargets.shared.base.fragment.ETimerState.SHOOTING;
+import static de.dreier.mytargets.shared.base.fragment.ETimerState.WAIT_FOR_START;
+
 public abstract class TimerFragmentBase extends Fragment implements View.OnClickListener {
     public static final String ARG_TIMER_SETTINGS = "timer_settings";
+    public static final String ARG_EXIT_AFTER_STOP = "exit_after_stop";
 
-    private ETimerState currentStatus = ETimerState.WAIT_FOR_START;
+    private ETimerState currentStatus = WAIT_FOR_START;
     private CountDownTimer countdown;
     private MediaPlayer horn;
-    private PowerManager.WakeLock wakeLock;
     public TimerSettings settings;
+    private boolean exitAfterStop = true;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        horn = MediaPlayer.create(context, R.raw.horn);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         settings = Parcels.unwrap(getArguments().getParcelable(ARG_TIMER_SETTINGS));
+        exitAfterStop = getArguments().getBoolean(ARG_EXIT_AFTER_STOP);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        getView().setOnClickListener(this);
-        PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
-        //noinspection deprecation
-        wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK |
-                PowerManager.ACQUIRE_CAUSES_WAKEUP |
-                PowerManager.ON_AFTER_RELEASE, "WakeLock");
-        wakeLock.acquire();
-        horn = MediaPlayer.create(getActivity(), R.raw.horn);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        view.setOnClickListener(this);
         changeStatus(currentStatus);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        wakeLock.release();
-        horn.release();
-        horn = null;
     }
 
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if(horn.isPlaying()) {
+            horn.stop();
+        }
+        horn.release();
         if (countdown != null) {
             countdown.cancel();
         }
@@ -86,45 +100,49 @@ public abstract class TimerFragmentBase extends Fragment implements View.OnClick
             countdown.cancel();
         }
         if (status == ETimerState.EXIT) {
-            getActivity().finish();
-            return;
+            if (exitAfterStop) {
+                getActivity().finish();
+                return;
+            } else {
+                status = WAIT_FOR_START;
+            }
         }
+        ETimerState finalStatus = status;
         currentStatus = status;
         applyStatus(status);
         playSignal(status.signalCount);
 
-        if (status == ETimerState.FINISHED) {
+        if (status == FINISHED) {
             applyTime(getString(R.string.stop));
             countdown = new CountDownTimer(6000, 100) {
                 public void onTick(long millisUntilFinished) {
                 }
 
                 public void onFinish() {
-                    changeStatus(status.getNext());
+                    changeStatus(finalStatus.getNext());
                 }
             }.start();
-        } else if (status != ETimerState.PREPARATION && status != ETimerState.SHOOTING && status != ETimerState.COUNTDOWN) {
-            applyTime("");
         } else {
-            final int offset = getOffset(status);
-            countdown = new CountDownTimer(getDuration(status) * 1000, 100) {
-                public void onTick(long millisUntilFinished) {
-                    final String text = String.valueOf((millisUntilFinished / 1000) + offset);
-                    applyTime(text);
-                }
+            if (status != PREPARATION && status != SHOOTING && status != COUNTDOWN) {
+                applyTime("");
+            } else {
+                final int offset = getOffset(status);
+                countdown = new CountDownTimer(getDuration(status) * 1000, 100) {
+                    public void onTick(long millisUntilFinished) {
+                        final String text = String
+                                .valueOf((millisUntilFinished / 1000) + offset);
+                        applyTime(text);
+                    }
 
-                public void onFinish() {
-                    changeStatus(status.getNext());
-                }
-            }.start();
+                    public void onFinish() {
+                        changeStatus(finalStatus.getNext());
+                    }
+                }.start();
+            }
         }
     }
 
-    public abstract void applyTime(String text);
-
-    protected abstract void applyStatus(ETimerState status);
-
-    protected int getDuration(ETimerState status) {
+    protected int getDuration(@NonNull ETimerState status) {
         switch (status) {
             case PREPARATION:
                 return settings.waitTime;
@@ -138,7 +156,7 @@ public abstract class TimerFragmentBase extends Fragment implements View.OnClick
     }
 
     protected int getOffset(ETimerState status) {
-        if (status == ETimerState.SHOOTING) {
+        if (status == SHOOTING) {
             return settings.warnTime;
         } else {
             return 0;
@@ -171,4 +189,9 @@ public abstract class TimerFragmentBase extends Fragment implements View.OnClick
             }
         });
     }
+
+    public abstract void applyTime(String text);
+
+    protected abstract void applyStatus(ETimerState status);
+
 }

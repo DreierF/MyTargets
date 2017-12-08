@@ -16,6 +16,7 @@
 package de.dreier.mytargets.utils;
 
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 
 import de.dreier.mytargets.ApplicationInstance;
 import de.dreier.mytargets.shared.models.TimerSettings;
@@ -30,6 +31,7 @@ public class WearSettingsManager {
     private static final SharedPreferences preferences = ApplicationInstance
             .getSharedPreferences();
 
+    @NonNull
     public static TimerSettings getTimerSettings() {
         TimerSettings settings = new TimerSettings();
         settings.enabled = preferences.getBoolean(KEY_TIMER_ENABLED, false);
@@ -41,7 +43,7 @@ public class WearSettingsManager {
         return settings;
     }
 
-    public static void setTimerSettings(TimerSettings settings) {
+    public static void setTimerSettings(@NonNull TimerSettings settings) {
         preferences
                 .edit()
                 .putBoolean(KEY_TIMER_ENABLED, settings.enabled)

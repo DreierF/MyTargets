@@ -16,16 +16,18 @@
 package de.dreier.mytargets.utils;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import de.dreier.mytargets.utils.multiselector.MultiSelector;
 import icepick.Bundler;
 
 public class MultiSelectorBundler implements Bundler<MultiSelector> {
-    public void put(String key, MultiSelector value, Bundle bundle) {
+    public void put(String key, @NonNull MultiSelector value, @NonNull Bundle bundle) {
         bundle.putBundle(key, value.saveSelectionStates());
     }
 
-    public MultiSelector get(String key, Bundle bundle) {
+    @NonNull
+    public MultiSelector get(String key, @NonNull Bundle bundle) {
         MultiSelector selector = new MultiSelector();
         selector.restoreSelectionStates(bundle.getBundle(key));
         return selector;

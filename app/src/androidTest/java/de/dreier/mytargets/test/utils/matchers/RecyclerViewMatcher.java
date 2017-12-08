@@ -16,6 +16,8 @@
 package de.dreier.mytargets.test.utils.matchers;
 
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -48,16 +50,19 @@ public class RecyclerViewMatcher {
                 withParent(withParent(isDisplayed()))));
     }
 
+    @Nullable
     public Matcher<View> atPosition(final int position) {
         return atPositionOnView(position, -1);
     }
 
+    @Nullable
     public Matcher<View> atPositionOnView(final int position, final int targetViewId) {
         return new TypeSafeMatcher<View>() {
+            @Nullable
             Resources resources = null;
             View childView;
 
-            public void describeTo(Description description) {
+            public void describeTo(@NonNull Description description) {
                 recyclerViewMatcher.describeTo(description);
                 description.appendText(" at position " + position);
                 if (targetViewId != -1) {
@@ -73,7 +78,7 @@ public class RecyclerViewMatcher {
                 }
             }
 
-            public boolean matchesSafely(View view) {
+            public boolean matchesSafely(@NonNull View view) {
                 resources = view.getResources();
 
                 if (childView == null) {

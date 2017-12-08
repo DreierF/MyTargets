@@ -26,9 +26,15 @@ android {
     compileSdkVersion compileSdkVersionCode
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 26
+        minSdkVersion 16
+        targetSdkVersion 27
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+        vectorDrawables.useSupportLibrary true
+    }
+
+    buildTypes {
+        debug {}
+        release {}
     }
 }
 
@@ -38,7 +44,7 @@ dependencies {
     api "com.android.support:support-core-utils:$libraryVersion.support"
     api "com.android.support:support-annotations:$libraryVersion.support"
     api "com.annimon:stream:$libraryVersion.annimonStream"
-    api "joda-time:joda-time:$libraryVersion.jodaTime"
+    api "com.jakewharton.threetenabp:threetenabp:$libraryVersion.threeTenABP"
 
     implementation "org.parceler:parceler-api:$libraryVersion.parceler"
 

@@ -23,6 +23,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
@@ -45,15 +46,16 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.renderer.LineChartRenderer;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.parceler.Parcels;
+import org.threeten.bp.Duration;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.FormatStyle;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -63,6 +65,7 @@ import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.base.fragments.FragmentBase;
 import de.dreier.mytargets.databinding.FragmentStatisticsBinding;
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
+import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.SelectableZone;
@@ -91,6 +94,7 @@ public class StatisticsFragment extends FragmentBase {
             "<small>&nbsp;</small><br>" +
             "<font color='gray'>%s</font><br>" +
             "<big>%d</big>";
+    @NonNull
     private static final Description EMPTY_DESCRIPTION;
 
     static {
@@ -98,6 +102,7 @@ public class StatisticsFragment extends FragmentBase {
         EMPTY_DESCRIPTION.setText("");
     }
 
+    @Nullable
     private long[] roundIds;
     private List<Round> rounds;
     private ArrowStatisticAdapter adapter;
@@ -105,6 +110,7 @@ public class StatisticsFragment extends FragmentBase {
     private Target target;
     private boolean animate;
 
+    @NonNull
     private BroadcastReceiver updateReceiver = new MobileWearableClient.EndUpdateReceiver() {
 
         @Override
@@ -116,7 +122,8 @@ public class StatisticsFragment extends FragmentBase {
         }
     };
 
-    public static StatisticsFragment newInstance(List<Long> roundIds, Target item, boolean animate) {
+    @NonNull
+    public static StatisticsFragment newInstance(@NonNull List<Long> roundIds, Target item, boolean animate) {
         StatisticsFragment fragment = new StatisticsFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(StatisticsFragment.ARG_TARGET, Parcels.wrap(item));
@@ -141,10 +148,15 @@ public class StatisticsFragment extends FragmentBase {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_statistics, container, false);
 
-        target = Parcels.unwrap(getArguments().getParcelable(ARG_TARGET));
+        Target target = Parcels.unwrap(getArguments().getParcelable(ARG_TARGET));
+        if(SettingsManager.getStatisticsDispersionPatternMergeSpot()) {
+            this.target = Target.singleSpotTargetFrom(target);
+        } else {
+            this.target = target;
+        }
         roundIds = getArguments().getLongArray(ARG_ROUND_IDS);
         animate = getArguments().getBoolean(ARG_ANIMATE);
 
@@ -193,7 +205,7 @@ public class StatisticsFragment extends FragmentBase {
         }
         ArrowStatistic stats = new ArrowStatistic(target, exactShots);
         stats.arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
-        binding.dispersionView.setShots(stats);
+        binding.dispersionView.setShots(stats, SettingsManager.getAggregationStrategy());
         binding.dispersionView.setEnabled(false);
         binding.dispersionViewOverlay.setOnClickListener(view -> {
             ArrowStatistic statistics = new ArrowStatistic(target, exactShots);
@@ -229,7 +241,7 @@ public class StatisticsFragment extends FragmentBase {
                 new LineChartRenderer(binding.chartView, binding.chartView.getAnimator(),
                         binding.chartView.getViewPortHandler()) {
                     @Override
-                    public void drawHighlighted(Canvas canvas, Highlight[] indices) {
+                    public void drawHighlighted(@NonNull Canvas canvas, Highlight[] indices) {
                         mRenderPaint.setStyle(Paint.Style.FILL);
 
                         List<ILineDataSet> dataSets = mChart.getLineData().getDataSets();
@@ -260,7 +272,7 @@ public class StatisticsFragment extends FragmentBase {
     private void showPieChart() {
         // enable hole and configure
         binding.distributionChart.setTransparentCircleRadius(15);
-        binding.distributionChart.setHoleColor(0xFFEEEEEE);
+        binding.distributionChart.setHoleColor(ContextCompat.getColor(getContext(), R.color.md_grey_50));
         binding.distributionChart.getLegend().setEnabled(false);
         binding.distributionChart.setDescription(EMPTY_DESCRIPTION);
 
@@ -270,7 +282,7 @@ public class StatisticsFragment extends FragmentBase {
 
         binding.distributionChart.setUsePercentValues(false);
         binding.distributionChart.highlightValues(null);
-        binding.distributionChart.setBackgroundColor(0xFFEEEEEE);
+        binding.distributionChart.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.md_grey_50));
         binding.distributionChart.invalidate();
         addPieData();
     }
@@ -315,7 +327,7 @@ public class StatisticsFragment extends FragmentBase {
         binding.distributionChart
                 .setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
                     @Override
-                    public void onValueSelected(Entry e, Highlight h) {
+                    public void onValueSelected(@NonNull Entry e, Highlight h) {
                         final SelectableZone selectableZone = (SelectableZone) e.getData();
                         final String s = String.format(Locale.US,
                                 PIE_CHART_CENTER_TEXT_FORMAT,
@@ -359,12 +371,12 @@ public class StatisticsFragment extends FragmentBase {
                 .map(Training::get)
                 .collect(Collectors.toMap(Training::getId));
 
-        List<Pair<Float, DateTime>> values = Stream.of(rounds)
+        List<Pair<Float, LocalDateTime>> values = Stream.of(rounds)
                 .map(r -> new Pair<>(trainingsMap.get(r.trainingId).date, r))
                 .flatMap(roundIdPair -> Stream.of(roundIdPair.second.getEnds())
                         .map(end -> new Pair<>(roundIdPair.first, end)))
                 .map(endPair -> getPairEndSummary(target, endPair.second, endPair.first))
-                .sortBy(pair -> pair.second.toDate().getTime())
+                .sortBy(pair -> pair.second)
                 .collect(Collectors.toList());
         if (values.isEmpty()) {
             return null;
@@ -387,54 +399,58 @@ public class StatisticsFragment extends FragmentBase {
     }
 
     @NonNull
-    private Evaluator getEntryEvaluator(final List<Pair<Float, DateTime>> values) {
+    private Evaluator getEntryEvaluator(@NonNull final List<Pair<Float, LocalDateTime>> values) {
         boolean singleTraining = Stream.of(rounds)
                 .groupBy(r -> r.trainingId).count() == 1;
 
         Evaluator eval;
         if (singleTraining) {
             eval = new Evaluator() {
-                private DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+                @NonNull
+                private DateTimeFormatter dateFormat = DateTimeFormatter
+                        .ofLocalizedTime(FormatStyle.SHORT);
 
                 @Override
-                public long getXValue(List<Pair<Float, DateTime>> values, int i) {
-                    return values.get(i).second.getMillis() - values.get(0).second.getMillis();
+                public long getXValue(@NonNull List<Pair<Float, LocalDateTime>> values, int i) {
+                    return Duration.between(values.get(0).second, values.get(i).second)
+                            .getSeconds();
                 }
 
                 @Override
                 public String getXValueFormatted(float value) {
                     final long diffToFirst = (long) value;
-                    return dateFormat
-                            .format(new Date(values.get(0).second.getMillis() + diffToFirst));
+                    return values.get(0).second.plusSeconds(diffToFirst).format(dateFormat);
                 }
             };
         } else {
             eval = new Evaluator() {
-                private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
+                @NonNull
+                private DateTimeFormatter dateFormat = DateTimeFormatter
+                        .ofLocalizedDate(FormatStyle.SHORT);
 
                 @Override
-                public long getXValue(List<Pair<Float, DateTime>> values, int i) {
+                public long getXValue(List<Pair<Float, LocalDateTime>> values, int i) {
                     return i;
                 }
 
                 @Override
                 public String getXValueFormatted(float value) {
                     int index = Math.max(Math.min((int) value, values.size() - 1), 0);
-                    return dateFormat.format(values.get(index).second.toDate());
+                    return dateFormat.format(values.get(index).second);
                 }
             };
         }
         return eval;
     }
 
-    private Pair<Float, DateTime> getPairEndSummary(Target target, End end, LocalDate trainingDate) {
+    private Pair<Float, LocalDateTime> getPairEndSummary(@NonNull Target target, @NonNull End end, @NonNull LocalDate trainingDate) {
         Score reachedScore = target.getReachedScore(end);
         return new Pair<>(reachedScore.getShotAverage(),
-                new DateTime(end.saveTime).withDate(trainingDate));
+                LocalDateTime.of(trainingDate, end.saveTime));
     }
 
     @NonNull
-    private LineDataSet convertToLineData(List<Pair<Float, DateTime>> values, Evaluator evaluator) {
+    private LineDataSet convertToLineData(@NonNull List<Pair<Float, LocalDateTime>> values, @NonNull Evaluator evaluator) {
         List<Entry> seriesEntries = new ArrayList<>();
         for (int i = 0; i < values.size(); i++) {
             seriesEntries.add(new Entry(evaluator.getXValue(values, i), values.get(i).first));
@@ -457,7 +473,7 @@ public class StatisticsFragment extends FragmentBase {
         return series;
     }
 
-    private ILineDataSet generateLinearRegressionLine(List<Pair<Float, DateTime>> values, Evaluator eval) {
+    private ILineDataSet generateLinearRegressionLine(@NonNull List<Pair<Float, LocalDateTime>> values, @NonNull Evaluator eval) {
         int dataSetSize = values.size();
         double[] x = new double[dataSetSize];
         double[] y = new double[dataSetSize];
@@ -473,10 +489,10 @@ public class StatisticsFragment extends FragmentBase {
             sumX += x[n];
             sumY += y[n];
             if (x[n] < minX) {
-                minX = eval.getXValue(values, i);
+                minX = (long) x[n];
             }
             if (x[n] > maxX) {
-                maxX = eval.getXValue(values, i);
+                maxX = (long) x[n];
             }
             n++;
         }
@@ -510,7 +526,7 @@ public class StatisticsFragment extends FragmentBase {
     }
 
     private interface Evaluator {
-        long getXValue(List<Pair<Float, DateTime>> values, int i);
+        long getXValue(List<Pair<Float, LocalDateTime>> values, int i);
 
         String getXValueFormatted(float value);
     }
@@ -519,15 +535,16 @@ public class StatisticsFragment extends FragmentBase {
 
         private List<ArrowStatistic> data = new ArrayList<>();
 
+        @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_image_simple, parent, false);
             return new ViewHolder(itemView);
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             holder.bindItem(data.get(position));
         }
 
@@ -547,7 +564,7 @@ public class StatisticsFragment extends FragmentBase {
         private ItemImageSimpleBinding binding;
         private ArrowStatistic mItem;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setClickable(true);
             binding = DataBindingUtil.bind(itemView);
@@ -560,7 +577,7 @@ public class StatisticsFragment extends FragmentBase {
                     .start();
         }
 
-        void bindItem(ArrowStatistic item) {
+        void bindItem(@NonNull ArrowStatistic item) {
             mItem = item;
             binding.name.setText(
                     getString(R.string.arrow_x_of_set_of_arrows, item.arrowNumber, item.arrowName));

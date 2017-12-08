@@ -15,25 +15,13 @@
 
 package de.dreier.mytargets.test.base;
 
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.support.test.InstrumentationRegistry;
-import android.util.Log;
+import org.junit.BeforeClass;
 
-import org.junit.Rule;
-import org.junit.rules.TestName;
-import org.junit.runner.Description;
-
-import java.util.Locale;
+import de.dreier.mytargets.features.settings.SettingsManager;
 
 public class InstrumentedTestBase {
-    protected void setLocale(Locale locale) {
-        // here we update locale for date formatter
-        Locale.setDefault(locale);
-        // here we update locale for app resources
-        Resources res = InstrumentationRegistry.getTargetContext().getResources();
-        Configuration config = res.getConfiguration();
-        config.locale = locale;
-        res.updateConfiguration(config, res.getDisplayMetrics());
+    @BeforeClass
+    public static void setLanguage() {
+        SettingsManager.setLanguage("en");
     }
 }

@@ -14,12 +14,12 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/md_wear_green_lighter_background"
-    android:orientation="vertical"
-    android:paddingEnd="@dimen/padding_list_horizontal"
-    android:paddingStart="@dimen/padding_list_horizontal">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/md_wear_green_lighter_background"
+              android:orientation="vertical"
+              android:paddingEnd="@dimen/padding_list_horizontal"
+              android:paddingStart="@dimen/padding_list_horizontal">
 
     <TextView
         android:id="@+id/end"
@@ -28,7 +28,7 @@
         android:layout_gravity="center_vertical"
         android:layout_margin="5dp"
         android:clickable="false"
-        android:textColor="@color/md_wear_green_active_ui_element" />
+        android:textColor="@color/md_wear_green_active_ui_element"/>
 
     <de.dreier.mytargets.shared.views.EndView
         android:id="@+id/shoots"
@@ -36,6 +36,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:clickable="false"
-        android:layout_marginBottom="4dp" />
+        android:layout_marginBottom="4dp"/>
 
 </LinearLayout>

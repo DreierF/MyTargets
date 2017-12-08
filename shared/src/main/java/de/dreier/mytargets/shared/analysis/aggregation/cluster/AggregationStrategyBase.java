@@ -21,7 +21,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.shared.analysis.aggregation.IAggregationResultRenderer;
@@ -30,21 +29,17 @@ import de.dreier.mytargets.shared.analysis.aggregation.NOPResultRenderer;
 import de.dreier.mytargets.shared.models.db.Shot;
 
 public abstract class AggregationStrategyBase implements IAggregationStrategy {
-    protected final ArrayList<Shot> data;
+
     @NonNull
-    protected IAggregationResultRenderer result = new NOPResultRenderer();
+    private IAggregationResultRenderer result = new NOPResultRenderer();
     protected boolean isDirty;
+    @Nullable
     private OnAggregationResult resultListener;
     private AsyncTask<List<Shot>, Integer, IAggregationResultRenderer> computeTask;
     private int color;
 
-    public AggregationStrategyBase() {
-        this.data = new ArrayList<>();
-    }
-
     @CallSuper
     protected void reset() {
-        data.clear();
         result = new NOPResultRenderer();
         if (computeTask != null) {
             computeTask.cancel(true);
@@ -70,7 +65,7 @@ public abstract class AggregationStrategyBase implements IAggregationStrategy {
     }
 
     @WorkerThread
-    @Nullable
+    @NonNull
     protected abstract IAggregationResultRenderer compute(List<Shot> shots);
 
     @Override
@@ -92,15 +87,14 @@ public abstract class AggregationStrategyBase implements IAggregationStrategy {
 
     private class ComputeTask extends AsyncTask<List<Shot>, Integer, IAggregationResultRenderer> {
 
+        @NonNull
         protected IAggregationResultRenderer doInBackground(final List<Shot>... array) {
             return compute(array[0]);
         }
 
-        protected void onPostExecute(final IAggregationResultRenderer clusterResultRenderer) {
+        protected void onPostExecute(@NonNull final IAggregationResultRenderer clusterResultRenderer) {
             super.onPostExecute(clusterResultRenderer);
-            if (clusterResultRenderer != null) {
-                clusterResultRenderer.setColor(color);
-            }
+            clusterResultRenderer.setColor(color);
             result = clusterResultRenderer;
             isDirty = false;
             if (resultListener != null) {

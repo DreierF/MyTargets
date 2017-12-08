@@ -18,12 +18,13 @@ package de.dreier.mytargets.features.settings;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.joda.time.LocalDate;
-import org.joda.time.Years;
-import org.joda.time.format.DateTimeFormat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.Period;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.FormatStyle;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -189,18 +190,24 @@ public class SettingsManagerTest extends InstrumentedTestBase {
     }
 
     @Test
+    public void setProfileLicenceNumber() {
+        SettingsManager.setProfileLicenceNumber("12345");
+        assertThat(SettingsManager.getProfileLicenceNumber()).isEqualTo("12345");
+    }
+
+    @Test
     public void setProfileBirthDay() {
         assertThat(SettingsManager.getProfileBirthDay()).isEqualTo(null);
         assertThat(SettingsManager.getProfileBirthDayFormatted()).isEqualTo(null);
         assertThat(SettingsManager.getProfileAge()).isEqualTo(-1);
 
-        final LocalDate birthDay = new LocalDate(1993, 5, 4);
+        final LocalDate birthDay = LocalDate.of(1993, 5, 4);
         SettingsManager.setProfileBirthDay(birthDay);
         assertThat(SettingsManager.getProfileBirthDay()).isEqualTo(birthDay);
         assertThat(SettingsManager.getProfileBirthDayFormatted()).isEqualTo(
-                DateTimeFormat.mediumDate().print(birthDay));
+                DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(birthDay));
         assertThat(SettingsManager.getProfileAge())
-                .isEqualTo(Years.yearsBetween(birthDay, LocalDate.now()).getYears());
+                .isEqualTo(Period.between(birthDay, LocalDate.now()).getYears());
     }
 
     @Test

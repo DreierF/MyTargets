@@ -48,7 +48,7 @@ public abstract class FragmentBase extends Fragment implements LoaderManager.Loa
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         Icepick.saveInstanceState(this, outState);
     }
@@ -71,6 +71,7 @@ public abstract class FragmentBase extends Fragment implements LoaderManager.Loa
         reloadData();
     }
 
+    @Nullable
     @Override
     public Loader<LoaderUICallback> onCreateLoader(int id, Bundle args) {
         return new AsyncTaskLoader<LoaderUICallback>(getContext()) {
@@ -89,7 +90,7 @@ public abstract class FragmentBase extends Fragment implements LoaderManager.Loa
     }
 
     @Override
-    public void onLoadFinished(Loader<LoaderUICallback> loader, LoaderUICallback callback) {
+    public void onLoadFinished(Loader<LoaderUICallback> loader, @NonNull LoaderUICallback callback) {
         callback.applyData();
     }
 

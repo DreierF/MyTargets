@@ -15,6 +15,9 @@
 
 package de.dreier.mytargets.shared.models.db;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
@@ -36,10 +39,12 @@ import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter;
 @Table(database = AppDatabase.class)
 public class RoundTemplate extends BaseModel implements IIdSettable {
 
+    @Nullable
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     Long id;
 
+    @Nullable
     @ForeignKey(tableClass = StandardRound.class, references = {
             @ForeignKeyReference(columnName = "standardRound", columnType = Long.class, foreignKeyColumnName = "_id")},
             onDelete = ForeignKeyAction.CASCADE)
@@ -54,6 +59,7 @@ public class RoundTemplate extends BaseModel implements IIdSettable {
     @Column
     public int endCount;
 
+    @Nullable
     @Column(typeConverter = DimensionConverter.class)
     public Dimension distance;
 
@@ -63,9 +69,11 @@ public class RoundTemplate extends BaseModel implements IIdSettable {
     @Column
     int targetScoringStyle;
 
+    @Nullable
     @Column(typeConverter = DimensionConverter.class)
     Dimension targetDiameter;
 
+    @Nullable
     public static RoundTemplate get(long sid, int index) {
         return SQLite.select()
                 .from(RoundTemplate.class)
@@ -74,11 +82,12 @@ public class RoundTemplate extends BaseModel implements IIdSettable {
                 .querySingle();
     }
 
+    @Nullable
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(@Nullable Long id) {
         this.id = id;
     }
 
@@ -89,13 +98,14 @@ public class RoundTemplate extends BaseModel implements IIdSettable {
                 id.equals(((RoundTemplate) another).id);
     }
 
+    @Nullable
     public Target getTargetTemplate() {
         return new Target(targetId, targetScoringStyle, targetDiameter);
     }
 
-    public void setTargetTemplate(Target targetTemplate) {
+    public void setTargetTemplate(@NonNull Target targetTemplate) {
         targetId = targetTemplate.id;
         targetScoringStyle = targetTemplate.scoringStyle;
-        targetDiameter = targetTemplate.size;
+        targetDiameter = targetTemplate.diameter;
     }
 }

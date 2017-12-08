@@ -21,11 +21,12 @@ import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.annotation.NonNull;
 
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.settings.backup.BackupException;
 import de.dreier.mytargets.features.settings.backup.provider.IBlockingBackup;
+import timber.log.Timber;
 
 /**
  * Define a sync adapter for the app.
@@ -62,8 +63,8 @@ class SyncAdapter extends AbstractThreadedSyncAdapter {
      */
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority,
-                              ContentProviderClient provider, SyncResult syncResult) {
-        Log.e("SyncAdapter", "Beginning network synchronization");
+                              ContentProviderClient provider, @NonNull SyncResult syncResult) {
+        Timber.e("Beginning network synchronization");
         IBlockingBackup backup = SettingsManager.getBackupLocation().createBackup();
         try {
             backup.performBackup(getContext());
@@ -71,6 +72,6 @@ class SyncAdapter extends AbstractThreadedSyncAdapter {
             e.printStackTrace();
             syncResult.stats.numIoExceptions++;
         }
-        Log.e("SyncAdapter", "Network synchronization complete");
+        Timber.e("Network synchronization complete");
     }
 }

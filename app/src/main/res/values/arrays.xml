@@ -65,6 +65,14 @@
         <item>LEFT</item>
         <item>RIGHT</item>
     </string-array>
+    <string-array name="file_type_entries">
+        <item>@string/pdf_file</item>
+        <item>@string/image_file</item>
+    </string-array>
+    <string-array name="file_type_values" translatable="false">
+        <item>PDF</item>
+        <item>JPG</item>
+    </string-array>
     <string-array name="summary_average_entries">
         <item>@string/end</item>
         <item>@string/round</item>
@@ -75,4 +83,28 @@
         <item>ROUND</item>
         <item>TRAINING</item>
     </string-array>
+    <string-array name="target_aggregation_strategy_entries">
+        <item>@string/show_none</item>
+        <item>@string/show_average</item>
+        <item>@string/show_clusters</item>
+    </string-array>
+    <string-array name="target_aggregation_strategy_values" translatable="false">
+        <item>NONE</item>
+        <item>AVERAGE</item>
+        <item>CLUSTER</item>
+    </string-array>
+    <string-array name="target_show_mode_entries">
+        <item>@string/show_shots_end</item>
+        <item>@string/show_shots_round</item>
+        <item>@string/show_shots_training</item>
+    </string-array>
+    <string-array name="target_show_mode_values" translatable="false">
+        <item>END</item>
+        <item>ROUND</item>
+        <item>TRAINING</item>
+    </string-array>
+    <integer-array name="fab_menu_trainings_colors">
+        <item>@color/fabTrainingWithStandardRound</item>
+        <item>@color/fabFreeTraining</item>
+    </integer-array>
 </resources>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 Florian Dreier
+  ~
+  ~ This file is part of MyTargets.
+  ~
+  ~ MyTargets is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License version 2
+  ~ as published by the Free Software Foundation.
+  ~
+  ~ MyTargets is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="24dp"
+        android:height="24dp"
+        android:viewportHeight="24"
+        android:viewportWidth="24">
+
+    <path
+        android:fillColor="#FFF"
+        android:pathData="M20.375,1.5 L20.2813,1.53125 L20.25,1.53125
+C18.9961,1.69922,18.0469,2.71875,17.875,3.90625 L3.75,18.0313
+C2.61719,18.2461,1.66406,19.1563,1.5,20.375 L3.5,20.625
+C3.56641,20.1367,4,19.8555,4.46875,20
+C5.73438,20.3906,7.51172,20.8906,9.3125,21.0313
+C11.1133,21.1719,13.0352,20.9648,14.375,19.625
+C15.6211,18.3789,15.9766,16.8633,16.0625,16.4375 L16.4375,16.0625
+C16.8633,15.9727,18.3945,15.6055,19.625,14.375
+C20.9141,13.0859,21.0352,11.1836,20.875,9.375
+C20.7148,7.56641,20.2305,5.75781,19.875,4.46875
+C19.75,4.01172,20.0156,3.55859,20.5,3.5 L20.625,3.5 Z M18,5.21875
+C18.3398,6.46484,18.7461,8.07422,18.875,9.5625
+C19.0117,11.1289,18.7773,12.4102,18.2188,12.9688
+C17.457,13.7305,15.7188,14.1875,15.7188,14.1875 L15.4375,14.25 L14.25,15.4375
+L14.1875,15.7188 C14.1875,15.7188,13.7617,17.4258,12.9688,18.2188
+C12.2656,18.9219,10.9922,19.1484,9.46875,19.0313
+C7.95313,18.9141,6.30859,18.4688,5.09375,18.0938 Z"/>
+
+</vector>

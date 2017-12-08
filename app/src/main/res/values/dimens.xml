@@ -22,4 +22,20 @@
     <dimen name="touch_raise">6dp</dimen>
     <dimen name="launchscreen_product_logo_bottom">16dp</dimen>
     <dimen name="launchscreen_brand_logo_bottom">48dp</dimen>
+
+    <dimen name="keyline_1">16dp</dimen>
+    <dimen name="keyline_1_minus_8dp">8dp</dimen>
+
+    <!-- Needed as the impl of CardView in pre-Lollipop unnecessarily adds 16 dp to the top and bottom -->
+    <dimen name="fab_menu_item_margin_top">-16dp</dimen>
+    <!-- CoordinatorLayout adds to the margins of the FAB, official bug: 'Issue 176096:
+    Using CoordinatorLayout view anchors will cause margins to be ignored' -->
+    <dimen name="coordinator_layout_offset">12dp</dimen>
+    <!-- Needed as another side effect of the bug above -->
+    <dimen name="fab_margin">0dp</dimen>
+    <!-- Needed in order to align vertically the fabs -->
+    <dimen name="mini_fab_margin_left">@dimen/keyline_1_minus_8dp</dimen>
+    <dimen name="mini_fab_margin_top">0dp</dimen>
+    <dimen name="mini_fab_margin_right">@dimen/keyline_1_minus_8dp</dimen>
+    <dimen name="mini_fab_margin_bottom">0dp</dimen>
 </resources>

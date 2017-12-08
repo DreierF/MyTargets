@@ -15,6 +15,8 @@
 
 package de.dreier.mytargets.shared.models.db;
 
+import android.support.annotation.Nullable;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
@@ -28,13 +30,16 @@ import de.dreier.mytargets.shared.AppDatabase;
 @Table(database = AppDatabase.class)
 public class BowImage extends BaseModel implements Image {
 
+    @Nullable
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     public Long id = -1L;
 
+    @Nullable
     @Column
     public String fileName = "";
 
+    @Nullable
     @ForeignKey(tableClass = Bow.class, references = {
             @ForeignKeyReference(columnName = "bow", columnType = Long.class, foreignKeyColumnName = "_id", referencedGetterName = "getId", referencedSetterName = "setId")},
             onDelete = ForeignKeyAction.CASCADE)
@@ -43,17 +48,18 @@ public class BowImage extends BaseModel implements Image {
     public BowImage() {
     }
 
-    public BowImage(String imageFilePath) {
+    public BowImage(@Nullable String imageFilePath) {
         fileName = imageFilePath;
     }
 
+    @Nullable
     @Override
     public String getFileName() {
         return fileName;
     }
 
     @Override
-    public void setFileName(String fileName) {
+    public void setFileName(@Nullable String fileName) {
         this.fileName = fileName;
     }
 }

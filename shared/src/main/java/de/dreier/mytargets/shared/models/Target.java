@@ -22,7 +22,6 @@ import android.support.annotation.NonNull;
 import org.parceler.Parcel;
 
 import java.util.List;
-import java.util.Set;
 
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.targets.TargetFactory;
@@ -31,30 +30,43 @@ import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawab
 import de.dreier.mytargets.shared.targets.models.TargetModelBase;
 import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle;
 
+/**
+ * Represents a target face, which is in contrast to a {@link TargetModelBase} bound to a specific
+ * scoring style and diameter.
+ */
 @Parcel
 public class Target implements IIdProvider, IImageProvider, IDetailProvider, Comparable<Target> {
     public int id;
     public int scoringStyle;
-    public Dimension size;
+    public Dimension diameter;
     private transient TargetModelBase model;
     private transient TargetDrawable drawable;
     private transient TargetImpactAggregationDrawable targetImpactAggregationDrawable;
+
+    public static Target singleSpotTargetFrom(Target spotTarget) {
+        if (spotTarget.getModel().getFaceCount() == 1) {
+            return spotTarget;
+        }
+        int singleSpotTargetId = (int) spotTarget.getModel().getSingleSpotTargetId();
+        return new Target(singleSpotTargetId, spotTarget.scoringStyle, spotTarget.diameter);
+    }
 
     public Target() {
     }
 
     public Target(int target, int scoringStyle) {
         this(target, scoringStyle, null);
-        this.size = getModel().getDiameters()[0];
+        this.diameter = getModel().getDiameters()[0];
     }
 
     public Target(int target, int scoringStyle, Dimension diameter) {
         this.id = target;
         this.model = TargetFactory.getTarget(target);
         this.scoringStyle = scoringStyle;
-        this.size = diameter;
+        this.diameter = diameter;
     }
 
+    @NonNull
     public Long getId() {
         return (long) id;
     }
@@ -81,9 +93,12 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
     public boolean equals(Object another) {
         return another instanceof Target &&
                 getClass().equals(another.getClass()) &&
-                id == ((Target) another).id;
+                id == ((Target) another).id &&
+                diameter.equals(((Target) another).diameter) &&
+                scoringStyle == ((Target) another).scoringStyle;
     }
 
+    @NonNull
     public TargetModelBase getModel() {
         if (model == null) {
             model = TargetFactory.getTarget(id);
@@ -100,9 +115,10 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
         return getDrawable();
     }
 
+    @NonNull
     @Override
     public String getName() {
-        return String.format("%s (%s)", toString(), size.toString());
+        return String.format("%s (%s)", toString(), diameter.toString());
     }
 
     @Override
@@ -114,7 +130,7 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
         return getModel().getSelectableZoneList(scoringStyle, arrow);
     }
 
-    private ScoringStyle getScoringStyle() {
+    public ScoringStyle getScoringStyle() {
         return getModel().getScoringStyle(scoringStyle);
     }
 
@@ -127,10 +143,6 @@ public class Target implements IIdProvider, IImageProvider, IDetailProvider, Com
         return getModel().toString();
     }
 
-    public Set<SelectableZone> getAllPossibleSelectableZones() {
-        return getModel().getAllPossibleSelectableZones(scoringStyle);
-    }
-    
     @Override
     public int compareTo(@NonNull Target target) {
         return id - target.id;

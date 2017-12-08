@@ -56,7 +56,7 @@ import permissions.dispatcher.RuntimePermissions;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
-import static de.dreier.mytargets.base.gallery.GalleryActivityPermissionsDispatcher.onTakePictureWithCheck;
+import static de.dreier.mytargets.base.gallery.GalleryActivityPermissionsDispatcher.onTakePictureWithPermissionCheck;
 
 @RuntimePermissions
 public class GalleryActivity extends ChildActivityBase {
@@ -79,7 +79,7 @@ public class GalleryActivity extends ChildActivityBase {
                 .with(EXTRA_IMAGES, Parcels.wrap(images));
     }
 
-    public static ImageList getResult(Intent data) {
+    public static ImageList getResult(@NonNull Intent data) {
         return Parcels.unwrap(data.getParcelableExtra(RESULT_IMAGES));
     }
 
@@ -133,7 +133,7 @@ public class GalleryActivity extends ChildActivityBase {
         binding.pager.setCurrentItem(currentPos);
 
         if (imageList.size() == 0 && savedInstanceState == null) {
-            onTakePictureWithCheck(this);
+            onTakePictureWithPermissionCheck(this);
         }
     }
 
@@ -144,7 +144,7 @@ public class GalleryActivity extends ChildActivityBase {
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.action_share).setVisible(!imageList.isEmpty());
         menu.findItem(R.id.action_delete).setVisible(!imageList.isEmpty());
@@ -152,7 +152,7 @@ public class GalleryActivity extends ChildActivityBase {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
                 int currentItem = binding.pager.getCurrentItem();
@@ -203,6 +203,7 @@ public class GalleryActivity extends ChildActivityBase {
         setResult(RESULT_OK, wrap(imageList));
     }
 
+    @NonNull
     private Intent wrap(ImageList imageList) {
         Intent i = new Intent();
         i.putExtra(RESULT_IMAGES, Parcels.wrap(imageList));
@@ -247,7 +248,8 @@ public class GalleryActivity extends ChildActivityBase {
                     public void onCanceled(EasyImage.ImageSource source, int type) {
                         //Cancel handling, you might wanna remove taken photo if it was canceled
                         if (source == EasyImage.ImageSource.CAMERA) {
-                            File photoFile = EasyImage.lastlyTakenButCanceledPhoto(getApplicationContext());
+                            File photoFile = EasyImage
+                                    .lastlyTakenButCanceledPhoto(getApplicationContext());
                             if (photoFile != null) {
                                 photoFile.delete();
                             }
@@ -256,9 +258,10 @@ public class GalleryActivity extends ChildActivityBase {
                 });
     }
 
-    protected void loadImages(final List<File> imageFile) {
+    protected void loadImages(@NonNull final List<File> imageFile) {
         new AsyncTask<Void, Void, List<String>>() {
 
+            @NonNull
             @Override
             protected List<String> doInBackground(Void... params) {
                 List<String> internalFiles = new ArrayList<>();
@@ -275,7 +278,7 @@ public class GalleryActivity extends ChildActivityBase {
             }
 
             @Override
-            protected void onPostExecute(List<String> files) {
+            protected void onPostExecute(@NonNull List<String> files) {
                 super.onPostExecute(files);
                 imageList.addAll(files);
                 updateResult();
@@ -291,7 +294,7 @@ public class GalleryActivity extends ChildActivityBase {
 
     private void goToImage(int pos) {
         if (imageList.size() == pos) {
-            onTakePictureWithCheck(this);
+            onTakePictureWithPermissionCheck(this);
         } else {
             binding.pager.setCurrentItem(pos, true);
         }

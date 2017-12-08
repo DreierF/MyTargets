@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.bows;
 
 import android.databinding.DataBindingUtil;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,26 +24,30 @@ import android.view.ViewGroup;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
-import de.dreier.mytargets.features.scoreboard.HtmlInfoBuilder;
+import de.dreier.mytargets.features.training.details.HtmlInfoBuilder;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.SightMark;
 import de.dreier.mytargets.utils.Utils;
+import de.dreier.mytargets.utils.multiselector.MultiSelector;
 import de.dreier.mytargets.utils.multiselector.OnItemClickListener;
+import de.dreier.mytargets.utils.multiselector.OnItemLongClickListener;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
-import de.dreier.mytargets.utils.multiselector.SelectorBase;
 
 class BowAdapter extends SimpleListAdapterBase<Bow> {
 
     private final OnItemClickListener<Bow> clickListener;
-    private final SelectorBase selector;
+    private final OnItemLongClickListener<Bow> longClickListener;
+    private final MultiSelector selector;
 
-    public BowAdapter(SelectorBase selector, OnItemClickListener<Bow> clickListener) {
+    public BowAdapter(MultiSelector selector, OnItemClickListener<Bow> clickListener, OnItemLongClickListener<Bow> longClickListener) {
         this.selector = selector;
         this.clickListener = clickListener;
+        this.longClickListener = longClickListener;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_image_details, parent, false);
         return new ViewHolder(itemView);
@@ -52,8 +57,8 @@ class BowAdapter extends SimpleListAdapterBase<Bow> {
 
         final ItemImageDetailsBinding binding;
 
-        public ViewHolder(View itemView) {
-            super(itemView, selector, clickListener);
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView, selector, clickListener, longClickListener);
             binding = DataBindingUtil.bind(itemView);
         }
 

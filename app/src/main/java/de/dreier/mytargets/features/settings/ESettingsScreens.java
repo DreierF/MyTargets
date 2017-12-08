@@ -15,13 +15,21 @@
 
 package de.dreier.mytargets.features.settings;
 
+import android.support.annotation.NonNull;
+
 import de.dreier.mytargets.features.settings.backup.BackupSettingsFragment;
 
+/**
+ * All available settings screens. The identifiers implicitly match the keys used in the xml
+ * definition.
+ */
 public enum ESettingsScreens {
     MAIN(MainSettingsFragment.class),
+    PROFILE(ProfileSettingsFragment.class),
     OVERVIEW(OverviewSettingsFragment.class),
     INPUT(InputSettingsFragment.class),
     TIMER(TimerSettingsFragment.class),
+    STATISTICS(StatisticsSettingsFragment.class),
     SCOREBOARD(ScoreboardSettingsFragment.class),
     BACKUP(BackupSettingsFragment.class);
 
@@ -31,21 +39,13 @@ public enum ESettingsScreens {
         this.settingsFragment = settingsFragment;
     }
 
-    public static ESettingsScreens from(String key) {
-        switch (key) {
-            case "overview":
-                return OVERVIEW;
-            case "input":
-                return INPUT;
-            case "timer":
-                return TIMER;
-            case "scoreboard":
-                return SCOREBOARD;
-            case "backup":
-                return BACKUP;
-            default:
-                return MAIN;
-        }
+    @NonNull
+    public static ESettingsScreens from(@NonNull String key) {
+        return valueOf(key.toUpperCase());
+    }
+
+    public String getKey() {
+        return name().toLowerCase();
     }
 
     public SettingsFragmentBase create() {
@@ -62,9 +62,5 @@ public enum ESettingsScreens {
         }
         // Otherwise just show main fragment
         return new MainSettingsFragment();
-    }
-
-    public String getKey() {
-        return name().toLowerCase();
     }
 }

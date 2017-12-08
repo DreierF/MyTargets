@@ -30,10 +30,11 @@ import android.widget.DatePicker;
 import com.annimon.stream.Stream;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
-import org.joda.time.LocalDate;
 import org.parceler.Parcels;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.FormatStyle;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import de.dreier.mytargets.R;
@@ -43,7 +44,7 @@ import de.dreier.mytargets.databinding.FragmentEditTrainingBinding;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.training.ETrainingType;
 import de.dreier.mytargets.features.training.RoundFragment;
-import de.dreier.mytargets.features.training.TrainingFragment;
+import de.dreier.mytargets.features.training.details.TrainingFragment;
 import de.dreier.mytargets.features.training.input.InputActivity;
 import de.dreier.mytargets.features.training.target.TargetListFragment;
 import de.dreier.mytargets.shared.models.EBowType;
@@ -71,10 +72,14 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private static final int REQ_SELECTED_DATE = 2;
     private static final int SR_TARGET_REQUEST_CODE = 11;
 
+    @Nullable
     private Long trainingId = null;
+    @NonNull
     private ETrainingType trainingType = FREE_TRAINING;
-    private LocalDate date = new LocalDate();
+    @Nullable
+    private LocalDate date = LocalDate.now();
     private FragmentEditTrainingBinding binding;
+    @Nullable
     private Target roundTarget;
 
     @NonNull
@@ -84,14 +89,14 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     }
 
     @NonNull
-    public static IntentWrapper editIntent(Training training) {
+    public static IntentWrapper editIntent(long trainingId) {
         return new IntentWrapper(EditTrainingActivity.class)
-                .with(ITEM_ID, training.getId());
+                .with(ITEM_ID, trainingId);
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_edit_training, container, false);
 
@@ -144,14 +149,15 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         if (trainingId == null) {
             ToolbarUtils.setTitle(this, R.string.new_training);
             binding.training.setText(getString(
-                    trainingType == ETrainingType.COMPETITION ? R.string.competition : R.string.training));
+                    trainingType == ETrainingType.COMPETITION ? R.string.competition :
+                            R.string.training));
             setTrainingDate();
             loadRoundDefaultValues();
             binding.bow.setItemId(SettingsManager.getBow());
             binding.arrow.setItemId(SettingsManager.getArrow());
             binding.standardRound.setItemId(SettingsManager.getStandardRound());
             binding.numberArrows.setChecked(SettingsManager.getArrowNumbersEnabled());
-            if(savedInstanceState == null) {
+            if (savedInstanceState == null) {
                 binding.environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
             }
             binding.changeTargetFace.setVisibility(trainingType == TRAINING_WITH_STANDARD_ROUND
@@ -180,7 +186,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                         binding.arrows.getProgress()));
     }
 
-    protected void setScoringStyleForCompoundBow(Bow bow) {
+    protected void setScoringStyleForCompoundBow(@Nullable Bow bow) {
         final Target target = binding.target.getSelectedItem();
         if (bow != null && target != null && target.id <= WA3Ring3Spot.ID) {
             if (bow.type == EBowType.COMPOUND_BOW && target.scoringStyle == 0) {
@@ -228,12 +234,13 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        date = new LocalDate(year, monthOfYear + 1, dayOfMonth);
+        date = LocalDate.of(year, monthOfYear + 1, dayOfMonth);
         setTrainingDate();
     }
 
     private void setTrainingDate() {
-        binding.trainingDate.setText(SimpleDateFormat.getDateInstance().format(date.toDate()));
+        binding.trainingDate
+                .setText(date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
     }
 
     @Override
@@ -306,7 +313,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         binding.target.onActivityResult(requestCode, resultCode, data);
         binding.distance.onActivityResult(requestCode, resultCode, data);

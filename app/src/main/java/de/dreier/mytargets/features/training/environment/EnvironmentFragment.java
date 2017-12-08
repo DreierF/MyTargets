@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -56,7 +57,7 @@ public class EnvironmentFragment extends FragmentBase {
     private SwitchCompat switchView;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_environment, container, false);
 
@@ -73,7 +74,7 @@ public class EnvironmentFragment extends FragmentBase {
 
         if (savedInstanceState == null) {
             Bundle i = getArguments();
-            assert i!= null;
+            assert i != null;
             environment = Parcels.unwrap(i.getParcelable(ITEM));
         }
         setWeather(environment.weather);
@@ -87,7 +88,7 @@ public class EnvironmentFragment extends FragmentBase {
         return binding.getRoot();
     }
 
-    private void setOnClickWeather(ImageButton b, final EWeather w) {
+    private void setOnClickWeather(@NonNull ImageButton b, final EWeather w) {
         b.setOnClickListener(v -> setWeather(w));
     }
 
@@ -101,7 +102,7 @@ public class EnvironmentFragment extends FragmentBase {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.environment_switch, menu);
         MenuItem item = menu.findItem(R.id.action_switch);
         switchView = item.getActionView().findViewById(R.id.action_switch_control);
@@ -117,7 +118,7 @@ public class EnvironmentFragment extends FragmentBase {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         environment = saveItem();
         super.onSaveInstanceState(outState);
     }
@@ -151,7 +152,7 @@ public class EnvironmentFragment extends FragmentBase {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         binding.windSpeed.onActivityResult(requestCode, resultCode, data);
         binding.windDirection.onActivityResult(requestCode, resultCode, data);

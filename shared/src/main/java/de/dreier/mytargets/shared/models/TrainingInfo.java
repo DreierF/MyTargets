@@ -15,12 +15,15 @@
 package de.dreier.mytargets.shared.models;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
 
 public class TrainingInfo {
+    @Nullable
     public String title;
     public int roundCount;
     public Round round;
@@ -28,13 +31,14 @@ public class TrainingInfo {
     public TrainingInfo() {
     }
 
-    public TrainingInfo(Training training, Round round) {
+    public TrainingInfo(@NonNull Training training, Round round) {
         this.round = round;
         this.title = training.title;
         this.roundCount = training.getRounds().size();
     }
 
-    public String getRoundDetails(Context context) {
+    @NonNull
+    public String getRoundDetails(@NonNull Context context) {
         if (round.getEnds().isEmpty()) {
             return context.getResources()
                     .getQuantityString(R.plurals.rounds, roundCount, roundCount);
@@ -43,7 +47,8 @@ public class TrainingInfo {
         }
     }
 
-    public String getEndDetails(Context context) {
+    @NonNull
+    public String getEndDetails(@NonNull Context context) {
         if (round.getEnds().isEmpty()) {
             if (round.maxEndCount == null) {
                 return context.getResources()

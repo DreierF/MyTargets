@@ -17,15 +17,14 @@ package de.dreier.mytargets.shared.targets.models;
 
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.models.Dimension;
@@ -47,16 +46,18 @@ public class TargetModelBase implements IIdProvider {
     public float faceRadius;
     public PointF[] facePositions;
     protected ZoneBase[] zones;
-    protected Dimension[] diameters;
+    @NonNull
+    protected Dimension[] diameters = new Dimension[0];
     protected ScoringStyle[] scoringStyles;
     protected TargetDecorator decorator;
+    @NonNull
     protected ETargetType type = ETargetType.TARGET;
 
     /**
      * Factor that needs to be applied to the target's diameter to get the real target size.
      * e.g. 5 Ring 40cm is half the size of a full 40cm, therefore the target is 20cm in reality,
      * hence the factor is 0.5f.
-     * */
+     */
     protected float realSizeFactor = 1f;
 
     protected TargetModelBase(long id, @StringRes int nameRes) {
@@ -71,10 +72,12 @@ public class TargetModelBase implements IIdProvider {
         return id;
     }
 
+    @NonNull
     public ETargetType getType() {
         return type;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return SharedApplicationInstance.get(nameRes);
@@ -87,11 +90,13 @@ public class TargetModelBase implements IIdProvider {
         return zones[zone];
     }
 
+    @NonNull
     public Dimension[] getDiameters() {
         return diameters;
     }
 
-    public Dimension getRealSize(Dimension diameter) {
+    @Nullable
+    public Dimension getRealSize(@NonNull Dimension diameter) {
         return new Dimension(realSizeFactor * diameter.value, diameter.unit);
     }
 
@@ -149,10 +154,12 @@ public class TargetModelBase implements IIdProvider {
     /**
      * Lists all zones that can be selected for the given scoringStyle and arrow index.
      * Consecutive zones with the same text are excluded.
+     *
      * @param scoringStyleIndex Index of the scoring style for this target.
-     * @param arrow Shot index, describes whether it is the first arrow(0), the second one, ...
-     *              This has an impact on the yielded score for some animal target faces.
+     * @param arrow             Shot index, describes whether it is the first arrow(0), the second one, ...
+     *                          This has an impact on the yielded score for some animal target faces.
      */
+    @NonNull
     public List<SelectableZone> getSelectableZoneList(int scoringStyleIndex, int arrow) {
         ScoringStyle scoringStyle = getScoringStyle(scoringStyleIndex);
         List<SelectableZone> list = new ArrayList<>();
@@ -169,16 +176,7 @@ public class TargetModelBase implements IIdProvider {
         return list;
     }
 
-    @NonNull
-    public Set<SelectableZone> getAllPossibleSelectableZones(int scoringStyleIndex) {
-        Set<SelectableZone> scoreCount = new HashSet<>();
-        for (int arrow = 0; arrow < 3; arrow++) {
-            scoreCount.addAll(getSelectableZoneList(scoringStyleIndex, arrow));
-            if (!dependsOnArrowIndex()) {
-                break;
-            }
-        }
-        return scoreCount;
+    public long getSingleSpotTargetId() {
+        return id;
     }
-
 }

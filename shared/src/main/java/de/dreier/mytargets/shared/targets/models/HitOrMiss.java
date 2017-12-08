@@ -30,7 +30,7 @@ public class HitOrMiss extends TargetModelBase {
 
     public HitOrMiss() {
         super(14, R.string.hit_or_miss);
-        zones = new ZoneBase[] {
+        zones = new ZoneBase[]{
                 new CircularZone(0.25f, YELLOW, DARK_GRAY, 3),
                 new CircularZone(1.0f, RED_MISS, DARK_GRAY, 3)
         };

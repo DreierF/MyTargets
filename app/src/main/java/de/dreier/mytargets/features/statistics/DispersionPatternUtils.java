@@ -15,10 +15,16 @@
 
 package de.dreier.mytargets.features.statistics;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.pdf.PdfDocument;
+import android.os.Build;
+import android.print.PrintAttributes;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,7 +37,7 @@ import de.dreier.mytargets.shared.targets.drawable.TargetImpactDrawable;
 
 public class DispersionPatternUtils {
 
-    public static void createDispersionPatternImageFile(int size, File f, ArrowStatistic statistic) throws FileNotFoundException {
+    public static void createDispersionPatternImageFile(int size, @NonNull File f, @NonNull ArrowStatistic statistic) throws FileNotFoundException {
         Bitmap b = getDispersionPatternBitmap(size, statistic);
         if (b == null) {
             return;
@@ -39,7 +45,7 @@ public class DispersionPatternUtils {
 
         final FileOutputStream fOut = new FileOutputStream(f);
         try {
-            b.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+            b.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
             fOut.flush();
             fOut.close();
         } catch (IOException e) {
@@ -53,7 +59,45 @@ public class DispersionPatternUtils {
         }
     }
 
-    public static Bitmap getDispersionPatternBitmap(int size, ArrowStatistic statistic) {
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public static void generatePdf(@NonNull File f, @NonNull ArrowStatistic statistic) throws FileNotFoundException {
+        final FileOutputStream outputStream = new FileOutputStream(f);
+        try {
+            TargetImpactDrawable target = new TargetImpactAggregationDrawable(statistic.target);
+            target.setShots(statistic.shots);
+            target.setArrowDiameter(statistic.arrowDiameter,
+                    SettingsManager.getInputArrowDiameterScale());
+
+            PdfDocument document = new PdfDocument();
+
+            PrintAttributes.MediaSize mediaSize = PrintAttributes.MediaSize.ISO_A4;
+            @SuppressLint("Range")
+            PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder((int) (mediaSize
+                    .getWidthMils() * 0.072f), (int) (mediaSize.getHeightMils() * 0.072f), 1)
+                    .create();
+
+            PdfDocument.Page page = document.startPage(pageInfo);
+            Canvas canvas = page.getCanvas();
+            target.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            target.draw(canvas);
+            document.finishPage(page);
+
+            document.writeTo(outputStream);
+            document.close();
+            outputStream.flush();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                outputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static Bitmap getDispersionPatternBitmap(int size, @NonNull ArrowStatistic statistic) {
         Bitmap b = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(b);
         canvas.drawColor(Color.WHITE);

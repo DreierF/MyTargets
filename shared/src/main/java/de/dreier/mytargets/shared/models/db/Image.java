@@ -17,5 +17,6 @@ package de.dreier.mytargets.shared.models.db;
 
 public interface Image {
     String getFileName();
+
     void setFileName(String fileName);
 }

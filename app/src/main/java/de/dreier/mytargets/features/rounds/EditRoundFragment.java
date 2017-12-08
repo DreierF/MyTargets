@@ -43,26 +43,28 @@ import static de.dreier.mytargets.base.fragments.EditableListFragmentBase.ITEM_I
 
 public class EditRoundFragment extends EditFragmentBase {
     private static final String ROUND_ID = "round_id";
+    @Nullable
     private Long trainingId = null;
+    @Nullable
     private Long roundId = null;
     private FragmentEditRoundBinding binding;
 
     @NonNull
-    public static IntentWrapper createIntent(Training training) {
+    public static IntentWrapper createIntent(@NonNull Training training) {
         return new IntentWrapper(EditRoundActivity.class)
                 .with(ITEM_ID, training.getId());
     }
 
     @NonNull
-    public static IntentWrapper editIntent(Training training, Round round) {
+    public static IntentWrapper editIntent(@NonNull Training training, long roundId) {
         return new IntentWrapper(EditRoundActivity.class)
                 .with(ITEM_ID, training.getId())
-                .with(ROUND_ID, round.getId());
+                .with(ROUND_ID, roundId);
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_edit_round, container, false);
 
@@ -97,12 +99,10 @@ public class EditRoundFragment extends EditFragmentBase {
         if (roundId == null) {
             ToolbarUtils.setTitle(this, R.string.new_round);
             loadRoundDefaultValues();
-            binding.comment.setText("");
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_round);
             Round round = Round.get(roundId);
             binding.distance.setItem(round.distance);
-            binding.comment.setText(round.comment);
             binding.target.setItem(round.getTarget());
             binding.target.setFixedType(TargetListFragment.EFixedType.TARGET);
             binding.notEditable.setVisibility(View.GONE);
@@ -137,6 +137,7 @@ public class EditRoundFragment extends EditFragmentBase {
         }
     }
 
+    @Nullable
     private Round onSaveRound() {
         Training training = Training.get(trainingId);
 
@@ -152,7 +153,6 @@ public class EditRoundFragment extends EditFragmentBase {
         }
         round.distance = binding.distance.getSelectedItem();
         round.setTarget(binding.target.getSelectedItem());
-        round.comment = binding.comment.getText().toString();
         round.save();
         return round;
     }
@@ -170,7 +170,7 @@ public class EditRoundFragment extends EditFragmentBase {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         binding.target.onActivityResult(requestCode, resultCode, data);
         binding.distance.onActivityResult(requestCode, resultCode, data);

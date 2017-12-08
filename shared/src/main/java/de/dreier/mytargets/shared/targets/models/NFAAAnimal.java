@@ -44,7 +44,8 @@ public class NFAAAnimal extends TargetOvalBase {
                         {21, 20, 18},
                         {17, 16, 14},
                         {13, 12, 10}
-                })
+                }),
+                new ScoringStyle(false, 20, 16, 10)
         };
         type = ETargetType.THREE_D;
     }

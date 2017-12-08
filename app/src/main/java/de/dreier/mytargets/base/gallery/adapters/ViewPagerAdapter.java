@@ -16,7 +16,7 @@
 package de.dreier.mytargets.base.gallery.adapters;
 
 import android.app.Activity;
-import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -41,17 +41,18 @@ import de.dreier.mytargets.utils.Utils;
 
 public class ViewPagerAdapter extends PagerAdapter {
 
-    private Activity activity;
-    private LayoutInflater layoutInflater;
-    private ImageList images;
+    @NonNull
+    final private Activity activity;
+    @NonNull
+    final private LayoutInflater layoutInflater;
+    final private ImageList images;
+    final private Toolbar toolbar;
+    final private RecyclerView imagesHorizontalList;
     private boolean isShowing = true;
-    private Toolbar toolbar;
-    private RecyclerView imagesHorizontalList;
 
-    public ViewPagerAdapter(Activity activity, ImageList images, Toolbar toolbar, RecyclerView imagesHorizontalList) {
+    public ViewPagerAdapter(@NonNull Activity activity, ImageList images, Toolbar toolbar, RecyclerView imagesHorizontalList) {
         this.activity = activity;
-        this.layoutInflater = (LayoutInflater) activity
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.layoutInflater = LayoutInflater.from(activity);
         this.images = images;
         this.toolbar = toolbar;
         this.imagesHorizontalList = imagesHorizontalList;
@@ -63,17 +64,18 @@ public class ViewPagerAdapter extends PagerAdapter {
     }
 
     @Override
-    public boolean isViewFromObject(View view, Object object) {
+    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
         return SharedUtils.equals(view, object);
     }
 
     @Override
-    public int getItemPosition(Object object) {
+    public int getItemPosition(@NonNull Object object) {
         return POSITION_NONE;
     }
 
+    @NonNull
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
+    public Object instantiateItem(@NonNull ViewGroup container, int position) {
         View itemView = layoutInflater.inflate(R.layout.pager_item, container, false);
 
         final PhotoView imageView = itemView.findViewById(R.id.iv);
@@ -125,7 +127,7 @@ public class ViewPagerAdapter extends PagerAdapter {
     }
 
     @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
+    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView((RelativeLayout) object);
     }
 

@@ -14,6 +14,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           package="de.dreier.mytargets"
           android:installLocation="auto">
 
@@ -27,8 +28,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.READ_SYNC_STATS"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
     <uses-permission android:name="com.android.vending.BILLING"/>
@@ -82,7 +81,6 @@
             android:theme="@style/AppTheme.CustomToolbar.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
@@ -133,13 +131,8 @@
         <activity
             android:name=".features.training.edit.EditTrainingActivity"
             android:label="@string/new_round"
-            android:parentActivityName=".features.training.TrainingActivity"
             android:theme="@style/AppTheme.CustomToolbar"
-            android:windowSoftInputMode="stateAlwaysHidden">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".features.training.TrainingActivity"/>
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".features.training.EditRoundActivity"
             android:label="@string/new_round"
@@ -183,6 +176,7 @@
             android:theme="@style/AppTheme.CustomToolbar.Translucent"/>
         <activity
             android:name=".features.scoreboard.ScoreboardActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/scoreboard"/>
         <activity
             android:name=".features.statistics.StatisticsActivity"
@@ -283,7 +277,7 @@
                 android:value=".features.settings.SettingsActivity"/>
         </activity>
         <activity
-            android:name=".features.settings.licences.LicencesActivity"
+            android:name=".features.help.licences.LicencesActivity"
             android:label="@string/licences"
             android:parentActivityName=".features.settings.SettingsActivity">
             <meta-data
@@ -300,6 +294,10 @@
         </activity>
         <activity android:name=".features.statistics.DispersionPatternActivity"/>
 
+        <activity
+            android:name=".features.help.HelpActivity"
+            android:label="@string/help"/>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -315,9 +313,11 @@
             android:exported="false"
             android:syncable="true"/>
 
+        <!-- Ignored due to a bug in android lint https://issuetracker.google.com/issues/37123054 -->
         <service
             android:name=".features.settings.backup.synchronization.SyncService"
-            android:exported="true">
+            android:exported="true"
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter"/>
             </intent-filter>

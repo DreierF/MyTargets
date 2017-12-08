@@ -25,15 +25,17 @@ import de.dreier.mytargets.shared.SharedApplicationInstance;
 
 public class Environment implements IImageProvider, IDetailProvider {
     public boolean indoor;
-    public EWeather weather;
+    @NonNull
+    public EWeather weather = EWeather.SUNNY;
     public int windSpeed;
     public int windDirection;
     public String location;
 
+    //TODO: Replace with Kotlin builder
     public Environment() {
     }
 
-    public Environment(boolean indoor, EWeather weather, int windSpeed, int windDirection, String location) {
+    public Environment(boolean indoor, @NonNull EWeather weather, int windSpeed, int windDirection, String location) {
         this.indoor = indoor;
         this.weather = weather;
         this.windSpeed = windSpeed;
@@ -46,15 +48,16 @@ public class Environment implements IImageProvider, IDetailProvider {
         return new Environment(indoor, EWeather.SUNNY, 0, 0, "");
     }
 
+    @NonNull
     @Override
     public String getName() {
         return indoor ? SharedApplicationInstance.get(R.string.indoor) : weather.getName();
     }
 
     @Override
-    public String getDetails(Context context) {
+    public String getDetails(@NonNull Context context) {
         String description;
-        if(indoor) {
+        if (indoor) {
             description = "";
             if (!TextUtils.isEmpty(location)) {
                 description += context.getString(R.string.location) + ": " + location;
@@ -74,7 +77,7 @@ public class Environment implements IImageProvider, IDetailProvider {
     }
 
     @Override
-    public Drawable getDrawable(Context context) {
+    public Drawable getDrawable(@NonNull Context context) {
         if (indoor) {
             return context.getResources().getDrawable(R.drawable.ic_house_24dp);
         } else {

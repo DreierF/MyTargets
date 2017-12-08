@@ -21,11 +21,11 @@ import android.support.test.InstrumentationRegistry;
 
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.LocalTime;
 
 import java.util.Collections;
 import java.util.Random;
@@ -49,8 +49,9 @@ public abstract class DbTestRuleBase implements TestRule {
         context = InstrumentationRegistry.getTargetContext();
     }
 
+    @NonNull
     @Override
-    public Statement apply(Statement base, Description description) {
+    public Statement apply(@NonNull Statement base, Description description) {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
@@ -64,7 +65,8 @@ public abstract class DbTestRuleBase implements TestRule {
         };
     }
 
-    protected End buildEnd(Round round, int... shots) {
+    @NonNull
+    protected End buildEnd(@NonNull Round round, @NonNull int... shots) {
         End end = round.addEnd();
         end.roundId = round.getId();
         for (int i = 0; i < shots.length; i++) {
@@ -74,7 +76,8 @@ public abstract class DbTestRuleBase implements TestRule {
         return end;
     }
 
-    protected End randomEnd(Training training, Round round, int arrowsPerEnd, Random gen, int index) {
+    @NonNull
+    protected End randomEnd(@NonNull Round round, int arrowsPerEnd, @NonNull Random gen, int index) {
         End end = new End(arrowsPerEnd, index);
         end.roundId = round.getId();
         end.exact = true;
@@ -86,12 +89,11 @@ public abstract class DbTestRuleBase implements TestRule {
                     .getZoneFromPoint(end.getShots().get(i).x,
                             end.getShots().get(i).y, 0.05f);
         }
-        end.saveTime = new DateTime().withDate(training.date)
-                .withTime(14, gen.nextInt(59), gen.nextInt(59), 0);
+        end.saveTime = LocalTime.of(14, gen.nextInt(59), gen.nextInt(59), 0);
         return end;
     }
 
-    private float gaussianRand(Random gen) {
+    private float gaussianRand(@NonNull Random gen) {
         final float rand1 = gen.nextFloat();
         final float rand2 = gen.nextFloat();
         return (float) (Math.sqrt(-2 * Math.log(rand1) / Math.log(Math.E)) *
@@ -129,10 +131,10 @@ public abstract class DbTestRuleBase implements TestRule {
     }
 
     @NonNull
-    protected Training saveDefaultTraining(Long standardRoundId, Random generator) {
+    protected Training saveDefaultTraining(Long standardRoundId, @NonNull Random generator) {
         Training training = new Training();
         training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training);
-        training.date = new LocalDate(2016, 4 + generator.nextInt(5), generator.nextInt(29));
+        training.date = LocalDate.of(2016, 4 + generator.nextInt(5), generator.nextInt(29));
         training.location = "";
         training.weather = EWeather.SUNNY;
         training.windSpeed = 1;

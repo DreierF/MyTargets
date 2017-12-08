@@ -15,6 +15,8 @@
 
 package de.dreier.mytargets.shared.models.db;
 
+import android.support.annotation.NonNull;
+
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
@@ -36,7 +38,7 @@ public class ShotTest {
                 toSortedShotList(0, 2, Shot.MISS, Shot.NOTHING_SELECTED));
     }
 
-    private String toSortedShotList(int... zones) {
+    private String toSortedShotList(@NonNull int... zones) {
         List<Shot> shots = new ArrayList<>(zones.length);
         for (int i = 0; i < zones.length; i++) {
             shots.add(new Shot(i));

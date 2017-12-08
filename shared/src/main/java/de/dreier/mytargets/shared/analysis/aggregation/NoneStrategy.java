@@ -21,6 +21,7 @@ import java.util.List;
 
 public class NoneStrategy implements IAggregationStrategy {
 
+    @NonNull
     private NOPResultRenderer resultRenderer = new NOPResultRenderer();
     private OnAggregationResult resultListener;
 

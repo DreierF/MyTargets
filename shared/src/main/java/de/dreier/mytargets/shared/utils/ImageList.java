@@ -15,6 +15,8 @@
 
 package de.dreier.mytargets.shared.utils;
 
+import android.support.annotation.NonNull;
+
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
@@ -34,7 +36,7 @@ public class ImageList {
     public ImageList() {
     }
 
-    public ImageList(List<? extends Image> images) {
+    public ImageList(@NonNull List<? extends Image> images) {
         for (Image image : images) {
             this.images.add(image.getFileName());
         }
@@ -49,6 +51,7 @@ public class ImageList {
         return images.isEmpty();
     }
 
+    @NonNull
     public Image get(int i) {
         return new EndImage(images.get(i));
     }
@@ -57,7 +60,7 @@ public class ImageList {
         removed.add(images.remove(i));
     }
 
-    public void addAll(List<String> images) {
+    public void addAll(@NonNull List<String> images) {
         this.images.addAll(images);
     }
 

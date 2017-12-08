@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.training;
 
 
+import android.support.annotation.NonNull;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -29,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 
 import de.dreier.mytargets.R;
+import de.dreier.mytargets.features.training.details.TrainingFragment;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.test.base.UITestBase;
 import de.dreier.mytargets.test.utils.rules.SimpleDbTestRule;
@@ -44,6 +46,7 @@ import static org.hamcrest.Matchers.containsString;
 @RunWith(AndroidJUnit4.class)
 public class TrainingActivityTest extends UITestBase {
 
+    @NonNull
     private IntentsTestRule<TrainingActivity> activityTestRule = new IntentsTestRule<>(
             TrainingActivity.class, true, false);
     @Rule

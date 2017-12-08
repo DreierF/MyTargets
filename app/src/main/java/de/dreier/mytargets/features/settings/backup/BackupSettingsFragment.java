@@ -27,6 +27,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -70,7 +71,7 @@ import static android.content.ContentResolver.SYNC_OBSERVER_TYPE_PENDING;
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static de.dreier.mytargets.features.settings.backup.BackupSettingsFragmentPermissionsDispatcher.showFilePickerWithCheck;
+import static de.dreier.mytargets.features.settings.backup.BackupSettingsFragmentPermissionsDispatcher.showFilePickerWithPermissionCheck;
 import static de.dreier.mytargets.features.settings.backup.provider.GoogleDriveBackup.AsyncRestore.REQUEST_CODE_RESOLUTION;
 
 @RuntimePermissions
@@ -79,6 +80,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
     private static final int IMPORT_FROM_URI = 1234;
 
     private IAsyncBackupRestore backup;
+    @Nullable
     private BackupAdapter adapter;
     private FragmentBackupBinding binding;
     private Timer updateLabelTimer;
@@ -89,6 +91,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
      * <p>This allows us to delete our SyncObserver once the application is no longer in the
      * foreground.
      */
+    @Nullable
     private Object syncObserverHandle;
     private boolean isRefreshing = false;
 
@@ -97,6 +100,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
      * onResume(), and removed in onPause(). If status changes, it sets the state of the Progress
      * bar. If a sync is active or pending, the progress is shown.
      */
+    @NonNull
     private SyncStatusObserver syncStatusObserver = which -> getActivity().runOnUiThread(() -> {
         Account account = GenericAccountService.getAccount();
 
@@ -119,7 +123,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
      * {@link de.dreier.mytargets.features.settings.backup.synchronization.SyncService} with it.
      */
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
         // Create account, if needed
@@ -159,14 +163,14 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.backup_import, menu);
+        inflater.inflate(R.menu.settings_backup, menu);
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_import) {
-            showFilePickerWithCheck(this);
+            showFilePickerWithPermissionCheck(this);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -175,7 +179,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
     @Override
     public void onResume() {
         super.onResume();
-        applyBackupLocationWithCheck(SettingsManager.getBackupLocation());
+        applyBackupLocationWithPermissionCheck(SettingsManager.getBackupLocation());
         updateAutomaticBackupSwitch();
 
         syncStatusObserver.onStatusChanged(0);
@@ -199,7 +203,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
     }
 
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, @NonNull final Intent data) {
         if (requestCode == REQUEST_CODE_RESOLUTION && resultCode != RESULT_OK) {
             leaveBackupSettings();
         }
@@ -253,7 +257,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
                             if (backup != null) {
                                 backup.stop();
                             }
-                            applyBackupLocationWithCheck(location);
+                            applyBackupLocationWithPermissionCheck(location);
                             return true;
                         })
                 .show();
@@ -266,16 +270,17 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         binding.backupLocation.summary.setText(backupLocation.toString());
     }
 
-    private void applyBackupLocationWithCheck(EBackupLocation item) {
+    private void applyBackupLocationWithPermissionCheck(@NonNull EBackupLocation item) {
         if (item.needsStoragePermissions()) {
-            BackupSettingsFragmentPermissionsDispatcher.applyBackupLocationWithCheck(this, item);
+            BackupSettingsFragmentPermissionsDispatcher
+                    .applyBackupLocationWithPermissionCheck(this, item);
         } else {
             applyBackupLocation(item);
         }
     }
 
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    void applyBackupLocation(EBackupLocation item) {
+    void applyBackupLocation(@NonNull EBackupLocation item) {
         SettingsManager.setBackupLocation(item);
         backup = item.createAsyncRestore();
         binding.recentBackupsProgress.setVisibility(VISIBLE);
@@ -301,7 +306,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         getActivity().setTitle(R.string.backup_action);
     }
 
-    private void onBackupsLoaded(List<BackupEntry> list) {
+    private void onBackupsLoaded(@NonNull List<BackupEntry> list) {
         binding.recentBackupsProgress.setVisibility(GONE);
         binding.recentBackupsList.setVisibility(VISIBLE);
         adapter.setList(list);
@@ -325,7 +330,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
         }
     }
 
-    private void showError(@StringRes int title, String message) {
+    private void showError(@StringRes int title, @NonNull String message) {
         new MaterialDialog.Builder(getContext())
                 .title(title)
                 .content(message)
@@ -340,7 +345,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
                 .show();
     }
 
-    private void showBackupDetails(BackupEntry item) {
+    private void showBackupDetails(@NonNull BackupEntry item) {
         final String html = String.format(Locale.US,
                 "%s<br><br><b>%s</b><br>%s<br>%s",
                 getString(R.string.restore_desc),
@@ -371,7 +376,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
                     }
 
                     @Override
-                    public void onError(String message) {
+                    public void onError(@NonNull String message) {
                         progress.dismiss();
                         showError(R.string.restore_failed, message);
                     }
@@ -387,7 +392,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
             }
 
             @Override
-            public void onError(String message) {
+            public void onError(@NonNull String message) {
                 showError(R.string.delete_failed, message);
             }
         });
@@ -419,9 +424,10 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
                 .onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
-    private void importFromUri(final Uri uri) {
+    private void importFromUri(@NonNull final Uri uri) {
         MaterialDialog progress = showRestoreProgressDialog();
         new AsyncTask<Void, Void, String>() {
+            @Nullable
             @Override
             protected String doInBackground(Void... params) {
                 try {
@@ -438,7 +444,7 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
             }
 
             @Override
-            protected void onPostExecute(String errorMessage) {
+            protected void onPostExecute(@Nullable String errorMessage) {
                 progress.dismiss();
                 if (errorMessage == null) {
                     Utils.doRestart(getContext());
@@ -450,12 +456,12 @@ public class BackupSettingsFragment extends SettingsFragmentBase implements IAsy
     }
 
     @Override
-    public void onLoadFinished(List<BackupEntry> backupEntries) {
+    public void onLoadFinished(@NonNull List<BackupEntry> backupEntries) {
         onBackupsLoaded(backupEntries);
     }
 
     @Override
-    public void onError(String message) {
+    public void onError(@NonNull String message) {
         showError(R.string.loading_backups_failed, message);
     }
 }
