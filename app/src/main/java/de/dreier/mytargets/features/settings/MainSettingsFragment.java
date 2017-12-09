@@ -18,12 +18,15 @@ package de.dreier.mytargets.features.settings;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
+import im.delight.android.languages.Language;
+
 public class MainSettingsFragment extends SettingsFragmentBase {
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @NonNull String s) {
-        super.onSharedPreferenceChanged(sharedPreferences, s);
-        if (s.equals(SettingsManager.KEY_LANGUAGE)) {
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @NonNull String key) {
+        super.onSharedPreferenceChanged(sharedPreferences, key);
+        if (key.equals(SettingsManager.KEY_LANGUAGE)) {
+            Language.setFromPreference(getActivity(), SettingsManager.KEY_LANGUAGE, true);
             getActivity().recreate();
         }
     }

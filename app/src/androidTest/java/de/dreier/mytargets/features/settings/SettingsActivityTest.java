@@ -156,6 +156,10 @@ public class SettingsActivityTest extends UITestBase {
         clickOnPreference(R.string.language);
         selectFromList("Spanish (Español)");
         matchToolbarTitle("Opciones");
+
+        clickOnPreference(R.string.language);
+        selectFromList("Standard (recommended)");
+        matchToolbarTitle("Options");
     }
 
     @After

@@ -26,7 +26,6 @@ import android.view.MenuItem;
 
 import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
 import de.dreier.mytargets.utils.IntentWrapper;
-import im.delight.android.languages.Language;
 
 import static android.support.v7.preference.PreferenceFragmentCompat.ARG_PREFERENCE_ROOT;
 import static de.dreier.mytargets.features.settings.ESettingsScreens.MAIN;
@@ -51,7 +50,6 @@ public class SettingsActivity extends SimpleFragmentActivityBase implements
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Language.setFromPreference(this, SettingsManager.KEY_LANGUAGE);
         super.onCreate(savedInstanceState);
         getSupportFragmentManager().addOnBackStackChangedListener(
                 () -> {
