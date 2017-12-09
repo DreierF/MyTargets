@@ -13,45 +13,40 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils;
+package de.dreier.mytargets.shared.utils
 
-import org.junit.Test;
+import de.dreier.mytargets.shared.models.db.EndImage
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
-import java.util.Arrays;
-import java.util.Collections;
-
-import de.dreier.mytargets.shared.models.db.EndImage;
-
-import static junit.framework.Assert.assertEquals;
-
-public class ImageListTest {
+class ImageListTest {
     @Test
-    public void testEmptyList() {
-        ImageList list = new ImageList();
-        assertEquals(true, list.isEmpty());
-        assertEquals(0, list.size());
-        assertEquals(0, list.toEndImageList().size());
+    fun testEmptyList() {
+        val list = ImageList()
+        assertEquals(true, list.isEmpty)
+        assertEquals(0, list.size())
+        assertEquals(0, list.toEndImageList().size)
     }
 
     @Test
-    public void testSingleImage() {
-        ImageList list = new ImageList(Collections.singletonList(new EndImage("someImage")));
-        assertEquals(false, list.isEmpty());
-        assertEquals(1, list.size());
-        assertEquals(1, list.toEndImageList().size());
-        assertEquals("someImage", list.toEndImageList().get(0).getFileName());
+    fun testSingleImage() {
+        val list = ImageList(listOf(EndImage("someImage")))
+        assertEquals(false, list.isEmpty)
+        assertEquals(1, list.size())
+        assertEquals(1, list.toEndImageList().size)
+        assertEquals("someImage", list.toEndImageList()[0].getFileName())
     }
 
     @Test
-    public void testMultiImage() {
-        ImageList list = new ImageList(Collections.singletonList(new EndImage("someImage")));
-        list.addAll(Arrays.asList("myImage", "oneMore"));
-        list.remove(0);
-        assertEquals(false, list.isEmpty());
-        assertEquals(2, list.size());
-        assertEquals(2, list.toEndImageList().size());
-        assertEquals("myImage", list.toEndImageList().get(0).getFileName());
-        assertEquals("oneMore", list.toEndImageList().get(1).getFileName());
-        assertEquals("someImage", list.getRemovedImages().get(0));
+    fun testMultiImage() {
+        val list = ImageList(listOf(EndImage("someImage")))
+        list.addAll(listOf("myImage", "oneMore"))
+        list.remove(0)
+        assertEquals(false, list.isEmpty)
+        assertEquals(2, list.size())
+        assertEquals(2, list.toEndImageList().size)
+        assertEquals("myImage", list.toEndImageList()[0].getFileName())
+        assertEquals("oneMore", list.toEndImageList()[1].getFileName())
+        assertEquals("someImage", list.removedImages[0])
     }
 }
