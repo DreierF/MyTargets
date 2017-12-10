@@ -15,14 +15,24 @@
 
 package de.dreier.mytargets.test.base;
 
+import android.os.Environment;
 import android.support.annotation.IdRes;
 import android.support.annotation.StringRes;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.PickerActions;
+import android.support.test.uiautomator.UiDevice;
 import android.widget.DatePicker;
 
 import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.rules.TestRule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
+
+import java.io.File;
+import java.io.IOException;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.features.settings.SettingsManager;
@@ -51,6 +61,30 @@ public abstract class UITestBase extends InstrumentedTestBase {
     public static void disableIntro() {
         SettingsManager.INSTANCE.setShouldShowIntroActivity(false);
     }
+
+    @Rule
+    public TestRule watcher = new TestWatcher() {
+        @Override
+        protected void failed(Throwable e, Description description) {
+            // Save to external storage (usually /sdcard/screenshots)
+            File path = new File(Environment.getExternalStorageDirectory(), "screenshots");
+            if (!path.exists()) {
+                path.mkdirs();
+            }
+
+            // Take advantage of UiAutomator screenshot method
+            UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+            String filename = description.getClassName().replaceAll(".*\\.([^.]+)", "$1")
+                    + "-" + description.getMethodName();
+            device.takeScreenshot(new File(path, filename + ".png"));
+
+            try {
+                device.dumpWindowHierarchy(new File(path, filename + ".txt"));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+    };
 
     protected static void navigateUp() {
         onView(ViewMatcher.androidHomeMatcher()).perform(click());
