@@ -39,6 +39,11 @@ public abstract class ChildActivityBase extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         Language.setFromPreference(this, SettingsManager.KEY_LANGUAGE);
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         logEvent(getClass().getSimpleName());
     }
 

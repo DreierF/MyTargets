@@ -81,7 +81,7 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
         contentBinding = FragmentEditBowBinding.inflate(inflater, binding.content, true);
