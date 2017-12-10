@@ -75,6 +75,7 @@ after_failure:
 - >
   adb logcat -d 2>&1 | python pidcat.py de.dreier.mytargets.debug &> logcat.log &&
   cd app/build/reports/androidTests/connected/flavors/DEV/ &&
+  ( adb pull /sdcard/screenshots/ || true ) &&
   mv ../../../../../../../logcat.log logcat.log &&
   zip -r reports.zip . &&
   cd ../../../../../../.. &&
