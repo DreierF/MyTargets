@@ -40,6 +40,7 @@ import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IImageProvider;
 import de.dreier.mytargets.shared.models.IRecursiveModel;
 import de.dreier.mytargets.shared.models.Thumbnail;
+import de.dreier.mytargets.shared.utils.SharedUtils;
 import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter;
 import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter;
 
@@ -50,7 +51,7 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
     @Nullable
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
-    Long id = -1L;
+    Long id = null;
 
     @NonNull
     @Column
@@ -91,7 +92,7 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
     @Column
     public String comment = "";
 
-    @Nullable
+    @NonNull
     @Column(typeConverter = DimensionConverter.class)
     public Dimension diameter = new Dimension(5, Dimension.Unit.MILLIMETER);
 
@@ -154,7 +155,7 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
     public boolean equals(Object another) {
         return another instanceof Arrow &&
                 getClass().equals(another.getClass()) &&
-                id.equals(((Arrow) another).id);
+                SharedUtils.equals(id, ((Arrow) another).id);
     }
 
     @Override

@@ -245,7 +245,7 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
         }
     }
 
-    @Nullable
+    @NonNull
     protected Thumbnail getThumbnail() {
         if (imageFile == null) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), defaultDrawable);
