@@ -80,7 +80,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
             }
 
             setImageFiles(arrow.getImages());
-            contentBinding.diameterUnit.setSelection(arrow.diameter.unit == MILLIMETER ? 0 : 1);
+            contentBinding.diameterUnit.setSelection(arrow.diameter.getUnit() == MILLIMETER ? 0 : 1);
         }
         ToolbarUtils.setTitle(this, arrow.name);
         contentBinding.setArrow(arrow);

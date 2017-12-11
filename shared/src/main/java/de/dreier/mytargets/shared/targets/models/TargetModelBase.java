@@ -94,7 +94,7 @@ public class TargetModelBase implements IIdProvider {
 
     @NonNull
     public Dimension getRealSize(@NonNull Dimension diameter) {
-        return new Dimension(realSizeFactor * diameter.value, diameter.unit);
+        return new Dimension(realSizeFactor * diameter.getValue(), diameter.getUnit());
     }
 
     public int getZoneCount() {

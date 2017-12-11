@@ -16,6 +16,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'jacoco-android'
 
@@ -32,6 +33,10 @@ android {
         targetSdkVersion 27
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary true
+    }
+
+    androidExtensions {
+        experimental = true
     }
 
     buildTypes {

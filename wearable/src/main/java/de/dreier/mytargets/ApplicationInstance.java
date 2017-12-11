@@ -20,7 +20,6 @@ import org.parceler.ParcelClasses;
 
 import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.analysis.aggregation.average.Average;
-import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.Target;
@@ -56,7 +55,6 @@ import de.dreier.mytargets.utils.WearWearableClient;
         @ParcelClass(ArrowImage.class),
         @ParcelClass(Bow.class),
         @ParcelClass(BowImage.class),
-        @ParcelClass(Dimension.class),
         @ParcelClass(Environment.class),
         @ParcelClass(End.class),
         @ParcelClass(EndImage.class),

@@ -41,7 +41,7 @@ public class DistanceFragment extends Fragment {
         binding.slidingTabs.setupWithViewPager(binding.viewPager);
 
         // Select current unit
-        int item = DistanceTabsFragmentPagerAdapter.UNITS.indexOf(distance.unit);
+        int item = DistanceTabsFragmentPagerAdapter.UNITS.indexOf(distance.getUnit());
         binding.viewPager.setCurrentItem(item, false);
         return binding.getRoot();
     }

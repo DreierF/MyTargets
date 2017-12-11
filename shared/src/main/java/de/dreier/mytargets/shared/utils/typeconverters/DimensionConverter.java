@@ -28,7 +28,7 @@ public final class DimensionConverter extends TypeConverter<String, Dimension> {
     @Override
     public String getDBValue(@Nullable Dimension model) {
         if (model != null) {
-            return model.value + " " + model.unit;
+            return model.getValue() + " " + model.getUnit();
         }
         return null;
     }
@@ -38,6 +38,6 @@ public final class DimensionConverter extends TypeConverter<String, Dimension> {
         int index = data.indexOf(' ');
         final String value = data.substring(0, index);
         final String unit = data.substring(index + 1);
-        return new Dimension(Float.parseFloat(value), Dimension.Unit.from(unit));
+        return Dimension.Companion.from(Float.parseFloat(value), unit);
     }
 }
