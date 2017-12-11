@@ -58,7 +58,7 @@ script:
 - adb shell settings put global animator_duration_scale 0
 - adb shell input keyevent 82 &
 - adb logcat -c
-- travis_wait ./gradlew createRegularDebugCoverageReport -PdisablePreDex
+- travis_wait ./gradlew createDevDebugCoverageReport -PdisablePreDex
 - echo -en 'travis_fold:end:script.uitest\\r'
 
 after_success:
@@ -73,12 +73,12 @@ after_success:
 - ./gradlew sendCoverageToCodacy -PdisablePreDex
 after_failure:
 - >
-  adb logcat -d 2>&1 | python pidcat.py de.dreier.mytargets.debug | tee logcat.log &&
-  cd app/build/reports/androidTests/connected/flavors/REGULAR/ &&
+  adb logcat -d 2>&1 | python pidcat.py de.dreier.mytargets.debug &> logcat.log &&
+  cd app/build/reports/androidTests/connected/flavors/DEV/ &&
   mv ../../../../../../../logcat.log logcat.log &&
   zip -r reports.zip . &&
   cd ../../../../../../.. &&
-  ./dropbox_uploader.sh upload app/build/reports/androidTests/connected/flavors/REGULAR/reports.zip /Reports/$TRAVIS_JOB_NUMBER.zip
+  ./dropbox_uploader.sh upload app/build/reports/androidTests/connected/flavors/DEV/reports.zip /Reports/$TRAVIS_JOB_NUMBER.zip
 deploy:
   provider: releases
   skip_cleanup: true
