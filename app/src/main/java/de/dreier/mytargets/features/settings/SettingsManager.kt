@@ -116,11 +116,11 @@ object SettingsManager {
         get() {
             val distance = lastUsed.getInt(KEY_DISTANCE_VALUE, 10)
             val unit = lastUsed.getString(KEY_DISTANCE_UNIT, "m")
-            return Dimension(distance.toFloat(), unit)
+            return Dimension.from(distance.toFloat(), unit)
         }
         set(value) = lastUsed.edit()
                 .putInt(KEY_DISTANCE_VALUE, value.value.toInt())
-                .putString(KEY_DISTANCE_UNIT, Dimension.Unit.toStringHandleNull(value.unit))
+                .putString(KEY_DISTANCE_UNIT, value.unit?.toString())
                 .apply()
 
     var shotsPerEnd: Int
@@ -133,15 +133,14 @@ object SettingsManager {
             val scoringStyle = lastUsed[KEY_SCORING_STYLE, 0]
             val diameterValue = lastUsed[KEY_TARGET_DIAMETER_VALUE, 60]
             val diameterUnit = lastUsed[KEY_TARGET_DIAMETER_UNIT, CENTIMETER.toString()]
-            val diameter = Dimension(diameterValue.toFloat(), diameterUnit)
+            val diameter = Dimension.from(diameterValue.toFloat(), diameterUnit)
             return Target(targetId, scoringStyle, diameter)
         }
         set(value) = lastUsed.edit()
                 .putInt(KEY_TARGET, value.getId().toInt())
                 .putInt(KEY_SCORING_STYLE, value.scoringStyle)
                 .putInt(KEY_TARGET_DIAMETER_VALUE, value.diameter.value.toInt())
-                .putString(KEY_TARGET_DIAMETER_UNIT,
-                        Dimension.Unit.toStringHandleNull(value.diameter.unit))
+                .putString(KEY_TARGET_DIAMETER_UNIT, value.diameter.unit?.toString())
                 .apply()
 
     var timerEnabled: Boolean

@@ -65,7 +65,7 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension, Simp
         binding.recyclerView.setHasFixedSize(true);
         Bundle bundle = getArguments();
         distance = Parcels.unwrap(bundle.getParcelable(ITEM));
-        unit = Unit.from(bundle.getString(DISTANCE_UNIT));
+        unit = Unit.Companion.from(bundle.getString(DISTANCE_UNIT));
         binding.recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         binding.recyclerView.addItemDecoration(new DistanceItemDecorator(getActivity(), 3));
         adapter = new DistanceAdapter();
@@ -94,7 +94,7 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension, Simp
     @NonNull
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
-        final List<Dimension> distances = Dimension.getAll(distance, unit);
+        final List<Dimension> distances = Dimension.Companion.getAll(distance, unit);
         return () -> {
             adapter.setList(distances);
             selectItem(binding.recyclerView, distance);

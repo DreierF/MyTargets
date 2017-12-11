@@ -59,9 +59,9 @@ public class RoundTemplate extends BaseModel implements IIdSettable {
     @Column
     public int endCount;
 
-    @Nullable
+    @NonNull
     @Column(typeConverter = DimensionConverter.class)
-    public Dimension distance;
+    public Dimension distance = Dimension.Companion.getUNKNOWN();
 
     @Column
     int targetId;

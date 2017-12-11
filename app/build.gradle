@@ -16,6 +16,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.triplet.play'
 apply plugin: 'jacoco-android'
@@ -49,6 +50,10 @@ android {
 
     dataBinding {
         enabled true
+    }
+
+    androidExtensions {
+        experimental = true
     }
 
     signingConfigs {

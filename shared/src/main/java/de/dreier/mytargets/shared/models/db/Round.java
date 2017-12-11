@@ -70,9 +70,9 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round>, 
     @Column
     public Integer maxEndCount;
 
-    @Nullable
+    @NonNull
     @Column(typeConverter = DimensionConverter.class)
-    public Dimension distance;
+    public Dimension distance = Dimension.Companion.getUNKNOWN();
 
     @Nullable
     @Column

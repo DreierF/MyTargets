@@ -34,6 +34,7 @@ import de.dreier.mytargets.features.training.input.ETrainingScope;
 import de.dreier.mytargets.features.training.input.SummaryConfiguration;
 import de.dreier.mytargets.features.training.input.TargetView;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
+import de.dreier.mytargets.shared.models.Diameter;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.Target;
@@ -82,9 +83,9 @@ public class SettingsManagerTest extends InstrumentedTestBase {
         SettingsManager.INSTANCE.setDistance(new Dimension(30, Dimension.Unit.METER));
         assertThat(SettingsManager.INSTANCE.getDistance())
                 .isEqualTo(new Dimension(30, Dimension.Unit.METER));
-        SettingsManager.INSTANCE.setDistance(new Dimension(-1, Dimension.Unit.METER));
+        SettingsManager.INSTANCE.setDistance(Dimension.Companion.getUNKNOWN());
         assertThat(SettingsManager.INSTANCE.getDistance())
-                .isEqualTo(new Dimension(-1, Dimension.Unit.METER));
+                .isEqualTo(Dimension.Companion.getUNKNOWN());
     }
 
     @Test
@@ -99,7 +100,7 @@ public class SettingsManagerTest extends InstrumentedTestBase {
                 new Dimension(40, Dimension.Unit.CENTIMETER));
         SettingsManager.INSTANCE.setTarget(targetWA);
         assertThat(SettingsManager.INSTANCE.getTarget()).isEqualTo(targetWA);
-        final Target target3d = new Target(NFAAAnimal.ID, 0, Dimension.LARGE);
+        final Target target3d = new Target(NFAAAnimal.ID, 0, Diameter.INSTANCE.getLARGE());
         SettingsManager.INSTANCE.setTarget(target3d);
         assertThat(SettingsManager.INSTANCE.getTarget()).isEqualTo(target3d);
     }
@@ -222,13 +223,15 @@ public class SettingsManagerTest extends InstrumentedTestBase {
     @Test
     public void setInputKeyboardType() {
         SettingsManager.INSTANCE.setInputKeyboardType(TargetView.EKeyboardType.LEFT);
-        assertThat(SettingsManager.INSTANCE.getInputKeyboardType()).isEqualTo(TargetView.EKeyboardType.LEFT);
+        assertThat(SettingsManager.INSTANCE.getInputKeyboardType())
+                .isEqualTo(TargetView.EKeyboardType.LEFT);
     }
 
     @Test
     public void setBackupLocation() {
         SettingsManager.INSTANCE.setBackupLocation(EBackupLocation.GOOGLE_DRIVE);
-        assertThat(SettingsManager.INSTANCE.getBackupLocation()).isEqualTo(EBackupLocation.GOOGLE_DRIVE);
+        assertThat(SettingsManager.INSTANCE.getBackupLocation())
+                .isEqualTo(EBackupLocation.GOOGLE_DRIVE);
     }
 
     @Test

@@ -200,7 +200,7 @@ public class Migration9 extends BaseMigration {
                 int target = res.getInt(1);
                 template.setTargetTemplate(new Target(
                         target == 4 ? 5 : target, target == 5 ? 1 : 0));
-                template.distance = new Dimension(res.getInt(2), res.getString(3));
+                template.distance = Dimension.Companion.from(res.getInt(2), res.getString(3));
                 template.endCount = res.getInt(4);
                 template.index = sr.getRounds().size();
                 sr.getRounds().add(template);
@@ -240,14 +240,14 @@ public class Migration9 extends BaseMigration {
         ContentValues values = new ContentValues();
         values.put(RT_STANDARD_ID, item.standardRound);
         values.put(RT_INDEX, item.index);
-        values.put(RT_DISTANCE, item.distance.value);
-        values.put(RT_UNIT, Dimension.Unit.toStringHandleNull(item.distance.unit));
+        values.put(RT_DISTANCE, item.distance.getValue());
+        values.put(RT_UNIT, Dimension.Unit.Companion.toStringHandleNull(item.distance.getUnit()));
         values.put(RT_PASSES, item.endCount);
         values.put(RT_ARROWS_PER_PASSE, item.shotsPerEnd);
         values.put(RT_TARGET, item.getTargetTemplate().id);
-        values.put(RT_TARGET_SIZE, item.getTargetTemplate().diameter.value);
-        values.put(RT_TARGET_SIZE_UNIT, Dimension.Unit
-                .toStringHandleNull(item.getTargetTemplate().diameter.unit));
+        values.put(RT_TARGET_SIZE, item.getTargetTemplate().diameter.getValue());
+        values.put(RT_TARGET_SIZE_UNIT, Dimension.Unit.Companion
+                .toStringHandleNull(item.getTargetTemplate().diameter.getUnit()));
         values.put(RT_SCORING_STYLE, item.getTargetTemplate().scoringStyle);
         if (item.getId() == null) {
             item.setId(database
@@ -278,11 +278,11 @@ public class Migration9 extends BaseMigration {
         roundTemplate.setId(cursor.getLong(startColumnIndex));
         roundTemplate.index = cursor.getInt(startColumnIndex + 1);
         roundTemplate.shotsPerEnd = cursor.getInt(startColumnIndex + 2);
-        final Dimension diameter = new Dimension(
+        final Dimension diameter = Dimension.Companion.from(
                 cursor.getInt(startColumnIndex + 9), cursor.getString(startColumnIndex + 10));
         roundTemplate.setTargetTemplate(new Target(cursor.getInt(startColumnIndex + 3),
                 cursor.getInt(startColumnIndex + 4), diameter));
-        roundTemplate.distance = new Dimension(cursor.getInt(startColumnIndex + 7),
+        roundTemplate.distance = Dimension.Companion.from(cursor.getInt(startColumnIndex + 7),
                 cursor.getString(startColumnIndex + 8));
         roundTemplate.endCount = cursor.getInt(startColumnIndex + 11);
         roundTemplate.standardRound = cursor.getLong(startColumnIndex + 12);

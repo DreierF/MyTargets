@@ -14,6 +14,7 @@
  */
 package de.dreier.mytargets.shared.models.db;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -48,7 +49,7 @@ public class SightMark extends BaseModel implements IIdSettable {
             onDelete = ForeignKeyAction.CASCADE)
     public Long bowId;
 
-    @Nullable
+    @NonNull
     @Column(typeConverter = DimensionConverter.class)
     public Dimension distance = new Dimension(18, METER);
 
