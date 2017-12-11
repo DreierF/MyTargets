@@ -67,7 +67,6 @@ android {
         debug {
             applicationIdSuffix '.debug'
             signingConfig signingConfigs.debug
-            minifyEnabled false
             testCoverageEnabled true
         }
         release {
@@ -81,6 +80,10 @@ android {
     flavorDimensions "mode"
 
     productFlavors {
+        dev {
+            dimension "mode"
+            multiDexEnabled true
+        }
         regular {
             dimension "mode"
         }
@@ -206,6 +209,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
+
+    implementation "com.android.support:multidex:$libraryVersion.multidex"
 }
 
 // Must be at the bottom

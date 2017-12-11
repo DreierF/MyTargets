@@ -20,6 +20,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.google.firebase.crash.FirebaseCrash;
@@ -103,6 +104,14 @@ public class ApplicationInstance extends SharedApplicationInstance {
 
     public static SharedPreferences getLastSharedPreferences() {
         return context.getSharedPreferences(MyBackupAgent.PREFS, 0);
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        if(BuildConfig.DEBUG) {
+            MultiDex.install(this);
+        }
     }
 
     @Override
