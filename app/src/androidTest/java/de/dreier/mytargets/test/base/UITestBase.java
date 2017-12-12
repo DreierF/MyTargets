@@ -128,4 +128,9 @@ public abstract class UITestBase extends InstrumentedTestBase {
         clickActionBarItem(R.id.action_save, R.string.save);
     }
 
+
+    protected String getString(@StringRes int resString) {
+        return InstrumentationRegistry.getTargetContext().getString(resString);
+    }
+
 }
