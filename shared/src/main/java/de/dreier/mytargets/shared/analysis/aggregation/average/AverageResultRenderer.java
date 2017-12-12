@@ -54,25 +54,25 @@ public class AverageResultRenderer implements IAggregationResultRenderer {
         RectF nUniStdDev = average.getNonUniformStdDev();
         stdDevPath.rewind();
         stdDevPath.arcTo(new RectF(
-                average.weightedAverage.x - nUniStdDev.right,
-                average.weightedAverage.y - nUniStdDev.bottom,
-                average.weightedAverage.x + nUniStdDev.right,
-                average.weightedAverage.y + nUniStdDev.bottom), 270.0f, 90.0f, true);
+                average.getWeightedAverage().x - nUniStdDev.right,
+                average.getWeightedAverage().y - nUniStdDev.bottom,
+                average.getWeightedAverage().x + nUniStdDev.right,
+                average.getWeightedAverage().y + nUniStdDev.bottom), 270.0f, 90.0f, true);
         stdDevPath.arcTo(new RectF(
-                average.weightedAverage.x - nUniStdDev.right,
-                average.weightedAverage.y - nUniStdDev.top,
-                average.weightedAverage.x + nUniStdDev.right,
-                average.weightedAverage.y + nUniStdDev.top), 0.0f, 90.0f);
+                average.getWeightedAverage().x - nUniStdDev.right,
+                average.getWeightedAverage().y - nUniStdDev.top,
+                average.getWeightedAverage().x + nUniStdDev.right,
+                average.getWeightedAverage().y + nUniStdDev.top), 0.0f, 90.0f);
         stdDevPath.arcTo(new RectF(
-                average.weightedAverage.x - nUniStdDev.left,
-                average.weightedAverage.y - nUniStdDev.top,
-                average.weightedAverage.x + nUniStdDev.left,
-                average.weightedAverage.y + nUniStdDev.top), 90.0f, 90.0f);
+                average.getWeightedAverage().x - nUniStdDev.left,
+                average.getWeightedAverage().y - nUniStdDev.top,
+                average.getWeightedAverage().x + nUniStdDev.left,
+                average.getWeightedAverage().y + nUniStdDev.top), 90.0f, 90.0f);
         stdDevPath.arcTo(new RectF(
-                average.weightedAverage.x - nUniStdDev.left,
-                average.weightedAverage.y - nUniStdDev.bottom,
-                average.weightedAverage.x + nUniStdDev.left,
-                average.weightedAverage.y + nUniStdDev.bottom), 180.0f, 90.0f);
+                average.getWeightedAverage().x - nUniStdDev.left,
+                average.getWeightedAverage().y - nUniStdDev.bottom,
+                average.getWeightedAverage().x + nUniStdDev.left,
+                average.getWeightedAverage().y + nUniStdDev.bottom), 180.0f, 90.0f);
 
         float smallestNonUniStdDev = Stream.of(nUniStdDev.top, nUniStdDev.bottom,
                 nUniStdDev.left, nUniStdDev.right).min(Float::compare);

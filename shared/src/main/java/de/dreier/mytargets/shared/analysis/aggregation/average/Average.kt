@@ -13,138 +13,113 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.analysis.aggregation.average;
+package de.dreier.mytargets.shared.analysis.aggregation.average
 
-import android.graphics.PointF;
-import android.graphics.RectF;
-import android.support.annotation.NonNull;
+import android.annotation.SuppressLint
+import android.graphics.PointF
+import android.graphics.RectF
+import android.os.Parcelable
 
-import java.util.List;
+import de.dreier.mytargets.shared.models.db.Shot
+import kotlinx.android.parcel.Parcelize
 
-import de.dreier.mytargets.shared.models.db.Shot;
+@SuppressLint("ParcelCreator")
+@Parcelize
+class Average constructor(var dataPointCount: Int = 0,
+                          var average: PointF = PointF(0.0f, 0.0f),
+                          var weightedAverage: PointF = PointF(0.0f, 0.0f),
+                          var nonUniformStdDev: RectF = RectF(-1.0f, -1.0f, -1.0f, -1.0f),
+                          private var stdDevX: Double = -1.0,
+                          private var stdDevY: Double = -1.0) : Parcelable {
 
-@SuppressWarnings("WeakerAccess")
-public class Average {
-    int dataPointCount;
-    @NonNull
-    PointF average = new PointF(0.0F, 0.0F);
-    @NonNull
-    PointF weightedAverage = new PointF(0.0F, 0.0F);
-    @NonNull
+    val stdDev: Double
+        get() = (stdDevX + stdDevY) / 2.0
 
-    RectF nonUniformStdDev = new RectF(-1.0F, -1.0F, -1.0F, -1.0F);
-    double stdDevX = -1.0D;
-    double stdDevY = -1.0D;
-
-    public void computeAll(@NonNull List<Shot> shots) {
-        dataPointCount = shots.size();
-        computeAverage(shots);
-        computeNonUniformStdDeviations(shots);
-        computeStdDevX(shots);
-        computeStdDevY(shots);
-        computeWeightedAverage(shots);
+    fun computeAll(shots: List<Shot>) {
+        dataPointCount = shots.size
+        computeAverage(shots)
+        computeNonUniformStdDeviations(shots)
+        computeStdDevX(shots)
+        computeStdDevY(shots)
+        computeWeightedAverage(shots)
     }
 
-    private void computeWeightedAverage(@NonNull List<Shot> data) {
-        double sumX = 0.0D;
-        double sumY = 0.0D;
-        int i = 0;
+    private fun computeWeightedAverage(data: List<Shot>) {
+        var sumX = 0.0
+        var sumY = 0.0
+        var i = 0
 
-        for (Shot point : data) {
-            ++i;
-            sumX += (double) ((float) i * point.x);
-            sumY += (double) ((float) i * point.y);
+        for (point in data) {
+            ++i
+            sumX += (i.toFloat() * point.x).toDouble()
+            sumY += (i.toFloat() * point.y).toDouble()
         }
 
-        i = (i + 1) * i / 2;
-        weightedAverage.set((float) (sumX / (double) i), (float) (sumY / (double) i));
+        i = (i + 1) * i / 2
+        weightedAverage.set((sumX / i.toDouble()).toFloat(), (sumY / i.toDouble()).toFloat())
     }
 
-    private void computeNonUniformStdDeviations(@NonNull List<Shot> data) {
-        int negCountX = 0;
-        int posCountX = 0;
-        int posCountY = 0;
-        int negCountY = 0;
-        double negSquaredXError = 0.0D;
-        double posSquaredXError = 0.0D;
-        double posSquaredYError = 0.0D;
-        double negSquaredYError = 0.0D;
+    private fun computeNonUniformStdDeviations(data: List<Shot>) {
+        var negCountX = 0
+        var posCountX = 0
+        var posCountY = 0
+        var negCountY = 0
+        var negSquaredXError = 0.0
+        var posSquaredXError = 0.0
+        var posSquaredYError = 0.0
+        var negSquaredYError = 0.0
 
-        for (Shot point : data) {
-            double error = (double) (point.x - average.x);
-            if (error < 0.0D) {
-                negSquaredXError += error * error;
-                ++negCountX;
+        for (point in data) {
+            var error = (point.x - average.x).toDouble()
+            if (error < 0.0) {
+                negSquaredXError += error * error
+                ++negCountX
             } else {
-                posSquaredXError += error * error;
-                ++posCountX;
+                posSquaredXError += error * error
+                ++posCountX
             }
 
-            error = (double) (point.y - average.y);
-            if (error >= 0.0D) {
-                posSquaredYError += error * error;
-                ++posCountY;
+            error = (point.y - average.y).toDouble()
+            if (error >= 0.0) {
+                posSquaredYError += error * error
+                ++posCountY
             } else {
-                negSquaredYError += error * error;
-                ++negCountY;
+                negSquaredYError += error * error
+                ++negCountY
             }
         }
 
-        nonUniformStdDev.set((float) Math.sqrt(negSquaredXError / (double) negCountX),
-                (float) Math.sqrt(posSquaredYError / (double) posCountY),
-                (float) Math.sqrt(posSquaredXError / (double) posCountX),
-                (float) Math.sqrt(negSquaredYError / (double) negCountY));
+        nonUniformStdDev.set(Math.sqrt(negSquaredXError / negCountX.toDouble()).toFloat(),
+                Math.sqrt(posSquaredYError / posCountY.toDouble()).toFloat(),
+                Math.sqrt(posSquaredXError / posCountX.toDouble()).toFloat(),
+                Math.sqrt(negSquaredYError / negCountY.toDouble()).toFloat())
     }
 
-    public void computeStdDevX(@NonNull List<Shot> data) {
-        double sumSquaredXError = 0.0D;
+    fun computeStdDevX(data: List<Shot>) {
+        val sumSquaredXError = data
+                .map { (it.x - average.x).toDouble() }
+                .sumByDouble { it * it }
 
-        for (Shot point : data) {
-            double error = (double) (point.x - average.x);
-            sumSquaredXError += error * error;
+        stdDevX = Math.sqrt(sumSquaredXError / data.size.toDouble())
+    }
+
+    fun computeStdDevY(data: List<Shot>) {
+        val sumSquaredYError = data
+                .map { (it.y - average.y).toDouble() }
+                .sumByDouble { it * it }
+
+        stdDevY = Math.sqrt(sumSquaredYError / data.size.toDouble())
+    }
+
+    fun computeAverage(data: List<Shot>) {
+        var sumX = 0.0
+        var sumY = 0.0
+
+        for (point in data) {
+            sumX += point.x.toDouble()
+            sumY += point.y.toDouble()
         }
 
-        stdDevX = Math.sqrt(sumSquaredXError / (double) data.size());
-    }
-
-    public void computeStdDevY(@NonNull List<Shot> data) {
-        double sumSquaredYError = 0.0D;
-
-        for (Shot point : data) {
-            double error = (double) (point.y - average.y);
-            sumSquaredYError += error * error;
-        }
-
-        stdDevY = Math.sqrt(sumSquaredYError / (double) data.size());
-    }
-
-    public void computeAverage(@NonNull List<Shot> data) {
-        double sumX = 0.0D;
-        double sumY = 0.0D;
-
-        for (Shot point : data) {
-            sumX += (double) point.x;
-            sumY += (double) point.y;
-        }
-
-        average.set((float) (sumX / (double) data.size()), (float) (sumY / (double) data.size()));
-    }
-
-    @NonNull
-    public PointF getAverage() {
-        return average;
-    }
-
-    @NonNull
-    public RectF getNonUniformStdDev() {
-        return nonUniformStdDev;
-    }
-
-    public double getStdDev() {
-        return (stdDevX + stdDevY) / 2.0D;
-    }
-
-    public int getDataPointCount() {
-        return dataPointCount;
+        average.set((sumX / data.size.toDouble()).toFloat(), (sumY / data.size.toDouble()).toFloat())
     }
 }
