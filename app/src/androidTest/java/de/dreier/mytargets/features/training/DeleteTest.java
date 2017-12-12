@@ -16,9 +16,11 @@
 package de.dreier.mytargets.features.training;
 
 import android.support.annotation.NonNull;
+import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v7.widget.Toolbar;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,10 +38,13 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
+import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static de.dreier.mytargets.test.utils.assertions.RecyclerViewAssertions.itemCount;
+import static de.dreier.mytargets.test.utils.matchers.MatcherUtils.matchToolbarTitle;
+import static de.dreier.mytargets.test.utils.matchers.MatcherUtils.withToolbarTitle;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.allOf;
 
@@ -118,6 +123,9 @@ public class DeleteTest extends UITestBase {
         onView(withId(R.id.recyclerView)).check(itemCount(is(4)));
 
         pressBack();
+        onView(allOf(isAssignableFrom(Toolbar.class), withId(R.id.toolbar)))
+                .check(ViewAssertions.matches(withToolbarTitle(is(getString(R.string.training)))));
         pressBack();
+        matchToolbarTitle(getString(R.string.my_targets));
     }
 }

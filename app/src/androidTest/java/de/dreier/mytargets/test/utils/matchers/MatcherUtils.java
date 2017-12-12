@@ -57,7 +57,7 @@ public class MatcherUtils {
                 .check(ViewAssertions.matches(withToolbarTitle(is(title))));
     }
 
-    private static Matcher<Object> withToolbarTitle(
+    public static Matcher<Object> withToolbarTitle(
             @NonNull final Matcher<CharSequence> textMatcher) {
         return new BoundedMatcher<Object, Toolbar>(Toolbar.class) {
             @Override
