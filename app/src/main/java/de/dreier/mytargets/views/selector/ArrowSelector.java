@@ -62,10 +62,10 @@ public class ArrowSelector extends ImageSelectorBase<Arrow> {
     public void setItemId(@Nullable Long arrowId) {
         Arrow item = null;
         if (arrowId != null) {
-            item = Arrow.get(arrowId);
+            item = Arrow.Companion.get(arrowId);
         }
         if (item == null) {
-            List<Arrow> all = Arrow.getAll();
+            List<Arrow> all = Arrow.Companion.getAll();
             if (all.size() > 0) {
                 item = all.get(0);
             }

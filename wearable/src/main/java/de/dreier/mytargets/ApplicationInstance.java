@@ -26,7 +26,6 @@ import de.dreier.mytargets.shared.models.TimerSettings;
 import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.WindDirection;
 import de.dreier.mytargets.shared.models.WindSpeed;
-import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.ArrowImage;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.BowImage;
@@ -48,7 +47,6 @@ import de.dreier.mytargets.utils.WearWearableClient;
  * resources.
  */
 @ParcelClasses({
-        @ParcelClass(Arrow.class),
         @ParcelClass(ArrowImage.class),
         @ParcelClass(Bow.class),
         @ParcelClass(BowImage.class),

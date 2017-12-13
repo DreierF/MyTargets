@@ -55,9 +55,9 @@ public class HtmlUtils {
             info.addLine(R.string.bow, bow.name);
         }
 
-        Arrow arrow = Arrow.get(training.arrowId);
+        Arrow arrow = Arrow.Companion.get(training.arrowId);
         if (arrow != null) {
-            info.addLine(R.string.arrow, arrow.name);
+            info.addLine(R.string.arrow, arrow.getName());
         }
 
         if (training.standardRoundId != null) {

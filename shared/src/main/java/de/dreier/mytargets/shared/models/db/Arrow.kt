@@ -13,191 +13,132 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models.db;
+package de.dreier.mytargets.shared.models.db
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.text.TextUtils;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.drawable.Drawable
+import android.os.Parcelable
+import android.text.TextUtils
+import com.raizlabs.android.dbflow.annotation.Column
+import com.raizlabs.android.dbflow.annotation.OneToMany
+import com.raizlabs.android.dbflow.annotation.PrimaryKey
+import com.raizlabs.android.dbflow.annotation.Table
+import com.raizlabs.android.dbflow.config.FlowManager
+import com.raizlabs.android.dbflow.sql.language.SQLite
+import com.raizlabs.android.dbflow.structure.BaseModel
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
+import de.dreier.mytargets.shared.AppDatabase
+import de.dreier.mytargets.shared.models.*
+import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter
+import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter
+import kotlinx.android.parcel.Parcelize
 
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.OneToMany;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.structure.BaseModel;
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
+@SuppressLint("ParcelCreator")
+@Parcelize
+@Table(database = AppDatabase::class)
+data class Arrow(@Column(name = "_id")
+            @PrimaryKey(autoincrement = true)
+            internal var id: Long? = null,
 
-import org.parceler.Parcel;
+            @Column
+            override var name: String = "",
 
-import java.util.List;
+            @Column
+            var maxArrowNumber: Int = 12,
 
-import de.dreier.mytargets.shared.AppDatabase;
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.IIdSettable;
-import de.dreier.mytargets.shared.models.IImageProvider;
-import de.dreier.mytargets.shared.models.IRecursiveModel;
-import de.dreier.mytargets.shared.models.Thumbnail;
-import de.dreier.mytargets.shared.utils.SharedUtils;
-import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter;
-import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter;
+            @Column
+            var length: String? = "",
 
-@Parcel
-@Table(database = AppDatabase.class)
-public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Comparable<Arrow>, IRecursiveModel {
+            @Column
+            var material: String? = "",
 
-    @Nullable
-    @Column(name = "_id")
-    @PrimaryKey(autoincrement = true)
-    Long id = null;
+            @Column
+            var spine: String? = "",
 
-    @NonNull
-    @Column
-    public String name = "";
+            @Column
+            var weight: String? = "",
 
-    @Column
-    public int maxArrowNumber = 12;
+            @Column
+            var tipWeight: String? = "",
 
-    @Nullable
-    @Column
-    public String length = "";
+            @Column
+            var vanes: String? = "",
 
-    @Nullable
-    @Column
-    public String material = "";
+            @Column
+            var nock: String? = "",
 
-    @Nullable
-    @Column
-    public String spine = "";
+            @Column
+            var comment: String? = "",
 
-    @Nullable
-    @Column
-    public String weight = "";
+            @Column(typeConverter = DimensionConverter::class)
+            var diameter: Dimension = Dimension(5f, Dimension.Unit.MILLIMETER),
 
-    @Nullable
-    @Column
-    public String tipWeight = "";
+            @Column(typeConverter = ThumbnailConverter::class)
+            @JvmField //DBFlow bug
+            var thumbnail: Thumbnail? = null) : BaseModel(), IImageProvider, IIdSettable, Comparable<Arrow>, IRecursiveModel, Parcelable {
 
-    @Nullable
-    @Column
-    public String vanes = "";
+    @Transient
+    var images: List<ArrowImage>? = null
 
-    @Nullable
-    @Column
-    public String nock = "";
+    val drawable: Drawable
+        get() = thumbnail!!.roundDrawable
 
-    @Nullable
-    @Column
-    public String comment = "";
-
-    @NonNull
-    @Column(typeConverter = DimensionConverter.class)
-    public Dimension diameter = new Dimension(5, Dimension.Unit.MILLIMETER);
-
-    @Nullable
-    @Column(typeConverter = ThumbnailConverter.class)
-    public Thumbnail thumbnail;
-
-    @Nullable
-    public List<ArrowImage> images = null;
-
-    public static List<Arrow> getAll() {
-        return SQLite.select().from(Arrow.class).queryList();
-    }
-
-    @Nullable
-    public static Arrow get(Long id) {
-        return SQLite.select()
-                .from(Arrow.class)
-                .where(Arrow_Table._id.eq(id))
-                .querySingle();
-    }
-
-    @Nullable
-    @OneToMany(methods = {}, variableName = "images")
-    public List<ArrowImage> loadImages() {
+    @OneToMany(methods = [], variableName = "images")
+    fun loadImages(): List<ArrowImage>? {
         if (images == null) {
             images = SQLite.select()
-                    .from(ArrowImage.class)
+                    .from(ArrowImage::class.java)
                     .where(ArrowImage_Table.arrow.eq(id))
-                    .queryList();
+                    .queryList()
         }
-        return images;
+        return images
     }
 
-    @Nullable
-    public Long getId() {
-        return id;
+    override fun getId(): Long? {
+        return id
     }
 
-    public void setId(@Nullable Long id) {
-        this.id = id;
+    override fun setId(id: Long?) {
+        this.id = id
     }
 
-    public Drawable getDrawable() {
-        return thumbnail.getRoundDrawable();
+    override fun getDrawable(context: Context): Drawable {
+        return drawable
     }
 
-    @Override
-    public Drawable getDrawable(Context context) {
-        return getDrawable();
+    override fun save() {
+        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { this.save(it) }
     }
 
-    @NonNull
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public boolean equals(Object another) {
-        return another instanceof Arrow &&
-                getClass().equals(another.getClass()) &&
-                SharedUtils.equals(id, ((Arrow) another).id);
-    }
-
-    @Override
-    public void save() {
-        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::save);
-    }
-
-    @Override
-    public void save(DatabaseWrapper databaseWrapper) {
-        super.save(databaseWrapper);
+    override fun save(databaseWrapper: DatabaseWrapper) {
+        super.save(databaseWrapper)
         if (images != null) {
-            SQLite.delete(ArrowImage.class)
+            SQLite.delete(ArrowImage::class.java)
                     .where(ArrowImage_Table.arrow.eq(id))
-                    .execute(databaseWrapper);
+                    .execute(databaseWrapper)
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-            for (ArrowImage image : images) {
-                image.arrowId = id;
-                image.save(databaseWrapper);
+            for (image in images!!) {
+                image.arrowId = id
+                image.save(databaseWrapper)
             }
         }
     }
 
-    @Override
-    public void delete() {
-        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::delete);
+    override fun delete() {
+        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { this.delete(it) }
     }
 
-    @Override
-    public void delete(DatabaseWrapper databaseWrapper) {
-        for (ArrowImage arrowImage : loadImages()) {
-            arrowImage.delete(databaseWrapper);
+    override fun delete(databaseWrapper: DatabaseWrapper) {
+        for (arrowImage in loadImages()!!) {
+            arrowImage.delete(databaseWrapper)
         }
-        super.delete(databaseWrapper);
+        super.delete(databaseWrapper)
     }
 
-    @Override
-    public int compareTo(@NonNull Arrow another) {
-        final int result = getName().compareTo(another.getName());
-        return result == 0 ? (int) (id - another.id) : result;
-    }
+    override fun compareTo(other: Arrow) = compareBy(Arrow::name, Arrow::id).compare(this, other)
 
-    public boolean areAllPropertiesSet() {
+    fun areAllPropertiesSet(): Boolean {
         return !TextUtils.isEmpty(length) &&
                 !TextUtils.isEmpty(material) &&
                 !TextUtils.isEmpty(spine) &&
@@ -205,16 +146,27 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
                 !TextUtils.isEmpty(tipWeight) &&
                 !TextUtils.isEmpty(vanes) &&
                 !TextUtils.isEmpty(nock) &&
-                !TextUtils.isEmpty(comment);
+                !TextUtils.isEmpty(comment)
     }
 
-    @Override
-    public void saveRecursively() {
-        save();
+    override fun saveRecursively() {
+        save()
     }
 
-    @Override
-    public void saveRecursively(DatabaseWrapper databaseWrapper) {
-        save(databaseWrapper);
+    override fun saveRecursively(databaseWrapper: DatabaseWrapper) {
+        save(databaseWrapper)
+    }
+
+    companion object {
+
+        val all: List<Arrow>
+            get() = SQLite.select().from(Arrow::class.java).queryList()
+
+        operator fun get(id: Long?): Arrow? {
+            return SQLite.select()
+                    .from(Arrow::class.java)
+                    .where(Arrow_Table._id.eq(id))
+                    .querySingle()
+        }
     }
 }

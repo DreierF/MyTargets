@@ -199,7 +199,7 @@ public class MainActivityTest extends UITestBase {
         // openArrow
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
                 .perform(click());
-        final Arrow firstArrow = Stream.of(Arrow.getAll()).sorted().findFirstOrNull();
+        final Arrow firstArrow = Stream.of(Arrow.Companion.getAll()).sorted().findFirstOrNull();
         intended(allOf(hasClass(EditArrowActivity.class),
                 hasExtra(EditArrowFragment.ARROW_ID, firstArrow.getId())));
 

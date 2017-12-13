@@ -125,9 +125,9 @@ public class DefaultScoreboardLayout {
             info.addLine(R.string.bow_type, bow.type);
         }
 
-        Arrow arrow = Arrow.get(training.arrowId);
+        Arrow arrow = Arrow.Companion.get(training.arrowId);
         if (arrow != null) {
-            info.addLine(R.string.arrow, arrow.name);
+            info.addLine(R.string.arrow, arrow.getName());
         }
 
         if (training.standardRoundId != null) {
