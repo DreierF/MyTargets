@@ -13,57 +13,28 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models.db;
+package de.dreier.mytargets.shared.models.db
 
-import android.support.annotation.Nullable;
+import android.annotation.SuppressLint
+import android.os.Parcelable
+import com.raizlabs.android.dbflow.annotation.*
+import com.raizlabs.android.dbflow.structure.BaseModel
+import de.dreier.mytargets.shared.AppDatabase
+import kotlinx.android.parcel.Parcelize
 
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ForeignKey;
-import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
-import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.structure.BaseModel;
+@SuppressLint("ParcelCreator")
+@Parcelize
+@Table(database = AppDatabase::class)
+data class EndImage(
+        @Column(name = "_id")
+        @PrimaryKey(autoincrement = true)
+        var _id: Long = 0,
 
-import de.dreier.mytargets.shared.AppDatabase;
+        @Column
+        override var fileName: String = "",
 
-@Table(database = AppDatabase.class)
-public class EndImage extends BaseModel implements Image {
-
-    @Nullable
-    @Column(name = "_id")
-    @PrimaryKey(autoincrement = true)
-    public Long _id = -1L;
-
-    @Nullable
-    @Column
-    public String fileName = "";
-
-    @Nullable
-    @ForeignKey(tableClass = End.class, references = {
-            @ForeignKeyReference(columnName = "end", columnType = Long.class, foreignKeyColumnName = "_id", referencedGetterName = "getId", referencedSetterName = "setId")},
-            onDelete = ForeignKeyAction.CASCADE)
-    public Long endId;
-
-    public EndImage() {
-    }
-
-    public EndImage(@Nullable String imageFile) {
-        fileName = imageFile;
-    }
-
-    /**
-     * @return The name of the image file, which is placed inside the files directory of the app
-     */
-    @Nullable
-    public String getFileName() {
-        return fileName;
-    }
-
-    /**
-     * @param fileName The name of the image file, which is placed inside the files directory of the app
-     */
-    public void setFileName(@Nullable String fileName) {
-        this.fileName = fileName;
-    }
+        @ForeignKey(tableClass = End::class, references = [(ForeignKeyReference(columnName = "end", columnType = Long::class, foreignKeyColumnName = "_id", referencedGetterName = "getId", referencedSetterName = "setId"))], onDelete = ForeignKeyAction.CASCADE)
+        var endId: Long? = null
+) : BaseModel(), Image, Parcelable {
+    constructor(imageFile: String) : this(fileName = imageFile)
 }

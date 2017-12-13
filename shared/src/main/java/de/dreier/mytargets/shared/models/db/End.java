@@ -227,7 +227,7 @@ public class End extends BaseModel implements IIdSettable, Comparable<End>, IRec
                     .execute(databaseWrapper);
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
             for (EndImage image : getImages()) {
-                image.endId = id;
+                image.setEndId(id);
                 image.save(databaseWrapper);
             }
         }

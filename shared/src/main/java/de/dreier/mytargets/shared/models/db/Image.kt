@@ -13,10 +13,15 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models.db;
+package de.dreier.mytargets.shared.models.db
 
-public interface Image {
-    String getFileName();
+interface Image {
 
-    void setFileName(String fileName);
+    /**
+     * @return The name of the image file, which is placed inside the files directory of the app
+     */
+    /**
+     * @param fileName The name of the image file, which is placed inside the files directory of the app
+     */
+    var fileName: String
 }

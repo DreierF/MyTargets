@@ -13,53 +13,28 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models.db;
+package de.dreier.mytargets.shared.models.db
 
-import android.support.annotation.Nullable;
+import android.annotation.SuppressLint
+import android.os.Parcelable
+import com.raizlabs.android.dbflow.annotation.*
+import com.raizlabs.android.dbflow.structure.BaseModel
+import de.dreier.mytargets.shared.AppDatabase
+import kotlinx.android.parcel.Parcelize
 
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ForeignKey;
-import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
-import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.structure.BaseModel;
+@SuppressLint("ParcelCreator")
+@Parcelize
+@Table(database = AppDatabase::class)
+data class BowImage(
+        @Column(name = "_id")
+        @PrimaryKey(autoincrement = true)
+        var id: Long? = 0,
 
-import de.dreier.mytargets.shared.AppDatabase;
+        @Column
+        override var fileName: String = "",
 
-@Table(database = AppDatabase.class)
-public class BowImage extends BaseModel implements Image {
-
-    @Nullable
-    @Column(name = "_id")
-    @PrimaryKey(autoincrement = true)
-    public Long id = -1L;
-
-    @Nullable
-    @Column
-    public String fileName = "";
-
-    @Nullable
-    @ForeignKey(tableClass = Bow.class, references = {
-            @ForeignKeyReference(columnName = "bow", columnType = Long.class, foreignKeyColumnName = "_id", referencedGetterName = "getId", referencedSetterName = "setId")},
-            onDelete = ForeignKeyAction.CASCADE)
-    public Long bowId;
-
-    public BowImage() {
-    }
-
-    public BowImage(@Nullable String imageFilePath) {
-        fileName = imageFilePath;
-    }
-
-    @Nullable
-    @Override
-    public String getFileName() {
-        return fileName;
-    }
-
-    @Override
-    public void setFileName(@Nullable String fileName) {
-        this.fileName = fileName;
-    }
+        @ForeignKey(tableClass = Bow::class, references = [(ForeignKeyReference(columnName = "bow", columnType = Long::class, foreignKeyColumnName = "_id", referencedGetterName = "getId", referencedSetterName = "setId"))], onDelete = ForeignKeyAction.CASCADE)
+        var bowId: Long? = null
+) : BaseModel(), Image, Parcelable {
+    constructor(imageFilePath: String) : this(fileName = imageFilePath)
 }
