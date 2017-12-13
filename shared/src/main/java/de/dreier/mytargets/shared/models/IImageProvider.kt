@@ -13,15 +13,12 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
+import android.content.Context
+import android.graphics.drawable.Drawable
 
-public interface IImageProvider {
-    Drawable getDrawable(Context context);
-
-    @NonNull
-    String getName();
+interface IImageProvider {
+    val name: String
+    fun getDrawable(context: Context): Drawable
 }
