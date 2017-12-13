@@ -36,15 +36,13 @@ import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 import de.dreier.mytargets.test.base.UITestBase;
 import de.dreier.mytargets.test.utils.actions.TargetViewActions;
+import de.dreier.mytargets.test.utils.assertions.TargetViewAssertions;
 import de.dreier.mytargets.test.utils.rules.DbTestRuleBase;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static de.dreier.mytargets.test.utils.VirtualViewUtil.assertVirtualViewExists;
-import static de.dreier.mytargets.test.utils.VirtualViewUtil.assertVirtualViewNotExists;
-import static de.dreier.mytargets.test.utils.VirtualViewUtil.clickVirtualView;
 import static de.dreier.mytargets.test.utils.matchers.ViewMatcher.clickOnPreference;
 
 @RunWith(AndroidJUnit4.class)
@@ -96,12 +94,15 @@ public class InputActivityTest extends UITestBase {
             e.printStackTrace();
         }
 
-        clickVirtualView("10");
-        assertVirtualViewExists("Shot 1: 10");
+        onView(withId(R.id.targetViewContainer))
+                .perform(TargetViewActions.clickVirtualButton("10"));
+        onView(withId(R.id.targetViewContainer))
+                .check(TargetViewAssertions.virtualButtonExists("Shot 1: 10"));
 
         clickActionBarItem(R.id.action_settings, R.string.preferences);
         clickOnPreference(R.string.keyboard_enabled);
         pressBack();
+
         // Wait for keyboard animation to finish
         try {
             Thread.sleep(1000);
@@ -112,30 +113,38 @@ public class InputActivityTest extends UITestBase {
 
         onView(withId(R.id.targetViewContainer))
                 .perform(TargetViewActions.clickTarget(0, 0));
-        assertVirtualViewExists("Shot 2: X");
+        onView(withId(R.id.targetViewContainer))
+                .check(TargetViewAssertions.virtualButtonExists("Shot 2: X"));
 
-        clickVirtualView("Backspace");
-        assertVirtualViewNotExists("Shot 2: X");
+        onView(withId(R.id.targetViewContainer))
+                .perform(TargetViewActions.clickVirtualButton("Backspace"));
+        onView(withId(R.id.targetViewContainer))
+                .check(TargetViewAssertions.virtualButtonNotExists("Shot 2: X"));
 
         onView(withId(R.id.targetViewContainer))
                 .perform(TargetViewActions.clickTarget(0.1f, 0.2f));
-        assertVirtualViewExists("Shot 2: 8");
+        onView(withId(R.id.targetViewContainer))
+                .check(TargetViewAssertions.virtualButtonExists("Shot 2: 8"));
 
         onView(withId(R.id.targetViewContainer))
                 .perform(TargetViewActions.clickTarget(0, 0));
-        assertVirtualViewExists("Shot 3: X");
+        onView(withId(R.id.targetViewContainer))
+                .check(TargetViewAssertions.virtualButtonExists("Shot 3: X"));
 
         onView(withId(R.id.targetViewContainer))
                 .perform(TargetViewActions.clickTarget(-0.9f, -0.9f));
-        assertVirtualViewExists("Shot 4: M");
+        onView(withId(R.id.targetViewContainer))
+                .check(TargetViewAssertions.virtualButtonExists("Shot 4: Miss"));
 
         onView(withId(R.id.targetViewContainer))
                 .perform(TargetViewActions.clickTarget(0, 0));
-        assertVirtualViewExists("Shot 5: X");
+        onView(withId(R.id.targetViewContainer))
+                .check(TargetViewAssertions.virtualButtonExists("Shot 5: X"));
 
         onView(withId(R.id.targetViewContainer))
                 .perform(TargetViewActions.clickTarget(0, 0));
-        assertVirtualViewExists("Shot 6: X");
+        onView(withId(R.id.targetViewContainer))
+                .check(TargetViewAssertions.virtualButtonExists("Shot 6: X"));
 
         onView(withId(R.id.next)).perform(click());
     }

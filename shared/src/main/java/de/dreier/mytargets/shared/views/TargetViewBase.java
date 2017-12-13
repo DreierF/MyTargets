@@ -27,6 +27,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.support.v4.widget.ExploreByTouchHelper;
@@ -54,7 +55,8 @@ import de.dreier.mytargets.shared.utils.RectUtils;
 public abstract class TargetViewBase extends View implements View.OnTouchListener {
     private final TargetAccessibilityTouchHelper touchHelper = new TargetAccessibilityTouchHelper(
             this);
-    private final List<VirtualView> virtualViews = new ArrayList<>();
+    @VisibleForTesting
+    public final List<VirtualView> virtualViews = new ArrayList<>();
     /**
      * Zero-based index of the shot that is currently being changed.
      * If no shot is selected it is set to EndRenderer#NO_SELECTION.
@@ -525,7 +527,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         }
     }
 
-    private class VirtualView {
+    public class VirtualView {
         public int id;
         public boolean shot;
         public Rect rect;
