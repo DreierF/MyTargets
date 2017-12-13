@@ -18,8 +18,6 @@ package de.dreier.mytargets.base.fragments;
 import android.Manifest;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
@@ -248,9 +246,8 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
     @NonNull
     protected Thumbnail getThumbnail() {
         if (imageFile == null) {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), defaultDrawable);
-            return new Thumbnail(bitmap);
+            return Thumbnail.Companion.from(getContext(), defaultDrawable);
         }
-        return new Thumbnail(imageFile);
+        return Thumbnail.Companion.from(imageFile);
     }
 }

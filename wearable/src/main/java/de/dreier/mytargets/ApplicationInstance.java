@@ -22,7 +22,6 @@ import de.dreier.mytargets.shared.SharedApplicationInstance;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.models.TimerSettings;
 import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.WindDirection;
@@ -68,7 +67,6 @@ import de.dreier.mytargets.utils.WearWearableClient;
         @ParcelClass(Target.class),
         @ParcelClass(TimerSettings.class),
         @ParcelClass(Training.class),
-        @ParcelClass(Thumbnail.class),
         @ParcelClass(WindDirection.class),
         @ParcelClass(WindSpeed.class)
 })
