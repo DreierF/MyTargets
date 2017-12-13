@@ -20,6 +20,12 @@ import android.support.test.espresso.action.GeneralClickAction;
 import android.support.test.espresso.action.Press;
 import android.support.test.espresso.action.Tap;
 
+import de.dreier.mytargets.features.training.input.TargetView;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
+import de.dreier.mytargets.shared.views.TargetViewBase;
+
+import static org.junit.Assert.assertNotNull;
+
 public class TargetViewActions {
     public static ViewAction clickTarget(final float x, final float y) {
         return new GeneralClickAction(
@@ -34,5 +40,20 @@ public class TargetViewActions {
 
     public static ViewAction releaseTapTarget(final float x, final float y) {
         return LowLevelActions.release(new float[]{x, y});
+    }
+
+    public static ViewAction clickVirtualButton(String description) {
+        return new GeneralClickAction(
+                Tap.SINGLE,
+                view -> {
+                    TargetView targetView = (TargetView) view;
+                    TargetViewBase.VirtualView vv = Stream.of(targetView.virtualViews)
+                            .filter(virtualView -> virtualView.description.equals(description))
+                            .findFirstOrNull();
+                    assertNotNull("Did not find virtual view with description '" + description + "'", vv);
+                    return LowLevelActions
+                            .getAbsoluteCoordinates(view, new float[]{vv.rect.exactCenterX(), vv.rect.exactCenterY()});
+                },
+                Press.PINPOINT, 0, 0);
     }
 }

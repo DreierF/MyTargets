@@ -77,6 +77,15 @@ public class LowLevelActions {
         return shotPos;
     }
 
+    @NonNull
+    public static float[] getAbsoluteCoordinates(@NonNull View v, float[] coordinates) {
+        final int[] screenPos = new int[2];
+        v.getLocationOnScreen(screenPos);
+        coordinates[0] += screenPos[0];
+        coordinates[1] += screenPos[1];
+        return coordinates;
+    }
+
     public static class PressAndHoldAction implements ViewAction {
         final float[] coordinates;
 
