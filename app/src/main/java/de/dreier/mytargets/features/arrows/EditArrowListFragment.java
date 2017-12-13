@@ -74,7 +74,7 @@ public class EditArrowListFragment extends EditableListFragment<Arrow> {
     @NonNull
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
-        List<Arrow> arrows = Arrow.getAll();
+        List<Arrow> arrows = Arrow.Companion.getAll();
         return () -> {
             adapter.setList(arrows);
             binding.emptyState.getRoot().setVisibility(arrows.isEmpty() ? View.VISIBLE : View.GONE);
@@ -115,7 +115,7 @@ public class EditArrowListFragment extends EditableListFragment<Arrow> {
 
         @Override
         public void bindItem() {
-            binding.name.setText(item.name);
+            binding.name.setText(item.getName());
             binding.image.setImageDrawable(item.getDrawable());
         }
     }

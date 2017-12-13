@@ -70,7 +70,7 @@ public class ArrowStatistic implements Comparable<ArrowStatistic> {
                 .withoutNulls()
                 .groupBy(r -> r.getTraining().arrowId == null ? 0 : r.getTraining().arrowId)
                 .flatMap(t -> {
-                    Arrow arrow = Arrow.get(t.getKey());
+                    Arrow arrow = Arrow.Companion.get(t.getKey());
                     String name = arrow == null ? Companion.getStr(R.string.unknown) : arrow.getName();
                     return Stream.of(t.getValue())
                             .flatMap(r -> Stream.of(r.getEnds())

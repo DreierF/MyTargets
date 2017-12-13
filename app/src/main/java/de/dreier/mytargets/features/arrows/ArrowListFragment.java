@@ -32,7 +32,7 @@ public class ArrowListFragment extends SelectPureListItemFragmentBase<Arrow> {
     @NonNull
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
-        List<Arrow> arrows = Arrow.getAll();
+        List<Arrow> arrows = Arrow.Companion.getAll();
         return () -> {
             adapter.setList(arrows);
             Arrow arrow = Parcels.unwrap(getArguments().getParcelable(ITEM));

@@ -111,7 +111,7 @@ public abstract class DbTestRuleBase implements TestRule {
         bow.braceHeight = "6 3/8\"";
         bow.type = EBowType.COMPOUND_BOW;
         bow.images = Collections.emptyList();
-        bow.thumbnail = new Thumbnail(context, R.drawable.recurve_bow);
+        bow.thumbnail = Thumbnail.Companion.from(context, R.drawable.recurve_bow);
         bow.save();
         return bow;
     }
@@ -119,13 +119,13 @@ public abstract class DbTestRuleBase implements TestRule {
     @NonNull
     protected Arrow addArrow(String name) {
         Arrow arrow = new Arrow();
-        arrow.name = name;
-        arrow.length = "30inch";
-        arrow.comment = "some comment";
-        arrow.diameter = new Dimension(4, Dimension.Unit.MILLIMETER);
-        arrow.nock = "Awesome nock";
-        arrow.images = Collections.emptyList();
-        arrow.thumbnail = new Thumbnail(context, R.drawable.arrows);
+        arrow.setName(name);
+        arrow.setLength("30inch");
+        arrow.setComment("some comment");
+        arrow.setDiameter(new Dimension(4, Dimension.Unit.MILLIMETER));
+        arrow.setNock("Awesome nock");
+        arrow.setImages(Collections.emptyList());
+        arrow.thumbnail = Thumbnail.Companion.from(context, R.drawable.arrows);
         arrow.save();
         return arrow;
     }

@@ -72,17 +72,18 @@ public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
         if (savedInstanceState == null) {
             Bundle bundle = getArguments();
             if (bundle != null && bundle.containsKey(ARROW_ID)) {
-                arrow = Arrow.get(bundle.getLong(ARROW_ID));
+                arrow = Arrow.Companion.get(bundle.getLong(ARROW_ID));
             } else {
                 // Set to default values
                 arrow = new Arrow();
-                arrow.name = getString(R.string.my_arrow);
+                arrow.setName(getString(R.string.my_arrow));
             }
 
             setImageFiles(arrow.loadImages());
-            contentBinding.diameterUnit.setSelection(arrow.diameter.getUnit() == MILLIMETER ? 0 : 1);
+            contentBinding.diameterUnit.setSelection(
+                    arrow.getDiameter().getUnit() == MILLIMETER ? 0 : 1);
         }
-        ToolbarUtils.setTitle(this, arrow.name);
+        ToolbarUtils.setTitle(this, arrow.getName());
         contentBinding.setArrow(arrow);
         loadImage(imageFile);
         return rootView;
@@ -134,17 +135,17 @@ public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
 
     @Nullable
     private Arrow buildArrow() {
-        arrow.name = contentBinding.name.getText().toString();
-        arrow.maxArrowNumber = parseInt(contentBinding.maxArrowNumber.getText().toString());
-        arrow.length = contentBinding.length.getText().toString();
-        arrow.material = contentBinding.material.getText().toString();
-        arrow.spine = contentBinding.spine.getText().toString();
-        arrow.weight = contentBinding.weight.getText().toString();
-        arrow.tipWeight = contentBinding.tipWeight.getText().toString();
-        arrow.vanes = contentBinding.vanes.getText().toString();
-        arrow.nock = contentBinding.nock.getText().toString();
-        arrow.comment = contentBinding.comment.getText().toString();
-        arrow.images = getImageFiles();
+        arrow.setName(contentBinding.name.getText().toString());
+        arrow.setMaxArrowNumber(parseInt(contentBinding.maxArrowNumber.getText().toString()));
+        arrow.setLength(contentBinding.length.getText().toString());
+        arrow.setMaterial(contentBinding.material.getText().toString());
+        arrow.setSpine(contentBinding.spine.getText().toString());
+        arrow.setWeight(contentBinding.weight.getText().toString());
+        arrow.setTipWeight(contentBinding.tipWeight.getText().toString());
+        arrow.setVanes(contentBinding.vanes.getText().toString());
+        arrow.setNock(contentBinding.nock.getText().toString());
+        arrow.setComment(contentBinding.comment.getText().toString());
+        arrow.setImages(getImageFiles());
         arrow.thumbnail = getThumbnail();
         float diameterValue;
         try {
@@ -154,7 +155,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
         }
         final int selectedUnit = contentBinding.diameterUnit.getSelectedItemPosition();
         Dimension.Unit diameterUnit = selectedUnit == 0 ? MILLIMETER : INCH;
-        arrow.diameter = new Dimension(diameterValue, diameterUnit);
+        arrow.setDiameter(new Dimension(diameterValue, diameterUnit));
         return arrow;
     }
 }

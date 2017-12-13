@@ -627,8 +627,8 @@ public class InputActivity extends ChildActivityBase
         }
 
         public void setArrow(@NonNull Arrow arrow) {
-            maxArrowNumber = arrow.maxArrowNumber;
-            arrowDiameter = arrow.diameter;
+            maxArrowNumber = arrow.getMaxArrowNumber();
+            arrowDiameter = arrow.getDiameter();
         }
     }
 }

@@ -39,7 +39,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.evernote.android.state.State;
 import com.evernote.android.state.StateSaver;
 
-import de.dreier.mytargets.shared.streamwrapper.Stream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -56,6 +55,7 @@ import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.shared.utils.FileUtils;
 import de.dreier.mytargets.shared.utils.LongUtils;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
@@ -299,7 +299,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 .distinct()
                 .map(aid -> {
                     if (aid != null) {
-                        Arrow arrow = Arrow.get(aid);
+                        Arrow arrow = Arrow.Companion.get(aid);
                         if (arrow == null) {
                             return new ChipGroup.Tag(aid, "Deleted " + aid);
                         }
