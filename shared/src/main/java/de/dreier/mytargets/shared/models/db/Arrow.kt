@@ -117,7 +117,7 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
 
     @Nullable
     @OneToMany(methods = {}, variableName = "images")
-    public List<ArrowImage> getImages() {
+    public List<ArrowImage> loadImages() {
         if (images == null) {
             images = SQLite.select()
                     .from(ArrowImage.class)
@@ -185,7 +185,7 @@ public class Arrow extends BaseModel implements IImageProvider, IIdSettable, Com
 
     @Override
     public void delete(DatabaseWrapper databaseWrapper) {
-        for (ArrowImage arrowImage : getImages()) {
+        for (ArrowImage arrowImage : loadImages()) {
             arrowImage.delete(databaseWrapper);
         }
         super.delete(databaseWrapper);
