@@ -13,79 +13,64 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.media.ThumbnailUtils;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
+import android.media.ThumbnailUtils
+import android.os.Parcelable
+import android.support.annotation.DrawableRes
+import com.raizlabs.android.dbflow.data.Blob
+import de.dreier.mytargets.shared.utils.BitmapUtils
+import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable
+import kotlinx.android.parcel.Parcelize
+import java.io.File
 
-import com.raizlabs.android.dbflow.data.Blob;
+@SuppressLint("ParcelCreator")
+@Parcelize
+class Thumbnail(internal var data: ByteArray) : Parcelable {
 
-import org.parceler.Parcel;
-
-import java.io.File;
-
-import de.dreier.mytargets.shared.utils.BitmapUtils;
-import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable;
-
-@Parcel
-public class Thumbnail {
-    /**
-     * Constant used to indicate the dimension of micro thumbnail.
-     */
-    private static final int TARGET_SIZE_MICRO_THUMBNAIL = 96;
-    private transient Drawable image;
-    byte[] data;
-
-
-    public Thumbnail() {
+    @Suppress("PLUGIN_WARNING")
+    val roundDrawable: Drawable by lazy {
+        val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+        RoundedAvatarDrawable(bitmap)
     }
 
-    public Thumbnail(@NonNull Blob data) {
-        this.data = data.getBlob();
-    }
+    val blob: Blob
+        get() = Blob(data)
 
-    public Thumbnail(Bitmap bitmap) {
-        Bitmap thumbnail = ThumbnailUtils.extractThumbnail(bitmap,
-                TARGET_SIZE_MICRO_THUMBNAIL,
-                TARGET_SIZE_MICRO_THUMBNAIL,
-                ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
-        data = BitmapUtils.getBitmapAsByteArray(thumbnail);
-        image = new RoundedAvatarDrawable(thumbnail);
-    }
 
-    public Thumbnail(@NonNull File imageFile) {
-        Bitmap thumbnail = ThumbnailUtils
-                .extractThumbnail(BitmapFactory.decodeFile(imageFile.getPath()),
-                        TARGET_SIZE_MICRO_THUMBNAIL, TARGET_SIZE_MICRO_THUMBNAIL);
-        if (thumbnail != null) {
-            data = BitmapUtils.getBitmapAsByteArray(thumbnail);
-            image = new RoundedAvatarDrawable(thumbnail);
-        } else {
-            data = new byte[0];
-            image = new RoundedAvatarDrawable(Bitmap
-                    .createBitmap(TARGET_SIZE_MICRO_THUMBNAIL, TARGET_SIZE_MICRO_THUMBNAIL, Bitmap.Config.RGB_565));
+    constructor() : this(ByteArray(0))
+
+    constructor(data: Blob) : this(data.blob)
+
+    companion object {
+        /**
+         * Constant used to indicate the dimension of micro thumbnail.
+         */
+        private val TARGET_SIZE_MICRO_THUMBNAIL = 96
+
+        fun from(bitmap: Bitmap): Thumbnail {
+            val thumbnail = ThumbnailUtils.extractThumbnail(bitmap,
+                    TARGET_SIZE_MICRO_THUMBNAIL,
+                    TARGET_SIZE_MICRO_THUMBNAIL,
+                    ThumbnailUtils.OPTIONS_RECYCLE_INPUT)
+            return Thumbnail(BitmapUtils.getBitmapAsByteArray(thumbnail))
         }
-    }
 
-    public Thumbnail(@NonNull Context context, @DrawableRes int resId) {
-        this(BitmapFactory.decodeResource(context.getResources(), resId));
-    }
-
-    public Drawable getRoundDrawable() {
-        if (image == null) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-            image = new RoundedAvatarDrawable(bitmap);
+        fun from(imageFile: File): Thumbnail {
+            val thumbnail = ThumbnailUtils
+                    .extractThumbnail(BitmapFactory.decodeFile(imageFile.path),
+                            TARGET_SIZE_MICRO_THUMBNAIL, TARGET_SIZE_MICRO_THUMBNAIL) ?:
+                    Bitmap.createBitmap(TARGET_SIZE_MICRO_THUMBNAIL, TARGET_SIZE_MICRO_THUMBNAIL, Bitmap.Config.RGB_565)
+            return Thumbnail(BitmapUtils.getBitmapAsByteArray(thumbnail))
         }
-        return image;
-    }
 
-    @NonNull
-    public Blob getBlob() {
-        return new Blob(data);
+        fun from(context: Context, @DrawableRes resId: Int) :Thumbnail {
+            return from(BitmapFactory.decodeResource(context.resources, resId))
+        }
     }
 }
