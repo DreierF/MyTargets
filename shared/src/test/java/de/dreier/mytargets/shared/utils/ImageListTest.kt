@@ -30,23 +30,23 @@ class ImageListTest {
 
     @Test
     fun testSingleImage() {
-        val list = ImageList(listOf(EndImage("someImage")))
+        val list = ImageList(listOf(EndImage(fileName = "someImage")))
         assertEquals(false, list.isEmpty)
         assertEquals(1, list.size())
         assertEquals(1, list.toEndImageList().size)
-        assertEquals("someImage", list.toEndImageList()[0].getFileName())
+        assertEquals("someImage", list.toEndImageList()[0].fileName)
     }
 
     @Test
     fun testMultiImage() {
-        val list = ImageList(listOf(EndImage("someImage")))
+        val list = ImageList(listOf(EndImage(fileName = "someImage")))
         list.addAll(listOf("myImage", "oneMore"))
         list.remove(0)
         assertEquals(false, list.isEmpty)
         assertEquals(2, list.size())
         assertEquals(2, list.toEndImageList().size)
-        assertEquals("myImage", list.toEndImageList()[0].getFileName())
-        assertEquals("oneMore", list.toEndImageList()[1].getFileName())
+        assertEquals("myImage", list.toEndImageList()[0].fileName)
+        assertEquals("oneMore", list.toEndImageList()[1].fileName)
         assertEquals("someImage", list.removedImages[0])
     }
 }

@@ -38,45 +38,45 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Table(database = AppDatabase::class)
 data class Arrow(@Column(name = "_id")
-            @PrimaryKey(autoincrement = true)
-            internal var id: Long? = null,
+                 @PrimaryKey(autoincrement = true)
+                 internal var id: Long = 0,
 
-            @Column
-            override var name: String = "",
+                 @Column
+                 override var name: String = "",
 
-            @Column
-            var maxArrowNumber: Int = 12,
+                 @Column
+                 var maxArrowNumber: Int = 12,
 
-            @Column
-            var length: String? = "",
+                 @Column
+                 var length: String? = "",
 
-            @Column
-            var material: String? = "",
+                 @Column
+                 var material: String? = "",
 
-            @Column
-            var spine: String? = "",
+                 @Column
+                 var spine: String? = "",
 
-            @Column
-            var weight: String? = "",
+                 @Column
+                 var weight: String? = "",
 
-            @Column
-            var tipWeight: String? = "",
+                 @Column
+                 var tipWeight: String? = "",
 
-            @Column
-            var vanes: String? = "",
+                 @Column
+                 var vanes: String? = "",
 
-            @Column
-            var nock: String? = "",
+                 @Column
+                 var nock: String? = "",
 
-            @Column
-            var comment: String? = "",
+                 @Column
+                 var comment: String? = "",
 
-            @Column(typeConverter = DimensionConverter::class)
-            var diameter: Dimension = Dimension(5f, Dimension.Unit.MILLIMETER),
+                 @Column(typeConverter = DimensionConverter::class)
+                 var diameter: Dimension = Dimension(5f, Dimension.Unit.MILLIMETER),
 
-            @Column(typeConverter = ThumbnailConverter::class)
-            @JvmField //DBFlow bug
-            var thumbnail: Thumbnail? = null) : BaseModel(), IImageProvider, IIdSettable, Comparable<Arrow>, IRecursiveModel, Parcelable {
+                 @Column(typeConverter = ThumbnailConverter::class)
+                 @JvmField //DBFlow bug
+                 var thumbnail: Thumbnail? = null) : BaseModel(), IImageProvider, IIdSettable, Comparable<Arrow>, IRecursiveModel, Parcelable {
 
     @Transient
     var images: List<ArrowImage>? = null
@@ -99,7 +99,7 @@ data class Arrow(@Column(name = "_id")
         return id
     }
 
-    override fun setId(id: Long?) {
+    override fun setId(id: Long) {
         this.id = id
     }
 
@@ -163,7 +163,7 @@ data class Arrow(@Column(name = "_id")
             get() = SQLite.select().from(Arrow::class.java).queryList()
 
         operator fun get(id: Long?): Arrow? {
-            return SQLite.select()
+            return if (id == null) null else SQLite.select()
                     .from(Arrow::class.java)
                     .where(Arrow_Table._id.eq(id))
                     .querySingle()

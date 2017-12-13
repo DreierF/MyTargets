@@ -97,17 +97,17 @@ public class BackupUtils {
         list.addAll(Stream.of(SQLite.select()
                 .from(BowImage.class)
                 .queryList())
-                .flatMap(bow -> Stream.of(bow.fileName))
+                .flatMap(bow -> Stream.of(bow.getFileName()))
                 .toList());
         list.addAll(Stream.of(SQLite.select()
                 .from(EndImage.class)
                 .queryList())
-                .flatMap(end -> Stream.of(end.fileName))
+                .flatMap(end -> Stream.of(end.getFileName()))
                 .toList());
         list.addAll(Stream.of(SQLite.select()
                 .from(ArrowImage.class)
                 .queryList())
-                .flatMap(arrow -> Stream.of(arrow.fileName))
+                .flatMap(arrow -> Stream.of(arrow.getFileName()))
                 .toList());
         return list.toArray(new String[list.size()]);
     }

@@ -43,11 +43,8 @@ import de.dreier.mytargets.shared.models.TimerSettings;
 import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.WindDirection;
 import de.dreier.mytargets.shared.models.WindSpeed;
-import de.dreier.mytargets.shared.models.db.ArrowImage;
 import de.dreier.mytargets.shared.models.db.Bow;
-import de.dreier.mytargets.shared.models.db.BowImage;
 import de.dreier.mytargets.shared.models.db.End;
-import de.dreier.mytargets.shared.models.db.EndImage;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.Shot;
@@ -68,12 +65,9 @@ import timber.log.Timber;
  * resources.
  */
 @ParcelClasses({
-        @ParcelClass(ArrowImage.class),
         @ParcelClass(Bow.class),
-        @ParcelClass(BowImage.class),
         @ParcelClass(Environment.class),
         @ParcelClass(End.class),
-        @ParcelClass(EndImage.class),
         @ParcelClass(EndRenderer.class),
         @ParcelClass(ImageList.class),
         @ParcelClass(Round.class),

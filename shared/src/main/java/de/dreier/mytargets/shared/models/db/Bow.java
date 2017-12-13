@@ -237,7 +237,7 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
                     .execute(databaseWrapper);
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
             for (BowImage image : images) {
-                image.bowId = id;
+                image.setBowId(id);
                 image.save(databaseWrapper);
             }
         }
