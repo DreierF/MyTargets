@@ -58,7 +58,7 @@ class ArrowSelector @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     companion object {
-        private val ARROW_REQUEST_CODE = 5
-        private val ARROW_ADD_REQUEST_CODE = 6
+        private const val ARROW_REQUEST_CODE = 5
+        const val ARROW_ADD_REQUEST_CODE = 6
     }
 }

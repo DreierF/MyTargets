@@ -30,13 +30,18 @@ import de.dreier.mytargets.base.activities.ItemSelectActivity
 import de.dreier.mytargets.base.fragments.EditFragmentBase
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase.Companion.ITEM_ID
 import de.dreier.mytargets.databinding.FragmentEditTrainingBinding
+import de.dreier.mytargets.features.bows.EditBowFragment
+import de.dreier.mytargets.features.distance.DistanceActivity
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.features.training.ETrainingType
 import de.dreier.mytargets.features.training.ETrainingType.FREE_TRAINING
 import de.dreier.mytargets.features.training.ETrainingType.TRAINING_WITH_STANDARD_ROUND
 import de.dreier.mytargets.features.training.RoundFragment
 import de.dreier.mytargets.features.training.details.TrainingFragment
+import de.dreier.mytargets.features.training.environment.EnvironmentActivity
 import de.dreier.mytargets.features.training.input.InputActivity
+import de.dreier.mytargets.features.training.standardround.StandardRoundActivity
+import de.dreier.mytargets.features.training.target.TargetActivity
 import de.dreier.mytargets.features.training.target.TargetListFragment
 import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.Target
@@ -49,6 +54,7 @@ import de.dreier.mytargets.shared.targets.models.WA3Ring3Spot
 import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.transitions.FabTransform
+import de.dreier.mytargets.views.selector.*
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -115,11 +121,10 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
         if (arguments != null && arguments.containsKey(ITEM_ID)) {
             trainingId = arguments.getLong(ITEM_ID)
         }
-        val i = activity!!.intent
-        if (i != null && CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION == i.action) {
-            trainingType = TRAINING_WITH_STANDARD_ROUND
+        trainingType = if (activity?.intent?.action == CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION) {
+            TRAINING_WITH_STANDARD_ROUND
         } else {
-            trainingType = FREE_TRAINING
+            FREE_TRAINING
         }
 
         ToolbarUtils.setSupportActionBar(this, binding.toolbar)
@@ -137,9 +142,32 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
 
             override fun onStopTrackingTouch(seekBar: DiscreteSeekBar) {}
         })
-        binding.target.setOnActivityResultContext(this)
-        binding.distance.setOnActivityResultContext(this)
-        binding.standardRound.setOnActivityResultContext(this)
+        binding.target.setOnClickListener { selectedItem, index ->
+            IntentWrapper(TargetActivity::class.java)
+                    .with(ItemSelectActivity.ITEM, selectedItem!!)
+                    .with(SelectorBase.INDEX, index)
+                    .with(TargetListFragment.FIXED_TYPE, TargetListFragment.EFixedType.NONE.name)
+                    .withContext(this)
+                    .forResult(TargetSelector.TARGET_REQUEST_CODE)
+                    .start()
+        }
+        binding.distance.setOnClickListener { selectedItem, index ->
+            IntentWrapper(DistanceActivity::class.java)
+                    .with(ItemSelectActivity.ITEM, selectedItem!!)
+                    .with(SelectorBase.INDEX, index)
+                    .withContext(this)
+                    .forResult(DistanceSelector.DISTANCE_REQUEST_CODE)
+                    .start()
+        }
+
+        binding.standardRound.setOnClickListener { selectedItem, index ->
+            IntentWrapper(StandardRoundActivity::class.java)
+                    .with(ItemSelectActivity.ITEM, selectedItem!!)
+                    .with(SelectorBase.INDEX, index)
+                    .withContext(this)
+                    .forResult(StandardRoundSelector.STANDARD_ROUND_REQUEST_CODE)
+                    .start()
+        }
         binding.standardRound.setOnUpdateListener { item -> roundTarget = item!!.loadRounds()[0].targetTemplate }
         binding.changeTargetFace.setOnClickListener {
             TargetListFragment.getIntent(roundTarget!!)
@@ -147,10 +175,23 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
                     .forResult(SR_TARGET_REQUEST_CODE)
                     .start()
         }
-        binding.arrow.setOnActivityResultContext(this)
-        binding.bow.setOnActivityResultContext(this)
+        binding.arrow.setOnAddClickListener {
+            navigationController.navigateToCreateArrow()
+                    .forResult(ArrowSelector.ARROW_ADD_REQUEST_CODE)
+                    .start()
+        }
+        binding.bow.setOnAddClickListener {
+            EditBowFragment.createIntent(EBowType.RECURVE_BOW)
+                    .forResult(BowSelector.BOW_ADD_REQUEST_CODE)
+        }
         binding.bow.setOnUpdateListener { this.setScoringStyleForCompoundBow(it) }
-        binding.environment.setOnActivityResultContext(this)
+        binding.environment.setOnClickListener { selectedItem, index ->
+            IntentWrapper(EnvironmentActivity::class.java)
+                    .with(ItemSelectActivity.ITEM, selectedItem!!)
+                    .with(SelectorBase.INDEX, index)
+                    .forResult(EnvironmentSelector.ENVIRONMENT_REQUEST_CODE)
+                    .start()
+        }
         binding.trainingDate.setOnClickListener { onDateClick() }
 
         if (trainingId == null) {

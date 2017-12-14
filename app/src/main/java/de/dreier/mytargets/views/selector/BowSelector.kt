@@ -19,23 +19,14 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.AttributeSet
-
 import de.dreier.mytargets.features.bows.BowListActivity
-import de.dreier.mytargets.features.bows.EditBowFragment
-import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.db.Bow
-import de.dreier.mytargets.utils.IntentWrapper
 
 class BowSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ImageSelectorBase<Bow>(context, attrs) {
 
     init {
         defaultActivity = BowListActivity::class.java
         requestCode = BOW_REQUEST_CODE
-    }
-
-    override fun getAddIntent(): IntentWrapper {
-        return EditBowFragment.createIntent(EBowType.RECURVE_BOW)
-                .forResult(BOW_ADD_REQUEST_CODE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -57,7 +48,7 @@ class BowSelector @JvmOverloads constructor(context: Context, attrs: AttributeSe
     }
 
     companion object {
-        private val BOW_REQUEST_CODE = 7
-        private val BOW_ADD_REQUEST_CODE = 8
+        private const val BOW_REQUEST_CODE = 7
+        const val BOW_ADD_REQUEST_CODE = 8
     }
 }
