@@ -66,6 +66,7 @@ import de.dreier.mytargets.base.fragments.FragmentBase;
 import de.dreier.mytargets.databinding.FragmentStatisticsBinding;
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
 import de.dreier.mytargets.features.settings.SettingsManager;
+import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.SelectableZone;
@@ -74,6 +75,7 @@ import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
 import de.dreier.mytargets.shared.utils.Color;
 import de.dreier.mytargets.shared.utils.LongUtils;
 import de.dreier.mytargets.shared.utils.SharedUtils;
@@ -205,8 +207,14 @@ public class StatisticsFragment extends FragmentBase {
         }
         ArrowStatistic stats = new ArrowStatistic(target, exactShots);
         stats.arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
-        binding.dispersionView.setShots(stats, SettingsManager.getAggregationStrategy());
-        binding.dispersionView.setEnabled(false);
+
+        EAggregationStrategy strategy = SettingsManager.getStatisticsDispersionPatternAggregationStrategy();
+        TargetImpactAggregationDrawable drawable = stats.target.getImpactAggregationDrawable();
+        drawable.setAggregationStrategy(strategy);
+        drawable.setShots(stats.shots);
+        drawable.setArrowDiameter(stats.arrowDiameter, SettingsManager.getInputArrowDiameterScale());
+        binding.dispersionView.setImageDrawable(drawable);
+
         binding.dispersionViewOverlay.setOnClickListener(view -> {
             ArrowStatistic statistics = new ArrowStatistic(target, exactShots);
             DispersionPatternActivity.getIntent(statistics)

@@ -41,17 +41,13 @@ public class CanvasWrapper {
 
     public void setCanvas(@NonNull Canvas canvas) {
         this.canvas = canvas;
-        canvas.save();
     }
 
     public void releaseCanvas() {
-        canvas.restore();
         canvas = null;
     }
 
     public void setMatrix(Matrix matrix) {
-        canvas.restore();
-        canvas.save();
         this.matrix = matrix;
 
         // get the scale for transforming the Paint

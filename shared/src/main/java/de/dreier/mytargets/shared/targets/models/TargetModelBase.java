@@ -17,7 +17,6 @@ package de.dreier.mytargets.shared.targets.models;
 
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import com.annimon.stream.Collectors;
@@ -95,7 +94,7 @@ public class TargetModelBase implements IIdProvider {
         return diameters;
     }
 
-    @Nullable
+    @NonNull
     public Dimension getRealSize(@NonNull Dimension diameter) {
         return new Dimension(realSizeFactor * diameter.value, diameter.unit);
     }

@@ -76,6 +76,15 @@ public class TargetDrawable extends Drawable {
         this.matrix = matrix;
     }
 
+    @Override
+    public int getIntrinsicHeight() {
+        return 2000;
+    }
+
+    @Override
+    public int getIntrinsicWidth() {
+        return 2000;
+    }
 
     @Override
     protected void onBoundsChange(@NonNull Rect bounds) {

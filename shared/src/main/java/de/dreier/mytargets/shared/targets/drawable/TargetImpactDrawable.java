@@ -19,6 +19,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextPaint;
 
 import com.annimon.stream.Collectors;
@@ -106,7 +107,7 @@ public class TargetImpactDrawable extends TargetDrawable {
         canvas.drawCircle(shot.x, shot.y, arrowRadius, paintFill);
     }
 
-    public void setFocusedArrow(@NonNull Shot shot) {
+    public void setFocusedArrow(@Nullable Shot shot) {
         focusedArrow = shot;
         if (focusedArrow == null) {
             setMid(0, 0);

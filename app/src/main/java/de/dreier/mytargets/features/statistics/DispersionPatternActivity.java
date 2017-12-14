@@ -39,6 +39,8 @@ import de.dreier.mytargets.features.scoreboard.EFileType;
 import de.dreier.mytargets.features.settings.ESettingsScreens;
 import de.dreier.mytargets.features.settings.SettingsActivity;
 import de.dreier.mytargets.features.settings.SettingsManager;
+import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
+import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
@@ -77,8 +79,16 @@ public class DispersionPatternActivity extends ChildActivityBase {
     @Override
     protected void onResume() {
         super.onResume();
-        binding.dispersionView.setShots(statistic,
-                SettingsManager.getStatisticsDispersionPatternAggregationStrategy());
+
+        EAggregationStrategy strategy = SettingsManager
+                .getStatisticsDispersionPatternAggregationStrategy();
+        TargetImpactAggregationDrawable drawable = statistic.target.getImpactAggregationDrawable();
+        drawable.setAggregationStrategy(strategy);
+        drawable.setShots(statistic.shots);
+        drawable.setArrowDiameter(statistic.arrowDiameter, SettingsManager
+                .getInputArrowDiameterScale());
+
+        binding.dispersionView.setImageDrawable(drawable);
     }
 
     @Override
