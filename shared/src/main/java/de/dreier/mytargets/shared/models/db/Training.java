@@ -153,11 +153,11 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     }
 
     public void setEnvironment(@NonNull Environment env) {
-        indoor = env.indoor;
-        weather = env.weather;
-        windDirection = env.windDirection;
-        windSpeed = env.windSpeed;
-        location = env.location;
+        indoor = env.getIndoor();
+        weather = env.getWeather();
+        windDirection = env.getWindDirection();
+        windSpeed = env.getWindSpeed();
+        location = env.getLocation();
     }
 
     @OneToMany(methods = {}, variableName = "rounds")

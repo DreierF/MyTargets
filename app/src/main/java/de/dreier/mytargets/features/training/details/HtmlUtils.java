@@ -42,11 +42,11 @@ public class HtmlUtils {
         if (training.indoor) {
             info.addLine(R.string.environment, context.getString(R.string.indoor));
         } else {
-            info.addLine(R.string.weather, training.getEnvironment().weather.getName());
+            info.addLine(R.string.weather, training.getEnvironment().getWeather().getName());
             info.addLine(R.string.wind,
                     training.getEnvironment().getWindSpeed(context));
-            if (!TextUtils.isEmpty(training.getEnvironment().location)) {
-                info.addLine(R.string.location, training.getEnvironment().location);
+            if (!TextUtils.isEmpty(training.getEnvironment().getLocation())) {
+                info.addLine(R.string.location, training.getEnvironment().getLocation());
             }
         }
 

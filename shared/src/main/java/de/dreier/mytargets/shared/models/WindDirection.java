@@ -28,7 +28,7 @@ import de.dreier.mytargets.shared.R;
 public class WindDirection implements IIdProvider, IImageProvider, Comparable<WindDirection> {
 
     public long id;
-    public String name;
+    private String name;
     public int drawable;
 
     @ParcelConstructor

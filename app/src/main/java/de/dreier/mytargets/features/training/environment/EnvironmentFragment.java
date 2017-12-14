@@ -77,10 +77,10 @@ public class EnvironmentFragment extends FragmentBase {
             assert i != null;
             environment = Parcels.unwrap(i.getParcelable(ITEM));
         }
-        setWeather(environment.weather);
-        binding.windSpeed.setItemId(environment.windSpeed);
-        binding.windDirection.setItemId(environment.windDirection);
-        binding.location.setText(environment.location);
+        setWeather(environment.getWeather());
+        binding.windSpeed.setItemId(environment.getWindSpeed());
+        binding.windDirection.setItemId(environment.getWindDirection());
+        binding.location.setText(environment.getLocation());
 
         binding.windDirection.setOnActivityResultContext(this);
         binding.windSpeed.setOnActivityResultContext(this);
@@ -93,7 +93,7 @@ public class EnvironmentFragment extends FragmentBase {
     }
 
     private void setWeather(EWeather weather) {
-        environment.weather = weather;
+        environment.setWeather(weather);
         binding.sunny.setImageResource(EWeather.SUNNY.getDrawable(weather));
         binding.partlyCloudy.setImageResource(EWeather.PARTLY_CLOUDY.getDrawable(weather));
         binding.cloudy.setImageResource(EWeather.CLOUDY.getDrawable(weather));
@@ -107,8 +107,8 @@ public class EnvironmentFragment extends FragmentBase {
         MenuItem item = menu.findItem(R.id.action_switch);
         switchView = item.getActionView().findViewById(R.id.action_switch_control);
         switchView.setOnCheckedChangeListener((compoundButton, checked) -> setOutdoor(checked));
-        setOutdoor(!environment.indoor);
-        switchView.setChecked(!environment.indoor);
+        setOutdoor(!environment.getIndoor());
+        switchView.setChecked(!environment.getIndoor());
     }
 
     protected void setOutdoor(boolean checked) {
@@ -137,17 +137,17 @@ public class EnvironmentFragment extends FragmentBase {
         Environment e = saveItem();
         listener.onItemSelected(Parcels.wrap(e));
         finish();
-        SettingsManager.INSTANCE.setIndoor(e.indoor);
+        SettingsManager.INSTANCE.setIndoor(e.getIndoor());
     }
 
     @NonNull
     public Environment saveItem() {
         Environment e = new Environment();
-        e.indoor = !switchView.isChecked();
-        e.weather = environment.weather;
-        e.windSpeed = (int) (long) binding.windSpeed.getSelectedItem().getId();
-        e.windDirection = (int) (long) binding.windDirection.getSelectedItem().getId();
-        e.location = binding.location.getText().toString();
+        e.setIndoor(!switchView.isChecked());
+        e.setWeather(environment.getWeather());
+        e.setWindSpeed((int) (long) binding.windSpeed.getSelectedItem().getId());
+        e.setWindDirection((int) (long) binding.windDirection.getSelectedItem().getId());
+        e.setLocation(binding.location.getText().toString());
         return e;
     }
 
