@@ -102,7 +102,7 @@ public class EditBowListFragment extends EditableListFragment<Bow> {
     @NonNull
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
-        List<Bow> bows = Bow.getAll();
+        List<Bow> bows = Bow.Companion.getAll();
         return () -> {
             adapter.setList(bows);
             binding.emptyState.getRoot().setVisibility(bows.isEmpty() ? View.VISIBLE : View.GONE);

@@ -63,10 +63,10 @@ public class BowSelector extends ImageSelectorBase<Bow> {
     public void setItemId(@Nullable Long bow) {
         Bow item = null;
         if (bow != null) {
-            item = Bow.get(bow);
+            item = Bow.Companion.get(bow);
         }
         if (item == null) {
-            List<Bow> all = Bow.getAll();
+            List<Bow> all = Bow.Companion.getAll();
             if (all.size() > 0) {
                 item = all.get(0);
             }

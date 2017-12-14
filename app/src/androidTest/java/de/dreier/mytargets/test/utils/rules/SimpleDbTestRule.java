@@ -147,7 +147,7 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         training.windSpeed = 1;
         training.windDirection = 0;
         training.standardRoundId = standardRound.getId();
-        training.bowId = bow.id;
+        training.bowId = bow.getId();
         training.arrowId = null;
         training.arrowNumbering = false;
         training.save();

@@ -107,7 +107,7 @@ public final class MigrationTest extends InstrumentedTestBase {
         assertTraining1(trainings.get(0));
         assertTraining2(trainings.get(1));
 
-        final List<Bow> bows = Bow.getAll();
+        final List<Bow> bows = Bow.Companion.getAll();
         Truth.assertThat(bows.get(0).getImages().get(0).getFileName())
                 .isEqualTo("img175420839671886584-0f61-43a6-bc1e-dbcd8526056c794370927.jpg");
     }

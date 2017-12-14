@@ -32,7 +32,7 @@ public class BowListFragment extends SelectPureListItemFragmentBase<Bow> {
     @NonNull
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
-        List<Bow> bows = Bow.getAll();
+        List<Bow> bows = Bow.Companion.getAll();
         return () -> {
             adapter.setList(bows);
             Bow bow = Parcels.unwrap(getArguments().getParcelable(ITEM));
