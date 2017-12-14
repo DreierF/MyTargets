@@ -47,9 +47,8 @@ data class Dimension(val value: Float, val unit: Unit?) : IIdProvider, Comparabl
         return Integer.toString(value.toInt()) + unit.toString()
     }
 
-    override fun getId(): Long {
-        return hashCode().toLong()
-    }
+    override val id: Long?
+        get() = hashCode().toLong()
 
     fun convertTo(unit: Unit): Dimension {
         if (this.unit == null) {

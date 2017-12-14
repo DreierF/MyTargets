@@ -104,7 +104,7 @@ public class RoundTemplate extends BaseModel implements IIdSettable {
     }
 
     public void setTargetTemplate(@NonNull Target targetTemplate) {
-        targetId = targetTemplate.id;
+        targetId = (int)(long)targetTemplate.getId();
         targetScoringStyle = targetTemplate.scoringStyle;
         targetDiameter = targetTemplate.diameter;
     }

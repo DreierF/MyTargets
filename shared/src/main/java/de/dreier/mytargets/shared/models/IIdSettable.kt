@@ -13,10 +13,10 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models
 
-import java.io.Serializable;
+import java.io.Serializable
 
-public interface IIdSettable extends IIdProvider, Serializable {
-    void setId(Long id);
+interface IIdSettable : IIdProvider, Serializable {
+    override var id: Long?
 }

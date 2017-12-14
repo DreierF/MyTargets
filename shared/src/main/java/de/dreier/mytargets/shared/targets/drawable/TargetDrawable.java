@@ -31,6 +31,7 @@ import java.util.List;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.targets.models.TargetModelBase;
 import de.dreier.mytargets.shared.targets.zone.ZoneBase;
+import de.dreier.mytargets.shared.utils.SharedUtils;
 
 public class TargetDrawable extends Drawable {
 
@@ -164,7 +165,7 @@ public class TargetDrawable extends Drawable {
     public boolean equals(Object o) {
         if (o instanceof TargetDrawable) {
             TargetDrawable t = (TargetDrawable) o;
-            return t.target.id == target.id;
+            return SharedUtils.equals(t.target.getId(), target.getId());
         }
         return false;
     }

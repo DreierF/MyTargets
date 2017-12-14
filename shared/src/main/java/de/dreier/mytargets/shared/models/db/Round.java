@@ -165,7 +165,7 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round>, 
     }
 
     public void setTarget(@NonNull Target targetTemplate) {
-        targetId = targetTemplate.id;
+        targetId = (int)(long)targetTemplate.getId();
         targetScoringStyle = targetTemplate.scoringStyle;
         targetDiameter = targetTemplate.diameter;
     }

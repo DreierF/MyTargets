@@ -244,7 +244,7 @@ public class Migration9 extends BaseMigration {
         values.put(RT_UNIT, Dimension.Unit.Companion.toStringHandleNull(item.distance.getUnit()));
         values.put(RT_PASSES, item.endCount);
         values.put(RT_ARROWS_PER_PASSE, item.shotsPerEnd);
-        values.put(RT_TARGET, item.getTargetTemplate().id);
+        values.put(RT_TARGET, (int) (long) item.getTargetTemplate().getId());
         values.put(RT_TARGET_SIZE, item.getTargetTemplate().diameter.getValue());
         values.put(RT_TARGET_SIZE_UNIT, Dimension.Unit.Companion
                 .toStringHandleNull(item.getTargetTemplate().diameter.getUnit()));
