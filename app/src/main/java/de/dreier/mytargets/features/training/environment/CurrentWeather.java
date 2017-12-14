@@ -48,14 +48,14 @@ public class CurrentWeather {
 
     @NonNull
     public Environment toEnvironment() {
-        Environment e = new Environment();
         int code = Integer.parseInt(weather.get(0).icon.substring(0, 2));
-        e.indoor = SettingsManager.INSTANCE.getIndoor();
-        e.weather = imageCodeToWeather(code);
-        e.windDirection = 0;
-        e.location = cityName;
-        e.windDirection = 0;
-        e.windSpeed = kmhToBeaufort(mpsToKmh(wind.speed));
+        Environment e = new Environment();
+        e.setIndoor(SettingsManager.INSTANCE.getIndoor());
+        e.setWeather(imageCodeToWeather(code));
+        e.setWindDirection(0);
+        e.setLocation(cityName);
+        e.setWindDirection(0);
+        e.setWindSpeed(kmhToBeaufort(mpsToKmh(wind.speed)));
         return e;
     }
 

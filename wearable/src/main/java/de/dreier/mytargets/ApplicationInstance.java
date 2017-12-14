@@ -19,7 +19,6 @@ import org.parceler.ParcelClass;
 import org.parceler.ParcelClasses;
 
 import de.dreier.mytargets.shared.SharedApplicationInstance;
-import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.TimerSettings;
@@ -43,7 +42,6 @@ import de.dreier.mytargets.utils.WearWearableClient;
  * resources.
  */
 @ParcelClasses({
-        @ParcelClass(Environment.class),
         @ParcelClass(End.class),
         @ParcelClass(EndRenderer.class),
         @ParcelClass(ImageList.class),

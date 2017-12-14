@@ -88,7 +88,7 @@ public class MobileWearableListener extends WearableListenerService {
             Training training = new Training();
             training.title = getString(R.string.training);
             training.date = LocalDate.now();
-            training.setEnvironment(Environment.getDefault(SettingsManager.INSTANCE.getIndoor()));
+            training.setEnvironment(Environment.Companion.getDefault(SettingsManager.INSTANCE.getIndoor()));
             training.bowId = SettingsManager.INSTANCE.getBow();
             training.arrowId = SettingsManager.INSTANCE.getArrow();
             training.arrowNumbering = false;

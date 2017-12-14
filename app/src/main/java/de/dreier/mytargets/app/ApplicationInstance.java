@@ -36,7 +36,6 @@ import de.dreier.mytargets.BuildConfig;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.SharedApplicationInstance;
-import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.TimerSettings;
@@ -64,7 +63,6 @@ import timber.log.Timber;
  * resources.
  */
 @ParcelClasses({
-        @ParcelClass(Environment.class),
         @ParcelClass(End.class),
         @ParcelClass(EndRenderer.class),
         @ParcelClass(ImageList.class),
