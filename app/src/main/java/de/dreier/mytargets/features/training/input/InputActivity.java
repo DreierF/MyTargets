@@ -439,14 +439,14 @@ public class InputActivity extends ChildActivityBase
     }
 
     private void updateNextButton() {
-        final boolean endFinished = data != null && !data.getCurrentEnd().isEmpty();
-        boolean isLastEnd = data != null &&
+        final boolean dataLoaded = data != null;
+        boolean isLastEnd = dataLoaded &&
                 data.getCurrentRound().maxEndCount != null &&
                 data.endIndex + 1 == data.getCurrentRound().maxEndCount;
-        final boolean hasOneMoreRound = data != null &&
+        final boolean hasOneMoreRound = dataLoaded &&
                 data.roundIndex + 1 < data.training.getRounds().size();
         boolean showNextRound = isLastEnd && hasOneMoreRound;
-        final boolean isEnabled = endFinished && (!isLastEnd || hasOneMoreRound);
+        final boolean isEnabled = dataLoaded && (!isLastEnd || hasOneMoreRound);
         final int color;
         if (showNextRound) {
             final Round round = data.training.getRounds().get(data.roundIndex + 1);
