@@ -39,7 +39,7 @@ import kotlinx.android.parcel.Parcelize
 @Table(database = AppDatabase::class)
 data class Arrow(@Column(name = "_id")
                  @PrimaryKey(autoincrement = true)
-                 internal var id: Long = 0,
+                 override var id: Long? = 0,
 
                  @Column
                  override var name: String = "",
@@ -87,20 +87,12 @@ data class Arrow(@Column(name = "_id")
     @OneToMany(methods = [], variableName = "images")
     fun loadImages(): List<ArrowImage>? {
         if (images == null) {
-            images = SQLite.select()
+            images = if (id == null) mutableListOf() else SQLite.select()
                     .from(ArrowImage::class.java)
-                    .where(ArrowImage_Table.arrow.eq(id))
+                    .where(ArrowImage_Table.arrow.eq(id!!))
                     .queryList()
         }
         return images
-    }
-
-    override fun getId(): Long? {
-        return id
-    }
-
-    override fun setId(id: Long) {
-        this.id = id
     }
 
     override fun getDrawable(context: Context): Drawable {
@@ -115,7 +107,7 @@ data class Arrow(@Column(name = "_id")
         super.save(databaseWrapper)
         if (images != null) {
             SQLite.delete(ArrowImage::class.java)
-                    .where(ArrowImage_Table.arrow.eq(id))
+                    .where(ArrowImage_Table.arrow.eq(id!!))
                     .execute(databaseWrapper)
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
             for (image in images!!) {

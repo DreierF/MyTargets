@@ -137,7 +137,7 @@ object SettingsManager {
             return Target(targetId, scoringStyle, diameter)
         }
         set(value) = lastUsed.edit()
-                .putInt(KEY_TARGET, value.getId().toInt())
+                .putInt(KEY_TARGET, value.id.toInt())
                 .putInt(KEY_SCORING_STYLE, value.scoringStyle)
                 .putInt(KEY_TARGET_DIAMETER_VALUE, value.diameter.value.toInt())
                 .putString(KEY_TARGET_DIAMETER_UNIT, value.diameter.unit?.toString())

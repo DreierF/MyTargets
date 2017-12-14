@@ -12,12 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models
 
-import android.support.annotation.Nullable;
-
-public interface IIdProvider {
-    @Nullable
-    Long getId();
+interface IIdProvider {
+    val id: Long?
 }
-

@@ -36,7 +36,7 @@ import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle;
  */
 @Parcel
 public class Target implements IIdProvider, IImageProvider, IDetailProvider, Comparable<Target> {
-    public int id;
+     int id;
     public int scoringStyle;
     public Dimension diameter;
     private transient TargetModelBase model;

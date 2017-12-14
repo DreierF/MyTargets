@@ -107,16 +107,16 @@ public class TargetFactory {
     @NonNull
     public static List<TargetModelBase> getList(@NonNull Target target) {
         List<TargetModelBase> out = new ArrayList<>();
-        if (target.id < 7) {
+        if (target.getId() < 7) {
             int til = target.diameter.getValue() <= 60 ? 7 : 4;
             for (int i = 0; i < til; i++) {
                 out.add(list.get(i));
             }
-        } else if (target.id == 10 || target.id == 11) {
+        } else if (target.getId() == 10 || target.getId() == 11) {
             out.add(new NFAAIndoor());
             out.add(new NFAAIndoor5Spot());
         } else {
-            out.add(list.get(idIndexLookup[target.id]));
+            out.add(list.get(idIndexLookup[(int)(long)target.getId()]));
         }
         return out;
     }
@@ -126,6 +126,6 @@ public class TargetFactory {
     }
 
     public static Comparator<Target> getComparator() {
-        return (t1, t2) -> idIndexLookup[t1.id].compareTo(idIndexLookup[t2.id]);
+        return (t1, t2) -> idIndexLookup[(int)(long)t1.getId()].compareTo(idIndexLookup[(int)(long)t2.getId()]);
     }
 }

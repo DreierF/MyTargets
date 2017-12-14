@@ -13,10 +13,10 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models
 
-import android.content.Context;
+import android.content.Context
 
-public interface IDetailProvider {
-    String getDetails(Context context);
+interface IDetailProvider {
+    fun getDetails(context: Context): String
 }

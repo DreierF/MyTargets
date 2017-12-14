@@ -187,7 +187,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
     protected void setScoringStyleForCompoundBow(@Nullable Bow bow) {
         final Target target = binding.target.getSelectedItem();
-        if (bow != null && target != null && target.id <= WA3Ring3Spot.ID) {
+        if (bow != null && target != null && target.getId() <= WA3Ring3Spot.ID) {
             if (bow.type == EBowType.COMPOUND_BOW && target.scoringStyle == 0) {
                 target.scoringStyle = 2;
                 binding.target.setItem(target);

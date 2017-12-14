@@ -49,7 +49,7 @@ import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter;
 @Table(database = AppDatabase.class)
 public class Bow extends BaseModel implements IImageProvider, IIdSettable, Comparable<Bow>, IRecursiveModel {
 
-    @Nullable
+    @NonNull
     @Column(name = "_id")
     @PrimaryKey(autoincrement = true)
     public Long id = -1L;
@@ -186,12 +186,12 @@ public class Bow extends BaseModel implements IImageProvider, IIdSettable, Compa
         return images;
     }
 
-    @Nullable
     public Long getId() {
         return id;
     }
 
-    public void setId(@Nullable Long id) {
+    @Override
+    public void setId(Long id) {
         this.id = id;
     }
 
