@@ -42,7 +42,7 @@ import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.ToolbarUtils;
-import icepick.State;
+import com.evernote.android.state.State;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;

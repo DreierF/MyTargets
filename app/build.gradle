@@ -119,8 +119,8 @@ dependencies {
 
     implementation "com.squareup.picasso:picasso:$libraryVersion.picasso"
 
-    implementation "frankiesardo:icepick:$libraryVersion.icepick"
-    annotationProcessor "frankiesardo:icepick-processor:$libraryVersion.icepick"
+    implementation "com.evernote:android-state:$libraryVersion.androidState"
+    annotationProcessor "com.evernote:android-state-processor:$libraryVersion.androidState"
 
     implementation "com.github.hotchemi:permissionsdispatcher:$libraryVersion.permissionsdispatcher"
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$libraryVersion.permissionsdispatcher"

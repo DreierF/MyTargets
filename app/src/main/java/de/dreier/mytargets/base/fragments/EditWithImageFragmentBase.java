@@ -46,7 +46,7 @@ import de.dreier.mytargets.shared.models.db.Image;
 import de.dreier.mytargets.shared.utils.FileUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
-import icepick.State;
+import com.evernote.android.state.State;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 import pl.aprilapps.easyphotopicker.DefaultCallback;

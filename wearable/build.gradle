@@ -75,8 +75,8 @@ dependencies {
     implementation "org.parceler:parceler-api:$libraryVersion.parceler"
     annotationProcessor "org.parceler:parceler:$libraryVersion.parceler"
 
-    implementation "frankiesardo:icepick:$libraryVersion.icepick"
-    annotationProcessor "frankiesardo:icepick-processor:$libraryVersion.icepick"
+    implementation "com.evernote:android-state:$libraryVersion.androidState"
+    annotationProcessor "com.evernote:android-state-processor:$libraryVersion.androidState"
 
     implementation project(':shared')
 }

@@ -38,6 +38,8 @@ import android.view.MenuItem;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
+import com.evernote.android.state.State;
+import com.evernote.android.state.StateSaver;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,8 +63,6 @@ import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.SharedUtils;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
-import icepick.Icepick;
-import icepick.State;
 
 import static android.support.v4.view.GravityCompat.END;
 
@@ -104,7 +104,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         binding.progressBar.show();
 
         ToolbarUtils.showHomeAsUp(this);
-        Icepick.restoreInstanceState(this, savedInstanceState);
+        StateSaver.restoreInstanceState(this, savedInstanceState);
 
         getLoaderManager().initLoader(0, getIntent().getExtras(), this).forceLoad();
     }
@@ -308,7 +308,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
+        StateSaver.saveInstanceState(this, outState);
     }
 
     @Override

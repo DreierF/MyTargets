@@ -52,8 +52,8 @@ dependencies {
     implementation "com.github.Raizlabs.DBFlow:dbflow-core:$libraryVersion.dbFlow"
     implementation "com.github.Raizlabs.DBFlow:dbflow:$libraryVersion.dbFlow"
 
-    implementation "frankiesardo:icepick:$libraryVersion.icepick"
-    annotationProcessor "frankiesardo:icepick-processor:$libraryVersion.icepick"
+    implementation "com.evernote:android-state:$libraryVersion.androidState"
+    annotationProcessor "com.evernote:android-state-processor:$libraryVersion.androidState"
 
     api "com.google.android.gms:play-services-wearable:$libraryVersion.playService"
     api "com.jakewharton.timber:timber:$libraryVersion.timber"

@@ -48,7 +48,7 @@ import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import de.dreier.mytargets.views.selector.DistanceSelector;
 import de.dreier.mytargets.views.selector.SelectorBase;
 import de.dreier.mytargets.views.selector.TargetSelector;
-import icepick.State;
+import com.evernote.android.state.State;
 
 import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
 

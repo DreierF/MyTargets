@@ -27,9 +27,10 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 
+import com.evernote.android.state.StateSaver;
+
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.utils.Utils;
-import icepick.Icepick;
 
 /**
  * Generic fragment class used as base for most fragments.
@@ -44,13 +45,13 @@ public abstract class FragmentBase extends Fragment implements LoaderManager.Loa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Icepick.restoreInstanceState(this, savedInstanceState);
+        StateSaver.restoreInstanceState(this, savedInstanceState);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
+        StateSaver.saveInstanceState(this, outState);
     }
 
     protected void finish() {

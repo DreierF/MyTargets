@@ -34,15 +34,6 @@
 -keep class !android.support.v7.view.menu.*MenuBuilder*, android.support.v7.** { *; }
 -keep interface android.support.v7.** { *; }
 
-# Icepick excludes
--dontwarn icepick.**
--keep class icepick.** { *; }
--keep class **$$Icepick { *; }
--keepclasseswithmembernames class * {
-    @icepick.* <fields>;
-}
--keepnames class * { @icepick.State *;}
-
 # Parceler
 -keep class **$$Parcelable { *; }
 
@@ -69,18 +60,6 @@
 -keep class okhttp3.** { *; }
 -keep interface okhttp3.** { *; }
 -dontwarn okhttp3.**
-
-# Butterknife
--dontwarn butterknife.internal.**
--keep class butterknife.** { *; }
--keep class **$$ViewBinder { *; }
-
--keepclasseswithmembernames class * {
-    @butterknife.* <fields>;
-}
--keepclasseswithmembernames class * {
-    @butterknife.* <methods>;
-}
 
 -keep class com.google.android.gms.** { *; }
 -dontwarn com.google.android.gms.**

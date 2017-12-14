@@ -19,7 +19,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import de.dreier.mytargets.utils.multiselector.SingleSelector;
-import icepick.Bundler;
+import com.evernote.android.state.Bundler;
 
 public class SingleSelectorBundler implements Bundler<SingleSelector> {
     public void put(String key, @NonNull SingleSelector value, @NonNull Bundle bundle) {

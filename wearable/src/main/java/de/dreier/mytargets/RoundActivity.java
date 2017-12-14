@@ -32,6 +32,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.evernote.android.state.State;
+import com.evernote.android.state.StateSaver;
+
 import org.parceler.Parcels;
 
 import java.text.DateFormat;
@@ -47,8 +50,6 @@ import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.views.EndView;
 import de.dreier.mytargets.utils.WearSettingsManager;
 import de.dreier.mytargets.utils.WearWearableClient;
-import icepick.Icepick;
-import icepick.State;
 
 import static de.dreier.mytargets.shared.wearable.WearableClientBase.BROADCAST_TIMER_SETTINGS_FROM_REMOTE;
 import static de.dreier.mytargets.utils.WearWearableClient.BROADCAST_TRAINING_UPDATED;
@@ -89,7 +90,7 @@ public class RoundActivity extends WearableActivity {
 
         setAmbientEnabled();
 
-        Icepick.restoreInstanceState(this, savedInstanceState);
+        StateSaver.restoreInstanceState(this, savedInstanceState);
         if (savedInstanceState == null) {
             Intent intent = getIntent();
             if (intent != null && intent.getExtras() != null) {
@@ -116,7 +117,7 @@ public class RoundActivity extends WearableActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
+        StateSaver.saveInstanceState(this, outState);
     }
 
     @Override

@@ -19,7 +19,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import de.dreier.mytargets.utils.multiselector.MultiSelector;
-import icepick.Bundler;
+import com.evernote.android.state.Bundler;
 
 public class MultiSelectorBundler implements Bundler<MultiSelector> {
     public void put(String key, @NonNull MultiSelector value, @NonNull Bundle bundle) {

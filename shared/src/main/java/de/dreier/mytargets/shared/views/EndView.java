@@ -23,14 +23,15 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.evernote.android.state.State;
+import com.evernote.android.state.StateSaver;
+
 import java.util.List;
 
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
-import icepick.Icepick;
-import icepick.State;
 
 public class EndView extends View {
 
@@ -110,12 +111,12 @@ public class EndView extends View {
 
     @Override
     public Parcelable onSaveInstanceState() {
-        return Icepick.saveInstanceState(this, super.onSaveInstanceState());
+        return StateSaver.saveInstanceState(this, super.onSaveInstanceState());
     }
 
     @Override
     public void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
+        super.onRestoreInstanceState(StateSaver.restoreInstanceState(this, state));
     }
 
     public void setAmbientMode(boolean ambient) {

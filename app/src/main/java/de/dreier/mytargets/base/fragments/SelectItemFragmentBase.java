@@ -32,7 +32,7 @@ import de.dreier.mytargets.utils.SingleSelectorBundler;
 import de.dreier.mytargets.utils.multiselector.ItemBindingHolder;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import de.dreier.mytargets.utils.multiselector.SingleSelector;
-import icepick.State;
+import com.evernote.android.state.State;
 
 /**
  * Base class for handling single item selection

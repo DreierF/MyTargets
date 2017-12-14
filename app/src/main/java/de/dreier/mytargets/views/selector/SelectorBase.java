@@ -30,14 +30,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.evernote.android.state.State;
+import com.evernote.android.state.StateSaver;
+
 import org.parceler.Parcels;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.activities.ItemSelectActivity;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.IntentWrapper;
-import icepick.Icepick;
-import icepick.State;
 
 import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
 
@@ -148,12 +149,12 @@ public abstract class SelectorBase<T> extends LinearLayout {
 
     @Override
     public Parcelable onSaveInstanceState() {
-        return Icepick.saveInstanceState(this, super.onSaveInstanceState());
+        return StateSaver.saveInstanceState(this, super.onSaveInstanceState());
     }
 
     @Override
     public void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(Icepick.restoreInstanceState(this, state));
+        super.onRestoreInstanceState(StateSaver.restoreInstanceState(this, state));
     }
 
     public interface OnUpdateListener<T> {

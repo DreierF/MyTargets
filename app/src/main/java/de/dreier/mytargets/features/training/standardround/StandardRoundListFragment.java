@@ -51,7 +51,7 @@ import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
-import icepick.State;
+import com.evernote.android.state.State;
 
 import static android.app.Activity.RESULT_OK;
 import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;

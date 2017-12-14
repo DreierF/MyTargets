@@ -78,8 +78,8 @@ import de.dreier.mytargets.utils.Utils;
 import de.dreier.mytargets.utils.transitions.FabTransform;
 import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import de.dreier.mytargets.utils.transitions.TransitionAdapter;
-import icepick.Icepick;
-import icepick.State;
+import com.evernote.android.state.StateSaver;
+import com.evernote.android.state.State;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -162,7 +162,7 @@ public class InputActivity extends ChildActivityBase
 
         updateSummaryVisibility();
 
-        Icepick.restoreInstanceState(this, savedInstanceState);
+        StateSaver.restoreInstanceState(this, savedInstanceState);
         if (data == null) {
             getSupportLoaderManager().initLoader(0, getIntent().getExtras(), this).forceLoad();
         }
@@ -529,7 +529,7 @@ public class InputActivity extends ChildActivityBase
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
+        StateSaver.saveInstanceState(this, outState);
     }
 
     private static class UITaskAsyncTaskLoader extends AsyncTaskLoader<LoaderResult> {

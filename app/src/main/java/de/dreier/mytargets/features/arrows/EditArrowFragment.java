@@ -23,6 +23,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.evernote.android.state.State;
+
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.fragments.EditWithImageFragmentBase;
 import de.dreier.mytargets.databinding.FragmentEditArrowBinding;
@@ -32,7 +34,6 @@ import de.dreier.mytargets.shared.models.db.ArrowImage;
 import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
-import icepick.State;
 
 import static de.dreier.mytargets.shared.models.Dimension.Unit.INCH;
 import static de.dreier.mytargets.shared.models.Dimension.Unit.MILLIMETER;

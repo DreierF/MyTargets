@@ -18,16 +18,18 @@ package de.dreier.mytargets.shared.utils;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import com.evernote.android.state.Bundler;
+
 import org.parceler.Parcels;
 
-public class ParcelsBundler<T> implements icepick.Bundler<T> {
+public class ParcelsBundler<T> implements Bundler<T> {
     @Override
-    public void put(String s, T example, @NonNull Bundle bundle) {
+    public void put(@NonNull String s, @NonNull T example, @NonNull Bundle bundle) {
         bundle.putParcelable(s, Parcels.wrap(example));
     }
 
     @Override
-    public T get(String s, @NonNull Bundle bundle) {
+    public T get(@NonNull String s, @NonNull Bundle bundle) {
         return Parcels.unwrap(bundle.getParcelable(s));
     }
 }

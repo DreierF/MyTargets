@@ -29,6 +29,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.evernote.android.state.State;
+import com.evernote.android.state.StateSaver;
 
 import org.parceler.Parcels;
 
@@ -49,8 +51,6 @@ import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
-import icepick.Icepick;
-import icepick.State;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
@@ -92,7 +92,7 @@ public class GalleryActivity extends ChildActivityBase {
         if (savedInstanceState == null) {
             imageList = Parcels.unwrap(getIntent().getParcelableExtra(EXTRA_IMAGES));
         } else {
-            Icepick.restoreInstanceState(this, savedInstanceState);
+            StateSaver.restoreInstanceState(this, savedInstanceState);
         }
 
         setSupportActionBar(binding.toolbar);
@@ -213,7 +213,7 @@ public class GalleryActivity extends ChildActivityBase {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
+        StateSaver.saveInstanceState(this, outState);
     }
 
     @NeedsPermission(Manifest.permission.CAMERA)

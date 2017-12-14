@@ -33,7 +33,7 @@ import de.dreier.mytargets.utils.MultiSelectorBundler;
 import de.dreier.mytargets.utils.multiselector.MultiSelector;
 import de.dreier.mytargets.utils.multiselector.OnItemLongClickListener;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
-import icepick.State;
+import com.evernote.android.state.State;
 
 /**
  * @param <T> Model of the item which is managed within the fragment.

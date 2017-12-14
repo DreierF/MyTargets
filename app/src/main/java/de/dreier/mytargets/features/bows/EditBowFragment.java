@@ -50,7 +50,7 @@ import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.views.selector.SelectorBase;
 import de.dreier.mytargets.views.selector.SimpleDistanceSelector;
-import icepick.State;
+import com.evernote.android.state.State;
 
 public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
 
