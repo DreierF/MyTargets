@@ -39,6 +39,6 @@ class StandardRoundSelector @JvmOverloads constructor(context: Context, attrs: A
     }
 
     companion object {
-        private val STANDARD_ROUND_REQUEST_CODE = 10
+        const val STANDARD_ROUND_REQUEST_CODE = 10
     }
 }

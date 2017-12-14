@@ -21,19 +21,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
+import de.dreier.mytargets.base.activities.ItemSelectActivity
 import de.dreier.mytargets.base.fragments.EditFragmentBase
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase.Companion.ITEM_ID
 import de.dreier.mytargets.databinding.FragmentEditRoundBinding
+import de.dreier.mytargets.features.distance.DistanceActivity
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.features.training.EditRoundActivity
 import de.dreier.mytargets.features.training.RoundFragment
 import de.dreier.mytargets.features.training.input.InputActivity
+import de.dreier.mytargets.features.training.target.TargetActivity
 import de.dreier.mytargets.features.training.target.TargetListFragment
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.transitions.FabTransform
+import de.dreier.mytargets.views.selector.SelectorBase
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
 
 class EditRoundFragment : EditFragmentBase() {
@@ -65,8 +69,22 @@ class EditRoundFragment : EditFragmentBase() {
 
             override fun onStopTrackingTouch(seekBar: DiscreteSeekBar) {}
         })
-        binding.target.setOnActivityResultContext(this)
-        binding.distance.setOnActivityResultContext(this)
+        binding.target.setOnClickListener { selectedItem, index ->
+            val fixedType = if (roundId == null) TargetListFragment.EFixedType.NONE else TargetListFragment.EFixedType.TARGET
+            IntentWrapper(TargetActivity::class.java)
+                    .with(ItemSelectActivity.ITEM, selectedItem!!)
+                    .with(SelectorBase.INDEX, index)
+                    .with(TargetListFragment.FIXED_TYPE, fixedType.name)
+                    .withContext(this)
+                    .start()
+        }
+        binding.distance.setOnClickListener { selectedItem, index ->
+            IntentWrapper(DistanceActivity::class.java)
+                    .with(ItemSelectActivity.ITEM, selectedItem!!)
+                    .with(SelectorBase.INDEX, index)
+                    .withContext(this)
+                    .start()
+        }
 
         if (roundId == null) {
             ToolbarUtils.setTitle(this, R.string.new_round)

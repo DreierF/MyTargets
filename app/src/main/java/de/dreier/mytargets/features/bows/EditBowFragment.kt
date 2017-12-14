@@ -34,6 +34,7 @@ import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemHolder
 import de.dreier.mytargets.base.fragments.EditWithImageFragmentBase
 import de.dreier.mytargets.databinding.FragmentEditBowBinding
 import de.dreier.mytargets.databinding.ItemSightMarkBinding
+import de.dreier.mytargets.features.distance.DistanceActivity
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.db.Bow
@@ -41,6 +42,7 @@ import de.dreier.mytargets.shared.models.db.BowImage
 import de.dreier.mytargets.shared.models.db.SightMark
 import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.ToolbarUtils
+import de.dreier.mytargets.views.selector.DistanceSelector
 import de.dreier.mytargets.views.selector.SelectorBase
 import de.dreier.mytargets.views.selector.SimpleDistanceSelector
 
@@ -173,7 +175,14 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
 
         override fun onBind(item: SightMark, position: Int, fragment: Fragment, removeListener: View.OnClickListener) {
             this.item = item
-            binding.distance.setOnActivityResultContext(fragment)
+            binding.distance.setOnClickListener { selectedItem, index ->
+                IntentWrapper(DistanceActivity::class.java)
+                        .with(ItemSelectActivity.ITEM, selectedItem!!)
+                        .with(SelectorBase.INDEX, index)
+                        .withContext(activity!!)
+                        .forResult(DistanceSelector.DISTANCE_REQUEST_CODE)
+                        .start()
+            }
             binding.distance.setItemIndex(position)
             binding.distance.setItem(item.distance)
             binding.sightSetting.setText(item.value)

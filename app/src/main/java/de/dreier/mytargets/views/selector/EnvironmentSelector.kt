@@ -112,7 +112,7 @@ class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: Att
     }
 
     companion object {
-        private const val ENVIRONMENT_REQUEST_CODE = 9
+        const val ENVIRONMENT_REQUEST_CODE = 9
 
         private val isTestMode: Boolean
             get() {

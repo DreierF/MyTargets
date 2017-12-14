@@ -20,7 +20,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Parcelable
 import android.support.annotation.LayoutRes
-import android.support.v4.app.Fragment
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -37,7 +36,8 @@ typealias OnUpdateListener<T> = (T?) -> Unit
 
 abstract class SelectorBase<T : Parcelable>(
         context: Context, attrs: AttributeSet?,
-        @LayoutRes private val layout: Int) : LinearLayout(context, attrs) {
+        @LayoutRes private val layout: Int
+) : LinearLayout(context, attrs) {
 
     protected lateinit var view: View
     protected var requestCode: Int = 0
@@ -48,7 +48,10 @@ abstract class SelectorBase<T : Parcelable>(
     private var progress: View? = null
     private var updateListener: OnUpdateListener<T>? = null
     private var index = -1
-    private var addIntent: IntentWrapper? = null
+
+    private var addClickListener: OnClickListener? = null
+
+    private var clickListener: OnClickListener? = null
 
     open protected val defaultIntent: IntentWrapper
         get() {
@@ -63,7 +66,6 @@ abstract class SelectorBase<T : Parcelable>(
     override fun onFinishInflate() {
         super.onFinishInflate()
         addButton = getChildAt(0) as Button?
-        addButton?.setOnClickListener { addIntent!!.start() }
         val inflater = LayoutInflater.from(context)
         progress = inflater.inflate(R.layout.selector_item_process, this, false)
         view = inflater.inflate(layout, this, false)
@@ -84,10 +86,6 @@ abstract class SelectorBase<T : Parcelable>(
         this.index = index
     }
 
-    protected open fun getAddIntent(): IntentWrapper? {
-        return null
-    }
-
     protected abstract fun bindView(item: T)
 
     fun setItem(item: T?) {
@@ -100,17 +98,17 @@ abstract class SelectorBase<T : Parcelable>(
         this.updateListener = updateListener
     }
 
-    fun setOnActivityResultContext(fragment: Fragment) {
-        if (addButton != null) {
-            addIntent = getAddIntent()!!.withContext(fragment)
-        }
-        setOnClickListener {
-            defaultIntent
-                    .withContext(fragment)
-                    .forResult(requestCode)
-                    .start()
-        }
-    }
+//    fun setOnActivityResultContext(fragment: Fragment) {
+//        if (addButton != null) {
+//            addIntent = getAddIntent()!!.withContext(fragment)
+//        }
+//        setOnClickListener {
+//            defaultIntent
+//                    .withContext(fragment)
+//                    .forResult(requestCode)
+//                    .start()
+//        }
+//    }
 
     open fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == this.requestCode && data != null) {
@@ -131,5 +129,13 @@ abstract class SelectorBase<T : Parcelable>(
 
     companion object {
         const val INDEX = "index"
+    }
+
+    fun setOnAddClickListener(addClickListener: () -> Unit) {
+        addButton!!.setOnClickListener { addClickListener.invoke() }
+    }
+
+    fun setOnClickListener(clickListener: (T?, Int) -> Unit) {
+        view.setOnClickListener { clickListener.invoke(selectedItem, index) }
     }
 }
