@@ -187,7 +187,7 @@ public class MainActivityTest extends UITestBase {
         // openBow
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
                 .perform(click());
-        final Bow firstBow = Stream.of(Bow.getAll()).sorted().findFirstOrNull();
+        final Bow firstBow = Stream.of(Bow.Companion.getAll()).sorted().findFirstOrNull();
         intended(allOf(hasClass(EditBowActivity.class),
                 hasExtra(EditBowFragment.BOW_ID, firstBow.getId())));
 

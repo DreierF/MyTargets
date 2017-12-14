@@ -30,6 +30,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.evernote.android.state.State;
+
 import org.parceler.Parcels;
 
 import java.util.List;
@@ -50,7 +52,6 @@ import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.views.selector.SelectorBase;
 import de.dreier.mytargets.views.selector.SimpleDistanceSelector;
-import com.evernote.android.state.State;
 
 public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
 
@@ -95,17 +96,17 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
             Bundle bundle = getArguments();
             if (bundle != null && bundle.containsKey(BOW_ID)) {
                 // Load data from database
-                bow = Bow.get(bundle.getLong(BOW_ID));
+                bow = Bow.Companion.get(bundle.getLong(BOW_ID));
             } else {
                 // Set to default values
                 bow = new Bow();
-                bow.name = getString(R.string.my_bow);
-                bow.type = bowType;
+                bow.setName(getString(R.string.my_bow));
+                bow.setType(bowType);
                 bow.getSightMarks().add(new SightMark());
             }
             setImageFiles(bow.getImages());
         }
-        ToolbarUtils.setTitle(this, bow.name);
+        ToolbarUtils.setTitle(this, bow.getName());
         contentBinding.setBow(bow);
 
         loadImage(imageFile);
@@ -156,28 +157,28 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
 
     @Nullable
     private Bow buildBow() {
-        bow.name = contentBinding.name.getText().toString();
-        bow.brand = contentBinding.brand.getText().toString();
-        bow.size = contentBinding.size.getText().toString();
-        bow.braceHeight = contentBinding.braceHeight.getText().toString();
-        bow.tiller = contentBinding.tiller.getText().toString();
-        bow.limbs = contentBinding.limbs.getText().toString();
-        bow.sight = contentBinding.sight.getText().toString();
-        bow.drawWeight = contentBinding.drawWeight.getText().toString();
-        bow.stabilizer = contentBinding.stabilizer.getText().toString();
-        bow.clicker = contentBinding.clicker.getText().toString();
-        bow.description = contentBinding.description.getText().toString();
-        bow.button = contentBinding.button.getText().toString();
-        bow.string = contentBinding.string.getText().toString();
-        bow.nockingPoint = contentBinding.nockingPoint.getText().toString();
-        bow.letoffWeight = contentBinding.letoffWeight.getText().toString();
-        bow.arrowRest = contentBinding.rest.getText().toString();
-        bow.restHorizontalPosition = contentBinding.restHorizontalPosition.getText().toString();
-        bow.restVerticalPosition = contentBinding.restVerticalPosition.getText().toString();
-        bow.restStiffness = contentBinding.restStiffness.getText().toString();
-        bow.camSetting = contentBinding.cam.getText().toString();
-        bow.scopeMagnification = contentBinding.scopeMagnification.getText().toString();
-        bow.images = getImageFiles();
+        bow.setName(contentBinding.name.getText().toString());
+        bow.setBrand(contentBinding.brand.getText().toString());
+        bow.setSize(contentBinding.size.getText().toString());
+        bow.setBraceHeight(contentBinding.braceHeight.getText().toString());
+        bow.setTiller(contentBinding.tiller.getText().toString());
+        bow.setLimbs(contentBinding.limbs.getText().toString());
+        bow.setSight(contentBinding.sight.getText().toString());
+        bow.setDrawWeight(contentBinding.drawWeight.getText().toString());
+        bow.setStabilizer(contentBinding.stabilizer.getText().toString());
+        bow.setClicker(contentBinding.clicker.getText().toString());
+        bow.setDescription(contentBinding.description.getText().toString());
+        bow.setButton(contentBinding.button.getText().toString());
+        bow.setString(contentBinding.string.getText().toString());
+        bow.setNockingPoint(contentBinding.nockingPoint.getText().toString());
+        bow.setLetoffWeight(contentBinding.letoffWeight.getText().toString());
+        bow.setArrowRest(contentBinding.rest.getText().toString());
+        bow.setRestHorizontalPosition(contentBinding.restHorizontalPosition.getText().toString());
+        bow.setRestVerticalPosition(contentBinding.restVerticalPosition.getText().toString());
+        bow.setRestStiffness(contentBinding.restStiffness.getText().toString());
+        bow.setCamSetting(contentBinding.cam.getText().toString());
+        bow.setScopeMagnification(contentBinding.scopeMagnification.getText().toString());
+        bow.setImages(getImageFiles());
         bow.thumbnail = getThumbnail();
         return bow;
     }

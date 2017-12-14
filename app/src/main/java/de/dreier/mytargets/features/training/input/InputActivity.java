@@ -558,7 +558,7 @@ public class InputActivity extends ChildActivityBase
             }
             final Bow bow = training.getBow();
             if (bow != null) {
-                result.sightMark = bow.getSightSetting(result.getDistance());
+                result.sightMark = bow.loadSightSetting(result.getDistance());
             }
             return result;
         }

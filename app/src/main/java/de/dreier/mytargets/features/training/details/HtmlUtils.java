@@ -50,9 +50,9 @@ public class HtmlUtils {
             }
         }
 
-        Bow bow = Bow.get(training.bowId);
+        Bow bow = Bow.Companion.get(training.bowId);
         if (bow != null) {
-            info.addLine(R.string.bow, bow.name);
+            info.addLine(R.string.bow, bow.getName());
         }
 
         Arrow arrow = Arrow.Companion.get(training.arrowId);

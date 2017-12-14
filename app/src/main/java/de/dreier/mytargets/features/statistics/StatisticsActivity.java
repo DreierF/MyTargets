@@ -280,7 +280,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                 .distinct()
                 .map(bid -> {
                     if (bid != null) {
-                        Bow bow = Bow.get(bid);
+                        Bow bow = Bow.Companion.get(bid);
                         if (bow == null) {
                             return new ChipGroup.Tag(bid, "Deleted " + bid);
                         }

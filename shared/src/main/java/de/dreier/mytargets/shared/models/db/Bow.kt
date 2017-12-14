@@ -13,297 +13,226 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models.db;
+package de.dreier.mytargets.shared.models.db
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.text.TextUtils;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.drawable.Drawable
+import android.os.Parcelable
+import android.text.TextUtils
+import com.raizlabs.android.dbflow.annotation.Column
+import com.raizlabs.android.dbflow.annotation.OneToMany
+import com.raizlabs.android.dbflow.annotation.PrimaryKey
+import com.raizlabs.android.dbflow.annotation.Table
+import com.raizlabs.android.dbflow.config.FlowManager
+import com.raizlabs.android.dbflow.sql.language.SQLite
+import com.raizlabs.android.dbflow.structure.BaseModel
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
+import de.dreier.mytargets.shared.AppDatabase
+import de.dreier.mytargets.shared.models.*
+import de.dreier.mytargets.shared.utils.typeconverters.EBowTypeConverter
+import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter
+import kotlinx.android.parcel.Parcelize
 
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.OneToMany;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.structure.BaseModel;
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
+@SuppressLint("ParcelCreator")
+@Parcelize
+@Table(database = AppDatabase::class)
+data class Bow(
+        @Column(name = "_id")
+        @PrimaryKey(autoincrement = true)
+        override var id: Long? = 0,
 
-import org.parceler.Parcel;
+        @Column
+        override var name: String = "",
 
-import java.util.List;
+        @Column(typeConverter = EBowTypeConverter::class)
+        var type: EBowType? = EBowType.RECURVE_BOW,
 
-import de.dreier.mytargets.shared.AppDatabase;
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.EBowType;
-import de.dreier.mytargets.shared.models.IIdSettable;
-import de.dreier.mytargets.shared.models.IImageProvider;
-import de.dreier.mytargets.shared.models.IRecursiveModel;
-import de.dreier.mytargets.shared.models.Thumbnail;
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-import de.dreier.mytargets.shared.utils.typeconverters.EBowTypeConverter;
-import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter;
+        @Column
+        var brand: String? = "",
 
-@Parcel
-@Table(database = AppDatabase.class)
-public class Bow extends BaseModel implements IImageProvider, IIdSettable, Comparable<Bow>, IRecursiveModel {
+        @Column
+        var size: String? = "",
 
-    @NonNull
-    @Column(name = "_id")
-    @PrimaryKey(autoincrement = true)
-    public Long id = -1L;
+        @Column
+        var braceHeight: String? = "",
 
-    @NonNull
-    @Column
-    public String name = "";
+        @Column
+        var tiller: String? = "",
 
-    @Nullable
-    @Column(typeConverter = EBowTypeConverter.class)
-    public EBowType type = EBowType.RECURVE_BOW;
+        @Column
+        var limbs: String? = "",
 
-    @Nullable
-    @Column
-    public String brand = "";
+        @Column
+        var sight: String? = "",
 
-    @Nullable
-    @Column
-    public String size = "";
+        @Column
+        var drawWeight: String? = "",
 
-    @Nullable
-    @Column
-    public String braceHeight = "";
+        @Column
+        var stabilizer: String? = "",
 
-    @Nullable
-    @Column
-    public String tiller = "";
+        @Column
+        var clicker: String? = "",
 
-    @Nullable
-    @Column
-    public String limbs = "";
+        @Column
+        var button: String? = "",
 
-    @Nullable
-    @Column
-    public String sight = "";
+        @Column
+        var string: String? = "",
 
-    @Nullable
-    @Column
-    public String drawWeight = "";
+        @Column
+        var nockingPoint: String? = "",
 
-    @Nullable
-    @Column
-    public String stabilizer = "";
+        @Column
+        var letoffWeight: String? = "",
 
-    @Nullable
-    @Column
-    public String clicker = "";
+        @Column
+        var arrowRest: String? = "",
 
-    @Nullable
-    @Column
-    public String button = "";
+        @Column
+        var restHorizontalPosition: String? = "",
 
-    @Nullable
-    @Column
-    public String string = "";
+        @Column
+        var restVerticalPosition: String? = "",
 
-    @Nullable
-    @Column
-    public String nockingPoint = "";
+        @Column
+        var restStiffness: String? = "",
 
-    @Nullable
-    @Column
-    public String letoffWeight = "";
+        @Column
+        var camSetting: String? = "",
 
-    @Nullable
-    @Column
-    public String arrowRest = "";
+        @Column
+        var scopeMagnification: String? = "",
 
-    @Nullable
-    @Column
-    public String restHorizontalPosition = "";
+        @Column
+        var description: String? = "",
 
-    @Nullable
-    @Column
-    public String restVerticalPosition = "";
+        @Column(typeConverter = ThumbnailConverter::class)
+        @JvmField //DBFlow bug
+        var thumbnail: Thumbnail? = null
+) : BaseModel(), IImageProvider, IIdSettable, Comparable<Bow>, IRecursiveModel, Parcelable {
 
-    @Nullable
-    @Column
-    public String restStiffness = "";
+    @Transient
+    var images: List<BowImage>? = null
 
-    @Nullable
-    @Column
-    public String camSetting = "";
+    @Transient
+    var sightMarks: List<SightMark>? = null
 
-    @Nullable
-    @Column
-    public String scopeMagnification = "";
+    val drawable: Drawable
+        get() = thumbnail!!.roundDrawable
 
-    @Nullable
-    @Column
-    public String description = "";
-
-    @Nullable
-    @Column(typeConverter = ThumbnailConverter.class)
-    public Thumbnail thumbnail;
-
-    public List<BowImage> images;
-
-    public List<SightMark> sightMarks;
-
-    public static List<Bow> getAll() {
-        return SQLite.select().from(Bow.class).queryList();
-    }
-
-    @Nullable
-    public static Bow get(Long id) {
-        return SQLite.select()
-                .from(Bow.class)
-                .where(Bow_Table._id.eq(id))
-                .querySingle();
-    }
-
-    @OneToMany(methods = {}, variableName = "sightMarks")
-    public List<SightMark> getSightMarks() {
+    @OneToMany(methods = [], variableName = "sightMarks")
+    fun loadSightMarks(): List<SightMark>? {
         if (sightMarks == null) {
-            sightMarks = Stream.of(SQLite.select()
-                    .from(SightMark.class)
+            sightMarks = if (id == null) mutableListOf() else SQLite.select()
+                    .from(SightMark::class.java)
                     .where(SightMark_Table.bow.eq(id))
-                    .queryList())
-                    .sortBy(sightMark -> sightMark.distance)
-                    .toList();
+                    .queryList()
+                    .sortedBy { sightMark -> sightMark.distance }
         }
-        return sightMarks;
+        return sightMarks
     }
 
-    @OneToMany(methods = {}, variableName = "images")
-    public List<BowImage> getImages() {
+    @OneToMany(methods = [], variableName = "images")
+    fun loadImages(): List<BowImage>? {
         if (images == null) {
-            images = SQLite.select()
-                    .from(BowImage.class)
-                    .where(BowImage_Table.bow.eq(id))
-                    .queryList();
+            images = if (id == null) mutableListOf() else SQLite.select()
+                    .from(BowImage::class.java)
+                    .where(BowImage_Table.bow.eq(id!!))
+                    .queryList()
         }
-        return images;
+        return images
     }
 
-    public Long getId() {
-        return id;
+    override fun getDrawable(context: Context): Drawable {
+        return drawable
     }
 
-    @Override
-    public void setId(Long id) {
-        this.id = id;
+    fun loadSightSetting(distance: Dimension): SightMark? {
+        return loadSightMarks()?.firstOrNull { s -> s.distance == distance }
     }
 
-    public Drawable getDrawable() {
-        return thumbnail.getRoundDrawable();
+    override fun save() {
+        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.save(it) })
     }
 
-    @Override
-    public Drawable getDrawable(Context context) {
-        return getDrawable();
-    }
-
-    @NonNull
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public boolean equals(Object another) {
-        return another instanceof Bow &&
-                getClass().equals(another.getClass()) &&
-                id.equals(((Bow) another).id);
-    }
-
-    public SightMark getSightSetting(Dimension distance) {
-        return Stream.of(getSightMarks())
-                .filter(s -> s.distance.equals(distance))
-                .findFirstOrNull();
-    }
-
-    @Override
-    public void save() {
-        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::save);
-    }
-
-    @Override
-    public void save(DatabaseWrapper databaseWrapper) {
-        super.save(databaseWrapper);
+    override fun save(databaseWrapper: DatabaseWrapper) {
+        super.save(databaseWrapper)
         if (images != null) {
-            SQLite.delete(BowImage.class)
-                    .where(BowImage_Table.bow.eq(id))
-                    .execute(databaseWrapper);
+            SQLite.delete(BowImage::class.java)
+                    .where(BowImage_Table.bow.eq(id!!))
+                    .execute(databaseWrapper)
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-            for (BowImage image : images) {
-                image.setBowId(id);
-                image.save(databaseWrapper);
+            for (image in images!!) {
+                image.bowId = id
+                image.save(databaseWrapper)
             }
         }
         if (sightMarks != null) {
-            SQLite.delete(SightMark.class)
+            SQLite.delete(SightMark::class.java)
                     .where(SightMark_Table.bow.eq(id))
-                    .execute(databaseWrapper);
+                    .execute(databaseWrapper)
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-            for (SightMark sightMark : sightMarks) {
-                sightMark.bowId = id;
-                sightMark.save(databaseWrapper);
+            for (sightMark in sightMarks!!) {
+                sightMark.bowId = id
+                sightMark.save(databaseWrapper)
             }
         }
     }
 
-    @Override
-    public void delete() {
-        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::delete);
+    override fun delete() {
+        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.delete(it) })
     }
 
-    @Override
-    public void delete(DatabaseWrapper databaseWrapper) {
-        for (SightMark sightMark : getSightMarks()) {
-            sightMark.delete(databaseWrapper);
-        }
-        for (BowImage bowImage : getImages()) {
-            bowImage.delete(databaseWrapper);
-        }
-        super.delete(databaseWrapper);
+    override fun delete(databaseWrapper: DatabaseWrapper) {
+        loadSightMarks()?.forEach { sightMark -> sightMark.delete(databaseWrapper) }
+        loadImages()?.forEach { bowImage -> bowImage.delete(databaseWrapper) }
+        super.delete(databaseWrapper)
     }
 
-    @Override
-    public int compareTo(@NonNull Bow another) {
-        final int result = getName().compareTo(another.getName());
-        return result == 0 ? (int) (id - another.id) : result;
-    }
+    override fun compareTo(other: Bow) = compareBy(Bow::name, Bow::id).compare(this, other)
 
-    public boolean areAllPropertiesSet() {
+    fun areAllPropertiesSet(): Boolean {
         return !TextUtils.isEmpty(size) &&
                 !TextUtils.isEmpty(drawWeight) &&
-                (!type.showLetoffWeight() || !TextUtils.isEmpty(letoffWeight)) &&
-                (!type.showArrowRest() || !TextUtils.isEmpty(arrowRest)) &&
-                (!type.showArrowRest() || !TextUtils.isEmpty(restVerticalPosition)) &&
-                (!type.showArrowRest() || !TextUtils.isEmpty(restHorizontalPosition)) &&
-                (!type.showArrowRest() || !TextUtils.isEmpty(restStiffness)) &&
-                (!type.showCamSetting() || !TextUtils.isEmpty(camSetting)) &&
-                (!type.showTiller() || !TextUtils.isEmpty(tiller)) &&
-                (!type.showBraceHeight() || !TextUtils.isEmpty(braceHeight)) &&
-                (!type.showLimbs() || !TextUtils.isEmpty(limbs)) &&
-                (!type.showSight() || !TextUtils.isEmpty(sight)) &&
-                (!type.showScopeMagnification() || !TextUtils.isEmpty(scopeMagnification)) &&
-                (!type.showStabilizer() || !TextUtils.isEmpty(stabilizer)) &&
-                (!type.showClicker() || !TextUtils.isEmpty(clicker)) &&
-                (!type.showNockingPoint() || !TextUtils.isEmpty(nockingPoint)) &&
+                (!type!!.showLetoffWeight() || !TextUtils.isEmpty(letoffWeight)) &&
+                (!type!!.showArrowRest() || !TextUtils.isEmpty(arrowRest)) &&
+                (!type!!.showArrowRest() || !TextUtils.isEmpty(restVerticalPosition)) &&
+                (!type!!.showArrowRest() || !TextUtils.isEmpty(restHorizontalPosition)) &&
+                (!type!!.showArrowRest() || !TextUtils.isEmpty(restStiffness)) &&
+                (!type!!.showCamSetting() || !TextUtils.isEmpty(camSetting)) &&
+                (!type!!.showTiller() || !TextUtils.isEmpty(tiller)) &&
+                (!type!!.showBraceHeight() || !TextUtils.isEmpty(braceHeight)) &&
+                (!type!!.showLimbs() || !TextUtils.isEmpty(limbs)) &&
+                (!type!!.showSight() || !TextUtils.isEmpty(sight)) &&
+                (!type!!.showScopeMagnification() || !TextUtils.isEmpty(scopeMagnification)) &&
+                (!type!!.showStabilizer() || !TextUtils.isEmpty(stabilizer)) &&
+                (!type!!.showClicker() || !TextUtils.isEmpty(clicker)) &&
+                (!type!!.showNockingPoint() || !TextUtils.isEmpty(nockingPoint)) &&
                 !TextUtils.isEmpty(string) &&
-                (!type.showButton() || !TextUtils.isEmpty(button)) &&
-                !TextUtils.isEmpty(description);
+                (!type!!.showButton() || !TextUtils.isEmpty(button)) &&
+                !TextUtils.isEmpty(description)
     }
 
-    @Override
-    public void saveRecursively() {
-        save();
+    override fun saveRecursively() {
+        save()
     }
 
-    @Override
-    public void saveRecursively(DatabaseWrapper databaseWrapper) {
-        save(databaseWrapper);
+    override fun saveRecursively(databaseWrapper: DatabaseWrapper) {
+        save(databaseWrapper)
+    }
+
+    companion object {
+
+        val all: List<Bow>
+            get() = SQLite.select().from(Bow::class.java).queryList()
+
+        operator fun get(id: Long?): Bow? {
+            return SQLite.select()
+                    .from(Bow::class.java)
+                    .where(Bow_Table._id.eq(id))
+                    .querySingle()
+        }
     }
 }

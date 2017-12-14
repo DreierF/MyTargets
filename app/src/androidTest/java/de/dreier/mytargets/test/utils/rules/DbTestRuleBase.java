@@ -105,13 +105,13 @@ public abstract class DbTestRuleBase implements TestRule {
     @NonNull
     protected Bow addBow(String name) {
         Bow bow = new Bow();
-        bow.name = name;
-        bow.brand = "PSE";
-        bow.size = "64\"";
-        bow.braceHeight = "6 3/8\"";
-        bow.type = EBowType.COMPOUND_BOW;
-        bow.images = Collections.emptyList();
-        bow.thumbnail = Thumbnail.Companion.from(context, R.drawable.recurve_bow);
+        bow.setName(name);
+        bow.setBrand("PSE");
+        bow.setSize("64\"");
+        bow.setBraceHeight("6 3/8\"");
+        bow.setType(EBowType.COMPOUND_BOW);
+        bow.setImages(Collections.emptyList());
+        bow.setThumbnail(Thumbnail.Companion.from(context, R.drawable.recurve_bow));
         bow.save();
         return bow;
     }

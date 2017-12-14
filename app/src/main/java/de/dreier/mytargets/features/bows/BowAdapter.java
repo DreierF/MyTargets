@@ -64,17 +64,17 @@ class BowAdapter extends SimpleListAdapterBase<Bow> {
 
         @Override
         public void bindItem() {
-            binding.name.setText(item.name);
+            binding.name.setText(item.getName());
             binding.image.setImageDrawable(item.getDrawable());
             binding.details.setVisibility(View.VISIBLE);
 
             HtmlInfoBuilder info = new HtmlInfoBuilder();
-            info.addLine(R.string.bow_type, item.type);
-            if (!item.brand.trim().isEmpty()) {
-                info.addLine(R.string.brand, item.brand);
+            info.addLine(R.string.bow_type, item.getType());
+            if (!item.getBrand().trim().isEmpty()) {
+                info.addLine(R.string.brand, item.getBrand());
             }
-            if (!item.size.trim().isEmpty()) {
-                info.addLine(R.string.size, item.size);
+            if (!item.getSize().trim().isEmpty()) {
+                info.addLine(R.string.size, item.getSize());
             }
             for (SightMark s : item.getSightMarks()) {
                 info.addLine(s.distance.toString(), s.value);
