@@ -13,41 +13,18 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models
 
-import android.support.annotation.Nullable;
+import android.annotation.SuppressLint
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-public class TimerSettings {
-    public boolean enabled;
-    public boolean sound;
-    public boolean vibrate;
-    public int waitTime;
-    public int shootTime;
-    public int warnTime;
-
-    @Override
-    public boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        TimerSettings settings = (TimerSettings) o;
-        return enabled == settings.enabled && sound == settings.sound &&
-                vibrate == settings.vibrate && waitTime == settings.waitTime &&
-                shootTime == settings.shootTime && warnTime == settings.warnTime;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (enabled ? 1 : 0);
-        result = 31 * result + (sound ? 1 : 0);
-        result = 31 * result + (vibrate ? 1 : 0);
-        result = 31 * result + waitTime;
-        result = 31 * result + shootTime;
-        result = 31 * result + warnTime;
-        return result;
-    }
-}
+@SuppressLint("ParcelCreator")
+@Parcelize
+data class TimerSettings(
+        var enabled: Boolean = false,
+        var sound: Boolean = false,
+        var vibrate: Boolean = false,
+        var waitTime: Int = 0,
+        var shootTime: Int = 0,
+        var warnTime: Int = 0) : Parcelable

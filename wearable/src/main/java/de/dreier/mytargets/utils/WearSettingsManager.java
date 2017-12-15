@@ -34,24 +34,24 @@ public class WearSettingsManager {
     @NonNull
     public static TimerSettings getTimerSettings() {
         TimerSettings settings = new TimerSettings();
-        settings.enabled = preferences.getBoolean(KEY_TIMER_ENABLED, false);
-        settings.vibrate = preferences.getBoolean(KEY_TIMER_VIBRATE, false);
-        settings.sound = preferences.getBoolean(KEY_TIMER_SOUND, true);
-        settings.waitTime = preferences.getInt(KEY_TIMER_WAIT_TIME, 10);
-        settings.shootTime = preferences.getInt(KEY_TIMER_SHOOT_TIME, 120);
-        settings.warnTime = preferences.getInt(KEY_TIMER_WARN_TIME, 30);
+        settings.setEnabled(preferences.getBoolean(KEY_TIMER_ENABLED, false));
+        settings.setVibrate(preferences.getBoolean(KEY_TIMER_VIBRATE, false));
+        settings.setSound(preferences.getBoolean(KEY_TIMER_SOUND, true));
+        settings.setWaitTime(preferences.getInt(KEY_TIMER_WAIT_TIME, 10));
+        settings.setShootTime(preferences.getInt(KEY_TIMER_SHOOT_TIME, 120));
+        settings.setWarnTime(preferences.getInt(KEY_TIMER_WARN_TIME, 30));
         return settings;
     }
 
     public static void setTimerSettings(@NonNull TimerSettings settings) {
         preferences
                 .edit()
-                .putBoolean(KEY_TIMER_ENABLED, settings.enabled)
-                .putBoolean(KEY_TIMER_VIBRATE, settings.vibrate)
-                .putBoolean(KEY_TIMER_SOUND, settings.sound)
-                .putInt(KEY_TIMER_WAIT_TIME, settings.waitTime)
-                .putInt(KEY_TIMER_SHOOT_TIME, settings.shootTime)
-                .putInt(KEY_TIMER_WARN_TIME, settings.warnTime)
+                .putBoolean(KEY_TIMER_ENABLED, settings.getEnabled())
+                .putBoolean(KEY_TIMER_VIBRATE, settings.getVibrate())
+                .putBoolean(KEY_TIMER_SOUND, settings.getSound())
+                .putInt(KEY_TIMER_WAIT_TIME, settings.getWaitTime())
+                .putInt(KEY_TIMER_SHOOT_TIME, settings.getShootTime())
+                .putInt(KEY_TIMER_WARN_TIME, settings.getWarnTime())
                 .apply();
     }
 }

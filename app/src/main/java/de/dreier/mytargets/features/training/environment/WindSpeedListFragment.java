@@ -33,7 +33,7 @@ public class WindSpeedListFragment extends SelectPureListItemFragmentBase<WindSp
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        adapter.setList(WindSpeed.getList(getContext()));
+        adapter.setList(WindSpeed.Companion.getList(getContext()));
         WindSpeed windSpeed = Parcels.unwrap(getArguments().getParcelable(ITEM));
         selectItem(binding.recyclerView, windSpeed);
         return binding.getRoot();

@@ -76,7 +76,7 @@ public class WearWearableListener extends WearableListenerService {
     private void showNotification(@NonNull TrainingInfo info) {
         // Build the intent to display our custom notification
         Intent notificationIntent = new Intent(this, RoundActivity.class);
-        notificationIntent.putExtra(RoundActivity.EXTRA_ROUND, Parcels.wrap(info.round));
+        notificationIntent.putExtra(RoundActivity.EXTRA_ROUND, Parcels.wrap(info.getRound()));
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
@@ -84,7 +84,7 @@ public class WearWearableListener extends WearableListenerService {
         Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.wear_bg);
         Notification.Builder notificationBuilder =
                 new Notification.Builder(this)
-                        .setContentTitle(info.title)
+                        .setContentTitle(info.getTitle())
                         .setContentText(describe(info))
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentIntent(pendingIntent)
@@ -101,6 +101,6 @@ public class WearWearableListener extends WearableListenerService {
     private String describe(@NonNull TrainingInfo info) {
         return info.getRoundDetails(this) + "\n" +
                 info.getEndDetails(this) + "\n" +
-                info.round.getRound().getDistance().toString();
+                info.getRound().getRound().getDistance().toString();
     }
 }

@@ -13,132 +13,102 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.annotation.SuppressLint
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+import java.util.*
 
-import org.parceler.Parcel;
-import org.parceler.ParcelConstructor;
+@SuppressLint("ParcelCreator")
+@Parcelize
+data class Score(
+        var reachedScore: Int = 0,
+        var totalScore: Int = 0,
+        var shotCount: Int = 0
+) : Parcelable {
 
-import java.util.Locale;
+    constructor() : this(
+            reachedScore = 0,
+            totalScore = 0,
+            shotCount = 0
+    )
 
-@Parcel
-public class Score {
-    public int reachedScore;
-    public int totalScore;
-    public int shotCount;
+    constructor(reachedScore: Int, totalScore: Int) : this(
+            reachedScore = reachedScore,
+            totalScore = totalScore,
+            shotCount = 1
+    )
 
-    public Score() {
-        this.reachedScore = 0;
-        this.totalScore = 0;
-        this.shotCount = 0;
-    }
+    constructor(totalScore: Int) : this(
+            reachedScore = 0,
+            totalScore = totalScore,
+            shotCount = 0
+    )
 
-    @ParcelConstructor
-    public Score(int reachedScore, int totalScore) {
-        this.reachedScore = reachedScore;
-        this.totalScore = totalScore;
-        this.shotCount = 1;
-    }
-
-    public Score(int totalScore) {
-        this.reachedScore = 0;
-        this.totalScore = totalScore;
-        this.shotCount = 0;
-    }
-
-    @NonNull
-    public Score add(@NonNull Score other) {
-        reachedScore += other.reachedScore;
-        totalScore += other.totalScore;
-        shotCount += other.shotCount;
-        return this;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return reachedScore + "/" + totalScore;
-    }
-
-    @NonNull
-    public String format(Locale locale, @NonNull Configuration config) {
-        if (!config.showReachedScore) {
-            return "";
-        }
-        String score = String.valueOf(reachedScore);
-        if (config.showTotalScore) {
-            score += "/" + totalScore;
-        }
-        if ((config.showPercentage || config.showAverage) && totalScore > 0) {
-            score += " (";
-            if (config.showPercentage) {
-                score += getPercentString();
-                if (config.showAverage) {
-                    score += ", ";
-                }
-            }
-            if (config.showAverage) {
-                score += getShotAverageFormatted(locale) + "∅";
-            }
-            score += ")";
-        }
-        return score;
-    }
-
-    public float getShotAverage() {
-        if (shotCount == 0) {
-            return -1;
-        }
-        return reachedScore / (float) shotCount;
-    }
-
-    public String getShotAverageFormatted(Locale locale) {
-        if (shotCount == 0) {
-            return "-";
-        }
-        return String.format(locale, "%.2f", getShotAverage());
-    }
+    val shotAverage: Float
+        get() = if (shotCount == 0) {
+            -1f
+        } else reachedScore / shotCount.toFloat()
 
     /**
      * @return The percent of points reached relative to the total reachable score.
      */
-    public float getPercent() {
-        if (totalScore > 0) {
-            return reachedScore / (float) totalScore;
-        }
-        return 0;
+    val percent: Float
+        get() = if (totalScore > 0) {
+            reachedScore / totalScore.toFloat()
+        } else 0f
+
+    private val percentString: String
+        get() = if (totalScore > 0) {
+            (reachedScore * 100 / totalScore).toString() + "%"
+        } else ""
+
+    fun add(other: Score): Score {
+        reachedScore += other.reachedScore
+        totalScore += other.totalScore
+        shotCount += other.shotCount
+        return this
     }
 
-    private String getPercentString() {
-        if (totalScore > 0) {
-            return String.valueOf(reachedScore * 100 / totalScore) + "%";
-        }
-        return "";
+    override fun toString(): String {
+        return reachedScore.toString() + "/" + totalScore
     }
 
-    public static class Configuration {
-        public boolean showReachedScore;
-        public boolean showTotalScore;
-        public boolean showPercentage;
-        public boolean showAverage;
-
-        @Override
-        public boolean equals(@Nullable Object o) {
-            if (this == o) {
-                return true;
+    fun format(locale: Locale, config: Configuration): String {
+        if (!config.showReachedScore) {
+            return ""
+        }
+        var score = reachedScore.toString()
+        if (config.showTotalScore) {
+            score += "/" + totalScore
+        }
+        if ((config.showPercentage || config.showAverage) && totalScore > 0) {
+            score += " ("
+            if (config.showPercentage) {
+                score += percentString
+                if (config.showAverage) {
+                    score += ", "
+                }
             }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
+            if (config.showAverage) {
+                score += getShotAverageFormatted(locale) + "∅"
             }
-            Configuration that = (Configuration) o;
-
-            return showReachedScore == that.showReachedScore &&
-                    showTotalScore == that.showTotalScore &&
-                    showPercentage == that.showPercentage &&
-                    showAverage == that.showAverage;
-
+            score += ")"
         }
+        return score
     }
+
+    fun getShotAverageFormatted(locale: Locale): String {
+        return if (shotCount == 0) {
+            "-"
+        } else String.format(locale, "%.2f", shotAverage)
+    }
+
+    data class Configuration(
+            var showReachedScore: Boolean = false,
+            var showTotalScore: Boolean = false,
+            var showPercentage: Boolean = false,
+            var showAverage: Boolean = false
+    )
 }
