@@ -42,10 +42,6 @@ import de.dreier.mytargets.shared.models.TimerSettings;
 import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.WindDirection;
 import de.dreier.mytargets.shared.models.WindSpeed;
-import de.dreier.mytargets.shared.models.db.RoundTemplate;
-import de.dreier.mytargets.shared.models.db.SightMark;
-import de.dreier.mytargets.shared.models.db.Signature;
-import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.utils.ImageList;
 import de.dreier.mytargets.utils.MobileWearableClient;
@@ -61,11 +57,7 @@ import timber.log.Timber;
 @ParcelClasses({
         @ParcelClass(EndRenderer.class),
         @ParcelClass(ImageList.class),
-        @ParcelClass(RoundTemplate.class),
         @ParcelClass(Score.class),
-        @ParcelClass(SightMark.class),
-        @ParcelClass(Signature.class),
-        @ParcelClass(StandardRound.class),
         @ParcelClass(TrainingInfo.class),
         @ParcelClass(Target.class),
         @ParcelClass(TimerSettings.class),

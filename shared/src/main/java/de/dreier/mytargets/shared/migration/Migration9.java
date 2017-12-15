@@ -190,25 +190,25 @@ public class Migration9 extends BaseMigration {
                         "GROUP BY r._id " +
                         "ORDER BY r._id ASC", null);
         StandardRound sr = new StandardRound();
-        sr.name = "Practice";
-        sr.club = 512;
+        sr.setName("Practice");
+        sr.setClub(512);
         sr.setRounds(new ArrayList<>());
         if (res.moveToFirst()) {
             do {
                 RoundTemplate template = new RoundTemplate();
-                template.shotsPerEnd = res.getInt(0);
+                template.setShotsPerEnd(res.getInt(0));
                 int target = res.getInt(1);
                 template.setTargetTemplate(new Target(
                         target == 4 ? 5 : target, target == 5 ? 1 : 0));
-                template.distance = Dimension.Companion.from(res.getInt(2), res.getString(3));
-                template.endCount = res.getInt(4);
-                template.index = sr.getRounds().size();
-                sr.getRounds().add(template);
+                template.setDistance(Dimension.Companion.from(res.getInt(2), res.getString(3)));
+                template.setEndCount(res.getInt(4));
+                template.setIndex(sr.loadRounds().size());
+                sr.loadRounds().add(template);
             } while (res.moveToNext());
         }
         res.close();
 
-        if (sr.getRounds().isEmpty()) {
+        if (sr.loadRounds().isEmpty()) {
             return 0L;
         }
         insertStandardRound(db, sr);
@@ -217,33 +217,33 @@ public class Migration9 extends BaseMigration {
 
     private static void insertStandardRound(@NonNull DatabaseWrapper database, @NonNull StandardRound item) {
         ContentValues values = new ContentValues();
-        values.put(SR_NAME, item.name);
-        values.put(SR_INSTITUTION, item.club);
+        values.put(SR_NAME, item.getName());
+        values.put(SR_INSTITUTION, item.getClub());
         values.put(SR_INDOOR, 0);
         if (item.getId() == null) {
             item.setId(database
                     .insertWithOnConflict(SR_TABLE, null, values, SQLiteDatabase.CONFLICT_NONE));
-            for (RoundTemplate r : item.getRounds()) {
-                r.standardRound = item.getId();
+            for (RoundTemplate r : item.loadRounds()) {
+                r.setStandardRound(item.getId());
             }
         } else {
             values.put(SR_ID, item.getId());
             database.insertWithOnConflict(SR_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
         }
-        for (RoundTemplate template : item.getRounds()) {
-            template.standardRound = item.getId();
+        for (RoundTemplate template : item.loadRounds()) {
+            template.setStandardRound(item.getId());
             insertRoundTemplate(database, template);
         }
     }
 
     private static void insertRoundTemplate(@NonNull DatabaseWrapper database, @NonNull RoundTemplate item) {
         ContentValues values = new ContentValues();
-        values.put(RT_STANDARD_ID, item.standardRound);
-        values.put(RT_INDEX, item.index);
-        values.put(RT_DISTANCE, item.distance.getValue());
-        values.put(RT_UNIT, Dimension.Unit.Companion.toStringHandleNull(item.distance.getUnit()));
-        values.put(RT_PASSES, item.endCount);
-        values.put(RT_ARROWS_PER_PASSE, item.shotsPerEnd);
+        values.put(RT_STANDARD_ID, item.getStandardRound());
+        values.put(RT_INDEX, item.getIndex());
+        values.put(RT_DISTANCE, item.getDistance().getValue());
+        values.put(RT_UNIT, Dimension.Unit.Companion.toStringHandleNull(item.getDistance().getUnit()));
+        values.put(RT_PASSES, item.getEndCount());
+        values.put(RT_ARROWS_PER_PASSE, item.getShotsPerEnd());
         values.put(RT_TARGET, (int) (long) item.getTargetTemplate().getId());
         values.put(RT_TARGET_SIZE, item.getTargetTemplate().diameter.getValue());
         values.put(RT_TARGET_SIZE_UNIT, Dimension.Unit.Companion
@@ -276,16 +276,16 @@ public class Migration9 extends BaseMigration {
     private static RoundTemplate cursorToRoundTemplate(@NonNull Cursor cursor, int startColumnIndex) {
         RoundTemplate roundTemplate = new RoundTemplate();
         roundTemplate.setId(cursor.getLong(startColumnIndex));
-        roundTemplate.index = cursor.getInt(startColumnIndex + 1);
-        roundTemplate.shotsPerEnd = cursor.getInt(startColumnIndex + 2);
+        roundTemplate.setIndex(cursor.getInt(startColumnIndex + 1));
+        roundTemplate.setShotsPerEnd(cursor.getInt(startColumnIndex + 2));
         final Dimension diameter = Dimension.Companion.from(
                 cursor.getInt(startColumnIndex + 9), cursor.getString(startColumnIndex + 10));
         roundTemplate.setTargetTemplate(new Target(cursor.getInt(startColumnIndex + 3),
                 cursor.getInt(startColumnIndex + 4), diameter));
-        roundTemplate.distance = Dimension.Companion.from(cursor.getInt(startColumnIndex + 7),
-                cursor.getString(startColumnIndex + 8));
-        roundTemplate.endCount = cursor.getInt(startColumnIndex + 11);
-        roundTemplate.standardRound = cursor.getLong(startColumnIndex + 12);
+        roundTemplate.setDistance(Dimension.Companion.from(cursor.getInt(startColumnIndex + 7),
+                cursor.getString(startColumnIndex + 8)));
+        roundTemplate.setEndCount(cursor.getInt(startColumnIndex + 11));
+        roundTemplate.setStandardRound(cursor.getLong(startColumnIndex + 12));
         return roundTemplate;
     }
 }

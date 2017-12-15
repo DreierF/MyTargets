@@ -94,22 +94,23 @@ public class EditStandardRoundFragment extends EditFragmentBase {
             } else {
                 ToolbarUtils.setTitle(this, R.string.edit_standard_round);
                 // Load saved values
-                if (standardRound.club == StandardRoundFactory.CUSTOM) {
-                    binding.name.setText(standardRound.name);
+                if (standardRound.getClub() == StandardRoundFactory.CUSTOM) {
+                    binding.name.setText(standardRound.getName());
                 } else {
                     standardRound.setId(null);
                     binding.name.setText(
-                            String.format("%s %s", getString(R.string.custom), standardRound.name));
+                            String.format("%s %s", getString(R.string.custom), standardRound
+                                    .getName()));
                     // When copying an existing standard round make sure
                     // we don't overwrite the other rounds templates
-                    for (RoundTemplate round : standardRound.getRounds()) {
+                    for (RoundTemplate round : standardRound.loadRounds()) {
                         round.setId(null);
                     }
                 }
             }
         }
 
-        adapter = new RoundTemplateAdapter(this, standardRound.getRounds());
+        adapter = new RoundTemplateAdapter(this, standardRound.loadRounds());
         binding.rounds.setAdapter(adapter);
         binding.addButton.setOnClickListener((view) -> onAddRound());
         binding.deleteStandardRound.setOnClickListener((view) -> onDeleteStandardRound());
@@ -119,11 +120,11 @@ public class EditStandardRoundFragment extends EditFragmentBase {
 
     private void addDefaultRound() {
         RoundTemplate round = new RoundTemplate();
-        round.shotsPerEnd = SettingsManager.INSTANCE.getShotsPerEnd();
-        round.endCount = SettingsManager.INSTANCE.getEndCount();
+        round.setShotsPerEnd(SettingsManager.INSTANCE.getShotsPerEnd());
+        round.setEndCount(SettingsManager.INSTANCE.getEndCount());
         round.setTargetTemplate(SettingsManager.INSTANCE.getTarget());
-        round.distance = SettingsManager.INSTANCE.getDistance();
-        standardRound.getRounds().add(round);
+        round.setDistance(SettingsManager.INSTANCE.getDistance());
+        standardRound.loadRounds().add(round);
     }
 
     @Override
@@ -133,15 +134,15 @@ public class EditStandardRoundFragment extends EditFragmentBase {
     }
 
     private void onAddRound() {
-        int newItemIndex = standardRound.getRounds().size();
+        int newItemIndex = standardRound.loadRounds().size();
         if (newItemIndex > 0) {
-            RoundTemplate r = standardRound.getRounds().get(newItemIndex - 1);
+            RoundTemplate r = standardRound.loadRounds().get(newItemIndex - 1);
             RoundTemplate roundTemplate = new RoundTemplate();
-            roundTemplate.endCount = r.endCount;
-            roundTemplate.shotsPerEnd = r.shotsPerEnd;
-            roundTemplate.distance = r.distance;
+            roundTemplate.setEndCount(r.getEndCount());
+            roundTemplate.setShotsPerEnd(r.getShotsPerEnd());
+            roundTemplate.setDistance(r.getDistance());
             roundTemplate.setTargetTemplate(r.getTargetTemplate());
-            standardRound.getRounds().add(roundTemplate);
+            standardRound.loadRounds().add(roundTemplate);
         } else {
             addDefaultRound();
         }
@@ -156,15 +157,15 @@ public class EditStandardRoundFragment extends EditFragmentBase {
 
     @Override
     protected void onSave() {
-        standardRound.club = StandardRoundFactory.CUSTOM;
-        standardRound.name = binding.name.getText().toString();
+        standardRound.setClub(StandardRoundFactory.CUSTOM);
+        standardRound.setName(binding.name.getText().toString());
         standardRound.save();
 
-        RoundTemplate round = standardRound.getRounds().get(0); //FIXME how is this possible?
-        SettingsManager.INSTANCE.setShotsPerEnd(round.shotsPerEnd);
-        SettingsManager.INSTANCE.setEndCount(round.endCount);
+        RoundTemplate round = standardRound.loadRounds().get(0); //FIXME how is this possible?
+        SettingsManager.INSTANCE.setShotsPerEnd(round.getShotsPerEnd());
+        SettingsManager.INSTANCE.setEndCount(round.getEndCount());
         SettingsManager.INSTANCE.setTarget(round.getTargetTemplate());
-        SettingsManager.INSTANCE.setDistance(round.distance);
+        SettingsManager.INSTANCE.setDistance(round.getDistance());
 
         Intent data = new Intent();
         data.putExtra(ITEM, Parcels.wrap(standardRound));
@@ -182,11 +183,11 @@ public class EditStandardRoundFragment extends EditFragmentBase {
             final Parcelable parcelable = data.getParcelableExtra(ITEM);
             switch (requestCode) {
                 case DistanceSelector.DISTANCE_REQUEST_CODE:
-                    standardRound.getRounds().get(index).distance = Parcels.unwrap(parcelable);
+                    standardRound.loadRounds().get(index).setDistance(Parcels.unwrap(parcelable));
                     adapter.notifyItemChanged(index);
                     break;
                 case TargetSelector.TARGET_REQUEST_CODE:
-                    standardRound.getRounds().get(index)
+                    standardRound.loadRounds().get(index)
                             .setTargetTemplate(Parcels.unwrap(parcelable));
                     adapter.notifyItemChanged(index);
                     break;
@@ -210,11 +211,11 @@ public class EditStandardRoundFragment extends EditFragmentBase {
             // Set title of round
             binding.roundNumber.setText(fragment.getResources()
                     .getQuantityString(R.plurals.rounds, position + 1, position + 1));
-            item.index = position;
+            item.setIndex(position);
 
             binding.distance.setOnActivityResultContext(fragment);
             binding.distance.setItemIndex(position);
-            binding.distance.setItem(item.distance);
+            binding.distance.setItem(item.getDistance());
 
             // Target round
             binding.target.setOnActivityResultContext(fragment);
@@ -223,15 +224,15 @@ public class EditStandardRoundFragment extends EditFragmentBase {
 
             // Ends
             binding.endCount.setTextPattern(R.plurals.passe);
-            binding.endCount.setOnValueChangedListener(val -> item.endCount = val);
-            binding.endCount.setValue(item.endCount);
+            binding.endCount.setOnValueChangedListener(val -> item.setEndCount(val));
+            binding.endCount.setValue(item.getEndCount());
 
             // Shots per end
             binding.shotCount.setTextPattern(R.plurals.arrow);
             binding.shotCount.setMinimum(1);
             binding.shotCount.setMaximum(12);
-            binding.shotCount.setOnValueChangedListener(val -> item.shotsPerEnd = val);
-            binding.shotCount.setValue(item.shotsPerEnd);
+            binding.shotCount.setOnValueChangedListener(val -> item.setShotsPerEnd(val));
+            binding.shotCount.setValue(item.getShotsPerEnd());
 
             if (position == 0) {
                 binding.remove.setVisibility(View.GONE);

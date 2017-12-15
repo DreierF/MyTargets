@@ -62,7 +62,7 @@ public class StandardRoundActivityTest extends UITestBase {
     @Test
     public void searchTest() {
         activityTestRule.launchActivity(
-                StandardRoundListFragment.getIntent(StandardRound.get(32L)).build());
+                StandardRoundListFragment.getIntent(StandardRound.Companion.get(32L)).build());
 
         clickActionBarItem(R.id.action_search, R.string.search);
 
@@ -81,7 +81,7 @@ public class StandardRoundActivityTest extends UITestBase {
     @Test
     public void recentlyUsedTest() {
         activityTestRule.launchActivity(
-                StandardRoundListFragment.getIntent(StandardRound.get(32L)).build());
+                StandardRoundListFragment.getIntent(StandardRound.Companion.get(32L)).build());
 
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
                 .check(matches(hasDescendant(withText(R.string.recently_used))));

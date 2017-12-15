@@ -112,9 +112,9 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
         List<StandardRound> data;
         if (args != null && args.containsKey(KEY_QUERY)) {
             String query = args.getString(KEY_QUERY);
-            data = StandardRound.getAllSearch(query);
+            data = StandardRound.Companion.getAllSearch(query);
         } else {
-            data = StandardRound.getAll();
+            data = StandardRound.Companion.getAll();
         }
         return () -> {
             adapter.setList(data);
@@ -142,7 +142,7 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
 
     public void onLongClick(@NonNull SelectableViewHolder<StandardRound> holder) {
         StandardRound item = holder.getItem();
-        if (item.club == StandardRoundFactory.CUSTOM) {
+        if (item.getClub() == StandardRoundFactory.CUSTOM) {
             EditStandardRoundFragment.editIntent(item)
                     .withContext(this)
                     .forResult(EDIT_STANDARD_ROUND)
@@ -204,7 +204,7 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
                 currentSelection = Parcels.unwrap(data.getParcelableExtra(ITEM));
                 reloadData();
             } else if (resultCode == EditStandardRoundFragment.RESULT_STANDARD_ROUND_DELETED) {
-                currentSelection = StandardRound.get(32L);
+                currentSelection = StandardRound.Companion.get(32L);
                 saveItem();
                 reloadData();
             }
@@ -271,7 +271,7 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
 
         @Override
         public void bindItem() {
-            binding.name.setText(item.name);
+            binding.name.setText(item.getName());
 
             if (item.equals(currentSelection)) {
                 binding.image.setVisibility(View.VISIBLE);

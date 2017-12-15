@@ -61,8 +61,8 @@ public class HtmlUtils {
         }
 
         if (training.getStandardRoundId() != null) {
-            StandardRound standardRound = StandardRound.get(training.getStandardRoundId());
-            info.addLine(R.string.standard_round, standardRound.name);
+            StandardRound standardRound = StandardRound.Companion.get(training.getStandardRoundId());
+            info.addLine(R.string.standard_round, standardRound.getName());
         }
     }
 

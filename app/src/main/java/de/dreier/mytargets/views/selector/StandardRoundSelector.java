@@ -36,10 +36,10 @@ public class StandardRoundSelector extends ImageSelectorBase<StandardRound> {
     }
 
     public void setItemId(Long standardRoundId) {
-        StandardRound standardRound = StandardRound.get(standardRoundId);
+        StandardRound standardRound = StandardRound.Companion.get(standardRoundId);
         // If the round has been removed, choose default one
-        if (standardRound == null || standardRound.getRounds().isEmpty()) {
-            standardRound = StandardRound.get(32L);
+        if (standardRound == null || standardRound.loadRounds().isEmpty()) {
+            standardRound = StandardRound.Companion.get(32L);
         }
         setItem(standardRound);
     }

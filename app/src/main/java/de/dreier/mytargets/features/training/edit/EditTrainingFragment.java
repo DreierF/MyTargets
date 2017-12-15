@@ -133,7 +133,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         binding.distance.setOnActivityResultContext(this);
         binding.standardRound.setOnActivityResultContext(this);
         binding.standardRound.setOnUpdateListener(
-                item -> roundTarget = item.getRounds().get(0).getTargetTemplate());
+                item -> roundTarget = item.loadRounds().get(0).getTargetTemplate());
         binding.changeTargetFace.setOnClickListener(v ->
                 TargetListFragment.getIntent(roundTarget)
                         .withContext(this)
@@ -325,7 +325,7 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
             final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
             Target target = Parcels.unwrap(parcelable);
             final StandardRound item = binding.standardRound.getSelectedItem();
-            Stream.of(item.getRounds())
+            Stream.of(item.loadRounds())
                     .forEach(r -> {
                         r.setTargetTemplate(target);
                         return null;
