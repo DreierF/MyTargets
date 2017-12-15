@@ -25,8 +25,8 @@ import com.raizlabs.android.dbflow.sql.language.SQLite
 import com.raizlabs.android.dbflow.structure.BaseModel
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.utils.typeconverters.BitmapConverter
-import de.dreier.mytargets.shared.utils.typeconverters.readBitmap
-import de.dreier.mytargets.shared.utils.typeconverters.writeBitmap
+import de.dreier.mytargets.shared.utils.readBitmap
+import de.dreier.mytargets.shared.utils.writeBitmap
 
 @Table(database = AppDatabase::class)
 data class Signature(
