@@ -157,19 +157,19 @@ public class SettingsManagerTest extends InstrumentedTestBase {
     @Test
     public void getTimerSettings() {
         TimerSettings settings = new TimerSettings();
-        settings.enabled = false;
-        settings.sound = true;
-        settings.vibrate = true;
-        settings.waitTime = 5;
-        settings.shootTime = 90;
-        settings.warnTime = 30;
+        settings.setEnabled(false);
+        settings.setSound(true);
+        settings.setVibrate(true);
+        settings.setWaitTime(5);
+        settings.setShootTime(90);
+        settings.setWarnTime(30);
         SettingsManager.INSTANCE.setTimerSettings(settings);
         assertThat(SettingsManager.INSTANCE.getTimerSettings()).isEqualTo(settings);
         ApplicationInstance.Companion.getSharedPreferences()
                 .edit()
                 .putString(SettingsManager.KEY_TIMER_WAIT_TIME, "")
                 .apply();
-        assertThat(SettingsManager.INSTANCE.getTimerSettings().waitTime).isEqualTo(10);
+        assertThat(SettingsManager.INSTANCE.getTimerSettings().getWaitTime()).isEqualTo(10);
     }
 
     @Test
@@ -281,10 +281,10 @@ public class SettingsManagerTest extends InstrumentedTestBase {
     @Test
     public void setScoreConfiguration() {
         Score.Configuration config = new Score.Configuration();
-        config.showReachedScore = true;
-        config.showTotalScore = true;
-        config.showPercentage = false;
-        config.showAverage = true;
+        config.setShowReachedScore(true);
+        config.setShowTotalScore(true);
+        config.setShowPercentage(false);
+        config.setShowAverage(true);
         SettingsManager.INSTANCE.setScoreConfiguration(config);
         assertThat(SettingsManager.INSTANCE.getScoreConfiguration()).isEqualTo(config);
     }

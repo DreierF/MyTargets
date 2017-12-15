@@ -36,14 +36,8 @@ import de.dreier.mytargets.BuildConfig;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.SharedApplicationInstance;
-import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.TimerSettings;
-import de.dreier.mytargets.shared.models.TrainingInfo;
-import de.dreier.mytargets.shared.models.WindDirection;
-import de.dreier.mytargets.shared.models.WindSpeed;
 import de.dreier.mytargets.shared.utils.EndRenderer;
-import de.dreier.mytargets.shared.utils.ImageList;
 import de.dreier.mytargets.utils.MobileWearableClient;
 import de.dreier.mytargets.utils.backup.MyBackupAgent;
 import im.delight.android.languages.Language;
@@ -56,13 +50,7 @@ import timber.log.Timber;
  */
 @ParcelClasses({
         @ParcelClass(EndRenderer.class),
-        @ParcelClass(ImageList.class),
-        @ParcelClass(Score.class),
-        @ParcelClass(TrainingInfo.class),
-        @ParcelClass(Target.class),
-        @ParcelClass(TimerSettings.class),
-        @ParcelClass(WindDirection.class),
-        @ParcelClass(WindSpeed.class)
+        @ParcelClass(Target.class)
 })
 public class ApplicationInstance extends SharedApplicationInstance {
 

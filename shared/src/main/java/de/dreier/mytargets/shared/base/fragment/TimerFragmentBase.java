@@ -145,11 +145,11 @@ public abstract class TimerFragmentBase extends Fragment implements View.OnClick
     protected int getDuration(@NonNull ETimerState status) {
         switch (status) {
             case PREPARATION:
-                return settings.waitTime;
+                return settings.getWaitTime();
             case SHOOTING:
-                return settings.shootTime - settings.warnTime;
+                return settings.getShootTime() - settings.getWarnTime();
             case COUNTDOWN:
-                return settings.warnTime;
+                return settings.getWarnTime();
             default:
                 throw new IllegalArgumentException();
         }
@@ -157,7 +157,7 @@ public abstract class TimerFragmentBase extends Fragment implements View.OnClick
 
     protected int getOffset(ETimerState status) {
         if (status == SHOOTING) {
-            return settings.warnTime;
+            return settings.getWarnTime();
         } else {
             return 0;
         }
@@ -165,10 +165,10 @@ public abstract class TimerFragmentBase extends Fragment implements View.OnClick
 
     private void playSignal(final int n) {
         if (n > 0) {
-            if (settings.sound) {
+            if (settings.getSound()) {
                 playHorn(n);
             }
-            if (settings.vibrate) {
+            if (settings.getVibrate()) {
                 long[] pattern = new long[1 + n * 2];
                 Vibrator v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
                 pattern[0] = 150;

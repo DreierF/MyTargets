@@ -53,9 +53,9 @@ public class TimerSettingsFragment extends SettingsFragmentBase {
     @Override
     protected void updateItemSummaries() {
         TimerSettings settings = SettingsManager.INSTANCE.getTimerSettings();
-        setSecondsSummary(SettingsManager.KEY_TIMER_WAIT_TIME, settings.waitTime);
-        setSecondsSummary(SettingsManager.KEY_TIMER_SHOOT_TIME, settings.shootTime);
-        setSecondsSummary(SettingsManager.KEY_TIMER_WARN_TIME, settings.warnTime);
+        setSecondsSummary(SettingsManager.KEY_TIMER_WAIT_TIME, settings.getWaitTime());
+        setSecondsSummary(SettingsManager.KEY_TIMER_SHOOT_TIME, settings.getShootTime());
+        setSecondsSummary(SettingsManager.KEY_TIMER_WARN_TIME, settings.getWarnTime());
         ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(settings);
     }
 

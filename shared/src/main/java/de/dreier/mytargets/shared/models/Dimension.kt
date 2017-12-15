@@ -150,15 +150,3 @@ data class Dimension(val value: Float, val unit: Unit?) : IIdProvider, Comparabl
     }
 }
 
-object Diameter {
-    internal const val MINI_VALUE = -6
-    val MINI = Dimension(MINI_VALUE.toFloat(), null as Dimension.Unit?)
-    internal const val SMALL_VALUE = -5
-    val SMALL = Dimension(SMALL_VALUE.toFloat(), null as Dimension.Unit?)
-    internal const val MEDIUM_VALUE = -4
-    val MEDIUM = Dimension(MEDIUM_VALUE.toFloat(), null as Dimension.Unit?)
-    internal const val LARGE_VALUE = -3
-    val LARGE = Dimension(LARGE_VALUE.toFloat(), null as Dimension.Unit?)
-    internal const val XLARGE_VALUE = -2
-    val XLARGE = Dimension(XLARGE_VALUE.toFloat(), null as Dimension.Unit?)
-}

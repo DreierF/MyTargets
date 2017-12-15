@@ -70,7 +70,7 @@ public class RoundActivity extends WearableActivity {
                 case BROADCAST_TRAINING_UPDATED:
                     TrainingInfo info = Parcels
                             .unwrap(intent.getParcelableExtra(WearWearableClient.EXTRA_INFO));
-                    round = info.round;
+                    round = info.getRound();
                     showRoundData();
                     break;
                 case BROADCAST_TIMER_SETTINGS_FROM_REMOTE:
@@ -163,7 +163,7 @@ public class RoundActivity extends WearableActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         TimerSettings timerSettings = WearSettingsManager.getTimerSettings();
-        if (timerSettings.enabled) {
+        if (timerSettings.getEnabled()) {
             Intent intentTimer = new Intent(this, TimerActivity.class);
             intentTimer.putExtra(TimerActivity.EXTRA_TIMER_SETTINGS, Parcels.wrap(timerSettings));
             startActivity(intentTimer);
@@ -172,7 +172,7 @@ public class RoundActivity extends WearableActivity {
 
     public void toggleTimer() {
         TimerSettings timerSettings = WearSettingsManager.getTimerSettings();
-        timerSettings.enabled = !timerSettings.enabled;
+        timerSettings.setEnabled(!timerSettings.getEnabled());
         ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(timerSettings);
         applyTimerState();
     }
@@ -180,7 +180,7 @@ public class RoundActivity extends WearableActivity {
     private void applyTimerState() {
         TimerSettings timerSettings = WearSettingsManager.getTimerSettings();
         binding.primaryActionTimer.setImageResource(
-                timerSettings.enabled ? R.drawable.ic_traffic_white_24dp
+                timerSettings.getEnabled() ? R.drawable.ic_traffic_white_24dp
                         : R.drawable.ic_timer_off_white_24dp);
     }
 

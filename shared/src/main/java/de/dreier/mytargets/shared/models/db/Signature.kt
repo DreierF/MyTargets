@@ -40,9 +40,7 @@ data class Signature(
         @Column
         var name: String = "",
 
-        /**
-         * Returns a bitmap of the signature or null if no signature has been set.
-         */
+        /** A bitmap of the signature or null if no signature has been set. */
         @Column(typeConverter = BitmapConverter::class)
         @ParcelPropertyConverter(BitmapParcelConverter::class)
         var bitmap: Bitmap? = null

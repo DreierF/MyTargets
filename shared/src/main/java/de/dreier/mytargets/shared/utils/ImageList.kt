@@ -13,60 +13,48 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils;
+package de.dreier.mytargets.shared.utils
 
-import android.support.annotation.NonNull;
+import android.annotation.SuppressLint
+import android.os.Parcelable
+import de.dreier.mytargets.shared.models.db.EndImage
+import de.dreier.mytargets.shared.models.db.Image
+import kotlinx.android.parcel.Parcelize
 
-import org.parceler.ParcelConstructor;
+@SuppressLint("ParcelCreator")
+@Parcelize
+class ImageList(
+        internal var images: MutableList<String> = mutableListOf(),
+        private var removed: MutableList<String> = mutableListOf()
+) : Parcelable {
 
-import java.util.ArrayList;
-import java.util.List;
+    val isEmpty: Boolean
+        get() = images.isEmpty()
 
-import de.dreier.mytargets.shared.models.db.EndImage;
-import de.dreier.mytargets.shared.models.db.Image;
-import de.dreier.mytargets.shared.streamwrapper.Stream;
+    val removedImages: List<String>
+        get() = removed
 
-public class ImageList {
-    List<String> images = new ArrayList<>();
-    List<String> removed = new ArrayList<>();
+    constructor(images: List<Image>) : this(
+            images = images.map(Image::fileName).toMutableList()
+    )
 
-    @ParcelConstructor
-    public ImageList() {
+    fun size(): Int {
+        return images.size
     }
 
-    public ImageList(@NonNull List<? extends Image> images) {
-        for (Image image : images) {
-            this.images.add(image.getFileName());
-        }
+    operator fun get(i: Int): Image {
+        return EndImage(images[i])
     }
 
-
-    public int size() {
-        return images.size();
+    fun remove(i: Int) {
+        removed.add(images.removeAt(i))
     }
 
-    public boolean isEmpty() {
-        return images.isEmpty();
+    fun addAll(images: List<String>) {
+        this.images.addAll(images)
     }
 
-    @NonNull
-    public Image get(int i) {
-        return new EndImage(images.get(i));
-    }
-
-    public void remove(int i) {
-        removed.add(images.remove(i));
-    }
-
-    public void addAll(@NonNull List<String> images) {
-        this.images.addAll(images);
-    }
-
-    public List<String> getRemovedImages() {
-        return removed;
-    }
-
-    public List<EndImage> toEndImageList() {
-        return Stream.of(images).map(EndImage::new).toList();
+    fun toEndImageList(): List<EndImage> {
+        return images.map { EndImage(it) }
     }
 }

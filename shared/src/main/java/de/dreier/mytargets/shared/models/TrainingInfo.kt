@@ -12,63 +12,53 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.os.Parcelable
+import de.dreier.mytargets.shared.R
+import de.dreier.mytargets.shared.models.augmented.AugmentedRound
+import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
+import kotlinx.android.parcel.Parcelize
 
-import java.util.List;
+@SuppressLint("ParcelCreator")
+@Parcelize
+data class TrainingInfo(
+        var title: String? = null,
+        var roundCount: Int = 0,
+        var round: AugmentedRound) : Parcelable {
 
-import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.models.augmented.AugmentedEnd;
-import de.dreier.mytargets.shared.models.augmented.AugmentedRound;
-import de.dreier.mytargets.shared.models.augmented.AugmentedTraining;
-import de.dreier.mytargets.shared.models.db.Round;
+    constructor(training: AugmentedTraining, round: AugmentedRound) : this(
+            title = training.training.title,
+            roundCount = training.rounds.size,
+            round = round
+    )
 
-public class TrainingInfo {
-    @Nullable
-    public String title;
-    public int roundCount;
-    public AugmentedRound round;
-
-    public TrainingInfo() {
-    }
-
-    public TrainingInfo(@NonNull AugmentedTraining training, AugmentedRound round) {
-        this.round = round;
-        this.title = training.getTraining().getTitle();
-        this.roundCount = training.getRounds().size();
-    }
-
-    @NonNull
-    public String getRoundDetails(@NonNull Context context) {
-        if (round.getEnds().isEmpty()) {
-            return context.getResources()
-                    .getQuantityString(R.plurals.rounds, roundCount, roundCount);
+    fun getRoundDetails(context: Context): String {
+        return if (round.ends.isEmpty()) {
+            context.resources
+                    .getQuantityString(R.plurals.rounds, roundCount, roundCount)
         } else {
-            return round.getReachedScore().toString();
+            round.reachedScore.toString()
         }
     }
 
-    @NonNull
-    public String getEndDetails(@NonNull Context context) {
-        Round simpleRound = round.getRound();
-        List<AugmentedEnd> ends = round.getEnds();
-        if (ends.isEmpty()) {
-            if (simpleRound.getMaxEndCount() == null) {
-                return context.getResources()
-                        .getQuantityString(R.plurals.arrows_per_end, simpleRound.getShotsPerEnd(), simpleRound
-                                .getShotsPerEnd());
+    fun getEndDetails(context: Context): String {
+        val (_, _, _, shotsPerEnd, maxEndCount) = round.round
+        val ends = round.ends
+        return if (ends.isEmpty()) {
+            if (maxEndCount == null) {
+                context.resources
+                        .getQuantityString(R.plurals.arrows_per_end, shotsPerEnd, shotsPerEnd)
             } else {
-                return context.getResources()
-                        .getQuantityString(R.plurals.ends_arrow, simpleRound.getShotsPerEnd(), simpleRound
-                                .getMaxEndCount(), simpleRound.getShotsPerEnd());
+                context.resources
+                        .getQuantityString(R.plurals.ends_arrow, shotsPerEnd, maxEndCount, shotsPerEnd)
             }
         } else {
-            return context.getResources()
-                    .getQuantityString(R.plurals.ends_arrow, simpleRound.getShotsPerEnd(), ends
-                            .size(), simpleRound.getShotsPerEnd());
+            context.resources
+                    .getQuantityString(R.plurals.ends_arrow, shotsPerEnd, ends
+                            .size, shotsPerEnd)
         }
     }
 }

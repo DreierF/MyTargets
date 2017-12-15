@@ -71,7 +71,7 @@ public class MainActivity extends WearableActivity {
                     binding.root.setClickable(true);
                     binding.root.setOnClickListener(v -> {
                         Intent i = new Intent(MainActivity.this, RoundActivity.class);
-                        i.putExtra(RoundActivity.EXTRA_ROUND, Parcels.wrap(info.round));
+                        i.putExtra(RoundActivity.EXTRA_ROUND, Parcels.wrap(info.getRound()));
                         startActivity(i);
                     });
                     binding.wearableDrawerView.setVisibility(View.GONE);
@@ -139,10 +139,10 @@ public class MainActivity extends WearableActivity {
     }
 
     private void setCommonTrainingInfo(@NonNull TrainingInfo info) {
-        binding.title.setText(info.title);
+        binding.title.setText(info.getTitle());
         binding.rounds.setText(info.getRoundDetails(this));
         binding.ends.setText(info.getEndDetails(this));
-        binding.distance.setText(info.round.getRound().getDistance().toString());
+        binding.distance.setText(info.getRound().getRound().getDistance().toString());
     }
 
     @Override

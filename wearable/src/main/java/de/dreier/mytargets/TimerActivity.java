@@ -61,11 +61,11 @@ public class TimerActivity extends WearableActivity implements MenuItem.OnMenuIt
                 .setOnClickListener(v -> binding.bottomActionDrawer.getController().openDrawer());
         binding.bottomActionDrawer.setOnMenuItemClickListener(this);
         binding.bottomActionDrawer.getMenu().findItem(R.id.menu_vibrate)
-                .setIcon(settings.vibrate
+                .setIcon(settings.getVibrate()
                         ? R.drawable.ic_vibration_white_24dp
                         : R.drawable.ic_vibration_off_white_24dp);
         binding.bottomActionDrawer.getMenu().findItem(R.id.menu_sound)
-                .setIcon(settings.sound
+                .setIcon(settings.getSound()
                         ? R.drawable.ic_volume_up_white_24dp
                         : R.drawable.ic_volume_off_white_24dp);
         binding.bottomActionDrawer.getController().peekDrawer();
@@ -78,16 +78,16 @@ public class TimerActivity extends WearableActivity implements MenuItem.OnMenuIt
                 finish();
                 return true;
             case R.id.menu_vibrate:
-                timerFragment.settings.vibrate = !timerFragment.settings.vibrate;
-                menuItem.setIcon(timerFragment.settings.vibrate
+                timerFragment.settings.setVibrate(!timerFragment.settings.getVibrate());
+                menuItem.setIcon(timerFragment.settings.getVibrate()
                         ? R.drawable.ic_vibration_white_24dp
                         : R.drawable.ic_vibration_off_white_24dp);
                 ApplicationInstance.wearableClient
                         .sendTimerSettingsFromLocal(timerFragment.settings);
                 return true;
             case R.id.menu_sound:
-                timerFragment.settings.sound = !timerFragment.settings.sound;
-                menuItem.setIcon(timerFragment.settings.sound
+                timerFragment.settings.setSound(!timerFragment.settings.getSound());
+                menuItem.setIcon(timerFragment.settings.getSound()
                         ? R.drawable.ic_volume_up_white_24dp
                         : R.drawable.ic_volume_off_white_24dp);
                 ApplicationInstance.wearableClient

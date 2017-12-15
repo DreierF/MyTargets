@@ -37,7 +37,7 @@ public class WindDirectionSelector extends ImageSelectorBase<WindDirection> {
     }
 
     public void setItemId(long direction) {
-        setItem(WindDirection.getList(getContext()).get((int) direction));
+        setItem(WindDirection.Companion.getList(getContext()).get((int) direction));
     }
 
     @Override

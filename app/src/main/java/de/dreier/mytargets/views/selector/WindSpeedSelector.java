@@ -37,7 +37,7 @@ public class WindSpeedSelector extends ImageSelectorBase<WindSpeed> {
     }
 
     public void setItemId(long speed) {
-        setItem(WindSpeed.getList(getContext()).get((int) speed));
+        setItem(WindSpeed.Companion.getList(getContext()).get((int) speed));
     }
 
     @Override

@@ -12,79 +12,51 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.drawable.Drawable
+import android.os.Parcelable
+import android.support.v4.content.ContextCompat
+import de.dreier.mytargets.shared.R
+import kotlinx.android.parcel.Parcelize
+import java.util.*
 
-import org.parceler.ParcelConstructor;
+@SuppressLint("ParcelCreator")
+@Parcelize
+data class WindDirection internal constructor(
+        override var id: Long?,
+        override val name: String,
+        var drawable: Int
+) : IIdProvider, IImageProvider, Comparable<WindDirection>, Parcelable {
 
-import java.util.ArrayList;
-import java.util.List;
-
-import de.dreier.mytargets.shared.R;
-
-public class WindDirection implements IIdProvider, IImageProvider, Comparable<WindDirection> {
-
-    public long id;
-    private String name;
-    public int drawable;
-
-    @ParcelConstructor
-    WindDirection(long id, String name, int drawable) {
-        this.id = id;
-        this.name = name;
-        this.drawable = drawable;
+    override fun getDrawable(context: Context): Drawable {
+        return ContextCompat.getDrawable(context, drawable)!!
     }
 
-    @NonNull
-    public static List<WindDirection> getList(@NonNull Context context) {
-        List<WindDirection> list = new ArrayList<>();
-        list.add(new WindDirection(0, context.getString(R.string.front),
-                R.drawable.ic_arrow_downward_black_24dp));
-        list.add(new WindDirection(1, context.getString(R.string.back),
-                R.drawable.ic_arrow_upward_black_24dp));
-        list.add(new WindDirection(2, context.getString(R.string.left),
-                R.drawable.ic_arrow_right_black_24px));
-        list.add(new WindDirection(3, context.getString(R.string.right),
-                R.drawable.ic_arrow_left_black_24dp));
-        list.add(new WindDirection(4, context.getString(R.string.left_front),
-                R.drawable.ic_arrow_bottom_right_black_24dp));
-        list.add(new WindDirection(5, context.getString(R.string.right_front),
-                R.drawable.ic_arrow_bottom_left_black_24dp));
-        list.add(new WindDirection(6, context.getString(R.string.left_back),
-                R.drawable.ic_arrow_up_right_black_24dp));
-        list.add(new WindDirection(7, context.getString(R.string.right_back),
-                R.drawable.ic_arrow_up_left_black_24dp));
-        return list;
-    }
+    override fun compareTo(other: WindDirection) = compareBy(WindDirection::id).compare(this, other)
 
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public boolean equals(Object another) {
-        return another instanceof WindDirection &&
-                getClass().equals(another.getClass()) &&
-                id == ((WindDirection) another).id;
-    }
-
-    @Override
-    public Drawable getDrawable(@NonNull Context context) {
-        return context.getResources().getDrawable(drawable);
-    }
-
-    @NonNull
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public int compareTo(@NonNull WindDirection windDirection) {
-        return (int) (id - windDirection.id);
+    companion object {
+        fun getList(context: Context): List<WindDirection> {
+            val list = ArrayList<WindDirection>()
+            list.add(WindDirection(0, context.getString(R.string.front),
+                    R.drawable.ic_arrow_downward_black_24dp))
+            list.add(WindDirection(1, context.getString(R.string.back),
+                    R.drawable.ic_arrow_upward_black_24dp))
+            list.add(WindDirection(2, context.getString(R.string.left),
+                    R.drawable.ic_arrow_right_black_24px))
+            list.add(WindDirection(3, context.getString(R.string.right),
+                    R.drawable.ic_arrow_left_black_24dp))
+            list.add(WindDirection(4, context.getString(R.string.left_front),
+                    R.drawable.ic_arrow_bottom_right_black_24dp))
+            list.add(WindDirection(5, context.getString(R.string.right_front),
+                    R.drawable.ic_arrow_bottom_left_black_24dp))
+            list.add(WindDirection(6, context.getString(R.string.left_back),
+                    R.drawable.ic_arrow_up_right_black_24dp))
+            list.add(WindDirection(7, context.getString(R.string.right_back),
+                    R.drawable.ic_arrow_up_left_black_24dp))
+            return list
+        }
     }
 }
