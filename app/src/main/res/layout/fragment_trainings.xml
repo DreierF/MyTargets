@@ -29,6 +29,7 @@
         <include
             android:id="@+id/emptyState"
             layout="@layout/partial_empty_state"
+            android:visibility="gone"
             app:image="@{de.dreier.mytargets.R.drawable.ic_archery_24dp}"
             app:text="@{de.dreier.mytargets.R.string.no_trainings}"/>
 
