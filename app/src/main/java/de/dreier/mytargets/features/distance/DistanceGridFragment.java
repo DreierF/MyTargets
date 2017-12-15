@@ -24,8 +24,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.parceler.Parcels;
-
 import java.util.List;
 
 import de.dreier.mytargets.R;
@@ -53,7 +51,7 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension, Simp
     public static DistanceGridFragment newInstance(Dimension distance, @NonNull Unit unit) {
         DistanceGridFragment fragment = new DistanceGridFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ITEM, Parcels.wrap(distance));
+        args.putParcelable(ITEM, distance);
         args.putString(DISTANCE_UNIT, unit.toString());
         fragment.setArguments(args);
         return fragment;
@@ -64,7 +62,7 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension, Simp
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
         binding.recyclerView.setHasFixedSize(true);
         Bundle bundle = getArguments();
-        distance = Parcels.unwrap(bundle.getParcelable(ITEM));
+        distance = bundle.getParcelable(ITEM);
         unit = Unit.Companion.from(bundle.getString(DISTANCE_UNIT));
         binding.recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         binding.recyclerView.addItemDecoration(new DistanceItemDecorator(getActivity(), 3));
@@ -87,7 +85,7 @@ public class DistanceGridFragment extends SelectItemFragmentBase<Dimension, Simp
         } catch (NumberFormatException e) {
             // leave distance as it is
         }
-        listener.onItemSelected(Parcels.wrap(distance));
+        listener.onItemSelected(distance);
         finish();
     }
 

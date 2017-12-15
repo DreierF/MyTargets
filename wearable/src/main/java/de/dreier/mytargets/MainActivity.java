@@ -30,8 +30,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import org.parceler.Parcels;
-
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -65,13 +63,12 @@ public class MainActivity extends WearableActivity {
                     binding.wearableDrawerView.getController().peekDrawer();
                     break;
                 case BROADCAST_TRAINING_UPDATED:
-                    TrainingInfo info = Parcels
-                            .unwrap(intent.getParcelableExtra(WearWearableClient.EXTRA_INFO));
+                    TrainingInfo info = intent.getParcelableExtra(WearWearableClient.EXTRA_INFO);
                     setTrainingInfo(info);
                     binding.root.setClickable(true);
                     binding.root.setOnClickListener(v -> {
                         Intent i = new Intent(MainActivity.this, RoundActivity.class);
-                        i.putExtra(RoundActivity.EXTRA_ROUND, Parcels.wrap(info.getRound()));
+                        i.putExtra(RoundActivity.EXTRA_ROUND, info.getRound());
                         startActivity(i);
                     });
                     binding.wearableDrawerView.setVisibility(View.GONE);

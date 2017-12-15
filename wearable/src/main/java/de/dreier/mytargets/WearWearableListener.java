@@ -27,15 +27,9 @@ import android.support.annotation.NonNull;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
 
-import org.parceler.Parcels;
-
 import de.dreier.mytargets.shared.models.TimerSettings;
-import de.dreier.mytargets.shared.models.TimerSettings$$Parcelable;
 import de.dreier.mytargets.shared.models.TrainingInfo;
-import de.dreier.mytargets.shared.models.TrainingInfo$$Parcelable;
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining;
-import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.shared.models.db.Training$$Parcelable;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.utils.WearSettingsManager;
 
@@ -53,8 +47,7 @@ public class WearWearableListener extends WearableListenerService {
         byte[] data = messageEvent.getData();
         switch (messageEvent.getPath()) {
             case TRAINING_UPDATE:
-                TrainingInfo info = Parcels
-                        .unwrap(ParcelableUtil.unmarshall(data, TrainingInfo$$Parcelable.CREATOR));
+                TrainingInfo info = ParcelableUtil.unmarshall(data, (Parcelable.Creator<TrainingInfo>) TrainingInfo.CREATOR);
                 showNotification(info);
                 ApplicationInstance.wearableClient.sendTrainingUpdate(info);
                 break;
@@ -63,8 +56,7 @@ public class WearWearableListener extends WearableListenerService {
                 ApplicationInstance.wearableClient.sendTrainingTemplate(training);
                 break;
             case TIMER_SETTINGS:
-                TimerSettings settings = Parcels
-                        .unwrap(ParcelableUtil.unmarshall(data, TimerSettings$$Parcelable.CREATOR));
+                TimerSettings settings = ParcelableUtil.unmarshall(data, (Parcelable.Creator<TimerSettings>) TimerSettings.CREATOR);
                 WearSettingsManager.setTimerSettings(settings);
                 ApplicationInstance.wearableClient.sendTimerSettingsFromRemote();
                 break;
@@ -76,7 +68,7 @@ public class WearWearableListener extends WearableListenerService {
     private void showNotification(@NonNull TrainingInfo info) {
         // Build the intent to display our custom notification
         Intent notificationIntent = new Intent(this, RoundActivity.class);
-        notificationIntent.putExtra(RoundActivity.EXTRA_ROUND, Parcels.wrap(info.getRound()));
+        notificationIntent.putExtra(RoundActivity.EXTRA_ROUND, info.getRound());
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 

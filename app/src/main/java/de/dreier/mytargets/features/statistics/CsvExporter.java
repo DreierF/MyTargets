@@ -108,7 +108,7 @@ public class CsvExporter {
         csv.add(r.getDistance().toString());
         // Target
         final Target target = r.getTarget();
-        csv.add(target.getModel().toString() + " (" + target.diameter
+        csv.add(target.getModel().toString() + " (" + target.getDiameter()
                 .toString() + ")");
         for (End e : r.loadEnds()) {
             csv.enterScope();

@@ -33,8 +33,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-
-import org.parceler.Parcels;
+import com.evernote.android.state.State;
 
 import java.util.List;
 
@@ -46,13 +45,11 @@ import de.dreier.mytargets.databinding.ItemStandardRoundBinding;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.utils.LongSparseArrayUtilsKt;
-import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
-import com.evernote.android.state.State;
 
 import static android.app.Activity.RESULT_OK;
 import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
@@ -65,7 +62,7 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
     private static final String KEY_QUERY = "query";
 
     @Nullable
-    @State(ParcelsBundler.class)
+    @State
     StandardRound currentSelection;
     private SearchView searchView;
 
@@ -74,14 +71,14 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
     @NonNull
     public static IntentWrapper getIntent(StandardRound standardRound) {
         return new IntentWrapper(StandardRoundActivity.class)
-                .with(ITEM, Parcels.wrap(standardRound));
+                .with(ITEM, standardRound);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
-            currentSelection = Parcels.unwrap(getArguments().getParcelable(ITEM));
+            currentSelection = getArguments().getParcelable(ITEM);
         }
     }
 
@@ -196,12 +193,12 @@ public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRo
     public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == NEW_STANDARD_ROUND) {
-            persistSelection(Parcels.unwrap(data.getParcelableExtra(ITEM)));
+            persistSelection(data.getParcelableExtra(ITEM));
             getActivity().setResult(resultCode, data);
             finish();
         } else if (requestCode == EDIT_STANDARD_ROUND) {
             if (resultCode == RESULT_OK) {
-                currentSelection = Parcels.unwrap(data.getParcelableExtra(ITEM));
+                currentSelection = data.getParcelableExtra(ITEM);
                 reloadData();
             } else if (resultCode == EditStandardRoundFragment.RESULT_STANDARD_ROUND_DELETED) {
                 currentSelection = StandardRound.Companion.get(32L);

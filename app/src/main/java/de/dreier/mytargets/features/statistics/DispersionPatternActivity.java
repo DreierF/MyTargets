@@ -27,8 +27,6 @@ import android.support.v4.print.PrintHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import org.parceler.Parcels;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -56,7 +54,7 @@ public class DispersionPatternActivity extends ChildActivityBase {
     @NonNull
     public static IntentWrapper getIntent(ArrowStatistic statistics) {
         return new IntentWrapper(DispersionPatternActivity.class)
-                .with(ITEM, Parcels.wrap(statistics));
+                .with(ITEM, statistics);
     }
 
     @Override
@@ -65,12 +63,13 @@ public class DispersionPatternActivity extends ChildActivityBase {
         binding = DataBindingUtil
                 .setContentView(this, R.layout.activity_arrow_ranking_details);
 
-        statistic = Parcels.unwrap(getIntent().getParcelableExtra(ITEM));
+        statistic = getIntent().getParcelableExtra(ITEM);
 
         ToolbarUtils.showHomeAsUp(this);
-        if (statistic.arrowName != null) {
-            ToolbarUtils.setTitle(this, getString(R.string.arrow_number_x, statistic.arrowNumber));
-            ToolbarUtils.setSubtitle(this, statistic.arrowName);
+        if (statistic.getArrowName() != null) {
+            ToolbarUtils.setTitle(this, getString(R.string.arrow_number_x, statistic
+                    .getArrowNumber()));
+            ToolbarUtils.setSubtitle(this, statistic.getArrowName());
         } else {
             ToolbarUtils.setTitle(this, R.string.dispersion_pattern);
         }
@@ -82,10 +81,10 @@ public class DispersionPatternActivity extends ChildActivityBase {
 
         EAggregationStrategy strategy = SettingsManager.INSTANCE
                 .getStatisticsDispersionPatternAggregationStrategy();
-        TargetImpactAggregationDrawable drawable = statistic.target.getImpactAggregationDrawable();
+        TargetImpactAggregationDrawable drawable = statistic.getTarget().getImpactAggregationDrawable();
         drawable.setAggregationStrategy(strategy);
-        drawable.setShots(statistic.shots);
-        drawable.setArrowDiameter(statistic.arrowDiameter, SettingsManager.INSTANCE
+        drawable.setShots(statistic.getShots());
+        drawable.setArrowDiameter(statistic.getArrowDiameter(), SettingsManager.INSTANCE
                 .getInputArrowDiameterScale());
 
         binding.dispersionView.setImageDrawable(drawable);

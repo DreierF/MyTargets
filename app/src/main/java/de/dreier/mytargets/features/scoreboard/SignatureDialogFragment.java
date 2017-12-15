@@ -29,8 +29,6 @@ import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import org.parceler.Parcels;
-
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentSignatureBinding;
 import de.dreier.mytargets.shared.models.db.Signature;
@@ -43,7 +41,7 @@ public class SignatureDialogFragment extends DialogFragment {
     public static SignatureDialogFragment newInstance(Signature signature, String defaultName) {
         SignatureDialogFragment fragment = new SignatureDialogFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_SIGNATURE, Parcels.wrap(signature));
+        args.putParcelable(ARG_SIGNATURE, signature);
         args.putString(ARG_DEFAULT_NAME, defaultName);
         fragment.setArguments(args);
         return fragment;
@@ -55,11 +53,11 @@ public class SignatureDialogFragment extends DialogFragment {
         FragmentSignatureBinding binding = FragmentSignatureBinding
                 .inflate(inflater, container, false);
         Bundle args = getArguments();
-        Signature signature = Parcels.unwrap(args.getParcelable(ARG_SIGNATURE));
+        Signature signature = args.getParcelable(ARG_SIGNATURE);
         String defaultName = args.getString(ARG_DEFAULT_NAME);
 
         if (signature.isSigned()) {
-            binding.signatureView.setSignatureBitmap(signature.getBitmap());
+            binding.signatureView.setSignatureBitmap(signature.bitmap);
         }
         binding.editName.setOnClickListener(v -> new MaterialDialog.Builder(getContext())
                 .title(R.string.name)
@@ -77,7 +75,7 @@ public class SignatureDialogFragment extends DialogFragment {
             if (!binding.signatureView.isEmpty()) {
                 bitmap = binding.signatureView.getTransparentSignatureBitmap();
             }
-            signature.setBitmap(bitmap);
+            signature.bitmap = bitmap;
             signature.save();
             dismiss();
         });

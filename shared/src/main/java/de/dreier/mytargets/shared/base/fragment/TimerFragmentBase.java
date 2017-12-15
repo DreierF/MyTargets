@@ -26,8 +26,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.WindowManager;
 
-import org.parceler.Parcels;
-
 import de.dreier.mytargets.shared.R;
 import de.dreier.mytargets.shared.models.TimerSettings;
 
@@ -56,7 +54,7 @@ public abstract class TimerFragmentBase extends Fragment implements View.OnClick
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        settings = Parcels.unwrap(getArguments().getParcelable(ARG_TIMER_SETTINGS));
+        settings = getArguments().getParcelable(ARG_TIMER_SETTINGS);
         exitAfterStop = getArguments().getBoolean(ARG_EXIT_AFTER_STOP);
     }
 

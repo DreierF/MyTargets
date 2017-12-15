@@ -13,87 +13,77 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.statistics;
+package de.dreier.mytargets.features.statistics
 
-import android.support.annotation.NonNull;
+import android.annotation.SuppressLint
+import android.os.Parcelable
+import de.dreier.mytargets.R
+import de.dreier.mytargets.shared.SharedApplicationInstance
+import de.dreier.mytargets.shared.analysis.aggregation.average.Average
+import de.dreier.mytargets.shared.models.Dimension
+import de.dreier.mytargets.shared.models.Score
+import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.models.db.Arrow
+import de.dreier.mytargets.shared.models.db.Round
+import de.dreier.mytargets.shared.models.db.Shot
+import kotlinx.android.parcel.Parcelize
+import java.lang.Math.ceil
+import java.util.*
 
-import org.parceler.Parcel;
+@SuppressLint("ParcelCreator")
+@Parcelize
+data class ArrowStatistic(
+        var arrowName: String? = null,
+        var arrowNumber: String? = null,
+        var target: Target,
+        var shots: MutableList<Shot> = ArrayList(),
+        var average: Average = Average(),
+        var totalScore: Score = Score(),
+        var arrowDiameter: Dimension = Dimension(5f, Dimension.Unit.MILLIMETER)
+) : Comparable<ArrowStatistic>, Parcelable {
 
-import java.util.ArrayList;
-import java.util.List;
+    val appropriateBgColor: Int
+        get() = BG_COLORS[ceil(((BG_COLORS.size - 1) * totalScore.percent).toDouble()).toInt()]
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.shared.analysis.aggregation.average.Average;
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.Score;
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.Arrow;
-import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.Shot;
-import de.dreier.mytargets.shared.streamwrapper.Stream;
+    val appropriateTextColor: Int
+        get() = TEXT_COLORS[ceil(((TEXT_COLORS.size - 1) * totalScore.percent).toDouble()).toInt()]
 
-import static de.dreier.mytargets.shared.SharedApplicationInstance.Companion;
-import static java.lang.Math.ceil;
+    constructor(target: Target, shots: List<Shot>) : this(null, null, target, shots)
 
-@Parcel
-public class ArrowStatistic implements Comparable<ArrowStatistic> {
-
-    private static final int[] BG_COLORS = {0xFFF44336, 0xFFFF5722, 0xFFFF9800, 0xFFFFC107, 0xFFFFEB3B, 0xFFCDDC39, 0xFF8BC34A, 0xFF4CAF50};
-    private static final int[] TEXT_COLORS = {0xFFFFFFFF, 0xFFFFFFFF, 0xFF000002, 0xFF000002, 0xFF000002, 0xFF000002, 0xFF000002, 0xFF000002};
-    public String arrowName;
-    public String arrowNumber;
-    public Average average = new Average();
-    public Target target;
-    public List<Shot> shots = new ArrayList<>();
-    public Score totalScore;
-    public Dimension arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
-
-    public ArrowStatistic() {
+    private constructor(arrowName: String?, arrowNumber: String?, target: Target, shots: List<Shot>) : this(
+            arrowName = arrowName,
+            arrowNumber = arrowNumber,
+            target = target
+    ) {
+        this.average.computeAll(shots)
+        this.shots.addAll(shots)
+        this.totalScore = shots
+                .map { shot -> target.getScoringStyle().getReachedScore(shot) }
+                .fold(Score()) { score, s ->
+                    score.add(s)
+                }
     }
 
-    public ArrowStatistic(@NonNull Target target, @NonNull List<Shot> shots) {
-        this(null, null, target, shots);
-    }
+    override fun compareTo(other: ArrowStatistic) = compareByDescending<ArrowStatistic>({ totalScore.shotAverage }).compare(this, other)
 
-    private ArrowStatistic(String arrowName, String arrowNumber, @NonNull Target target, @NonNull List<Shot> shots) {
-        this.arrowName = arrowName;
-        this.arrowNumber = arrowNumber;
-        this.target = target;
-        this.average.computeAll(shots);
-        this.shots.addAll(shots);
-        this.totalScore = Stream.of(shots)
-                .map(shot -> target.getScoringStyle().getReachedScore(shot)).scoreSum();
-    }
+    companion object {
 
-    public static List<ArrowStatistic> getAll(@NonNull Target target, @NonNull List<Round> rounds) {
-        return Stream.of(rounds)
-                .withoutNulls()
-                .groupBy(r -> r.getTraining().getArrowId() == null ? 0 :
-                        r.getTraining().getArrowId())
-                .flatMap(t -> {
-                    Arrow arrow = Arrow.Companion.get(t.getKey());
-                    String name = arrow == null ? Companion.getStr(R.string.unknown) : arrow.getName();
-                    return Stream.of(t.getValue())
-                            .flatMap(r -> Stream.of(r.loadEnds())
-                                    .flatMap(e -> Stream.of(e.loadShots())))
-                            .filter(s -> s.getArrowNumber() != null)
-                            .groupBy(shot -> shot.getArrowNumber())
-                            .filter(entry -> entry.getValue().size() > 1)
-                            .map(stringListEntry -> new ArrowStatistic(name,
-                                    stringListEntry.getKey(), target, stringListEntry.getValue()));
-                }).toList();
-    }
+        private val BG_COLORS = intArrayOf(-0xbbcca, -0xa8de, -0x6800, -0x3ef9, -0x14c5, -0x3223c7, -0x743cb6, -0xb350b0)
+        private val TEXT_COLORS = intArrayOf(-0x1, -0x1, -0xfffffe, -0xfffffe, -0xfffffe, -0xfffffe, -0xfffffe, -0xfffffe)
 
-    public int getAppropriateBgColor() {
-        return BG_COLORS[((int) ceil((BG_COLORS.length - 1) * totalScore.getPercent()))];
-    }
-
-    public int getAppropriateTextColor() {
-        return TEXT_COLORS[((int) ceil((TEXT_COLORS.length - 1) * totalScore.getPercent()))];
-    }
-
-    @Override
-    public int compareTo(@NonNull ArrowStatistic another) {
-        return Float.compare(another.totalScore.getShotAverage(), totalScore.getShotAverage());
+        fun getAll(target: Target, rounds: List<Round>): List<ArrowStatistic> {
+            return rounds
+                    .groupBy { r -> r.training!!.arrowId ?: 0 }
+                    .flatMap { t ->
+                        val arrow = Arrow[t.key]
+                        val name = arrow?.name ?: SharedApplicationInstance.getStr(R.string.unknown)
+                        t.value.flatMap { it.loadEnds()!! }
+                                .flatMap { it.loadShots()!! }
+                                .filter { it.arrowNumber != null }
+                                .groupBy {it.arrowNumber!! }
+                                .filter { it.value.size > 1 }
+                                .map { (key, value) -> ArrowStatistic(name, key, target, value) }
+                    }
+        }
     }
 }

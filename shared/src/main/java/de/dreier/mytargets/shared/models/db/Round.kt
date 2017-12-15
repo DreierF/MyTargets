@@ -94,10 +94,10 @@ data class Round(
     }
 
     var target: Target
-        get() = Target(targetId, targetScoringStyle, targetDiameter)
+        get() = Target(targetId.toLong(), targetScoringStyle, targetDiameter)
         set(targetTemplate) {
-            targetId = targetTemplate.id.toInt()
-            targetScoringStyle = targetTemplate.scoringStyle
+            targetId = targetTemplate.id!!.toInt()
+            targetScoringStyle = targetTemplate.scoringStyleIndex
             targetDiameter = targetTemplate.diameter
         }
 

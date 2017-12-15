@@ -123,16 +123,16 @@ data class Bow(
         get() = thumbnail!!.roundDrawable
 
     @OneToMany(methods = [], variableName = "sightMarks")
-    fun loadSightMarks(): MutableList<SightMark>? {
+    fun loadSightMarks(): ArrayList<SightMark>? {
         if (sightMarks == null) {
             sightMarks = if (id == null) mutableListOf() else SQLite.select()
                     .from(SightMark::class.java)
-                    .where(SightMark_Table.bow.eq(id))
+                    .where(SightMark_Table.bow.eq(id!!))
                     .queryList()
                     .sortedBy { sightMark -> sightMark.distance }
                     .toMutableList()
         }
-        return sightMarks
+        return ArrayList(sightMarks) //TODO remove
     }
 
     @OneToMany(methods = [], variableName = "images")
@@ -172,7 +172,7 @@ data class Bow(
         }
         if (sightMarks != null) {
             SQLite.delete(SightMark::class.java)
-                    .where(SightMark_Table.bow.eq(id))
+                    .where(SightMark_Table.bow.eq(id!!))
                     .execute(databaseWrapper)
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
             for (sightMark in sightMarks!!) {

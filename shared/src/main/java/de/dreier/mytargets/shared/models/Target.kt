@@ -13,138 +13,86 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-
-import org.parceler.Parcel;
-
-import java.util.List;
-
-import de.dreier.mytargets.shared.models.db.End;
-import de.dreier.mytargets.shared.targets.TargetFactory;
-import de.dreier.mytargets.shared.targets.drawable.TargetDrawable;
-import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
-import de.dreier.mytargets.shared.targets.models.TargetModelBase;
-import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.drawable.Drawable
+import android.os.Parcelable
+import de.dreier.mytargets.shared.models.db.End
+import de.dreier.mytargets.shared.targets.TargetFactory
+import de.dreier.mytargets.shared.targets.drawable.TargetDrawable
+import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable
+import de.dreier.mytargets.shared.targets.models.TargetModelBase
+import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle
+import kotlinx.android.parcel.Parcelize
 
 /**
- * Represents a target face, which is in contrast to a {@link TargetModelBase} bound to a specific
+ * Represents a target face, which is in contrast to a [TargetModelBase] bound to a specific
  * scoring style and diameter.
  */
-@Parcel
-public class Target implements IIdProvider, IImageProvider, IDetailProvider, Comparable<Target> {
-     int id;
-    public int scoringStyle;
-    public Dimension diameter;
-    private transient TargetModelBase model;
-    private transient TargetDrawable drawable;
-    private transient TargetImpactAggregationDrawable targetImpactAggregationDrawable;
+@SuppressLint("ParcelCreator")
+@Parcelize
+data class Target(
+        override var id: Long? = 0,
+        var scoringStyleIndex: Int = 0,
+        var diameter: Dimension? = null
+) : IIdProvider, IImageProvider, IDetailProvider, Comparable<Target>, Parcelable {
 
-    public static Target singleSpotTargetFrom(Target spotTarget) {
-        if (spotTarget.getModel().getFaceCount() == 1) {
-            return spotTarget;
+    val model: TargetModelBase by lazy { TargetFactory.getTarget(id!!.toInt()) }
+    val drawable: TargetDrawable by lazy { TargetDrawable(this) }
+    val impactAggregationDrawable: TargetImpactAggregationDrawable by lazy {
+        TargetImpactAggregationDrawable(this)
+    }
+
+    constructor(target: Int, scoringStyle: Int) : this(target.toLong(), scoringStyle, null) {
+        this.diameter = model.diameters[0]
+    }
+
+    override val name: String
+        get() = String.format("%s (%s)", toString(), diameter!!.toString())
+
+    fun zoneToString(zone: Int, arrow: Int): String {
+        return getScoringStyle().zoneToString(zone, arrow)
+    }
+
+    fun getScoreByZone(zone: Int, arrow: Int): Int {
+        return getScoringStyle().getScoreByScoringRing(zone, arrow)
+    }
+
+    override fun getDrawable(context: Context): Drawable {
+        return drawable
+    }
+
+    override fun getDetails(context: Context): String {
+        return model.scoringStyles[scoringStyleIndex]
+    }
+
+    fun getSelectableZoneList(arrow: Int): List<SelectableZone> {
+        return model.getSelectableZoneList(scoringStyleIndex, arrow)
+    }
+
+    fun getScoringStyle(): ScoringStyle {
+        return model.getScoringStyle(scoringStyleIndex)
+    }
+
+    fun getReachedScore(end: End): Score {
+        return getScoringStyle().getReachedScore(end)
+    }
+
+    override fun toString(): String {
+        return model.toString()
+    }
+
+    override fun compareTo(other: Target) = compareBy(Target::id).compare(this, other)
+
+    companion object {
+        fun singleSpotTargetFrom(spotTarget: Target): Target {
+            if (spotTarget.model.faceCount == 1) {
+                return spotTarget
+            }
+            val singleSpotTargetId = spotTarget.model.singleSpotTargetId.toInt()
+            return Target(singleSpotTargetId.toLong(), spotTarget.scoringStyleIndex, spotTarget.diameter)
         }
-        int singleSpotTargetId = (int) spotTarget.getModel().getSingleSpotTargetId();
-        return new Target(singleSpotTargetId, spotTarget.scoringStyle, spotTarget.diameter);
-    }
-
-    public Target() {
-    }
-
-    public Target(int target, int scoringStyle) {
-        this(target, scoringStyle, null);
-        this.diameter = getModel().getDiameters()[0];
-    }
-
-    public Target(int target, int scoringStyle, Dimension diameter) {
-        this.id = target;
-        this.model = TargetFactory.getTarget(target);
-        this.scoringStyle = scoringStyle;
-        this.diameter = diameter;
-    }
-
-    @NonNull
-    public Long getId() {
-        return (long) id;
-    }
-
-    public TargetDrawable getDrawable() {
-        if (drawable == null) {
-            drawable = new TargetDrawable(this);
-        }
-        return drawable;
-    }
-
-    public TargetImpactAggregationDrawable getImpactAggregationDrawable() {
-        if (targetImpactAggregationDrawable == null) {
-            targetImpactAggregationDrawable = new TargetImpactAggregationDrawable(this);
-        }
-        return targetImpactAggregationDrawable;
-    }
-
-    public String zoneToString(int zone, int arrow) {
-        return getScoringStyle().zoneToString(zone, arrow);
-    }
-
-    @Override
-    public boolean equals(Object another) {
-        return another instanceof Target &&
-                getClass().equals(another.getClass()) &&
-                id == ((Target) another).id &&
-                diameter.equals(((Target) another).diameter) &&
-                scoringStyle == ((Target) another).scoringStyle;
-    }
-
-    @NonNull
-    public TargetModelBase getModel() {
-        if (model == null) {
-            model = TargetFactory.getTarget(id);
-        }
-        return model;
-    }
-
-    public int getScoreByZone(int zone, int arrow) {
-        return getScoringStyle().getScoreByScoringRing(zone, arrow);
-    }
-
-    @Override
-    public Drawable getDrawable(Context context) {
-        return getDrawable();
-    }
-
-    @NonNull
-    @Override
-    public String getName() {
-        return String.format("%s (%s)", toString(), diameter.toString());
-    }
-
-    @Override
-    public String getDetails(Context context) {
-        return getModel().getScoringStyles().get(scoringStyle);
-    }
-
-    public List<SelectableZone> getSelectableZoneList(int arrow) {
-        return getModel().getSelectableZoneList(scoringStyle, arrow);
-    }
-
-    public ScoringStyle getScoringStyle() {
-        return getModel().getScoringStyle(scoringStyle);
-    }
-
-    public Score getReachedScore(End end) {
-        return getScoringStyle().getReachedScore(end);
-    }
-
-    @Override
-    public String toString() {
-        return getModel().toString();
-    }
-
-    @Override
-    public int compareTo(@NonNull Target target) {
-        return id - target.id;
     }
 }

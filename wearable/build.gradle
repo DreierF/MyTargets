@@ -79,9 +79,6 @@ dependencies {
     implementation "com.github.Raizlabs.DBFlow:dbflow-core:$libraryVersion.dbFlow"
     implementation "com.github.Raizlabs.DBFlow:dbflow:$libraryVersion.dbFlow"
 
-    implementation "org.parceler:parceler-api:$libraryVersion.parceler"
-    kapt "org.parceler:parceler:$libraryVersion.parceler"
-
     implementation "com.evernote:android-state:$libraryVersion.androidState"
     annotationProcessor "com.evernote:android-state-processor:$libraryVersion.androidState"
 

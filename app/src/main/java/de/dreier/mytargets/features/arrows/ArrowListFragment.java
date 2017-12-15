@@ -18,8 +18,6 @@ package de.dreier.mytargets.features.arrows;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import org.parceler.Parcels;
-
 import java.util.List;
 
 import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase;
@@ -35,7 +33,7 @@ public class ArrowListFragment extends SelectPureListItemFragmentBase<Arrow> {
         List<Arrow> arrows = Arrow.Companion.getAll();
         return () -> {
             adapter.setList(arrows);
-            Arrow arrow = Parcels.unwrap(getArguments().getParcelable(ITEM));
+            Arrow arrow = getArguments().getParcelable(ITEM);
             selectItem(binding.recyclerView, arrow);
         };
     }

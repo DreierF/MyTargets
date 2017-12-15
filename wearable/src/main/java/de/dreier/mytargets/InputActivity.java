@@ -24,8 +24,6 @@ import android.support.wearable.activity.ConfirmationActivity;
 import android.support.wearable.activity.WearableActivity;
 import android.view.View;
 
-import org.parceler.Parcels;
-
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
@@ -52,7 +50,7 @@ public class InputActivity extends WearableActivity implements TargetViewBase.On
 
         Intent intent = getIntent();
         if (intent != null && intent.getExtras() != null) {
-            round = Parcels.unwrap(intent.getParcelableExtra(EXTRA_ROUND));
+            round = intent.getParcelableExtra(EXTRA_ROUND);
         }
 
         // Workaround to avoid crash happening when setting invisible via xml layout

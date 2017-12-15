@@ -26,8 +26,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
-import org.parceler.Parcels;
-
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentTimerBinding;
 import de.dreier.mytargets.features.settings.SettingsManager;
@@ -50,8 +48,7 @@ public class TimerFragment extends TimerFragmentBase {
     public static IntentWrapper getIntent(boolean exitAfterStop) {
         return new IntentWrapper(TimerActivity.class)
                 .with(TimerFragmentBase.ARG_EXIT_AFTER_STOP, exitAfterStop)
-                .with(TimerFragmentBase.ARG_TIMER_SETTINGS,
-                        Parcels.wrap(SettingsManager.INSTANCE.getTimerSettings()));
+                .with(TimerFragmentBase.ARG_TIMER_SETTINGS, SettingsManager.INSTANCE.getTimerSettings());
     }
 
     @Override

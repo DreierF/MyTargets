@@ -29,9 +29,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import junit.framework.Assert;
+import com.evernote.android.state.State;
 
-import org.parceler.Parcels;
+import junit.framework.Assert;
 
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.fragments.FragmentBase;
@@ -40,9 +40,7 @@ import de.dreier.mytargets.databinding.FragmentEnvironmentBinding;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.EWeather;
 import de.dreier.mytargets.shared.models.Environment;
-import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.ToolbarUtils;
-import com.evernote.android.state.State;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -51,7 +49,7 @@ import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
 public class EnvironmentFragment extends FragmentBase {
 
     private ListFragmentBase.OnItemSelectedListener listener;
-    @State(ParcelsBundler.class)
+    @State
     Environment environment;
     private FragmentEnvironmentBinding binding;
     private SwitchCompat switchView;
@@ -75,7 +73,7 @@ public class EnvironmentFragment extends FragmentBase {
         if (savedInstanceState == null) {
             Bundle i = getArguments();
             assert i != null;
-            environment = Parcels.unwrap(i.getParcelable(ITEM));
+            environment = i.getParcelable(ITEM);
         }
         setWeather(environment.getWeather());
         binding.windSpeed.setItemId(environment.getWindSpeed());
@@ -135,7 +133,7 @@ public class EnvironmentFragment extends FragmentBase {
 
     public void onSave() {
         Environment e = saveItem();
-        listener.onItemSelected(Parcels.wrap(e));
+        listener.onItemSelected(e);
         finish();
         SettingsManager.INSTANCE.setIndoor(e.getIndoor());
     }

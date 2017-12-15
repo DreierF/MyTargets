@@ -22,8 +22,6 @@ import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
-import org.parceler.Parcels;
-
 import java.util.List;
 
 import de.dreier.mytargets.features.settings.SettingsManager;
@@ -81,7 +79,7 @@ public class MobileWearableClient extends WearableClientBase {
         Intent intent = new Intent(BROADCAST_UPDATE_TRAINING_FROM_REMOTE);
         intent.putExtra(EXTRA_TRAINING_ID, round.getTrainingId());
         intent.putExtra(EXTRA_ROUND_ID, round.getId());
-        intent.putExtra(EXTRA_END, Parcels.wrap(end));
+        intent.putExtra(EXTRA_END, end);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
@@ -120,7 +118,7 @@ public class MobileWearableClient extends WearableClientBase {
     }
 
     private void sendTrainingInfo(TrainingInfo trainingInfo) {
-        final byte[] data = ParcelableUtil.marshall(Parcels.wrap(trainingInfo));
+        final byte[] data = ParcelableUtil.marshall(trainingInfo);
         sendMessage(WearableClientBase.TRAINING_UPDATE, data);
     }
 
@@ -135,7 +133,7 @@ public class MobileWearableClient extends WearableClientBase {
         public void onReceive(Context context, @NonNull Intent intent) {
             Long trainingId = intent.getLongExtra(EXTRA_TRAINING_ID, -1);
             Long roundId = intent.getLongExtra(EXTRA_ROUND_ID, -1);
-            End end = Parcels.unwrap(intent.getParcelableExtra(EXTRA_END));
+            End end = intent.getParcelableExtra(EXTRA_END);
             if (trainingId == -1 || roundId == -1) {
                 Timber.w("Incomplete request!");
             }

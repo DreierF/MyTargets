@@ -21,8 +21,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.parceler.Parcels;
-
 import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase;
 import de.dreier.mytargets.shared.models.WindDirection;
 
@@ -34,7 +32,7 @@ public class WindDirectionListFragment extends SelectPureListItemFragmentBase<Wi
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         adapter.setList(WindDirection.Companion.getList(getContext()));
-        WindDirection windDirection = Parcels.unwrap(getArguments().getParcelable(ITEM));
+        WindDirection windDirection = getArguments().getParcelable(ITEM);
         selectItem(binding.recyclerView, windDirection);
         return binding.getRoot();
     }

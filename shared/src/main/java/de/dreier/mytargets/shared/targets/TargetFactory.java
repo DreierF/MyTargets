@@ -108,7 +108,7 @@ public class TargetFactory {
     public static List<TargetModelBase> getList(@NonNull Target target) {
         List<TargetModelBase> out = new ArrayList<>();
         if (target.getId() < 7) {
-            int til = target.diameter.getValue() <= 60 ? 7 : 4;
+            int til = target.getDiameter().getValue() <= 60 ? 7 : 4;
             for (int i = 0; i < til; i++) {
                 out.add(list.get(i));
             }

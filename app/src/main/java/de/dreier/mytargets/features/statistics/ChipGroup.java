@@ -16,31 +16,17 @@
 package de.dreier.mytargets.features.statistics;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-
-
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-
-import org.parceler.Parcel;
-import org.parceler.ParcelConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.ViewChipsBinding;
-import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 
 public class ChipGroup extends ViewGroup {
     @NonNull
@@ -185,7 +171,7 @@ public class ChipGroup extends ViewGroup {
      */
     public List<Tag> getCheckedTags() {
         return Stream.of(tagList)
-                .filter(value -> value.isChecked)
+                .filter(Tag::isChecked)
                 .toList();
     }
 
@@ -197,8 +183,8 @@ public class ChipGroup extends ViewGroup {
     protected void appendTag(@NonNull Tag tag) {
         ViewChipsBinding binding = tag.getView(getContext(), this);
         binding.getRoot().setOnClickListener(v -> {
-            tag.isChecked = !tag.isChecked;
-            binding.getRoot().setActivated(!tag.isChecked);
+            tag.setChecked(!tag.isChecked());
+            binding.getRoot().setActivated(!tag.isChecked());
             if (mOnSelectionChangedListener != null) {
                 mOnSelectionChangedListener.onSelectionChanged(tag);
             }
@@ -244,53 +230,6 @@ public class ChipGroup extends ViewGroup {
     public static class LayoutParams extends ViewGroup.LayoutParams {
         public LayoutParams(Context c, AttributeSet attrs) {
             super(c, attrs);
-        }
-    }
-
-    @Parcel
-    public static class Tag {
-
-        private static final int CHIP_HEIGHT = 32; // dp
-
-        public Long id;
-        public String text;
-        public byte[] image;
-        public boolean isChecked = false;
-        private transient Bitmap thumbnail;
-
-        public Tag(Long id, String text) {
-            this(id, text, null, true);
-        }
-
-        @ParcelConstructor
-        public Tag(Long id, String text, byte[] image, boolean isChecked) {
-            this.id = id;
-            this.text = text;
-            this.isChecked = isChecked;
-            this.image = image;
-        }
-
-        public ViewChipsBinding getView(@NonNull Context context, ViewGroup parent) {
-            ViewChipsBinding binding = DataBindingUtil
-                    .inflate(LayoutInflater.from(context), R.layout.view_chips, parent, false);
-            binding.setTag(this);
-            binding.getRoot().setActivated(!isChecked);
-            float mDensity = context.getResources().getDisplayMetrics().density;
-            binding.getRoot().setLayoutParams(
-                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                            (int) (CHIP_HEIGHT * mDensity)));
-            return binding;
-        }
-
-        @Nullable
-        public Drawable getDrawable() {
-            if (image == null) {
-                return null;
-            }
-            if (thumbnail == null) {
-                thumbnail = BitmapFactory.decodeByteArray(image, 0, image.length);
-            }
-            return new RoundedAvatarDrawable(thumbnail);
         }
     }
 

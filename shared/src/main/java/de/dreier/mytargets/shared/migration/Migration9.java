@@ -245,10 +245,10 @@ public class Migration9 extends BaseMigration {
         values.put(RT_PASSES, item.getEndCount());
         values.put(RT_ARROWS_PER_PASSE, item.getShotsPerEnd());
         values.put(RT_TARGET, (int) (long) item.getTargetTemplate().getId());
-        values.put(RT_TARGET_SIZE, item.getTargetTemplate().diameter.getValue());
+        values.put(RT_TARGET_SIZE, item.getTargetTemplate().getDiameter().getValue());
         values.put(RT_TARGET_SIZE_UNIT, Dimension.Unit.Companion
-                .toStringHandleNull(item.getTargetTemplate().diameter.getUnit()));
-        values.put(RT_SCORING_STYLE, item.getTargetTemplate().scoringStyle);
+                .toStringHandleNull(item.getTargetTemplate().getDiameter().getUnit()));
+        values.put(RT_SCORING_STYLE, item.getTargetTemplate().getScoringStyleIndex());
         if (item.getId() == null) {
             item.setId(database
                     .insertWithOnConflict(RT_TABLE, null, values, SQLiteDatabase.CONFLICT_NONE));
@@ -280,7 +280,7 @@ public class Migration9 extends BaseMigration {
         roundTemplate.setShotsPerEnd(cursor.getInt(startColumnIndex + 2));
         final Dimension diameter = Dimension.Companion.from(
                 cursor.getInt(startColumnIndex + 9), cursor.getString(startColumnIndex + 10));
-        roundTemplate.setTargetTemplate(new Target(cursor.getInt(startColumnIndex + 3),
+        roundTemplate.setTargetTemplate(new Target(cursor.getLong(startColumnIndex + 3),
                 cursor.getInt(startColumnIndex + 4), diameter));
         roundTemplate.setDistance(Dimension.Companion.from(cursor.getInt(startColumnIndex + 7),
                 cursor.getString(startColumnIndex + 8)));

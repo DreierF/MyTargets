@@ -15,8 +15,8 @@
 
 package de.dreier.mytargets.shared.models.db
 
-import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import android.os.Parcel
 import android.os.Parcelable
 import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
@@ -25,12 +25,9 @@ import com.raizlabs.android.dbflow.sql.language.SQLite
 import com.raizlabs.android.dbflow.structure.BaseModel
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.utils.typeconverters.BitmapConverter
-import de.dreier.mytargets.shared.utils.typeconverters.BitmapParcelConverter
-import kotlinx.android.parcel.Parcelize
-import org.parceler.ParcelPropertyConverter
+import de.dreier.mytargets.shared.utils.typeconverters.readBitmap
+import de.dreier.mytargets.shared.utils.typeconverters.writeBitmap
 
-@SuppressLint("ParcelCreator")
-@Parcelize
 @Table(database = AppDatabase::class)
 data class Signature(
         @Column(name = "_id")
@@ -42,7 +39,7 @@ data class Signature(
 
         /** A bitmap of the signature or null if no signature has been set. */
         @Column(typeConverter = BitmapConverter::class)
-        @ParcelPropertyConverter(BitmapParcelConverter::class)
+        @JvmField //Bug dbFlow
         var bitmap: Bitmap? = null
 ) : BaseModel(), Parcelable {
 
@@ -53,7 +50,27 @@ data class Signature(
         return if (name.isEmpty()) defaultName else name
     }
 
+    override fun describeContents() = 1
+
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeLong(_id!!)
+        dest.writeString(name)
+        dest.writeBitmap(bitmap)
+    }
+
     companion object {
+        @JvmField
+        val CREATOR = object : Parcelable.Creator<Signature> {
+            override fun createFromParcel(source: Parcel): Signature {
+                val id = source.readLong()
+                val name = source.readString()
+                val bitmap = source.readBitmap()
+                return Signature(id, name, bitmap)
+            }
+
+            override fun newArray(size: Int) = arrayOfNulls<Signature>(size)
+        }
+
         operator fun get(signatureId: Long): Signature? {
             return SQLite.select()
                     .from(Signature::class.java)
