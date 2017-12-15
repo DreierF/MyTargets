@@ -47,7 +47,7 @@ public class ScoreboardActivityTest extends UITestBase {
 
     @Test
     public void navigation() {
-        final List<Training> trainings = Training.getAll();
+        final List<Training> trainings = Training.Companion.getAll();
         Collections.sort(trainings, Collections.reverseOrder());
         Training training = trainings.get(0);
         activityTestRule.launchActivity(ScoreboardActivity.getIntent(training.getId()).build());

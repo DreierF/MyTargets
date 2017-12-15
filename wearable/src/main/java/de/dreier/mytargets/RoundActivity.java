@@ -44,9 +44,8 @@ import java.util.List;
 import de.dreier.mytargets.databinding.ActivityRoundBinding;
 import de.dreier.mytargets.shared.models.TimerSettings;
 import de.dreier.mytargets.shared.models.TrainingInfo;
-import de.dreier.mytargets.shared.models.db.End;
-import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.utils.ParcelsBundler;
+import de.dreier.mytargets.shared.models.augmented.AugmentedEnd;
+import de.dreier.mytargets.shared.models.augmented.AugmentedRound;
 import de.dreier.mytargets.shared.views.EndView;
 import de.dreier.mytargets.utils.WearSettingsManager;
 import de.dreier.mytargets.utils.WearWearableClient;
@@ -60,10 +59,10 @@ public class RoundActivity extends WearableActivity {
 
     private ActivityRoundBinding binding;
 
-    @State(ParcelsBundler.class)
-    Round round;
+    @State
+    AugmentedRound round;
 
-    @Nullable
+    @NonNull
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, @NonNull Intent intent) {
@@ -153,7 +152,7 @@ public class RoundActivity extends WearableActivity {
 
     private void showRoundData() {
         boolean showAddEnd =
-                round.maxEndCount == null || round.maxEndCount > round.getEnds().size();
+                round.getRound().getMaxEndCount() == null || round.getRound().getMaxEndCount() > round.getEnds().size();
         binding.recyclerViewEnds.setAdapter(new EndAdapter(round.getEnds(), showAddEnd));
         binding.recyclerViewEnds.scrollToPosition(round.getEnds().size());
     }
@@ -187,10 +186,10 @@ public class RoundActivity extends WearableActivity {
 
     private class EndAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private final List<End> ends;
+        private final List<AugmentedEnd> ends;
         private final boolean showAddEnd;
 
-        public EndAdapter(List<End> ends, boolean showAddEnd) {
+        public EndAdapter(List<AugmentedEnd> ends, boolean showAddEnd) {
             this.ends = ends;
             this.showAddEnd = showAddEnd;
         }
@@ -216,10 +215,10 @@ public class RoundActivity extends WearableActivity {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof ViewHolder) {
-                End end = ends.get(position);
+                AugmentedEnd end = ends.get(position);
                 ViewHolder viewHolder = (ViewHolder) holder;
-                viewHolder.end.setText(getString(R.string.end_n, end.getIndex() + 1));
-                viewHolder.shots.setShots(round.getTarget(), end.loadShots());
+                viewHolder.end.setText(getString(R.string.end_n, end.getEnd().getIndex() + 1));
+                viewHolder.shots.setShots(round.getRound().getTarget(), end.getShots());
 
                 viewHolder.end.setTextColor(ContextCompat.getColor(RoundActivity.this,
                         isAmbient() ? R.color.md_white_1000 :

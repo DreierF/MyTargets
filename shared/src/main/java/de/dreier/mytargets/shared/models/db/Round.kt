@@ -13,210 +13,148 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models.db;
+package de.dreier.mytargets.shared.models.db
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.annotation.SuppressLint
+import android.os.Parcelable
+import com.raizlabs.android.dbflow.annotation.*
+import com.raizlabs.android.dbflow.config.FlowManager
+import com.raizlabs.android.dbflow.sql.language.SQLite
+import com.raizlabs.android.dbflow.structure.BaseModel
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
+import de.dreier.mytargets.shared.AppDatabase
+import de.dreier.mytargets.shared.models.*
+import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter
+import kotlinx.android.parcel.Parcelize
+import java.util.*
 
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ForeignKey;
-import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
-import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
-import com.raizlabs.android.dbflow.annotation.OneToMany;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.structure.BaseModel;
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
+@SuppressLint("ParcelCreator")
+@Parcelize
+@Table(database = AppDatabase::class)
+data class Round(
+        @Column(name = "_id")
+        @PrimaryKey(autoincrement = true)
+        override var id: Long? = null,
 
-import org.parceler.Parcel;
+        @ForeignKey(tableClass = Training::class, references = [(ForeignKeyReference(columnName = "training", columnType = Long::class, foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
+        var trainingId: Long? = null,
 
-import java.util.Collections;
-import java.util.List;
+        @Column
+        var index: Int = 0,
 
-import de.dreier.mytargets.shared.AppDatabase;
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.IIdSettable;
-import de.dreier.mytargets.shared.models.IRecursiveModel;
-import de.dreier.mytargets.shared.models.Score;
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-import de.dreier.mytargets.shared.utils.LongUtils;
-import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter;
+        @Column
+        var shotsPerEnd: Int = 0,
 
-@Parcel
-@Table(database = AppDatabase.class)
-public class Round extends BaseModel implements IIdSettable, Comparable<Round>, IRecursiveModel {
+        @Column
+        var maxEndCount: Int? = null,
 
-    @Nullable
-    @Column(name = "_id")
-    @PrimaryKey(autoincrement = true)
-    Long id;
+        @Column(typeConverter = DimensionConverter::class)
+        var distance: Dimension = Dimension.UNKNOWN,
 
-    @Nullable
-    @ForeignKey(tableClass = Training.class, references = {
-            @ForeignKeyReference(columnName = "training", columnType = Long.class, foreignKeyColumnName = "_id")},
-            onDelete = ForeignKeyAction.CASCADE)
-    public Long trainingId;
+        @Column
+        var comment: String? = "",
 
-    @Column
-    public int index;
+        @Column
+        var targetId: Int = 0,
 
-    @Column
-    public int shotsPerEnd;
+        @Column
+        var targetScoringStyle: Int = 0,
 
-    @Nullable
-    @Column
-    public Integer maxEndCount;
+        @Column(typeConverter = DimensionConverter::class)
+        var targetDiameter: Dimension? = null
+) : BaseModel(), IIdSettable, Comparable<Round>, IRecursiveModel, Parcelable {
 
-    @NonNull
-    @Column(typeConverter = DimensionConverter.class)
-    public Dimension distance = Dimension.Companion.getUNKNOWN();
+    @Transient
+    var ends: List<End>? = null
 
-    @Nullable
-    @Column
-    public String comment = "";
+    constructor(info: RoundTemplate) : this(
+            distance = info.distance,
+            shotsPerEnd = info.shotsPerEnd,
+            maxEndCount = info.endCount,
+            index = info.index,
+            targetId = info.targetId,
+            targetScoringStyle = info.targetScoringStyle,
+            targetDiameter = info.targetDiameter
+    )
 
-    @Column
-    int targetId;
-
-    @Column
-    int targetScoringStyle;
-
-    @Nullable
-    @Column(typeConverter = DimensionConverter.class)
-    Dimension targetDiameter;
-
-    public List<End> ends;
-
-    public Round() {
-
+    constructor(round: Round) : this(
+            id = round.id,
+            trainingId = round.trainingId,
+            index = round.index,
+            shotsPerEnd = round.shotsPerEnd,
+            maxEndCount = round.maxEndCount,
+            distance = round.distance,
+            comment = round.comment,
+            targetId = round.targetId,
+            targetScoringStyle = round.targetScoringStyle,
+            targetDiameter = round.targetDiameter
+    ) {
+        ends = round.ends
     }
 
-    public Round(@NonNull RoundTemplate info) {
-        distance = info.distance;
-        shotsPerEnd = info.shotsPerEnd;
-        maxEndCount = info.endCount;
-        index = info.index;
-        setTarget(info.getTargetTemplate());
-    }
-
-    public Round(@NonNull Round round) {
-        this.id = round.id;
-        this.trainingId = round.trainingId;
-        this.index = round.index;
-        this.shotsPerEnd = round.shotsPerEnd;
-        this.maxEndCount = round.maxEndCount;
-        this.distance = round.distance;
-        this.comment = round.comment;
-        this.targetId = round.targetId;
-        this.targetScoringStyle = round.targetScoringStyle;
-        this.targetDiameter = round.targetDiameter;
-        this.ends = round.ends;
-    }
-
-    @Nullable
-    public static Round get(Long id) {
-        return SQLite.select()
-                .from(Round.class)
-                .where(Round_Table._id.eq(id))
-                .querySingle();
-    }
-
-    public static List<Round> getAll(@NonNull long[] roundIds) {
-        return SQLite.select()
-                .from(Round.class)
-                .where(Round_Table._id.in(LongUtils.toList(roundIds)))
-                .queryList();
-    }
-
-    @Override
-    public void delete() {
-        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::delete);
-    }
-
-    @Override
-    public void delete(DatabaseWrapper databaseWrapper) {
-        for (End end : getEnds()) {
-            end.delete(databaseWrapper);
+    var target: Target
+        get() = Target(targetId, targetScoringStyle, targetDiameter)
+        set(targetTemplate) {
+            targetId = targetTemplate.id.toInt()
+            targetScoringStyle = targetTemplate.scoringStyle
+            targetDiameter = targetTemplate.diameter
         }
-        super.delete(databaseWrapper);
-        updateRoundIndicesForTraining(databaseWrapper);
+
+    val reachedScore: Score
+        get() {
+            val target = target
+            return loadEnds()!!.
+                    map { end: End -> target.getReachedScore(end) }
+                    .fold(Score()) { score, s ->
+                        score.add(s as Score)
+                    }
+        }
+
+    val training: Training?
+        get() = Training[trainingId]
+
+    override fun delete() {
+        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.delete(it) })
     }
 
-    private void updateRoundIndicesForTraining(DatabaseWrapper databaseWrapper) {
+    override fun delete(databaseWrapper: DatabaseWrapper) {
+        loadEnds()?.forEach { it.delete(databaseWrapper) }
+        super.delete(databaseWrapper)
+        updateRoundIndicesForTraining(databaseWrapper)
+    }
+
+    private fun updateRoundIndicesForTraining(databaseWrapper: DatabaseWrapper) {
         // TODO very inefficient
-        int i = 0;
-        Training training = Training.get(trainingId);
-        if (training == null) {
-            return; //FIXME This should not happen, but does for some users
-        }
-        for (Round r : training.getRounds()) {
-            r.index = i;
-            r.save(databaseWrapper);
-            i++;
+        val training = Training[trainingId] ?: return  //FIXME This should not happen, but does for some users
+        for ((i, r) in training.loadRounds()!!.withIndex()) {
+            r.index = i
+            r.save(databaseWrapper)
         }
     }
 
-    @Nullable
-    public Target getTarget() {
-        return new Target(targetId, targetScoringStyle, targetDiameter);
-    }
-
-    public void setTarget(@NonNull Target targetTemplate) {
-        targetId = (int)(long)targetTemplate.getId();
-        targetScoringStyle = targetTemplate.scoringStyle;
-        targetDiameter = targetTemplate.diameter;
-    }
-
-    @Nullable
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(@Nullable Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public boolean equals(Object another) {
-        return another instanceof Round &&
-                getClass().equals(another.getClass()) &&
-                id.equals(((Round) another).id);
-    }
-
-    @OneToMany(methods = {}, variableName = "ends")
-    public List<End> getEnds() {
+    @OneToMany(methods = [], variableName = "ends")
+    fun loadEnds(): MutableList<End>? {
         if (ends == null) {
             ends = SQLite.select()
-                    .from(End.class)
-                    .where(End_Table.round.eq(id))
+                    .from(End::class.java)
+                    .where(End_Table.round.eq(id!!))
                     .orderBy(End_Table.index, true)
-                    .queryList();
+                    .queryList()
         }
-        return ends;
+        return ends?.toMutableList()
     }
 
-    @NonNull
-    public List<End> getEnds(DatabaseWrapper databaseWrapper) {
+    fun loadEnds(databaseWrapper: DatabaseWrapper): List<End> {
         return SQLite.select()
-                .from(End.class)
-                .where(End_Table.round.eq(id))
+                .from(End::class.java)
+                .where(End_Table.round.eq(id!!))
                 .orderBy(End_Table.index, true)
-                .queryList(databaseWrapper);
+                .queryList(databaseWrapper)
     }
 
-    public Score getReachedScore() {
-        final Target target = getTarget();
-        return Stream.of(getEnds())
-                .map(target::getReachedScore)
-                .scoreSum();
-    }
-
-    @Override
-    public int compareTo(@NonNull Round round) {
-        return index - round.index;
+    override fun compareTo(other: Round): Int {
+        return index - other.index
     }
 
     /**
@@ -224,22 +162,16 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round>, 
      *
      * @return Returns the newly created end
      */
-    @NonNull
-    public End addEnd() {
-        End end = new End(shotsPerEnd, getEnds().size());
-        end.setRoundId(id);
-        end.save();
-        getEnds().add(end);
-        return end;
+    fun addEnd(): End {
+        val end = End(shotsPerEnd, loadEnds()!!.size)
+        end.roundId = id
+        end.save()
+        loadEnds()?.add(end)
+        return end
     }
 
-    public Training getTraining() {
-        return Training.get(trainingId);
-    }
-
-    @Override
-    public void saveRecursively() {
-        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::saveRecursively);
+    override fun saveRecursively() {
+        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.saveRecursively(it) })
     }
 
     /**
@@ -247,27 +179,41 @@ public class Round extends BaseModel implements IIdSettable, Comparable<Round>, 
      * Gets called when deletion of a round has been canceled by the user via undo
      * or when deleting a training has been canceled.
      */
-    @Override
-    public void saveRecursively(DatabaseWrapper databaseWrapper) {
-        Training training = Training.get(trainingId);
-        List<Round> rounds = training.getRounds(databaseWrapper);
+    override fun saveRecursively(databaseWrapper: DatabaseWrapper) {
+        val training = Training[trainingId]
+        val rounds = training!!.loadRounds(databaseWrapper).toMutableList()
 
-        int pos = Collections.binarySearch(rounds, this);
+        val pos = Collections.binarySearch(rounds, this)
         if (pos < 0) {
-            rounds.add(-pos - 1, this);
+            rounds.add(-pos - 1, this)
         } else {
-            rounds.add(pos, this);
+            rounds.add(pos, this)
         }
 
-        int i = 0;
-        for (Round round : rounds) {
-            round.index = i;
-            round.save(databaseWrapper);
-            i++;
+        for ((i, round) in rounds.withIndex()) {
+            round.index = i
+            round.save(databaseWrapper)
         }
-        for (End end : ends) {
-            end.setRoundId(id);
-            end.save(databaseWrapper);
+        for (end in ends!!) {
+            end.roundId = id
+            end.save(databaseWrapper)
+        }
+    }
+
+    companion object {
+
+        operator fun get(id: Long?): Round? {
+            return SQLite.select()
+                    .from(Round::class.java)
+                    .where(Round_Table._id.eq(id))
+                    .querySingle()
+        }
+
+        fun getAll(roundIds: LongArray): List<Round> {
+            return SQLite.select()
+                    .from(Round::class.java)
+                    .where(Round_Table._id.`in`(roundIds.toList()))
+                    .queryList()
         }
     }
 }

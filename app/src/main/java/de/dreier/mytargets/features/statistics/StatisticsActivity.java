@@ -115,14 +115,14 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         return new AsyncTaskLoader<List<Pair<Training, Round>>>(this) {
             @Override
             public List<Pair<Training, Round>> loadInBackground() {
-                final List<Round> rounds = Round.getAll(roundIds);
+                final List<Round> rounds = Round.Companion.getAll(roundIds);
                 LongSparseArray<Training> trainingsMap = new LongSparseArray<>();
-                Stream.of(rounds).map(round -> round.trainingId)
+                Stream.of(rounds).map(round -> round.getTrainingId())
                         .distinct()
-                        .map(Training::get)
+                        .map(Training.Companion::get)
                         .forEach(training -> {trainingsMap.append(training.getId(), training);return null;});
                 return Stream.of(rounds)
-                        .map(round -> new Pair<>(trainingsMap.get(round.trainingId), round))
+                        .map(round -> new Pair<>(trainingsMap.get(round.getTrainingId()), round))
                         .toList();
             }
         };
@@ -257,10 +257,10 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         bowTags = Stream.of(binding.bowTags.getCheckedTags())
                 .map(t -> t.id).toList();
         filteredRounds = Stream.of(rounds)
-                .filter(pair -> distanceTags.contains(pair.second.distance.toString())
+                .filter(pair -> distanceTags.contains(pair.second.getDistance().toString())
                         && diameterTags.contains(pair.second.getTarget().diameter.toString())
-                        && arrowTags.contains(pair.first.arrowId)
-                        && bowTags.contains(pair.first.bowId))
+                        && arrowTags.contains(pair.first.getArrowId())
+                        && bowTags.contains(pair.first.getBowId()))
                 .map(p -> p.second)
                 .groupBy(value -> new Pair<>(value.getTarget().getId(),
                         value.getTarget().scoringStyle))
@@ -274,7 +274,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
 
     private List<ChipGroup.Tag> getBowTags() {
         return Stream.of(rounds)
-                .map(p -> p.first.bowId)
+                .map(p -> p.first.getBowId())
                 .distinct()
                 .map(bid -> {
                     if (bid != null) {
@@ -293,7 +293,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
 
     private List<ChipGroup.Tag> getArrowTags() {
         return Stream.of(rounds)
-                .map(p -> p.first.arrowId)
+                .map(p -> p.first.getArrowId())
                 .distinct()
                 .map(aid -> {
                     if (aid != null) {
@@ -312,7 +312,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
 
     private List<ChipGroup.Tag> getDistanceTags() {
         return Stream.of(rounds)
-                .map(p -> p.second.distance)
+                .map(p -> p.second.getDistance())
                 .distinct()
                 .sorted()
                 .map(d -> new ChipGroup.Tag(d.getId(), d.toString()))

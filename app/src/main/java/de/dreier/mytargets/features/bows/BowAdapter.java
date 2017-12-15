@@ -76,7 +76,7 @@ class BowAdapter extends SimpleListAdapterBase<Bow> {
             if (!item.getSize().trim().isEmpty()) {
                 info.addLine(R.string.size, item.getSize());
             }
-            for (SightMark s : item.getSightMarks()) {
+            for (SightMark s : item.loadSightMarks()) {
                 info.addLine(s.distance.toString(), s.value);
             }
             binding.details.setText(Utils.fromHtml(info.toString()));

@@ -48,11 +48,11 @@ public class MiniDbTestRule extends DbTestRuleBase {
         Training training = saveDefaultTraining(standardRound.getId(), generator);
 
         Round round1 = new Round(standardRound.getRounds().get(0));
-        round1.trainingId = training.getId();
+        round1.setTrainingId(training.getId());
         round1.save();
 
         Round round2 = new Round(standardRound.getRounds().get(1));
-        round2.trainingId = training.getId();
+        round2.setTrainingId(training.getId());
         round2.save();
 
         randomEnd(round1, 6, generator, 0).save();

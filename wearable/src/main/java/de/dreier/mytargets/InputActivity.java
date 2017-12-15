@@ -60,7 +60,7 @@ public class InputActivity extends WearableActivity implements TargetViewBase.On
 
         // Set up target view
         binding.target.setTarget(round.getTarget());
-        binding.target.setEnd(new End(round.shotsPerEnd, 0));
+        binding.target.setEnd(new End(round.getShotsPerEnd(), 0));
         binding.target.setOnTargetSetListener(this);
 
         // Ensure Moto 360 is not cut off at the bottom
@@ -114,7 +114,7 @@ public class InputActivity extends WearableActivity implements TargetViewBase.On
                     .getSystemService(Context.VIBRATOR_SERVICE);
             v.vibrate(200);
             InputActivity.this.finish();
-            End end = new End(round.shotsPerEnd, 0);
+            End end = new End(round.getShotsPerEnd(), 0);
             end.setRoundId(round.getId());
             AugmentedEnd ae = new AugmentedEnd(end, shotList);
             ApplicationInstance.wearableClient.sendEndUpdate(ae);

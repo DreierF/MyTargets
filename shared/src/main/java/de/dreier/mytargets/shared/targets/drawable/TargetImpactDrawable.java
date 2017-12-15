@@ -97,12 +97,12 @@ public class TargetImpactDrawable extends TargetDrawable {
     }
 
     private void drawArrow(@NonNull CanvasWrapper canvas, @NonNull Shot shot, boolean transparent) {
-        int color = model.getContrastColor(shot.scoringRing);
+        int color = model.getContrastColor(shot.getScoringRing());
         if (transparent) {
             color = 0x55000000 | color & 0xFFFFFF;
         }
         paintFill.setColor(color);
-        canvas.drawCircle(shot.x, shot.y, arrowRadius, paintFill);
+        canvas.drawCircle(shot.getX(), shot.getY(), arrowRadius, paintFill);
     }
 
     public void setFocusedArrow(@Nullable Shot shot) {
@@ -110,28 +110,28 @@ public class TargetImpactDrawable extends TargetDrawable {
         if (focusedArrow == null) {
             setMid(0, 0);
         } else {
-            setMid(shot.x, shot.y);
+            setMid(shot.getX(), shot.getY());
         }
     }
 
     private void drawFocusedArrow(@NonNull CanvasWrapper canvas, @NonNull Shot shot, int drawFaceIndex) {
-        if (shot.index % model.getFaceCount() != drawFaceIndex) {
+        if (shot.getIndex() % model.getFaceCount() != drawFaceIndex) {
             return;
         }
 
         paintFill.setColor(0xFF009900);
-        canvas.drawCircle(shot.x, shot.y, arrowRadius, paintFill);
+        canvas.drawCircle(shot.getX(), shot.getY(), arrowRadius, paintFill);
 
         // Draw cross
         float lineLen = 2f * arrowRadius;
         paintFill.setStrokeWidth(0.2f * arrowRadius);
-        canvas.drawLine(shot.x - lineLen, shot.y, shot.x + lineLen, shot.y, paintFill);
-        canvas.drawLine(shot.x, shot.y - lineLen, shot.x, shot.y + lineLen, paintFill);
+        canvas.drawLine(shot.getX() - lineLen, shot.getY(), shot.getX() + lineLen, shot.getY(), paintFill);
+        canvas.drawLine(shot.getX(), shot.getY() - lineLen, shot.getX(), shot.getY() + lineLen, paintFill);
 
         // Draw zone points
-        String zoneString = target.zoneToString(shot.scoringRing, shot.index);
-        RectF srcRect = new RectF(shot.x - arrowRadius, shot.y - arrowRadius,
-                shot.x + arrowRadius, shot.y + arrowRadius);
+        String zoneString = target.zoneToString(shot.getScoringRing(), shot.getIndex());
+        RectF srcRect = new RectF(shot.getX() - arrowRadius, shot.getY() - arrowRadius,
+                shot.getX() + arrowRadius, shot.getY() + arrowRadius);
         canvas.drawText(zoneString, srcRect, paintText);
     }
 
@@ -140,7 +140,7 @@ public class TargetImpactDrawable extends TargetDrawable {
             this.shots.get(i).clear();
         }
         Map<Integer, List<Shot>> map = Stream.of(shots)
-                .groupingBy(shot -> shot.index % model.getFaceCount());
+                .groupingBy(shot -> shot.getIndex() % model.getFaceCount());
         for (Map.Entry<Integer, List<Shot>> entry : map.entrySet()) {
             this.shots.set(entry.getKey(), entry.getValue());
         }
@@ -152,7 +152,7 @@ public class TargetImpactDrawable extends TargetDrawable {
             @Override
             protected Map<Integer, List<Shot>> doInBackground(Void... objects) {
                 return shots
-                        .groupingBy(shot -> shot.index % model.getFaceCount());
+                        .groupingBy(shot -> shot.getIndex() % model.getFaceCount());
             }
 
             @Override

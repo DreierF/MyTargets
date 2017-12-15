@@ -103,94 +103,94 @@ public final class MigrationTest extends InstrumentedTestBase {
 
     @Test
     public void upgradeShouldKeepData() throws IOException {
-        List<Training> trainings = Training.getAll();
+        List<Training> trainings = Training.Companion.getAll();
         assertTraining1(trainings.get(0));
         assertTraining2(trainings.get(1));
 
         final List<Bow> bows = Bow.Companion.getAll();
-        Truth.assertThat(bows.get(0).getImages().get(0).getFileName())
+        Truth.assertThat(bows.get(0).loadImages().get(0).getFileName())
                 .isEqualTo("img175420839671886584-0f61-43a6-bc1e-dbcd8526056c794370927.jpg");
     }
 
     private void assertTraining1(@NonNull Training training) {
         Truth.assertThat(training.getId()).isEqualTo(1);
-        Truth.assertThat(training.title).isEqualTo("Training im Dez");
-        Truth.assertThat(training.standardRoundId).isEqualTo(null);
-        Truth.assertThat(training.bowId).isEqualTo(null);
-        Truth.assertThat(training.arrowId).isEqualTo(null);
-        Truth.assertThat(training.arrowNumbering).isEqualTo(false);
-        Truth.assertThat(training.indoor).isEqualTo(true);
-        Truth.assertThat(training.weather).isEqualTo(EWeather.SUNNY);
-        Truth.assertThat(training.windDirection).isEqualTo(0);
-        Truth.assertThat(training.windSpeed).isEqualTo(3);
-        Truth.assertThat(training.location).isEqualTo("Neufahrn bei Freising");
-        List<Round> rounds = training.getRounds();
+        Truth.assertThat(training.getTitle()).isEqualTo("Training im Dez");
+        Truth.assertThat(training.getStandardRoundId()).isEqualTo(null);
+        Truth.assertThat(training.getBowId()).isEqualTo(null);
+        Truth.assertThat(training.getArrowId()).isEqualTo(null);
+        Truth.assertThat(training.getArrowNumbering()).isEqualTo(false);
+        Truth.assertThat(training.getIndoor()).isEqualTo(true);
+        Truth.assertThat(training.getWeather()).isEqualTo(EWeather.SUNNY);
+        Truth.assertThat(training.getWindDirection()).isEqualTo(0);
+        Truth.assertThat(training.getWindSpeed()).isEqualTo(3);
+        Truth.assertThat(training.getLocation()).isEqualTo("Neufahrn bei Freising");
+        List<Round> rounds = training.loadRounds();
 
         assertRound11(rounds);
 
         Truth.assertThat(rounds.get(1).getId()).isEqualTo(2L);
-        Truth.assertThat(rounds.get(1).trainingId).isEqualTo(1L);
-        Truth.assertThat(rounds.get(1).index).isEqualTo(1);
-        Truth.assertThat(rounds.get(1).shotsPerEnd).isEqualTo(3);
-        Truth.assertThat(rounds.get(1).maxEndCount).isEqualTo(null);
-        Truth.assertThat(rounds.get(1).distance).isEqualTo(new Dimension(20, METER));
-        Truth.assertThat(rounds.get(1).comment).isEqualTo("Kommentar");
+        Truth.assertThat(rounds.get(1).getTrainingId()).isEqualTo(1L);
+        Truth.assertThat(rounds.get(1).getIndex()).isEqualTo(1);
+        Truth.assertThat(rounds.get(1).getShotsPerEnd()).isEqualTo(3);
+        Truth.assertThat(rounds.get(1).getMaxEndCount()).isEqualTo(null);
+        Truth.assertThat(rounds.get(1).getDistance()).isEqualTo(new Dimension(20, METER));
+        Truth.assertThat(rounds.get(1).getComment()).isEqualTo("Kommentar");
         Truth.assertThat(rounds.get(1).getTarget().getId()).isEqualTo(0);
         Truth.assertThat(rounds.get(1).getTarget().scoringStyle).isEqualTo(0);
         Truth.assertThat(rounds.get(1).getTarget().diameter).isEqualTo(new Dimension(60, CENTIMETER));
-        Truth.assertThat(rounds.get(1).getEnds()).hasSize(2);
+        Truth.assertThat(rounds.get(1).loadEnds()).hasSize(2);
     }
 
     private void assertRound11(@NonNull List<Round> rounds) {
         final Round round1 = rounds.get(0);
         Truth.assertThat(round1.getId()).isEqualTo(1L);
-        Truth.assertThat(round1.trainingId).isEqualTo(1L);
-        Truth.assertThat(round1.index).isEqualTo(0);
-        Truth.assertThat(round1.shotsPerEnd).isEqualTo(4);
-        Truth.assertThat(round1.maxEndCount).isEqualTo(null);
-        Truth.assertThat(round1.distance).isEqualTo(new Dimension(50, METER));
-        Truth.assertThat(round1.comment).isEqualTo("");
+        Truth.assertThat(round1.getTrainingId()).isEqualTo(1L);
+        Truth.assertThat(round1.getIndex()).isEqualTo(0);
+        Truth.assertThat(round1.getShotsPerEnd()).isEqualTo(4);
+        Truth.assertThat(round1.getMaxEndCount()).isEqualTo(null);
+        Truth.assertThat(round1.getDistance()).isEqualTo(new Dimension(50, METER));
+        Truth.assertThat(round1.getComment()).isEqualTo("");
         Truth.assertThat(round1.getTarget().getId()).isEqualTo(1);
         Truth.assertThat(round1.getTarget().scoringStyle).isEqualTo(2);
         Truth.assertThat(round1.getTarget().diameter).isEqualTo(new Dimension(40, CENTIMETER));
-        final List<End> ends = round1.getEnds();
+        final List<End> ends = round1.loadEnds();
         Truth.assertThat(ends).hasSize(3);
         Truth.assertThat(ends.get(0).getId()).isEqualTo(1L);
         Truth.assertThat(ends.get(0).getRoundId()).isEqualTo(1L);
         Truth.assertThat(ends.get(0).getIndex()).isEqualTo(0);
-        Truth.assertThat(ends.get(0).getImages()).isEmpty();
+        Truth.assertThat(ends.get(0).loadImages()).isEmpty();
         Truth.assertThat(ends.get(0).getExact()).isEqualTo(true);
         Truth.assertThat(ends.get(2).getExact()).isEqualTo(false);
         final List<Shot> shots = ends.get(0).loadShots();
         Truth.assertThat(shots).hasSize(4);
-        Truth.assertThat(shots.get(0).index).isEqualTo(0);
-        Truth.assertThat(shots.get(0).x).isWithin(0f).of(-0.41206896f);
-        Truth.assertThat(shots.get(0).y).isWithin(0f).of(0.03448276f);
-        Truth.assertThat(shots.get(0).scoringRing).isEqualTo(3);
-        Truth.assertThat(shots.get(0).arrowNumber).isEqualTo(null);
-        Truth.assertThat(shots.get(1).index).isEqualTo(1);
-        Truth.assertThat(shots.get(1).scoringRing).isEqualTo(2);
-        Truth.assertThat(shots.get(2).index).isEqualTo(2);
-        Truth.assertThat(shots.get(2).scoringRing).isEqualTo(1);
-        Truth.assertThat(shots.get(3).index).isEqualTo(3);
-        Truth.assertThat(shots.get(3).scoringRing).isEqualTo(0);
+        Truth.assertThat(shots.get(0).getIndex()).isEqualTo(0);
+        Truth.assertThat(shots.get(0).getX()).isWithin(0f).of(-0.41206896f);
+        Truth.assertThat(shots.get(0).getY()).isWithin(0f).of(0.03448276f);
+        Truth.assertThat(shots.get(0).getScoringRing()).isEqualTo(3);
+        Truth.assertThat(shots.get(0).getArrowNumber()).isEqualTo(null);
+        Truth.assertThat(shots.get(1).getIndex()).isEqualTo(1);
+        Truth.assertThat(shots.get(1).getScoringRing()).isEqualTo(2);
+        Truth.assertThat(shots.get(2).getIndex()).isEqualTo(2);
+        Truth.assertThat(shots.get(2).getScoringRing()).isEqualTo(1);
+        Truth.assertThat(shots.get(3).getIndex()).isEqualTo(3);
+        Truth.assertThat(shots.get(3).getScoringRing()).isEqualTo(0);
     }
 
     private void assertTraining2(@NonNull Training training) {
         Truth.assertThat(training.getId()).isEqualTo(2);
-        Truth.assertThat(training.title).isEqualTo("Training");
-        Truth.assertThat(training.standardRoundId).isEqualTo(32L);
-        Truth.assertThat(training.bowId).isEqualTo(1);
-        Truth.assertThat(training.arrowId).isEqualTo(1);
-        Truth.assertThat(training.arrowNumbering).isEqualTo(false);
-        Truth.assertThat(training.indoor).isEqualTo(false);
-        Truth.assertThat(training.weather).isEqualTo(EWeather.LIGHT_RAIN);
-        Truth.assertThat(training.windDirection).isEqualTo(0);
-        Truth.assertThat(training.windSpeed).isEqualTo(3);
-        Truth.assertThat(training.location).isEqualTo("Neufahrn bei Freising");
-        List<Round> rounds = training.getRounds();
-        Truth.assertThat(rounds.get(0).getEnds()).hasSize(6);
-        Truth.assertThat(rounds.get(1).getEnds()).hasSize(6);
+        Truth.assertThat(training.getTitle()).isEqualTo("Training");
+        Truth.assertThat(training.getStandardRoundId()).isEqualTo(32L);
+        Truth.assertThat(training.getBowId()).isEqualTo(1);
+        Truth.assertThat(training.getArrowId()).isEqualTo(1);
+        Truth.assertThat(training.getArrowNumbering()).isEqualTo(false);
+        Truth.assertThat(training.getIndoor()).isEqualTo(false);
+        Truth.assertThat(training.getWeather()).isEqualTo(EWeather.LIGHT_RAIN);
+        Truth.assertThat(training.getWindDirection()).isEqualTo(0);
+        Truth.assertThat(training.getWindSpeed()).isEqualTo(3);
+        Truth.assertThat(training.getLocation()).isEqualTo("Neufahrn bei Freising");
+        List<Round> rounds = training.loadRounds();
+        Truth.assertThat(rounds.get(0).loadEnds()).hasSize(6);
+        Truth.assertThat(rounds.get(1).loadEnds()).hasSize(6);
     }
 
     @Test

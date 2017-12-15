@@ -145,7 +145,7 @@ public class TargetModelBase implements IIdProvider {
                 return i;
             }
         }
-        return Shot.MISS;
+        return Shot.Companion.getMISS();
     }
 
     /**

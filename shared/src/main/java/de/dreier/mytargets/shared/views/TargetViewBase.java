@@ -112,9 +112,9 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
             for (int i = 0; i < 3; i++) {
                 shots.add(new Shot(i));
             }
-            shots.get(0).scoringRing = 0;
-            shots.get(0).x = 0.01f;
-            shots.get(0).y = 0.05f;
+            shots.get(0).setScoringRing(0);
+            shots.get(0).setX(0.01f);
+            shots.get(0).setY(0.05f);
             target = new Target(WAFull.ID, 0);
             targetDrawable = target.getImpactAggregationDrawable();
             endRenderer.init(this, density, target);
@@ -209,7 +209,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected int getSelectableZoneIndexFromShot(@NonNull Shot shot) {
         int i = 0;
         for (SelectableZone selectableZone : selectableZones) {
-            if (shot.scoringRing == selectableZone.index) {
+            if (shot.getScoringRing() == selectableZone.index) {
                 return i;
             }
             i++;
@@ -256,7 +256,8 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
 
     protected boolean isCurrentlySelecting() {
         return getCurrentShotIndex() != EndRenderer.NO_SELECTION
-                && shots.get(getCurrentShotIndex()).scoringRing != Shot.NOTHING_SELECTED;
+                && shots.get(getCurrentShotIndex()).getScoringRing() !=
+                Shot.Companion.getNOTHING_SELECTED();
     }
 
     protected void onShotSelectionFinished() {
@@ -276,7 +277,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected int getNextShotIndex(int currentShotIndex) {
         int nextShotIndex = currentShotIndex + 1;
         while (nextShotIndex < shots.size() && shots
-                .get(nextShotIndex).scoringRing != Shot.NOTHING_SELECTED) {
+                .get(nextShotIndex).getScoringRing() != Shot.Companion.getNOTHING_SELECTED()) {
             nextShotIndex++;
         }
         if (nextShotIndex == shots.size()) {
@@ -376,7 +377,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
                         currentShotIndex = shots.size();
                     }
                     Shot shot = shots.get(currentShotIndex - 1);
-                    shot.scoringRing = Shot.NOTHING_SELECTED;
+                    shot.setScoringRing(Shot.Companion.getNOTHING_SELECTED());
                     setCurrentShotIndex(currentShotIndex - 1);
                     notifyTargetShotsChanged();
                     animateToNewState();
@@ -438,19 +439,19 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         }
         int firstId = virtualViews.size();
         for (Shot s : shots) {
-            if (s.scoringRing == Shot.NOTHING_SELECTED) {
+            if (s.getScoringRing() == Shot.Companion.getNOTHING_SELECTED()) {
                 continue;
             }
             vv = new VirtualView();
-            vv.id = firstId + s.index;
+            vv.id = firstId + s.getIndex();
             vv.shot = true;
-            String score = target.zoneToString(s.scoringRing, s.index);
+            String score = target.zoneToString(s.getScoringRing(), s.getIndex());
             if ("M".equals(score)) {
                 score = getResources().getString(R.string.miss);
             }
             vv.description = getResources()
-                    .getString(R.string.accessibility_description_shot_n_score, s.index + 1, score);
-            vv.rect = endRenderer.getBoundsForShot(s.index);
+                    .getString(R.string.accessibility_description_shot_n_score, s.getIndex() + 1, score);
+            vv.rect = endRenderer.getBoundsForShot(s.getIndex());
             virtualViews.add(vv);
         }
     }

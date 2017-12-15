@@ -116,7 +116,7 @@ public class ScoreboardFragment extends FragmentBase {
     @NonNull
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
-        training = Training.get(trainingId);
+        training = Training.Companion.get(trainingId);
         Signature archerSignature = training.getOrCreateArcherSignature();
         Signature witnessSignature = training.getOrCreateWitnessSignature();
 
@@ -267,8 +267,9 @@ public class ScoreboardFragment extends FragmentBase {
 
     public String getDefaultFileName(EFileType extension) {
         return String
-                .format(Locale.US, "%04d-%02d-%02d-%s.%s", training.date.getYear(), training.date
-                        .getMonthValue(), training.date
+                .format(Locale.US, "%04d-%02d-%02d-%s.%s", training.getDate().getYear(), training
+                        .getDate()
+                        .getMonthValue(), training.getDate()
                         .getDayOfMonth(), getString(R.string.scoreboard), extension.name()
                         .toLowerCase());
     }

@@ -117,19 +117,20 @@ data class Bow(
     var images: List<BowImage>? = null
 
     @Transient
-    var sightMarks: List<SightMark>? = null
+    var sightMarks: MutableList<SightMark>? = null
 
     val drawable: Drawable
         get() = thumbnail!!.roundDrawable
 
     @OneToMany(methods = [], variableName = "sightMarks")
-    fun loadSightMarks(): List<SightMark>? {
+    fun loadSightMarks(): MutableList<SightMark>? {
         if (sightMarks == null) {
             sightMarks = if (id == null) mutableListOf() else SQLite.select()
                     .from(SightMark::class.java)
                     .where(SightMark_Table.bow.eq(id))
                     .queryList()
                     .sortedBy { sightMark -> sightMark.distance }
+                    .toMutableList()
         }
         return sightMarks
     }
@@ -186,8 +187,8 @@ data class Bow(
     }
 
     override fun delete(databaseWrapper: DatabaseWrapper) {
-        loadSightMarks()?.forEach { sightMark -> sightMark.delete(databaseWrapper) }
-        loadImages()?.forEach { bowImage -> bowImage.delete(databaseWrapper) }
+        loadSightMarks()?.forEach { it.delete(databaseWrapper) }
+        loadImages()?.forEach { it.delete(databaseWrapper) }
         super.delete(databaseWrapper)
     }
 

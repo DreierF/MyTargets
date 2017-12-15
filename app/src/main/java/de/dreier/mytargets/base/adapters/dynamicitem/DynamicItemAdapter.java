@@ -46,9 +46,6 @@ public abstract class DynamicItemAdapter<T> extends RecyclerView.Adapter<Dynamic
         holder.onBind(item, position, fragment, view -> {
             list.remove(position);
 
-            if (position + 1 <= list.size()) {
-                notifyItemRangeChanged(position + 1, list.size() - position);
-            }
             notifyItemRemoved(position);
 
             Snackbar.make(fragment.getView(), undoString, Snackbar.LENGTH_LONG)

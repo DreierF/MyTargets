@@ -21,6 +21,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.wearable.MessageEvent;
@@ -32,6 +33,7 @@ import de.dreier.mytargets.shared.models.TimerSettings;
 import de.dreier.mytargets.shared.models.TimerSettings$$Parcelable;
 import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.TrainingInfo$$Parcelable;
+import de.dreier.mytargets.shared.models.augmented.AugmentedTraining;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.models.db.Training$$Parcelable;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
@@ -57,8 +59,7 @@ public class WearWearableListener extends WearableListenerService {
                 ApplicationInstance.wearableClient.sendTrainingUpdate(info);
                 break;
             case TRAINING_TEMPLATE:
-                Training training = Parcels
-                        .unwrap(ParcelableUtil.unmarshall(data, Training$$Parcelable.CREATOR));
+                AugmentedTraining training = ParcelableUtil.unmarshall(data, (Parcelable.Creator<AugmentedTraining>) AugmentedTraining.CREATOR);
                 ApplicationInstance.wearableClient.sendTrainingTemplate(training);
                 break;
             case TIMER_SETTINGS:
@@ -100,6 +101,6 @@ public class WearWearableListener extends WearableListenerService {
     private String describe(@NonNull TrainingInfo info) {
         return info.getRoundDetails(this) + "\n" +
                 info.getEndDetails(this) + "\n" +
-                info.round.distance.toString();
+                info.round.getRound().getDistance().toString();
     }
 }

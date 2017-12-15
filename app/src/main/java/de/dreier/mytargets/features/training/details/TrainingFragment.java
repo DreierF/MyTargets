@@ -33,8 +33,6 @@ import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-
 import junit.framework.Assert;
 
 import java.util.List;
@@ -54,6 +52,7 @@ import de.dreier.mytargets.features.training.TrainingActivity;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.MobileWearableClient;
@@ -151,11 +150,11 @@ public class TrainingFragment extends EditableListFragment<Round> {
     @NonNull
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
-        training = Training.get(trainingId);
-        List<Round> rounds = training.getRounds(); //FIXME can be null!?
+        training = Training.Companion.get(trainingId);
+        List<Round> rounds = training.loadRounds(); //FIXME can be null!?
         return () -> {
             // Hide fab for standard rounds
-            boolean supportsDeletion = training.standardRoundId == null;
+            boolean supportsDeletion = training.getStandardRoundId() == null;
             if (supportsDeletion) {
                 actionModeCallback.setDeleteCallback(this::onDelete);
             } else {
@@ -171,7 +170,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
 
             getActivity().invalidateOptionsMenu();
 
-            ToolbarUtils.setTitle(TrainingFragment.this, training.title);
+            ToolbarUtils.setTitle(TrainingFragment.this, training.getTitle());
             ToolbarUtils.setSubtitle(TrainingFragment.this, training.getFormattedDate());
         };
     }
@@ -198,7 +197,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
                 return true;
             case R.id.action_statistics:
                 StatisticsActivity.getIntent(
-                        Stream.of(training.getRounds())
+                        Stream.of(training.loadRounds())
                                 .map(Round::getId)
                                 .toList())
                         .withContext(this)
@@ -208,8 +207,8 @@ public class TrainingFragment extends EditableListFragment<Round> {
                 new MaterialDialog.Builder(getContext())
                         .title(R.string.comment)
                         .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE)
-                        .input("", training.comment, (dialog, input) -> {
-                            training.comment = input.toString();
+                        .input("", training.getComment(), (dialog, input) -> {
+                            training.setComment(input.toString());
                             training.save();
                         })
                         .negativeText(android.R.string.cancel)
@@ -261,7 +260,8 @@ public class TrainingFragment extends EditableListFragment<Round> {
 
         @Override
         public void bindItem() {
-            binding.title.setText(getResources().getQuantityString(R.plurals.rounds, item.index + 1, item.index + 1));
+            binding.title.setText(getResources().getQuantityString(R.plurals.rounds, item
+                    .getIndex() + 1, item.getIndex() + 1));
             binding.subtitle.setText(Utils.fromHtml(HtmlUtils.getRoundInfo(item, equals)));
             if (binding.subtitle.getText().toString().isEmpty()) {
                 binding.subtitle.setVisibility(View.GONE);

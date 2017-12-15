@@ -40,7 +40,7 @@ data class End(
 
         @Column(name = "_id")
         @PrimaryKey(autoincrement = true)
-        override var id: Long? = null,
+        override var id: Long? = 0,
 
         @Column
         var index: Int = 0,
@@ -68,10 +68,9 @@ data class End(
         get() = loadShots()!!.any { it.scoringRing == Shot.NOTHING_SELECTED } && loadImages()!!.isEmpty()
 
     constructor(shotCount: Int, index: Int) : this(index = index) {
-        shots = ArrayList()
-        for (i in 0 until shotCount) {
-            shots!!.add(Shot(i))
-        }
+        shots = (0 until shotCount)
+                .map { Shot(it) }
+                .toMutableList()
     }
 
     constructor(end: End) : this(index = end.index) {
@@ -83,7 +82,7 @@ data class End(
         if (shots == null) {
             shots = if (id == null) mutableListOf() else SQLite.select()
                     .from(Shot::class.java)
-                    .where(Shot_Table.end.eq(id))
+                    .where(Shot_Table.end.eq(id!!))
                     .queryList()
         }
         return shots
@@ -115,7 +114,7 @@ data class End(
         super.save(databaseWrapper)
         if (shots != null) {
             SQLite.delete(Shot::class.java)
-                    .where(Shot_Table.end.eq(id))
+                    .where(Shot_Table.end.eq(id!!))
                     .execute(databaseWrapper)
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
             for (s in shots!!) {
@@ -150,11 +149,9 @@ data class End(
         // FIXME very inefficient
         val round = Round.get(roundId) ?: return
 
-        var i = 0
-        for (end in round.getEnds(databaseWrapper)) {
+        for ((i, end) in round.loadEnds(databaseWrapper).withIndex()) {
             end.index = i
             end.save(databaseWrapper)
-            i++
         }
     }
 
@@ -166,7 +163,7 @@ data class End(
 
     override fun saveRecursively(databaseWrapper: DatabaseWrapper) {
         val round = Round.get(roundId)
-        val ends = round!!.getEnds(databaseWrapper)
+        val ends = round!!.loadEnds(databaseWrapper).toMutableList()
 
         val pos = Collections.binarySearch(ends, this)
         if (pos < 0) {
@@ -185,10 +182,10 @@ data class End(
 
         private fun getRoundScores(rounds: List<Round>): Map<SelectableZone, Int> {
             val t = rounds[0].target
-            val scoreCount = getAllPossibleZones(t!!)
-            rounds.flatMap { it.getEnds() }
+            val scoreCount = getAllPossibleZones(t)
+            rounds.flatMap { it.loadEnds()!! }
                     .forEach {
-                        it.loadShots()?.forEach { s ->
+                        it.loadShots()!!.forEach { s ->
                             if (s.scoringRing != Shot.NOTHING_SELECTED) {
                                 val tuple = SelectableZone(s.scoringRing,
                                         t.model.getZone(s.scoringRing),
@@ -219,7 +216,7 @@ data class End(
             return scoreCount
         }
 
-        fun getTopScoreDistribution(sortedScore: List<java.util.Map.Entry<SelectableZone, Int>>): List<Pair<String, Int>> {
+        fun getTopScoreDistribution(sortedScore: List<Map.Entry<SelectableZone, Int>>): List<Pair<String, Int>> {
             val result = sortedScore.map { Pair(it.key.text, it.value) }.toMutableList()
 
             // Collapse first two entries if they yield the same score points,

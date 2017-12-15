@@ -272,7 +272,7 @@ public class TargetView extends TargetViewBase {
     protected void notifyTargetShotsChanged() {
         List<Shot> displayedShots = new ArrayList<>();
         for (Shot shot : shots) {
-            if (shot.scoringRing != Shot.NOTHING_SELECTED && shot.index != getCurrentShotIndex()) {
+            if (shot.getScoringRing() != Shot.Companion.getNOTHING_SELECTED() && shot.getIndex() != getCurrentShotIndex()) {
                 displayedShots.add(shot);
             }
         }
@@ -298,8 +298,8 @@ public class TargetView extends TargetViewBase {
             int index = getSelectableZoneIndexFromShot(shot);
             coordinate.y = keyboardRect.top + indicatorHeight * index + indicatorHeight / 2.0f;
         } else {
-            pt[0] = shot.x;
-            pt[1] = shot.y;
+            pt[0] = shot.getX();
+            pt[1] = shot.getY();
             fullMatrix.mapPoints(pt);
             coordinate.x = pt[0];
             coordinate.y = pt[1];
@@ -399,7 +399,7 @@ public class TargetView extends TargetViewBase {
                 int index = (int) ((y - keyboardRect.top) * selectableZones.size() /
                         keyboardRect.height());
                 index = Math.min(Math.max(0, index), selectableZones.size() - 1);
-                s.scoringRing = selectableZones.get(index).index;
+                s.setScoringRing(selectableZones.get(index).index);
             } else {
                 return false;
             }
@@ -407,10 +407,10 @@ public class TargetView extends TargetViewBase {
             pt[0] = x;
             pt[1] = y;
             fullExtendedMatrixInverse.mapPoints(pt);
-            s.x = pt[0];
-            s.y = pt[1];
-            s.scoringRing = targetDrawable.getZoneFromPoint(s.x, s.y);
-            slipDetector.addShot(s.x, s.y);
+            s.setX(pt[0]);
+            s.setY(pt[1]);
+            s.setScoringRing(targetDrawable.getZoneFromPoint(s.getX(), s.getY()));
+            slipDetector.addShot(s.getX(), s.getY());
         }
         return true;
     }
@@ -468,9 +468,9 @@ public class TargetView extends TargetViewBase {
         PointF position = slipDetector.getFinalPosition();
         Shot shot = shots.get(getCurrentShotIndex());
         if (position != null) {
-            shot.x = position.x;
-            shot.y = position.y;
-            shot.scoringRing = targetDrawable.getZoneFromPoint(shot.x, shot.y);
+            shot.setX(position.x);
+            shot.setY(position.y);
+            shot.setScoringRing(targetDrawable.getZoneFromPoint(shot.getX(), shot.getY()));
             slipDetector.reset();
         }
 
@@ -496,7 +496,7 @@ public class TargetView extends TargetViewBase {
             gridView.setNumColumns(4);
             gridView.setOnItemClickListener((parent, view, pos, id) -> {
                 if (getCurrentShotIndex() < shots.size()) {
-                    shot.arrowNumber = numbers.get(pos);
+                    shot.setArrowNumber(numbers.get(pos));
                 }
                 dialog.dismiss();
                 setOnTouchListener(this);

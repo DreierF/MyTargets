@@ -154,8 +154,8 @@ public class ClusterStrategy extends AggregationStrategyBase {
     }
 
     private double distanceFrom(@NonNull Shot p1, @NonNull Shot p2) {
-        final double diffX = p1.x - p2.x;
-        final double diffY = p1.y - p2.y;
+        final double diffX = p1.getX() - p2.getX();
+        final double diffY = p1.getY() - p2.getY();
         return Math.sqrt(diffX * diffX + diffY * diffY);
     }
 

@@ -37,8 +37,8 @@ import java.util.Date;
 
 import de.dreier.mytargets.databinding.ActivityMainBinding;
 import de.dreier.mytargets.shared.models.TrainingInfo;
-import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.models.augmented.AugmentedRound;
+import de.dreier.mytargets.shared.models.augmented.AugmentedTraining;
 import de.dreier.mytargets.utils.WearWearableClient;
 
 import static de.dreier.mytargets.utils.WearWearableClient.BROADCAST_TRAINING_TEMPLATE;
@@ -52,8 +52,7 @@ public class MainActivity extends WearableActivity {
         public void onReceive(Context context, @NonNull Intent intent) {
             switch (intent.getAction()) {
                 case BROADCAST_TRAINING_TEMPLATE:
-                    Training training = Parcels
-                            .unwrap(intent.getParcelableExtra(WearWearableClient.EXTRA_TRAINING));
+                    AugmentedTraining training = intent.getParcelableExtra(WearWearableClient.EXTRA_TRAINING);
                     setTraining(training);
                     binding.root.setClickable(false);
                     binding.wearableDrawerView.setVisibility(View.VISIBLE);
@@ -132,8 +131,8 @@ public class MainActivity extends WearableActivity {
         binding.date.setText(R.string.today);
     }
 
-    private void setTraining(@NonNull Training training) {
-        Round round = training.getRounds().get(0);
+    private void setTraining(@NonNull AugmentedTraining training) {
+        AugmentedRound round = training.getRounds().get(0);
         TrainingInfo info = new TrainingInfo(training, round);
         setCommonTrainingInfo(info);
         binding.date.setText("");
@@ -143,7 +142,7 @@ public class MainActivity extends WearableActivity {
         binding.title.setText(info.title);
         binding.rounds.setText(info.getRoundDetails(this));
         binding.ends.setText(info.getEndDetails(this));
-        binding.distance.setText(info.round.distance.toString());
+        binding.distance.setText(info.round.getRound().getDistance().toString());
     }
 
     @Override

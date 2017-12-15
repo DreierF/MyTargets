@@ -83,8 +83,8 @@ public class ExportTest extends InstrumentedTestBase {
     @Test
     public void testDataExport() throws IOException {
         final StringWriter writer = new StringWriter();
-        List<Long> roundIds = Stream.of(Training.getAll())
-                .flatMap(t -> Stream.of(t.getRounds()))
+        List<Long> roundIds = Stream.of(Training.Companion.getAll())
+                .flatMap(t -> Stream.of(t.loadRounds()))
                 .map(Round::getId)
                 .sorted()
                 .toList();

@@ -69,11 +69,11 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         Training training = saveDefaultTraining(null, generator);
 
         Round round1 = new Round(rounds.get(0));
-        round1.trainingId = training.getId();
+        round1.setTrainingId(training.getId());
         round1.save();
 
         Round round2 = new Round(rounds.get(1));
-        round2.trainingId = training.getId();
+        round2.setTrainingId(training.getId());
         round2.save();
 
         randomEnd(round1, 6, generator, 0).save();
@@ -115,11 +115,11 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         Training training = saveDefaultTraining(standardRound.getId(), generator);
 
         Round round1 = new Round(standardRound.getRounds().get(0));
-        round1.trainingId = training.getId();
+        round1.setTrainingId(training.getId());
         round1.save();
 
         Round round2 = new Round(standardRound.getRounds().get(1));
-        round2.trainingId = training.getId();
+        round2.setTrainingId(training.getId());
         round2.save();
 
         randomEnd(round1, 6, generator, 0).save();
@@ -141,23 +141,23 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         StandardRound standardRound = StandardRound.get(32L);
 
         Training training = new Training();
-        training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training);
-        training.date = LocalDate.of(2016, 7, 15);
-        training.weather = EWeather.SUNNY;
-        training.windSpeed = 1;
-        training.windDirection = 0;
-        training.standardRoundId = standardRound.getId();
-        training.bowId = bow.getId();
-        training.arrowId = null;
-        training.arrowNumbering = false;
+        training.setTitle(InstrumentationRegistry.getTargetContext().getString(R.string.training));
+        training.setDate(LocalDate.of(2016, 7, 15));
+        training.setWeather(EWeather.SUNNY);
+        training.setWindSpeed(1);
+        training.setWindDirection(0);
+        training.setStandardRoundId(standardRound.getId());
+        training.setBowId(bow.getId());
+        training.setArrowId(null);
+        training.setArrowNumbering(false);
         training.save();
 
         Round round1 = new Round(standardRound.getRounds().get(0));
-        round1.trainingId = training.getId();
+        round1.setTrainingId(training.getId());
         round1.save();
 
         Round round2 = new Round(standardRound.getRounds().get(1));
-        round2.trainingId = training.getId();
+        round2.setTrainingId(training.getId());
         round2.save();
 
         buildEnd(round1, 1, 1, 2, 3, 3, 4).save();

@@ -51,9 +51,9 @@ public class ScoreboardUtils {
     public static LinearLayout getScoreboardView(Context context, Locale locale, Training training, long roundId, @NonNull ScoreboardConfiguration configuration) {
         List<Round> rounds;
         if (roundId == -1) {
-            rounds = training.getRounds();
+            rounds = training.loadRounds();
         } else {
-            rounds = Collections.singletonList(Round.get(roundId));
+            rounds = Collections.singletonList(Round.Companion.get(roundId));
         }
 
         DefaultScoreboardLayout scoreboardLayout = new DefaultScoreboardLayout(context, locale, configuration);

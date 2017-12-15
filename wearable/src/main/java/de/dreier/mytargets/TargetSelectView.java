@@ -101,9 +101,9 @@ public class TargetSelectView extends TargetViewBase {
 
     private int getCurrentlySelectedZone() {
         if (getCurrentShotIndex() != EndRenderer.NO_SELECTION) {
-            return shots.get(getCurrentShotIndex()).scoringRing;
+            return shots.get(getCurrentShotIndex()).getScoringRing();
         } else {
-            return Shot.NOTHING_SELECTED;
+            return Shot.Companion.getNOTHING_SELECTED();
         }
     }
 
@@ -182,7 +182,7 @@ public class TargetSelectView extends TargetViewBase {
                 degree += 360.0;
             }
             int index = (int) (zones * ((360.0 - degree) / 360.0));
-            shot.scoringRing = selectableZones.get(index).index;
+            shot.setScoringRing(selectableZones.get(index).index);
             return true;
         }
 

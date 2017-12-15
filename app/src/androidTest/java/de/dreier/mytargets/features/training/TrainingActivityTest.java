@@ -55,7 +55,7 @@ public class TrainingActivityTest extends UITestBase {
 
     @Test
     public void navigation() {
-        final List<Training> trainings = Training.getAll();
+        final List<Training> trainings = Training.Companion.getAll();
         Collections.sort(trainings, Collections.reverseOrder());
         Training training = trainings.get(0);
         activityTestRule.launchActivity(TrainingFragment.getIntent(training).build());
@@ -74,11 +74,11 @@ public class TrainingActivityTest extends UITestBase {
 //        onView(withRecyclerView(R.id.recyclerView).atPosition(1))
 //                .perform(click());
 //        intended(allOf(hasClass(RoundActivity.class),
-//                hasExtra(RoundFragment.ROUND_ID, training.getRounds().get(1).getId())));
+//                hasExtra(RoundFragment.ROUND_ID, training.loadRounds().get(1).getId())));
 //
 //        clickActionBarItem(R.id.action_statistics, R.string.statistic);
 //        intended(allOf(hasClass(StatisticsActivity.class),
-//                hasLongArrayExtra(StatisticsActivity.ROUND_IDS, Stream.of(training.getRounds())
+//                hasLongArrayExtra(StatisticsActivity.ROUND_IDS, Stream.of(training.loadRounds())
 //                        .map(Round::getId)
 //                        .toSet())));
 

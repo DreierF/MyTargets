@@ -26,7 +26,12 @@ data class AugmentedTraining(
         val training: Training,
         var rounds: MutableList<AugmentedRound>
 ) : Parcelable {
-    constructor(training: Training) : this(training, training.getRounds()
+    constructor(training: Training) : this(training, training.loadRounds()!!
             .map { AugmentedRound(it) }
             .toMutableList())
+
+    fun toTraining(): Training {
+        training.rounds = rounds.map {it.toRound()}.toMutableList()
+        return training
+    }
 }

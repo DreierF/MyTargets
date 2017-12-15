@@ -39,7 +39,7 @@ public class HtmlUtils {
     }
 
     private static void addStaticTrainingHeaderInfo(Context context, @NonNull HtmlInfoBuilder info, @NonNull Training training) {
-        if (training.indoor) {
+        if (training.getIndoor()) {
             info.addLine(R.string.environment, context.getString(R.string.indoor));
         } else {
             info.addLine(R.string.weather, training.getEnvironment().getWeather().getName());
@@ -50,18 +50,18 @@ public class HtmlUtils {
             }
         }
 
-        Bow bow = Bow.Companion.get(training.bowId);
+        Bow bow = Bow.Companion.get(training.getBowId());
         if (bow != null) {
             info.addLine(R.string.bow, bow.getName());
         }
 
-        Arrow arrow = Arrow.Companion.get(training.arrowId);
+        Arrow arrow = Arrow.Companion.get(training.getArrowId());
         if (arrow != null) {
             info.addLine(R.string.arrow, arrow.getName());
         }
 
-        if (training.standardRoundId != null) {
-            StandardRound standardRound = StandardRound.get(training.standardRoundId);
+        if (training.getStandardRoundId() != null) {
+            StandardRound standardRound = StandardRound.get(training.getStandardRoundId());
             info.addLine(R.string.standard_round, standardRound.name);
         }
     }
@@ -71,7 +71,7 @@ public class HtmlUtils {
             getEqualValues(rounds, equals);
             Round round = rounds.get(0);
             if (equals[0]) {
-                info.addLine(R.string.distance, round.distance);
+                info.addLine(R.string.distance, round.getDistance());
             }
             if (equals[1]) {
                 info.addLine(R.string.target_face, round.getTarget().getName());
@@ -85,7 +85,7 @@ public class HtmlUtils {
         equals[1] = true;
         Round round = rounds.get(0);
         for (Round r : rounds) {
-            equals[0] = SharedUtils.equals(r.distance, round.distance) && equals[0];
+            equals[0] = SharedUtils.equals(r.getDistance(), round.getDistance()) && equals[0];
             equals[1] = SharedUtils.equals(r.getTarget(), round.getTarget()) && equals[1];
         }
     }
@@ -93,13 +93,13 @@ public class HtmlUtils {
     public static String getRoundInfo(@NonNull Round round, boolean[] equals) {
         HtmlInfoBuilder info = new HtmlInfoBuilder();
         if (!equals[0]) {
-            info.addLine(R.string.distance, round.distance);
+            info.addLine(R.string.distance, round.getDistance());
         }
         if (!equals[1]) {
             info.addLine(R.string.target_face, round.getTarget().getName());
         }
-        if (!round.comment.isEmpty()) {
-            info.addLine(R.string.comment, round.comment);
+        if (!round.getComment().isEmpty()) {
+            info.addLine(R.string.comment, round.getComment());
         }
         return info.toString();
     }
