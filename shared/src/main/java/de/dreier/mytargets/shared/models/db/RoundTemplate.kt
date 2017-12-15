@@ -13,99 +13,68 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models.db;
+package de.dreier.mytargets.shared.models.db
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.annotation.SuppressLint
+import android.os.Parcelable
+import com.raizlabs.android.dbflow.annotation.*
+import com.raizlabs.android.dbflow.sql.language.SQLite
+import com.raizlabs.android.dbflow.structure.BaseModel
+import de.dreier.mytargets.shared.AppDatabase
+import de.dreier.mytargets.shared.models.Dimension
+import de.dreier.mytargets.shared.models.IIdSettable
+import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter
+import kotlinx.android.parcel.Parcelize
 
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ForeignKey;
-import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
-import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.structure.BaseModel;
+@SuppressLint("ParcelCreator")
+@Parcelize
+@Table(database = AppDatabase::class)
+data class RoundTemplate(
+        @Column(name = "_id")
+        @PrimaryKey(autoincrement = true)
+        override var id: Long? = null,
 
-import org.parceler.Parcel;
+        @ForeignKey(tableClass = StandardRound::class, references = [(ForeignKeyReference(columnName = "standardRound", columnType = Long::class, foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
+        var standardRound: Long? = null,
 
-import de.dreier.mytargets.shared.AppDatabase;
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.IIdSettable;
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter;
+        @Column
+        var index: Int = 0,
 
-@Parcel
-@Table(database = AppDatabase.class)
-public class RoundTemplate extends BaseModel implements IIdSettable {
+        @Column
+        var shotsPerEnd: Int = 0,
 
-    @Nullable
-    @Column(name = "_id")
-    @PrimaryKey(autoincrement = true)
-    Long id;
+        @Column
+        var endCount: Int = 0,
 
-    @Nullable
-    @ForeignKey(tableClass = StandardRound.class, references = {
-            @ForeignKeyReference(columnName = "standardRound", columnType = Long.class, foreignKeyColumnName = "_id")},
-            onDelete = ForeignKeyAction.CASCADE)
-    public Long standardRound;
+        @Column(typeConverter = DimensionConverter::class)
+        var distance: Dimension = Dimension.UNKNOWN,
 
-    @Column
-    public int index;
+        @Column
+        internal var targetId: Int = 0,
 
-    @Column
-    public int shotsPerEnd;
+        @Column
+        internal var targetScoringStyle: Int = 0,
 
-    @Column
-    public int endCount;
+        @Column(typeConverter = DimensionConverter::class)
+        internal var targetDiameter: Dimension? = null
+) : BaseModel(), IIdSettable, Parcelable {
 
-    @NonNull
-    @Column(typeConverter = DimensionConverter.class)
-    public Dimension distance = Dimension.Companion.getUNKNOWN();
+    var targetTemplate: Target
+        get() = Target(targetId, targetScoringStyle, targetDiameter)
+        set(targetTemplate) {
+            targetId = targetTemplate.id.toInt()
+            targetScoringStyle = targetTemplate.scoringStyle
+            targetDiameter = targetTemplate.diameter
+        }
 
-    @Column
-    int targetId;
-
-    @Column
-    int targetScoringStyle;
-
-    @Nullable
-    @Column(typeConverter = DimensionConverter.class)
-    Dimension targetDiameter;
-
-    @Nullable
-    public static RoundTemplate get(long sid, int index) {
-        return SQLite.select()
-                .from(RoundTemplate.class)
-                .where(RoundTemplate_Table.standardRound.eq(sid))
-                .and(RoundTemplate_Table.index.eq(index))
-                .querySingle();
-    }
-
-    @Nullable
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(@Nullable Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public boolean equals(Object another) {
-        return another instanceof RoundTemplate &&
-                getClass().equals(another.getClass()) &&
-                id.equals(((RoundTemplate) another).id);
-    }
-
-    @Nullable
-    public Target getTargetTemplate() {
-        return new Target(targetId, targetScoringStyle, targetDiameter);
-    }
-
-    public void setTargetTemplate(@NonNull Target targetTemplate) {
-        targetId = (int)(long)targetTemplate.getId();
-        targetScoringStyle = targetTemplate.scoringStyle;
-        targetDiameter = targetTemplate.diameter;
+    companion object {
+        operator fun get(sid: Long, index: Int): RoundTemplate? {
+            return SQLite.select()
+                    .from(RoundTemplate::class.java)
+                    .where(RoundTemplate_Table.standardRound.eq(sid))
+                    .and(RoundTemplate_Table.index.eq(index))
+                    .querySingle()
+        }
     }
 }

@@ -12,187 +12,143 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.shared.models.db;
+package de.dreier.mytargets.shared.models.db
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.drawable.Drawable
+import android.os.Parcelable
+import com.raizlabs.android.dbflow.annotation.Column
+import com.raizlabs.android.dbflow.annotation.OneToMany
+import com.raizlabs.android.dbflow.annotation.PrimaryKey
+import com.raizlabs.android.dbflow.annotation.Table
+import com.raizlabs.android.dbflow.config.FlowManager
+import com.raizlabs.android.dbflow.sql.language.SQLite
+import com.raizlabs.android.dbflow.structure.BaseModel
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
+import de.dreier.mytargets.shared.AppDatabase
+import de.dreier.mytargets.shared.R
+import de.dreier.mytargets.shared.models.IDetailProvider
+import de.dreier.mytargets.shared.models.IIdSettable
+import de.dreier.mytargets.shared.models.IImageProvider
+import de.dreier.mytargets.shared.targets.models.CombinedSpot
+import kotlinx.android.parcel.Parcelize
 
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.OneToMany;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.structure.BaseModel;
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
+@SuppressLint("ParcelCreator")
+@Parcelize
+@Table(database = AppDatabase::class)
+data class StandardRound(
+        @Column(name = "_id")
+        @PrimaryKey(autoincrement = true)
+        override var id: Long? = null,
 
-import org.parceler.Parcel;
+        @Column
+        var club: Int = 0,
 
-import java.util.ArrayList;
-import java.util.List;
+        @Column
+        override var name: String = ""
+) : BaseModel(), IIdSettable, IImageProvider, IDetailProvider, Comparable<StandardRound>, Parcelable {
 
-import de.dreier.mytargets.shared.AppDatabase;
-import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.models.IDetailProvider;
-import de.dreier.mytargets.shared.models.IIdSettable;
-import de.dreier.mytargets.shared.models.IImageProvider;
-import de.dreier.mytargets.shared.targets.drawable.TargetDrawable;
-import de.dreier.mytargets.shared.targets.models.CombinedSpot;
+    @Transient internal var rounds: MutableList<RoundTemplate>? = null
 
-@Parcel
-@Table(database = AppDatabase.class)
-public class StandardRound extends BaseModel implements IIdSettable, IImageProvider, IDetailProvider, Comparable<StandardRound> {
+    val targetDrawable: Drawable
+        get() {
+            val targets = loadRounds()?.map { it.targetTemplate.drawable }
+            return CombinedSpot(targets)
+        }
 
-    @Nullable
-    @Column(name = "_id")
-    @PrimaryKey(autoincrement = true)
-    Long id;
-
-    @Column
-    public int club;
-
-    @NonNull
-    @Column
-    public String name = "";
-
-    List<RoundTemplate> rounds;
-
-    @Nullable
-    public static StandardRound get(Long id) {
-        return SQLite.select()
-                .from(StandardRound.class)
-                .where(StandardRound_Table._id.eq(id))
-                .querySingle();
+    fun insert(template: RoundTemplate) {
+        template.index = loadRounds()!!.size
+        template.standardRound = id
+        loadRounds()!!.add(template)
     }
 
-    public static List<StandardRound> getAll() {
-        return SQLite.select().from(StandardRound.class).queryList();
-    }
-
-    public static List<StandardRound> getAllSearch(String query) {
-        query = "%" + query.replace(' ', '%') + "%";
-        return SQLite.select()
-                .from(StandardRound.class)
-                .where(StandardRound_Table.name.like(query))
-                .and(StandardRound_Table.club.notEq(512))
-                .queryList();
-    }
-
-    public void insert(@NonNull RoundTemplate template) {
-        template.index = getRounds().size();
-        template.standardRound = id;
-        getRounds().add(template);
-    }
-
-    @Nullable
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(@Nullable Long id) {
-        this.id = id;
-    }
-
-    @NonNull
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @NonNull
-    public String getDescription(@NonNull Context context) {
-        String desc = "";
-        for (RoundTemplate r : getRounds()) {
+    fun getDescription(context: Context): String {
+        var desc = ""
+        for (r in loadRounds()!!) {
             if (!desc.isEmpty()) {
-                desc += "\n";
+                desc += "\n"
             }
             desc += context.getString(R.string.round_desc, r.distance, r.endCount,
-                    r.shotsPerEnd, r.getTargetTemplate().diameter);
+                    r.shotsPerEnd, r.targetTemplate.diameter)
         }
-        return desc;
+        return desc
     }
 
-    @OneToMany(methods = {}, variableName = "rounds")
-    public List<RoundTemplate> getRounds() {
+    @OneToMany(methods = [], variableName = "rounds")
+    fun loadRounds(): MutableList<RoundTemplate>? {
         if (rounds == null) {
             rounds = SQLite.select()
-                    .from(RoundTemplate.class)
+                    .from(RoundTemplate::class.java)
                     .where(RoundTemplate_Table.standardRound.eq(id))
-                    .queryList();
+                    .queryList()
+                    .toMutableList()
         }
-        return rounds;
+        return rounds
     }
 
-    public void setRounds(List<RoundTemplate> rounds) {
-        this.rounds = rounds;
+    fun setRounds(rounds: MutableList<RoundTemplate>) {
+        this.rounds = rounds
     }
 
-    @NonNull
-    @Override
-    public Drawable getDrawable(Context context) {
-        return getTargetDrawable();
+    override fun getDrawable(context: Context): Drawable {
+        return targetDrawable
     }
 
-    @NonNull
-    public Drawable getTargetDrawable() {
-        List<TargetDrawable> targets = new ArrayList<>();
-        for (RoundTemplate r : getRounds()) {
-            targets.add(r.getTargetTemplate().getDrawable());
-        }
-        return new CombinedSpot(targets);
+    override fun getDetails(context: Context): String {
+        return getDescription(context)
     }
 
-    @Override
-    public boolean equals(Object another) {
-        return another instanceof StandardRound &&
-                getClass().equals(another.getClass()) &&
-                id.equals(((StandardRound) another).id);
+    override fun compareTo(other: StandardRound) = compareBy(StandardRound::name, StandardRound::id).compare(this, other)
+
+    override fun save() {
+        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.save(it) })
     }
 
-    @NonNull
-    @Override
-    public String getDetails(@NonNull Context context) {
-        return getDescription(context);
-    }
-
-    @Override
-    public int compareTo(@NonNull StandardRound another) {
-        final int result = getName().compareTo(another.getName());
-        return result == 0 ? (int) (id - another.id) : result;
-    }
-
-    @Override
-    public void save() {
-        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::save);
-    }
-
-    @Override
-    public void save(DatabaseWrapper databaseWrapper) {
-        super.save(databaseWrapper);
+    override fun save(databaseWrapper: DatabaseWrapper) {
+        super.save(databaseWrapper)
         if (rounds != null) {
-            SQLite.delete(RoundTemplate.class)
+            SQLite.delete(RoundTemplate::class.java)
                     .where(RoundTemplate_Table.standardRound.eq(id))
-                    .execute(databaseWrapper);
+                    .execute(databaseWrapper)
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-            for (RoundTemplate s : rounds) {
-                s.standardRound = id;
-                s.save(databaseWrapper);
+            for (s in rounds!!) {
+                s.standardRound = id
+                s.save(databaseWrapper)
             }
         }
     }
 
-    @Override
-    public void delete() {
-        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::delete);
+    override fun delete() {
+        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.delete(it) })
     }
 
-    @Override
-    public void delete(DatabaseWrapper databaseWrapper) {
-        for (RoundTemplate roundTemplate : getRounds()) {
-            roundTemplate.delete(databaseWrapper);
+    override fun delete(databaseWrapper: DatabaseWrapper) {
+        for (roundTemplate in loadRounds()!!) {
+            roundTemplate.delete(databaseWrapper)
         }
-        super.delete(databaseWrapper);
+        super.delete(databaseWrapper)
+    }
+
+    companion object {
+
+        operator fun get(id: Long?): StandardRound? {
+            return SQLite.select()
+                    .from(StandardRound::class.java)
+                    .where(StandardRound_Table._id.eq(id))
+                    .querySingle()
+        }
+
+        val all: List<StandardRound>
+            get() = SQLite.select().from(StandardRound::class.java).queryList()
+
+        fun getAllSearch(query: String): List<StandardRound> {
+            val queryString = "%" + query.replace(' ', '%') + "%"
+            return SQLite.select()
+                    .from(StandardRound::class.java)
+                    .where(StandardRound_Table.name.like(queryString))
+                    .and(StandardRound_Table.club.notEq(512))
+                    .queryList()
+        }
     }
 }

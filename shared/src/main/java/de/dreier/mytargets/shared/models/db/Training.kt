@@ -210,7 +210,7 @@ data class Training(
 
     fun initRoundsFromTemplate(standardRound: StandardRound) {
         rounds = mutableListOf()
-        for (template in standardRound.getRounds()) {
+        for (template in standardRound.loadRounds()) {
             val round = Round(template)
             round.trainingId = id
             round.target = template.targetTemplate!!

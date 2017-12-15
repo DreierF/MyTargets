@@ -13,77 +13,54 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models.db;
+package de.dreier.mytargets.shared.models.db
 
-import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.os.Parcelable
+import com.raizlabs.android.dbflow.annotation.Column
+import com.raizlabs.android.dbflow.annotation.PrimaryKey
+import com.raizlabs.android.dbflow.annotation.Table
+import com.raizlabs.android.dbflow.sql.language.SQLite
+import com.raizlabs.android.dbflow.structure.BaseModel
+import de.dreier.mytargets.shared.AppDatabase
+import de.dreier.mytargets.shared.utils.typeconverters.BitmapConverter
+import de.dreier.mytargets.shared.utils.typeconverters.BitmapParcelConverter
+import kotlinx.android.parcel.Parcelize
+import org.parceler.ParcelPropertyConverter
 
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.structure.BaseModel;
+@SuppressLint("ParcelCreator")
+@Parcelize
+@Table(database = AppDatabase::class)
+data class Signature(
+        @Column(name = "_id")
+        @PrimaryKey(autoincrement = true)
+        var _id: Long? = 0,
 
-import org.parceler.Parcel;
-import org.parceler.ParcelConstructor;
-import org.parceler.ParcelPropertyConverter;
+        @Column
+        var name: String = "",
 
-import de.dreier.mytargets.shared.AppDatabase;
-import de.dreier.mytargets.shared.utils.typeconverters.BitmapConverter;
-import de.dreier.mytargets.shared.utils.typeconverters.BitmapParcelConverter;
+        /**
+         * Returns a bitmap of the signature or null if no signature has been set.
+         */
+        @Column(typeConverter = BitmapConverter::class)
+        @ParcelPropertyConverter(BitmapParcelConverter::class)
+        var bitmap: Bitmap? = null
+) : BaseModel(), Parcelable {
 
-@Parcel
-@Table(database = AppDatabase.class)
-public class Signature extends BaseModel {
+    val isSigned: Boolean
+        get() = bitmap != null
 
-    @Nullable
-    @Column(name = "_id")
-    @PrimaryKey(autoincrement = true)
-    public Long _id = -1L;
-
-    @NonNull
-    @Column
-    public String name = "";
-
-    @Nullable
-    @Column(typeConverter = BitmapConverter.class)
-    @ParcelPropertyConverter(BitmapParcelConverter.class)
-    public Bitmap bitmap;
-
-    @ParcelConstructor
-    public Signature() {
+    fun getName(defaultName: String): String {
+        return if (name.isEmpty()) defaultName else name
     }
 
-    public Signature(@Nullable Bitmap bitmap) {
-        this.bitmap = bitmap;
-    }
-
-    /**
-     * Returns a bitmap of the signature or null if no signature has been set.
-     */
-    @Nullable
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
-
-    public void setBitmap(@Nullable Bitmap bitmap) {
-        this.bitmap = bitmap;
-    }
-
-    public boolean isSigned() {
-        return bitmap != null;
-    }
-
-    public String getName(String defaultName) {
-        return name.isEmpty() ? defaultName : name;
-    }
-
-    @Nullable
-    public static Signature get(long signatureId) {
-        return SQLite.select()
-                .from(Signature.class)
-                .where(Signature_Table._id.eq(signatureId))
-                .querySingle();
+    companion object {
+        operator fun get(signatureId: Long): Signature? {
+            return SQLite.select()
+                    .from(Signature::class.java)
+                    .where(Signature_Table._id.eq(signatureId))
+                    .querySingle()
+        }
     }
 }

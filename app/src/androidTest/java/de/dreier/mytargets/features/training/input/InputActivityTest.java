@@ -59,16 +59,16 @@ public class InputActivityTest extends UITestBase {
         @Override
         protected void addDatabaseContent() {
             Random generator = new Random(3435);
-            StandardRound standardRound = StandardRound.get(32L);
+            StandardRound standardRound = StandardRound.Companion.get(32L);
 
             Training training = saveDefaultTraining(standardRound.getId(), generator);
 
-            round1 = new Round(standardRound.getRounds().get(0));
+            round1 = new Round(standardRound.loadRounds().get(0));
             round1.setTrainingId(training.getId());
             round1.setComment("");
             round1.save();
 
-            Round round2 = new Round(standardRound.getRounds().get(1));
+            Round round2 = new Round(standardRound.loadRounds().get(1));
             round2.setTrainingId(training.getId());
             round2.setComment("");
             round2.save();

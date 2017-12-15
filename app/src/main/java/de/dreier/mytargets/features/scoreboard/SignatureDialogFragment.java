@@ -64,10 +64,10 @@ public class SignatureDialogFragment extends DialogFragment {
         binding.editName.setOnClickListener(v -> new MaterialDialog.Builder(getContext())
                 .title(R.string.name)
                 .inputType(InputType.TYPE_CLASS_TEXT)
-                .input(defaultName, signature.name, (dialog, input) -> {
-                    signature.name = input.toString();
+                .input(defaultName, signature.getName(), (dialog, input) -> {
+                    signature.setName(input.toString());
                     signature.save();
-                    binding.signer.setText(signature.name);
+                    binding.signer.setText(signature.getName());
                 })
                 .negativeText(android.R.string.cancel)
                 .show());
@@ -77,7 +77,7 @@ public class SignatureDialogFragment extends DialogFragment {
             if (!binding.signatureView.isEmpty()) {
                 bitmap = binding.signatureView.getTransparentSignatureBitmap();
             }
-            signature.bitmap = bitmap;
+            signature.setBitmap(bitmap);
             signature.save();
             dismiss();
         });

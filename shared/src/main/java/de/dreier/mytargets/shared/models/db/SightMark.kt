@@ -12,64 +12,33 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.shared.models.db;
+package de.dreier.mytargets.shared.models.db
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.annotation.SuppressLint
+import android.os.Parcelable
+import com.raizlabs.android.dbflow.annotation.*
+import com.raizlabs.android.dbflow.structure.BaseModel
+import de.dreier.mytargets.shared.AppDatabase
+import de.dreier.mytargets.shared.models.Dimension
+import de.dreier.mytargets.shared.models.Dimension.Unit.METER
+import de.dreier.mytargets.shared.models.IIdSettable
+import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter
+import kotlinx.android.parcel.Parcelize
 
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ForeignKey;
-import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
-import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.structure.BaseModel;
+@SuppressLint("ParcelCreator")
+@Parcelize
+@Table(database = AppDatabase::class)
+data class SightMark(
+        @Column(name = "_id")
+        @PrimaryKey(autoincrement = true)
+        override var id: Long? = null,
 
-import org.parceler.Parcel;
+        @ForeignKey(tableClass = Bow::class, references = [(ForeignKeyReference(columnName = "bow", columnType = Long::class, foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
+        var bowId: Long? = null,
 
-import de.dreier.mytargets.shared.AppDatabase;
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.IIdSettable;
-import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter;
+        @Column(typeConverter = DimensionConverter::class)
+        var distance: Dimension = Dimension(18f, METER),
 
-import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
-
-@Parcel
-@Table(database = AppDatabase.class)
-public class SightMark extends BaseModel implements IIdSettable {
-
-    @Nullable
-    @Column(name = "_id")
-    @PrimaryKey(autoincrement = true)
-    Long id;
-
-    @Nullable
-    @ForeignKey(tableClass = Bow.class, references = {
-            @ForeignKeyReference(columnName = "bow", columnType = Long.class, foreignKeyColumnName = "_id")},
-            onDelete = ForeignKeyAction.CASCADE)
-    public Long bowId;
-
-    @NonNull
-    @Column(typeConverter = DimensionConverter.class)
-    public Dimension distance = new Dimension(18, METER);
-
-    @Nullable
-    @Column
-    public String value = "";
-
-    @Nullable
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(@Nullable Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public boolean equals(Object another) {
-        return another instanceof SightMark &&
-                getClass().equals(another.getClass()) &&
-                id.equals(((SightMark) another).id);
-    }
-}
+        @Column
+        var value: String? = ""
+) : BaseModel(), IIdSettable, Parcelable

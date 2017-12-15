@@ -150,7 +150,7 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
             Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
             final int index = intentData.getInt(SelectorBase.INDEX);
             final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
-            sightMarks.get(index).distance = Parcels.unwrap(parcelable);
+            sightMarks.get(index).setDistance(Parcels.unwrap(parcelable));
             adapter.notifyItemChanged(index);
         }
     }
@@ -206,7 +206,7 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
 
                 @Override
                 public void onTextChanged(@NonNull CharSequence s, int i, int i1, int i2) {
-                    item.value = s.toString();
+                    item.setValue(s.toString());
                 }
 
                 @Override
@@ -221,8 +221,8 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
             item = sightMark;
             binding.distance.setOnActivityResultContext(fragment);
             binding.distance.setItemIndex(position);
-            binding.distance.setItem(sightMark.distance);
-            binding.sightSetting.setText(sightMark.value);
+            binding.distance.setItem(sightMark.getDistance());
+            binding.sightSetting.setText(sightMark.getValue());
             binding.removeSightSetting.setOnClickListener(removeListener);
         }
     }

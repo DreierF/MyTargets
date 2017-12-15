@@ -732,19 +732,19 @@ public class StandardRoundFactory {
         StandardRound standardRound = new StandardRound();
         idCounter++;
         standardRound.setId(idCounter);
-        standardRound.name = SharedApplicationInstance.Companion.getContext().getString(name);
-        standardRound.club = institution;
+        standardRound.setName(SharedApplicationInstance.Companion.getContext().getString(name));
+        standardRound.setClub(institution);
         standardRound.setRounds(new ArrayList<>());
         for (int i = 0; i < roundDetails.length; i += 3) {
             roundCounter++;
             RoundTemplate roundTemplate = new RoundTemplate();
             roundTemplate.setId(roundCounter);
-            roundTemplate.shotsPerEnd = shotsPerEnd;
-            roundTemplate.distance = new Dimension(roundDetails[i], distanceUnit);
+            roundTemplate.setShotsPerEnd(shotsPerEnd);
+            roundTemplate.setDistance(new Dimension(roundDetails[i], distanceUnit));
             roundTemplate.setTargetTemplate(
                     new Target(target, scoringStyle, new Dimension(roundDetails[i +
                             1], targetUnit)));
-            roundTemplate.endCount = roundDetails[i + 2];
+            roundTemplate.setEndCount(roundDetails[i + 2]);
             standardRound.insert(roundTemplate);
         }
         return standardRound;
@@ -754,7 +754,7 @@ public class StandardRoundFactory {
     private static StandardRound build(int institution, int name, Dimension.Unit distanceUnit, Dimension.Unit targetUnit, int target, int scoringStyle, @NonNull Target target2, int shotsPerEnd, int... roundDetails) {
         StandardRound standardRound = build(institution, name, distanceUnit,
                 targetUnit, target, scoringStyle, shotsPerEnd, roundDetails);
-        RoundTemplate round2 = standardRound.getRounds().get(1);
+        RoundTemplate round2 = standardRound.loadRounds().get(1);
         target2.diameter = round2.getTargetTemplate().diameter;
         round2.setTargetTemplate(target2);
         return standardRound;
