@@ -13,315 +13,243 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models.db;
+package de.dreier.mytargets.shared.models.db
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.annotation.SuppressLint
+import android.os.Parcelable
+import com.raizlabs.android.dbflow.annotation.*
+import com.raizlabs.android.dbflow.config.FlowManager
+import com.raizlabs.android.dbflow.sql.language.SQLite
+import com.raizlabs.android.dbflow.structure.BaseModel
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
+import de.dreier.mytargets.shared.AppDatabase
+import de.dreier.mytargets.shared.models.*
+import de.dreier.mytargets.shared.utils.typeconverters.EWeatherConverter
+import de.dreier.mytargets.shared.utils.typeconverters.LocalDateConverter
+import kotlinx.android.parcel.Parcelize
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.format.FormatStyle
 
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ForeignKey;
-import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
-import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
-import com.raizlabs.android.dbflow.annotation.OneToMany;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.structure.BaseModel;
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
+@SuppressLint("ParcelCreator")
+@Parcelize
+@Table(database = AppDatabase::class)
+data class Training(
 
-import org.parceler.Parcel;
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.format.DateTimeFormatter;
-import org.threeten.bp.format.FormatStyle;
+        @Column(name = "_id")
+        @PrimaryKey(autoincrement = true)
+        override var id: Long? = null,
 
-import java.util.ArrayList;
-import java.util.List;
+        @Column
+        var title: String? = "",
 
-import de.dreier.mytargets.shared.AppDatabase;
-import de.dreier.mytargets.shared.models.EWeather;
-import de.dreier.mytargets.shared.models.Environment;
-import de.dreier.mytargets.shared.models.IIdSettable;
-import de.dreier.mytargets.shared.models.IRecursiveModel;
-import de.dreier.mytargets.shared.models.Score;
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-import de.dreier.mytargets.shared.utils.typeconverters.EWeatherConverter;
-import de.dreier.mytargets.shared.utils.typeconverters.LocalDateConverter;
+        @Column(typeConverter = LocalDateConverter::class)
+        var date: LocalDate? = null,
 
-@Parcel
-@Table(database = AppDatabase.class)
-public class Training extends BaseModel implements IIdSettable, Comparable<Training>, IRecursiveModel {
+        @ForeignKey(tableClass = StandardRound::class, references = [(ForeignKeyReference(columnName = "standardRound", columnType = Long::class, foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
+        var standardRoundId: Long? = null,
 
-    @Nullable
-    @Column(name = "_id")
-    @PrimaryKey(autoincrement = true)
-    Long id;
+        @ForeignKey(tableClass = Bow::class, references = [(ForeignKeyReference(columnName = "bow", columnType = Long::class, foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
+        var bowId: Long? = null,
 
-    @Nullable
-    @Column
-    public String title = "";
+        @ForeignKey(tableClass = Arrow::class, references = [(ForeignKeyReference(columnName = "arrow", columnType = Long::class, foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
+        var arrowId: Long? = null,
 
-    @Nullable
-    @Column(typeConverter = LocalDateConverter.class)
-    public LocalDate date;
+        @Column(getterName = "getArrowNumbering", setterName = "setArrowNumbering")
+        var arrowNumbering: Boolean = false,
 
-    @Nullable
-    @ForeignKey(tableClass = StandardRound.class, references = {
-            @ForeignKeyReference(columnName = "standardRound", columnType = Long.class, foreignKeyColumnName = "_id")},
-            onDelete = ForeignKeyAction.SET_NULL)
-    public Long standardRoundId;
+        @Column(getterName = "getIndoor", setterName = "setIndoor")
+        var indoor: Boolean = false,
 
-    @Nullable
-    @ForeignKey(tableClass = Bow.class, references = {
-            @ForeignKeyReference(columnName = "bow", columnType = Long.class, foreignKeyColumnName = "_id")},
-            onDelete = ForeignKeyAction.SET_NULL)
-    public Long bowId;
+        @Column(typeConverter = EWeatherConverter::class)
+        var weather: EWeather? = null,
 
-    @Nullable
-    @ForeignKey(tableClass = Arrow.class, references = {
-            @ForeignKeyReference(columnName = "arrow", columnType = Long.class, foreignKeyColumnName = "_id")},
-            onDelete = ForeignKeyAction.SET_NULL)
-    public Long arrowId;
+        @Column
+        var windDirection: Int = 0,
 
-    @Column
-    public boolean arrowNumbering;
+        @Column
+        var windSpeed: Int = 0,
 
-    @Column
-    public boolean indoor;
+        @Column
+        var location: String? = "",
 
-    @Nullable
-    @Column(typeConverter = EWeatherConverter.class)
-    public EWeather weather;
+        @Column
+        var comment: String = "",
 
-    @Column
-    public int windDirection;
+        @ForeignKey(tableClass = Signature::class, references = [(ForeignKeyReference(columnName = "archerSignature", columnType = Long::class, foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
+        var archerSignatureId: Long? = null,
 
-    @Column
-    public int windSpeed;
+        @ForeignKey(tableClass = Signature::class, references = [(ForeignKeyReference(columnName = "witnessSignature", columnType = Long::class, foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
+        var witnessSignatureId: Long? = null
+) : BaseModel(), IIdSettable, Comparable<Training>, IRecursiveModel, Parcelable {
 
-    @Nullable
-    @Column
-    public String location = "";
+    @Transient
+    var rounds: MutableList<Round>? = null
 
-    @NonNull
-    @Column
-    public String comment = "";
+    var environment: Environment
+        get() = Environment(indoor, weather!!, windSpeed, windDirection, location!!)
+        set(env) {
+            indoor = env.indoor
+            weather = env.weather
+            windDirection = env.windDirection
+            windSpeed = env.windSpeed
+            location = env.location
+        }
 
-    @Nullable
-    @ForeignKey(tableClass = Signature.class, references = {
-            @ForeignKeyReference(columnName = "archerSignature", columnType = Long.class, foreignKeyColumnName = "_id")}, onDelete = ForeignKeyAction.SET_NULL)
-    public Long archerSignatureId;
+    val standardRound: StandardRound?
+        get() = SQLite.select()
+                .from(StandardRound::class.java)
+                .where(StandardRound_Table._id.eq(standardRoundId))
+                .querySingle()
 
-    @Nullable
-    @ForeignKey(tableClass = Signature.class, references = {
-            @ForeignKeyReference(columnName = "witnessSignature", columnType = Long.class, foreignKeyColumnName = "_id")}, onDelete = ForeignKeyAction.SET_NULL)
-    public Long witnessSignatureId;
+    val bow: Bow?
+        get() = SQLite.select()
+                .from(Bow::class.java)
+                .where(Bow_Table._id.eq(bowId))
+                .querySingle()
 
-    public List<Round> rounds;
+    val arrow: Arrow?
+        get() = SQLite.select()
+                .from(Arrow::class.java)
+                .where(Arrow_Table._id.eq(arrowId))
+                .querySingle()
 
-    @Nullable
-    public static Training get(Long id) {
-        return SQLite.select()
-                .from(Training.class)
-                .where(Training_Table._id.eq(id))
-                .querySingle();
-    }
+    val orCreateArcherSignature: Signature
+        get() {
+            if (archerSignatureId != null) {
+                val signature = SQLite.select()
+                        .from(Signature::class.java)
+                        .where(Signature_Table._id.eq(archerSignatureId))
+                        .querySingle()
+                if (signature != null) {
+                    return signature
+                }
+            }
+            val signature = Signature()
+            signature.save()
+            archerSignatureId = signature._id
+            save()
+            return signature
+        }
 
-    public static List<Training> getAll() {
-        return SQLite.select().from(Training.class).queryList();
-    }
+    val orCreateWitnessSignature: Signature
+        get() {
+            if (witnessSignatureId != null) {
+                val signature = SQLite.select()
+                        .from(Signature::class.java)
+                        .where(Signature_Table._id.eq(witnessSignatureId))
+                        .querySingle()
+                if (signature != null) {
+                    return signature
+                }
+            }
+            val signature = Signature()
+            signature.save()
+            witnessSignatureId = signature._id
+            save()
+            return signature
+        }
 
-    @Nullable
-    public Long getId() {
-        return id;
-    }
+    val formattedDate: String
+        get() = date!!.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
 
-    public void setId(@Nullable Long id) {
-        this.id = id;
-    }
+    val reachedScore: Score
+        get() = loadRounds()!!
+                .map { obj: Round -> obj.reachedScore }
+                .fold(Score()) { score, s ->
+                    score.add(s)
+                }
 
-    @Override
-    public boolean equals(Object another) {
-        return another instanceof Training &&
-                getClass().equals(another.getClass()) &&
-                id.equals(((Training) another).id);
-    }
-
-    @Nullable
-    public Environment getEnvironment() {
-        return new Environment(indoor, weather, windSpeed, windDirection, location);
-    }
-
-    public void setEnvironment(@NonNull Environment env) {
-        indoor = env.getIndoor();
-        weather = env.getWeather();
-        windDirection = env.getWindDirection();
-        windSpeed = env.getWindSpeed();
-        location = env.getLocation();
-    }
-
-    @OneToMany(methods = {}, variableName = "rounds")
-    public List<Round> getRounds() {
+    @OneToMany(methods = [], variableName = "rounds")
+    fun loadRounds(): List<Round>? {
         if (rounds == null) {
             rounds = SQLite.select()
-                    .from(Round.class)
-                    .where(Round_Table.training.eq(id))
+                    .from(Round::class.java)
+                    .where(Round_Table.training.eq(id!!))
                     .orderBy(Round_Table.index, true)
-                    .queryList();
+                    .queryList()
         }
-        return rounds;
+        return rounds
     }
 
-    @Nullable
-    public StandardRound getStandardRound() {
-        return SQLite.select()
-                .from(StandardRound.class)
-                .where(StandardRound_Table._id.eq(standardRoundId))
-                .querySingle();
+    override fun compareTo(other: Training): Int {
+        return if (date == other.date) {
+            (id!! - other.id!!).toInt()
+        } else date!!.compareTo(other.date!!)
     }
 
-    @Nullable
-    public Bow getBow() {
-        return SQLite.select()
-                .from(Bow.class)
-                .where(Bow_Table._id.eq(bowId))
-                .querySingle();
+    override fun save() {
+        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.save(it) })
     }
 
-    @Nullable
-    public Arrow getArrow() {
-        return SQLite.select()
-                .from(Arrow.class)
-                .where(Arrow_Table._id.eq(arrowId))
-                .querySingle();
-    }
-
-    @NonNull
-    public Signature getOrCreateArcherSignature() {
-        if (archerSignatureId != null) {
-            Signature signature = SQLite.select()
-                    .from(Signature.class)
-                    .where(Signature_Table._id.eq(archerSignatureId))
-                    .querySingle();
-            if (signature != null) {
-                return signature;
-            }
-        }
-        Signature signature = new Signature();
-        signature.save();
-        archerSignatureId = signature._id;
-        save();
-        return signature;
-    }
-
-    @NonNull
-    public Signature getOrCreateWitnessSignature() {
-        if (witnessSignatureId != null) {
-            Signature signature = SQLite.select()
-                    .from(Signature.class)
-                    .where(Signature_Table._id.eq(witnessSignatureId))
-                    .querySingle();
-            if (signature != null) {
-                return signature;
-            }
-        }
-        Signature signature = new Signature();
-        signature.save();
-        witnessSignatureId = signature._id;
-        save();
-        return signature;
-    }
-
-    public String getFormattedDate() {
-        return date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
-    }
-
-    public Score getReachedScore() {
-        return Stream.of(getRounds())
-                .map(Round::getReachedScore)
-                .scoreSum();
-    }
-
-    @Override
-    public int compareTo(@NonNull Training training) {
-        if (date.equals(training.date)) {
-            return (int) (id - training.id);
-        }
-        return date.compareTo(training.date);
-    }
-
-
-    @Override
-    public void save() {
-        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::save);
-    }
-
-    @Override
-    public void save(DatabaseWrapper databaseWrapper) {
-        super.save(databaseWrapper);
+    override fun save(databaseWrapper: DatabaseWrapper) {
+        super.save(databaseWrapper)
         // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-        for (Round s : getRounds()) {
-            s.trainingId = id;
-            s.save(databaseWrapper);
+        loadRounds()?.forEach { s ->
+            s.trainingId = id
+            s.save(databaseWrapper)
         }
     }
 
-    @Override
-    public void delete() {
-        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::delete);
+    override fun delete() {
+        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.delete(it) })
     }
 
-    @Override
-    public void delete(DatabaseWrapper databaseWrapper) {
-        for (Round round : getRounds()) {
-            round.delete(databaseWrapper);
+    override fun delete(databaseWrapper: DatabaseWrapper) {
+        loadRounds()?.forEach { round -> round.delete(databaseWrapper) }
+        super.delete(databaseWrapper)
+    }
+
+    @Deprecated(message = "Use AugmentedTraining instead")
+    fun ensureLoaded(): Training {
+        loadRounds()?.forEach { round ->
+            round.loadEnds()?.forEach { end -> end.loadShots() }
         }
-        super.delete(databaseWrapper);
+        return this
     }
 
-    @NonNull
-    public Training ensureLoaded() {
-        for (Round round : getRounds()) {
-            for (End end : round.getEnds()) {
-                end.loadShots();
-            }
-        }
-        return this;
-    }
-
-    public void initRoundsFromTemplate(@NonNull StandardRound standardRound) {
-        rounds = new ArrayList<>();
-        for (RoundTemplate template : standardRound.getRounds()) {
-            Round round = new Round(template);
-            round.trainingId = id;
-            round.setTarget(template.getTargetTemplate());
-            round.comment = "";
-            round.ends = new ArrayList<>();
-            round.save();
-            rounds.add(round);
+    fun initRoundsFromTemplate(standardRound: StandardRound) {
+        rounds = mutableListOf()
+        for (template in standardRound.getRounds()) {
+            val round = Round(template)
+            round.trainingId = id
+            round.target = template.targetTemplate!!
+            round.comment = ""
+            round.save()
+            rounds!!.add(round)
         }
     }
 
-    @Override
-    public void saveRecursively() {
-        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::saveRecursively);
+    override fun saveRecursively() {
+        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.saveRecursively(it) })
     }
 
-    @Override
-    public void saveRecursively(DatabaseWrapper databaseWrapper) {
-        super.save(databaseWrapper);
-        for (Round s : getRounds()) {
-            s.trainingId = id;
-            s.saveRecursively(databaseWrapper);
+    override fun saveRecursively(databaseWrapper: DatabaseWrapper) {
+        super.save(databaseWrapper)
+        loadRounds()?.forEach { s ->
+            s.trainingId = id
+            s.saveRecursively(databaseWrapper)
         }
     }
 
-    @NonNull
-    public List<Round> getRounds(DatabaseWrapper databaseWrapper) {
+    fun loadRounds(databaseWrapper: DatabaseWrapper): List<Round> {
         return SQLite.select()
-                .from(Round.class)
-                .where(Round_Table.training.eq(id))
+                .from(Round::class.java)
+                .where(Round_Table.training.eq(id!!))
                 .orderBy(Round_Table.index, true)
-                .queryList(databaseWrapper);
+                .queryList(databaseWrapper)
+    }
+
+    companion object {
+
+        operator fun get(id: Long?): Training? {
+            return SQLite.select()
+                    .from(Training::class.java)
+                    .where(Training_Table._id.eq(id))
+                    .querySingle()
+        }
+
+        val all: List<Training>
+            get() = SQLite.select().from(Training::class.java).queryList()
     }
 }

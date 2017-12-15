@@ -13,89 +13,59 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models.db;
+package de.dreier.mytargets.shared.models.db
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.annotation.SuppressLint
+import android.os.Parcelable
+import com.raizlabs.android.dbflow.annotation.*
+import com.raizlabs.android.dbflow.structure.BaseModel
+import de.dreier.mytargets.shared.AppDatabase
+import de.dreier.mytargets.shared.models.IIdSettable
+import kotlinx.android.parcel.Parcelize
 
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ForeignKey;
-import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
-import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.structure.BaseModel;
+@SuppressLint("ParcelCreator")
+@Parcelize
+@Table(database = AppDatabase::class)
+data class Shot(
+        @Column(name = "_id")
+        @PrimaryKey(autoincrement = true)
+        override var id: Long? = null,
 
-import org.parceler.Parcel;
+        // The index of the shot in the containing end
+        @Column
+        var index: Int = 0,
 
-import de.dreier.mytargets.shared.AppDatabase;
-import de.dreier.mytargets.shared.models.IIdSettable;
+        @ForeignKey(tableClass = End::class, references = arrayOf(ForeignKeyReference(columnName = "end", columnType = Long::class, foreignKeyColumnName = "_id", referencedGetterName = "getId", referencedSetterName = "setId")), onDelete = ForeignKeyAction.CASCADE)
+        var endId: Long? = null,
 
-@Parcel
-@Table(database = AppDatabase.class)
-public class Shot extends BaseModel implements IIdSettable, Comparable<Shot> {
-    public static final int NOTHING_SELECTED = -2;
-    public static final int MISS = -1;
+        @Column
+        var x: Float = 0.toFloat(),
 
-    @Nullable
-    @Column(name = "_id")
-    @PrimaryKey(autoincrement = true)
-    Long id;
+        @Column
+        var y: Float = 0.toFloat(),
 
-    // The index of the shot in the containing end
-    @Column
-    public int index;
+        @Column
+        var scoringRing: Int = NOTHING_SELECTED,
 
-    @Nullable
-    @ForeignKey(tableClass = End.class, references = {
-            @ForeignKeyReference(columnName = "end", columnType = Long.class, foreignKeyColumnName = "_id", referencedGetterName = "getId", referencedSetterName = "setId")},
-            onDelete = ForeignKeyAction.CASCADE)
-    public Long endId;
+        // Is the actual number of the arrow not its index, arrow id or something else
+        @Column
+        var arrowNumber: String? = null
+) : BaseModel(), IIdSettable, Comparable<Shot>, Parcelable {
 
-    @Column
-    public float x;
+    constructor(i: Int) : this(index = i)
 
-    @Column
-    public float y;
-
-    @Column
-    public int scoringRing = NOTHING_SELECTED;
-
-    // Is the actual number of the arrow not its index, arrow id or something else
-    @Nullable
-    @Column
-    public String arrowNumber = null;
-
-    public Shot() {
-    }
-
-    public Shot(int i) {
-        this.index = i;
-    }
-
-    @Nullable
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(@Nullable Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public int compareTo(@NonNull Shot another) {
-        if (another.scoringRing == scoringRing) {
-            return 0;
-        } else if (another.scoringRing >= 0 && scoringRing >= 0) {
-            return scoringRing - another.scoringRing;
+    override fun compareTo(other: Shot): Int {
+        return if (other.scoringRing == scoringRing) {
+            0
+        } else if (other.scoringRing >= 0 && scoringRing >= 0) {
+            scoringRing - other.scoringRing
         } else {
-            return another.scoringRing - scoringRing;
+            other.scoringRing - scoringRing
         }
     }
 
-    @Override
-    public boolean equals(@Nullable Object o) {
-        return this == o || !(o == null || getClass() != o.getClass())
-                && (id != null ? id.equals(((Shot) o).id) : ((Shot) o).id == null);
+    companion object {
+        val NOTHING_SELECTED = -2
+        val MISS = -1
     }
 }

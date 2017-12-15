@@ -68,7 +68,7 @@ public class CsvExporter {
         csv.add("y");
         csv.newLine();
         csv.exitScope();
-        for (Training t : Training.getAll()) {
+        for (Training t : Training.Companion.getAll()) {
             addTraining(csv, t, roundIds);
         }
 
@@ -79,19 +79,19 @@ public class CsvExporter {
     private void addTraining(@NonNull CsvBuilder csv, @NonNull Training t, @NonNull List<Long> roundIds) throws IOException {
         csv.enterScope();
         // Title
-        csv.add(t.title);
+        csv.add(t.getTitle());
         // Date
-        csv.add(t.date.format(DateTimeFormatter.ISO_LOCAL_DATE));
+        csv.add(t.getDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
         // StandardRound
-        csv.add(t.standardRoundId == null ? context.getString(R.string.practice) : t.getStandardRound()
+        csv.add(t.getStandardRoundId() == null ? context.getString(R.string.practice) : t.getStandardRound()
                 .getName());
         // Indoor
-        csv.add(t.indoor ? context.getString(R.string.indoor) : context.getString(R.string.outdoor));
+        csv.add(t.getIndoor() ? context.getString(R.string.indoor) : context.getString(R.string.outdoor));
         // Bow
         csv.add(t.getBow() == null ? "" : t.getBow().getName());
         // Arrow
         csv.add(t.getArrow() == null ? "" : t.getArrow().getName());
-        for (Round r : t.getRounds()) {
+        for (Round r : t.loadRounds()) {
             if (!roundIds.contains(r.getId())) {
                 continue;
             }
@@ -103,14 +103,14 @@ public class CsvExporter {
     private static void addRound(@NonNull CsvBuilder csv, @NonNull Round r) throws IOException {
         csv.enterScope();
         // Round
-        csv.add(String.valueOf(r.index + 1));
+        csv.add(String.valueOf(r.getIndex() + 1));
         // Distance
-        csv.add(r.distance.toString());
+        csv.add(r.getDistance().toString());
         // Target
         final Target target = r.getTarget();
         csv.add(target.getModel().toString() + " (" + target.diameter
                 .toString() + ")");
-        for (End e : r.getEnds()) {
+        for (End e : r.loadEnds()) {
             csv.enterScope();
             // End
             csv.add(String.valueOf(e.getIndex() + 1));
@@ -119,11 +119,11 @@ public class CsvExporter {
             for (Shot s : e.loadShots()) {
                 csv.enterScope();
                 // Score
-                csv.add(target.zoneToString(s.scoringRing, s.index));
+                csv.add(target.zoneToString(s.getScoringRing(), s.getIndex()));
 
                 // Coordinates (X, Y)
-                csv.add(String.valueOf(s.x));
-                csv.add(String.valueOf(s.y));
+                csv.add(String.valueOf(s.getX()));
+                csv.add(String.valueOf(s.getY()));
 
                 csv.newLine();
                 csv.exitScope();

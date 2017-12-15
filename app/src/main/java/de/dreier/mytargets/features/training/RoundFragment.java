@@ -145,9 +145,10 @@ public class RoundFragment extends EditableListFragment<End> {
     @NonNull
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
-        round = Round.get(roundId);
-        final List<End> ends = round.getEnds();
-        final boolean showFab = round.maxEndCount == null || ends.size() < round.maxEndCount;
+        round = Round.Companion.get(roundId);
+        final List<End> ends = round.loadEnds();
+        final boolean showFab = round.getMaxEndCount() == null || ends.size() <
+                round.getMaxEndCount();
 
         return () -> {
             adapter.setList(ends);
@@ -155,7 +156,7 @@ public class RoundFragment extends EditableListFragment<End> {
 
             ToolbarUtils.setTitle(RoundFragment.this,
                     String.format(Locale.US, "%s %d", getString(R.string.round),
-                            round.index + 1));
+                            round.getIndex() + 1));
             ToolbarUtils.setSubtitle(RoundFragment.this, round.getReachedScore().toString());
         };
     }
@@ -178,8 +179,8 @@ public class RoundFragment extends EditableListFragment<End> {
                 new MaterialDialog.Builder(getContext())
                         .title(R.string.comment)
                         .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE)
-                        .input("", round.comment, (dialog, input) -> {
-                            round.comment = input.toString();
+                        .input("", round.getComment(), (dialog, input) -> {
+                            round.setComment(input.toString());
                             round.save();
                         })
                         .negativeText(android.R.string.cancel)
@@ -187,7 +188,7 @@ public class RoundFragment extends EditableListFragment<End> {
                 return true;
             case R.id.action_scoreboard:
                 ScoreboardActivity
-                        .getIntent(round.trainingId, round.getId())
+                        .getIntent(round.getTrainingId(), round.getId())
                         .withContext(this)
                         .start();
                 return true;
@@ -237,7 +238,7 @@ public class RoundFragment extends EditableListFragment<End> {
             }
             binding.shoots.setShots(round.getTarget(), shots);
             binding.imageIndicator
-                    .setVisibility(item.getImages().isEmpty() ? View.INVISIBLE : View.VISIBLE);
+                    .setVisibility(item.loadImages().isEmpty() ? View.INVISIBLE : View.VISIBLE);
             binding.end.setText(getString(R.string.end_n, item.getIndex() + 1));
         }
     }

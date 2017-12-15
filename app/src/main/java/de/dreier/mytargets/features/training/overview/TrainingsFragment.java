@@ -31,8 +31,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -47,6 +45,7 @@ import de.dreier.mytargets.features.training.details.TrainingFragment;
 import de.dreier.mytargets.features.training.edit.EditTrainingFragment;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.utils.DividerItemDecoration;
 import de.dreier.mytargets.utils.SlideInItemAnimator;
 import de.dreier.mytargets.utils.Utils;
@@ -158,8 +157,8 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
         switch (item.getItemId()) {
             case R.id.action_statistics:
                 StatisticsActivity
-                        .getIntent(Stream.of(Training.getAll())
-                                .flatMap((training) -> Stream.of(training.getRounds()))
+                        .getIntent(Stream.of(Training.Companion.getAll())
+                                .flatMap((training) -> Stream.of(training.loadRounds()))
                                 .map(Round::getId)
                                 .toList()).withContext(this)
                         .start();
@@ -178,8 +177,8 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
 
     public void onStatistics(@NonNull List<Long> ids) {
         StatisticsActivity.getIntent(Stream.of(ids)
-                .map(Training::get)
-                .flatMap(t -> Stream.of(t.getRounds()))
+                .map(Training.Companion::get)
+                .flatMap(t -> Stream.of(t.loadRounds()))
                 .map(Round::getId)
                 .toList())
                 .withContext(this)
@@ -195,7 +194,7 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
     @NonNull
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
-        final List<Training> trainings = Training.getAll();
+        final List<Training> trainings = Training.Companion.getAll();
         return () -> {
             TrainingsFragment.this.setList(trainings, false);
             FragmentActivity activity = getActivity();
@@ -210,7 +209,7 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
     private class TrainingAdapter extends ExpandableListAdapter<Header, Training> {
 
         TrainingAdapter(@NonNull Context context) {
-            super(child -> Utils.getMonthHeader(context, child.date),
+            super(child -> Utils.getMonthHeader(context, child.getDate()),
                     Collections.reverseOrder(),
                     Collections.reverseOrder());
         }
@@ -234,7 +233,7 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
 
         @Override
         public void bindItem() {
-            binding.training.setText(item.title);
+            binding.training.setText(item.getTitle());
             binding.trainingDate.setText(item.getFormattedDate());
             binding.gesTraining.setText(item.getReachedScore()
                     .format(Utils.getCurrentLocale(getContext()), SettingsManager.INSTANCE

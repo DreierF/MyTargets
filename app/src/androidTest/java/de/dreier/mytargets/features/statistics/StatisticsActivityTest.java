@@ -19,9 +19,6 @@ import android.support.annotation.NonNull;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -32,6 +29,7 @@ import java.util.List;
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.test.base.UITestBase;
 import de.dreier.mytargets.test.utils.rules.SimpleDbTestRule;
 
@@ -56,8 +54,8 @@ public class StatisticsActivityTest extends UITestBase {
     @Test
     public void navigationTest() {
         // Add round ids
-        final List<Long> roundIds = Stream.of(Training.getAll())
-                .flatMap(t -> Stream.of(t.getRounds()))
+        final List<Long> roundIds = Stream.of(Training.Companion.getAll())
+                .flatMap(t -> Stream.of(t.loadRounds()))
                 .map(Round::getId)
                 .toList();
         activityTestRule.launchActivity(StatisticsActivity.getIntent(roundIds).build());

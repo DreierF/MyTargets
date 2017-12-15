@@ -101,12 +101,12 @@ public class EditRoundFragment extends EditFragmentBase {
             loadRoundDefaultValues();
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_round);
-            Round round = Round.get(roundId);
-            binding.distance.setItem(round.distance);
+            Round round = Round.Companion.get(roundId);
+            binding.distance.setItem(round.getDistance());
             binding.target.setItem(round.getTarget());
             binding.target.setFixedType(TargetListFragment.EFixedType.TARGET);
             binding.notEditable.setVisibility(View.GONE);
-            if (round.getTraining().standardRoundId != null) {
+            if (round.getTraining().getStandardRoundId() != null) {
                 binding.distanceLayout.setVisibility(View.GONE);
             }
         }
@@ -139,19 +139,19 @@ public class EditRoundFragment extends EditFragmentBase {
 
     @Nullable
     private Round onSaveRound() {
-        Training training = Training.get(trainingId);
+        Training training = Training.Companion.get(trainingId);
 
         Round round;
         if (roundId == null) {
             round = new Round();
-            round.trainingId = trainingId;
-            round.shotsPerEnd = binding.arrows.getProgress();
-            round.maxEndCount = null;
-            round.index = training.getRounds().size();
+            round.setTrainingId(trainingId);
+            round.setShotsPerEnd(binding.arrows.getProgress());
+            round.setMaxEndCount(null);
+            round.setIndex(training.loadRounds().size());
         } else {
-            round = Round.get(roundId);
+            round = Round.Companion.get(roundId);
         }
-        round.distance = binding.distance.getSelectedItem();
+        round.setDistance(binding.distance.getSelectedItem());
         round.setTarget(binding.target.getSelectedItem());
         round.save();
         return round;

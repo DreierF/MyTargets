@@ -15,8 +15,6 @@
 
 package de.dreier.mytargets.shared.models
 
-import java.io.Serializable
-
-interface IIdSettable : IIdProvider, Serializable {
+interface IIdSettable : IIdProvider {
     override var id: Long?
 }

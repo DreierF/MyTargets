@@ -70,8 +70,8 @@ public abstract class DbTestRuleBase implements TestRule {
         End end = round.addEnd();
         end.setRoundId(round.getId());
         for (int i = 0; i < shots.length; i++) {
-            end.loadShots().get(i).index = i;
-            end.loadShots().get(i).scoringRing = shots[i];
+            end.loadShots().get(i).setIndex(i);
+            end.loadShots().get(i).setScoringRing(shots[i]);
         }
         return end;
     }
@@ -82,12 +82,12 @@ public abstract class DbTestRuleBase implements TestRule {
         end.setRoundId(round.getId());
         end.setExact(true);
         for (int i = 0; i < arrowsPerEnd; i++) {
-            end.loadShots().get(i).index = i;
-            end.loadShots().get(i).x = gaussianRand(gen);
-            end.loadShots().get(i).y = gaussianRand(gen);
-            end.loadShots().get(i).scoringRing = round.getTarget().getModel()
-                    .getZoneFromPoint(end.loadShots().get(i).x,
-                            end.loadShots().get(i).y, 0.05f);
+            end.loadShots().get(i).setIndex(i);
+            end.loadShots().get(i).setX(gaussianRand(gen));
+            end.loadShots().get(i).setY(gaussianRand(gen));
+            end.loadShots().get(i).setScoringRing(round.getTarget().getModel()
+                    .getZoneFromPoint(end.loadShots().get(i).getX(),
+                            end.loadShots().get(i).getY(), 0.05f));
         }
         end.setSaveTime(LocalTime.of(14, gen.nextInt(59), gen.nextInt(59), 0));
         return end;
@@ -111,7 +111,7 @@ public abstract class DbTestRuleBase implements TestRule {
         bow.setBraceHeight("6 3/8\"");
         bow.setType(EBowType.COMPOUND_BOW);
         bow.setImages(Collections.emptyList());
-        bow.setThumbnail(Thumbnail.Companion.from(context, R.drawable.recurve_bow));
+        bow.thumbnail = Thumbnail.Companion.from(context, R.drawable.recurve_bow);
         bow.save();
         return bow;
     }
@@ -133,16 +133,16 @@ public abstract class DbTestRuleBase implements TestRule {
     @NonNull
     protected Training saveDefaultTraining(Long standardRoundId, @NonNull Random generator) {
         Training training = new Training();
-        training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training);
-        training.date = LocalDate.of(2016, 4 + generator.nextInt(5), generator.nextInt(29));
-        training.location = "";
-        training.weather = EWeather.SUNNY;
-        training.windSpeed = 1;
-        training.windDirection = 0;
-        training.standardRoundId = standardRoundId;
-        training.bowId = null;
-        training.arrowId = null;
-        training.arrowNumbering = false;
+        training.setTitle(InstrumentationRegistry.getTargetContext().getString(R.string.training));
+        training.setDate(LocalDate.of(2016, 4 + generator.nextInt(5), generator.nextInt(29)));
+        training.setLocation("");
+        training.setWeather(EWeather.SUNNY);
+        training.setWindSpeed(1);
+        training.setWindDirection(0);
+        training.setStandardRoundId(standardRoundId);
+        training.setBowId(null);
+        training.setArrowId(null);
+        training.setArrowNumbering(false);
         training.save();
         return training;
     }

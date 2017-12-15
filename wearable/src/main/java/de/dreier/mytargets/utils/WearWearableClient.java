@@ -27,11 +27,9 @@ import org.parceler.Parcels;
 import de.dreier.mytargets.shared.models.TimerSettings;
 import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.augmented.AugmentedEnd;
-import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.models.augmented.AugmentedTraining;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.wearable.WearableClientBase;
-
-import static org.parceler.Parcels.unwrap;
 
 public class WearWearableClient extends WearableClientBase {
 
@@ -54,7 +52,7 @@ public class WearWearableClient extends WearableClientBase {
                     sendMessage(TRAINING_TEMPLATE, null);
                     break;
                 case BROADCAST_TRAINING_CREATE:
-                    Training training = unwrap(intent.getParcelableExtra(EXTRA_TRAINING));
+                    AugmentedTraining training = intent.getParcelableExtra(EXTRA_TRAINING);
                     createTraining(training);
                     break;
                 case BROADCAST_UPDATE_END_FROM_LOCAL:
@@ -87,8 +85,8 @@ public class WearWearableClient extends WearableClientBase {
         sendMessage(WearableClientBase.END_UPDATE, data);
     }
 
-    private void createTraining(Training training) {
-        final byte[] data = ParcelableUtil.marshall(Parcels.wrap(training));
+    private void createTraining(AugmentedTraining training) {
+        final byte[] data = ParcelableUtil.marshall(training);
         sendMessage(WearableClientBase.TRAINING_CREATE, data);
     }
 
@@ -109,15 +107,15 @@ public class WearWearableClient extends WearableClientBase {
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
-    public void sendCreateTraining(Training training) {
+    public void sendCreateTraining(AugmentedTraining training) {
         Intent intent = new Intent(BROADCAST_TRAINING_CREATE);
-        intent.putExtra(EXTRA_TRAINING, Parcels.wrap(training));
+        intent.putExtra(EXTRA_TRAINING, training);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
-    public void sendTrainingTemplate(Training training) {
+    public void sendTrainingTemplate(AugmentedTraining training) {
         Intent intent = new Intent(BROADCAST_TRAINING_TEMPLATE);
-        intent.putExtra(EXTRA_TRAINING, Parcels.wrap(training));
+        intent.putExtra(EXTRA_TRAINING, training);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 

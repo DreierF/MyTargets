@@ -17,6 +17,7 @@ package de.dreier.mytargets.shared.models.augmented
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
+import de.dreier.mytargets.shared.models.Score
 import de.dreier.mytargets.shared.models.db.Round
 import kotlinx.android.parcel.Parcelize
 
@@ -26,7 +27,21 @@ data class AugmentedRound(
         val round: Round,
         var ends: MutableList<AugmentedEnd>
 ) : Parcelable {
-    constructor(round: Round) : this(round, round.getEnds()
+    constructor(round: Round) : this(round, round.loadEnds()!!
             .map { AugmentedEnd(it) }
             .toMutableList())
+
+    val reachedScore: Score
+        get() {
+            val target = round.target
+            return ends.map { target.getReachedScore(it.end) }
+                    .fold(Score()) { score, s ->
+                        score.add(s as Score)
+                    }
+        }
+
+    fun toRound(): Round {
+        round.ends = ends.map { it.toEnd() }
+        return round
+    }
 }

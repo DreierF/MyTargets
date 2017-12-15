@@ -64,7 +64,7 @@ public class DefaultScoreboardLayout {
         this.builder = builder;
 
         if (configuration.showTitle) {
-            builder.title(training.title);
+            builder.title(training.getTitle());
         }
 
         boolean[] equals = new boolean[2];
@@ -75,7 +75,8 @@ public class DefaultScoreboardLayout {
         if (configuration.showTable) {
             for (Round round : rounds) {
                 builder.openSection();
-                builder.subtitle(context.getResources().getQuantityString(R.plurals.rounds, round.index + 1, round.index + 1));
+                builder.subtitle(context.getResources().getQuantityString(R.plurals.rounds, round
+                        .getIndex() + 1, round.getIndex() + 1));
                 if (configuration.showProperties) {
                     builder.table(getRoundInfo(round, equals));
                 }
@@ -107,7 +108,7 @@ public class DefaultScoreboardLayout {
     private void addStaticTrainingHeaderInfo(@NonNull InfoTableBuilder info, @NonNull Training training, @NonNull List<Round> rounds) {
         getScoreboardOnlyHeaderInfo(info, training, rounds);
 
-        if (training.indoor) {
+        if (training.getIndoor()) {
             info.addLine(R.string.environment, context.getString(R.string.indoor));
         } else {
             info.addLine(R.string.weather, training.getEnvironment().getWeather().getName());
@@ -118,23 +119,23 @@ public class DefaultScoreboardLayout {
             }
         }
 
-        Bow bow = Bow.Companion.get(training.bowId);
+        Bow bow = Bow.Companion.get(training.getBowId());
         if (bow != null) {
             info.addLine(R.string.bow, bow.getName());
             info.addLine(R.string.bow_type, bow.getType());
         }
 
-        Arrow arrow = Arrow.Companion.get(training.arrowId);
+        Arrow arrow = Arrow.Companion.get(training.getArrowId());
         if (arrow != null) {
             info.addLine(R.string.arrow, arrow.getName());
         }
 
-        if (training.standardRoundId != null) {
-            StandardRound standardRound = StandardRound.get(training.standardRoundId);
+        if (training.getStandardRoundId() != null) {
+            StandardRound standardRound = StandardRound.get(training.getStandardRoundId());
             info.addLine(R.string.standard_round, standardRound.name);
         }
-        if (!training.comment.isEmpty() && configuration.showComments) {
-            info.addLine(R.string.comment, training.comment);
+        if (!training.getComment().isEmpty() && configuration.showComments) {
+            info.addLine(R.string.comment, training.getComment());
         }
     }
 
@@ -143,7 +144,7 @@ public class DefaultScoreboardLayout {
             getEqualValues(rounds, equals);
             Round round = rounds.get(0);
             if (equals[0]) {
-                info.addLine(R.string.distance, round.distance);
+                info.addLine(R.string.distance, round.getDistance());
             }
             if (equals[1]) {
                 info.addLine(R.string.target_face, round.getTarget().getName());
@@ -157,7 +158,7 @@ public class DefaultScoreboardLayout {
         equals[1] = true;
         Round round = rounds.get(0);
         for (Round r : rounds) {
-            equals[0] = SharedUtils.equals(r.distance, round.distance) && equals[0];
+            equals[0] = SharedUtils.equals(r.getDistance(), round.getDistance()) && equals[0];
             equals[1] = SharedUtils.equals(r.getTarget(), round.getTarget()) && equals[1];
         }
     }
@@ -168,7 +169,8 @@ public class DefaultScoreboardLayout {
         } else if (rounds.size() > 1) {
             for (Round round : rounds) {
                 builder.openSection();
-                builder.subtitle(context.getResources().getQuantityString(R.plurals.rounds, round.index + 1, round.index + 1));
+                builder.subtitle(context.getResources().getQuantityString(R.plurals.rounds, round
+                        .getIndex() + 1, round.getIndex() + 1));
                 builder.table(getStatisticsForRound(Collections.singletonList(round)));
                 builder.closeSection();
             }
@@ -182,13 +184,13 @@ public class DefaultScoreboardLayout {
     private Table getRoundInfo(@NonNull Round round, boolean[] equals) {
         InfoTableBuilder info = new InfoTableBuilder();
         if (!equals[0]) {
-            info.addLine(R.string.distance, round.distance);
+            info.addLine(R.string.distance, round.getDistance());
         }
         if (!equals[1]) {
             info.addLine(R.string.target_face, round.getTarget().getName());
         }
-        if (!round.comment.isEmpty() && configuration.showComments) {
-            info.addLine(R.string.comment, round.comment);
+        if (!round.getComment().isEmpty() && configuration.showComments) {
+            info.addLine(R.string.comment, round.getComment());
         }
         return info.info;
     }
@@ -243,9 +245,9 @@ public class DefaultScoreboardLayout {
     @NonNull
     private Table getRoundTable(@NonNull Round round) {
         Table table = new Table(false);
-        appendTableHeader(table, round.shotsPerEnd);
+        appendTableHeader(table, round.getShotsPerEnd());
         int carry = 0;
-        for (End end : round.getEnds()) {
+        for (End end : round.loadEnds()) {
             Table.Row row = table.startRow();
             row.addCell(end.getIndex() + 1);
             int sum = 0;
@@ -255,7 +257,8 @@ public class DefaultScoreboardLayout {
             }
             for (Shot shot : shots) {
                 appendPointsCell(row, shot, round.getTarget());
-                int points = round.getTarget().getScoreByZone(shot.scoringRing, shot.index);
+                int points = round.getTarget().getScoreByZone(shot.getScoringRing(), shot
+                        .getIndex());
                 sum += points;
                 carry += points;
             }
@@ -281,15 +284,15 @@ public class DefaultScoreboardLayout {
     }
 
     private void appendPointsCell(Table.Row row, @NonNull Shot shot, @NonNull Target target) {
-        if (shot.scoringRing == Shot.NOTHING_SELECTED) {
+        if (shot.getScoringRing() == Shot.Companion.getNOTHING_SELECTED()) {
             row.addCell("");
             return;
         }
-        final String points = target.zoneToString(shot.scoringRing, shot.index);
+        final String points = target.zoneToString(shot.getScoringRing(), shot.getIndex());
         if (configuration.showPointsColored) {
-            int fillColor = target.getModel().getZone(shot.scoringRing).getFillColor();
-            int color = target.getModel().getZone(shot.scoringRing).getTextColor();
-            row.addEndCell(points, fillColor, color, shot.arrowNumber);
+            int fillColor = target.getModel().getZone(shot.getScoringRing()).getFillColor();
+            int color = target.getModel().getZone(shot.getScoringRing()).getTextColor();
+            row.addEndCell(points, fillColor, color, shot.getArrowNumber());
         } else {
             row.addCell(points);
         }
@@ -303,11 +306,11 @@ public class DefaultScoreboardLayout {
 
         int commentsCount = 0;
         for (Round round : rounds) {
-            List<End> ends = round.getEnds();
+            List<End> ends = round.loadEnds();
             for (End end : ends) {
                 if (!TextUtils.isEmpty(end.getComment())) {
                     comments.startRow()
-                            .addCell(round.index + 1)
+                            .addCell(round.getIndex() + 1)
                             .addCell(end.getIndex() + 1)
                             .addCell(end.getComment());
                     commentsCount++;

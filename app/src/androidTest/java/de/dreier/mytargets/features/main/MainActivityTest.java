@@ -128,7 +128,7 @@ public class MainActivityTest extends UITestBase {
         onView(withRecyclerView(R.id.recyclerView).atPosition(1))
                 .perform(click());
 
-        final Training firstTraining = Stream.of(Training.getAll())
+        final Training firstTraining = Stream.of(Training.Companion.getAll())
                 .sorted(Collections.reverseOrder())
                 .findFirstOrNull();
 
@@ -139,8 +139,8 @@ public class MainActivityTest extends UITestBase {
         clickActionBarItem(R.id.action_statistics, R.string.statistic);
         intended(hasClass(StatisticsActivity.class));
 
-        Set<Long> expectedRoundIds = Stream.of(Training.getAll())
-                .flatMap(t -> Stream.of(t.getRounds()))
+        Set<Long> expectedRoundIds = Stream.of(Training.Companion.getAll())
+                .flatMap(t -> Stream.of(t.loadRounds()))
                 .map(Round::getId)
                 .toSet();
         intended(allOf(hasClass(StatisticsActivity.class),
@@ -167,11 +167,11 @@ public class MainActivityTest extends UITestBase {
                 .perform(click());
         clickContextualActionBarItem(R.id.action_statistics, R.string.statistic);
 
-        final List<Training> trainings = Stream.of(Training.getAll())
+        final List<Training> trainings = Stream.of(Training.Companion.getAll())
                 .sorted(Collections.reverseOrder())
                 .toList();
         expectedRoundIds = Stream.of(trainings.get(1), trainings.get(2))
-                .flatMap(t -> Stream.of(t.getRounds()))
+                .flatMap(t -> Stream.of(t.loadRounds()))
                 .map(Round::getId)
                 .toSet();
 

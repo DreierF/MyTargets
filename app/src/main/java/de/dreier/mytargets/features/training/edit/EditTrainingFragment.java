@@ -163,15 +163,16 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
                     ? VISIBLE : GONE);
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_training);
-            Training train = Training.get(trainingId);
-            binding.training.setText(train.title);
-            date = train.date;
-            binding.bow.setItemId(train.bowId);
-            binding.arrow.setItemId(train.arrowId);
+            Training train = Training.Companion.get(trainingId);
+            binding.training.setText(train.getTitle());
+            date = train.getDate();
+            binding.bow.setItemId(train.getBowId());
+            binding.arrow.setItemId(train.getArrowId());
             binding.environment.setItem(train.getEnvironment());
             setTrainingDate();
             binding.notEditable.setVisibility(GONE);
-            binding.changeTargetFace.setVisibility(train.standardRoundId != null ? VISIBLE : GONE);
+            binding.changeTargetFace.setVisibility(
+                    train.getStandardRoundId() != null ? VISIBLE : GONE);
         }
         applyTrainingType();
         updateArrowsLabel();
@@ -249,24 +250,24 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
 
         if (trainingId == null) {
             if (trainingType == FREE_TRAINING) {
-                training.standardRoundId = null;
-                training.rounds = new ArrayList<>();
-                training.rounds.add(getRound());
+                training.setStandardRoundId(null);
+                training.setRounds(new ArrayList<>());
+                training.loadRounds().add(getRound());
             } else {
                 StandardRound standardRound = binding.standardRound.getSelectedItem();
                 SettingsManager.INSTANCE.setStandardRound(standardRound.getId());
                 if (standardRound.getId() == null) {
                     standardRound.save();
                 }
-                training.standardRoundId = standardRound.getId();
+                training.setStandardRoundId(standardRound.getId());
                 training.initRoundsFromTemplate(standardRound);
-                for (Round round : training.getRounds()) {
+                for (Round round : training.loadRounds()) {
                     round.setTarget(roundTarget);
                 }
             }
             training.save();
 
-            Round round = training.getRounds().get(0);
+            Round round = training.loadRounds().get(0);
 
             TrainingFragment.getIntent(training)
                     .withContext(this)
@@ -292,22 +293,22 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
         if (trainingId == null) {
             training = new Training();
         } else {
-            training = Training.get(trainingId);
+            training = Training.Companion.get(trainingId);
         }
-        training.title = binding.training.getText().toString();
-        training.date = date;
+        training.setTitle(binding.training.getText().toString());
+        training.setDate(date);
         training.setEnvironment(binding.environment.getSelectedItem());
-        training.bowId = binding.bow.getSelectedItem() == null ? null : binding.bow
+        training.setBowId(binding.bow.getSelectedItem() == null ? null : binding.bow
                 .getSelectedItem()
-                .getId();
-        training.arrowId = binding.arrow.getSelectedItem() == null ? null : binding.arrow
-                .getSelectedItem().getId();
-        training.arrowNumbering = binding.numberArrows.isChecked();
+                .getId());
+        training.setArrowId(binding.arrow.getSelectedItem() == null ? null : binding.arrow
+                .getSelectedItem().getId());
+        training.setArrowNumbering(binding.numberArrows.isChecked());
 
-        SettingsManager.INSTANCE.setBow(training.bowId);
-        SettingsManager.INSTANCE.setArrow(training.arrowId);
-        SettingsManager.INSTANCE.setArrowNumbersEnabled(training.arrowNumbering);
-        SettingsManager.INSTANCE.setIndoor(training.indoor);
+        SettingsManager.INSTANCE.setBow(training.getBowId());
+        SettingsManager.INSTANCE.setArrow(training.getArrowId());
+        SettingsManager.INSTANCE.setArrowNumbersEnabled(training.getArrowNumbering());
+        SettingsManager.INSTANCE.setIndoor(training.getIndoor());
         return training;
     }
 
@@ -343,13 +344,13 @@ public class EditTrainingFragment extends EditFragmentBase implements DatePicker
     private Round getRound() {
         Round round = new Round();
         round.setTarget(binding.target.getSelectedItem());
-        round.shotsPerEnd = binding.arrows.getProgress();
-        round.maxEndCount = null;
-        round.distance = binding.distance.getSelectedItem();
+        round.setShotsPerEnd(binding.arrows.getProgress());
+        round.setMaxEndCount(null);
+        round.setDistance(binding.distance.getSelectedItem());
 
         SettingsManager.INSTANCE.setTarget(binding.target.getSelectedItem());
-        SettingsManager.INSTANCE.setDistance(round.distance);
-        SettingsManager.INSTANCE.setShotsPerEnd(round.shotsPerEnd);
+        SettingsManager.INSTANCE.setDistance(round.getDistance());
+        SettingsManager.INSTANCE.setShotsPerEnd(round.getShotsPerEnd());
         return round;
     }
 }

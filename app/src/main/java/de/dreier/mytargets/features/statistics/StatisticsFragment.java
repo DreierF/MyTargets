@@ -175,7 +175,7 @@ public class StatisticsFragment extends FragmentBase {
     @Override
     protected LoaderUICallback onLoad(Bundle args) {
         rounds = Stream.of(LongUtils.toList(roundIds))
-                .map(Round::get)
+                .map(Round.Companion::get)
                 .withoutNulls()
                 .toList();
 
@@ -196,10 +196,10 @@ public class StatisticsFragment extends FragmentBase {
 
     private void showDispersionView() {
         final List<Shot> exactShots = Stream.of(rounds)
-                .flatMap(r -> Stream.of(r.getEnds()))
+                .flatMap(r -> Stream.of(r.loadEnds()))
                 .filter(p -> p.getExact())
                 .flatMap(p -> Stream.of(p.loadShots()))
-                .filter(p -> p.scoringRing != Shot.NOTHING_SELECTED)
+                .filter(p -> p.getScoringRing() != Shot.Companion.getNOTHING_SELECTED())
                 .toList();
         if (exactShots.isEmpty()) {
             binding.dispersionPatternLayout.setVisibility(View.GONE);
@@ -353,12 +353,13 @@ public class StatisticsFragment extends FragmentBase {
 
     private String getHitMissText() {
         final List<Shot> shots = Stream.of(rounds)
-                .flatMap(r -> Stream.of(r.getEnds()))
+                .flatMap(r -> Stream.of(r.loadEnds()))
                 .flatMap(p -> Stream.of(p.loadShots()))
-                .filter(p -> p.scoringRing !=
-                        Shot.NOTHING_SELECTED) //TODO: Refactor to not save NOTHING_SELECTED at all
+                .filter(p -> p.getScoringRing() !=
+                        Shot.Companion.getNOTHING_SELECTED()) //TODO: Refactor to not save NOTHING_SELECTED at all
                 .toList();
-        long missCount = Stream.of(shots).filter(s -> s.scoringRing == Shot.MISS).count();
+        long missCount = Stream.of(shots).filter(s -> s.getScoringRing() ==
+                Shot.Companion.getMISS()).count();
         long hitCount = shots.size() - missCount;
 
         return String.format(Locale.US, PIE_CHART_CENTER_TEXT_FORMAT,
@@ -374,14 +375,14 @@ public class StatisticsFragment extends FragmentBase {
 
     private LineData getLineChartDataSet() {
         Map<Long, Training> trainingsMap = Stream.of(rounds)
-                .map(r -> r.trainingId)
+                .map(r -> r.getTrainingId())
                 .distinct()
-                .map(Training::get)
+                .map(Training.Companion::get)
                 .toMap(Training::getId, t->t);
 
         List<Pair<Float, LocalDateTime>> values = Stream.of(rounds)
-                .map(r -> new Pair<>(trainingsMap.get(r.trainingId).date, r))
-                .flatMap(roundIdPair -> Stream.of(roundIdPair.second.getEnds())
+                .map(r -> new Pair<>(trainingsMap.get(r.getTrainingId()).getDate(), r))
+                .flatMap(roundIdPair -> Stream.of(roundIdPair.second.loadEnds())
                         .map(end -> new Pair<>(roundIdPair.first, end)))
                 .map(endPair -> getPairEndSummary(target, endPair.second, endPair.first))
                 .sortBy(pair -> pair.second)
@@ -409,7 +410,7 @@ public class StatisticsFragment extends FragmentBase {
     @NonNull
     private Evaluator getEntryEvaluator(@NonNull final List<Pair<Float, LocalDateTime>> values) {
         boolean singleTraining = Stream.of(rounds)
-                .groupBy(r -> r.trainingId).count() == 1;
+                .groupBy(r -> r.getTrainingId()).count() == 1;
 
         Evaluator eval;
         if (singleTraining) {

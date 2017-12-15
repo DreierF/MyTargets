@@ -18,22 +18,26 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.List;
+
 import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.models.augmented.AugmentedEnd;
+import de.dreier.mytargets.shared.models.augmented.AugmentedRound;
+import de.dreier.mytargets.shared.models.augmented.AugmentedTraining;
 import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.Training;
 
 public class TrainingInfo {
     @Nullable
     public String title;
     public int roundCount;
-    public Round round;
+    public AugmentedRound round;
 
     public TrainingInfo() {
     }
 
-    public TrainingInfo(@NonNull Training training, Round round) {
+    public TrainingInfo(@NonNull AugmentedTraining training, AugmentedRound round) {
         this.round = round;
-        this.title = training.title;
+        this.title = training.getTraining().getTitle();
         this.roundCount = training.getRounds().size();
     }
 
@@ -49,18 +53,22 @@ public class TrainingInfo {
 
     @NonNull
     public String getEndDetails(@NonNull Context context) {
-        if (round.getEnds().isEmpty()) {
-            if (round.maxEndCount == null) {
+        Round simpleRound = round.getRound();
+        List<AugmentedEnd> ends = round.getEnds();
+        if (ends.isEmpty()) {
+            if (simpleRound.getMaxEndCount() == null) {
                 return context.getResources()
-                        .getQuantityString(R.plurals.arrows_per_end, round.shotsPerEnd, round.shotsPerEnd);
+                        .getQuantityString(R.plurals.arrows_per_end, simpleRound.getShotsPerEnd(), simpleRound
+                                .getShotsPerEnd());
             } else {
                 return context.getResources()
-                        .getQuantityString(R.plurals.ends_arrow, round.shotsPerEnd, round.maxEndCount, round.shotsPerEnd);
+                        .getQuantityString(R.plurals.ends_arrow, simpleRound.getShotsPerEnd(), simpleRound
+                                .getMaxEndCount(), simpleRound.getShotsPerEnd());
             }
         } else {
             return context.getResources()
-                    .getQuantityString(R.plurals.ends_arrow, round.shotsPerEnd, round.getEnds()
-                            .size(), round.shotsPerEnd);
+                    .getQuantityString(R.plurals.ends_arrow, simpleRound.getShotsPerEnd(), ends
+                            .size(), simpleRound.getShotsPerEnd());
         }
     }
 }

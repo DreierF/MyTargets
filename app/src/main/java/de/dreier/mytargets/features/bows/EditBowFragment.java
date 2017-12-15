@@ -34,6 +34,7 @@ import com.evernote.android.state.State;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.dreier.mytargets.R;
@@ -60,8 +61,12 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
     public static final String BOW_ID = "bow_id";
 
     @Nullable
-    @State(ParcelsBundler.class)
+    @State
     Bow bow;
+
+    @State(ParcelsBundler.class)
+    List<SightMark> sightMarks;
+
     private FragmentEditBowBinding contentBinding;
     private SightMarksAdapter adapter;
 
@@ -97,20 +102,22 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
             if (bundle != null && bundle.containsKey(BOW_ID)) {
                 // Load data from database
                 bow = Bow.Companion.get(bundle.getLong(BOW_ID));
+                sightMarks = bow.loadSightMarks();
             } else {
                 // Set to default values
                 bow = new Bow();
                 bow.setName(getString(R.string.my_bow));
                 bow.setType(bowType);
-                bow.getSightMarks().add(new SightMark());
+                sightMarks = new ArrayList<>();
+                sightMarks.add(new SightMark());
             }
-            setImageFiles(bow.getImages());
+            setImageFiles(bow.loadImages());
         }
         ToolbarUtils.setTitle(this, bow.getName());
         contentBinding.setBow(bow);
 
         loadImage(imageFile);
-        adapter = new SightMarksAdapter(this, bow.getSightMarks());
+        adapter = new SightMarksAdapter(this, sightMarks);
         contentBinding.sightMarks.setAdapter(adapter);
         contentBinding.sightMarks.setNestedScrollingEnabled(false);
         return rootView;
@@ -129,9 +136,9 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
     }
 
     private void onAddSightSetting() {
-        bow.getSightMarks().add(new SightMark());
-        adapter.setList(bow.getSightMarks());
-        adapter.notifyItemInserted(bow.getSightMarks().size() - 1);
+        sightMarks.add(new SightMark());
+        adapter.setList(sightMarks);
+        adapter.notifyItemInserted(sightMarks.size() - 1);
     }
 
     @Override
@@ -143,7 +150,7 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
             Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
             final int index = intentData.getInt(SelectorBase.INDEX);
             final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
-            bow.getSightMarks().get(index).distance = Parcels.unwrap(parcelable);
+            sightMarks.get(index).distance = Parcels.unwrap(parcelable);
             adapter.notifyItemChanged(index);
         }
     }
@@ -180,6 +187,7 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
         bow.setScopeMagnification(contentBinding.scopeMagnification.getText().toString());
         bow.setImages(getImageFiles());
         bow.thumbnail = getThumbnail();
+        bow.setSightMarks(sightMarks);
         return bow;
     }
 
