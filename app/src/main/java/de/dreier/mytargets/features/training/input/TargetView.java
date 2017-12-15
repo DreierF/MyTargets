@@ -200,7 +200,7 @@ public class TargetView extends TargetViewBase {
     public void setEnd(@NonNull End end) {
         EInputMethod inputMethod;
         if (!end.isEmpty()) {
-            inputMethod = end.exact ? PLOTTING : KEYBOARD;
+            inputMethod = end.getExact() ? PLOTTING : KEYBOARD;
         } else {
             inputMethod = SettingsManager.INSTANCE.getInputMethod();
         }

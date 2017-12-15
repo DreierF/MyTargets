@@ -156,12 +156,12 @@ public final class MigrationTest extends InstrumentedTestBase {
         final List<End> ends = round1.getEnds();
         Truth.assertThat(ends).hasSize(3);
         Truth.assertThat(ends.get(0).getId()).isEqualTo(1L);
-        Truth.assertThat(ends.get(0).roundId).isEqualTo(1L);
-        Truth.assertThat(ends.get(0).index).isEqualTo(0);
+        Truth.assertThat(ends.get(0).getRoundId()).isEqualTo(1L);
+        Truth.assertThat(ends.get(0).getIndex()).isEqualTo(0);
         Truth.assertThat(ends.get(0).getImages()).isEmpty();
-        Truth.assertThat(ends.get(0).exact).isEqualTo(true);
-        Truth.assertThat(ends.get(2).exact).isEqualTo(false);
-        final List<Shot> shots = ends.get(0).getShots();
+        Truth.assertThat(ends.get(0).getExact()).isEqualTo(true);
+        Truth.assertThat(ends.get(2).getExact()).isEqualTo(false);
+        final List<Shot> shots = ends.get(0).loadShots();
         Truth.assertThat(shots).hasSize(4);
         Truth.assertThat(shots.get(0).index).isEqualTo(0);
         Truth.assertThat(shots.get(0).x).isWithin(0f).of(-0.41206896f);

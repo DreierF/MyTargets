@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 
 import de.dreier.mytargets.databinding.ActivityInputBinding;
+import de.dreier.mytargets.shared.models.augmented.AugmentedEnd;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
@@ -114,9 +115,9 @@ public class InputActivity extends WearableActivity implements TargetViewBase.On
             v.vibrate(200);
             InputActivity.this.finish();
             End end = new End(round.shotsPerEnd, 0);
-            end.setShots(shotList);
-            end.roundId = round.getId();
-            ApplicationInstance.wearableClient.sendEndUpdate(end);
+            end.setRoundId(round.getId());
+            AugmentedEnd ae = new AugmentedEnd(end, shotList);
+            ApplicationInstance.wearableClient.sendEndUpdate(ae);
         });
     }
 }

@@ -18,7 +18,6 @@ package de.dreier.mytargets.shared.models.db;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import de.dreier.mytargets.shared.streamwrapper.Stream;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
@@ -45,6 +44,7 @@ import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IRecursiveModel;
 import de.dreier.mytargets.shared.models.Score;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.shared.utils.typeconverters.EWeatherConverter;
 import de.dreier.mytargets.shared.utils.typeconverters.LocalDateConverter;
 
@@ -283,7 +283,7 @@ public class Training extends BaseModel implements IIdSettable, Comparable<Train
     public Training ensureLoaded() {
         for (Round round : getRounds()) {
             for (End end : round.getEnds()) {
-                end.getShots();
+                end.loadShots();
             }
         }
         return this;

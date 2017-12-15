@@ -22,8 +22,6 @@ import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-
 import org.parceler.Parcels;
 
 import java.util.Collections;
@@ -36,6 +34,7 @@ import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.wearable.WearableClientBase;
 import timber.log.Timber;
@@ -105,12 +104,12 @@ public class MobileWearableClient extends WearableClientBase {
         }
         Target target = round.getTarget();
         round.ends = Stream.of(round.getEnds())
-                .filter(end -> Stream.of(end.getShots())
+                .filter(end -> Stream.of(end.loadShots())
                         .allMatch(s -> s.scoringRing != Shot.NOTHING_SELECTED))
                 .map(end -> {
                     End newEnd = new End(end);
                     if (SettingsManager.INSTANCE.shouldSortTarget(target)) {
-                        Collections.sort(newEnd.getShots());
+                        Collections.sort(newEnd.loadShots());
                     }
                     return newEnd;
                 })

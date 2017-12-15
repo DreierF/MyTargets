@@ -113,10 +113,10 @@ public class CsvExporter {
         for (End e : r.getEnds()) {
             csv.enterScope();
             // End
-            csv.add(String.valueOf(e.index + 1));
+            csv.add(String.valueOf(e.getIndex() + 1));
             // Timestamp
-            csv.add(e.saveTime.format(DateTimeFormatter.ISO_LOCAL_TIME));
-            for (Shot s : e.getShots()) {
+            csv.add(e.getSaveTime().format(DateTimeFormatter.ISO_LOCAL_TIME));
+            for (Shot s : e.loadShots()) {
                 csv.enterScope();
                 // Score
                 csv.add(target.zoneToString(s.scoringRing, s.index));

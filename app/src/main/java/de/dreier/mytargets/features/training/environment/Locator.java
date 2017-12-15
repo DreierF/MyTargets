@@ -36,8 +36,6 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
  */
 public class Locator implements LocationListener {
 
-    static private final String LOG_TAG = "locator";
-
     static private final int TIME_INTERVAL = 100; // minimum time between updates in milliseconds
     static private final int DISTANCE_INTERVAL = 1; // minimum distance between updates in meters
 

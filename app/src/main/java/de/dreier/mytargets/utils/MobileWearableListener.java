@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.utils;
 
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.wearable.MessageEvent;
@@ -31,8 +32,8 @@ import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.TimerSettings;
 import de.dreier.mytargets.shared.models.TimerSettings$$Parcelable;
+import de.dreier.mytargets.shared.models.augmented.AugmentedEnd;
 import de.dreier.mytargets.shared.models.db.End;
-import de.dreier.mytargets.shared.models.db.End$$Parcelable;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.models.db.Training$$Parcelable;
@@ -120,11 +121,11 @@ public class MobileWearableListener extends WearableListenerService {
 
     private void endUpdated(@NonNull MessageEvent messageEvent) {
         byte[] data = messageEvent.getData();
-        End end = unwrap(ParcelableUtil.unmarshall(data, End$$Parcelable.CREATOR));
-        Round round = Round.get(end.roundId);
+        AugmentedEnd augmentedEnd = ParcelableUtil.unmarshall(data, (Parcelable.Creator<AugmentedEnd>) AugmentedEnd.CREATOR);
+        Round round = Round.get(augmentedEnd.getEnd().getRoundId());
         End newEnd = getLastEmptyOrCreateNewEnd(round);
-        newEnd.exact = false;
-        newEnd.setShots(end.getShots());
+        newEnd.setExact(false);
+        newEnd.setShots(augmentedEnd.getShots());
         newEnd.save();
 
         ApplicationInstance.wearableClient.sendUpdateTrainingFromRemoteBroadcast(round, newEnd);
