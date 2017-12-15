@@ -259,7 +259,7 @@ public class TargetView extends TargetViewBase {
         targetDrawable.setFocusedArrow(null);
         if (animator == null) {
             targetDrawable.setMatrix(fullMatrix);
-            if (getCurrentShotIndex() == EndRenderer.NO_SELECTION || inputMethod == KEYBOARD) {
+            if (getCurrentShotIndex() == EndRenderer.Companion.getNO_SELECTION() || inputMethod == KEYBOARD) {
                 targetDrawable.setSpotMatrix(new Matrix());
             } else {
                 targetDrawable.setSpotMatrix(
@@ -420,7 +420,7 @@ public class TargetView extends TargetViewBase {
         // Handle selection of already saved shoots
         int shotIndex = endRenderer.getPressedPosition(x, y);
         endRenderer.setPressed(shotIndex);
-        if (shotIndex != EndRenderer.NO_SELECTION) {
+        if (shotIndex != EndRenderer.Companion.getNO_SELECTION()) {
             if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 setCurrentShotIndex(shotIndex);
                 animateToNewState();
@@ -454,7 +454,7 @@ public class TargetView extends TargetViewBase {
 
     private Matrix getSpotEndMatrix() {
         Matrix endMatrix;
-        if ((getCurrentShotIndex() == EndRenderer.NO_SELECTION || inputMethod == KEYBOARD)) {
+        if ((getCurrentShotIndex() == EndRenderer.Companion.getNO_SELECTION() || inputMethod == KEYBOARD)) {
             endMatrix = new Matrix();
         } else {
             endMatrix = spotMatrices[getCurrentShotIndex() % target.getModel().getFaceCount()];
@@ -583,7 +583,7 @@ public class TargetView extends TargetViewBase {
 
     @Override
     protected int getSelectedShotCircleRadius() {
-        return inputMethod == KEYBOARD ? EndRenderer.MAX_CIRCLE_SIZE : 0;
+        return inputMethod == KEYBOARD ? EndRenderer.Companion.getMAX_CIRCLE_SIZE() : 0;
     }
 
     public enum EKeyboardType {

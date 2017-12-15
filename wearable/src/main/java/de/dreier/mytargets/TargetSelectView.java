@@ -100,7 +100,7 @@ public class TargetSelectView extends TargetViewBase {
     }
 
     private int getCurrentlySelectedZone() {
-        if (getCurrentShotIndex() != EndRenderer.NO_SELECTION) {
+        if (getCurrentShotIndex() != EndRenderer.Companion.getNO_SELECTION()) {
             return shots.get(getCurrentShotIndex()).getScoringRing();
         } else {
             return Shot.Companion.getNOTHING_SELECTED();

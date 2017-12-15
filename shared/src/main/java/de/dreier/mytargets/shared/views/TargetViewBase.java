@@ -144,7 +144,8 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         shots = end.loadShots();
         setCurrentShotIndex(getNextShotIndex(-1));
         endRenderer.setShots(shots);
-        endRenderer.setSelection(getCurrentShotIndex(), null, EndRenderer.MAX_CIRCLE_SIZE);
+        endRenderer.setSelection(getCurrentShotIndex(), null, EndRenderer.Companion
+                .getMAX_CIRCLE_SIZE());
         animateToNewState();
         notifyTargetShotsChanged();
     }
@@ -233,7 +234,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
             return true;
         }
 
-        if (getCurrentShotIndex() == EndRenderer.NO_SELECTION) {
+        if (getCurrentShotIndex() == EndRenderer.Companion.getNO_SELECTION()) {
             return true;
         }
 
@@ -255,7 +256,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     protected abstract int getSelectedShotCircleRadius();
 
     protected boolean isCurrentlySelecting() {
-        return getCurrentShotIndex() != EndRenderer.NO_SELECTION
+        return getCurrentShotIndex() != EndRenderer.Companion.getNO_SELECTION()
                 && shots.get(getCurrentShotIndex()).getScoringRing() !=
                 Shot.Companion.getNOTHING_SELECTED();
     }
@@ -281,7 +282,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
             nextShotIndex++;
         }
         if (nextShotIndex == shots.size()) {
-            return EndRenderer.NO_SELECTION;
+            return EndRenderer.Companion.getNO_SELECTION();
         }
         return nextShotIndex;
     }
@@ -291,7 +292,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     protected void notifyEndFinished() {
-        if (currentShotIndex == EndRenderer.NO_SELECTION && setListener != null) {
+        if (currentShotIndex == EndRenderer.Companion.getNO_SELECTION() && setListener != null) {
             setListener.onEndFinished(shots);
         }
     }
@@ -373,7 +374,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
             if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 int currentShotIndex = getCurrentShotIndex();
                 if (currentShotIndex != 0) {
-                    if (currentShotIndex == EndRenderer.NO_SELECTION) {
+                    if (currentShotIndex == EndRenderer.Companion.getNO_SELECTION()) {
                         currentShotIndex = shots.size();
                     }
                     Shot shot = shots.get(currentShotIndex - 1);
@@ -400,7 +401,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     protected void updateSelectableZones() {
-        if (getCurrentShotIndex() != EndRenderer.NO_SELECTION) {
+        if (getCurrentShotIndex() != EndRenderer.Companion.getNO_SELECTION()) {
             selectableZones = target.getSelectableZoneList(getCurrentShotIndex());
             if (virtualViews.size() > 0) {
                 updateVirtualViews();
