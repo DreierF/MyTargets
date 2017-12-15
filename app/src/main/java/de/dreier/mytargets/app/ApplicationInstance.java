@@ -27,17 +27,12 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
-import org.parceler.ParcelClass;
-import org.parceler.ParcelClasses;
-
 import java.io.File;
 
 import de.dreier.mytargets.BuildConfig;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.SharedApplicationInstance;
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.utils.MobileWearableClient;
 import de.dreier.mytargets.utils.backup.MyBackupAgent;
 import im.delight.android.languages.Language;
@@ -48,10 +43,6 @@ import timber.log.Timber;
  * throughout the app whenever a context is needed e.g. to query app
  * resources.
  */
-@ParcelClasses({
-        @ParcelClass(EndRenderer.class),
-        @ParcelClass(Target.class)
-})
 public class ApplicationInstance extends SharedApplicationInstance {
 
     public static MobileWearableClient wearableClient;

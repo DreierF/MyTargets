@@ -89,7 +89,7 @@ public class IntentWrapper {
     }
 
     @NonNull
-    public IntentWrapper with(String key, Parcelable value) {
+    public <T extends Parcelable> IntentWrapper with(String key, T value) {
         intent.putExtra(key, value);
         return this;
     }

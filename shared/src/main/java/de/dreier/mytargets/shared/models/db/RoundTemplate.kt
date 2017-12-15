@@ -51,20 +51,20 @@ data class RoundTemplate(
         var distance: Dimension = Dimension.UNKNOWN,
 
         @Column
-        internal var targetId: Int = 0,
+        var targetId: Int = 0,
 
         @Column
-        internal var targetScoringStyle: Int = 0,
+        var targetScoringStyle: Int = 0,
 
         @Column(typeConverter = DimensionConverter::class)
-        internal var targetDiameter: Dimension? = null
+        var targetDiameter: Dimension? = null
 ) : BaseModel(), IIdSettable, Parcelable {
 
     var targetTemplate: Target
-        get() = Target(targetId, targetScoringStyle, targetDiameter)
+        get() = Target(targetId.toLong(), targetScoringStyle, targetDiameter)
         set(targetTemplate) {
-            targetId = targetTemplate.id.toInt()
-            targetScoringStyle = targetTemplate.scoringStyle
+            targetId = targetTemplate.id!!.toInt()
+            targetScoringStyle = targetTemplate.scoringStyleIndex
             targetDiameter = targetTemplate.diameter
         }
 

@@ -35,8 +35,6 @@ import android.widget.TextView;
 import com.evernote.android.state.State;
 import com.evernote.android.state.StateSaver;
 
-import org.parceler.Parcels;
-
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
@@ -68,8 +66,7 @@ public class RoundActivity extends WearableActivity {
         public void onReceive(Context context, @NonNull Intent intent) {
             switch (intent.getAction()) {
                 case BROADCAST_TRAINING_UPDATED:
-                    TrainingInfo info = Parcels
-                            .unwrap(intent.getParcelableExtra(WearWearableClient.EXTRA_INFO));
+                    TrainingInfo info = intent.getParcelableExtra(WearWearableClient.EXTRA_INFO);
                     round = info.getRound();
                     showRoundData();
                     break;
@@ -93,7 +90,7 @@ public class RoundActivity extends WearableActivity {
         if (savedInstanceState == null) {
             Intent intent = getIntent();
             if (intent != null && intent.getExtras() != null) {
-                round = Parcels.unwrap(intent.getParcelableExtra(EXTRA_ROUND));
+                round = intent.getParcelableExtra(EXTRA_ROUND);
             }
         }
 
@@ -159,13 +156,13 @@ public class RoundActivity extends WearableActivity {
 
     private void addEnd() {
         final Intent intent = new Intent(this, InputActivity.class);
-        intent.putExtra(InputActivity.EXTRA_ROUND, Parcels.wrap(round));
+        intent.putExtra(InputActivity.EXTRA_ROUND, round);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         TimerSettings timerSettings = WearSettingsManager.getTimerSettings();
         if (timerSettings.getEnabled()) {
             Intent intentTimer = new Intent(this, TimerActivity.class);
-            intentTimer.putExtra(TimerActivity.EXTRA_TIMER_SETTINGS, Parcels.wrap(timerSettings));
+            intentTimer.putExtra(TimerActivity.EXTRA_TIMER_SETTINGS, timerSettings);
             startActivity(intentTimer);
         }
     }

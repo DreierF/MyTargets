@@ -19,7 +19,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
@@ -32,8 +31,6 @@ import android.view.ViewGroup;
 
 import com.evernote.android.state.State;
 
-import org.parceler.Parcels;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,11 +41,11 @@ import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemHolder;
 import de.dreier.mytargets.base.fragments.EditWithImageFragmentBase;
 import de.dreier.mytargets.databinding.FragmentEditBowBinding;
 import de.dreier.mytargets.databinding.ItemSightMarkBinding;
+import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.EBowType;
 import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.BowImage;
 import de.dreier.mytargets.shared.models.db.SightMark;
-import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.views.selector.SelectorBase;
@@ -64,8 +61,8 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
     @State
     Bow bow;
 
-    @State(ParcelsBundler.class)
-    List<SightMark> sightMarks;
+    @State
+    ArrayList<SightMark> sightMarks;
 
     private FragmentEditBowBinding contentBinding;
     private SightMarksAdapter adapter;
@@ -149,8 +146,8 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
                 requestCode == SimpleDistanceSelector.SIMPLE_DISTANCE_REQUEST_CODE) {
             Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
             final int index = intentData.getInt(SelectorBase.INDEX);
-            final Parcelable parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
-            sightMarks.get(index).setDistance(Parcels.unwrap(parcelable));
+            final Dimension parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
+            sightMarks.get(index).setDistance(parcelable);
             adapter.notifyItemChanged(index);
         }
     }

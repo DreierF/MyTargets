@@ -153,9 +153,6 @@ dependencies {
     implementation "com.github.hotchemi:permissionsdispatcher:$libraryVersion.permissionsdispatcher"
     kapt "com.github.hotchemi:permissionsdispatcher-processor:$libraryVersion.permissionsdispatcher"
 
-    implementation "org.parceler:parceler-api:$libraryVersion.parceler"
-    kapt "org.parceler:parceler:$libraryVersion.parceler"
-
     implementation "com.anjlab.android.iab.v3:library:$libraryVersion.iab"
 
     implementation "com.github.PhilJay:MPAndroidChart:$libraryVersion.mpAndroidChart"

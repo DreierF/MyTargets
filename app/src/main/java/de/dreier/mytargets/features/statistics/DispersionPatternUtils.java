@@ -63,9 +63,9 @@ public class DispersionPatternUtils {
     public static void generatePdf(@NonNull File f, @NonNull ArrowStatistic statistic) throws FileNotFoundException {
         final FileOutputStream outputStream = new FileOutputStream(f);
         try {
-            TargetImpactDrawable target = new TargetImpactAggregationDrawable(statistic.target);
-            target.setShots(statistic.shots);
-            target.setArrowDiameter(statistic.arrowDiameter,
+            TargetImpactDrawable target = new TargetImpactAggregationDrawable(statistic.getTarget());
+            target.setShots(statistic.getShots());
+            target.setArrowDiameter(statistic.getArrowDiameter(),
                     SettingsManager.INSTANCE.getInputArrowDiameterScale());
 
             PdfDocument document = new PdfDocument();
@@ -102,9 +102,9 @@ public class DispersionPatternUtils {
         Canvas canvas = new Canvas(b);
         canvas.drawColor(Color.WHITE);
 
-        TargetImpactDrawable target = new TargetImpactAggregationDrawable(statistic.target);
-        target.setShots(statistic.shots);
-        target.setArrowDiameter(statistic.arrowDiameter,
+        TargetImpactDrawable target = new TargetImpactAggregationDrawable(statistic.getTarget());
+        target.setShots(statistic.getShots());
+        target.setArrowDiameter(statistic.getArrowDiameter(),
                 SettingsManager.INSTANCE.getInputArrowDiameterScale());
         target.setBounds(new Rect(0, 0, size, size));
         target.draw(canvas);

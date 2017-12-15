@@ -26,8 +26,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
 
-import org.parceler.Parcels;
-
 import de.dreier.mytargets.shared.models.TimerSettings;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import timber.log.Timber;
@@ -52,8 +50,7 @@ public class WearableClientBase {
     private BroadcastReceiver timerReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, @NonNull Intent intent) {
-            TimerSettings settings = Parcels
-                    .unwrap(intent.getParcelableExtra(EXTRA_TIMER_SETTINGS));
+            TimerSettings settings = intent.getParcelableExtra(EXTRA_TIMER_SETTINGS);
             sendTimerSettings(settings);
         }
     };
@@ -97,13 +94,13 @@ public class WearableClientBase {
     }
 
     protected void sendTimerSettings(TimerSettings settings) {
-        final byte[] data = ParcelableUtil.marshall(Parcels.wrap(settings));
+        final byte[] data = ParcelableUtil.marshall(settings);
         sendMessage(TIMER_SETTINGS, data);
     }
 
     public void sendTimerSettingsFromLocal(TimerSettings settings) {
         Intent intent = new Intent(BROADCAST_TIMER_SETTINGS_FROM_LOCAL);
-        intent.putExtra(EXTRA_TIMER_SETTINGS, Parcels.wrap(settings));
+        intent.putExtra(EXTRA_TIMER_SETTINGS, settings);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 

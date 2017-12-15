@@ -63,7 +63,7 @@ public class TargetImpactDrawable extends TargetDrawable {
     }
 
     public void setArrowDiameter(@NonNull Dimension arrowDiameter, float scale) {
-        Dimension targetSize = model.getRealSize(target.diameter).convertTo(arrowDiameter.getUnit());
+        Dimension targetSize = model.getRealSize(target.getDiameter()).convertTo(arrowDiameter.getUnit());
         arrowRadius = arrowDiameter.getValue() * scale / targetSize.getValue();
     }
 

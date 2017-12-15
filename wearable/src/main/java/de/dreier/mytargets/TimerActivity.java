@@ -24,8 +24,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.parceler.Parcels;
-
 import de.dreier.mytargets.databinding.ActivityTimerBinding;
 import de.dreier.mytargets.databinding.FragmentTimerBinding;
 import de.dreier.mytargets.shared.base.fragment.ETimerState;
@@ -51,8 +49,7 @@ public class TimerActivity extends WearableActivity implements MenuItem.OnMenuIt
         binding = DataBindingUtil.setContentView(this, R.layout.activity_timer);
         setAmbientEnabled();
 
-        TimerSettings settings = Parcels
-                .unwrap(getIntent().getParcelableExtra(EXTRA_TIMER_SETTINGS));
+        TimerSettings settings = getIntent().getParcelableExtra(EXTRA_TIMER_SETTINGS);
         timerFragment = TimerFragment.getInstance(settings);
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, timerFragment).commit();
@@ -117,7 +114,7 @@ public class TimerActivity extends WearableActivity implements MenuItem.OnMenuIt
         public static TimerFragment getInstance(TimerSettings settings) {
             TimerFragment timer = new TimerFragment();
             Bundle bundle = new Bundle();
-            bundle.putParcelable(ARG_TIMER_SETTINGS, Parcels.wrap(settings));
+            bundle.putParcelable(ARG_TIMER_SETTINGS, settings);
             timer.setArguments(bundle);
             return timer;
         }

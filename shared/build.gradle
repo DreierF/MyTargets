@@ -54,8 +54,6 @@ dependencies {
     api "com.android.support:support-annotations:$libraryVersion.support"
     api "com.jakewharton.threetenabp:threetenabp:$libraryVersion.threeTenABP"
 
-    implementation "org.parceler:parceler-api:$libraryVersion.parceler"
-
     kapt "com.github.Raizlabs.DBFlow:dbflow-processor:$libraryVersion.dbFlow"
     implementation "com.github.Raizlabs.DBFlow:dbflow-core:$libraryVersion.dbFlow"
     implementation "com.github.Raizlabs.DBFlow:dbflow:$libraryVersion.dbFlow"

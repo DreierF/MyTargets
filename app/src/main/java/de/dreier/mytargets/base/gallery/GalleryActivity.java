@@ -32,8 +32,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.evernote.android.state.State;
 import com.evernote.android.state.StateSaver;
 
-import org.parceler.Parcels;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,7 +45,6 @@ import de.dreier.mytargets.databinding.ActivityGalleryBinding;
 import de.dreier.mytargets.shared.models.db.Image;
 import de.dreier.mytargets.shared.utils.FileUtils;
 import de.dreier.mytargets.shared.utils.ImageList;
-import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
@@ -68,7 +65,7 @@ public class GalleryActivity extends ChildActivityBase {
     LinearLayoutManager layoutManager;
     HorizontalListAdapters previewAdapter;
 
-    @State(ParcelsBundler.class)
+    @State
     ImageList imageList;
 
     private ActivityGalleryBinding binding;
@@ -76,11 +73,11 @@ public class GalleryActivity extends ChildActivityBase {
     public static IntentWrapper getIntent(ImageList images, String title) {
         return new IntentWrapper(GalleryActivity.class)
                 .with(EXTRA_TITLE, title)
-                .with(EXTRA_IMAGES, Parcels.wrap(images));
+                .with(EXTRA_IMAGES, images);
     }
 
     public static ImageList getResult(@NonNull Intent data) {
-        return Parcels.unwrap(data.getParcelableExtra(RESULT_IMAGES));
+        return data.getParcelableExtra(RESULT_IMAGES);
     }
 
     @Override
@@ -90,7 +87,7 @@ public class GalleryActivity extends ChildActivityBase {
 
         String title = getIntent().getStringExtra(EXTRA_TITLE);
         if (savedInstanceState == null) {
-            imageList = Parcels.unwrap(getIntent().getParcelableExtra(EXTRA_IMAGES));
+            imageList = getIntent().getParcelableExtra(EXTRA_IMAGES);
         } else {
             StateSaver.restoreInstanceState(this, savedInstanceState);
         }
@@ -206,7 +203,7 @@ public class GalleryActivity extends ChildActivityBase {
     @NonNull
     private Intent wrap(ImageList imageList) {
         Intent i = new Intent();
-        i.putExtra(RESULT_IMAGES, Parcels.wrap(imageList));
+        i.putExtra(RESULT_IMAGES, imageList);
         return i;
     }
 

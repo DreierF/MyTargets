@@ -58,8 +58,8 @@ class Stream<T>(private val list: Iterable<T>) {
         return Stream(list.toList().sortedWith(comparator))
     }
 
-    fun toList(): List<T> {
-        return list.toMutableList()
+    fun toList(): ArrayList<T> {
+        return ArrayList(list.toMutableList())
     }
 
     fun <U, V> toMap(key: (T) -> U, value: (T) -> V): Map<U, V> {

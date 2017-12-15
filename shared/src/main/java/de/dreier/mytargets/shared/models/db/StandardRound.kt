@@ -80,7 +80,7 @@ data class StandardRound(
         if (rounds == null) {
             rounds = SQLite.select()
                     .from(RoundTemplate::class.java)
-                    .where(RoundTemplate_Table.standardRound.eq(id))
+                    .where(RoundTemplate_Table.standardRound.eq(id!!))
                     .queryList()
                     .toMutableList()
         }
@@ -109,7 +109,7 @@ data class StandardRound(
         super.save(databaseWrapper)
         if (rounds != null) {
             SQLite.delete(RoundTemplate::class.java)
-                    .where(RoundTemplate_Table.standardRound.eq(id))
+                    .where(RoundTemplate_Table.standardRound.eq(id!!))
                     .execute(databaseWrapper)
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
             for (s in rounds!!) {

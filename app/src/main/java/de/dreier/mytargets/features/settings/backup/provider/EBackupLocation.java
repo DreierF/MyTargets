@@ -18,8 +18,6 @@ package de.dreier.mytargets.features.settings.backup.provider;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
-import org.parceler.ParcelConstructor;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,6 +25,7 @@ import de.dreier.mytargets.R;
 import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.shared.models.IIdProvider;
 
+//TODO : Parcelize?
 public enum EBackupLocation implements IIdProvider {
     INTERNAL_STORAGE(1, R.string.internal_storage, R.drawable.ic_phone_android_grey600_24dp),
     EXTERNAL_STORAGE(2, R.string.external_storage, R.drawable.ic_micro_sd_card_grey600_24dp),
@@ -36,7 +35,6 @@ public enum EBackupLocation implements IIdProvider {
     int drawable;
     int name;
 
-    @ParcelConstructor
     EBackupLocation(long id, @StringRes int name, @DrawableRes int drawable) {
         this.id = id;
         this.name = name;

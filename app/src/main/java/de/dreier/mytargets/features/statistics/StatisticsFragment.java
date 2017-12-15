@@ -31,8 +31,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
-import de.dreier.mytargets.shared.streamwrapper.Stream;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -46,7 +44,6 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.renderer.LineChartRenderer;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
-import org.parceler.Parcels;
 import org.threeten.bp.Duration;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
@@ -75,6 +72,7 @@ import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
 import de.dreier.mytargets.shared.utils.Color;
 import de.dreier.mytargets.shared.utils.LongUtils;
@@ -128,7 +126,7 @@ public class StatisticsFragment extends FragmentBase {
     public static StatisticsFragment newInstance(@NonNull List<Long> roundIds, Target item, boolean animate) {
         StatisticsFragment fragment = new StatisticsFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(StatisticsFragment.ARG_TARGET, Parcels.wrap(item));
+        bundle.putParcelable(StatisticsFragment.ARG_TARGET, item);
         bundle.putLongArray(StatisticsFragment.ARG_ROUND_IDS, LongUtils.toArray(roundIds));
         bundle.putBoolean(StatisticsFragment.ARG_ANIMATE, animate);
         fragment.setArguments(bundle);
@@ -153,9 +151,9 @@ public class StatisticsFragment extends FragmentBase {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_statistics, container, false);
 
-        Target target = Parcels.unwrap(getArguments().getParcelable(ARG_TARGET));
+        Target target = getArguments().getParcelable(ARG_TARGET);
         if(SettingsManager.INSTANCE.getStatisticsDispersionPatternMergeSpot()) {
-            this.target = Target.singleSpotTargetFrom(target);
+            this.target = Target.Companion.singleSpotTargetFrom(target);
         } else {
             this.target = target;
         }
@@ -179,7 +177,7 @@ public class StatisticsFragment extends FragmentBase {
                 .withoutNulls()
                 .toList();
 
-        List<ArrowStatistic> data = ArrowStatistic.getAll(target, rounds);
+        List<ArrowStatistic> data = ArrowStatistic.Companion.getAll(target, rounds);
 
         return () -> {
             showLineChart();
@@ -206,13 +204,13 @@ public class StatisticsFragment extends FragmentBase {
             return;
         }
         ArrowStatistic stats = new ArrowStatistic(target, exactShots);
-        stats.arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
+        stats.setArrowDiameter(new Dimension(5, Dimension.Unit.MILLIMETER));
 
         EAggregationStrategy strategy = SettingsManager.INSTANCE.getStatisticsDispersionPatternAggregationStrategy();
-        TargetImpactAggregationDrawable drawable = stats.target.getImpactAggregationDrawable();
+        TargetImpactAggregationDrawable drawable = stats.getTarget().getImpactAggregationDrawable();
         drawable.setAggregationStrategy(strategy);
-        drawable.setShots(stats.shots);
-        drawable.setArrowDiameter(stats.arrowDiameter, SettingsManager.INSTANCE.getInputArrowDiameterScale());
+        drawable.setShots(stats.getShots());
+        drawable.setArrowDiameter(stats.getArrowDiameter(), SettingsManager.INSTANCE.getInputArrowDiameterScale());
         binding.dispersionView.setImageDrawable(drawable);
 
         binding.dispersionViewOverlay.setOnClickListener(view -> {
@@ -589,7 +587,8 @@ public class StatisticsFragment extends FragmentBase {
         void bindItem(@NonNull ArrowStatistic item) {
             mItem = item;
             binding.name.setText(
-                    getString(R.string.arrow_x_of_set_of_arrows, item.arrowNumber, item.arrowName));
+                    getString(R.string.arrow_x_of_set_of_arrows, item.getArrowNumber(), item
+                            .getArrowName()));
             binding.image.setImageDrawable(new RoundedTextDrawable(item));
         }
     }

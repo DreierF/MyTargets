@@ -149,7 +149,7 @@ public class TargetModelBase implements IIdProvider {
     }
 
     /**
-     * Lists all zones that can be selected for the given scoringStyle and arrow index.
+     * Lists all zones that can be selected for the given scoringStyleIndex and arrow index.
      * Consecutive zones with the same text are excluded.
      *
      * @param scoringStyleIndex Index of the scoring style for this target.

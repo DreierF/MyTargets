@@ -31,7 +31,6 @@ import de.dreier.mytargets.app.ApplicationInstance;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.TimerSettings;
-import de.dreier.mytargets.shared.models.TimerSettings$$Parcelable;
 import de.dreier.mytargets.shared.models.augmented.AugmentedEnd;
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining;
 import de.dreier.mytargets.shared.models.db.End;
@@ -40,8 +39,6 @@ import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.wearable.WearableClientBase;
-
-import static org.parceler.Parcels.unwrap;
 
 /**
  * Listens for incoming connections of wearable devices.
@@ -73,8 +70,7 @@ public class MobileWearableListener extends WearableListenerService {
 
     private void timerSettings(@NonNull MessageEvent messageEvent) {
         byte[] data = messageEvent.getData();
-        TimerSettings settings = unwrap(ParcelableUtil
-                .unmarshall(data, TimerSettings$$Parcelable.CREATOR));
+        TimerSettings settings = ParcelableUtil.unmarshall(data, (Parcelable.Creator<TimerSettings>) TimerSettings.CREATOR);
         SettingsManager.INSTANCE.setTimerSettings(settings);
         ApplicationInstance.wearableClient.sendTimerSettingsFromRemote();
     }

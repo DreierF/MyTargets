@@ -60,7 +60,7 @@ public class TargetDrawable extends Drawable {
         this.target = target;
         this.zonesToDraw = new ArrayList<>();
         for (int i = getZones() - 1; i >= 0; i--) {
-            if (!model.shouldDrawZone(i, target.scoringStyle)) {
+            if (!model.shouldDrawZone(i, target.getScoringStyleIndex())) {
                 continue;
             }
             zonesToDraw.add(model.getZone(i));

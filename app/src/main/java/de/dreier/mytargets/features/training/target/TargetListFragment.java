@@ -30,12 +30,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-
 import junit.framework.Assert;
-
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,6 +45,7 @@ import de.dreier.mytargets.databinding.ItemImageSimpleBinding;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.ETargetType;
 import de.dreier.mytargets.shared.models.Target;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.shared.targets.TargetFactory;
 import de.dreier.mytargets.shared.targets.models.TargetModelBase;
 import de.dreier.mytargets.utils.IntentWrapper;
@@ -74,7 +70,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
     @NonNull
     public static IntentWrapper getIntent(Target target) {
         return new IntentWrapper(TargetActivity.class)
-                .with(ITEM, Parcels.wrap(target))
+                .with(ITEM, target)
                 .with(FIXED_TYPE, GROUP.name());
     }
 
@@ -104,7 +100,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
         binding.targetSize.setAdapter(targetSizeAdapter);
 
         // Process passed arguments
-        Target target = Parcels.unwrap(getArguments().getParcelable(ITEM));
+        Target target = getArguments().getParcelable(ITEM);
         EFixedType fixedType = EFixedType
                 .valueOf(getArguments().getString(FIXED_TYPE, NONE.name()));
         List<TargetModelBase> list;
@@ -127,13 +123,13 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
         int diameterIndex = -1;
         Dimension[] diameters = target.getModel().getDiameters();
         for (int i = 0; i < diameters.length; i++) {
-            if (diameters[i].equals(target.diameter)) {
+            if (diameters[i].equals(target.getDiameter())) {
                 diameterIndex = i;
                 break;
             }
         }
 
-        setSelectionWithoutEvent(binding.scoringStyle, target.scoringStyle);
+        setSelectionWithoutEvent(binding.scoringStyle, target.getScoringStyleIndex());
         setSelectionWithoutEvent(binding.targetSize, diameterIndex);
     }
 
@@ -207,10 +203,10 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
     @Override
     protected Target onSave() {
         Target target = super.onSave();
-        target.scoringStyle = binding.scoringStyle.getSelectedItemPosition();
+        target.setScoringStyleIndex(binding.scoringStyle.getSelectedItemPosition());
         Dimension[] diameters = target.getModel().getDiameters();
-        target.diameter = diameters[binding.targetSize.getSelectedItemPosition()];
-        getArguments().putParcelable(ITEM, Parcels.wrap(target));
+        target.setDiameter(diameters[binding.targetSize.getSelectedItemPosition()]);
+        getArguments().putParcelable(ITEM, target);
         return target;
     }
 

@@ -15,19 +15,19 @@
 
 package de.dreier.mytargets.base.fragments;
 
-import org.parceler.Parcels;
+import android.os.Parcelable;
 
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
 import de.dreier.mytargets.shared.models.IIdSettable;
 import de.dreier.mytargets.shared.models.IRecursiveModel;
 
-public abstract class EditableListFragment<T extends IIdSettable & IRecursiveModel & Comparable<T>> extends EditableListFragmentBase<T, SimpleListAdapterBase<T>> {
+public abstract class EditableListFragment<T extends IIdSettable & IRecursiveModel & Comparable<T> & Parcelable> extends EditableListFragmentBase<T, SimpleListAdapterBase<T>> {
 
     protected final void onSelected(T item) {
         if (listener == null) {
             onItemSelected(item);
         } else {
-            listener.onItemSelected(Parcels.wrap(item));
+            listener.onItemSelected(item);
             finish();
         }
     }

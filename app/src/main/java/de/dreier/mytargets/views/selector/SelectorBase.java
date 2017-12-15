@@ -33,16 +33,13 @@ import android.widget.LinearLayout;
 import com.evernote.android.state.State;
 import com.evernote.android.state.StateSaver;
 
-import org.parceler.Parcels;
-
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.base.activities.ItemSelectActivity;
-import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.IntentWrapper;
 
 import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
 
-public abstract class SelectorBase<T> extends LinearLayout {
+public abstract class SelectorBase<T extends Parcelable> extends LinearLayout {
 
     public static final String INDEX = "index";
     private final int layout;
@@ -50,7 +47,7 @@ public abstract class SelectorBase<T> extends LinearLayout {
     protected int requestCode;
     protected Class<?> defaultActivity;
     @Nullable
-    @State(ParcelsBundler.class)
+    @State
     protected T item = null;
     private Button addButton;
     private View progress;
@@ -96,7 +93,7 @@ public abstract class SelectorBase<T> extends LinearLayout {
 
     protected IntentWrapper getDefaultIntent() {
         IntentWrapper i = new IntentWrapper(defaultActivity)
-                .with(ITEM, Parcels.wrap(getSelectedItem()));
+                .with(ITEM, getSelectedItem());
         if (index != -1) {
             i.with(INDEX, index);
         }
@@ -141,8 +138,7 @@ public abstract class SelectorBase<T> extends LinearLayout {
         if (resultCode == Activity.RESULT_OK && requestCode == this.requestCode) {
             Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
             if (index == -1 || (intentData != null && intentData.getInt(INDEX) == index)) {
-                final Parcelable parcelable = data.getParcelableExtra(ITEM);
-                setItem(Parcels.unwrap(parcelable));
+                setItem(data.getParcelableExtra(ITEM));
             }
         }
     }

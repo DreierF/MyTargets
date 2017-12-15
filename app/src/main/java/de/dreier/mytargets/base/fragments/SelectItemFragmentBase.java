@@ -17,14 +17,15 @@ package de.dreier.mytargets.base.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import junit.framework.Assert;
+import com.evernote.android.state.State;
 
-import org.parceler.Parcels;
+import junit.framework.Assert;
 
 import de.dreier.mytargets.base.adapters.ListAdapterBase;
 import de.dreier.mytargets.shared.models.IIdProvider;
@@ -32,7 +33,6 @@ import de.dreier.mytargets.utils.SingleSelectorBundler;
 import de.dreier.mytargets.utils.multiselector.ItemBindingHolder;
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
 import de.dreier.mytargets.utils.multiselector.SingleSelector;
-import com.evernote.android.state.State;
 
 /**
  * Base class for handling single item selection
@@ -41,7 +41,7 @@ import com.evernote.android.state.State;
  *
  * @param <T> Model of the item which is managed within the fragment.
  */
-public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<T>,
+public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<T> & Parcelable,
         U extends ListAdapterBase<? extends ItemBindingHolder<?>, T>> extends ListFragmentBase<T, U> {
 
     /**
@@ -111,7 +111,7 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
      * Returns the selected item to the calling activity. The item is retrieved by calling onSave().
      */
     protected void saveItem() {
-        listener.onItemSelected(Parcels.wrap(onSave()));
+        listener.onItemSelected(onSave());
     }
 
     /**

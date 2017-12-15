@@ -17,6 +17,7 @@ package de.dreier.mytargets.views.selector;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.os.Parcelable;
 import android.support.annotation.StringRes;
 import android.util.AttributeSet;
 
@@ -25,7 +26,7 @@ import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding;
 import de.dreier.mytargets.shared.models.IDetailProvider;
 import de.dreier.mytargets.shared.models.IImageProvider;
 
-public abstract class ImageSelectorBase<T extends IImageProvider> extends SelectorBase<T> {
+public abstract class ImageSelectorBase<T extends IImageProvider & Parcelable> extends SelectorBase<T> {
 
     protected SelectorItemImageDetailsBinding binding;
 

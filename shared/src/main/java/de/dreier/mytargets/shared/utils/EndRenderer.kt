@@ -35,7 +35,7 @@ class EndRenderer(
         internal var selected: Int = NO_SELECTION,
         private var selectedPosition: PointF? = null,
         private var selectedRadius: Int = 0,
-        private var oldCoordinate: Array<PointF?>,
+        private var oldCoordinate: Array<PointF?> = arrayOfNulls(0),
         internal var currentAnimationProgress: Float = -1f,
         private var ambientMode: Boolean = false
 ) : Parcelable {
@@ -192,7 +192,7 @@ class EndRenderer(
         return animator
     }
 
-    fun setSelection(selectedShot: Int, c: PointF, radius: Int) {
+    fun setSelection(selectedShot: Int, c: PointF?, radius: Int) {
         selected = selectedShot
         selectedPosition = c
         selectedRadius = radius

@@ -23,8 +23,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.parceler.Parcels;
-
 import de.dreier.mytargets.R;
 import de.dreier.mytargets.databinding.FragmentDistanceBinding;
 import de.dreier.mytargets.shared.models.Dimension;
@@ -36,7 +34,7 @@ public class DistanceFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FragmentDistanceBinding binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_distance, container, false);
-        Dimension distance = Parcels.unwrap(getArguments().getParcelable(ITEM));
+        Dimension distance = getArguments().getParcelable(ITEM);
         binding.viewPager.setAdapter(new DistanceTabsFragmentPagerAdapter(getActivity(), distance));
         binding.slidingTabs.setupWithViewPager(binding.viewPager);
 

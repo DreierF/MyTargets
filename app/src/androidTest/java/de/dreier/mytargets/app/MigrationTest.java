@@ -136,8 +136,8 @@ public final class MigrationTest extends InstrumentedTestBase {
         Truth.assertThat(rounds.get(1).getDistance()).isEqualTo(new Dimension(20, METER));
         Truth.assertThat(rounds.get(1).getComment()).isEqualTo("Kommentar");
         Truth.assertThat(rounds.get(1).getTarget().getId()).isEqualTo(0);
-        Truth.assertThat(rounds.get(1).getTarget().scoringStyle).isEqualTo(0);
-        Truth.assertThat(rounds.get(1).getTarget().diameter).isEqualTo(new Dimension(60, CENTIMETER));
+        Truth.assertThat(rounds.get(1).getTarget().getScoringStyle()).isEqualTo(0);
+        Truth.assertThat(rounds.get(1).getTarget().getDiameter()).isEqualTo(new Dimension(60, CENTIMETER));
         Truth.assertThat(rounds.get(1).loadEnds()).hasSize(2);
     }
 
@@ -151,8 +151,8 @@ public final class MigrationTest extends InstrumentedTestBase {
         Truth.assertThat(round1.getDistance()).isEqualTo(new Dimension(50, METER));
         Truth.assertThat(round1.getComment()).isEqualTo("");
         Truth.assertThat(round1.getTarget().getId()).isEqualTo(1);
-        Truth.assertThat(round1.getTarget().scoringStyle).isEqualTo(2);
-        Truth.assertThat(round1.getTarget().diameter).isEqualTo(new Dimension(40, CENTIMETER));
+        Truth.assertThat(round1.getTarget().getScoringStyle()).isEqualTo(2);
+        Truth.assertThat(round1.getTarget().getDiameter()).isEqualTo(new Dimension(40, CENTIMETER));
         final List<End> ends = round1.loadEnds();
         Truth.assertThat(ends).hasSize(3);
         Truth.assertThat(ends.get(0).getId()).isEqualTo(1L);

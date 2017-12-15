@@ -22,8 +22,6 @@ import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
-import org.parceler.Parcels;
-
 import de.dreier.mytargets.shared.models.TimerSettings;
 import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.augmented.AugmentedEnd;
@@ -92,7 +90,7 @@ public class WearWearableClient extends WearableClientBase {
 
     public void sendTrainingUpdate(TrainingInfo info) {
         Intent intent = new Intent(BROADCAST_TRAINING_UPDATED);
-        intent.putExtra(EXTRA_INFO, Parcels.wrap(info));
+        intent.putExtra(EXTRA_INFO, info);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 

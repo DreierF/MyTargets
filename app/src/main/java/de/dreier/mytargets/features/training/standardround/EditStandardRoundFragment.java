@@ -18,7 +18,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,7 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.parceler.Parcels;
+import com.evernote.android.state.State;
 
 import java.util.List;
 
@@ -40,7 +39,6 @@ import de.dreier.mytargets.databinding.ItemRoundTemplateBinding;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.db.RoundTemplate;
 import de.dreier.mytargets.shared.models.db.StandardRound;
-import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.StandardRoundFactory;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -48,7 +46,6 @@ import de.dreier.mytargets.utils.transitions.FabTransformUtil;
 import de.dreier.mytargets.views.selector.DistanceSelector;
 import de.dreier.mytargets.views.selector.SelectorBase;
 import de.dreier.mytargets.views.selector.TargetSelector;
-import com.evernote.android.state.State;
 
 import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
 
@@ -56,7 +53,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
 
     public static final int RESULT_STANDARD_ROUND_DELETED = Activity.RESULT_FIRST_USER;
 
-    @State(ParcelsBundler.class)
+    @State
     StandardRound standardRound;
     private RoundTemplateAdapter adapter;
     private FragmentEditStandardRoundBinding binding;
@@ -69,7 +66,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
     @NonNull
     public static IntentWrapper editIntent(StandardRound item) {
         return new IntentWrapper(EditStandardRoundActivity.class)
-                .with(ITEM, Parcels.wrap(item));
+                .with(ITEM, item);
     }
 
     @Override
@@ -83,7 +80,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
 
         if (savedInstanceState == null) {
             if (getArguments() != null) {
-                standardRound = Parcels.unwrap(getArguments().getParcelable(ITEM));
+                standardRound = getArguments().getParcelable(ITEM);
             }
             if (standardRound == null) {
                 standardRound = new StandardRound();
@@ -168,7 +165,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         SettingsManager.INSTANCE.setDistance(round.getDistance());
 
         Intent data = new Intent();
-        data.putExtra(ITEM, Parcels.wrap(standardRound));
+        data.putExtra(ITEM, standardRound);
         getActivity().setResult(Activity.RESULT_OK, data);
         finish();
     }
@@ -180,15 +177,14 @@ public class EditStandardRoundFragment extends EditFragmentBase {
         if (resultCode == Activity.RESULT_OK) {
             Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
             final int index = intentData.getInt(SelectorBase.INDEX);
-            final Parcelable parcelable = data.getParcelableExtra(ITEM);
             switch (requestCode) {
                 case DistanceSelector.DISTANCE_REQUEST_CODE:
-                    standardRound.loadRounds().get(index).setDistance(Parcels.unwrap(parcelable));
+                    standardRound.loadRounds().get(index).setDistance(data.getParcelableExtra(ITEM));
                     adapter.notifyItemChanged(index);
                     break;
                 case TargetSelector.TARGET_REQUEST_CODE:
                     standardRound.loadRounds().get(index)
-                            .setTargetTemplate(Parcels.unwrap(parcelable));
+                            .setTargetTemplate(data.getParcelableExtra(ITEM));
                     adapter.notifyItemChanged(index);
                     break;
             }

@@ -728,7 +728,7 @@ public class StandardRoundFactory {
      * @return The standard round with the specified properties
      */
     @NonNull
-    private static StandardRound build(int institution, int name, Dimension.Unit distanceUnit, Dimension.Unit targetUnit, int target, int scoringStyle, int shotsPerEnd, @NonNull int... roundDetails) {
+    private static StandardRound build(int institution, int name, Dimension.Unit distanceUnit, Dimension.Unit targetUnit, long target, int scoringStyle, int shotsPerEnd, @NonNull int... roundDetails) {
         StandardRound standardRound = new StandardRound();
         idCounter++;
         standardRound.setId(idCounter);
@@ -742,8 +742,7 @@ public class StandardRoundFactory {
             roundTemplate.setShotsPerEnd(shotsPerEnd);
             roundTemplate.setDistance(new Dimension(roundDetails[i], distanceUnit));
             roundTemplate.setTargetTemplate(
-                    new Target(target, scoringStyle, new Dimension(roundDetails[i +
-                            1], targetUnit)));
+                    new Target(target, scoringStyle, new Dimension(roundDetails[i + 1], targetUnit)));
             roundTemplate.setEndCount(roundDetails[i + 2]);
             standardRound.insert(roundTemplate);
         }
@@ -755,7 +754,7 @@ public class StandardRoundFactory {
         StandardRound standardRound = build(institution, name, distanceUnit,
                 targetUnit, target, scoringStyle, shotsPerEnd, roundDetails);
         RoundTemplate round2 = standardRound.loadRounds().get(1);
-        target2.diameter = round2.getTargetTemplate().diameter;
+        target2.setDiameter(round2.getTargetTemplate().getDiameter());
         round2.setTargetTemplate(target2);
         return standardRound;
     }

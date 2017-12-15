@@ -31,13 +31,12 @@ import java.util.List;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.utils.EndRenderer;
-import de.dreier.mytargets.shared.utils.ParcelsBundler;
 
 public class EndView extends View {
 
     private int shotCount;
     private float density;
-    @State(ParcelsBundler.class)
+    @State
     EndRenderer endRenderer = new EndRenderer();
     private final RectF rect = new RectF();
 

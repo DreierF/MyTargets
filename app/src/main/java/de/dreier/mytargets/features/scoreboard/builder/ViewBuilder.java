@@ -191,9 +191,9 @@ public class ViewBuilder implements ScoreboardBuilder {
         TextView witnessDescriptionView = v.findViewById(R.id.witness_description);
         witnessDescriptionView.setText(witnessSignature.getName(targetCaptain));
         ImageView archerSignatureView = v.findViewById(R.id.signature_archer);
-        archerSignatureView.setImageBitmap(archerSignature.getBitmap());
+        archerSignatureView.setImageBitmap(archerSignature.bitmap);
         ImageView witnessSignatureView = v.findViewById(R.id.signature_witness);
-        witnessSignatureView.setImageBitmap(witnessSignature.getBitmap());
+        witnessSignatureView.setImageBitmap(witnessSignature.bitmap);
     }
 
     private int dp(int dips) {

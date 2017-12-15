@@ -31,7 +31,6 @@ import de.dreier.mytargets.databinding.FragmentEditArrowBinding;
 import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.ArrowImage;
-import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 
@@ -44,7 +43,7 @@ public class EditArrowFragment extends EditWithImageFragmentBase<ArrowImage> {
     @VisibleForTesting
     public static final String ARROW_ID = "arrow_id";
     @Nullable
-    @State(ParcelsBundler.class)
+    @State
     Arrow arrow;
     private FragmentEditArrowBinding contentBinding;
 

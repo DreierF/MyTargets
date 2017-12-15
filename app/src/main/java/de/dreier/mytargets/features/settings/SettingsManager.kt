@@ -134,13 +134,13 @@ object SettingsManager {
             val diameterValue = lastUsed[KEY_TARGET_DIAMETER_VALUE, 60]
             val diameterUnit = lastUsed[KEY_TARGET_DIAMETER_UNIT, CENTIMETER.toString()]
             val diameter = Dimension.from(diameterValue.toFloat(), diameterUnit)
-            return Target(targetId, scoringStyle, diameter)
+            return Target(targetId.toLong(), scoringStyle, diameter)
         }
         set(value) = lastUsed.edit()
-                .putInt(KEY_TARGET, value.id.toInt())
-                .putInt(KEY_SCORING_STYLE, value.scoringStyle)
-                .putInt(KEY_TARGET_DIAMETER_VALUE, value.diameter.value.toInt())
-                .putString(KEY_TARGET_DIAMETER_UNIT, value.diameter.unit?.toString())
+                .putInt(KEY_TARGET, value.id!!.toInt())
+                .putInt(KEY_SCORING_STYLE, value.scoringStyleIndex)
+                .putInt(KEY_TARGET_DIAMETER_VALUE, value.diameter!!.value.toInt())
+                .putString(KEY_TARGET_DIAMETER_UNIT, value.diameter!!.unit?.toString())
                 .apply()
 
     var timerEnabled: Boolean

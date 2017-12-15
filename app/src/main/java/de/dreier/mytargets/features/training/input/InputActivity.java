@@ -39,9 +39,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.evernote.android.state.State;
 import com.evernote.android.state.StateSaver;
 
-import org.parceler.Parcel;
-import org.parceler.ParcelConstructor;
-
 import java.io.File;
 import java.util.List;
 
@@ -56,7 +53,6 @@ import de.dreier.mytargets.features.settings.SettingsActivity;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.timer.TimerFragment;
 import de.dreier.mytargets.features.training.RoundFragment;
-import de.dreier.mytargets.shared.models.Dimension;
 import de.dreier.mytargets.shared.models.Score;
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining;
 import de.dreier.mytargets.shared.models.db.Arrow;
@@ -64,12 +60,9 @@ import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
-import de.dreier.mytargets.shared.models.db.SightMark;
-import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.shared.utils.ImageList;
-import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.SharedUtils;
 import de.dreier.mytargets.shared.views.TargetViewBase;
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
@@ -89,14 +82,14 @@ import static de.dreier.mytargets.utils.Utils.getCurrentLocale;
 
 public class InputActivity extends ChildActivityBase
         implements TargetViewBase.OnEndFinishedListener, TargetView.OnEndUpdatedListener,
-        LoaderManager.LoaderCallbacks<InputActivity.LoaderResult> {
+        LoaderManager.LoaderCallbacks<LoaderResult> {
 
     static final String TRAINING_ID = "training_id";
     static final String ROUND_ID = "round_id";
     static final String END_INDEX = "end_ind";
     private static final int GALLERY_REQUEST_CODE = 1;
 
-    @State(ParcelsBundler.class)
+    @State
     LoaderResult data;
 
     private ActivityInputBinding binding;
@@ -252,7 +245,7 @@ public class InputActivity extends ChildActivityBase
                     : R.drawable.ic_timer_white_24dp);
             timer.setVisible(true);
             timer.setChecked(SettingsManager.INSTANCE.getTimerEnabled());
-            newRound.setVisible(data.training.getStandardRoundId() == null);
+            newRound.setVisible(data.getTraining().getStandardRoundId() == null);
             takePicture.setVisible(Utils.hasCameraHardware(this));
             takePicture.setIcon(data.getCurrentEnd().loadImages().isEmpty() ?
                     R.drawable.ic_photo_camera_white_24dp : R.drawable.ic_image_white_24dp);
@@ -265,7 +258,7 @@ public class InputActivity extends ChildActivityBase
         switch (item.getItemId()) {
             case R.id.action_photo:
                 GalleryActivity.getIntent(new ImageList(data.getCurrentEnd()
-                        .loadImages()), getString(R.string.end_n, data.endIndex + 1))
+                        .loadImages()), getString(R.string.end_n, data.getEndIndex() + 1))
                         .withContext(this)
                         .forResult(GALLERY_REQUEST_CODE)
                         .start();
@@ -296,7 +289,7 @@ public class InputActivity extends ChildActivityBase
                         .start();
                 return true;
             case R.id.action_new_round:
-                EditRoundFragment.createIntent(data.training)
+                EditRoundFragment.createIntent(data.getTraining())
                         .withContext(this)
                         .start();
                 return true;
@@ -318,17 +311,18 @@ public class InputActivity extends ChildActivityBase
     public void onLoadFinished(Loader<LoaderResult> loader, @NonNull LoaderResult data) {
         this.data = data;
         onDataLoadFinished();
-        showEnd(data.endIndex);
+        showEnd(data.getEndIndex());
     }
 
     private void onDataLoadFinished() {
-        setTitle(data.training.getTitle());
+        setTitle(data.getTraining().getTitle());
         if (!binding.targetViewStub.isInflated()) {
             binding.targetViewStub.getViewStub().inflate();
         }
         targetView = (TargetView) binding.targetViewStub.getBinding().getRoot();
         targetView.setTarget(data.getCurrentRound().getTarget());
-        targetView.setArrow(data.arrowDiameter, data.training.getArrowNumbering(), data.maxArrowNumber);
+        targetView.setArrow(data.getArrowDiameter(), data.getTraining().getArrowNumbering(), data
+                .getMaxArrowNumber());
         targetView.setOnTargetSetListener(InputActivity.this);
         targetView.setUpdateListener(InputActivity.this);
         targetView.reloadSettings();
@@ -344,7 +338,7 @@ public class InputActivity extends ChildActivityBase
 
     private void showEnd(int endIndex) {
         // Create a new end
-        data.endIndex = endIndex;
+        data.setEndIndex(endIndex);
         if (endIndex >= data.getEnds().size()) {
             End end = data.getCurrentRound().addEnd();
             end.setExact(SettingsManager.INSTANCE.getInputMethod() == EInputMethod.PLOTTING);
@@ -363,7 +357,7 @@ public class InputActivity extends ChildActivityBase
         final Long currentEndId = currentEnd.getId();
         final ETrainingScope shotShowScope = SettingsManager.INSTANCE.getShowMode();
         final LoaderResult data = this.data;
-        final Stream<Shot> shotStream = Stream.of(data.training.loadRounds())
+        final Stream<Shot> shotStream = Stream.of(data.getTraining().loadRounds())
                 .filter((r) -> shouldShowRound(r, shotShowScope, currentRoundId))
                 .flatMap(r -> Stream.of(r.loadEnds()))
                 .filter((end) -> shouldShowEnd(end, currentEndId))
@@ -401,17 +395,18 @@ public class InputActivity extends ChildActivityBase
         final int totalEnds = data.getCurrentRound().getMaxEndCount() == null
                 ? data.getEnds().size()
                 : data.getCurrentRound().getMaxEndCount();
-        binding.endTitle.setText(getString(R.string.end_x_of_y, data.endIndex + 1, totalEnds));
+        binding.endTitle.setText(getString(R.string.end_x_of_y, data.getEndIndex() + 1, totalEnds));
         binding.roundTitle.setText(getString(
                 R.string.round_x_of_y,
                 data.getCurrentRound().getIndex() + 1,
-                data.training.loadRounds().size()));
+                data.getTraining().loadRounds().size()));
         updateNavigationButtons();
         updateWearNotification();
     }
 
     private void updateWearNotification() {
-        ApplicationInstance.wearableClient.sendUpdateTrainingFromLocalBroadcast(new AugmentedTraining(data.training));
+        ApplicationInstance.wearableClient.sendUpdateTrainingFromLocalBroadcast(new AugmentedTraining(data
+                .getTraining()));
     }
 
     private void updateNavigationButtons() {
@@ -420,18 +415,18 @@ public class InputActivity extends ChildActivityBase
     }
 
     private void updatePreviousButton() {
-        final boolean isFirstEnd = data.endIndex == 0;
-        final boolean isFirstRound = data.roundIndex == 0;
+        final boolean isFirstEnd = data.getEndIndex() == 0;
+        final boolean isFirstRound = data.getRoundIndex() == 0;
         boolean showPreviousRound = isFirstEnd && !isFirstRound;
         final boolean isEnabled = !isFirstEnd || !isFirstRound;
         final int color;
         if (showPreviousRound) {
-            final Round round = data.training.loadRounds().get(data.roundIndex - 1);
+            final Round round = data.getTraining().loadRounds().get(data.getRoundIndex() - 1);
             binding.prev.setOnClickListener(view -> openRound(round, round.loadEnds().size() - 1));
             binding.prev.setText(R.string.previous_round);
             color = getResources().getColor(R.color.colorPrimary);
         } else {
-            binding.prev.setOnClickListener(view -> showEnd(data.endIndex - 1));
+            binding.prev.setOnClickListener(view -> showEnd(data.getEndIndex() - 1));
             binding.prev.setText(R.string.prev);
             color = Color.BLACK;
         }
@@ -443,19 +438,19 @@ public class InputActivity extends ChildActivityBase
         final boolean dataLoaded = data != null;
         boolean isLastEnd = dataLoaded &&
                 data.getCurrentRound().getMaxEndCount() != null &&
-                data.endIndex + 1 == data.getCurrentRound().getMaxEndCount();
+                data.getEndIndex() + 1 == data.getCurrentRound().getMaxEndCount();
         final boolean hasOneMoreRound = dataLoaded &&
-                data.roundIndex + 1 < data.training.loadRounds().size();
+                data.getRoundIndex() + 1 < data.getTraining().loadRounds().size();
         boolean showNextRound = isLastEnd && hasOneMoreRound;
         final boolean isEnabled = dataLoaded && (!isLastEnd || hasOneMoreRound);
         final int color;
         if (showNextRound) {
-            final Round round = data.training.loadRounds().get(data.roundIndex + 1);
+            final Round round = data.getTraining().loadRounds().get(data.getRoundIndex() + 1);
             binding.next.setOnClickListener(view -> openRound(round, 0));
             binding.next.setText(R.string.next_round);
             color = getResources().getColor(R.color.colorPrimary);
         } else {
-            binding.next.setOnClickListener(view -> showEnd(data.endIndex + 1));
+            binding.next.setOnClickListener(view -> showEnd(data.getEndIndex() + 1));
             binding.next.setText(R.string.next);
             color = Color.BLACK;
         }
@@ -491,7 +486,7 @@ public class InputActivity extends ChildActivityBase
         binding.roundScore.setText(reachedRoundScore.toString());
 
         // Set current training score
-        Score reachedTrainingScore = Stream.of(data.training.loadRounds())
+        Score reachedTrainingScore = Stream.of(data.getTraining().loadRounds())
                 .flatMap(r -> Stream.of(r.loadEnds())
                         .map(end -> r.getTarget().getReachedScore(end)))
                 .scoreSum();
@@ -559,77 +554,10 @@ public class InputActivity extends ChildActivityBase
             }
             final Bow bow = training.getBow();
             if (bow != null) {
-                result.sightMark = bow.loadSightSetting(result.getDistance());
+                result.setSightMark(bow.loadSightSetting(result.getDistance()));
             }
             return result;
         }
     }
 
-    @Parcel
-    static class LoaderResult {
-        @NonNull
-        final Training training;
-        @Nullable
-        StandardRound standardRound;
-        @Nullable
-        Dimension arrowDiameter = new Dimension(5, Dimension.Unit.MILLIMETER);
-        @Nullable
-        SightMark sightMark = null;
-        int roundIndex = 0;
-        int endIndex = 0;
-        int maxArrowNumber = 12;
-
-        @ParcelConstructor
-        public LoaderResult(@NonNull Training training) {
-            this.training = training.ensureLoaded();
-            this.standardRound = training.getStandardRound();
-        }
-
-        public void setRoundId(long roundId) {
-            List<Round> rounds = training.loadRounds();
-            roundIndex = 0;
-            for (int i = 0; i < rounds.size(); i++) {
-                if (rounds.get(i).getId() == roundId) {
-                    roundIndex = i;
-                    break;
-                }
-            }
-        }
-
-        public void setEndIndex(int endIndex) {
-            this.endIndex = Math.min(endIndex, getCurrentRound().loadEnds().size());
-        }
-
-        @Nullable
-        public Dimension getDistance() {
-            return getCurrentRound().getDistance();
-        }
-
-        @NonNull
-        private List<End> getEnds() {
-            return getCurrentRound().loadEnds();
-        }
-
-        @NonNull
-        private Round getCurrentRound() {
-            return training.loadRounds().get(roundIndex);
-        }
-
-        @NonNull
-        private End getCurrentEnd() {
-            List<End> ends = getEnds();
-            if (ends.size() <= endIndex || endIndex < 0 || ends.size() == 0) {
-                endIndex = ends.size();
-                End end = getCurrentRound().addEnd();
-                end.setExact(SettingsManager.INSTANCE.getInputMethod() == EInputMethod.PLOTTING);
-                ends = getEnds();
-            }
-            return ends.get(endIndex);
-        }
-
-        public void setArrow(@NonNull Arrow arrow) {
-            maxArrowNumber = arrow.getMaxArrowNumber();
-            arrowDiameter = arrow.getDiameter();
-        }
-    }
 }
