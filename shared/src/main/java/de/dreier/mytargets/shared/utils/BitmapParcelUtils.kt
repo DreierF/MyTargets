@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils.typeconverters
+package de.dreier.mytargets.shared.utils
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
