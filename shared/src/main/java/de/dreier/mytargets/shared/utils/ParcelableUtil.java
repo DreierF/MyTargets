@@ -19,32 +19,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import org.parceler.Parcels;
-
-import java.lang.reflect.Array;
-
 public class ParcelableUtil {
-    public static class Creator<T> implements Parcelable.Creator<T> {
-        private final Class<? extends T> type;
-
-        public Creator(Class<? extends T> type) {
-            this.type = type;
-        }
-
-        public T createFromParcel(@NonNull Parcel parcel) {
-            return Parcels.unwrap(parcel.readParcelable(type.getClassLoader()));
-        }
-
-        @NonNull
-        @Override
-        public T[] newArray(int i) {
-            return (T[]) Array.newInstance(type, i);
-        }
-    }
-
-    public static byte[] marshall(@NonNull Parcelable parceable) {
+    public static byte[] marshall(@NonNull Parcelable parcelable) {
         Parcel parcel = Parcel.obtain();
-        parceable.writeToParcel(parcel, 0);
+        parcelable.writeToParcel(parcel, 0);
         byte[] bytes = parcel.marshall();
         parcel.recycle();
         return bytes;

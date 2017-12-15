@@ -13,297 +13,233 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models.db;
+package de.dreier.mytargets.shared.models.db
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
+import android.annotation.SuppressLint
+import android.os.Parcelable
+import android.support.v4.util.Pair
+import com.raizlabs.android.dbflow.annotation.*
+import com.raizlabs.android.dbflow.config.FlowManager
+import com.raizlabs.android.dbflow.sql.language.SQLite
+import com.raizlabs.android.dbflow.structure.BaseModel
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
+import de.dreier.mytargets.shared.AppDatabase
+import de.dreier.mytargets.shared.models.IIdSettable
+import de.dreier.mytargets.shared.models.IRecursiveModel
+import de.dreier.mytargets.shared.models.SelectableZone
+import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.utils.typeconverters.LocalTimeConverter
+import kotlinx.android.parcel.Parcelize
+import org.threeten.bp.LocalTime
+import java.util.*
 
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ForeignKey;
-import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
-import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
-import com.raizlabs.android.dbflow.annotation.OneToMany;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.structure.BaseModel;
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
+@SuppressLint("ParcelCreator")
+@Parcelize
+@Table(database = AppDatabase::class)
+data class End(
 
-import org.parceler.Parcel;
-import org.threeten.bp.LocalTime;
+        @Column(name = "_id")
+        @PrimaryKey(autoincrement = true)
+        override var id: Long? = null,
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+        @Column
+        var index: Int = 0,
 
-import de.dreier.mytargets.shared.AppDatabase;
-import de.dreier.mytargets.shared.models.IIdSettable;
-import de.dreier.mytargets.shared.models.IRecursiveModel;
-import de.dreier.mytargets.shared.models.SelectableZone;
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-import de.dreier.mytargets.shared.utils.typeconverters.LocalTimeConverter;
+        @ForeignKey(tableClass = Round::class, references = [(ForeignKeyReference(columnName = "round", columnType = Long::class, foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
+        var roundId: Long? = null,
 
-@Parcel
-@Table(database = AppDatabase.class)
-public class End extends BaseModel implements IIdSettable, Comparable<End>, IRecursiveModel {
+        @Column(getterName = "getExact", setterName = "setExact")
+        var exact: Boolean = false,
 
-    @Nullable
-    @Column(name = "_id")
-    @PrimaryKey(autoincrement = true)
-    Long id;
+        @Column(typeConverter = LocalTimeConverter::class)
+        var saveTime: LocalTime? = null,
 
-    @Column
-    public int index;
+        @Column
+        var comment: String? = ""
+) : BaseModel(), IIdSettable, Comparable<End>, IRecursiveModel, Parcelable {
 
-    public List<EndImage> images;
+    @Transient
+    var images: List<EndImage>? = null
 
-    @Nullable
-    @ForeignKey(tableClass = Round.class, references = {
-            @ForeignKeyReference(columnName = "round", columnType = Long.class, foreignKeyColumnName = "_id")},
-            onDelete = ForeignKeyAction.CASCADE)
-    public Long roundId;
+    @Transient
+    internal var shots: MutableList<Shot>? = null
 
-    @Column
-    public boolean exact;
+    val isEmpty: Boolean
+        get() = loadShots()!!.any { it.scoringRing == Shot.NOTHING_SELECTED } && loadImages()!!.isEmpty()
 
-    @Nullable
-    @Column(typeConverter = LocalTimeConverter.class)
-    public LocalTime saveTime;
-
-    @Nullable
-    @Column
-    public String comment = "";
-
-    List<Shot> shots;
-
-    public End() {
-    }
-
-    public End(int shotCount, int index) {
-        this.index = index;
-        shots = new ArrayList<>();
-        for (int i = 0; i < shotCount; i++) {
-            shots.add(new Shot(i));
+    constructor(shotCount: Int, index: Int) : this(index = index) {
+        shots = ArrayList()
+        for (i in 0 until shotCount) {
+            shots!!.add(Shot(i))
         }
     }
 
-    public End(@NonNull End end) {
-        this.index = end.index;
-        this.shots = new ArrayList<>(end.getShots());
+    constructor(end: End) : this(index = end.index) {
+        this.shots = ArrayList(end.loadShots())
     }
 
-    @NonNull
-    @OneToMany(methods = {}, variableName = "shots")
-    public List<Shot> getShots() {
+    @OneToMany(methods = [], variableName = "shots")
+    fun loadShots(): List<Shot>? {
         if (shots == null) {
-            shots = SQLite.select()
-                    .from(Shot.class)
+            shots = if (id == null) mutableListOf() else SQLite.select()
+                    .from(Shot::class.java)
                     .where(Shot_Table.end.eq(id))
-                    .queryList();
+                    .queryList()
         }
-        return shots;
+        return shots
     }
 
-    @OneToMany(methods = {}, variableName = "images")
-    public List<EndImage> getImages() {
+    @OneToMany(methods = [], variableName = "images")
+    fun loadImages(): List<EndImage>? {
         if (images == null) {
-            images = SQLite.select()
-                    .from(EndImage.class)
-                    .where(EndImage_Table.end.eq(id))
-                    .queryList();
+            images = if (id == null) mutableListOf() else SQLite.select()
+                    .from(EndImage::class.java)
+                    .where(EndImage_Table.end.eq(id!!))
+                    .queryList()
         }
-        return images;
+        return images
     }
 
-    public void setShots(List<Shot> shots) {
-        this.shots = shots;
+    fun setShots(shots: MutableList<Shot>) {
+        this.shots = shots
     }
 
-    @NonNull
-    private static Map<SelectableZone, Integer> getRoundScores(@NonNull List<Round> rounds) {
-        final Target t = rounds.get(0).getTarget();
-        Map<SelectableZone, Integer> scoreCount = getAllPossibleZones(t);
-        for (Round round : rounds) {
-            for (End end : round.getEnds()) {
-                for (Shot s : end.getShots()) {
-                    if (s.scoringRing != Shot.NOTHING_SELECTED) {
-                        SelectableZone tuple = new SelectableZone(s.scoringRing,
-                                t.getModel().getZone(s.scoringRing),
-                                t.zoneToString(s.scoringRing, s.index),
-                                t.getScoreByZone(s.scoringRing, s.index));
-                        final Integer integer = scoreCount.get(tuple);
-                        if (integer != null) {
-                            int count = integer + 1;
-                            scoreCount.put(tuple, count);
-                        }
-                    }
-                }
-            }
-        }
-        return scoreCount;
+    override fun save() {
+        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.save(it) })
     }
 
-    @NonNull
-    private static Map<SelectableZone, Integer> getAllPossibleZones(@NonNull Target t) {
-        Map<SelectableZone, Integer> scoreCount = new HashMap<>();
-        for (int arrow = 0; arrow < 3; arrow++) {
-            final List<SelectableZone> zoneList = t.getSelectableZoneList(arrow);
-            for (SelectableZone selectableZone : zoneList) {
-                scoreCount.put(selectableZone, 0);
-            }
-            if (!t.getModel().dependsOnArrowIndex()) {
-                break;
-            }
-        }
-        return scoreCount;
-    }
-
-    public static List<Pair<String, Integer>> getTopScoreDistribution(@NonNull List<Map.Entry<SelectableZone, Integer>> sortedScore) {
-        final List<Pair<String, Integer>> result = Stream.of(sortedScore)
-                .map(value -> new Pair<>(value.getKey().text, value.getValue()))
-                .toList();
-
-        // Collapse first two entries if they yield the same score points,
-        // e.g. 10 and X => {X, 10+X, 9, ...}
-        if (sortedScore.size() > 1) {
-            Map.Entry<SelectableZone, Integer> first = sortedScore.get(0);
-            Map.Entry<SelectableZone, Integer> second = sortedScore.get(1);
-            if (first.getKey().points == second.getKey().points) {
-                final String newTitle = second.getKey().text + "+" + first.getKey().text;
-                result.set(1, new Pair<>(newTitle, second.getValue() + first.getValue()));
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Compound 9ers are already collapsed to one SelectableZone.
-     */
-    public static List<Map.Entry<SelectableZone, Integer>> getSortedScoreDistribution(@NonNull List<Round> rounds) {
-        Map<SelectableZone, Integer> scoreCount = getRoundScores(rounds);
-        return Stream.of(scoreCount)
-                .sorted((lhs, rhs) -> lhs.getKey().compareTo(rhs.getKey()))
-                .toList();
-    }
-
-    @Nullable
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(@Nullable Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public void save() {
-        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::save);
-    }
-
-    @Override
-    public void save(DatabaseWrapper databaseWrapper) {
+    override fun save(databaseWrapper: DatabaseWrapper) {
         if (saveTime == null) {
-            saveTime = LocalTime.now();
+            saveTime = LocalTime.now()
         }
-        super.save(databaseWrapper);
+        super.save(databaseWrapper)
         if (shots != null) {
-            SQLite.delete(Shot.class)
+            SQLite.delete(Shot::class.java)
                     .where(Shot_Table.end.eq(id))
-                    .execute(databaseWrapper);
+                    .execute(databaseWrapper)
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-            for (Shot s : shots) {
-                s.endId = id;
-                s.save(databaseWrapper);
+            for (s in shots!!) {
+                s.endId = id
+                s.save(databaseWrapper)
             }
         }
         if (images != null) {
-            SQLite.delete(EndImage.class)
-                    .where(EndImage_Table.end.eq(id))
-                    .execute(databaseWrapper);
+            SQLite.delete(EndImage::class.java)
+                    .where(EndImage_Table.end.eq(id!!))
+                    .execute(databaseWrapper)
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-            for (EndImage image : getImages()) {
-                image.setEndId(id);
-                image.save(databaseWrapper);
+            loadImages()?.forEach { image ->
+                image.endId = id
+                image.save(databaseWrapper)
             }
         }
     }
 
-    @Override
-    public void delete() {
-        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::delete);
+    override fun delete() {
+        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.delete(it) })
     }
 
-    @Override
-    public void delete(DatabaseWrapper databaseWrapper) {
-        for (Shot shot : getShots()) {
-            shot.delete(databaseWrapper);
-        }
-        for (EndImage endImage : getImages()) {
-            endImage.delete(databaseWrapper);
-        }
-        super.delete(databaseWrapper);
-        updateEndIndicesForRound(databaseWrapper);
+    override fun delete(databaseWrapper: DatabaseWrapper) {
+        loadShots()?.forEach { it.delete(databaseWrapper) }
+        loadImages()?.forEach { it.delete(databaseWrapper) }
+        super.delete(databaseWrapper)
+        updateEndIndicesForRound(databaseWrapper)
     }
 
-    private void updateEndIndicesForRound(DatabaseWrapper databaseWrapper) {
+    private fun updateEndIndicesForRound(databaseWrapper: DatabaseWrapper) {
         // FIXME very inefficient
-        Round round = Round.get(roundId);
-        if (round == null) {
-            return;
-        }
+        val round = Round.get(roundId) ?: return
 
-        int i = 0;
-        for (End end : round.getEnds(databaseWrapper)) {
-            end.index = i;
-            end.save(databaseWrapper);
-            i++;
+        var i = 0
+        for (end in round.getEnds(databaseWrapper)) {
+            end.index = i
+            end.save(databaseWrapper)
+            i++
         }
     }
 
-    @Override
-    public boolean equals(Object another) {
-        return another instanceof End &&
-                getClass().equals(another.getClass()) &&
-                id.equals(((End) another).id);
+    override fun compareTo(other: End) = compareBy(End::index).compare(this, other)
+
+    override fun saveRecursively() {
+        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.saveRecursively(it) })
     }
 
-    @Override
-    public int compareTo(@NonNull End end) {
-        return index - end.index;
-    }
+    override fun saveRecursively(databaseWrapper: DatabaseWrapper) {
+        val round = Round.get(roundId)
+        val ends = round!!.getEnds(databaseWrapper)
 
-    public boolean isEmpty() {
-        return Stream.of(getShots())
-                .anyMatch(s -> s.scoringRing == Shot.NOTHING_SELECTED) && getImages().isEmpty();
-    }
-
-    @Override
-    public void saveRecursively() {
-        FlowManager.getDatabase(AppDatabase.class).executeTransaction(this::saveRecursively);
-    }
-
-    @Override
-    public void saveRecursively(DatabaseWrapper databaseWrapper) {
-        Round round = Round.get(roundId);
-        List<End> ends = round.getEnds(databaseWrapper);
-
-        int pos = Collections.binarySearch(ends, this);
+        val pos = Collections.binarySearch(ends, this)
         if (pos < 0) {
-            ends.add(-pos - 1, this);
+            ends.add(-pos - 1, this)
         } else {
-            ends.add(pos, this);
+            ends.add(pos, this)
         }
 
-        int i = 0;
-        for (End end : ends) {
-            end.index = i;
-            end.save(databaseWrapper);
-            i++;
+        for ((i, end) in ends.withIndex()) {
+            end.index = i
+            end.save(databaseWrapper)
+        }
+    }
+
+    companion object {
+
+        private fun getRoundScores(rounds: List<Round>): Map<SelectableZone, Int> {
+            val t = rounds[0].target
+            val scoreCount = getAllPossibleZones(t!!)
+            rounds.flatMap { it.getEnds() }
+                    .forEach {
+                        it.loadShots()?.forEach { s ->
+                            if (s.scoringRing != Shot.NOTHING_SELECTED) {
+                                val tuple = SelectableZone(s.scoringRing,
+                                        t.model.getZone(s.scoringRing),
+                                        t.zoneToString(s.scoringRing, s.index),
+                                        t.getScoreByZone(s.scoringRing, s.index))
+                                val integer = scoreCount[tuple]
+                                if (integer != null) {
+                                    val count = integer + 1
+                                    scoreCount.put(tuple, count)
+                                }
+                            }
+                        }
+                    }
+            return scoreCount
+        }
+
+        private fun getAllPossibleZones(t: Target): MutableMap<SelectableZone, Int> {
+            val scoreCount = HashMap<SelectableZone, Int>()
+            for (arrow in 0..2) {
+                val zoneList = t.getSelectableZoneList(arrow)
+                for (selectableZone in zoneList) {
+                    scoreCount.put(selectableZone, 0)
+                }
+                if (!t.model.dependsOnArrowIndex()) {
+                    break
+                }
+            }
+            return scoreCount
+        }
+
+        fun getTopScoreDistribution(sortedScore: List<java.util.Map.Entry<SelectableZone, Int>>): List<Pair<String, Int>> {
+            val result = sortedScore.map { Pair(it.key.text, it.value) }.toMutableList()
+
+            // Collapse first two entries if they yield the same score points,
+            // e.g. 10 and X => {X, 10+X, 9, ...}
+            if (sortedScore.size > 1) {
+                val first = sortedScore[0]
+                val second = sortedScore[1]
+                if (first.key.points == second.key.points) {
+                    val newTitle = second.key.text + "+" + first.key.text
+                    result[1] = Pair(newTitle, second.value + first.value)
+                }
+            }
+            return result
+        }
+
+        /**
+         * Compound 9ers are already collapsed to one SelectableZone.
+         */
+        fun getSortedScoreDistribution(rounds: List<Round>): List<Map.Entry<SelectableZone, Int>> {
+            return getRoundScores(rounds).entries.sortedBy { it.key }
         }
     }
 }

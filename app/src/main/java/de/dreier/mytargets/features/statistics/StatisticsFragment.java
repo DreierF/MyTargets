@@ -197,8 +197,8 @@ public class StatisticsFragment extends FragmentBase {
     private void showDispersionView() {
         final List<Shot> exactShots = Stream.of(rounds)
                 .flatMap(r -> Stream.of(r.getEnds()))
-                .filter(p -> p.exact)
-                .flatMap(p -> Stream.of(p.getShots()))
+                .filter(p -> p.getExact())
+                .flatMap(p -> Stream.of(p.loadShots()))
                 .filter(p -> p.scoringRing != Shot.NOTHING_SELECTED)
                 .toList();
         if (exactShots.isEmpty()) {
@@ -296,7 +296,7 @@ public class StatisticsFragment extends FragmentBase {
     }
 
     private void addPieData() {
-        List<Map.Entry<SelectableZone, Integer>> scores = End
+        List<Map.Entry<SelectableZone, Integer>> scores = End.Companion
                 .getSortedScoreDistribution(rounds);
 
         ArrayList<PieEntry> yValues = new ArrayList<>();
@@ -354,7 +354,7 @@ public class StatisticsFragment extends FragmentBase {
     private String getHitMissText() {
         final List<Shot> shots = Stream.of(rounds)
                 .flatMap(r -> Stream.of(r.getEnds()))
-                .flatMap(p -> Stream.of(p.getShots()))
+                .flatMap(p -> Stream.of(p.loadShots()))
                 .filter(p -> p.scoringRing !=
                         Shot.NOTHING_SELECTED) //TODO: Refactor to not save NOTHING_SELECTED at all
                 .toList();
@@ -454,7 +454,7 @@ public class StatisticsFragment extends FragmentBase {
     private Pair<Float, LocalDateTime> getPairEndSummary(@NonNull Target target, @NonNull End end, @NonNull LocalDate trainingDate) {
         Score reachedScore = target.getReachedScore(end);
         return new Pair<>(reachedScore.getShotAverage(),
-                LocalDateTime.of(trainingDate, end.saveTime));
+                LocalDateTime.of(trainingDate, end.getSaveTime()));
     }
 
     @NonNull

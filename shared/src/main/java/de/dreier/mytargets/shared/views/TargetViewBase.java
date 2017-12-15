@@ -141,7 +141,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
     }
 
     public void setEnd(@NonNull End end) {
-        shots = end.getShots();
+        shots = end.loadShots();
         setCurrentShotIndex(getNextShotIndex(-1));
         endRenderer.setShots(shots);
         endRenderer.setSelection(getCurrentShotIndex(), null, EndRenderer.MAX_CIRCLE_SIZE);

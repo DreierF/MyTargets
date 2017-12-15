@@ -62,8 +62,6 @@ import de.dreier.mytargets.shared.utils.ParcelsBundler;
 import de.dreier.mytargets.shared.utils.SharedUtils;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 import static android.support.v4.view.GravityCompat.END;
 

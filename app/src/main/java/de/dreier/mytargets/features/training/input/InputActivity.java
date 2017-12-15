@@ -112,7 +112,7 @@ public class InputActivity extends ChildActivityBase
             Bundle extras = getIntent().getExtras();
             extras.putLong(TRAINING_ID, trainingId);
             extras.putLong(ROUND_ID, roundId);
-            extras.putInt(END_INDEX, end.index);
+            extras.putInt(END_INDEX, end.getIndex());
             getSupportLoaderManager().restartLoader(0, extras, InputActivity.this).forceLoad();
         }
     };
@@ -143,7 +143,7 @@ public class InputActivity extends ChildActivityBase
     }
 
     private static boolean shouldShowEnd(@NonNull End end, Long currentEndId) {
-        return !SharedUtils.equals(end.getId(), currentEndId) && end.exact;
+        return !SharedUtils.equals(end.getId(), currentEndId) && end.getExact();
     }
 
     @Override
@@ -186,7 +186,7 @@ public class InputActivity extends ChildActivityBase
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
             ImageList imageList = GalleryActivity.getResult(data);
-            this.data.getCurrentEnd().images = imageList.toEndImageList();
+            this.data.getCurrentEnd().setImages(imageList.toEndImageList());
             for (String image : imageList.getRemovedImages()) {
                 new File(getFilesDir(), image).delete();
             }
@@ -273,8 +273,8 @@ public class InputActivity extends ChildActivityBase
                 new MaterialDialog.Builder(this)
                         .title(R.string.comment)
                         .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE)
-                        .input("", data.getCurrentEnd().comment, (dialog, input) -> {
-                            data.getCurrentEnd().comment = input.toString();
+                        .input("", data.getCurrentEnd().getComment(), (dialog, input) -> {
+                            data.getCurrentEnd().setComment(input.toString());
                             data.getCurrentEnd().save();
                         })
                         .negativeText(android.R.string.cancel)
@@ -346,7 +346,7 @@ public class InputActivity extends ChildActivityBase
         data.endIndex = endIndex;
         if (endIndex >= data.getEnds().size()) {
             End end = data.getCurrentRound().addEnd();
-            end.exact = SettingsManager.INSTANCE.getInputMethod() == EInputMethod.PLOTTING;
+            end.setExact(SettingsManager.INSTANCE.getInputMethod() == EInputMethod.PLOTTING);
             updateOldShoots();
         }
 
@@ -366,7 +366,7 @@ public class InputActivity extends ChildActivityBase
                 .filter((r) -> shouldShowRound(r, shotShowScope, currentRoundId))
                 .flatMap(r -> Stream.of(r.getEnds()))
                 .filter((end) -> shouldShowEnd(end, currentEndId))
-                .flatMap(p -> Stream.of(p.getShots()));
+                .flatMap(p -> Stream.of(p.loadShots()));
         targetView.setTransparentShots(shotStream);
     }
 
@@ -517,7 +517,7 @@ public class InputActivity extends ChildActivityBase
     @Override
     public void onEndFinished(List<Shot> shots) {
         data.getCurrentEnd().setShots(shots);
-        data.getCurrentEnd().exact = targetView.getInputMode() == EInputMethod.PLOTTING;
+        data.getCurrentEnd().setExact(targetView.getInputMode() == EInputMethod.PLOTTING);
         data.getCurrentEnd().save();
 
         updateWearNotification();
@@ -620,7 +620,7 @@ public class InputActivity extends ChildActivityBase
             if (ends.size() <= endIndex || endIndex < 0 || ends.size() == 0) {
                 endIndex = ends.size();
                 End end = getCurrentRound().addEnd();
-                end.exact = SettingsManager.INSTANCE.getInputMethod() == EInputMethod.PLOTTING;
+                end.setExact(SettingsManager.INSTANCE.getInputMethod() == EInputMethod.PLOTTING);
                 ends = getEnds();
             }
             return ends.get(endIndex);

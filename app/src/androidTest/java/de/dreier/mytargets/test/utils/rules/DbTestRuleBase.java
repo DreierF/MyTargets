@@ -68,10 +68,10 @@ public abstract class DbTestRuleBase implements TestRule {
     @NonNull
     protected End buildEnd(@NonNull Round round, @NonNull int... shots) {
         End end = round.addEnd();
-        end.roundId = round.getId();
+        end.setRoundId(round.getId());
         for (int i = 0; i < shots.length; i++) {
-            end.getShots().get(i).index = i;
-            end.getShots().get(i).scoringRing = shots[i];
+            end.loadShots().get(i).index = i;
+            end.loadShots().get(i).scoringRing = shots[i];
         }
         return end;
     }
@@ -79,17 +79,17 @@ public abstract class DbTestRuleBase implements TestRule {
     @NonNull
     protected End randomEnd(@NonNull Round round, int arrowsPerEnd, @NonNull Random gen, int index) {
         End end = new End(arrowsPerEnd, index);
-        end.roundId = round.getId();
-        end.exact = true;
+        end.setRoundId(round.getId());
+        end.setExact(true);
         for (int i = 0; i < arrowsPerEnd; i++) {
-            end.getShots().get(i).index = i;
-            end.getShots().get(i).x = gaussianRand(gen);
-            end.getShots().get(i).y = gaussianRand(gen);
-            end.getShots().get(i).scoringRing = round.getTarget().getModel()
-                    .getZoneFromPoint(end.getShots().get(i).x,
-                            end.getShots().get(i).y, 0.05f);
+            end.loadShots().get(i).index = i;
+            end.loadShots().get(i).x = gaussianRand(gen);
+            end.loadShots().get(i).y = gaussianRand(gen);
+            end.loadShots().get(i).scoringRing = round.getTarget().getModel()
+                    .getZoneFromPoint(end.loadShots().get(i).x,
+                            end.loadShots().get(i).y, 0.05f);
         }
-        end.saveTime = LocalTime.of(14, gen.nextInt(59), gen.nextInt(59), 0);
+        end.setSaveTime(LocalTime.of(14, gen.nextInt(59), gen.nextInt(59), 0));
         return end;
     }
 

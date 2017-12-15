@@ -136,7 +136,7 @@ public class ScoringStyle {
     }
 
     public Score getReachedScore(@NonNull End end) {
-        return Stream.of(end.getShots())
+        return Stream.of(end.loadShots())
                 .map(this::getReachedScore)
                 .scoreSum();
     }

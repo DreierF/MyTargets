@@ -34,7 +34,7 @@ public class ColorScoringStyle extends ScoringStyle {
     @NonNull
     @Override
     public Score getReachedScore(@NonNull End end) {
-        int reachedScore = Stream.of(end.getShots())
+        int reachedScore = Stream.of(end.loadShots())
                 .map(s -> getScoreByScoringRing(s.scoringRing, s.index))
                 .distinct()
                 .reducing(0, (a, b) -> a + b);

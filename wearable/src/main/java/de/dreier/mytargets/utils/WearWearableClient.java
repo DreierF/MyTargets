@@ -26,7 +26,7 @@ import org.parceler.Parcels;
 
 import de.dreier.mytargets.shared.models.TimerSettings;
 import de.dreier.mytargets.shared.models.TrainingInfo;
-import de.dreier.mytargets.shared.models.db.End;
+import de.dreier.mytargets.shared.models.augmented.AugmentedEnd;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.ParcelableUtil;
 import de.dreier.mytargets.shared.wearable.WearableClientBase;
@@ -58,7 +58,7 @@ public class WearWearableClient extends WearableClientBase {
                     createTraining(training);
                     break;
                 case BROADCAST_UPDATE_END_FROM_LOCAL:
-                    End end = unwrap(intent.getParcelableExtra(EXTRA_END));
+                    AugmentedEnd end = intent.getParcelableExtra(EXTRA_END);
                     updateEnd(end);
                     break;
                 default:
@@ -82,8 +82,8 @@ public class WearWearableClient extends WearableClientBase {
         super.disconnect();
     }
 
-    private void updateEnd(End end) {
-        final byte[] data = ParcelableUtil.marshall(Parcels.wrap(end));
+    private void updateEnd(AugmentedEnd end) {
+        final byte[] data = ParcelableUtil.marshall(end);
         sendMessage(WearableClientBase.END_UPDATE, data);
     }
 
@@ -98,9 +98,9 @@ public class WearWearableClient extends WearableClientBase {
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
-    public void sendEndUpdate(End end) {
+    public void sendEndUpdate(AugmentedEnd end) {
         Intent intent = new Intent(BROADCAST_UPDATE_END_FROM_LOCAL);
-        intent.putExtra(EXTRA_END, Parcels.wrap(end));
+        intent.putExtra(EXTRA_END, end);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 

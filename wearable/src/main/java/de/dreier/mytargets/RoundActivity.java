@@ -218,8 +218,8 @@ public class RoundActivity extends WearableActivity {
             if (holder instanceof ViewHolder) {
                 End end = ends.get(position);
                 ViewHolder viewHolder = (ViewHolder) holder;
-                viewHolder.end.setText(getString(R.string.end_n, end.index + 1));
-                viewHolder.shots.setShots(round.getTarget(), end.getShots());
+                viewHolder.end.setText(getString(R.string.end_n, end.getIndex() + 1));
+                viewHolder.shots.setShots(round.getTarget(), end.loadShots());
 
                 viewHolder.end.setTextColor(ContextCompat.getColor(RoundActivity.this,
                         isAmbient() ? R.color.md_white_1000 :

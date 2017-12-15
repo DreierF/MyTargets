@@ -42,7 +42,6 @@ import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.utils.SharedUtils;
 
-import static de.dreier.mytargets.shared.models.db.End.getSortedScoreDistribution;
 import static de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle.MISS_SYMBOL;
 
 public class DefaultScoreboardLayout {
@@ -196,7 +195,8 @@ public class DefaultScoreboardLayout {
 
     @NonNull
     private Table getStatisticsForRound(@NonNull List<Round> rounds) {
-        List<Map.Entry<SelectableZone, Integer>> scoreDistribution = getSortedScoreDistribution(
+        List<Map.Entry<SelectableZone, Integer>> scoreDistribution = End.Companion
+                .getSortedScoreDistribution(
                 rounds);
         int hits = 0;
         int total = 0;
@@ -207,7 +207,7 @@ public class DefaultScoreboardLayout {
             total += score.getValue();
         }
 
-        List<Pair<String, Integer>> topScores = End.getTopScoreDistribution(scoreDistribution);
+        List<Pair<String, Integer>> topScores = End.Companion.getTopScoreDistribution(scoreDistribution);
 
         Table table = new Table(false);
         Table.Row row = table.startRow();
@@ -247,9 +247,9 @@ public class DefaultScoreboardLayout {
         int carry = 0;
         for (End end : round.getEnds()) {
             Table.Row row = table.startRow();
-            row.addCell(end.index + 1);
+            row.addCell(end.getIndex() + 1);
             int sum = 0;
-            final List<Shot> shots = new ArrayList<>(end.getShots());
+            final List<Shot> shots = new ArrayList<>(end.loadShots());
             if (SettingsManager.INSTANCE.shouldSortTarget(round.getTarget())) {
                 Collections.sort(shots);
             }
@@ -305,11 +305,11 @@ public class DefaultScoreboardLayout {
         for (Round round : rounds) {
             List<End> ends = round.getEnds();
             for (End end : ends) {
-                if (!TextUtils.isEmpty(end.comment)) {
+                if (!TextUtils.isEmpty(end.getComment())) {
                     comments.startRow()
                             .addCell(round.index + 1)
-                            .addCell(end.index + 1)
-                            .addCell(end.comment);
+                            .addCell(end.getIndex() + 1)
+                            .addCell(end.getComment());
                     commentsCount++;
                 }
             }

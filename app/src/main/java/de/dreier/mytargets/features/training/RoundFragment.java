@@ -198,13 +198,13 @@ public class RoundFragment extends EditableListFragment<End> {
 
     @Override
     protected void onItemSelected(@NonNull End item) {
-        InputActivity.getIntent(round, item.index)
+        InputActivity.getIntent(round, item.getIndex())
                 .withContext(this)
                 .start();
     }
 
     protected void onEdit(Long itemId) {
-        InputActivity.getIntent(round, adapter.getItemById(itemId).index)
+        InputActivity.getIntent(round, adapter.getItemById(itemId).getIndex())
                 .withContext(this)
                 .start();
     }
@@ -231,14 +231,14 @@ public class RoundFragment extends EditableListFragment<End> {
 
         @Override
         public void bindItem() {
-            List<Shot> shots = item.getShots();
+            List<Shot> shots = item.loadShots();
             if (SettingsManager.INSTANCE.shouldSortTarget(round.getTarget())) {
                 Collections.sort(shots);
             }
             binding.shoots.setShots(round.getTarget(), shots);
             binding.imageIndicator
                     .setVisibility(item.getImages().isEmpty() ? View.INVISIBLE : View.VISIBLE);
-            binding.end.setText(getString(R.string.end_n, item.index + 1));
+            binding.end.setText(getString(R.string.end_n, item.getIndex() + 1));
         }
     }
 }
