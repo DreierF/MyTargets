@@ -13,30 +13,11 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils;
+package de.dreier.mytargets.shared.utils
 
-import android.support.annotation.NonNull;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class LongUtils {
-    @NonNull
-    public static long[] toArray(@NonNull List<Long> values) {
-        long[] result = new long[values.size()];
-        int i = 0;
-        for (Long l : values) {
-            result[i++] = l;
-        }
-        return result;
-    }
-
-    @NonNull
-    public static List<Long> toList(@NonNull long[] array) {
-        List<Long> list = new ArrayList<>();
-        for (long value : array) {
-            list.add(value);
-        }
-        return list;
-    }
+object LongUtils {
+    @JvmStatic
+    fun toArray(values: List<Long>) = values.toLongArray()
+    @JvmStatic
+    fun toList(array: LongArray) = array.toList()
 }
