@@ -58,7 +58,7 @@ public class HeartZone extends ZoneBase {
 
         /** The region needs to be bigger, because the Region#contains(x,y) only allows to test for
          * integers, which is obviously to inaccurate for a -1..1 coordinate system. */
-        HEART_REGION = RegionUtils.getScaledRegion(heart, REGION_SCALE_FACTOR);
+        HEART_REGION = RegionUtils.INSTANCE.getScaledRegion(heart, REGION_SCALE_FACTOR);
     }
 
     public HeartZone(float radius, float midpointX, float midpointY, int fillColor, int strokeColor, int strokeWidth) {

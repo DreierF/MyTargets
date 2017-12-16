@@ -203,7 +203,7 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
                 oldImageFile = imageFile;
                 imageFile = File
                         .createTempFile("img", oldImageFile.getName(), getContext().getFilesDir());
-                FileUtils.copy(oldImageFile, imageFile);
+                FileUtils.INSTANCE.copy(oldImageFile, imageFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -70,7 +70,7 @@ public abstract class ZoneBase {
     }
 
     public int getTextColor() {
-        return Color.getContrast(fillColor);
+        return Color.INSTANCE.getContrast(fillColor);
     }
 
     public abstract void drawFill(CanvasWrapper canvas);

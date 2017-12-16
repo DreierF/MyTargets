@@ -13,12 +13,10 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils;
+package de.dreier.mytargets.shared.utils
 
-import android.support.annotation.Nullable;
-
-public class SharedUtils {
-    public static boolean equals(@Nullable Object a, @Nullable Object b) {
-        return (a == b) || (a != null && a.equals(b));
+object SharedUtils {
+    fun equals(a: Any?, b: Any?): Boolean {
+        return a == b
     }
 }

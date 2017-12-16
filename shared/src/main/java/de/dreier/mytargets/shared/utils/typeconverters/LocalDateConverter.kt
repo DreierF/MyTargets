@@ -13,33 +13,21 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils.typeconverters;
+package de.dreier.mytargets.shared.utils.typeconverters
 
-import android.support.annotation.Nullable;
+import com.raizlabs.android.dbflow.converter.TypeConverter
 
-import com.raizlabs.android.dbflow.converter.TypeConverter;
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.format.DateTimeFormatter;
+class LocalDateConverter : TypeConverter<String, LocalDate>() {
 
-public final class LocalDateConverter extends TypeConverter<String, LocalDate> {
-
-    @Nullable
-    @Override
-    public String getDBValue(@Nullable LocalDate model) {
-        if (model != null) {
-            return model.format(DateTimeFormatter.ISO_LOCAL_DATE);
-        }
-        return null;
+    override fun getDBValue(model: LocalDate?): String? {
+        return model?.format(DateTimeFormatter.ISO_LOCAL_DATE)
     }
 
-    @Nullable
-    @Override
-    public LocalDate getModelValue(@Nullable String data) {
-        if (data != null) {
-            return LocalDate.parse(data);
-        }
-        return null;
+    override fun getModelValue(data: String?): LocalDate? {
+        return if (data != null) LocalDate.parse(data) else null
     }
 
 }

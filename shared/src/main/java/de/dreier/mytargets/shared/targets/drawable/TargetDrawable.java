@@ -165,7 +165,7 @@ public class TargetDrawable extends Drawable {
     public boolean equals(Object o) {
         if (o instanceof TargetDrawable) {
             TargetDrawable t = (TargetDrawable) o;
-            return SharedUtils.equals(t.target.getId(), target.getId());
+            return SharedUtils.INSTANCE.equals(t.target.getId(), target.getId());
         }
         return false;
     }

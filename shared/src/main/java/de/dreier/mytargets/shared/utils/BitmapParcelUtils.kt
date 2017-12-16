@@ -19,13 +19,11 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Parcel
 
-import de.dreier.mytargets.shared.utils.BitmapUtils
-
 fun Parcel.writeBitmap(bitmap: Bitmap?) {
     if (bitmap == null) {
         writeInt(0.toByte().toInt())
     } else {
-        val byteArray = BitmapUtils.getBitmapAsByteArray(bitmap)
+        val byteArray = bitmap.toByteArray()
         writeInt(byteArray.size.toByte().toInt())
         writeByteArray(byteArray)
     }

@@ -56,7 +56,7 @@ public class ImageCaptureStubbingUtils {
             InputStream ts = testRes.openRawResource(mockedImage);
             OutputStream stream = context.getContentResolver()
                     .openOutputStream(uriToSaveImage);
-            FileUtils.copy(ts, stream);
+            FileUtils.INSTANCE.copy(ts, stream);
         } catch (IOException e) {
             e.printStackTrace();
         }

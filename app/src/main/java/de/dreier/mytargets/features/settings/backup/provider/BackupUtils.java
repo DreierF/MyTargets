@@ -86,7 +86,7 @@ public class BackupUtils {
 
         // Replace database file
         File db_file = context.getDatabasePath(AppDatabase.DATABASE_IMPORT_FILE_NAME);
-        FileUtils.copy(file, db_file);
+        FileUtils.INSTANCE.copy(file, db_file);
     }
 
     /**

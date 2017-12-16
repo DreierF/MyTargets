@@ -13,35 +13,21 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils.typeconverters;
+package de.dreier.mytargets.shared.utils.typeconverters
 
-import android.support.annotation.Nullable;
+import com.raizlabs.android.dbflow.converter.TypeConverter
+import com.raizlabs.android.dbflow.data.Blob
 
-import com.raizlabs.android.dbflow.converter.TypeConverter;
-import com.raizlabs.android.dbflow.data.Blob;
+import de.dreier.mytargets.shared.models.Thumbnail
 
-import de.dreier.mytargets.shared.models.Thumbnail;
+class ThumbnailConverter : TypeConverter<Blob, Thumbnail>() {
 
-public final class ThumbnailConverter extends TypeConverter<Blob, Thumbnail> {
-
-    @Nullable
-    @Override
-    public Blob getDBValue(@Nullable Thumbnail model) {
-        if (model != null) {
-            return model.getBlob();
-        }
-
-        return null;
+    override fun getDBValue(model: Thumbnail?): Blob? {
+        return model?.blob
     }
 
-    @Nullable
-    @Override
-    public Thumbnail getModelValue(@Nullable Blob data) {
-        if (data != null) {
-            return new Thumbnail(data);
-        }
-
-        return null;
+    override fun getModelValue(data: Blob?): Thumbnail? {
+        return if (data != null) Thumbnail(data) else null
     }
 
 }

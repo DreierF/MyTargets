@@ -34,7 +34,7 @@ import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.streamwrapper.Stream;
-import de.dreier.mytargets.shared.utils.ParcelableUtil;
+import de.dreier.mytargets.shared.utils.ParcelableUtilKt;
 import de.dreier.mytargets.shared.wearable.WearableClientBase;
 import timber.log.Timber;
 
@@ -118,12 +118,12 @@ public class MobileWearableClient extends WearableClientBase {
     }
 
     private void sendTrainingInfo(TrainingInfo trainingInfo) {
-        final byte[] data = ParcelableUtil.marshall(trainingInfo);
+        final byte[] data = ParcelableUtilKt.marshall(trainingInfo);
         sendMessage(WearableClientBase.TRAINING_UPDATE, data);
     }
 
     public void sendTrainingTemplate(AugmentedTraining training) {
-        final byte[] data = ParcelableUtil.marshall(training);
+        final byte[] data = ParcelableUtilKt.marshall(training);
         sendMessage(WearableClientBase.TRAINING_TEMPLATE, data);
     }
 

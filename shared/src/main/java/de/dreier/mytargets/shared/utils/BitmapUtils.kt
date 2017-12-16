@@ -13,17 +13,13 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils;
+package de.dreier.mytargets.shared.utils
 
-import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
+import android.graphics.Bitmap
+import java.io.ByteArrayOutputStream
 
-import java.io.ByteArrayOutputStream;
-
-public class BitmapUtils {
-    public static byte[] getBitmapAsByteArray(@NonNull Bitmap bitmap) {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-        return outputStream.toByteArray();
-    }
+fun Bitmap.toByteArray(): ByteArray {
+    val outputStream = ByteArrayOutputStream()
+    compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+    return outputStream.toByteArray()
 }

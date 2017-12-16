@@ -27,7 +27,7 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
 
 import de.dreier.mytargets.shared.models.TimerSettings;
-import de.dreier.mytargets.shared.utils.ParcelableUtil;
+import de.dreier.mytargets.shared.utils.ParcelableUtilKt;
 import timber.log.Timber;
 
 public class WearableClientBase {
@@ -94,7 +94,7 @@ public class WearableClientBase {
     }
 
     protected void sendTimerSettings(TimerSettings settings) {
-        final byte[] data = ParcelableUtil.marshall(settings);
+        final byte[] data = ParcelableUtilKt.marshall(settings);
         sendMessage(TIMER_SETTINGS, data);
     }
 

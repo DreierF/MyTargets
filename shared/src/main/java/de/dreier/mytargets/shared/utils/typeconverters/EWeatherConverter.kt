@@ -13,34 +13,20 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils.typeconverters;
+package de.dreier.mytargets.shared.utils.typeconverters
 
-import android.support.annotation.Nullable;
+import com.raizlabs.android.dbflow.converter.TypeConverter
 
-import com.raizlabs.android.dbflow.converter.TypeConverter;
+import de.dreier.mytargets.shared.models.EWeather
 
-import de.dreier.mytargets.shared.models.EWeather;
+class EWeatherConverter : TypeConverter<Int, EWeather>() {
 
-public final class EWeatherConverter extends TypeConverter<Integer, EWeather> {
-
-    @Nullable
-    @Override
-    public Integer getDBValue(@Nullable EWeather model) {
-        if (model != null) {
-            return model.getValue();
-        }
-
-        return null;
+    override fun getDBValue(model: EWeather?): Int? {
+        return model?.value
     }
 
-    @Nullable
-    @Override
-    public EWeather getModelValue(@Nullable Integer data) {
-        if (data != null) {
-            return EWeather.getOfValue(data);
-        }
-
-        return null;
+    override fun getModelValue(data: Int?): EWeather? {
+        return if (data != null) EWeather.getOfValue(data) else null
     }
 
 }

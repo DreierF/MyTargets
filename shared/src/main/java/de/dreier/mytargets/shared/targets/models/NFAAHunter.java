@@ -27,7 +27,7 @@ import static de.dreier.mytargets.shared.utils.Color.DARK_GRAY;
 import static de.dreier.mytargets.shared.utils.Color.WHITE;
 
 public class NFAAHunter extends TargetModelBase {
-    public static final long ID = 9;
+    public static final int ID = 9;
 
     public NFAAHunter() {
         super(ID, R.string.nfaa_hunter);

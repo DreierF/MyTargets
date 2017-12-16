@@ -13,59 +13,40 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils;
+package de.dreier.mytargets.shared.utils
 
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.PixelFormat;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.graphics.Canvas
+import android.graphics.ColorFilter
+import android.graphics.PixelFormat
+import android.graphics.Rect
+import android.graphics.drawable.Drawable
 
-public class CircleDrawable extends Drawable {
+class CircleDrawable(density: Float, private val score: String, private val arrowNumber: String, private val fillColor: Int, private val textColor: Int) : Drawable() {
 
-    private Circle circle;
-    private float x;
-    private float y;
-    private int radius;
-    private String score;
-    private String arrowNumber;
-    private int fillColor;
-    private int textColor;
+    private val circle = Circle(density)
+    private var x = 0f
+    private var y = 0f
+    private var radius = 0f
 
-    public CircleDrawable(float density, String score, String arrowNumber, int fillColor, int textColor) {
-        this.circle = new Circle(density, null);
-        this.score = score;
-        this.arrowNumber = arrowNumber;
-        this.fillColor = fillColor;
-        this.textColor = textColor;
+    override fun draw(canvas: Canvas) {
+        circle.drawScore(canvas, x, y, radius, score, arrowNumber, fillColor, Color.getStrokeColor(fillColor), textColor)
     }
 
-    @Override
-    public void draw(@NonNull Canvas canvas) {
-        circle.drawScore(canvas, x, y, radius, score, arrowNumber, fillColor, Color.getStrokeColor(fillColor), textColor);
-    }
-
-    @Override
-    public void setAlpha(int i) {
+    override fun setAlpha(i: Int) {
 
     }
 
-    @Override
-    public void setColorFilter(@Nullable ColorFilter colorFilter) {
+    override fun setColorFilter(colorFilter: ColorFilter?) {
 
     }
 
-    @Override
-    public int getOpacity() {
-        return PixelFormat.OPAQUE;
+    override fun getOpacity(): Int {
+        return PixelFormat.OPAQUE
     }
 
-    @Override
-    protected void onBoundsChange(Rect bounds) {
-        x = bounds.exactCenterX();
-        y = bounds.exactCenterY();
-        radius = (int) (Math.min(bounds.width(), bounds.height()) * 0.45f);
+    override fun onBoundsChange(bounds: Rect) {
+        x = bounds.exactCenterX()
+        y = bounds.exactCenterY()
+        radius = Math.min(bounds.width(), bounds.height()) * 0.45f
     }
 }

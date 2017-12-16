@@ -13,34 +13,20 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils.typeconverters;
+package de.dreier.mytargets.shared.utils.typeconverters
 
-import android.support.annotation.Nullable;
+import com.raizlabs.android.dbflow.converter.TypeConverter
 
-import com.raizlabs.android.dbflow.converter.TypeConverter;
+import de.dreier.mytargets.shared.models.EBowType
 
-import de.dreier.mytargets.shared.models.EBowType;
+class EBowTypeConverter : TypeConverter<Int, EBowType>() {
 
-public final class EBowTypeConverter extends TypeConverter<Integer, EBowType> {
-
-    @Nullable
-    @Override
-    public Integer getDBValue(@Nullable EBowType model) {
-        if (model != null) {
-            return model.getId();
-        }
-
-        return null;
+    override fun getDBValue(model: EBowType?): Int? {
+        return model?.id
     }
 
-    @Nullable
-    @Override
-    public EBowType getModelValue(@Nullable Integer data) {
-        if (data != null) {
-            return EBowType.fromId(data);
-        }
-
-        return null;
+    override fun getModelValue(data: Int?): EBowType? {
+        return if (data != null) EBowType.fromId(data) else null
     }
 
 }

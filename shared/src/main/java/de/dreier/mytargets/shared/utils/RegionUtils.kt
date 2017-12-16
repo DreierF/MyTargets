@@ -13,34 +13,28 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils;
+package de.dreier.mytargets.shared.utils
 
-import android.graphics.Matrix;
-import android.graphics.Path;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.Region;
-import android.support.annotation.NonNull;
+import android.graphics.*
 
-public class RegionUtils {
+object RegionUtils {
 
-    @NonNull
-    public static Region getScaledRegion(Path path, float scale) {
+    fun getScaledRegion(path: Path, scale: Float): Region {
         // Scale the path
-        Path scaledPath = new Path(path);
-        Matrix matrix = new Matrix();
-        matrix.setScale(scale, scale);
-        scaledPath.transform(matrix);
+        val scaledPath = Path(path)
+        val matrix = Matrix()
+        matrix.setScale(scale, scale)
+        scaledPath.transform(matrix)
 
         // Get path bounds
-        RectF bounds = new RectF();
-        scaledPath.computeBounds(bounds, true);
-        Rect rectBounds = new Rect();
-        bounds.roundOut(rectBounds);
+        val bounds = RectF()
+        scaledPath.computeBounds(bounds, true)
+        val rectBounds = Rect()
+        bounds.roundOut(rectBounds)
 
         // Create region from path
-        Region region = new Region();
-        region.setPath(scaledPath, new Region(rectBounds));
-        return region;
+        val region = Region()
+        region.setPath(scaledPath, Region(rectBounds))
+        return region
     }
 }

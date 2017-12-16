@@ -57,7 +57,7 @@ import de.dreier.mytargets.shared.models.db.Bow;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.streamwrapper.Stream;
-import de.dreier.mytargets.shared.utils.FileUtils;
+import de.dreier.mytargets.shared.utils.FileUtilsKt;
 import de.dreier.mytargets.shared.utils.LongUtils;
 import de.dreier.mytargets.shared.utils.SharedUtils;
 import de.dreier.mytargets.utils.IntentWrapper;
@@ -153,25 +153,25 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
         Stream.of(binding.distanceTags.getTags())
                 .forEach(tag -> {
                     tag.setChecked(Stream.of(distanceTags)
-                            .anyMatch(d -> SharedUtils.equals(d, tag.getText())));
+                            .anyMatch(d -> SharedUtils.INSTANCE.equals(d, tag.getText())));
                     return null;
                 });
         Stream.of(binding.diameterTags.getTags())
                 .forEach(tag -> {
                     tag.setChecked(Stream.of(diameterTags)
-                            .anyMatch(d -> SharedUtils.equals(d, tag.getText())));
+                            .anyMatch(d -> SharedUtils.INSTANCE.equals(d, tag.getText())));
                     return null;
                 });
         Stream.of(binding.arrowTags.getTags())
                 .forEach(tag -> {
                     tag.setChecked(Stream.of(arrowTags)
-                            .anyMatch(a -> SharedUtils.equals(a, tag.getId())));
+                            .anyMatch(a -> SharedUtils.INSTANCE.equals(a, tag.getId())));
                     return null;
                 });
         Stream.of(binding.bowTags.getTags())
                 .forEach(tag -> {
                     tag.setChecked(Stream.of(bowTags)
-                            .anyMatch(b -> SharedUtils.equals(b, tag.getId())));
+                            .anyMatch(b -> SharedUtils.INSTANCE.equals(b, tag.getId())));
                     return null;
                 });
         binding.distanceTags.setTags(binding.distanceTags.getTags());
@@ -356,7 +356,7 @@ public class StatisticsActivity extends ChildActivityBase implements LoaderManag
                                     .flatMap(p -> Stream.of(p.second))
                                     .map(Round::getId)
                                     .toList());
-                    return FileUtils.getUriForFile(StatisticsActivity.this, f);
+                    return FileUtilsKt.toUri(f, StatisticsActivity.this);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return null;

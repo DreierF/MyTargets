@@ -65,7 +65,7 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return SharedUtils.equals(view, object);
+        return SharedUtils.INSTANCE.equals(view, object);
     }
 
     @Override

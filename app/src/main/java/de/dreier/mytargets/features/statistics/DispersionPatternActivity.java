@@ -39,11 +39,10 @@ import de.dreier.mytargets.features.settings.SettingsActivity;
 import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
+import de.dreier.mytargets.shared.utils.FileUtilsKt;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
 import de.dreier.mytargets.utils.Utils;
-
-import static de.dreier.mytargets.shared.utils.FileUtils.getUriForFile;
 
 public class DispersionPatternActivity extends ChildActivityBase {
 
@@ -134,7 +133,7 @@ public class DispersionPatternActivity extends ChildActivityBase {
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType(fileType.mimeType);
                 shareIntent.putExtra(Intent.EXTRA_STREAM,
-                        getUriForFile(DispersionPatternActivity.this, f));
+                        FileUtilsKt.toUri(f, DispersionPatternActivity.this));
                 startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
             } catch (IOException e) {
                 e.printStackTrace();

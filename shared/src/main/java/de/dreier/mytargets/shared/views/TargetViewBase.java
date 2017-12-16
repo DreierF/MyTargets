@@ -193,7 +193,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
         innerButtonBounds.inset((int) (8 * density), (int) (8 * density));
         Rect bounds = new Rect(0, 0, backspaceSymbol.getIntrinsicWidth(), backspaceSymbol
                 .getIntrinsicHeight());
-        Rect backspaceSymbolBounds = RectUtils.fitRectWithin(bounds, innerButtonBounds);
+        Rect backspaceSymbolBounds = RectUtils.INSTANCE.fitRectWithin(bounds, innerButtonBounds);
         backspaceSymbol.setBounds(backspaceSymbolBounds);
     }
 

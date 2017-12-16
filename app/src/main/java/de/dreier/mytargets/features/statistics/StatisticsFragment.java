@@ -116,7 +116,7 @@ public class StatisticsFragment extends FragmentBase {
         @Override
         protected void onUpdate(Long trainingId, Long roundId, End end) {
             if (Stream.of(LongUtils.toList(roundIds))
-                    .anyMatch(r -> SharedUtils.equals(r, roundId))) {
+                    .anyMatch(r -> SharedUtils.INSTANCE.equals(r, roundId))) {
                 reloadData();
             }
         }

@@ -132,7 +132,7 @@ public class TargetModelBase implements IIdProvider {
         if (isOutOfRange(zone)) {
             return BLACK;
         }
-        return Color.getContrast(getZone(zone).getFillColor());
+        return Color.INSTANCE.getContrast(getZone(zone).getFillColor());
     }
 
     private boolean isOutOfRange(int zone) {

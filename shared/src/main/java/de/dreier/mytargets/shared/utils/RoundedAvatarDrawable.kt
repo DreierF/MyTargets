@@ -13,93 +13,59 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils;
+package de.dreier.mytargets.shared.utils
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.Shader;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
+import android.graphics.*
+import android.graphics.drawable.Drawable
 
 /**
- * A Drawable that draws an oval with given {@link Bitmap}
+ * A Drawable that draws an oval with given [Bitmap]
  */
-public class RoundedAvatarDrawable extends Drawable {
-    @NonNull
-    private final Paint mPaint;
-    @NonNull
-    private final RectF mRectF;
-    private final int mBitmapWidth;
-    private final int mBitmapHeight;
+class RoundedAvatarDrawable(bitmap: Bitmap) : Drawable() {
+    private val mPaint: Paint = Paint()
+    private val mRectF: RectF = RectF()
+    private val mBitmapWidth: Int = bitmap.width
+    private val mBitmapHeight: Int = bitmap.height
 
-    public RoundedAvatarDrawable(@NonNull Bitmap bitmap) {
-        mRectF = new RectF();
-        mPaint = new Paint();
-        mPaint.setAntiAlias(true);
-        mPaint.setDither(true);
-        final BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-        mPaint.setShader(shader);
-
-        // NOTE: we assume bitmap is properly scaled to current density
-        mBitmapWidth = bitmap.getWidth();
-        mBitmapHeight = bitmap.getHeight();
+    init {
+        mPaint.isAntiAlias = true
+        mPaint.shader = BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
     }
 
-    @Override
-    public void draw(@NonNull Canvas canvas) {
-        canvas.drawOval(mRectF, mPaint);
+    override fun draw(canvas: Canvas) {
+        canvas.drawOval(mRectF, mPaint)
     }
 
-    @Override
-    protected void onBoundsChange(Rect bounds) {
-        super.onBoundsChange(bounds);
-
-        mRectF.set(bounds);
+    override fun onBoundsChange(bounds: Rect) {
+        super.onBoundsChange(bounds)
+        mRectF.set(bounds)
     }
 
-    @Override
-    public void setAlpha(int alpha) {
-        if (mPaint.getAlpha() != alpha) {
-            mPaint.setAlpha(alpha);
-            invalidateSelf();
+    override fun setAlpha(alpha: Int) {
+        if (mPaint.alpha != alpha) {
+            mPaint.alpha = alpha
+            invalidateSelf()
         }
     }
 
-    @Override
-    public void setColorFilter(ColorFilter cf) {
-        mPaint.setColorFilter(cf);
+    override fun setColorFilter(cf: ColorFilter?) {
+        mPaint.colorFilter = cf
     }
 
-    @Override
-    public int getOpacity() {
-        return PixelFormat.TRANSLUCENT;
+    override fun getOpacity(): Int {
+        return PixelFormat.TRANSLUCENT
     }
 
-    @Override
-    public int getIntrinsicWidth() {
-        return mBitmapWidth;
+    override fun getIntrinsicWidth(): Int {
+        return mBitmapWidth
     }
 
-    @Override
-    public int getIntrinsicHeight() {
-        return mBitmapHeight;
+    override fun getIntrinsicHeight(): Int {
+        return mBitmapHeight
     }
 
-    @Override
-    public void setFilterBitmap(boolean filter) {
-        mPaint.setFilterBitmap(filter);
-        invalidateSelf();
-    }
-
-    @Override
-    public void setDither(boolean dither) {
-        mPaint.setDither(dither);
-        invalidateSelf();
+    override fun setFilterBitmap(filter: Boolean) {
+        mPaint.isFilterBitmap = filter
+        invalidateSelf()
     }
 }

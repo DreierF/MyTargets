@@ -13,31 +13,22 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils.typeconverters;
+package de.dreier.mytargets.shared.utils.typeconverters
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import com.raizlabs.android.dbflow.converter.TypeConverter
 
-import com.raizlabs.android.dbflow.converter.TypeConverter;
+import de.dreier.mytargets.shared.models.Dimension
 
-import de.dreier.mytargets.shared.models.Dimension;
+class DimensionConverter : TypeConverter<String, Dimension>() {
 
-public final class DimensionConverter extends TypeConverter<String, Dimension> {
-
-    @Nullable
-    @Override
-    public String getDBValue(@Nullable Dimension model) {
-        if (model != null) {
-            return model.getValue() + " " + model.getUnit();
-        }
-        return null;
+    override fun getDBValue(model: Dimension?): String? {
+        return if (model != null) "${model.value} ${model.unit}" else null
     }
 
-    @Override
-    public Dimension getModelValue(@NonNull String data) {
-        int index = data.indexOf(' ');
-        final String value = data.substring(0, index);
-        final String unit = data.substring(index + 1);
-        return Dimension.Companion.from(Float.parseFloat(value), unit);
+    override fun getModelValue(data: String): Dimension {
+        val index = data.indexOf(' ')
+        val value = data.substring(0, index)
+        val unit = data.substring(index + 1)
+        return Dimension.from(value.toFloat(), unit)
     }
 }
