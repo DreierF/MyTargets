@@ -57,6 +57,7 @@ import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Signature;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.utils.FileUtilsKt;
 import de.dreier.mytargets.utils.MobileWearableClient;
 import de.dreier.mytargets.utils.Utils;
 
@@ -64,7 +65,6 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static de.dreier.mytargets.shared.utils.FileUtils.getUriForFile;
 import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE;
 
 public class ScoreboardFragment extends FragmentBase {
@@ -223,7 +223,7 @@ public class ScoreboardFragment extends FragmentBase {
                                 .generateBitmap(getContext(), content, scoreboardFile);
                     }
 
-                    return getUriForFile(getContext(), scoreboardFile);
+                    return FileUtilsKt.toUri(scoreboardFile, getContext());
                 } catch (IOException e) {
                     e.printStackTrace();
                     return null;

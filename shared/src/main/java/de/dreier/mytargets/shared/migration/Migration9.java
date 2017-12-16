@@ -120,7 +120,7 @@ public class Migration9 extends BaseMigration {
                 RT_TARGET_SIZE_UNIT + " INTEGER," +
                 RT_SCORING_STYLE + " INTEGER," +
                 "UNIQUE(sid, r_index) ON CONFLICT REPLACE);");
-        List<StandardRound> rounds = StandardRoundFactory.initTable();
+        List<StandardRound> rounds = StandardRoundFactory.INSTANCE.initTable();
         for (StandardRound round : rounds) {
             insertStandardRound(database, round);
         }

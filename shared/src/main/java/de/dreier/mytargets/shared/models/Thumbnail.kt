@@ -24,8 +24,8 @@ import android.media.ThumbnailUtils
 import android.os.Parcelable
 import android.support.annotation.DrawableRes
 import com.raizlabs.android.dbflow.data.Blob
-import de.dreier.mytargets.shared.utils.BitmapUtils
 import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable
+import de.dreier.mytargets.shared.utils.toByteArray
 import kotlinx.android.parcel.Parcelize
 import java.io.File
 
@@ -58,7 +58,7 @@ class Thumbnail(internal var data: ByteArray) : Parcelable {
                     TARGET_SIZE_MICRO_THUMBNAIL,
                     TARGET_SIZE_MICRO_THUMBNAIL,
                     ThumbnailUtils.OPTIONS_RECYCLE_INPUT)
-            return Thumbnail(BitmapUtils.getBitmapAsByteArray(thumbnail))
+            return Thumbnail(thumbnail.toByteArray())
         }
 
         fun from(imageFile: File): Thumbnail {
@@ -66,7 +66,7 @@ class Thumbnail(internal var data: ByteArray) : Parcelable {
                     .extractThumbnail(BitmapFactory.decodeFile(imageFile.path),
                             TARGET_SIZE_MICRO_THUMBNAIL, TARGET_SIZE_MICRO_THUMBNAIL) ?:
                     Bitmap.createBitmap(TARGET_SIZE_MICRO_THUMBNAIL, TARGET_SIZE_MICRO_THUMBNAIL, Bitmap.Config.RGB_565)
-            return Thumbnail(BitmapUtils.getBitmapAsByteArray(thumbnail))
+            return Thumbnail(thumbnail.toByteArray())
         }
 
         fun from(context: Context, @DrawableRes resId: Int) :Thumbnail {

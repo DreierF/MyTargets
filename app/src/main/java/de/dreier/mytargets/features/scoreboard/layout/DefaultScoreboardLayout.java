@@ -158,8 +158,8 @@ public class DefaultScoreboardLayout {
         equals[1] = true;
         Round round = rounds.get(0);
         for (Round r : rounds) {
-            equals[0] = SharedUtils.equals(r.getDistance(), round.getDistance()) && equals[0];
-            equals[1] = SharedUtils.equals(r.getTarget(), round.getTarget()) && equals[1];
+            equals[0] = SharedUtils.INSTANCE.equals(r.getDistance(), round.getDistance()) && equals[0];
+            equals[1] = SharedUtils.INSTANCE.equals(r.getTarget(), round.getTarget()) && equals[1];
         }
     }
 

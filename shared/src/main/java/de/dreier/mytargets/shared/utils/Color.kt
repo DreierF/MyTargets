@@ -13,96 +13,75 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils;
+package de.dreier.mytargets.shared.utils
 
-import android.support.annotation.ColorInt;
+import android.support.annotation.ColorInt
 
-public class Color {
+object Color {
     @ColorInt
-    public static final int SAPPHIRE_BLUE = 0xFF2E489F;
+    const val SAPPHIRE_BLUE = -0xd1b761
     @ColorInt
-    public static final int DARK_GRAY = 0xFF221F1F;
+    const val DARK_GRAY = -0xdde0e1
     @ColorInt
-    public static final int GRAY = 0xFF686868;
+    const val GRAY = -0x979798
     @ColorInt
-    public static final int LIGHTER_GRAY = 0xFFB7B7B7;
+    const val LIGHTER_GRAY = -0x484849
     @ColorInt
-    public static final int LIGHT_GRAY = 0xFFDBDBDA;
+    const val LIGHT_GRAY = -0x242426
     @ColorInt
-    public static final int ORANGE = 0xFFFFA663;
+    const val ORANGE = -0x599d
     @ColorInt
-    public static final int GREEN = 0xFF009F23;
+    const val GREEN = -0xff60dd
     @ColorInt
-    public static final int BROWN = 0xFF9F7800;
+    const val BROWN = -0x608800
     @ColorInt
-    public static final int CERULEAN_BLUE = 0xFF00ADEF;
+    const val CERULEAN_BLUE = -0xff5211
     @ColorInt
-    public static final int FLAMINGO_RED = 0xFFEF4E4C;
+    const val FLAMINGO_RED = -0x10b1b4
     @ColorInt
-    public static final int RED = 0xFFFF000D;
+    const val RED = -0xfff3
     @ColorInt
-    public static final int TURBO_YELLOW = 0xFFFEEA00;
+    const val TURBO_YELLOW = -0x11600
     @ColorInt
-    public static final int LEMON_YELLOW = 0xFFF6EB0F;
+    const val LEMON_YELLOW = -0x914f1
     @ColorInt
-    public static final int RED_MISS = 0xFFEE3D36;
+    const val RED_MISS = -0x11c2ca
     @ColorInt
-    public static final int YELLOW = 0xFFFFEB52;
+    const val YELLOW = -0x14ae
     @ColorInt
-    public static final int BLACK = 0xFF000000;
+    const val BLACK = -0x1000000
     @ColorInt
-    public static final int WHITE = 0xFFFFFFFF;
+    const val WHITE = -0x1
     @ColorInt
-    public static final int DBSC_RED = 0xFFDA251C;
+    const val DBSC_RED = -0x25dae4
     @ColorInt
-    public static final int DBSC_YELLOW = 0xFFFFF500;
+    const val DBSC_YELLOW = -0xb00
     @ColorInt
-    public static final int DBSC_BLUE = 0xFF75C5F0;
+    const val DBSC_BLUE = -0x8a3a10
 
-    public static int getStrokeColor(@ColorInt int fillColor) {
-        switch (fillColor) {
-            case WHITE:
-                return BLACK;
-            case BLACK:
-            case DARK_GRAY:
-            case GRAY:
-            case LIGHT_GRAY:
-            case ORANGE:
-            case GREEN:
-            case BROWN:
-            case CERULEAN_BLUE:
-            case SAPPHIRE_BLUE:
-            case FLAMINGO_RED:
-            case RED:
-            case TURBO_YELLOW:
-            case LEMON_YELLOW:
-            case DBSC_BLUE:
-            case DBSC_RED:
-            case DBSC_YELLOW:
-                return fillColor;
-            default:
-                return DARK_GRAY;
+    fun getStrokeColor(@ColorInt fillColor: Int): Int {
+        return when (fillColor) {
+            WHITE -> BLACK
+            BLACK, DARK_GRAY,
+            GRAY, LIGHT_GRAY,
+            ORANGE, GREEN,
+            BROWN, CERULEAN_BLUE,
+            SAPPHIRE_BLUE, FLAMINGO_RED,
+            RED, TURBO_YELLOW,
+            LEMON_YELLOW, DBSC_BLUE,
+            DBSC_RED, DBSC_YELLOW -> fillColor
+            else -> DARK_GRAY
         }
     }
 
-    public static int getContrast(int fillColor) {
-        switch (fillColor) {
-            case WHITE:
-            case LIGHTER_GRAY:
-            case LIGHT_GRAY:
-            case TURBO_YELLOW:
-            case LEMON_YELLOW:
-            case YELLOW:
-            case DBSC_YELLOW:
-                return BLACK;
-            case ORANGE:
-                return BLACK;
-            case GREEN:
-                return BLACK;
-            case BROWN:
-                return BLACK;
-            default:
-                return WHITE;
+    fun getContrast(fillColor: Int): Int {
+        return when (fillColor) {
+            WHITE, LIGHTER_GRAY,
+            LIGHT_GRAY, TURBO_YELLOW,
+            LEMON_YELLOW, YELLOW,
+            DBSC_YELLOW, ORANGE,
+            GREEN, BROWN -> BLACK
+            else -> WHITE
         }
     }
 }

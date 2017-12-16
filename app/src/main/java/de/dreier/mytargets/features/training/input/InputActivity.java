@@ -137,7 +137,7 @@ public class InputActivity extends ChildActivityBase
     }
 
     private static boolean shouldShowEnd(@NonNull End end, Long currentEndId) {
-        return !SharedUtils.equals(end.getId(), currentEndId) && end.getExact();
+        return !SharedUtils.INSTANCE.equals(end.getId(), currentEndId) && end.getExact();
     }
 
     @Override

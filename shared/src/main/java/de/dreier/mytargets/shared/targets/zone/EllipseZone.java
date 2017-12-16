@@ -39,7 +39,7 @@ public class EllipseZone extends ZoneBase {
 
         /** The region needs to be bigger, because the Region#contains(x,y) only allows to test for
          * integers, which is obviously to inaccurate for a -1..1 coordinate system. */
-        ELLIPSE_REGION = RegionUtils.getScaledRegion(ellipse, REGION_SCALE_FACTOR);
+        ELLIPSE_REGION = RegionUtils.INSTANCE.getScaledRegion(ellipse, REGION_SCALE_FACTOR);
     }
 
     public EllipseZone(float radius, float midpointX, float midpointY, int fillColor, int strokeColor, int strokeWidth) {

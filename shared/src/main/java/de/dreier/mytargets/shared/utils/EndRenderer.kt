@@ -52,6 +52,7 @@ class EndRenderer(
     @Transient private var oldRadius: Int = 0
     @Transient private var oldSelected: Int = 0
     @Transient private var oldSelectedRadius: Int = 0
+    @Transient private lateinit var target: Target
 
     private val animator: ValueAnimator
         get() {
@@ -77,7 +78,8 @@ class EndRenderer(
     fun init(parent: View, density: Float, target: Target) {
         this.parent = parent
         this.density = density
-        circle = Circle(density, target)
+        this.target = target
+        circle = Circle(density)
     }
 
     fun setRect(rect: RectF) {
@@ -133,7 +135,7 @@ class EndRenderer(
                 // Draw circle
                 circle!!.draw(canvas, coordinate.x, coordinate.y, shot.scoringRing, radius,
                         shot.index,
-                        shot.arrowNumber, ambientMode)
+                        shot.arrowNumber, ambientMode, target)
             }
         }
     }

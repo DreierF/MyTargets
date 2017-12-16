@@ -44,6 +44,7 @@ import de.dreier.mytargets.base.gallery.adapters.ViewPagerAdapter;
 import de.dreier.mytargets.databinding.ActivityGalleryBinding;
 import de.dreier.mytargets.shared.models.db.Image;
 import de.dreier.mytargets.shared.utils.FileUtils;
+import de.dreier.mytargets.shared.utils.FileUtilsKt;
 import de.dreier.mytargets.shared.utils.ImageList;
 import de.dreier.mytargets.utils.IntentWrapper;
 import de.dreier.mytargets.utils.ToolbarUtils;
@@ -170,7 +171,7 @@ public class GalleryActivity extends ChildActivityBase {
     private void shareImage(int currentItem) {
         Image currentImage = imageList.get(currentItem);
         File file = new File(getFilesDir(), currentImage.getFileName());
-        Uri uri = FileUtils.getUriForFile(this, file);
+        Uri uri = FileUtilsKt.toUri(file, this);
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("*/*");
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
@@ -266,7 +267,7 @@ public class GalleryActivity extends ChildActivityBase {
                     try {
                         File internal = File.createTempFile("img", file.getName(), getFilesDir());
                         internalFiles.add(internal.getName());
-                        FileUtils.move(file, internal);
+                        FileUtils.INSTANCE.move(file, internal);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

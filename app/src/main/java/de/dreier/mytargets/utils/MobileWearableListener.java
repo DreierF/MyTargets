@@ -37,7 +37,7 @@ import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Training;
 import de.dreier.mytargets.shared.streamwrapper.Stream;
-import de.dreier.mytargets.shared.utils.ParcelableUtil;
+import de.dreier.mytargets.shared.utils.ParcelableUtilKt;
 import de.dreier.mytargets.shared.wearable.WearableClientBase;
 
 /**
@@ -70,7 +70,7 @@ public class MobileWearableListener extends WearableListenerService {
 
     private void timerSettings(@NonNull MessageEvent messageEvent) {
         byte[] data = messageEvent.getData();
-        TimerSettings settings = ParcelableUtil.unmarshall(data, (Parcelable.Creator<TimerSettings>) TimerSettings.CREATOR);
+        TimerSettings settings = ParcelableUtilKt.unmarshall(data, (Parcelable.Creator<TimerSettings>) TimerSettings.CREATOR);
         SettingsManager.INSTANCE.setTimerSettings(settings);
         ApplicationInstance.wearableClient.sendTimerSettingsFromRemote();
     }
@@ -109,7 +109,7 @@ public class MobileWearableListener extends WearableListenerService {
 
     public void createTraining(@NonNull MessageEvent messageEvent) {
         byte[] data = messageEvent.getData();
-        AugmentedTraining augmentedTraining = ParcelableUtil.unmarshall(data, (Parcelable.Creator<AugmentedTraining>) AugmentedTraining.CREATOR);
+        AugmentedTraining augmentedTraining = ParcelableUtilKt.unmarshall(data, (Parcelable.Creator<AugmentedTraining>) AugmentedTraining.CREATOR);
         Training training = augmentedTraining.toTraining();
         training.save();
         ApplicationInstance.wearableClient.updateTraining(new AugmentedTraining(training));
@@ -118,7 +118,7 @@ public class MobileWearableListener extends WearableListenerService {
 
     private void endUpdated(@NonNull MessageEvent messageEvent) {
         byte[] data = messageEvent.getData();
-        AugmentedEnd augmentedEnd = ParcelableUtil.unmarshall(data, (Parcelable.Creator<AugmentedEnd>) AugmentedEnd.CREATOR);
+        AugmentedEnd augmentedEnd = ParcelableUtilKt.unmarshall(data, (Parcelable.Creator<AugmentedEnd>) AugmentedEnd.CREATOR);
         Round round = Round.Companion.get(augmentedEnd.getEnd().getRoundId());
         End newEnd = getLastEmptyOrCreateNewEnd(round);
         newEnd.setExact(false);

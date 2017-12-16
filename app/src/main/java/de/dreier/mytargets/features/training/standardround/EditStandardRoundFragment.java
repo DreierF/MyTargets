@@ -91,7 +91,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
             } else {
                 ToolbarUtils.setTitle(this, R.string.edit_standard_round);
                 // Load saved values
-                if (standardRound.getClub() == StandardRoundFactory.CUSTOM) {
+                if (standardRound.getClub() == StandardRoundFactory.INSTANCE.getCUSTOM()) {
                     binding.name.setText(standardRound.getName());
                 } else {
                     standardRound.setId(null);
@@ -154,7 +154,7 @@ public class EditStandardRoundFragment extends EditFragmentBase {
 
     @Override
     protected void onSave() {
-        standardRound.setClub(StandardRoundFactory.CUSTOM);
+        standardRound.setClub(StandardRoundFactory.INSTANCE.getCUSTOM());
         standardRound.setName(binding.name.getText().toString());
         standardRound.save();
 

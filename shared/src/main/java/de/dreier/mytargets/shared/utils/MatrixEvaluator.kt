@@ -13,37 +13,29 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils;
+package de.dreier.mytargets.shared.utils
 
-import android.animation.TypeEvaluator;
-import android.graphics.Matrix;
-import android.support.annotation.NonNull;
+import android.animation.TypeEvaluator
+import android.graphics.Matrix
 
 /**
  * This class is passed to ValueAnimator in order to animate matrix changes
  */
-public class MatrixEvaluator implements TypeEvaluator<Matrix> {
+class MatrixEvaluator : TypeEvaluator<Matrix> {
 
-    @NonNull
-    private float[] tempStartValues = new float[9];
+    private val tempStartValues = FloatArray(9)
+    private val tempEndValues = FloatArray(9)
+    private val tempMatrix = Matrix()
 
-    @NonNull
-    private float[] tempEndValues = new float[9];
-
-    @NonNull
-    private Matrix tempMatrix = new Matrix();
-
-    @NonNull
-    @Override
-    public Matrix evaluate(float fraction, @NonNull Matrix startValue, @NonNull Matrix endValue) {
-        startValue.getValues(tempStartValues);
-        endValue.getValues(tempEndValues);
-        for (int i = 0; i < 9; i++) {
-            float diff = tempEndValues[i] - tempStartValues[i];
-            tempEndValues[i] = tempStartValues[i] + (fraction * diff);
+    override fun evaluate(fraction: Float, startValue: Matrix, endValue: Matrix): Matrix {
+        startValue.getValues(tempStartValues)
+        endValue.getValues(tempEndValues)
+        for (i in 0..8) {
+            val diff = tempEndValues[i] - tempStartValues[i]
+            tempEndValues[i] = tempStartValues[i] + fraction * diff
         }
-        tempMatrix.setValues(tempEndValues);
+        tempMatrix.setValues(tempEndValues)
 
-        return tempMatrix;
+        return tempMatrix
     }
 }

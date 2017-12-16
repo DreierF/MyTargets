@@ -26,7 +26,7 @@ import de.dreier.mytargets.shared.models.TimerSettings;
 import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.augmented.AugmentedEnd;
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining;
-import de.dreier.mytargets.shared.utils.ParcelableUtil;
+import de.dreier.mytargets.shared.utils.ParcelableUtilKt;
 import de.dreier.mytargets.shared.wearable.WearableClientBase;
 
 public class WearWearableClient extends WearableClientBase {
@@ -79,12 +79,12 @@ public class WearWearableClient extends WearableClientBase {
     }
 
     private void updateEnd(AugmentedEnd end) {
-        final byte[] data = ParcelableUtil.marshall(end);
+        final byte[] data = ParcelableUtilKt.marshall(end);
         sendMessage(WearableClientBase.END_UPDATE, data);
     }
 
     private void createTraining(AugmentedTraining training) {
-        final byte[] data = ParcelableUtil.marshall(training);
+        final byte[] data = ParcelableUtilKt.marshall(training);
         sendMessage(WearableClientBase.TRAINING_CREATE, data);
     }
 

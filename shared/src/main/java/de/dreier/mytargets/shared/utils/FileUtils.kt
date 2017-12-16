@@ -13,58 +13,55 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils;
+package de.dreier.mytargets.shared.utils
 
-import android.content.Context;
-import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
+import android.content.Context
+import android.net.Uri
+import android.support.v4.content.FileProvider
+import java.io.*
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.channels.FileChannel;
-
-public class FileUtils {
-    public static void copy(@NonNull File src, @NonNull File dst) throws IOException {
-        FileInputStream inStream = new FileInputStream(src);
-        FileOutputStream outStream = new FileOutputStream(dst);
-        FileChannel inChannel = inStream.getChannel();
-        FileChannel outChannel = outStream.getChannel();
-        inChannel.transferTo(0, inChannel.size(), outChannel);
-        inStream.close();
-        outStream.close();
+object FileUtils {
+    @Throws(IOException::class)
+    fun copy(src: File, dst: File) {
+        val inStream = FileInputStream(src)
+        val outStream = FileOutputStream(dst)
+        val inChannel = inStream.channel
+        val outChannel = outStream.channel
+        inChannel.transferTo(0, inChannel.size(), outChannel)
+        inStream.close()
+        outStream.close()
     }
 
-    public static void copy(@NonNull InputStream in, @NonNull File dst) throws IOException {
-        copy(in, new FileOutputStream(dst));
+    @Throws(IOException::class)
+    fun copy(inputStream: InputStream, dst: File) {
+        copy(inputStream, FileOutputStream(dst))
     }
 
-    public static void copy(@NonNull InputStream in, @NonNull OutputStream out) throws IOException {
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) > 0) {
-            out.write(buf, 0, len);
+    @Throws(IOException::class)
+    fun copy(inputStream: InputStream, out: OutputStream) {
+        val buf = ByteArray(1024)
+        var len: Int = inputStream.read(buf)
+        while (len > 0) {
+            out.write(buf, 0, len)
+            len = inputStream.read(buf)
         }
-        in.close();
-        out.close();
+        inputStream.close()
+        out.close()
     }
 
-    public static Uri getUriForFile(@NonNull Context context, @NonNull File file) {
-        String packageName = context.getPackageName();
-        String authority = packageName + ".fileprovider";
-        return FileProvider.getUriForFile(context, authority, file);
-    }
-
-    public static void move(@NonNull File from, @NonNull File to) throws IOException {
-        File directory = to.getParentFile();
+    @Throws(IOException::class)
+    fun move(from: File, to: File) {
+        val directory = to.parentFile
         if (!directory.exists()) {
-            directory.mkdir();
+            directory.mkdir()
         }
-        copy(from, to);
-        from.delete();
+        copy(from, to)
+        from.delete()
     }
+}
+
+fun File.toUri(context: Context): Uri {
+    val packageName = context.packageName
+    val authority = packageName + ".fileprovider"
+    return FileProvider.getUriForFile(context, authority, this)
 }

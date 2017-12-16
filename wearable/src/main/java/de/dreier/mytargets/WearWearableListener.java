@@ -30,7 +30,7 @@ import com.google.android.gms.wearable.WearableListenerService;
 import de.dreier.mytargets.shared.models.TimerSettings;
 import de.dreier.mytargets.shared.models.TrainingInfo;
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining;
-import de.dreier.mytargets.shared.utils.ParcelableUtil;
+import de.dreier.mytargets.shared.utils.ParcelableUtilKt;
 import de.dreier.mytargets.utils.WearSettingsManager;
 
 import static de.dreier.mytargets.shared.wearable.WearableClientBase.TIMER_SETTINGS;
@@ -47,16 +47,16 @@ public class WearWearableListener extends WearableListenerService {
         byte[] data = messageEvent.getData();
         switch (messageEvent.getPath()) {
             case TRAINING_UPDATE:
-                TrainingInfo info = ParcelableUtil.unmarshall(data, (Parcelable.Creator<TrainingInfo>) TrainingInfo.CREATOR);
+                TrainingInfo info = ParcelableUtilKt.unmarshall(data, (Parcelable.Creator<TrainingInfo>) TrainingInfo.CREATOR);
                 showNotification(info);
                 ApplicationInstance.wearableClient.sendTrainingUpdate(info);
                 break;
             case TRAINING_TEMPLATE:
-                AugmentedTraining training = ParcelableUtil.unmarshall(data, (Parcelable.Creator<AugmentedTraining>) AugmentedTraining.CREATOR);
+                AugmentedTraining training = ParcelableUtilKt.unmarshall(data, (Parcelable.Creator<AugmentedTraining>) AugmentedTraining.CREATOR);
                 ApplicationInstance.wearableClient.sendTrainingTemplate(training);
                 break;
             case TIMER_SETTINGS:
-                TimerSettings settings = ParcelableUtil.unmarshall(data, (Parcelable.Creator<TimerSettings>) TimerSettings.CREATOR);
+                TimerSettings settings = ParcelableUtilKt.unmarshall(data, (Parcelable.Creator<TimerSettings>) TimerSettings.CREATOR);
                 WearSettingsManager.setTimerSettings(settings);
                 ApplicationInstance.wearableClient.sendTimerSettingsFromRemote();
                 break;

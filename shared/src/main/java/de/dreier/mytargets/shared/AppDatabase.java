@@ -96,7 +96,7 @@ public class AppDatabase {
                     try {
                         imageFile = File
                                 .createTempFile("img", imageFromSomewhere.getName(), filesDir);
-                        FileUtils.move(imageFromSomewhere, imageFile);
+                        FileUtils.INSTANCE.move(imageFromSomewhere, imageFile);
                         image.setFileName(imageFile.getName());
                         image.save(database);
                     } catch (IOException e) {
@@ -110,7 +110,7 @@ public class AppDatabase {
     }
 
     private static void fillStandardRound(DatabaseWrapper db) {
-        List<StandardRound> rounds = StandardRoundFactory.initTable();
+        List<StandardRound> rounds = StandardRoundFactory.INSTANCE.initTable();
         for (StandardRound round : rounds) {
             round.save(db);
         }
@@ -171,7 +171,7 @@ public class AppDatabase {
                 String fileName = cur.getString(0);
                 try {
                     File file = File.createTempFile("img_", ".png", filesDir);
-                    FileUtils.copy(new File(fileName), file);
+                    FileUtils.INSTANCE.copy(new File(fileName), file);
                     database.execSQL(
                             "UPDATE BOW SET image=\"" + file.getName() + "\" WHERE image=\"" +
                                     fileName + "\"");
@@ -187,7 +187,7 @@ public class AppDatabase {
                 String fileName = cur.getString(0);
                 try {
                     File file = File.createTempFile("img_", ".png", filesDir);
-                    FileUtils.copy(new File(fileName), file);
+                    FileUtils.INSTANCE.copy(new File(fileName), file);
                     database.execSQL(
                             "UPDATE ARROW SET image=\"" + file.getName() + "\" WHERE image=\"" +
                                     fileName + "\"");

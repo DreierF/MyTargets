@@ -13,37 +13,24 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils.typeconverters;
+package de.dreier.mytargets.shared.utils.typeconverters
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.annotation.Nullable;
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import com.raizlabs.android.dbflow.converter.TypeConverter
+import com.raizlabs.android.dbflow.data.Blob
+import de.dreier.mytargets.shared.utils.toByteArray
 
-import com.raizlabs.android.dbflow.converter.TypeConverter;
-import com.raizlabs.android.dbflow.data.Blob;
+class BitmapConverter : TypeConverter<Blob, Bitmap>() {
 
-import de.dreier.mytargets.shared.utils.BitmapUtils;
-
-public final class BitmapConverter extends TypeConverter<Blob, Bitmap> {
-
-    @Nullable
-    @Override
-    public Blob getDBValue(@Nullable Bitmap model) {
-        if (model != null) {
-            return new Blob(BitmapUtils.getBitmapAsByteArray(model));
-        }
-
-        return null;
+    override fun getDBValue(model: Bitmap?): Blob? {
+        return if (model != null) Blob(model.toByteArray()) else null
     }
 
-    @Nullable
-    @Override
-    public Bitmap getModelValue(@Nullable Blob data) {
-        if (data != null) {
-            return BitmapFactory.decodeByteArray(data.getBlob(), 0, data.getBlob().length);
-        }
-
-        return null;
+    override fun getModelValue(data: Blob?): Bitmap? {
+        return if (data != null) {
+            BitmapFactory.decodeByteArray(data.blob, 0, data.blob.size)
+        } else null
     }
 
 }

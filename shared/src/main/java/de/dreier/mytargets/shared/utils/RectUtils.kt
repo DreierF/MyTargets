@@ -13,26 +13,25 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils;
+package de.dreier.mytargets.shared.utils
 
-import android.graphics.Rect;
-import android.support.annotation.NonNull;
+import android.graphics.Rect
 
-public class RectUtils {
-    public static Rect fitRectWithin(@NonNull Rect inner, @NonNull Rect outer) {
-        float innerAspectRatio = inner.width() / (float) inner.height();
-        float outerAspectRatio = outer.width() / (float) outer.height();
+object RectUtils {
+    fun fitRectWithin(inner: Rect, outer: Rect): Rect {
+        val innerAspectRatio = inner.width() / inner.height().toFloat()
+        val outerAspectRatio = outer.width() / outer.height().toFloat()
 
-        float resizeFactor = (innerAspectRatio >= outerAspectRatio) ?
-                (outer.width() / (float) inner.width()) :
-                (outer.height() / (float) inner.height());
+        val resizeFactor = if (innerAspectRatio >= outerAspectRatio)
+            outer.width() / inner.width().toFloat()
+        else
+            outer.height() / inner.height().toFloat()
 
-        float newWidth = inner.width() * resizeFactor;
-        float newHeight = inner.height() * resizeFactor;
-        float newLeft = outer.left + (outer.width() - newWidth) / 2f;
-        float newTop = outer.top + (outer.height() - newHeight) / 2f;
+        val newWidth = inner.width() * resizeFactor
+        val newHeight = inner.height() * resizeFactor
+        val newLeft = outer.left + (outer.width() - newWidth) / 2f
+        val newTop = outer.top + (outer.height() - newHeight) / 2f
 
-        return new Rect((int) newLeft, (int) newTop, (int) (newWidth + newLeft), (int) (newHeight +
-                newTop));
+        return Rect(newLeft.toInt(), newTop.toInt(), (newWidth + newLeft).toInt(), (newHeight + newTop).toInt())
     }
 }
