@@ -13,84 +13,73 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.targets.drawable;
+package de.dreier.mytargets.shared.targets.drawable
 
-import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
+import android.support.annotation.ColorInt
+import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy
+import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy.NONE
+import de.dreier.mytargets.shared.analysis.aggregation.IAggregationStrategy
+import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.models.db.Shot
+import java.util.*
 
-import java.util.ArrayList;
-import java.util.List;
+class TargetImpactAggregationDrawable(target: Target) : TargetImpactDrawable(target), IAggregationStrategy.OnAggregationResult {
 
-import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
-import de.dreier.mytargets.shared.analysis.aggregation.IAggregationResultRenderer;
-import de.dreier.mytargets.shared.analysis.aggregation.IAggregationStrategy;
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.Shot;
+    private val faceAggregations = ArrayList<IAggregationStrategy>()
+    private var resultsMissing = 0
 
-import static de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy.NONE;
-
-public class TargetImpactAggregationDrawable extends TargetImpactDrawable implements IAggregationStrategy.OnAggregationResult {
-
-    private final List<IAggregationStrategy> faceAggregations = new ArrayList<>();
-    private int resultsMissing = 0;
-
-    public TargetImpactAggregationDrawable(@NonNull Target target) {
-        super(target);
-        setAggregationStrategy(NONE);
+    init {
+        setAggregationStrategy(NONE)
     }
 
-    public void setAggregationStrategy(@NonNull EAggregationStrategy aggregation) {
-        faceAggregations.clear();
-        for (int i = 0; i < model.getFaceCount(); i++) {
-            IAggregationStrategy strategy = aggregation.newInstance();
-            strategy.setOnAggregationResultListener(this);
-            faceAggregations.add(strategy);
+    fun setAggregationStrategy(aggregation: EAggregationStrategy) {
+        faceAggregations.clear()
+        for (i in 0 until model.faceCount) {
+            val strategy = aggregation.newInstance()
+            strategy.setOnAggregationResultListener(this)
+            faceAggregations.add(strategy)
         }
-        setColor(0xAAAAAAAA);
-        recalculateAggregation();
+        setColor(-0x55555556)
+        recalculateAggregation()
     }
 
-    public void setColor(@ColorInt int color) {
-        for (IAggregationStrategy faceAggregation : faceAggregations) {
-            faceAggregation.setColor(color);
+    fun setColor(@ColorInt color: Int) {
+        for (faceAggregation in faceAggregations) {
+            faceAggregation.setColor(color)
         }
     }
 
-    @Override
-    public void onResult() {
-        resultsMissing--;
+    override fun onResult() {
+        resultsMissing--
         if (resultsMissing == 0) {
-            invalidateSelf();
+            invalidateSelf()
         }
     }
 
-    @Override
-    protected void onPostDraw(@NonNull CanvasWrapper canvas, int faceIndex) {
-        super.onPostDraw(canvas, faceIndex);
-        final IAggregationResultRenderer result = faceAggregations.get(faceIndex).getResult();
-        result.onDraw(canvas);
+    override fun onPostDraw(canvas: CanvasWrapper, faceIndex: Int) {
+        super.onPostDraw(canvas, faceIndex)
+        val result = faceAggregations[faceIndex].result
+        result.onDraw(canvas)
     }
 
-    @Override
-    public void cleanup() {
-        for (IAggregationStrategy cluster : faceAggregations) {
-            cluster.cleanup();
+    override fun cleanup() {
+        for (cluster in faceAggregations) {
+            cluster.cleanup()
         }
     }
 
-    @Override
-    public void notifyArrowSetChanged() {
-        super.notifyArrowSetChanged();
-        recalculateAggregation();
+    override fun notifyArrowSetChanged() {
+        super.notifyArrowSetChanged()
+        recalculateAggregation()
     }
 
-    private void recalculateAggregation() {
-        resultsMissing = model.getFaceCount();
-        for (int faceIndex = 0; faceIndex < model.getFaceCount(); faceIndex++) {
-            ArrayList<Shot> combinedList = new ArrayList<>();
-            combinedList.addAll(transparentShots.get(faceIndex));
-            combinedList.addAll(shots.get(faceIndex));
-            faceAggregations.get(faceIndex).calculate(combinedList);
+    private fun recalculateAggregation() {
+        resultsMissing = model.faceCount
+        for (faceIndex in 0 until model.faceCount) {
+            val combinedList = ArrayList<Shot>()
+            combinedList.addAll(transparentShots[faceIndex])
+            combinedList.addAll(shots[faceIndex])
+            faceAggregations[faceIndex].calculate(combinedList)
         }
     }
 }

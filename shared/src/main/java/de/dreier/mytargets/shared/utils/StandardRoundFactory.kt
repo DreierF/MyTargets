@@ -636,7 +636,7 @@ object StandardRoundFactory {
                 NFAAHunter.ID, 0, 4, -1, -1, 14, -1, -1, 14))
         rounds.add(build(NFAA, R.string.nfaa_field_hunter_560,
                 METER, CENTIMETER,
-                NFAAField.ID, 0, Target(NFAAHunter.ID.toLong(), 0, null), 4, -1, -1,
+                NFAAField.ID, 0, Target(NFAAHunter.ID, 0, null), 4, -1, -1,
                 14, -1, -1, 14))
         rounds.add(build(WA, R.string.wa_field_unmarked_marked_red,
                 METER, CENTIMETER,
@@ -705,7 +705,7 @@ object StandardRoundFactory {
      * @param roundDetails Per round distance, targetSize and number of ends are expected
      * @return The standard round with the specified properties
      */
-    private fun build(institution: Int, name: Int, distanceUnit: Dimension.Unit, targetUnit: Dimension.Unit, target: Int, scoringStyle: Int, shotsPerEnd: Int, vararg roundDetails: Int): StandardRound {
+    private fun build(institution: Int, name: Int, distanceUnit: Dimension.Unit, targetUnit: Dimension.Unit, target: Long, scoringStyle: Int, shotsPerEnd: Int, vararg roundDetails: Int): StandardRound {
         val standardRound = StandardRound()
         idCounter++
         standardRound.id = idCounter
@@ -719,7 +719,7 @@ object StandardRoundFactory {
             roundTemplate.id = roundCounter
             roundTemplate.shotsPerEnd = shotsPerEnd
             roundTemplate.distance = Dimension(roundDetails[i].toFloat(), distanceUnit)
-            roundTemplate.targetTemplate = Target(target.toLong(), scoringStyle, Dimension(roundDetails[i + 1].toFloat(), targetUnit))
+            roundTemplate.targetTemplate = Target(target, scoringStyle, Dimension(roundDetails[i + 1].toFloat(), targetUnit))
             roundTemplate.endCount = roundDetails[i + 2]
             standardRound.insert(roundTemplate)
             i += 3
@@ -727,7 +727,7 @@ object StandardRoundFactory {
         return standardRound
     }
 
-    private fun build(institution: Int, name: Int, distanceUnit: Dimension.Unit, targetUnit: Dimension.Unit, target: Int, scoringStyle: Int, target2: Target, shotsPerEnd: Int, vararg roundDetails: Int): StandardRound {
+    private fun build(institution: Int, name: Int, distanceUnit: Dimension.Unit, targetUnit: Dimension.Unit, target: Long, scoringStyle: Int, target2: Target, shotsPerEnd: Int, vararg roundDetails: Int): StandardRound {
         val standardRound = build(institution, name, distanceUnit,
                 targetUnit, target, scoringStyle, shotsPerEnd, *roundDetails)
         val round2 = standardRound.loadRounds()!![1]

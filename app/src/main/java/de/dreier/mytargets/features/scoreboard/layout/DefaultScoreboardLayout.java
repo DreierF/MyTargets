@@ -40,9 +40,8 @@ import de.dreier.mytargets.shared.models.db.Round;
 import de.dreier.mytargets.shared.models.db.Shot;
 import de.dreier.mytargets.shared.models.db.StandardRound;
 import de.dreier.mytargets.shared.models.db.Training;
+import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle;
 import de.dreier.mytargets.shared.utils.SharedUtils;
-
-import static de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle.MISS_SYMBOL;
 
 public class DefaultScoreboardLayout {
 
@@ -203,7 +202,7 @@ public class DefaultScoreboardLayout {
         int hits = 0;
         int total = 0;
         for (Map.Entry<SelectableZone, Integer> score : scoreDistribution) {
-            if (!score.getKey().text.equals(MISS_SYMBOL)) {
+            if (!score.getKey().text.equals(ScoringStyle.Companion.getMISS_SYMBOL())) {
                 hits += score.getValue();
             }
             total += score.getValue();

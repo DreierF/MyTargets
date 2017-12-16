@@ -82,7 +82,7 @@ public class DispersionPatternActivity extends ChildActivityBase {
                 .getStatisticsDispersionPatternAggregationStrategy();
         TargetImpactAggregationDrawable drawable = statistic.getTarget().getImpactAggregationDrawable();
         drawable.setAggregationStrategy(strategy);
-        drawable.setShots(statistic.getShots());
+        drawable.replaceShotsWith(statistic.getShots());
         drawable.setArrowDiameter(statistic.getArrowDiameter(), SettingsManager.INSTANCE
                 .getInputArrowDiameterScale());
 

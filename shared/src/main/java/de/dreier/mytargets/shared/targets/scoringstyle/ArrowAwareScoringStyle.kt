@@ -13,15 +13,11 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.targets.scoringstyle;
+package de.dreier.mytargets.shared.targets.scoringstyle
 
-public class ArrowAwareScoringStyle extends ScoringStyle {
+class ArrowAwareScoringStyle(showAsX: Boolean, points: Array<IntArray>) : ScoringStyle(showAsX, points) {
 
-    public ArrowAwareScoringStyle(boolean showAsX, int[][] points) {
-        super(showAsX, points);
-    }
-
-    protected int getPoints(int zone, int arrow) {
-        return points[arrow < points.length ? arrow : points.length - 1][zone];
+    override fun getPoints(zone: Int, arrow: Int): Int {
+        return points[if (arrow < points.size) arrow else points.size - 1][zone]
     }
 }

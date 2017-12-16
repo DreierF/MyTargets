@@ -38,9 +38,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
-
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +49,7 @@ import de.dreier.mytargets.shared.models.SelectableZone;
 import de.dreier.mytargets.shared.models.Target;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Shot;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.shared.targets.drawable.TargetDrawable;
 import de.dreier.mytargets.shared.utils.EndRenderer;
 import de.dreier.mytargets.shared.utils.MatrixEvaluator;
@@ -276,7 +274,7 @@ public class TargetView extends TargetViewBase {
                 displayedShots.add(shot);
             }
         }
-        targetDrawable.setShots(displayedShots);
+        targetDrawable.replaceShotsWith(displayedShots);
         super.notifyTargetShotsChanged();
         if (updateListener != null) {
             updateListener.onEndUpdated(shots);
@@ -333,13 +331,13 @@ public class TargetView extends TargetViewBase {
         }
 
         fullMatrix = new Matrix();
-        fullMatrix.setRectToRect(TargetDrawable.SRC_RECT, targetRect, Matrix.ScaleToFit.CENTER);
+        fullMatrix.setRectToRect(TargetDrawable.Companion.getSRC_RECT(), targetRect, Matrix.ScaleToFit.CENTER);
 
         RectF targetRectExt = new RectF(targetRect);
         targetRectExt.inset(30 * density, 30 * density);
         fullExtendedMatrix = new Matrix();
         fullExtendedMatrix
-                .setRectToRect(TargetDrawable.SRC_RECT, targetRectExt, Matrix.ScaleToFit.CENTER);
+                .setRectToRect(TargetDrawable.Companion.getSRC_RECT(), targetRectExt, Matrix.ScaleToFit.CENTER);
         fullExtendedMatrixInverse = new Matrix();
         fullExtendedMatrix.invert(fullExtendedMatrixInverse);
 
@@ -577,8 +575,8 @@ public class TargetView extends TargetViewBase {
                 .setArrowDiameter(arrowDiameter, SettingsManager.INSTANCE.getInputArrowDiameterScale());
     }
 
-    public void setTransparentShots(@NonNull Stream<Shot> shotStream) {
-        targetDrawable.setTransparentShots(shotStream);
+    public void setTransparentShots(@NonNull List<Shot> shotStream) {
+        targetDrawable.replacedTransparentShots(shotStream);
     }
 
     @Override

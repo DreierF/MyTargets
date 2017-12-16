@@ -13,67 +13,46 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.targets.zone;
+package de.dreier.mytargets.shared.targets.zone
 
-import android.graphics.Paint;
-import android.graphics.PointF;
+import android.graphics.Paint
+import android.graphics.PointF
 
-import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper;
-import de.dreier.mytargets.shared.utils.Color;
+import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper
+import de.dreier.mytargets.shared.utils.Color
 
-public abstract class ZoneBase {
-    public final float radius;
-    public final int fillColor;
-    public final int strokeColor;
-    public final float strokeWidth;
-    protected final PointF midpoint;
-    protected final boolean scoresAsOutsideIn;
+abstract class ZoneBase(
+        val radius: Float,
+        protected val midpoint: PointF,
+        val fillColor: Int,
+        val strokeColor: Int,
+        strokeWidth: Int,
+        protected val scoresAsOutsideIn: Boolean
+) {
+    val strokeWidth: Float = strokeWidth * 0.002f
 
-    Paint paintFill;
-    Paint paintStroke;
-
-    public ZoneBase(float radius, PointF midpoint, int fillColor, int strokeColor, int strokeWidth, boolean scoresAsOutsideIn) {
-        this.radius = radius;
-        this.midpoint = midpoint;
-        this.fillColor = fillColor;
-        this.strokeColor = strokeColor;
-        this.strokeWidth = strokeWidth * 0.002f;
-        this.scoresAsOutsideIn = scoresAsOutsideIn;
+    internal val paintFill: Paint by lazy {
+        val paintFill = Paint()
+        paintFill.isAntiAlias = true
+        paintFill.color = fillColor
+        paintFill
     }
 
-    protected void initPaint() {
-        if (paintFill != null) {
-            return;
-        }
-        paintFill = new Paint();
-        paintFill.setAntiAlias(true);
-        paintFill.setColor(fillColor);
-        paintStroke = new Paint();
-        paintStroke.setStyle(Paint.Style.STROKE);
-        paintStroke.setAntiAlias(true);
-        paintStroke.setColor(strokeColor);
-        paintStroke.setStrokeWidth(strokeWidth);
+    internal val paintStroke: Paint by lazy {
+        val paintStroke = Paint()
+        paintStroke.style = Paint.Style.STROKE
+        paintStroke.isAntiAlias = true
+        paintStroke.color = strokeColor
+        paintStroke.strokeWidth = this.strokeWidth
+        paintStroke
     }
 
-    public abstract boolean isInZone(float ax, float ay, float arrowRadius);
+    val textColor: Int
+        get() = Color.getContrast(fillColor)
 
-    public int getFillColor() {
-        return fillColor;
-    }
+    abstract fun isInZone(ax: Float, ay: Float, arrowRadius: Float): Boolean
 
-    public int getStrokeColor() {
-        return strokeColor;
-    }
+    abstract fun drawFill(canvas: CanvasWrapper)
 
-    public float getStrokeWidth() {
-        return strokeWidth;
-    }
-
-    public int getTextColor() {
-        return Color.INSTANCE.getContrast(fillColor);
-    }
-
-    public abstract void drawFill(CanvasWrapper canvas);
-
-    public abstract void drawStroke(CanvasWrapper canvas);
+    abstract fun drawStroke(canvas: CanvasWrapper)
 }

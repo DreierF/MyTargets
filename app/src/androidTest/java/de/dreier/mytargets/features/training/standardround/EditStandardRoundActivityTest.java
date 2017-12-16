@@ -65,7 +65,7 @@ public class EditStandardRoundActivityTest extends UITestBase {
 
     @Before
     public void setUp() {
-        SettingsManager.INSTANCE.setTarget(new Target(WAFull.ID, 0, new Dimension(122, CENTIMETER)));
+        SettingsManager.INSTANCE.setTarget(new Target(WAFull.Companion.getID(), 0, new Dimension(122, CENTIMETER)));
         SettingsManager.INSTANCE.setDistance(new Dimension(50, METER));
         SettingsManager.INSTANCE.setTimerEnabled(false);
         SettingsManager.INSTANCE.setShotsPerEnd(3);

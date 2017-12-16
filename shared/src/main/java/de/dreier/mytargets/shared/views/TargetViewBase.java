@@ -115,7 +115,7 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
             shots.get(0).setScoringRing(0);
             shots.get(0).setX(0.01f);
             shots.get(0).setY(0.05f);
-            target = new Target(WAFull.ID, 0);
+            target = new Target(WAFull.Companion.getID(), 0);
             targetDrawable = target.getImpactAggregationDrawable();
             endRenderer.init(this, density, target);
             endRenderer.setShots(shots);

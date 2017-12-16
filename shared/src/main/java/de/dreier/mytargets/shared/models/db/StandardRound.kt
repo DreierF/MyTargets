@@ -31,7 +31,7 @@ import de.dreier.mytargets.shared.R
 import de.dreier.mytargets.shared.models.IDetailProvider
 import de.dreier.mytargets.shared.models.IIdSettable
 import de.dreier.mytargets.shared.models.IImageProvider
-import de.dreier.mytargets.shared.targets.models.CombinedSpot
+import de.dreier.mytargets.shared.targets.drawable.CombinedSpot
 import kotlinx.android.parcel.Parcelize
 
 @SuppressLint("ParcelCreator")
@@ -53,7 +53,7 @@ data class StandardRound(
 
     val targetDrawable: Drawable
         get() {
-            val targets = loadRounds()?.map { it.targetTemplate.drawable }
+            val targets = loadRounds()!!.map { it.targetTemplate.drawable }
             return CombinedSpot(targets)
         }
 

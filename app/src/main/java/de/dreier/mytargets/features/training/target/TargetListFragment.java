@@ -107,9 +107,9 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
         if (fixedType == TARGET) {
             list = Collections.singletonList(target.getModel());
         } else if (fixedType == GROUP) {
-            list = TargetFactory.getList(target);
+            list = TargetFactory.INSTANCE.getList(target);
         } else {
-            list = TargetFactory.getList();
+            list = TargetFactory.INSTANCE.getList();
         }
         List<Target> targets = Stream.of(list)
                 .map(value -> new Target((int) (long) value.getId(), 0))
@@ -244,7 +244,7 @@ public class TargetListFragment extends SelectItemFragmentBase<Target,
             super(child -> {
                 final ETargetType type = child.getModel().getType();
                 return new HeaderListAdapter.SimpleHeader((long) type.ordinal(), type.toString());
-            }, HeaderListAdapter.SimpleHeader::compareTo, TargetFactory.getComparator());
+            }, HeaderListAdapter.SimpleHeader::compareTo, TargetFactory.INSTANCE.getComparator());
         }
 
         @NonNull

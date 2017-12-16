@@ -91,7 +91,7 @@ public class MainActivityTest extends UITestBase {
     @Before
     public void setUp() {
         SettingsManager.INSTANCE
-                .setTarget(new Target(WAFull.ID, 0, new Dimension(122, Dimension.Unit.CENTIMETER)));
+                .setTarget(new Target(WAFull.Companion.getID(), 0, new Dimension(122, Dimension.Unit.CENTIMETER)));
         SettingsManager.INSTANCE.setDistance(new Dimension(50, Dimension.Unit.METER));
         SettingsManager.INSTANCE.setIndoor(false);
         SettingsManager.INSTANCE.setInputMethod(EInputMethod.PLOTTING);

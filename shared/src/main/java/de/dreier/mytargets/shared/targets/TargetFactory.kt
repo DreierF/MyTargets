@@ -12,120 +12,82 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.shared.targets;
+package de.dreier.mytargets.shared.targets
 
-import android.support.annotation.NonNull;
+import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.targets.models.*
+import java.util.*
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+object TargetFactory {
 
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.targets.models.ASA3D;
-import de.dreier.mytargets.shared.targets.models.ASA3D14;
-import de.dreier.mytargets.shared.targets.models.Beursault;
-import de.dreier.mytargets.shared.targets.models.DAIR3D;
-import de.dreier.mytargets.shared.targets.models.DBSCBlowpipe;
-import de.dreier.mytargets.shared.targets.models.HitOrMiss;
-import de.dreier.mytargets.shared.targets.models.IBO3D;
-import de.dreier.mytargets.shared.targets.models.IFAAAnimal;
-import de.dreier.mytargets.shared.targets.models.NFAAAnimal;
-import de.dreier.mytargets.shared.targets.models.NFAAExpertField;
-import de.dreier.mytargets.shared.targets.models.NFAAField;
-import de.dreier.mytargets.shared.targets.models.NFAAHunter;
-import de.dreier.mytargets.shared.targets.models.NFAAIndoor;
-import de.dreier.mytargets.shared.targets.models.NFAAIndoor5Spot;
-import de.dreier.mytargets.shared.targets.models.NFAS3D;
-import de.dreier.mytargets.shared.targets.models.NFASField;
-import de.dreier.mytargets.shared.targets.models.SCAPeriod;
-import de.dreier.mytargets.shared.targets.models.TargetModelBase;
-import de.dreier.mytargets.shared.targets.models.WA3Ring;
-import de.dreier.mytargets.shared.targets.models.WA3Ring3Spot;
-import de.dreier.mytargets.shared.targets.models.WA5Ring;
-import de.dreier.mytargets.shared.targets.models.WA6Ring;
-import de.dreier.mytargets.shared.targets.models.WADanage3Spot;
-import de.dreier.mytargets.shared.targets.models.WADanage6Spot;
-import de.dreier.mytargets.shared.targets.models.WAField;
-import de.dreier.mytargets.shared.targets.models.WAField3Spot;
-import de.dreier.mytargets.shared.targets.models.WAFull;
-import de.dreier.mytargets.shared.targets.models.WAVegas3Spot;
-import de.dreier.mytargets.shared.targets.models.WAVertical3Spot;
-import de.dreier.mytargets.shared.targets.models.Worcester;
+    private val list: MutableList<TargetModelBase>
 
-public class TargetFactory {
+    private var idIndexLookup: Array<Int?>
 
-    @NonNull
-    private static final List<TargetModelBase> list;
+    val comparator: Comparator<Target>
+        get() = compareBy { idIndexLookup[(it.id!!).toInt()]!! }
 
-    static {
-        list = new ArrayList<>();
-        list.add(new WAFull());
-        list.add(new WA6Ring());
-        list.add(new WA5Ring());
-        list.add(new WA3Ring());
-        list.add(new WAVertical3Spot());
-        list.add(new WAVegas3Spot());
-        list.add(new WA3Ring3Spot());
-        list.add(new WADanage3Spot());
-        list.add(new WADanage6Spot());
-        list.add(new NFAAIndoor());
-        list.add(new NFAAIndoor5Spot());
-        list.add(new HitOrMiss());
-        list.add(new Beursault());
-        list.add(new SCAPeriod());
-        list.add(new Worcester());
-        list.add(new DBSCBlowpipe());
-        list.add(new WAField());
-        list.add(new WAField3Spot());
-        list.add(new NFAAField());
-        list.add(new NFAAExpertField());
-        list.add(new NFAAHunter());
-        list.add(new IFAAAnimal());
-        list.add(new NFAAAnimal());
-        list.add(new NFASField());
-        list.add(new ASA3D());
-        list.add(new ASA3D14());
-        list.add(new IBO3D());
-        list.add(new NFAS3D());
-        list.add(new DAIR3D());
+    init {
+        list = ArrayList()
+        list.add(WAFull())
+        list.add(WA6Ring())
+        list.add(WA5Ring())
+        list.add(WA3Ring())
+        list.add(WAVertical3Spot())
+        list.add(WAVegas3Spot())
+        list.add(WA3Ring3Spot())
+        list.add(WADanage3Spot())
+        list.add(WADanage6Spot())
+        list.add(NFAAIndoor())
+        list.add(NFAAIndoor5Spot())
+        list.add(HitOrMiss())
+        list.add(Beursault())
+        list.add(SCAPeriod())
+        list.add(Worcester())
+        list.add(DBSCBlowpipe())
+        list.add(WAField())
+        list.add(WAField3Spot())
+        list.add(NFAAField())
+        list.add(NFAAExpertField())
+        list.add(NFAAHunter())
+        list.add(IFAAAnimal())
+        list.add(NFAAAnimal())
+        list.add(NFASField())
+        list.add(ASA3D())
+        list.add(ASA3D14())
+        list.add(IBO3D())
+        list.add(NFAS3D())
+        list.add(DAIR3D())
     }
 
-    private static Integer[] idIndexLookup;
-
-    static {
-        idIndexLookup = new Integer[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            idIndexLookup[(int) (long) list.get(i).getId()] = i;
+    init {
+        idIndexLookup = arrayOfNulls(list.size)
+        for (i in list.indices) {
+            idIndexLookup[list[i].id.toInt()] = i
         }
     }
 
-    @NonNull
-    public static List<TargetModelBase> getList() {
-        return list;
+    fun getList(): List<TargetModelBase> {
+        return list
     }
 
-    @NonNull
-    public static List<TargetModelBase> getList(@NonNull Target target) {
-        List<TargetModelBase> out = new ArrayList<>();
-        if (target.getId() < 7) {
-            int til = target.getDiameter().getValue() <= 60 ? 7 : 4;
-            for (int i = 0; i < til; i++) {
-                out.add(list.get(i));
+    fun getList(target: Target): List<TargetModelBase> {
+        val out = ArrayList<TargetModelBase>()
+        if (target.id!! < 7L) {
+            val til = if (target.diameter!!.value <= 60) 7L else 4L
+            for (i in 0 until til) {
+                out.add(list[i.toInt()])
             }
-        } else if (target.getId() == 10 || target.getId() == 11) {
-            out.add(new NFAAIndoor());
-            out.add(new NFAAIndoor5Spot());
+        } else if (target.id == 10L || target.id == 11L) {
+            out.add(NFAAIndoor())
+            out.add(NFAAIndoor5Spot())
         } else {
-            out.add(list.get(idIndexLookup[(int)(long)target.getId()]));
+            out.add(list[idIndexLookup[(target.id!!).toInt()]!!])
         }
-        return out;
+        return out
     }
 
-    public static TargetModelBase getTarget(int id) {
-        return list.get(idIndexLookup[id]);
-    }
-
-    public static Comparator<Target> getComparator() {
-        return (t1, t2) -> idIndexLookup[(int)(long)t1.getId()].compareTo(idIndexLookup[(int)(long)t2.getId()]);
+    fun getTarget(id: Int): TargetModelBase {
+        return list[idIndexLookup[id]!!]
     }
 }

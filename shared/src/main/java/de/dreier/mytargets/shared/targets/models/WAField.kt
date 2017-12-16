@@ -12,49 +12,50 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.shared.targets.models;
+package de.dreier.mytargets.shared.targets.models
 
-import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.ETargetType;
-import de.dreier.mytargets.shared.targets.decoration.CenterMarkDecorator;
-import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle;
-import de.dreier.mytargets.shared.targets.zone.CircularZone;
-import de.dreier.mytargets.shared.targets.zone.ZoneBase;
+import android.graphics.Color.WHITE
+import de.dreier.mytargets.shared.R
+import de.dreier.mytargets.shared.models.Dimension
+import de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER
+import de.dreier.mytargets.shared.models.ETargetType
+import de.dreier.mytargets.shared.targets.decoration.CenterMarkDecorator
+import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle
+import de.dreier.mytargets.shared.targets.zone.CircularZone
+import de.dreier.mytargets.shared.utils.Color.DARK_GRAY
+import de.dreier.mytargets.shared.utils.Color.LEMON_YELLOW
 
-import static android.graphics.Color.WHITE;
-import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
-import static de.dreier.mytargets.shared.utils.Color.DARK_GRAY;
-import static de.dreier.mytargets.shared.utils.Color.LEMON_YELLOW;
+open class WAField internal constructor(id: Long, nameRes: Int) : TargetModelBase(
+        id = id,
+        nameRes = nameRes,
+        zones = arrayOf(
+                CircularZone(0.1f, LEMON_YELLOW, DARK_GRAY, 4),
+                CircularZone(0.2f, LEMON_YELLOW, DARK_GRAY, 4),
+                CircularZone(0.4f, DARK_GRAY, WHITE, 4),
+                CircularZone(0.6f, DARK_GRAY, WHITE, 4),
+                CircularZone(0.8f, DARK_GRAY, WHITE, 4),
+                CircularZone(1.0f, DARK_GRAY, WHITE, 4)
+        ),
+        scoringStyles = arrayOf(
+                ScoringStyle(true, 5, 5, 4, 3, 2, 1),
+                ScoringStyle(false, 6, 5, 4, 3, 2, 1)
+        ),
+        diameters = arrayOf(
+                Dimension(20f, CENTIMETER),
+                Dimension(40f, CENTIMETER),
+                Dimension(60f, CENTIMETER),
+                Dimension(80f, CENTIMETER)
+        ),
+        type = ETargetType.FIELD
+) {
 
-public class WAField extends TargetModelBase {
-    public static final int ID = 13;
+    constructor() : this(ID, R.string.wa_field)
 
-    public WAField() {
-        this(ID, R.string.wa_field);
+    init {
+        decorator = CenterMarkDecorator(DARK_GRAY, 10.5f, 4, false)
     }
 
-    WAField(int id, int nameRes) {
-        super(id, nameRes);
-        zones = new ZoneBase[]{
-                new CircularZone(0.1f, LEMON_YELLOW, DARK_GRAY, 4),
-                new CircularZone(0.2f, LEMON_YELLOW, DARK_GRAY, 4),
-                new CircularZone(0.4f, DARK_GRAY, WHITE, 4),
-                new CircularZone(0.6f, DARK_GRAY, WHITE, 4),
-                new CircularZone(0.8f, DARK_GRAY, WHITE, 4),
-                new CircularZone(1.0f, DARK_GRAY, WHITE, 4)
-        };
-        scoringStyles = new ScoringStyle[]{
-                new ScoringStyle(true, 5, 5, 4, 3, 2, 1),
-                new ScoringStyle(false, 6, 5, 4, 3, 2, 1)
-        };
-        diameters = new Dimension[]{
-                new Dimension(20, CENTIMETER),
-                new Dimension(40, CENTIMETER),
-                new Dimension(60, CENTIMETER),
-                new Dimension(80, CENTIMETER)
-        };
-        decorator = new CenterMarkDecorator(DARK_GRAY, 10.5f, 4, false);
-        type = ETargetType.FIELD;
+    companion object {
+        val ID = 13L
     }
 }

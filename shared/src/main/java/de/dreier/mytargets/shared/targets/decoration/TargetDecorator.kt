@@ -13,10 +13,10 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.targets.decoration;
+package de.dreier.mytargets.shared.targets.decoration
 
-import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper;
+import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper
 
-public interface TargetDecorator {
-    void drawDecoration(CanvasWrapper canvas);
+interface TargetDecorator {
+    fun drawDecoration(canvas: CanvasWrapper)
 }

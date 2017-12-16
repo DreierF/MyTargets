@@ -12,59 +12,61 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.shared.targets.models;
+package de.dreier.mytargets.shared.targets.models
 
-import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.targets.decoration.CenterMarkDecorator;
-import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle;
-import de.dreier.mytargets.shared.targets.zone.CircularZone;
-import de.dreier.mytargets.shared.targets.zone.ZoneBase;
+import de.dreier.mytargets.shared.R
+import de.dreier.mytargets.shared.models.Dimension
+import de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER
+import de.dreier.mytargets.shared.targets.decoration.CenterMarkDecorator
+import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle
+import de.dreier.mytargets.shared.targets.zone.CircularZone
+import de.dreier.mytargets.shared.utils.Color.DARK_GRAY
+import de.dreier.mytargets.shared.utils.Color.FLAMINGO_RED
+import de.dreier.mytargets.shared.utils.Color.LEMON_YELLOW
 
-import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
-import static de.dreier.mytargets.shared.utils.Color.DARK_GRAY;
-import static de.dreier.mytargets.shared.utils.Color.FLAMINGO_RED;
-import static de.dreier.mytargets.shared.utils.Color.LEMON_YELLOW;
+open class WA3Ring internal constructor(id: Long, nameRes: Int, diameters: Array<Dimension>) : TargetModelBase(
+        id = id,
+        nameRes = nameRes,
+        zones = arrayOf(
+                CircularZone(0.166f, LEMON_YELLOW, DARK_GRAY, 4),
+                CircularZone(0.334f, LEMON_YELLOW, DARK_GRAY, 4),
+                CircularZone(0.666f, LEMON_YELLOW, DARK_GRAY, 4),
+                CircularZone(1.0f, FLAMINGO_RED, DARK_GRAY, 4)
+        ),
+        scoringStyles = arrayOf(
+                ScoringStyle(R.string.recurve_style_x_8, true, 10, 10, 9, 8),
+                ScoringStyle(R.string.recurve_style_10_8, false, 10, 10, 9, 8),
+                ScoringStyle(R.string.compound_style, false, 10, 9, 9, 8),
+                ScoringStyle(false, 11, 10, 9, 8),
+                ScoringStyle(true, 5, 5, 5, 4),
+                ScoringStyle(false, 9, 9, 9, 7)
+        ),
+        diameters = diameters
+) {
 
-public class WA3Ring extends TargetModelBase {
+    constructor() : this(
+            id = ID,
+            nameRes = R.string.wa_3_ring,
+            diameters = arrayOf(
+                    Dimension(40f, CENTIMETER),
+                    Dimension(60f, CENTIMETER),
+                    Dimension(80f, CENTIMETER),
+                    Dimension(92f, CENTIMETER),
+                    Dimension(122f, CENTIMETER)
+            )
+    )
 
-    public static final int ID = 3;
-
-    public WA3Ring() {
-        this(ID, R.string.wa_3_ring);
+    init {
+        realSizeFactor = 0.3f
+        decorator = CenterMarkDecorator(DARK_GRAY, 16.667f, 4, false)
     }
 
-    WA3Ring(int id, int nameRes) {
-        super(id, nameRes);
-        realSizeFactor = 0.3f;
-        zones = new ZoneBase[]{
-                new CircularZone(0.166f, LEMON_YELLOW, DARK_GRAY, 4),
-                new CircularZone(0.334f, LEMON_YELLOW, DARK_GRAY, 4),
-                new CircularZone(0.666f, LEMON_YELLOW, DARK_GRAY, 4),
-                new CircularZone(1.0f, FLAMINGO_RED, DARK_GRAY, 4)
-        };
-        scoringStyles = new ScoringStyle[]{
-                new ScoringStyle(R.string.recurve_style_x_8, true, 10, 10, 9, 8),
-                new ScoringStyle(R.string.recurve_style_10_8, false, 10, 10, 9, 8),
-                new ScoringStyle(R.string.compound_style, false, 10, 9, 9, 8),
-                new ScoringStyle(false, 11, 10, 9, 8),
-                new ScoringStyle(true, 5, 5, 5, 4),
-                new ScoringStyle(false, 9, 9, 9, 7)
-        };
-        diameters = new Dimension[]{
-                new Dimension(40, CENTIMETER),
-                new Dimension(60, CENTIMETER),
-                new Dimension(80, CENTIMETER),
-                new Dimension(92, CENTIMETER),
-                new Dimension(122, CENTIMETER)
-        };
-        decorator = new CenterMarkDecorator(DARK_GRAY, 16.667f, 4, false);
-    }
-
-    @Override
-    public boolean shouldDrawZone(int zone, int scoringStyle) {
+    override fun shouldDrawZone(zone: Int, scoringStyle: Int): Boolean {
         // Do not draw second ring if we have a compound face
-        return !(scoringStyle == 1 && zone == 0) &&
-                !(scoringStyle == 2 && zone == 1);
+        return !(scoringStyle == 1 && zone == 0) && !(scoringStyle == 2 && zone == 1)
+    }
+
+    companion object {
+        val ID = 3L
     }
 }

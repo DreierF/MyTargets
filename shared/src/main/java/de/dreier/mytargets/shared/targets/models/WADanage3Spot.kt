@@ -12,34 +12,36 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.shared.targets.models;
+package de.dreier.mytargets.shared.targets.models
 
-import android.graphics.PointF;
+import android.graphics.PointF
 
-import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.R
+import de.dreier.mytargets.shared.models.Dimension
 
-import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
+import de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER
 
-public class WADanage3Spot extends WA3Ring {
-    public static final int ID = 26;
-
-    public WADanage3Spot() {
-        super(ID, R.string.wa_danage_3_spot);
-        faceRadius = 0.54556f;
-        facePositions = new PointF[]{
-                new PointF(0.0f, -0.39356598f),
-                new PointF(-0.45444f, 0.39756605f),
-                new PointF(0.45443994f, 0.39756605f)
-        };
-        diameters = new Dimension[]{
-                new Dimension(40, CENTIMETER),
-                new Dimension(60, CENTIMETER)
-        };
+class WADanage3Spot : WA3Ring(
+        id = ID,
+        nameRes = R.string.wa_danage_3_spot,
+        diameters = arrayOf(
+                Dimension(40f, CENTIMETER),
+                Dimension(60f, CENTIMETER)
+        )
+) {
+    init {
+        faceRadius = 0.54556f
+        facePositions = arrayOf(
+                PointF(0.0f, -0.39356598f),
+                PointF(-0.45444f, 0.39756605f),
+                PointF(0.45443994f, 0.39756605f)
+        )
     }
 
-    @Override
-    public long getSingleSpotTargetId() {
-        return WA3Ring.ID;
+    override val singleSpotTargetId: Long
+        get() = WA3Ring.ID
+
+    companion object {
+        val ID = 26L
     }
 }

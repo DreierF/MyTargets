@@ -68,7 +68,7 @@ public class LowLevelActions {
         targetRectExt.inset(30 * density, 30 * density);
         Matrix fullExtendedMatrix = new Matrix();
         fullExtendedMatrix
-                .setRectToRect(TargetDrawable.SRC_RECT, targetRectExt, Matrix.ScaleToFit.CENTER);
+                .setRectToRect(TargetDrawable.Companion.getSRC_RECT(), targetRectExt, Matrix.ScaleToFit.CENTER);
 
         final float[] shotPos = new float[2];
         fullExtendedMatrix.mapPoints(shotPos, coordinates);

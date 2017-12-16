@@ -13,31 +13,19 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.targets.scoringstyle;
+package de.dreier.mytargets.shared.targets.scoringstyle
 
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
+import android.support.annotation.StringRes
+import de.dreier.mytargets.shared.models.Score
+import de.dreier.mytargets.shared.models.db.End
 
-import de.dreier.mytargets.shared.models.Score;
-import de.dreier.mytargets.shared.models.db.End;
-import de.dreier.mytargets.shared.streamwrapper.Stream;
+class ColorScoringStyle(@StringRes title: Int, private val maxEndPoints: Int, vararg points: Int) : ScoringStyle(title, false, *points) {
 
-public class ColorScoringStyle extends ScoringStyle {
-
-    private final int maxEndPoints;
-
-    public ColorScoringStyle(@StringRes int title, int maxEndPoints, int... points) {
-        super(title, false, points);
-        this.maxEndPoints = maxEndPoints;
-    }
-
-    @NonNull
-    @Override
-    public Score getReachedScore(@NonNull End end) {
-        int reachedScore = Stream.of(end.loadShots())
-                .map(s -> getScoreByScoringRing(s.getScoringRing(), s.getIndex()))
+    override fun getReachedScore(end: End): Score {
+        val reachedScore = end.loadShots()!!
+                .map { s -> getScoreByScoringRing(s.scoringRing, s.index) }
                 .distinct()
-                .reducing(0, (a, b) -> a + b);
-        return new Score(reachedScore, maxEndPoints);
+                .fold(0) { a, b -> a + b }
+        return Score(reachedScore, maxEndPoints)
     }
 }

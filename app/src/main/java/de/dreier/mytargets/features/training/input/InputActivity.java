@@ -338,7 +338,7 @@ public class InputActivity extends ChildActivityBase
 
     private void showEnd(int endIndex) {
         // Create a new end
-        data.setEndIndex(endIndex);
+        data.setAdjustEndIndex(endIndex);
         if (endIndex >= data.getEnds().size()) {
             End end = data.getCurrentRound().addEnd();
             end.setExact(SettingsManager.INSTANCE.getInputMethod() == EInputMethod.PLOTTING);
@@ -362,7 +362,7 @@ public class InputActivity extends ChildActivityBase
                 .flatMap(r -> Stream.of(r.loadEnds()))
                 .filter((end) -> shouldShowEnd(end, currentEndId))
                 .flatMap(p -> Stream.of(p.loadShots()));
-        targetView.setTransparentShots(shotStream);
+        targetView.setTransparentShots(shotStream.toList());
     }
 
     private void openTimer() {
@@ -544,7 +544,7 @@ public class InputActivity extends ChildActivityBase
             Training training = Training.Companion.get(trainingId);
             final LoaderResult result = new LoaderResult(training);
             result.setRoundId(roundId);
-            result.setEndIndex(endIndex);
+            result.setAdjustEndIndex(endIndex);
 
             if (training.getArrowId() != null) {
                 Arrow arrow = training.getArrow();

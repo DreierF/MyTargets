@@ -12,27 +12,26 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.shared.targets.models;
+package de.dreier.mytargets.shared.targets.models
 
-import android.graphics.PointF;
+import android.graphics.PointF
 
-import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.R
 
-public class WAField3Spot extends WAField {
-    public static final int ID = 25;
-
-    public WAField3Spot() {
-        super(ID, R.string.wa_field_3_spot);
-        faceRadius = 0.32f;
-        facePositions = new PointF[]{
-                new PointF(0.0f, -0.68f),
-                new PointF(0.0f, 0.0f),
-                new PointF(0.0f, 0.68f)
-        };
+class WAField3Spot : WAField(ID, R.string.wa_field_3_spot) {
+    init {
+        faceRadius = 0.32f
+        facePositions = arrayOf(
+                PointF(0.0f, -0.68f),
+                PointF(0.0f, 0.0f),
+                PointF(0.0f, 0.68f)
+        )
     }
 
-    @Override
-    public long getSingleSpotTargetId() {
-        return WAField.ID;
+    override val singleSpotTargetId: Long
+        get() = WAField.ID
+
+    companion object {
+        val ID = 25L
     }
 }
