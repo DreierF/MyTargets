@@ -12,32 +12,36 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.shared.targets.models;
+package de.dreier.mytargets.shared.targets.models
 
-import android.graphics.PointF;
+import android.graphics.PointF
 
-import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.shared.R
+import de.dreier.mytargets.shared.models.Dimension
 
-import static de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER;
+import de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER
 
-public class WAVegas3Spot extends WA5Ring {
-    private static final int ID = 4;
-
-    public WAVegas3Spot() {
-        super(ID, R.string.vegas_3_spot);
-        faceRadius = 0.48f;
-        facePositions = new PointF[]{
-                new PointF(-0.52f, 0.5f),
-                new PointF(0.0f, -0.5f),
-                new PointF(0.52f, 0.5f)
-        };
-        diameters = new Dimension[]{new Dimension(40, CENTIMETER),
-                new Dimension(60, CENTIMETER)};
+class WAVegas3Spot : WA5Ring(
+        id = ID,
+        nameRes = R.string.vegas_3_spot,
+        diameters = arrayOf(
+                Dimension(40f, CENTIMETER),
+                Dimension(60f, CENTIMETER)
+        )
+) {
+    init {
+        faceRadius = 0.48f
+        facePositions = arrayOf(
+                PointF(-0.52f, 0.5f),
+                PointF(0.0f, -0.5f),
+                PointF(0.52f, 0.5f)
+        )
     }
 
-    @Override
-    public long getSingleSpotTargetId() {
-        return WA5Ring.ID;
+    override val singleSpotTargetId: Long
+        get() = WA5Ring.ID
+
+    companion object {
+        private val ID = 4L
     }
 }

@@ -42,7 +42,7 @@ public class SimpleDbTestRule extends DbTestRuleBase {
     @Override
     protected void addDatabaseContent() {
         SettingsManager.INSTANCE.setTarget(
-                new Target(WAFull.ID, 0, new Dimension(122, Dimension.Unit.CENTIMETER)));
+                new Target(WAFull.Companion.getID(), 0, new Dimension(122, Dimension.Unit.CENTIMETER)));
         SettingsManager.INSTANCE.setDistance(new Dimension(50, Dimension.Unit.METER));
         SettingsManager.INSTANCE.setIndoor(false);
         SettingsManager.INSTANCE.setInputMethod(TargetViewBase.EInputMethod.PLOTTING);
@@ -101,7 +101,7 @@ public class SimpleDbTestRule extends DbTestRuleBase {
         RoundTemplate roundTemplate = new RoundTemplate();
         roundTemplate.setIndex(index);
         roundTemplate.setTargetTemplate(
-                new Target(WAFull.ID, 0, new Dimension(60, Dimension.Unit.CENTIMETER)));
+                new Target(WAFull.Companion.getID(), 0, new Dimension(60, Dimension.Unit.CENTIMETER)));
         roundTemplate.setShotsPerEnd(6);
         roundTemplate.setEndCount(6);
         roundTemplate.setDistance(new Dimension(distance, Dimension.Unit.METER));

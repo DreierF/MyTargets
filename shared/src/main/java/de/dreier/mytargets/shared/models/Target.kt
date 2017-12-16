@@ -45,7 +45,7 @@ data class Target(
         TargetImpactAggregationDrawable(this)
     }
 
-    constructor(target: Int, scoringStyle: Int) : this(target.toLong(), scoringStyle, null) {
+    constructor(target: Long, scoringStyle: Int) : this(target, scoringStyle, null) {
         this.diameter = model.diameters[0]
     }
 
@@ -65,7 +65,7 @@ data class Target(
     }
 
     override fun getDetails(context: Context): String {
-        return model.scoringStyles[scoringStyleIndex]
+        return model.getScoringStyles()[scoringStyleIndex]
     }
 
     fun getSelectableZoneList(arrow: Int): List<SelectableZone> {

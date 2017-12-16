@@ -13,48 +13,31 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.targets.decoration;
+package de.dreier.mytargets.shared.targets.decoration
 
-import android.graphics.Paint;
-import android.support.annotation.NonNull;
+import android.graphics.Paint
 
-import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper;
+import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper
 
-public class CenterMarkDecorator implements TargetDecorator {
-    public final int color;
-    public final float size;
-    public final int stroke;
-    private final boolean tilted;
-    private Paint paintStroke;
-
-    public CenterMarkDecorator(int color, float size, int stroke, boolean tilted) {
-        this.color = color;
-        this.size = size;
-        this.stroke = stroke;
-        this.tilted = tilted;
+open class CenterMarkDecorator(val color: Int, val size: Float, val stroke: Int, private val tilted: Boolean) : TargetDecorator {
+    private val paintStroke: Paint by lazy {
+        val paintStroke = Paint()
+        paintStroke.style = Paint.Style.STROKE
+        paintStroke.isAntiAlias = true
+        paintStroke
     }
 
-    private void initPaint() {
-        paintStroke = new Paint();
-        paintStroke.setStyle(Paint.Style.STROKE);
-        paintStroke.setAntiAlias(true);
-    }
-
-    @Override
-    public void drawDecoration(@NonNull CanvasWrapper canvas) {
-        if (paintStroke == null) {
-            initPaint();
-        }
-        paintStroke.setColor(color);
-        paintStroke.setStrokeWidth(stroke / 500f);
+    override fun drawDecoration(canvas: CanvasWrapper) {
+        paintStroke.color = color
+        paintStroke.strokeWidth = stroke / 500f
         if (tilted) {
             canvas.drawLine(-size * 0.002f, -size * 0.002f,
-                    size * 0.002f, size * 0.002f, paintStroke);
+                    size * 0.002f, size * 0.002f, paintStroke)
             canvas.drawLine(-size * 0.002f, size * 0.002f,
-                    size * 0.002f, -size * 0.002f, paintStroke);
+                    size * 0.002f, -size * 0.002f, paintStroke)
         } else {
-            canvas.drawLine(-size * 0.002f, 0, size * 0.002f, 0, paintStroke);
-            canvas.drawLine(0, -size * 0.002f, 0, size * 0.002f, paintStroke);
+            canvas.drawLine(-size * 0.002f, 0f, size * 0.002f, 0f, paintStroke)
+            canvas.drawLine(0f, -size * 0.002f, 0f, size * 0.002f, paintStroke)
         }
     }
 }

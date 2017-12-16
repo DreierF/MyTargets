@@ -13,111 +13,102 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.targets.drawable;
+package de.dreier.mytargets.shared.targets.drawable
 
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.RectF;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.text.TextPaint;
+import android.graphics.*
+import android.text.TextPaint
 
-public class CanvasWrapper {
+class CanvasWrapper {
 
-    private final Paint tempPen = new Paint();
+    private val tempPen = Paint()
     // two points 1 unit away from each other
-    private final float[] PTS = new float[]{0, 0, 1, 0};
-    private final float[] tmpPts = new float[4];
-    private final float[] tmpPt = new float[2];
-    private final Path tmpPath = new Path();
-    @Nullable
-    private Canvas canvas;
-    private Matrix matrix;
-    private float scale;
-    @NonNull
-    private TextPaint tempTextPaint = new TextPaint();
+    private val PTS = floatArrayOf(0f, 0f, 1f, 0f)
+    private val tmpPts = FloatArray(4)
+    private val tmpPt = FloatArray(2)
+    private val tmpPath = Path()
+    private var canvas: Canvas? = null
+    private var matrix: Matrix = Matrix()
+    private var scale: Float = 0f
+    private val tempTextPaint = TextPaint()
 
-    public void setCanvas(@NonNull Canvas canvas) {
-        this.canvas = canvas;
+    fun setCanvas(canvas: Canvas) {
+        this.canvas = canvas
     }
 
-    public void releaseCanvas() {
-        canvas = null;
+    fun releaseCanvas() {
+        canvas = null
     }
 
-    public void setMatrix(Matrix matrix) {
-        this.matrix = matrix;
+    fun setMatrix(matrix: Matrix) {
+        this.matrix = matrix
 
         // get the scale for transforming the Paint
-        this.matrix.mapPoints(tmpPts, PTS);
-        scale = (float) Math
-                .sqrt(Math.pow(tmpPts[0] - tmpPts[2], 2) + Math.pow(tmpPts[1] - tmpPts[3], 2));
+        this.matrix.mapPoints(tmpPts, PTS)
+        scale = Math.sqrt(Math.pow((tmpPts[0] - tmpPts[2]).toDouble(), 2.0) + Math.pow((tmpPts[1] - tmpPts[3]).toDouble(), 2.0)).toFloat()
     }
 
-    public void drawPath(@NonNull Path path, @NonNull final Paint pen) {
+    fun drawPath(path: Path, pen: Paint) {
         // transform the path
-        tmpPath.set(path);
-        tmpPath.transform(matrix);
+        tmpPath.set(path)
+        tmpPath.transform(matrix)
 
         // copy the existing Paint
-        scalePaint(pen);
+        scalePaint(pen)
 
         // draw the path
-        canvas.drawPath(tmpPath, tempPen);
+        canvas!!.drawPath(tmpPath, tempPen)
     }
 
-    public void drawCircle(float x, float y, float radius, @NonNull Paint paintFill) {
+    fun drawCircle(x: Float, y: Float, radius: Float, paintFill: Paint) {
         // copy the existing Paint
-        scalePaint(paintFill);
-        tmpPt[0] = x;
-        tmpPt[1] = y;
-        this.matrix.mapPoints(tmpPt);
-        canvas.drawCircle(tmpPt[0], tmpPt[1], radius * scale, tempPen);
+        scalePaint(paintFill)
+        tmpPt[0] = x
+        tmpPt[1] = y
+        this.matrix.mapPoints(tmpPt)
+        canvas!!.drawCircle(tmpPt[0], tmpPt[1], radius * scale, tempPen)
     }
 
-    public void drawLine(float startX, float startY, float endX, float endY, @NonNull Paint paintStroke) {
+    fun drawLine(startX: Float, startY: Float, endX: Float, endY: Float, paintStroke: Paint) {
         // copy the existing Paint
-        scalePaint(paintStroke);
-        tmpPts[0] = startX;
-        tmpPts[1] = startY;
-        tmpPts[2] = endX;
-        tmpPts[3] = endY;
-        this.matrix.mapPoints(tmpPts);
-        canvas.drawLine(tmpPts[0], tmpPts[1], tmpPts[2], tmpPts[3], tempPen);
+        scalePaint(paintStroke)
+        tmpPts[0] = startX
+        tmpPts[1] = startY
+        tmpPts[2] = endX
+        tmpPts[3] = endY
+        this.matrix.mapPoints(tmpPts)
+        canvas!!.drawLine(tmpPts[0], tmpPts[1], tmpPts[2], tmpPts[3], tempPen)
     }
 
-    public void drawRect(@NonNull RectF rect, @NonNull Paint paint) {
-        scalePaint(paint);
-        tmpPts[0] = rect.left;
-        tmpPts[1] = rect.top;
-        tmpPts[2] = rect.right;
-        tmpPts[3] = rect.bottom;
-        this.matrix.mapPoints(tmpPts);
-        canvas.drawRect(tmpPts[0], tmpPts[1], tmpPts[2], tmpPts[3], tempPen);
+    fun drawRect(rect: RectF, paint: Paint) {
+        scalePaint(paint)
+        tmpPts[0] = rect.left
+        tmpPts[1] = rect.top
+        tmpPts[2] = rect.right
+        tmpPts[3] = rect.bottom
+        this.matrix.mapPoints(tmpPts)
+        canvas!!.drawRect(tmpPts[0], tmpPts[1], tmpPts[2], tmpPts[3], tempPen)
     }
 
-    private void scalePaint(@NonNull Paint paint) {
-        tempPen.set(paint);
-        tempPen.setStrokeMiter(paint.getStrokeMiter() * scale);
-        tempPen.setStrokeWidth(paint.getStrokeWidth() * scale);
+    private fun scalePaint(paint: Paint) {
+        tempPen.set(paint)
+        tempPen.strokeMiter = paint.strokeMiter * scale
+        tempPen.strokeWidth = paint.strokeWidth * scale
     }
 
-    public void drawText(@NonNull String text, @NonNull RectF rect, TextPaint paintText) {
-        tmpPts[0] = rect.left;
-        tmpPts[1] = rect.top;
-        tmpPts[2] = rect.right;
-        tmpPts[3] = rect.bottom;
-        this.matrix.mapPoints(tmpPts);
-        rect.left = tmpPts[0];
-        rect.top = tmpPts[1];
-        rect.right = tmpPts[2];
-        rect.bottom = tmpPts[3];
+    fun drawText(text: String, rect: RectF, paintText: TextPaint) {
+        tmpPts[0] = rect.left
+        tmpPts[1] = rect.top
+        tmpPts[2] = rect.right
+        tmpPts[3] = rect.bottom
+        this.matrix.mapPoints(tmpPts)
+        rect.left = tmpPts[0]
+        rect.top = tmpPts[1]
+        rect.right = tmpPts[2]
+        rect.bottom = tmpPts[3]
 
-        tempTextPaint.set(paintText);
-        tempTextPaint.setTextAlign(Paint.Align.CENTER);
-        tempTextPaint.setTextSize(rect.height() * 0.8f);
-        canvas.drawText(text, rect.centerX(), rect.bottom - rect.height() * 0.2f, tempTextPaint);
+        tempTextPaint.set(paintText)
+        tempTextPaint.textAlign = Paint.Align.CENTER
+        tempTextPaint.textSize = rect.height() * 0.8f
+        canvas!!.drawText(text, rect.centerX(), rect.bottom - rect.height() * 0.2f, tempTextPaint)
     }
 }

@@ -35,8 +35,8 @@ class Circle(private val density: Float) {
 
     fun draw(can: Canvas, x: Float, y: Float, zone: Int, radius: Int, arrow: Int, number: String?, ambientMode: Boolean, target: Target) {
         val zoneBase = target.model.getZone(zone)
-        val fillColor = if (ambientMode) Color.BLACK else zoneBase.getFillColor()
-        val borderColor = if (ambientMode) Color.WHITE else Color.getStrokeColor(zoneBase.getFillColor())
+        val fillColor = if (ambientMode) Color.BLACK else zoneBase.fillColor
+        val borderColor = if (ambientMode) Color.WHITE else Color.getStrokeColor(zoneBase.fillColor)
         val textColor = if (ambientMode) Color.WHITE else zoneBase.textColor
         val score = target.zoneToString(zone, arrow)
         drawScore(can, x, y, radius * density, score,

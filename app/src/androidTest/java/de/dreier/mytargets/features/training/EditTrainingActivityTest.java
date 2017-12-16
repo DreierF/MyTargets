@@ -73,7 +73,7 @@ public class EditTrainingActivityTest extends UITestBase {
     @Before
     public void setUp() {
         SettingsManager.INSTANCE.setStandardRound(93L);
-        SettingsManager.INSTANCE.setTarget(new Target(WAFull.ID, 0, new Dimension(122, CENTIMETER)));
+        SettingsManager.INSTANCE.setTarget(new Target(WAFull.Companion.getID(), 0, new Dimension(122, CENTIMETER)));
         SettingsManager.INSTANCE.setDistance(new Dimension(50, METER));
         SettingsManager.INSTANCE.setIndoor(false);
         SettingsManager.INSTANCE.setInputMethod(EInputMethod.PLOTTING);

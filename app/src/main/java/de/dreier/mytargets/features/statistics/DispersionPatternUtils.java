@@ -64,7 +64,7 @@ public class DispersionPatternUtils {
         final FileOutputStream outputStream = new FileOutputStream(f);
         try {
             TargetImpactDrawable target = new TargetImpactAggregationDrawable(statistic.getTarget());
-            target.setShots(statistic.getShots());
+            target.replaceShotsWith(statistic.getShots());
             target.setArrowDiameter(statistic.getArrowDiameter(),
                     SettingsManager.INSTANCE.getInputArrowDiameterScale());
 
@@ -103,7 +103,7 @@ public class DispersionPatternUtils {
         canvas.drawColor(Color.WHITE);
 
         TargetImpactDrawable target = new TargetImpactAggregationDrawable(statistic.getTarget());
-        target.setShots(statistic.getShots());
+        target.replaceShotsWith(statistic.getShots());
         target.setArrowDiameter(statistic.getArrowDiameter(),
                 SettingsManager.INSTANCE.getInputArrowDiameterScale());
         target.setBounds(new Rect(0, 0, size, size));

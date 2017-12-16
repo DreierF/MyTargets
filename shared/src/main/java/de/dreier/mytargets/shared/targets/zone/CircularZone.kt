@@ -13,52 +13,37 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.targets.zone;
+package de.dreier.mytargets.shared.targets.zone
 
-import android.graphics.PointF;
-import android.support.annotation.NonNull;
+import android.graphics.PointF
 
-import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper;
+import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper
 
-public class CircularZone extends ZoneBase {
+class CircularZone @JvmOverloads constructor(
+        radius: Float,
+        midpointX: Float,
+        midpointY: Float,
+        fillColor: Int,
+        strokeColor: Int,
+        strokeWidth: Int,
+        scoresAsOutsideIn: Boolean = true
+) : ZoneBase(radius, PointF(midpointX, midpointY), fillColor, strokeColor, strokeWidth, scoresAsOutsideIn) {
 
-    public CircularZone(float radius, int fillColor, int strokeColor, int strokeWidth) {
-        this(radius, fillColor, strokeColor, strokeWidth, true);
+    @JvmOverloads constructor(radius: Float, fillColor: Int, strokeColor: Int, strokeWidth: Int, scoresAsOutsideIn: Boolean = true) : this(radius, 0f, 0f, fillColor, strokeColor, strokeWidth, scoresAsOutsideIn) {}
+
+    override fun isInZone(ax: Float, ay: Float, arrowRadius: Float): Boolean {
+        val distance = (ax - midpoint.x) * (ax - midpoint.x) + (ay - midpoint.y) * (ay - midpoint.y)
+        val adaptedRadius = radius + (if (scoresAsOutsideIn) 1f else -1f) * (arrowRadius + strokeWidth / 2.0f)
+        return adaptedRadius * adaptedRadius > distance
     }
 
-    public CircularZone(float radius, int fillColor, int strokeColor, int strokeWidth, boolean scoresAsOutsideIn) {
-        this(radius, 0f, 0f, fillColor, strokeColor, strokeWidth, scoresAsOutsideIn);
-    }
-
-    public CircularZone(float radius, float midpointX, float midpointY, int fillColor, int strokeColor, int strokeWidth) {
-        this(radius, midpointX, midpointY, fillColor, strokeColor, strokeWidth, true);
-    }
-
-    public CircularZone(float radius, float midpointX, float midpointY, int fillColor, int strokeColor, int strokeWidth, boolean scoresAsOutsideIn) {
-        super(radius, new PointF(midpointX, midpointY), fillColor, strokeColor, strokeWidth,
-                scoresAsOutsideIn);
-    }
-
-    @Override
-    public boolean isInZone(float ax, float ay, float arrowRadius) {
-        float distance =
-                (ax - midpoint.x) * (ax - midpoint.x) + (ay - midpoint.y) * (ay - midpoint.y);
-        float adaptedRadius =
-                radius + (scoresAsOutsideIn ? 1f : -1f) * (arrowRadius + strokeWidth / 2.0f);
-        return adaptedRadius * adaptedRadius > distance;
-    }
-
-    @Override
-    public void drawFill(@NonNull CanvasWrapper canvas) {
-        initPaint();
-        canvas.drawCircle(midpoint.x, midpoint.y, radius, paintFill);
+    override fun drawFill(canvas: CanvasWrapper) {
+        canvas.drawCircle(midpoint.x, midpoint.y, radius, paintFill)
     }
 
 
-    @Override
-    public void drawStroke(@NonNull CanvasWrapper canvas) {
-        initPaint();
-        canvas.drawCircle(midpoint.x, midpoint.y, radius, paintStroke);
+    override fun drawStroke(canvas: CanvasWrapper) {
+        canvas.drawCircle(midpoint.x, midpoint.y, radius, paintStroke)
     }
 
 }

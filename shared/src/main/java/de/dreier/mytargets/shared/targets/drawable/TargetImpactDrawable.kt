@@ -13,171 +13,152 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.targets.drawable;
+package de.dreier.mytargets.shared.targets.drawable
 
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.text.TextPaint;
+import android.graphics.Paint
+import android.graphics.RectF
+import android.os.AsyncTask
+import android.text.TextPaint
+import de.dreier.mytargets.shared.models.Dimension
+import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.models.db.Shot
+import de.dreier.mytargets.shared.utils.Color.WHITE
+import java.util.*
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+open class TargetImpactDrawable(target: Target) : TargetDrawable(target) {
+    protected var shots: MutableList<MutableList<Shot>> = ArrayList()
+    protected var transparentShots: MutableList<MutableList<Shot>> = ArrayList()
+    private var arrowRadius: Float = 0.toFloat()
+    private var shouldDrawArrows = true
+    private var focusedArrow: Shot? = null
+    private val paintText: TextPaint by lazy {
+        val paintText = TextPaint()
+        paintText.isAntiAlias = true
+        paintText.color = WHITE
+        paintText
+    }
+    private val paintFill: Paint by lazy {
+        val paintFill = Paint()
+        paintFill.isAntiAlias = true
+        paintFill
+    }
 
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.Shot;
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-
-import static de.dreier.mytargets.shared.utils.Color.WHITE;
-
-public class TargetImpactDrawable extends TargetDrawable {
-    @NonNull
-    protected List<List<Shot>> shots = new ArrayList<>();
-    @NonNull
-    protected List<List<Shot>> transparentShots = new ArrayList<>();
-    private Paint paintFill;
-    private float arrowRadius;
-    private boolean shouldDrawArrows = true;
-    private Shot focusedArrow;
-    private TextPaint paintText;
-
-    public TargetImpactDrawable(@NonNull Target target) {
-        super(target);
-        initPaint();
-        setArrowDiameter(new Dimension(5, Dimension.Unit.MILLIMETER), 1);
-        for (int i = 0; i < model.getFaceCount(); i++) {
-            shots.add(new ArrayList<>());
-            transparentShots.add(new ArrayList<>());
+    init {
+        setArrowDiameter(Dimension(5f, Dimension.Unit.MILLIMETER), 1f)
+        for (i in 0 until model.faceCount) {
+            shots.add(ArrayList())
+            transparentShots.add(ArrayList())
         }
     }
 
-    private void initPaint() {
-        paintFill = new Paint();
-        paintFill.setAntiAlias(true);
-        paintText = new TextPaint();
-        paintText.setAntiAlias(true);
-        paintText.setColor(WHITE);
+    fun setArrowDiameter(arrowDiameter: Dimension, scale: Float) {
+        val (value) = model.getRealSize(target.diameter!!).convertTo(arrowDiameter.unit!!)
+        arrowRadius = arrowDiameter.value * scale / value
     }
 
-    public void setArrowDiameter(@NonNull Dimension arrowDiameter, float scale) {
-        Dimension targetSize = model.getRealSize(target.getDiameter()).convertTo(arrowDiameter.getUnit());
-        arrowRadius = arrowDiameter.getValue() * scale / targetSize.getValue();
-    }
-
-    @Override
-    protected void onPostDraw(@NonNull CanvasWrapper canvas, int faceIndex) {
-        super.onPostDraw(canvas, faceIndex);
+    override fun onPostDraw(canvas: CanvasWrapper, faceIndex: Int) {
+        super.onPostDraw(canvas, faceIndex)
         if (!shouldDrawArrows) {
-            return;
-        }
-        if (paintFill == null) {
-            initPaint();
+            return
         }
 
-        if (transparentShots.size() > faceIndex) {
-            for (Shot s : transparentShots.get(faceIndex)) {
-                drawArrow(canvas, s, true);
+        if (transparentShots.size > faceIndex) {
+            for (s in transparentShots[faceIndex]) {
+                drawArrow(canvas, s, true)
             }
         }
-        if (shots.size() > faceIndex) {
-            for (Shot s : shots.get(faceIndex)) {
-                drawArrow(canvas, s, false);
+        if (shots.size > faceIndex) {
+            for (s in shots[faceIndex]) {
+                drawArrow(canvas, s, false)
             }
         }
         if (focusedArrow != null) {
-            drawFocusedArrow(canvas, focusedArrow, faceIndex);
+            drawFocusedArrow(canvas, focusedArrow!!, faceIndex)
         }
     }
 
-    public int getZoneFromPoint(float x, float y) {
-        return model.getZoneFromPoint(x, y, arrowRadius);
+    fun getZoneFromPoint(x: Float, y: Float): Int {
+        return model.getZoneFromPoint(x, y, arrowRadius)
     }
 
-    private void drawArrow(@NonNull CanvasWrapper canvas, @NonNull Shot shot, boolean transparent) {
-        int color = model.getContrastColor(shot.getScoringRing());
+    private fun drawArrow(canvas: CanvasWrapper, shot: Shot, transparent: Boolean) {
+        var color = model.getContrastColor(shot.scoringRing)
         if (transparent) {
-            color = 0x55000000 | color & 0xFFFFFF;
+            color = 0x55000000 or (color and 0xFFFFFF)
         }
-        paintFill.setColor(color);
-        canvas.drawCircle(shot.getX(), shot.getY(), arrowRadius, paintFill);
+        paintFill.color = color
+        canvas.drawCircle(shot.x, shot.y, arrowRadius, paintFill)
     }
 
-    public void setFocusedArrow(@Nullable Shot shot) {
-        focusedArrow = shot;
-        if (focusedArrow == null) {
-            setMid(0, 0);
+    fun setFocusedArrow(shot: Shot?) {
+        focusedArrow = shot
+        if (shot == null) {
+            setMid(0f, 0f)
         } else {
-            setMid(shot.getX(), shot.getY());
+            setMid(shot.x, shot.y)
         }
     }
 
-    private void drawFocusedArrow(@NonNull CanvasWrapper canvas, @NonNull Shot shot, int drawFaceIndex) {
-        if (shot.getIndex() % model.getFaceCount() != drawFaceIndex) {
-            return;
+    private fun drawFocusedArrow(canvas: CanvasWrapper, shot: Shot, drawFaceIndex: Int) {
+        if (shot.index % model.faceCount != drawFaceIndex) {
+            return
         }
 
-        paintFill.setColor(0xFF009900);
-        canvas.drawCircle(shot.getX(), shot.getY(), arrowRadius, paintFill);
+        paintFill.color = -0xff6700
+        canvas.drawCircle(shot.x, shot.y, arrowRadius, paintFill)
 
         // Draw cross
-        float lineLen = 2f * arrowRadius;
-        paintFill.setStrokeWidth(0.2f * arrowRadius);
-        canvas.drawLine(shot.getX() - lineLen, shot.getY(), shot.getX() + lineLen, shot.getY(), paintFill);
-        canvas.drawLine(shot.getX(), shot.getY() - lineLen, shot.getX(), shot.getY() + lineLen, paintFill);
+        val lineLen = 2f * arrowRadius
+        paintFill.strokeWidth = 0.2f * arrowRadius
+        canvas.drawLine(shot.x - lineLen, shot.y, shot.x + lineLen, shot.y, paintFill)
+        canvas.drawLine(shot.x, shot.y - lineLen, shot.x, shot.y + lineLen, paintFill)
 
         // Draw zone points
-        String zoneString = target.zoneToString(shot.getScoringRing(), shot.getIndex());
-        RectF srcRect = new RectF(shot.getX() - arrowRadius, shot.getY() - arrowRadius,
-                shot.getX() + arrowRadius, shot.getY() + arrowRadius);
-        canvas.drawText(zoneString, srcRect, paintText);
+        val zoneString = target.zoneToString(shot.scoringRing, shot.index)
+        val srcRect = RectF(shot.x - arrowRadius, shot.y - arrowRadius,
+                shot.x + arrowRadius, shot.y + arrowRadius)
+        canvas.drawText(zoneString, srcRect, paintText)
     }
 
-    public void setShots(@NonNull List<Shot> shots) {
-        for (int i = 0; i < this.shots.size(); i++) {
-            this.shots.get(i).clear();
+    fun replaceShotsWith(shots: List<Shot>) {
+        for (i in this.shots.indices) {
+            this.shots[i].clear()
         }
-        Map<Integer, List<Shot>> map = Stream.of(shots)
-                .groupingBy(shot -> shot.getIndex() % model.getFaceCount());
-        for (Map.Entry<Integer, List<Shot>> entry : map.entrySet()) {
-            this.shots.set(entry.getKey(), entry.getValue());
+        val map = shots.groupBy { (_, index) -> index % model.faceCount }
+        for ((key, value) in map) {
+            this.shots[key] = value.toMutableList()
         }
-        notifyArrowSetChanged();
+        notifyArrowSetChanged()
     }
 
-    public void setTransparentShots(@NonNull Stream<Shot> shots) {
-        new AsyncTask<Void, Void, Map<Integer, List<Shot>>>() {
-            @Override
-            protected Map<Integer, List<Shot>> doInBackground(Void... objects) {
-                return shots
-                        .groupingBy(shot -> shot.getIndex() % model.getFaceCount());
+    fun replacedTransparentShots(shots: List<Shot>) {
+        object : AsyncTask<Void, Void, Map<Int, List<Shot>>>() {
+            override fun doInBackground(vararg objects: Void): Map<Int, List<Shot>> {
+                return shots.groupBy { (_, index) -> index % model.faceCount }
             }
 
-            @Override
-            protected void onPostExecute(@NonNull Map<Integer, List<Shot>> map) {
-                super.onPostExecute(map);
-                for (List<Shot> shotList : transparentShots) {
-                    shotList.clear();
+            override fun onPostExecute(map: Map<Int, List<Shot>>) {
+                super.onPostExecute(map)
+                for (shotList in transparentShots) {
+                    shotList.clear()
                 }
-                for (Map.Entry<Integer, List<Shot>> entry : map.entrySet()) {
-                    transparentShots.set(entry.getKey(), entry.getValue());
+                for ((key, value) in map) {
+                    transparentShots[key] = value.toMutableList()
                 }
-                notifyArrowSetChanged();
+                notifyArrowSetChanged()
             }
-        }.execute();
+        }.execute()
     }
 
-    public void notifyArrowSetChanged() {
-        invalidateSelf();
+    open fun notifyArrowSetChanged() {
+        invalidateSelf()
     }
 
-    public void drawArrowsEnabled(boolean enabled) {
-        shouldDrawArrows = enabled;
+    fun drawArrowsEnabled(enabled: Boolean) {
+        shouldDrawArrows = enabled
     }
 
-    public void cleanup() {
+    open fun cleanup() {
 
     }
 }

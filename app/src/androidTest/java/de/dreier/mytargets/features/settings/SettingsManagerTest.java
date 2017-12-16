@@ -96,11 +96,11 @@ public class SettingsManagerTest extends InstrumentedTestBase {
 
     @Test
     public void setTarget() {
-        final Target targetWA = new Target(WAFull.ID, 0,
+        final Target targetWA = new Target(WAFull.Companion.getID(), 0,
                 new Dimension(40, Dimension.Unit.CENTIMETER));
         SettingsManager.INSTANCE.setTarget(targetWA);
         assertThat(SettingsManager.INSTANCE.getTarget()).isEqualTo(targetWA);
-        final Target target3d = new Target(NFAAAnimal.ID, 0, Diameter.INSTANCE.getLARGE());
+        final Target target3d = new Target(NFAAAnimal.Companion.getID(), 0, Diameter.INSTANCE.getLARGE());
         SettingsManager.INSTANCE.setTarget(target3d);
         assertThat(SettingsManager.INSTANCE.getTarget()).isEqualTo(target3d);
     }

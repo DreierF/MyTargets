@@ -12,25 +12,30 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.shared.targets;
+package de.dreier.mytargets.shared.targets
 
-import android.support.annotation.StringRes;
+import android.support.annotation.StringRes
+import de.dreier.mytargets.shared.models.Diameter
+import de.dreier.mytargets.shared.models.ETargetType
+import de.dreier.mytargets.shared.targets.models.TargetModelBase
+import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle
+import de.dreier.mytargets.shared.targets.zone.ZoneBase
 
-import de.dreier.mytargets.shared.models.Diameter;
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.targets.models.TargetModelBase;
-
-public class TargetOvalBase extends TargetModelBase {
-
-    protected TargetOvalBase(long id, @StringRes int name) {
-        super(id, name);
-        diameters = new Dimension[]{Diameter.INSTANCE.getSMALL(), Diameter.INSTANCE.getMEDIUM(),
-                Diameter.INSTANCE.getLARGE(), Diameter.INSTANCE.getXLARGE()};
+open class TargetOvalBase protected constructor(
+        id: Long,
+        @StringRes nameRes: Int,
+        type: ETargetType,
+        zones: Array<ZoneBase>,
+        scoringStyles: Array<ScoringStyle>
+) : TargetModelBase(
+        id = id,
+        nameRes = nameRes,
+        diameters = arrayOf(Diameter.SMALL, Diameter.MEDIUM, Diameter.LARGE, Diameter.XLARGE),
+        type = type,
+        zones = zones,
+        scoringStyles = scoringStyles
+) {
+    override fun dependsOnArrowIndex(): Boolean {
+        return true
     }
-
-    @Override
-    public boolean dependsOnArrowIndex() {
-        return true;
-    }
-
 }

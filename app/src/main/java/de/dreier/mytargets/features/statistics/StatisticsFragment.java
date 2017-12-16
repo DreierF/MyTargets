@@ -209,7 +209,7 @@ public class StatisticsFragment extends FragmentBase {
         EAggregationStrategy strategy = SettingsManager.INSTANCE.getStatisticsDispersionPatternAggregationStrategy();
         TargetImpactAggregationDrawable drawable = stats.getTarget().getImpactAggregationDrawable();
         drawable.setAggregationStrategy(strategy);
-        drawable.setShots(stats.getShots());
+        drawable.replaceShotsWith(stats.getShots());
         drawable.setArrowDiameter(stats.getArrowDiameter(), SettingsManager.INSTANCE.getInputArrowDiameterScale());
         binding.dispersionView.setImageDrawable(drawable);
 
