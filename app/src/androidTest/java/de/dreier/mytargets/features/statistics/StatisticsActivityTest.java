@@ -58,7 +58,7 @@ public class StatisticsActivityTest extends UITestBase {
                 .flatMap(t -> Stream.of(t.loadRounds()))
                 .map(Round::getId)
                 .toList();
-        activityTestRule.launchActivity(StatisticsActivity.getIntent(roundIds).build());
+        activityTestRule.launchActivity(StatisticsActivity.Companion.getIntent(roundIds).build());
 
         onView(allOf(withId(R.id.dispersionViewOverlay),
                 withParent(withId(R.id.dispersionPatternLayout))))

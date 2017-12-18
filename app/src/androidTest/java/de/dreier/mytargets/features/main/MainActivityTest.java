@@ -144,7 +144,7 @@ public class MainActivityTest extends UITestBase {
                 .map(Round::getId)
                 .toSet();
         intended(allOf(hasClass(StatisticsActivity.class),
-                hasLongArrayExtra(ROUND_IDS, expectedRoundIds)));
+                hasLongArrayExtra(Companion.getROUND_IDS(), expectedRoundIds)));
 
         // openStatistics_selectedTrainings
         // Start Action mode with training 0
@@ -176,7 +176,7 @@ public class MainActivityTest extends UITestBase {
                 .toSet();
 
         intended(allOf(hasClass(StatisticsActivity.class),
-                hasLongArrayExtra(ROUND_IDS, expectedRoundIds)));
+                hasLongArrayExtra(Companion.getROUND_IDS(), expectedRoundIds)));
 
         // newBow_recurve
         onView(withId(R.id.action_bows)).perform(click());

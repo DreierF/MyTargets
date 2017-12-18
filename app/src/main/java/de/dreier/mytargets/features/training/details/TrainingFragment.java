@@ -196,7 +196,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
                         .start();
                 return true;
             case R.id.action_statistics:
-                StatisticsActivity.getIntent(
+                StatisticsActivity.Companion.getIntent(
                         Stream.of(training.loadRounds())
                                 .map(Round::getId)
                                 .toList())
@@ -233,7 +233,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
     }
 
     public void onStatistics(List<Long> ids) {
-        StatisticsActivity
+        StatisticsActivity.Companion
                 .getIntent(ids)
                 .withContext(this)
                 .start();

@@ -13,407 +13,328 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.statistics;
+package de.dreier.mytargets.features.statistics
 
-import android.app.LoaderManager;
-import android.content.AsyncTaskLoader;
-import android.content.Intent;
-import android.content.Loader;
-import android.databinding.DataBindingUtil;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.util.LongSparseArray;
-import android.support.v4.util.Pair;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.annotation.SuppressLint
+import android.app.LoaderManager
+import android.content.AsyncTaskLoader
+import android.content.Intent
+import android.content.Loader
+import android.databinding.DataBindingUtil
+import android.net.Uri
+import android.os.AsyncTask
+import android.os.Bundle
+import android.support.annotation.VisibleForTesting
+import android.support.design.widget.Snackbar
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentStatePagerAdapter
+import android.support.v4.util.LongSparseArray
+import android.support.v4.util.Pair
+import android.support.v4.view.GravityCompat.END
+import android.view.Menu
+import android.view.MenuItem
+import com.afollestad.materialdialogs.MaterialDialog
+import com.evernote.android.state.State
+import com.evernote.android.state.StateSaver
+import de.dreier.mytargets.R
+import de.dreier.mytargets.base.activities.ChildActivityBase
+import de.dreier.mytargets.databinding.ActivityStatisticsBinding
+import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.models.db.Arrow
+import de.dreier.mytargets.shared.models.db.Bow
+import de.dreier.mytargets.shared.models.db.Round
+import de.dreier.mytargets.shared.models.db.Training
+import de.dreier.mytargets.shared.streamwrapper.Stream
+import de.dreier.mytargets.shared.utils.LongUtils
+import de.dreier.mytargets.shared.utils.toUri
+import de.dreier.mytargets.utils.IntentWrapper
+import de.dreier.mytargets.utils.ToolbarUtils
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.evernote.android.state.State;
-import com.evernote.android.state.StateSaver;
+class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<List<Pair<Training, Round>>> {
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.base.activities.ChildActivityBase;
-import de.dreier.mytargets.databinding.ActivityStatisticsBinding;
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.Arrow;
-import de.dreier.mytargets.shared.models.db.Bow;
-import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-import de.dreier.mytargets.shared.utils.FileUtilsKt;
-import de.dreier.mytargets.shared.utils.LongUtils;
-import de.dreier.mytargets.shared.utils.SharedUtils;
-import de.dreier.mytargets.utils.IntentWrapper;
-import de.dreier.mytargets.utils.ToolbarUtils;
-
-import static android.support.v4.view.GravityCompat.END;
-
-public class StatisticsActivity extends ChildActivityBase implements LoaderManager.LoaderCallbacks<List<Pair<Training, Round>>> {
-
-    @VisibleForTesting
-    public static final String ROUND_IDS = "round_ids";
-
-    private ActivityStatisticsBinding binding;
-    private List<Pair<Training, Round>> rounds;
-    private List<Pair<Target, List<Round>>> filteredRounds;
+    private var binding: ActivityStatisticsBinding? = null
+    private var rounds: List<Pair<Training, Round>>? = null
+    private var filteredRounds: List<Pair<Target, List<Round>>>? = null
 
     @State
-    ArrayList<String> distanceTags;
+    var distanceTags: Set<String>? = null
 
     @State
-    ArrayList<String> diameterTags;
+    var diameterTags: Set<String>? = null
 
     @State
-    ArrayList<Long> arrowTags;
+    var arrowTags: Set<Long>? = null
 
     @State
-    ArrayList<Long> bowTags;
+    var bowTags: Set<Long>? = null
 
-    @NonNull
-    public static IntentWrapper getIntent(@NonNull List<Long> roundIds) {
-        return new IntentWrapper(StatisticsActivity.class)
-                .with(ROUND_IDS, LongUtils.toArray(roundIds));
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_statistics)
+        setSupportActionBar(binding!!.toolbar)
+
+        binding!!.reset.setOnClickListener { v -> resetFilter() }
+
+        binding!!.progressBar.show()
+
+        ToolbarUtils.showHomeAsUp(this)
+        StateSaver.restoreInstanceState(this, savedInstanceState)
+
+        loaderManager.initLoader(0, intent.extras, this).forceLoad()
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_statistics);
-        setSupportActionBar(binding.toolbar);
-
-        binding.reset.setOnClickListener(v -> resetFilter());
-
-        binding.progressBar.show();
-
-        ToolbarUtils.showHomeAsUp(this);
-        StateSaver.restoreInstanceState(this, savedInstanceState);
-
-        getLoaderManager().initLoader(0, getIntent().getExtras(), this).forceLoad();
-    }
-
-    @NonNull
-    @Override
-    public Loader<List<Pair<Training, Round>>> onCreateLoader(int i, Bundle bundle) {
-        final long[] roundIds = getIntent().getLongArrayExtra(ROUND_IDS);
-        return new AsyncTaskLoader<List<Pair<Training, Round>>>(this) {
-            @Override
-            public List<Pair<Training, Round>> loadInBackground() {
-                final List<Round> rounds = Round.Companion.getAll(roundIds);
-                LongSparseArray<Training> trainingsMap = new LongSparseArray<>();
-                Stream.of(rounds).map(round -> round.getTrainingId())
+    @SuppressLint("StaticFieldLeak")
+    override fun onCreateLoader(i: Int, bundle: Bundle): Loader<List<Pair<Training, Round>>> {
+        val roundIds = intent.getLongArrayExtra(ROUND_IDS)
+        return object : AsyncTaskLoader<List<Pair<Training, Round>>>(this) {
+            override fun loadInBackground(): List<Pair<Training, Round>> {
+                val rounds = Round.getAll(roundIds)
+                val trainingsMap = LongSparseArray<Training>()
+                rounds.map { (_, trainingId) -> trainingId!! }
                         .distinct()
-                        .map(Training.Companion::get)
-                        .forEach(training -> {trainingsMap.append(training.getId(), training);return null;});
-                return Stream.of(rounds)
-                        .map(round -> new Pair<>(trainingsMap.get(round.getTrainingId()), round))
-                        .toList();
+                        .map { id: Long -> Training[id]!! }
+                        .forEach { training ->
+                            trainingsMap.append(training.id!!, training)
+                        }
+                return rounds.map { round -> Pair(trainingsMap.get(round.trainingId!!), round) }
             }
-        };
+        }
     }
 
-    @Override
-    public void onLoadFinished(Loader<List<Pair<Training, Round>>> loader, List<Pair<Training, Round>> data) {
-        rounds = data;
-        binding.progressBar.hide();
-        binding.distanceTags.setTags(getDistanceTags());
-        binding.distanceTags.setOnTagClickListener(t -> applyFilter());
-        binding.diameterTags.setTags(getDiameterTags());
-        binding.diameterTags.setOnTagClickListener(t -> applyFilter());
-        binding.arrowTags.setTags(getArrowTags());
-        binding.arrowTags.setOnTagClickListener(t -> applyFilter());
-        binding.bowTags.setTags(getBowTags());
-        binding.bowTags.setOnTagClickListener(t -> applyFilter());
+    override fun onLoadFinished(loader: Loader<List<Pair<Training, Round>>>, data: List<Pair<Training, Round>>) {
+        rounds = data
+        binding!!.progressBar.hide()
+        binding!!.distanceTags.tags = getDistanceTags()
+        binding!!.distanceTags.setOnTagClickListener({ applyFilter() })
+        binding!!.diameterTags.tags = getDiameterTags()
+        binding!!.diameterTags.setOnTagClickListener({ applyFilter() })
+        binding!!.arrowTags.tags = getArrowTags()
+        binding!!.arrowTags.setOnTagClickListener({ applyFilter() })
+        binding!!.bowTags.tags = getBowTags()
+        binding!!.bowTags.setOnTagClickListener({ applyFilter() })
 
         if (distanceTags != null && diameterTags != null && arrowTags != null && bowTags != null) {
-            restoreCheckedStates();
+            restoreCheckedStates()
         }
 
-        applyFilter();
-        invalidateOptionsMenu();
+        applyFilter()
+        invalidateOptionsMenu()
     }
 
-    private void restoreCheckedStates() {
-        Stream.of(binding.distanceTags.getTags())
-                .forEach(tag -> {
-                    tag.setChecked(Stream.of(distanceTags)
-                            .anyMatch(d -> SharedUtils.INSTANCE.equals(d, tag.getText())));
-                    return null;
-                });
-        Stream.of(binding.diameterTags.getTags())
-                .forEach(tag -> {
-                    tag.setChecked(Stream.of(diameterTags)
-                            .anyMatch(d -> SharedUtils.INSTANCE.equals(d, tag.getText())));
-                    return null;
-                });
-        Stream.of(binding.arrowTags.getTags())
-                .forEach(tag -> {
-                    tag.setChecked(Stream.of(arrowTags)
-                            .anyMatch(a -> SharedUtils.INSTANCE.equals(a, tag.getId())));
-                    return null;
-                });
-        Stream.of(binding.bowTags.getTags())
-                .forEach(tag -> {
-                    tag.setChecked(Stream.of(bowTags)
-                            .anyMatch(b -> SharedUtils.INSTANCE.equals(b, tag.getId())));
-                    return null;
-                });
-        binding.distanceTags.setTags(binding.distanceTags.getTags());
-        binding.diameterTags.setTags(binding.diameterTags.getTags());
-        binding.arrowTags.setTags(binding.arrowTags.getTags());
-        binding.bowTags.setTags(binding.bowTags.getTags());
+    private fun restoreCheckedStates() {
+        binding!!.distanceTags.tags.forEach { it.isChecked = distanceTags!!.contains(it.text) }
+        binding!!.diameterTags.tags.forEach { it.isChecked = diameterTags!!.contains(it.text) }
+        binding!!.arrowTags.tags.forEach { it.isChecked = arrowTags!!.contains(it.id) }
+        binding!!.bowTags.tags.forEach { it.isChecked = bowTags!!.contains(it.id) }
+        binding!!.distanceTags.tags = binding!!.distanceTags.tags
+        binding!!.diameterTags.tags = binding!!.diameterTags.tags
+        binding!!.arrowTags.tags = binding!!.arrowTags.tags
+        binding!!.bowTags.tags = binding!!.bowTags.tags
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.export_filter, menu);
-        return true;
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.export_filter, menu)
+        return true
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        final MenuItem filter = menu.findItem(R.id.action_filter);
-        final MenuItem export = menu.findItem(R.id.action_export);
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        super.onPrepareOptionsMenu(menu)
+        val filter = menu.findItem(R.id.action_filter)
+        val export = menu.findItem(R.id.action_export)
         // only show filter if we have at least one category to filter by
-        boolean filterAvailable = binding.distanceTags.getTags().size() > 1
-                || binding.diameterTags.getTags().size() > 1
-                || binding.bowTags.getTags().size() > 1
-                || binding.arrowTags.getTags().size() > 1;
-        filter.setVisible(rounds != null && filterAvailable);
-        export.setVisible(rounds != null);
-        return true;
+        val filterAvailable = (binding!!.distanceTags.tags.size > 1
+                || binding!!.diameterTags.tags.size > 1
+                || binding!!.bowTags.tags.size > 1
+                || binding!!.arrowTags.tags.size > 1)
+        filter.isVisible = rounds != null && filterAvailable
+        export.isVisible = rounds != null
+        return true
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_export:
-                export();
-                return true;
-            case R.id.action_filter:
-                if (!binding.drawerLayout.isDrawerOpen(END)) {
-                    binding.drawerLayout.openDrawer(END);
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_export -> {
+                export()
+                return true
+            }
+            R.id.action_filter -> {
+                if (!binding!!.drawerLayout.isDrawerOpen(END)) {
+                    binding!!.drawerLayout.openDrawer(END)
                 } else {
-                    binding.drawerLayout.closeDrawer(END);
+                    binding!!.drawerLayout.closeDrawer(END)
                 }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
         }
     }
 
-    private void resetFilter() {
-        Stream.of(binding.distanceTags.getTags())
-                .forEach(tag -> {
-                    tag.setChecked(true);
-                    return null;
-                });
-        Stream.of(binding.diameterTags.getTags())
-                .forEach(tag -> {
-                    tag.setChecked(true);
-                    return null;
-                });
-        Stream.of(binding.arrowTags.getTags())
-                .forEach(tag -> {
-                    tag.setChecked(true);
-                    return null;
-                });
-        Stream.of(binding.bowTags.getTags())
-                .forEach(tag -> {
-                    tag.setChecked(true);
-                    return null;
-                });
-        binding.distanceTags.setTags(binding.distanceTags.getTags());
-        binding.diameterTags.setTags(binding.diameterTags.getTags());
-        binding.arrowTags.setTags(binding.arrowTags.getTags());
-        binding.bowTags.setTags(binding.bowTags.getTags());
-        applyFilter();
+    private fun resetFilter() {
+        binding!!.distanceTags.tags.forEach { it.isChecked = true }
+        binding!!.diameterTags.tags.forEach { it.isChecked = true }
+        binding!!.arrowTags.tags.forEach { it.isChecked = true }
+        binding!!.bowTags.tags.forEach { it.isChecked = true }
+        binding!!.distanceTags.tags = binding!!.distanceTags.tags
+        binding!!.diameterTags.tags = binding!!.diameterTags.tags
+        binding!!.arrowTags.tags = binding!!.arrowTags.tags
+        binding!!.bowTags.tags = binding!!.bowTags.tags
+        applyFilter()
     }
 
-    private void applyFilter() {
-        distanceTags = Stream.of(binding.distanceTags.getCheckedTags())
-                .map(t -> t.getText()).toList();
-        diameterTags = Stream.of(binding.diameterTags.getCheckedTags())
-                .map(t -> t.getText()).toList();
-        arrowTags = Stream.of(binding.arrowTags.getCheckedTags())
-                .map(t -> t.getId()).toList();
-        bowTags = Stream.of(binding.bowTags.getCheckedTags())
-                .map(t -> t.getId()).toList();
-        filteredRounds = Stream.of(rounds)
-                .filter(pair -> distanceTags.contains(pair.second.getDistance().toString())
-                        && diameterTags.contains(pair.second.getTarget().getDiameter().toString())
-                        && arrowTags.contains(pair.first.getArrowId())
-                        && bowTags.contains(pair.first.getBowId()))
-                .map(p -> p.second)
-                .groupBy(value -> new Pair<>(value.getTarget().getId(),
-                        value.getTarget().getScoringStyle()))
-                .map(value1 -> new Pair<>(value1.getValue().get(0).getTarget(), value1.getValue()))
-                .toList();
-        boolean animate = binding.viewPager.getAdapter() == null;
-        final StatisticsPagerAdapter adapter = new StatisticsPagerAdapter(
-                getSupportFragmentManager(), filteredRounds, animate);
-        binding.viewPager.setAdapter(adapter);
+    private fun applyFilter() {
+        distanceTags = binding!!.distanceTags.checkedTags.map { t -> t.text }.toSet()
+        diameterTags = binding!!.diameterTags.checkedTags.map { t -> t.text }.toSet()
+        arrowTags = binding!!.arrowTags.checkedTags.map { t -> t.id!! }.toSet()
+        bowTags = binding!!.bowTags.checkedTags.map { t -> t.id!! }.toSet()
+        filteredRounds = rounds!!.filter { pair ->
+            (distanceTags!!.contains(pair.second!!.distance.toString())
+                    && diameterTags!!.contains(pair.second!!.target.diameter!!.toString())
+                    && arrowTags!!.contains(pair.first!!.arrowId)
+                    && bowTags!!.contains(pair.first!!.bowId))
+        }
+                .map { p -> p.second }
+                .map { it!! }
+                .groupBy { value -> Pair(value.target.id, value.target.getScoringStyle()) }
+                .map { value1 -> Pair(value1.value[0].target, value1.value) }
+        val animate = binding!!.viewPager.adapter == null
+        val adapter = StatisticsPagerAdapter(
+                supportFragmentManager, filteredRounds!!, animate)
+        binding!!.viewPager.adapter = adapter
     }
 
-    private List<Tag> getBowTags() {
-        return Stream.of(rounds)
-                .map(p -> p.first.getBowId())
+    private fun getBowTags(): List<Tag> {
+        return rounds!!
+                .map { it.first!!.id }
                 .distinct()
-                .map(bid -> {
+                .map { bid ->
                     if (bid != null) {
-                        Bow bow = Bow.Companion.get(bid);
-                        if (bow == null) {
-                            return new Tag(bid, "Deleted " + bid);
-                        }
-                        return new Tag(bow.getId(), bow.getName(),
-                                bow.thumbnail.getBlob().getBlob(), true);
+                        val bow = Bow[bid] ?: return@map Tag(bid, "Deleted " + bid)
+                        Tag(bow.id!!, bow.name, bow.thumbnail!!.blob.blob, true)
                     } else {
-                        return new Tag(null, getString(R.string.unknown));
+                        Tag(null, getString(R.string.unknown))
                     }
-                })
-                .toList();
+                }
     }
 
-    private List<Tag> getArrowTags() {
-        return Stream.of(rounds)
-                .map(p -> p.first.getArrowId())
+    private fun getArrowTags(): List<Tag> {
+        return rounds!!
+                .map { it.first!!.arrowId }
                 .distinct()
-                .map(aid -> {
+                .map { aid ->
                     if (aid != null) {
-                        Arrow arrow = Arrow.Companion.get(aid);
-                        if (arrow == null) {
-                            return new Tag(aid, "Deleted " + aid);
-                        }
-                        return new Tag(arrow.getId(), arrow.getName(),
-                                arrow.thumbnail.getBlob().getBlob(), true);
+                        val arrow = Arrow[aid] ?: return@map Tag(aid, "Deleted " + aid)
+                        Tag(arrow.id, arrow.name, arrow.thumbnail!!.blob.blob, true)
                     } else {
-                        return new Tag(null, getString(R.string.unknown));
+                        Tag(null, getString(R.string.unknown))
                     }
-                })
-                .toList();
+                }
     }
 
-    private List<Tag> getDistanceTags() {
-        return Stream.of(rounds)
-                .map(p -> p.second.getDistance())
+    private fun getDistanceTags(): List<Tag> {
+        return Stream.of(rounds!!)
+                .map { p -> p.second!!.distance }
                 .distinct()
                 .sorted()
-                .map(d -> new Tag(d.getId(), d.toString()))
-                .toList();
+                .map { d -> Tag(d.id, d.toString()) }
+                .toList()
     }
 
-    private List<Tag> getDiameterTags() {
-        return Stream.of(rounds)
-                .map(p -> p.second.getTarget().getDiameter())
+    private fun getDiameterTags(): List<Tag> {
+        return Stream.of(rounds!!)
+                .map { p -> p.second!!.target.diameter }
                 .distinct()
                 .sorted()
-                .map(d -> new Tag(d.getId(), d.toString()))
-                .toList();
+                .map { Tag(it!!.id, it.toString()) }
+                .toList()
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        StateSaver.saveInstanceState(this, outState);
+    public override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        StateSaver.saveInstanceState(this, outState!!)
     }
 
-    @Override
-    public void onLoaderReset(Loader<List<Pair<Training, Round>>> loader) {
+    override fun onLoaderReset(loader: Loader<List<Pair<Training, Round>>>) {
 
     }
 
-    void export() {
-        MaterialDialog progress = new MaterialDialog.Builder(this)
+    @SuppressLint("StaticFieldLeak")
+    internal fun export() {
+        val progress = MaterialDialog.Builder(this)
                 .content(R.string.exporting)
                 .progress(true, 0)
-                .show();
-        new AsyncTask<Void, Void, Uri>() {
+                .show()
+        object : AsyncTask<Void, Void, Uri>() {
 
-            @Nullable
-            @Override
-            protected Uri doInBackground(Void... params) {
-                try {
-                    final File f = new File(getCacheDir(), getExportFileName());
-                    new CsvExporter(getApplicationContext())
-                            .exportAll(f, Stream.of(filteredRounds)
-                                    .flatMap(p -> Stream.of(p.second))
-                                    .map(Round::getId)
-                                    .toList());
-                    return FileUtilsKt.toUri(f, StatisticsActivity.this);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return null;
+            override fun doInBackground(vararg params: Void): Uri? {
+                return try {
+                    val f = File(cacheDir, exportFileName)
+                    CsvExporter(applicationContext)
+                            .exportAll(f, filteredRounds!!.flatMap { it.second!! }.map { it.id!! })
+                    f.toUri(this@StatisticsActivity)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    null
                 }
             }
 
-            @Override
-            protected void onPostExecute(@Nullable Uri uri) {
-                super.onPostExecute(uri);
-                progress.dismiss();
+            override fun onPostExecute(uri: Uri?) {
+                super.onPostExecute(uri)
+                progress.dismiss()
                 if (uri != null) {
-                    Intent email = new Intent(Intent.ACTION_SEND);
-                    email.putExtra(Intent.EXTRA_STREAM, uri);
-                    email.setType("text/csv");
-                    startActivity(Intent.createChooser(email, getString(R.string.send_exported)));
+                    val email = Intent(Intent.ACTION_SEND)
+                    email.putExtra(Intent.EXTRA_STREAM, uri)
+                    email.type = "text/csv"
+                    startActivity(Intent.createChooser(email, getString(R.string.send_exported)))
                 } else {
-                    Snackbar.make(binding.getRoot(), R.string.exporting_failed,
-                            Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(binding!!.root, R.string.exporting_failed,
+                            Snackbar.LENGTH_LONG).show()
                 }
             }
-        }.execute();
+        }.execute()
     }
 
-    @NonNull
-    private static String getExportFileName() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
-        return "MyTargets_exported_data_" + format.format(new Date()) + ".csv";
+    inner class StatisticsPagerAdapter internal constructor(fm: FragmentManager, private val targets: List<Pair<Target, List<Round>>>, private val animate: Boolean) : FragmentStatePagerAdapter(fm) {
+
+        init {
+            Collections.sort(targets) { p1, p2 -> p2.second!!.size - p1.second!!.size }
+        }
+
+        override fun getItem(position: Int): Fragment {
+            val item = targets[position]
+            val roundIds = Stream.of(item.second!!)
+                    .map { it.id!! }
+                    .toList()
+            return StatisticsFragment.newInstance(roundIds, item.first, animate)
+        }
+
+        override fun getCount(): Int {
+            return targets.size
+        }
+
+        override fun getPageTitle(position: Int): CharSequence? {
+            return targets[position].first!!.toString()
+        }
     }
 
-    private class StatisticsPagerAdapter extends FragmentStatePagerAdapter {
-        private final List<Pair<Target, List<Round>>> targets;
-        private final boolean animate;
+    companion object {
 
-        StatisticsPagerAdapter(FragmentManager fm, List<Pair<Target, List<Round>>> pairs, boolean animate) {
-            super(fm);
-            targets = pairs;
-            this.animate = animate;
-            Collections.sort(targets, (p1, p2) -> p2.second.size() - p1.second.size());
+        @VisibleForTesting
+        val ROUND_IDS = "round_ids"
+
+        fun getIntent(roundIds: List<Long>): IntentWrapper {
+            return IntentWrapper(StatisticsActivity::class.java)
+                    .with(ROUND_IDS, LongUtils.toArray(roundIds))
         }
 
-        @Override
-        public Fragment getItem(int position) {
-            final Pair<Target, List<Round>> item = targets.get(position);
-            final List<Long> roundIds = Stream.of(item.second)
-                    .map(Round::getId)
-                    .toList();
-            return StatisticsFragment.newInstance(roundIds, item.first, animate);
-        }
-
-        @Override
-        public int getCount() {
-            return targets.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return targets.get(position).first.toString();
-        }
+        private val exportFileName: String
+            get() {
+                val format = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
+                return "MyTargets_exported_data_" + format.format(Date()) + ".csv"
+            }
     }
 }

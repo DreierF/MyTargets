@@ -13,155 +13,144 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.statistics;
+package de.dreier.mytargets.features.statistics
 
-import android.content.Context;
-import android.support.annotation.NonNull;
+import android.content.Context
+import de.dreier.mytargets.R
+import de.dreier.mytargets.shared.models.db.Round
+import de.dreier.mytargets.shared.models.db.Training
+import org.threeten.bp.format.DateTimeFormatter
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
+import java.io.Writer
+import java.util.*
 
-import org.threeten.bp.format.DateTimeFormatter;
+class CsvExporter(private val context: Context) {
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.List;
-import java.util.Stack;
-
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.End;
-import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.Shot;
-import de.dreier.mytargets.shared.models.db.Training;
-
-public class CsvExporter {
-
-    @NonNull
-    private final Context context;
-
-    public CsvExporter(@NonNull Context context) {
-        this.context = context;
+    @Throws(IOException::class)
+    fun exportAll(file: File, roundIds: List<Long>) {
+        val writer = FileWriter(file)
+        writeExportData(writer, roundIds)
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    public void exportAll(@NonNull File file, @NonNull List<Long> roundIds) throws IOException {
-        FileWriter writer = new FileWriter(file);
-        writeExportData(writer, roundIds);
-    }
-
-    public void writeExportData(@NonNull Writer writer, @NonNull List<Long> roundIds) throws IOException {
-        CsvBuilder csv = new CsvBuilder(writer);
-        csv.enterScope();
-        csv.add(context.getString(R.string.title));
-        csv.add(context.getString(R.string.date));
-        csv.add(context.getString(R.string.standard_round));
-        csv.add(context.getString(R.string.indoor));
-        csv.add(context.getString(R.string.bow));
-        csv.add(context.getString(R.string.arrow));
-        csv.add(context.getString(R.string.round));
-        csv.add(context.getString(R.string.distance));
-        csv.add(context.getString(R.string.target));
-        csv.add(context.getString(R.string.passe));
-        csv.add(context.getString(R.string.timestamp));
-        csv.add(context.getString(R.string.points));
-        csv.add("x");
-        csv.add("y");
-        csv.newLine();
-        csv.exitScope();
-        for (Training t : Training.Companion.getAll()) {
-            addTraining(csv, t, roundIds);
+    @Throws(IOException::class)
+    fun writeExportData(writer: Writer, roundIds: List<Long>) {
+        val csv = CsvBuilder(writer)
+        csv.enterScope()
+        csv.add(context.getString(R.string.title))
+        csv.add(context.getString(R.string.date))
+        csv.add(context.getString(R.string.standard_round))
+        csv.add(context.getString(R.string.indoor))
+        csv.add(context.getString(R.string.bow))
+        csv.add(context.getString(R.string.arrow))
+        csv.add(context.getString(R.string.round))
+        csv.add(context.getString(R.string.distance))
+        csv.add(context.getString(R.string.target))
+        csv.add(context.getString(R.string.passe))
+        csv.add(context.getString(R.string.timestamp))
+        csv.add(context.getString(R.string.points))
+        csv.add("x")
+        csv.add("y")
+        csv.newLine()
+        csv.exitScope()
+        for (t in Training.all) {
+            addTraining(csv, t, roundIds)
         }
 
-        writer.flush();
-        writer.close();
+        writer.flush()
+        writer.close()
     }
 
-    private void addTraining(@NonNull CsvBuilder csv, @NonNull Training t, @NonNull List<Long> roundIds) throws IOException {
-        csv.enterScope();
+    @Throws(IOException::class)
+    private fun addTraining(csv: CsvBuilder, t: Training, roundIds: List<Long>) {
+        csv.enterScope()
         // Title
-        csv.add(t.getTitle());
+        csv.add(t.title)
         // Date
-        csv.add(t.getDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
+        csv.add(t.date!!.format(DateTimeFormatter.ISO_LOCAL_DATE))
         // StandardRound
-        csv.add(t.getStandardRoundId() == null ? context.getString(R.string.practice) : t.getStandardRound()
-                .getName());
+        csv.add(if (t.standardRoundId == null)
+            context.getString(R.string.practice)
+        else
+            t.standardRound!!.name)
         // Indoor
-        csv.add(t.getIndoor() ? context.getString(R.string.indoor) : context.getString(R.string.outdoor));
+        csv.add(if (t.indoor) context.getString(R.string.indoor) else context.getString(R.string.outdoor))
         // Bow
-        csv.add(t.getBow() == null ? "" : t.getBow().getName());
+        csv.add(if (t.bow == null) "" else t.bow!!.name)
         // Arrow
-        csv.add(t.getArrow() == null ? "" : t.getArrow().getName());
-        for (Round r : t.loadRounds()) {
-            if (!roundIds.contains(r.getId())) {
-                continue;
+        csv.add(if (t.arrow == null) "" else t.arrow!!.name)
+        for (r in t.loadRounds()!!) {
+            if (!roundIds.contains(r.id)) {
+                continue
             }
-            addRound(csv, r);
+            addRound(csv, r)
         }
-        csv.exitScope();
+        csv.exitScope()
     }
 
-    private static void addRound(@NonNull CsvBuilder csv, @NonNull Round r) throws IOException {
-        csv.enterScope();
+    @Throws(IOException::class)
+    private fun addRound(csv: CsvBuilder, r: Round) {
+        csv.enterScope()
         // Round
-        csv.add(String.valueOf(r.getIndex() + 1));
+        csv.add((r.index + 1).toString())
         // Distance
-        csv.add(r.getDistance().toString());
+        csv.add(r.distance.toString())
         // Target
-        final Target target = r.getTarget();
-        csv.add(target.getModel().toString() + " (" + target.getDiameter()
-                .toString() + ")");
-        for (End e : r.loadEnds()) {
-            csv.enterScope();
+        val target = r.target
+        csv.add(target.model.toString() + " (" + target.diameter!!
+                .toString() + ")")
+        for (e in r.loadEnds()!!) {
+            csv.enterScope()
             // End
-            csv.add(String.valueOf(e.getIndex() + 1));
+            csv.add((e.index + 1).toString())
             // Timestamp
-            csv.add(e.getSaveTime().format(DateTimeFormatter.ISO_LOCAL_TIME));
-            for (Shot s : e.loadShots()) {
-                csv.enterScope();
+            csv.add(e.saveTime!!.format(DateTimeFormatter.ISO_LOCAL_TIME))
+            for ((_, index, _, x, y, scoringRing) in e.loadShots()!!) {
+                csv.enterScope()
                 // Score
-                csv.add(target.zoneToString(s.getScoringRing(), s.getIndex()));
+                csv.add(target.zoneToString(scoringRing, index))
 
                 // Coordinates (X, Y)
-                csv.add(String.valueOf(s.getX()));
-                csv.add(String.valueOf(s.getY()));
+                csv.add(x.toString())
+                csv.add(y.toString())
 
-                csv.newLine();
-                csv.exitScope();
+                csv.newLine()
+                csv.exitScope()
             }
-            csv.exitScope();
+            csv.exitScope()
         }
-        csv.exitScope();
+        csv.exitScope()
     }
 
-    private static class CsvBuilder {
-        private final Writer writer;
-        private final Stack<String> scopeStack = new Stack<>();
+    private class CsvBuilder(private val writer: Writer) {
+        private val scopeStack = Stack<String>()
 
-        public CsvBuilder(Writer writer) {
-            this.writer = writer;
-            scopeStack.push("");
+        init {
+            scopeStack.push("")
         }
 
-        public void add(String text) {
-            String line = scopeStack.pop();
+        fun add(text: String?) {
+            var line = scopeStack.pop()
             if (!line.isEmpty()) {
-                line += ";";
+                line += ";"
             }
-            line += "\"" + text + "\"";
-            scopeStack.push(line);
+            line += "\"" + text + "\""
+            scopeStack.push(line)
         }
 
-        public void newLine() throws IOException {
-            writer.append(scopeStack.peek());
-            writer.append("\n");
+        @Throws(IOException::class)
+        fun newLine() {
+            writer.append(scopeStack.peek())
+            writer.append("\n")
         }
 
-        public void enterScope() {
-            scopeStack.push(scopeStack.peek());
+        fun enterScope() {
+            scopeStack.push(scopeStack.peek())
         }
 
-        public void exitScope() {
-            scopeStack.pop();
+        fun exitScope() {
+            scopeStack.pop()
         }
     }
 }

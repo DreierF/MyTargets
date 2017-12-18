@@ -13,166 +13,139 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.statistics;
+package de.dreier.mytargets.features.statistics
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.util.AttributeSet;
-import android.util.TypedValue;
-import android.view.View;
-import android.view.ViewGroup;
+import android.content.Context
+import android.util.AttributeSet
+import android.util.TypedValue
+import android.view.View
+import android.view.ViewGroup
+import java.util.*
 
-import java.util.ArrayList;
-import java.util.List;
+class ChipGroup @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ViewGroup(context, attrs, defStyleAttr) {
+    private var tagList: MutableList<Tag> = ArrayList()
 
-import de.dreier.mytargets.databinding.ViewChipsBinding;
-import de.dreier.mytargets.shared.streamwrapper.Stream;
+    private val horizontalSpacing = dp2px(8.0f).toInt()
 
-public class ChipGroup extends ViewGroup {
-    @NonNull
-    List<Tag> tagList = new ArrayList<>();
-
-    private int horizontalSpacing = (int) dp2px(8.0f);
-
-    private int verticalSpacing = (int) dp2px(4.0f);
+    private val verticalSpacing = dp2px(4.0f).toInt()
 
     /**
      * Listener used to dispatch tag click event.
      */
-    private OnSelectionChangedListener mOnSelectionChangedListener;
-
-    public ChipGroup(Context context) {
-        this(context, null);
-    }
-
-    public ChipGroup(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public ChipGroup(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        final int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        final int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-
-        measureChildren(widthMeasureSpec, heightMeasureSpec);
-
-        int width;
-        int height = 0;
-
-        int row = 0; // The row counter.
-        int rowWidth = 0; // Calc the current row width.
-        int rowMaxHeight = 0; // Calc the max tag height, in current row.
-
-        final int count = getChildCount();
-        for (int i = 0; i < count; i++) {
-            final View child = getChildAt(i);
-            final int childWidth = child.getMeasuredWidth();
-            final int childHeight = child.getMeasuredHeight();
-
-            if (child.getVisibility() != GONE) {
-                rowWidth += childWidth;
-                if (rowWidth > widthSize) { // Next line.
-                    rowWidth = childWidth; // The next row width.
-                    height += rowMaxHeight + verticalSpacing;
-                    rowMaxHeight = childHeight; // The next row max height.
-                    row++;
-                } else { // This line.
-                    rowMaxHeight = Math.max(rowMaxHeight, childHeight);
-                }
-                rowWidth += horizontalSpacing;
-            }
-        }
-        // Account for the last row height.
-        height += rowMaxHeight;
-
-        // Account for the padding too.
-        height += getPaddingTop() + getPaddingBottom();
-
-        // If the tags grouped in one row, set the width to wrap the tags.
-        if (row == 0) {
-            width = rowWidth;
-            width += getPaddingLeft() + getPaddingRight();
-        } else { // If the tags grouped exceed one line, set the width to match the parent.
-            width = widthSize;
-        }
-
-        setMeasuredDimension(widthMode == MeasureSpec.EXACTLY ? widthSize : width,
-                heightMode == MeasureSpec.EXACTLY ? heightSize : height);
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        final int parentLeft = getPaddingLeft();
-        final int parentRight = r - l - getPaddingRight();
-        final int parentTop = getPaddingTop();
-
-        int childLeft = parentLeft;
-        int childTop = parentTop;
-
-        int rowMaxHeight = 0;
-
-        final int count = getChildCount();
-        for (int i = 0; i < count; i++) {
-            final View child = getChildAt(i);
-            final int width = child.getMeasuredWidth();
-            final int height = child.getMeasuredHeight();
-
-            if (child.getVisibility() != GONE) {
-                if (childLeft + width > parentRight) { // Next line
-                    childLeft = parentLeft;
-                    childTop += rowMaxHeight + verticalSpacing;
-                    rowMaxHeight = height;
-                } else {
-                    rowMaxHeight = Math.max(rowMaxHeight, height);
-                }
-                child.layout(childLeft, childTop, childLeft + width, childTop + height);
-
-                childLeft += width + horizontalSpacing;
-            }
-        }
-    }
+    private var onSelectionChangedListener: ((Tag) -> Unit)? = null
 
     /**
      * Returns the tag list in group.
      *
      * @return the tag list.
      */
-    @NonNull
-    public List<Tag> getTags() {
-        return new ArrayList<>(tagList);
-    }
-
     /**
      * Set the tags. It will remove all previous tags first.
      * If the list of tags contains less than 2 elements the view sets its visibility to gone.
      *
      * @param tags the tag list to set.
      */
-    public void setTags(@NonNull List<Tag> tags) {
-        removeAllViews();
-        tagList.clear();
-        tagList.addAll(tags);
-        for (final Tag tag : tagList) {
-            appendTag(tag);
+    var tags: List<Tag>
+        get() = ArrayList(tagList)
+        set(tags) {
+            removeAllViews()
+            tagList.clear()
+            tagList.addAll(tags)
+            for (tag in tagList) {
+                appendTag(tag)
+            }
+            visibility = if (tags.size < 2) View.GONE else View.VISIBLE
         }
-        setVisibility(tags.size() < 2 ? GONE : VISIBLE);
-    }
 
     /**
      * Returns the checked tag list in group.
      *
      * @return the tag list.
      */
-    public List<Tag> getCheckedTags() {
-        return Stream.of(tagList)
-                .filter(Tag::isChecked)
-                .toList();
+    val checkedTags: List<Tag>
+        get() = tagList.filter { it.isChecked }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val widthMode = View.MeasureSpec.getMode(widthMeasureSpec)
+        val heightMode = View.MeasureSpec.getMode(heightMeasureSpec)
+        val widthSize = View.MeasureSpec.getSize(widthMeasureSpec)
+        val heightSize = View.MeasureSpec.getSize(heightMeasureSpec)
+
+        measureChildren(widthMeasureSpec, heightMeasureSpec)
+
+        var width: Int
+        var height = 0
+
+        var row = 0 // The row counter.
+        var rowWidth = 0 // Calc the current row width.
+        var rowMaxHeight = 0 // Calc the max tag height, in current row.
+
+        val count = childCount
+        for (i in 0 until count) {
+            val child = getChildAt(i)
+            val childWidth = child.measuredWidth
+            val childHeight = child.measuredHeight
+
+            if (child.visibility != View.GONE) {
+                rowWidth += childWidth
+                if (rowWidth > widthSize) { // Next line.
+                    rowWidth = childWidth // The next row width.
+                    height += rowMaxHeight + verticalSpacing
+                    rowMaxHeight = childHeight // The next row max height.
+                    row++
+                } else { // This line.
+                    rowMaxHeight = Math.max(rowMaxHeight, childHeight)
+                }
+                rowWidth += horizontalSpacing
+            }
+        }
+        // Account for the last row height.
+        height += rowMaxHeight
+
+        // Account for the padding too.
+        height += paddingTop + paddingBottom
+
+        // If the tags grouped in one row, set the width to wrap the tags.
+        if (row == 0) {
+            width = rowWidth
+            width += paddingLeft + paddingRight
+        } else { // If the tags grouped exceed one line, set the width to match the parent.
+            width = widthSize
+        }
+
+        setMeasuredDimension(if (widthMode == View.MeasureSpec.EXACTLY) widthSize else width,
+                if (heightMode == View.MeasureSpec.EXACTLY) heightSize else height)
+    }
+
+    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+        val parentLeft = paddingLeft
+        val parentRight = r - l - paddingRight
+        val parentTop = paddingTop
+
+        var childLeft = parentLeft
+        var childTop = parentTop
+
+        var rowMaxHeight = 0
+
+        val count = childCount
+        for (i in 0 until count) {
+            val child = getChildAt(i)
+            val width = child.measuredWidth
+            val height = child.measuredHeight
+
+            if (child.visibility != View.GONE) {
+                if (childLeft + width > parentRight) { // Next line
+                    childLeft = parentLeft
+                    childTop += rowMaxHeight + verticalSpacing
+                    rowMaxHeight = height
+                } else {
+                    rowMaxHeight = Math.max(rowMaxHeight, height)
+                }
+                child.layout(childLeft, childTop, childLeft + width, childTop + height)
+
+                childLeft += width + horizontalSpacing
+            }
+        }
     }
 
     /**
@@ -180,27 +153,23 @@ public class ChipGroup extends ViewGroup {
      *
      * @param tag the tag to append.
      */
-    protected void appendTag(@NonNull Tag tag) {
-        ViewChipsBinding binding = tag.getView(getContext(), this);
-        binding.getRoot().setOnClickListener(v -> {
-            tag.setChecked(!tag.isChecked());
-            binding.getRoot().setActivated(!tag.isChecked());
-            if (mOnSelectionChangedListener != null) {
-                mOnSelectionChangedListener.onSelectionChanged(tag);
-            }
-        });
-        addView(binding.getRoot());
+    private fun appendTag(tag: Tag) {
+        val binding = tag.getView(context, this)
+        binding.root.setOnClickListener { v ->
+            tag.isChecked = !tag.isChecked
+            binding.root.isActivated = !tag.isChecked
+            onSelectionChangedListener?.invoke(tag)
+        }
+        addView(binding.root)
     }
 
-    public float dp2px(float dp) {
+    private fun dp2px(dp: Float): Float {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-                getResources().getDisplayMetrics());
+                resources.displayMetrics)
     }
 
-    @NonNull
-    @Override
-    public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {
-        return new ChipGroup.LayoutParams(getContext(), attrs);
+    override fun generateLayoutParams(attrs: AttributeSet): ViewGroup.LayoutParams {
+        return ChipGroup.LayoutParams(context, attrs)
     }
 
     /**
@@ -208,29 +177,13 @@ public class ChipGroup extends ViewGroup {
      *
      * @param l the callback that will run.
      */
-    public void setOnTagClickListener(OnSelectionChangedListener l) {
-        mOnSelectionChangedListener = l;
-    }
-
-    /**
-     * Interface definition for a callback to be invoked when a tag is clicked.
-     */
-    public interface OnSelectionChangedListener {
-        /**
-         * Called when a tag has been clicked.
-         *
-         * @param tag The tag that was clicked.
-         */
-        void onSelectionChanged(Tag tag);
+    fun setOnTagClickListener(l: (Tag) -> Unit) {
+        onSelectionChangedListener = l
     }
 
     /**
      * Per-child layout information for layouts.
      */
-    public static class LayoutParams extends ViewGroup.LayoutParams {
-        public LayoutParams(Context c, AttributeSet attrs) {
-            super(c, attrs);
-        }
-    }
+    class LayoutParams(c: Context, attrs: AttributeSet) : ViewGroup.LayoutParams(c, attrs)
 
 }
