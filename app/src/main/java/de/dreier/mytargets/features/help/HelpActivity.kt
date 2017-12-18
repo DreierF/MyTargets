@@ -13,19 +13,16 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.help;
+package de.dreier.mytargets.features.help
 
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment
 
-import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase
 
-public class HelpActivity extends SimpleFragmentActivityBase {
+class HelpActivity : SimpleFragmentActivityBase() {
 
-    @NonNull
-    @Override
-    public Fragment instantiateFragment() {
-        return new HelpFragment();
+    public override fun instantiateFragment(): Fragment {
+        return HelpFragment()
     }
 
 }

@@ -13,38 +13,35 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.main;
+package de.dreier.mytargets.features.main
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
+import agency.tango.materialintroscreen.MaterialIntroActivity
+import agency.tango.materialintroscreen.SlideFragmentBuilder
+import android.os.Bundle
+import de.dreier.mytargets.R
 
-import agency.tango.materialintroscreen.MaterialIntroActivity;
-import agency.tango.materialintroscreen.SlideFragmentBuilder;
-import de.dreier.mytargets.R;
+class IntroActivity : MaterialIntroActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-public class IntroActivity extends MaterialIntroActivity {
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        hideBackButton()
 
-        hideBackButton();
+        enableLastSlideAlphaExitTransition(true)
 
-        enableLastSlideAlphaExitTransition(true);
-
-        addSlide(new SlideFragmentBuilder()
+        addSlide(SlideFragmentBuilder()
                 .backgroundColor(R.color.introBackground)
                 .buttonsColor(R.color.colorAccent)
                 .image(R.drawable.intro_screen_1)
                 .title(getString(R.string.intro_title_track_training_progress))
                 .description(getString(R.string.intro_description_track_training_progress))
-                .build());
+                .build())
 
-        addSlide(new SlideFragmentBuilder()
+        addSlide(SlideFragmentBuilder()
                 .backgroundColor(R.color.introBackground)
                 .buttonsColor(R.color.colorAccent)
                 .image(R.drawable.intro_screen_2)
                 .title(getString(R.string.intro_title_everything_in_one_place))
                 .description(getString(R.string.intro_description_everything_in_one_place))
-                .build());
+                .build())
     }
 }
