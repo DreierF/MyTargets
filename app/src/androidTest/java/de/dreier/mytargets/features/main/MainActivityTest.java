@@ -201,7 +201,7 @@ public class MainActivityTest extends UITestBase {
                 .perform(click());
         final Arrow firstArrow = Stream.of(Arrow.Companion.getAll()).sorted().findFirstOrNull();
         intended(allOf(hasClass(EditArrowActivity.class),
-                hasExtra(EditArrowFragment.ARROW_ID, firstArrow.getId())));
+                hasExtra(EditArrowFragment.Companion.getARROW_ID(), firstArrow.getId())));
 
         // Open settings
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
