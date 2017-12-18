@@ -12,246 +12,212 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets;
+package de.dreier.mytargets
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.databinding.DataBindingUtil;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.wearable.activity.WearableActivity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.databinding.DataBindingUtil
+import android.os.Bundle
+import android.support.v4.content.ContextCompat
+import android.support.v4.content.LocalBroadcastManager
+import android.support.v7.widget.RecyclerView
+import android.support.wearable.activity.WearableActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
+import com.evernote.android.state.State
+import com.evernote.android.state.StateSaver
+import de.dreier.mytargets.databinding.ActivityRoundBinding
+import de.dreier.mytargets.shared.models.TrainingInfo
+import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
+import de.dreier.mytargets.shared.models.augmented.AugmentedRound
+import de.dreier.mytargets.shared.views.EndView
+import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.BROADCAST_TIMER_SETTINGS_FROM_REMOTE
+import de.dreier.mytargets.utils.WearSettingsManager
+import de.dreier.mytargets.utils.WearWearableClient
+import de.dreier.mytargets.utils.WearWearableClient.Companion.BROADCAST_TRAINING_UPDATED
+import java.text.DateFormat
+import java.util.*
 
-import com.evernote.android.state.State;
-import com.evernote.android.state.StateSaver;
+class RoundActivity : WearableActivity() {
 
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.List;
-
-import de.dreier.mytargets.databinding.ActivityRoundBinding;
-import de.dreier.mytargets.shared.models.TimerSettings;
-import de.dreier.mytargets.shared.models.TrainingInfo;
-import de.dreier.mytargets.shared.models.augmented.AugmentedEnd;
-import de.dreier.mytargets.shared.models.augmented.AugmentedRound;
-import de.dreier.mytargets.shared.views.EndView;
-import de.dreier.mytargets.utils.WearSettingsManager;
-import de.dreier.mytargets.utils.WearWearableClient;
-
-import static de.dreier.mytargets.shared.wearable.WearableClientBase.BROADCAST_TIMER_SETTINGS_FROM_REMOTE;
-import static de.dreier.mytargets.utils.WearWearableClient.BROADCAST_TRAINING_UPDATED;
-
-public class RoundActivity extends WearableActivity {
-
-    public static final String EXTRA_ROUND = "round";
-
-    private ActivityRoundBinding binding;
+    private lateinit var binding: ActivityRoundBinding
 
     @State
-    AugmentedRound round;
+    internal lateinit var round: AugmentedRound
 
-    @NonNull
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, @NonNull Intent intent) {
-            switch (intent.getAction()) {
-                case BROADCAST_TRAINING_UPDATED:
-                    TrainingInfo info = intent.getParcelableExtra(WearWearableClient.EXTRA_INFO);
-                    round = info.getRound();
-                    showRoundData();
-                    break;
-                case Companion.getBROADCAST_TIMER_SETTINGS_FROM_REMOTE():
-                    applyTimerState();
-                    break;
-                default:
-                    break;
+    private val receiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            when (intent.action) {
+                BROADCAST_TRAINING_UPDATED -> {
+                    val (_, _, round1) = intent.getParcelableExtra<TrainingInfo>(WearWearableClient.EXTRA_INFO)
+                    round = round1
+                    showRoundData()
+                }
+                BROADCAST_TIMER_SETTINGS_FROM_REMOTE -> applyTimerState()
+                else -> {
+                }
             }
         }
-    };
+    }
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_round);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_round)
 
-        setAmbientEnabled();
+        setAmbientEnabled()
 
-        StateSaver.restoreInstanceState(this, savedInstanceState);
+        StateSaver.restoreInstanceState(this, savedInstanceState)
         if (savedInstanceState == null) {
-            Intent intent = getIntent();
-            if (intent != null && intent.getExtras() != null) {
-                round = intent.getParcelableExtra(EXTRA_ROUND);
+            val intent = intent
+            if (intent != null && intent.extras != null) {
+                round = intent.getParcelableExtra(EXTRA_ROUND)
             }
         }
 
-        showRoundData();
+        showRoundData()
 
-        binding.wearableDrawerView.getController().peekDrawer();
+        binding.wearableDrawerView.controller.peekDrawer()
 
         // Replaces the on click behaviour that open the (empty) drawer
-        LinearLayout peekView = ((LinearLayout) binding.primaryActionTimer.getParent());
-        ViewGroup peekContainer = ((ViewGroup) peekView.getParent());
-        peekContainer.setOnClickListener(view -> toggleTimer());
-        applyTimerState();
+        val peekView = binding.primaryActionTimer.parent as LinearLayout
+        val peekContainer = peekView.parent as ViewGroup
+        peekContainer.setOnClickListener { view -> toggleTimer() }
+        applyTimerState()
 
-        final IntentFilter filter = new IntentFilter();
-        filter.addAction(BROADCAST_TRAINING_UPDATED);
-        filter.addAction(Companion.getBROADCAST_TIMER_SETTINGS_FROM_REMOTE());
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
+        val filter = IntentFilter()
+        filter.addAction(BROADCAST_TRAINING_UPDATED)
+        filter.addAction(BROADCAST_TIMER_SETTINGS_FROM_REMOTE)
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter)
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        StateSaver.saveInstanceState(this, outState);
+    public override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        StateSaver.saveInstanceState(this, outState)
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+    override fun onDestroy() {
+        super.onDestroy()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
     }
 
-    @Override
-    public void onEnterAmbient(Bundle ambientDetails) {
-        super.onEnterAmbient(ambientDetails);
-        binding.drawerLayout.setBackgroundResource(R.color.md_black_1000);
-        binding.recyclerViewEnds.getAdapter().notifyDataSetChanged();
-        binding.wearableDrawerView.setVisibility(View.INVISIBLE);
-        binding.clock.time.setVisibility(View.VISIBLE);
-        binding.clock.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
+    override fun onEnterAmbient(ambientDetails: Bundle?) {
+        super.onEnterAmbient(ambientDetails)
+        binding.drawerLayout.setBackgroundResource(R.color.md_black_1000)
+        binding.recyclerViewEnds.adapter.notifyDataSetChanged()
+        binding.wearableDrawerView.visibility = View.INVISIBLE
+        binding.clock.time.visibility = View.VISIBLE
+        binding.clock.time.text = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date())
     }
 
-    @Override
-    public void onUpdateAmbient() {
-        super.onUpdateAmbient();
-        binding.clock.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
+    override fun onUpdateAmbient() {
+        super.onUpdateAmbient()
+        binding.clock.time.text = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date())
     }
 
-    @Override
-    public void onExitAmbient() {
-        super.onExitAmbient();
-        binding.drawerLayout.setBackgroundResource(R.color.md_wear_green_dark_background);
-        binding.recyclerViewEnds.getAdapter().notifyDataSetChanged();
-        binding.wearableDrawerView.setVisibility(View.VISIBLE);
-        binding.clock.time.setVisibility(View.GONE);
+    override fun onExitAmbient() {
+        super.onExitAmbient()
+        binding.drawerLayout.setBackgroundResource(R.color.md_wear_green_dark_background)
+        binding.recyclerViewEnds.adapter.notifyDataSetChanged()
+        binding.wearableDrawerView.visibility = View.VISIBLE
+        binding.clock.time.visibility = View.GONE
     }
 
-    private void showRoundData() {
-        boolean showAddEnd =
-                round.getRound().getMaxEndCount() == null || round.getRound().getMaxEndCount() > round.getEnds().size();
-        binding.recyclerViewEnds.setAdapter(new EndAdapter(round.getEnds(), showAddEnd));
-        binding.recyclerViewEnds.scrollToPosition(round.getEnds().size());
+    private fun showRoundData() {
+        val showAddEnd = round.round.maxEndCount == null || round.round.maxEndCount!! > round.ends.size
+        binding.recyclerViewEnds.adapter = EndAdapter(round.ends, showAddEnd)
+        binding.recyclerViewEnds.scrollToPosition(round.ends.size)
     }
 
-    private void addEnd() {
-        final Intent intent = new Intent(this, InputActivity.class);
-        intent.putExtra(InputActivity.EXTRA_ROUND, round);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        startActivity(intent);
-        TimerSettings timerSettings = WearSettingsManager.getTimerSettings();
-        if (timerSettings.getEnabled()) {
-            Intent intentTimer = new Intent(this, TimerActivity.class);
-            intentTimer.putExtra(TimerActivity.EXTRA_TIMER_SETTINGS, timerSettings);
-            startActivity(intentTimer);
+    private fun addEnd() {
+        val intent = Intent(this, InputActivity::class.java)
+        intent.putExtra(InputActivity.EXTRA_ROUND, round)
+        intent.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+        startActivity(intent)
+        val timerSettings = WearSettingsManager.timerSettings
+        if (timerSettings.enabled) {
+            val intentTimer = Intent(this, TimerActivity::class.java)
+            intentTimer.putExtra(TimerActivity.EXTRA_TIMER_SETTINGS, timerSettings)
+            startActivity(intentTimer)
         }
     }
 
-    public void toggleTimer() {
-        TimerSettings timerSettings = WearSettingsManager.getTimerSettings();
-        timerSettings.setEnabled(!timerSettings.getEnabled());
-        ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(timerSettings);
-        applyTimerState();
+    private fun toggleTimer() {
+        val timerSettings = WearSettingsManager.timerSettings
+        timerSettings.enabled = !timerSettings.enabled
+        ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(timerSettings)
+        applyTimerState()
     }
 
-    private void applyTimerState() {
-        TimerSettings timerSettings = WearSettingsManager.getTimerSettings();
+    private fun applyTimerState() {
+        val timerSettings = WearSettingsManager.timerSettings
         binding.primaryActionTimer.setImageResource(
-                timerSettings.getEnabled() ? R.drawable.ic_traffic_white_24dp
-                        : R.drawable.ic_timer_off_white_24dp);
+                if (timerSettings.enabled)
+                    R.drawable.ic_traffic_white_24dp
+                else
+                    R.drawable.ic_timer_off_white_24dp)
     }
 
-    private class EndAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private inner class EndAdapter(private val ends: List<AugmentedEnd>, private val showAddEnd: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-        private final List<AugmentedEnd> ends;
-        private final boolean showAddEnd;
-
-        public EndAdapter(List<AugmentedEnd> ends, boolean showAddEnd) {
-            this.ends = ends;
-            this.showAddEnd = showAddEnd;
-        }
-
-        @NonNull
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+            val inflater = LayoutInflater.from(parent.context)
             if (viewType == 0) {
-                View view = inflater.inflate(R.layout.item_end, parent, false);
-                return new ViewHolder(view);
+                val view = inflater.inflate(R.layout.item_end, parent, false)
+                return ViewHolder(view)
             } else {
-                View view = inflater.inflate(R.layout.item_inline_button, parent, false);
-                return new InlineButtonViewHolder(view);
+                val view = inflater.inflate(R.layout.item_inline_button, parent, false)
+                return InlineButtonViewHolder(view)
             }
         }
 
-        @Override
-        public int getItemViewType(int position) {
-            return position == ends.size() ? 1 : 0;
+        override fun getItemViewType(position: Int): Int {
+            return if (position == ends.size) 1 else 0
         }
 
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            if (holder instanceof ViewHolder) {
-                AugmentedEnd end = ends.get(position);
-                ViewHolder viewHolder = (ViewHolder) holder;
-                viewHolder.end.setText(getString(R.string.end_n, end.getEnd().getIndex() + 1));
-                viewHolder.shots.setShots(round.getRound().getTarget(), end.getShots());
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+            if (holder is ViewHolder) {
+                val end = ends[position]
+                holder.end.text = getString(R.string.end_n, end.end.index + 1)
+                holder.shots.setShots(round.round.target, end.shots)
 
-                viewHolder.end.setTextColor(ContextCompat.getColor(RoundActivity.this,
-                        isAmbient() ? R.color.md_white_1000 :
-                                R.color.md_wear_green_active_ui_element));
-                viewHolder.shots.setAmbientMode(isAmbient());
-                viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(RoundActivity.this,
-                        isAmbient() ? R.color.md_black_1000 :
-                                R.color.md_wear_green_lighter_background));
-            } else if (holder instanceof InlineButtonViewHolder) {
-                holder.itemView.setVisibility(isAmbient() ? View.INVISIBLE : View.VISIBLE);
+                holder.end.setTextColor(ContextCompat.getColor(this@RoundActivity,
+                        if (isAmbient)
+                            R.color.md_white_1000
+                        else
+                            R.color.md_wear_green_active_ui_element))
+                holder.shots.setAmbientMode(isAmbient)
+                holder.itemView.setBackgroundColor(ContextCompat.getColor(this@RoundActivity,
+                        if (isAmbient)
+                            R.color.md_black_1000
+                        else
+                            R.color.md_wear_green_lighter_background))
+            } else if (holder is InlineButtonViewHolder) {
+                holder.itemView.visibility = if (isAmbient) View.INVISIBLE else View.VISIBLE
             }
         }
 
-        @Override
-        public int getItemCount() {
-            return ends.size() + (showAddEnd ? 1 : 0);
+        override fun getItemCount(): Int {
+            return ends.size + if (showAddEnd) 1 else 0
         }
     }
 
-    private class ViewHolder extends RecyclerView.ViewHolder {
+    private inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val end: TextView = itemView.findViewById(R.id.end)
+        val shots: EndView = itemView.findViewById(R.id.shoots)
+    }
 
-        private final TextView end;
-        private final EndView shots;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            end = itemView.findViewById(R.id.end);
-            shots = itemView.findViewById(R.id.shoots);
+    private inner class InlineButtonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.setOnClickListener { v -> addEnd() }
         }
     }
 
-    private class InlineButtonViewHolder extends RecyclerView.ViewHolder {
-
-        public InlineButtonViewHolder(@NonNull View itemView) {
-            super(itemView);
-            itemView.setOnClickListener(v -> addEnd());
-        }
+    companion object {
+        const val EXTRA_ROUND = "round"
     }
 }

@@ -31,8 +31,8 @@ abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
 
     private var currentStatus = WAIT_FOR_START
     private var countdown: CountDownTimer? = null
-    private var horn: MediaPlayer? = null
-    var settings: TimerSettings? = null
+    private lateinit var horn: MediaPlayer
+    lateinit var settings: TimerSettings
     private var exitAfterStop = true
 
     override fun onAttach(context: Context) {
@@ -59,10 +59,10 @@ abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
 
     override fun onDetach() {
         super.onDetach()
-        if (horn!!.isPlaying) {
-            horn!!.stop()
+        if (horn.isPlaying) {
+            horn.stop()
         }
-        horn!!.release()
+        horn.release()
         countdown?.cancel()
     }
 
@@ -116,16 +116,16 @@ abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
 
     protected fun getDuration(status: ETimerState): Int {
         when (status) {
-            PREPARATION -> return settings!!.waitTime
-            SHOOTING -> return settings!!.shootTime - settings!!.warnTime
-            COUNTDOWN -> return settings!!.warnTime
+            PREPARATION -> return settings.waitTime
+            SHOOTING -> return settings.shootTime - settings.warnTime
+            COUNTDOWN -> return settings.warnTime
             else -> throw IllegalArgumentException()
         }
     }
 
     protected fun getOffset(status: ETimerState): Int {
         return if (status === SHOOTING) {
-            settings!!.warnTime
+            settings.warnTime
         } else {
             0
         }
@@ -133,10 +133,10 @@ abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
 
     private fun playSignal(n: Int) {
         if (n > 0) {
-            if (settings!!.sound) {
+            if (settings.sound) {
                 playHorn(n)
             }
-            if (settings!!.vibrate) {
+            if (settings.vibrate) {
                 val pattern = LongArray(1 + n * 2)
                 val v = activity.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
                 pattern[0] = 150
@@ -150,8 +150,8 @@ abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
     }
 
     private fun playHorn(n: Int) {
-        horn!!.start()
-        horn!!.setOnCompletionListener { mp ->
+        horn.start()
+        horn.setOnCompletionListener {
             if (n > 1) {
                 playHorn(n - 1)
             }

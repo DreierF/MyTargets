@@ -26,7 +26,7 @@ fun Parcelable.marshall(): ByteArray {
     return bytes
 }
 
-fun <T : Parcelable> ByteArray.unmarshall(creator: Parcelable.Creator<T>): T { //TODO try with reifed inline
+fun <T : Parcelable> ByteArray.unmarshall(creator: Parcelable.Creator<T>): T {
     val parcel = Parcel.obtain()
     parcel.unmarshall(this, 0, size)
     parcel.setDataPosition(0)

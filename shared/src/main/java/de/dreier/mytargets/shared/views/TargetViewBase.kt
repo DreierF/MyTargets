@@ -145,11 +145,11 @@ abstract class TargetViewBase : View, View.OnTouchListener {
         targetDrawable?.cleanup()
     }
 
-    open fun initWithTarget(t: Target) {
-        target = t
-        targetDrawable = target.impactAggregationDrawable
+    open fun initWithTarget(target: Target) {
+        this.target = target
+        targetDrawable = this.target.impactAggregationDrawable
         targetDrawable?.callback = this
-        endRenderer.init(this, density, target)
+        endRenderer.init(this, density, this.target)
         updateSelectableZones()
     }
 
@@ -379,7 +379,7 @@ abstract class TargetViewBase : View, View.OnTouchListener {
     }
 
     interface OnEndFinishedListener {
-        fun onEndFinished(shotList: List<Shot>?)
+        fun onEndFinished(shotList: List<Shot>)
     }
 
     private fun updateVirtualViews() {

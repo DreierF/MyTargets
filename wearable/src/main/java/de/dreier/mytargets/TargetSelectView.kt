@@ -13,195 +13,168 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets;
+package de.dreier.mytargets
 
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PointF;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
+import android.content.Context
+import android.graphics.*
+import android.support.v4.content.ContextCompat
+import android.util.AttributeSet
+import android.view.MotionEvent
+import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.models.db.Shot
+import de.dreier.mytargets.shared.utils.Circle
+import de.dreier.mytargets.shared.utils.EndRenderer
+import de.dreier.mytargets.shared.views.TargetViewBase
 
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.Shot;
-import de.dreier.mytargets.shared.utils.Circle;
-import de.dreier.mytargets.shared.utils.EndRenderer;
-import de.dreier.mytargets.shared.views.TargetViewBase;
+class TargetSelectView : TargetViewBase {
+    private var radius: Int = 0
+    private var chinHeight: Int = 0
+    private var circleRadius: Double = 0.toDouble()
+    private var circle: Circle? = null
+    private var chinBound: Float = 0.toFloat()
+    private var ambientMode = false
+    private val backspaceBackground = Paint()
 
-public class TargetSelectView extends TargetViewBase {
+    private val currentlySelectedZone: Int
+        get() = if (currentShotIndex != EndRenderer.NO_SELECTION) {
+            shots[currentShotIndex].scoringRing
+        } else {
+            Shot.NOTHING_SELECTED
+        }
 
-    public static final int RADIUS_SELECTED = 23;
-    public static final int RADIUS_UNSELECTED = 17;
-    private int radius;
-    private int chinHeight;
-    private double circleRadius;
-    private Circle circle;
-    private float chinBound;
-    private boolean ambientMode = false;
-    @NonNull
-    private Paint backspaceBackground = new Paint();
+    override val selectedShotCircleRadius: Int
+        get() = RADIUS_SELECTED
 
-    public TargetSelectView(Context context) {
-        super(context);
-        init();
+    constructor(context: Context) : super(context) {
+        init()
     }
 
-    public TargetSelectView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+        init()
     }
 
-    public TargetSelectView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        init();
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
+        init()
     }
 
-    private void init() {
-        getBackspaceSymbol().setTint(0xFFFFFFFF);
-        backspaceBackground
-                .setColor(ContextCompat
-                        .getColor(getContext(), R.color.md_wear_green_active_ui_element));
-        backspaceBackground.setAntiAlias(true);
+    private fun init() {
+        backspaceSymbol.setTint(-0x1)
+        backspaceBackground.color = ContextCompat.getColor(context, R.color.md_wear_green_active_ui_element)
+        backspaceBackground.isAntiAlias = true
     }
 
-    void setChinHeight(int chinHeight) {
-        this.chinHeight = chinHeight;
+    internal fun setChinHeight(chinHeight: Int) {
+        this.chinHeight = chinHeight
     }
 
-    @Override
-    public void initWithTarget(Target target) {
-        super.initWithTarget(target);
-        circle = new Circle(getDensity(), target);
+    override fun initWithTarget(target: Target) {
+        super.initWithTarget(target)
+        circle = Circle(density)
     }
 
-    @Override
-    protected void onDraw(@NonNull Canvas canvas) {
+    override fun onDraw(canvas: Canvas) {
         // Draw all possible points in a circular
-        int curZone = getCurrentlySelectedZone();
-        for (int i = 0; i < getSelectableZones().size(); i++) {
-            PointF coordinate = getCircularCoordinates(i);
+        val curZone = currentlySelectedZone
+        for (i in 0 until selectableZones.size) {
+            val coordinate = getCircularCoordinates(i)
             if (i != curZone) {
-                circle.draw(canvas, coordinate.x, coordinate.y, getSelectableZones().get(i).getIndex(),
-                        17, getCurrentShotIndex(), null, ambientMode);
+                circle!!.draw(canvas, coordinate.x, coordinate.y, selectableZones[i].index,
+                        17, currentShotIndex, null, ambientMode, target)
             }
         }
 
         if (!ambientMode) {
-            canvas.drawCircle(radius, radius + 30 * getDensity(), 20 * getDensity(), backspaceBackground);
-            drawBackspaceButton(canvas);
+            canvas.drawCircle(radius.toFloat(), radius + 30 * density, 20 * density, backspaceBackground)
+            drawBackspaceButton(canvas)
         }
 
         // Draw all points of this end in the center
-        getEndRenderer().draw(canvas);
+        endRenderer.draw(canvas)
     }
 
-    private int getCurrentlySelectedZone() {
-        if (getCurrentShotIndex() != EndRenderer.Companion.getNO_SELECTION()) {
-            return getShots().get(getCurrentShotIndex()).getScoringRing();
-        } else {
-            return Shot.Companion.getNOTHING_SELECTED();
-        }
-    }
-
-    @NonNull
-    private PointF getCircularCoordinates(int zone) {
-        double degree = Math.toRadians(zone * 360.0 / (double) getSelectableZones().size());
-        PointF coordinate = new PointF();
-        coordinate.x = (float) (radius + (Math.cos(degree) * circleRadius));
-        coordinate.y = (float) (radius + (Math.sin(degree) * circleRadius));
+    private fun getCircularCoordinates(zone: Int): PointF {
+        val degree = Math.toRadians(zone * 360.0 / selectableZones.size.toDouble())
+        val coordinate = PointF()
+        coordinate.x = (radius + Math.cos(degree) * circleRadius).toFloat()
+        coordinate.y = (radius + Math.sin(degree) * circleRadius).toFloat()
         if (coordinate.y > chinBound) {
-            coordinate.y = chinBound;
+            coordinate.y = chinBound
         }
-        return coordinate;
+        return coordinate
     }
 
-    @NonNull
-    @Override
-    protected PointF getShotCoordinates(@NonNull Shot shot) {
-        return getCircularCoordinates(getSelectableZoneIndexFromShot(shot));
+    override fun getShotCoordinates(shot: Shot): PointF {
+        return getCircularCoordinates(getSelectableZoneIndexFromShot(shot))
     }
 
-    @Override
-    protected void updateLayoutBounds(int width, int height) {
-        radius = (int) (width / 2.0);
-        chinBound = height - (chinHeight + 15) * getDensity();
-        circleRadius = radius - 25 * getDensity();
+    override fun updateLayoutBounds(width: Int, height: Int) {
+        radius = (width / 2.0).toInt()
+        chinBound = height - (chinHeight + 15) * density
+        circleRadius = (radius - 25 * density).toDouble()
     }
 
-    @NonNull
-    @Override
-    protected RectF getEndRect() {
-        RectF endRect = new RectF();
-        endRect.left = radius - 45 * getDensity();
-        endRect.right = radius + 45 * getDensity();
-        endRect.top = radius / 2;
-        endRect.bottom = radius;
-        return endRect;
+    override fun getEndRect(): RectF {
+        val endRect = RectF()
+        endRect.left = radius - 45 * density
+        endRect.right = radius + 45 * density
+        endRect.top = (radius / 2).toFloat()
+        endRect.bottom = radius.toFloat()
+        return endRect
     }
 
-    @NonNull
-    @Override
-    protected Rect getBackspaceButtonBounds() {
-        Rect backspaceBounds = new Rect();
-        backspaceBounds.left = (int) (radius - 20 * getDensity());
-        backspaceBounds.right = (int) (radius + 20 * getDensity());
-        backspaceBounds.top = (int) (radius + 10 * getDensity());
-        backspaceBounds.bottom = (int) (radius + 50 * getDensity());
-        return backspaceBounds;
+    override fun getBackspaceButtonBounds(): Rect {
+        val backspaceBounds = Rect()
+        backspaceBounds.left = (radius - 20 * density).toInt()
+        backspaceBounds.right = (radius + 20 * density).toInt()
+        backspaceBounds.top = (radius + 10 * density).toInt()
+        backspaceBounds.bottom = (radius + 50 * density).toInt()
+        return backspaceBounds
     }
 
-    @NonNull
-    @Override
-    protected Rect getSelectableZonePosition(int i) {
-        PointF coordinate = getCircularCoordinates(i);
-        final int rad = i == getCurrentlySelectedZone() ? RADIUS_SELECTED : RADIUS_UNSELECTED;
-        final Rect rect = new Rect();
-        rect.left = (int) (coordinate.x - rad);
-        rect.top = (int) (coordinate.y - rad);
-        rect.right = (int) (coordinate.x + rad);
-        rect.bottom = (int) (coordinate.y + rad);
-        return rect;
+    override fun getSelectableZonePosition(i: Int): Rect {
+        val coordinate = getCircularCoordinates(i)
+        val rad = if (i == currentlySelectedZone) RADIUS_SELECTED else RADIUS_UNSELECTED
+        val rect = Rect()
+        rect.left = (coordinate.x - rad).toInt()
+        rect.top = (coordinate.y - rad).toInt()
+        rect.right = (coordinate.x + rad).toInt()
+        rect.bottom = (coordinate.y + rad).toInt()
+        return rect
     }
 
-    @Override
-    protected boolean updateShotToPosition(@NonNull Shot shot, float x, float y) {
-        int zones = getSelectableZones().size();
+    override fun updateShotToPosition(shot: Shot, x: Float, y: Float): Boolean {
+        val zones = selectableZones.size
 
-        double xDiff = x - radius;
-        double yDiff = y - radius;
+        val xDiff = (x - radius).toDouble()
+        val yDiff = (y - radius).toDouble()
 
-        float perception_rad = radius - 50 * getDensity();
+        val perceptionRadius = radius - 50 * density
         // Select current arrow
-        if (xDiff * xDiff + yDiff * yDiff > perception_rad * perception_rad) {
-            double degree = Math.toDegrees(Math.atan2(-yDiff, xDiff)) - (180.0 / (double) zones);
+        if (xDiff * xDiff + yDiff * yDiff > perceptionRadius * perceptionRadius) {
+            var degree = Math.toDegrees(Math.atan2(-yDiff, xDiff)) - 180.0 / zones.toDouble()
             if (degree < 0) {
-                degree += 360.0;
+                degree += 360.0
             }
-            int index = (int) (zones * ((360.0 - degree) / 360.0));
-            shot.setScoringRing(getSelectableZones().get(index).getIndex());
-            return true;
+            val index = (zones * ((360.0 - degree) / 360.0)).toInt()
+            shot.scoringRing = selectableZones[index].index
+            return true
         }
 
-        return false;
+        return false
     }
 
-    @Override
-    protected boolean selectPreviousShots(MotionEvent motionEvent, float x, float y) {
-        return false;
+    override fun selectPreviousShots(motionEvent: MotionEvent, x: Float, y: Float): Boolean {
+        return false
     }
 
-    @Override
-    protected int getSelectedShotCircleRadius() {
-        return RADIUS_SELECTED;
+    fun setAmbientMode(ambientMode: Boolean) {
+        this.ambientMode = ambientMode
+        endRenderer.setAmbientMode(ambientMode)
+        invalidate()
     }
 
-    public void setAmbientMode(boolean ambientMode) {
-        this.ambientMode = ambientMode;
-        getEndRenderer().setAmbientMode(ambientMode);
-        invalidate();
+    companion object {
+        const val RADIUS_SELECTED = 23
+        const val RADIUS_UNSELECTED = 17
     }
 }
