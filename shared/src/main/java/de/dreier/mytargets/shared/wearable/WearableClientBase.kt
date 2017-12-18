@@ -61,8 +61,7 @@ open class WearableClientBase(protected val context: Context) {
     }
 
     private fun sendToNode(node: Node, path: String, data: ByteArray) {
-        Wearable.MessageApi.sendMessage(
-                googleApiClient, node.id, path, data)
+        Wearable.MessageApi.sendMessage(googleApiClient, node.id, path, data)
                 .setResultCallback { sendMessageResult ->
                     if (!sendMessageResult.status.isSuccess) {
                         Timber.e("Failed to send message with status code: %d",
@@ -88,14 +87,13 @@ open class WearableClientBase(protected val context: Context) {
     }
 
     companion object {
-        val TRAINING_TEMPLATE = "/de/dreier/mytargets/training/last"
-        val TRAINING_CREATE = "/de/dreier/mytargets/training/create"
-        val TRAINING_UPDATE = "/de/dreier/mytargets/training/update"
-        val END_UPDATE = "/de/dreier/mytargets/end/update"
-        val TIMER_SETTINGS = "/de/dreier/mytargets/timer/settings"
-
-        private val BROADCAST_TIMER_SETTINGS_FROM_LOCAL = "timer_settings_local"
-        val BROADCAST_TIMER_SETTINGS_FROM_REMOTE = "timer_settings_remote"
-        private val EXTRA_TIMER_SETTINGS = "timer_settings"
+        const val REQUEST_TRAINING_TEMPLATE = "/de/dreier/mytargets/training/last"
+        const val TRAINING_CREATE = "/de/dreier/mytargets/training/create"
+        const val TRAINING_UPDATE = "/de/dreier/mytargets/training/update"
+        const val END_UPDATE = "/de/dreier/mytargets/end/update"
+        const val TIMER_SETTINGS = "/de/dreier/mytargets/timer/settings"
+        private const val BROADCAST_TIMER_SETTINGS_FROM_LOCAL = "timer_settings_local"
+        const val BROADCAST_TIMER_SETTINGS_FROM_REMOTE = "timer_settings_remote"
+        private const val EXTRA_TIMER_SETTINGS = "timer_settings"
     }
 }

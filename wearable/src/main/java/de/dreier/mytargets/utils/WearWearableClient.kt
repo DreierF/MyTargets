@@ -13,113 +13,105 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils;
+package de.dreier.mytargets.utils
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.support.annotation.NonNull;
-import android.support.v4.content.LocalBroadcastManager;
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.support.v4.content.LocalBroadcastManager
+import de.dreier.mytargets.shared.models.TimerSettings
+import de.dreier.mytargets.shared.models.TrainingInfo
+import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
+import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
+import de.dreier.mytargets.shared.utils.marshall
+import de.dreier.mytargets.shared.wearable.WearableClientBase
 
-import de.dreier.mytargets.shared.models.TimerSettings;
-import de.dreier.mytargets.shared.models.TrainingInfo;
-import de.dreier.mytargets.shared.models.augmented.AugmentedEnd;
-import de.dreier.mytargets.shared.models.augmented.AugmentedTraining;
-import de.dreier.mytargets.shared.utils.ParcelableUtilKt;
-import de.dreier.mytargets.shared.wearable.WearableClientBase;
+class WearWearableClient(context: Context) : WearableClientBase(context) {
 
-public class WearWearableClient extends WearableClientBase {
-
-    public static final String BROADCAST_TRAINING_TEMPLATE = "training_template";
-    private static final String BROADCAST_TRAINING_CREATE = "training_create";
-    public static final String BROADCAST_TRAINING_UPDATED = "training_updated";
-    private static final String BROADCAST_UPDATE_END_FROM_LOCAL = "end_from_local";
-    private static final String BROADCAST_REQUEST_TRAINING_TEMPLATE = "request_info";
-
-    public static final String EXTRA_TRAINING = "training";
-    private static final String EXTRA_END = "end";
-    public static final String EXTRA_INFO = "info";
-
-    @NonNull
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, @NonNull Intent intent) {
-            switch (intent.getAction()) {
-                case BROADCAST_REQUEST_TRAINING_TEMPLATE:
-                    sendMessage(Companion.getTRAINING_TEMPLATE(), null);
-                    break;
-                case BROADCAST_TRAINING_CREATE:
-                    AugmentedTraining training = intent.getParcelableExtra(EXTRA_TRAINING);
-                    createTraining(training);
-                    break;
-                case BROADCAST_UPDATE_END_FROM_LOCAL:
-                    AugmentedEnd end = intent.getParcelableExtra(EXTRA_END);
-                    updateEnd(end);
-                    break;
-                default:
-                    break;
+    private val broadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            when (intent.action) {
+                BROADCAST_REQUEST_TRAINING_TEMPLATE -> sendMessage(WearableClientBase.Companion.REQUEST_TRAINING_TEMPLATE, ByteArray(0))
+                BROADCAST_TRAINING_CREATE -> {
+                    val training = intent.getParcelableExtra<AugmentedTraining>(EXTRA_TRAINING)
+                    createTraining(training)
+                }
+                BROADCAST_UPDATE_END_FROM_LOCAL -> {
+                    val end = intent.getParcelableExtra<AugmentedEnd>(EXTRA_END)
+                    updateEnd(end)
+                }
+                else -> {
+                }
             }
         }
-    };
-
-    public WearWearableClient(@NonNull Context context) {
-        super(context);
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BROADCAST_UPDATE_END_FROM_LOCAL);
-        filter.addAction(BROADCAST_REQUEST_TRAINING_TEMPLATE);
-        filter.addAction(BROADCAST_TRAINING_CREATE);
-        LocalBroadcastManager.getInstance(context).registerReceiver(broadcastReceiver, filter);
     }
 
-    @Override
-    public void disconnect() {
-        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(broadcastReceiver);
-        super.disconnect();
+    init {
+        val filter = IntentFilter()
+        filter.addAction(BROADCAST_UPDATE_END_FROM_LOCAL)
+        filter.addAction(BROADCAST_REQUEST_TRAINING_TEMPLATE)
+        filter.addAction(BROADCAST_TRAINING_CREATE)
+        LocalBroadcastManager.getInstance(context).registerReceiver(broadcastReceiver, filter)
     }
 
-    private void updateEnd(AugmentedEnd end) {
-        final byte[] data = ParcelableUtilKt.marshall(end);
-        sendMessage(WearableClientBase.Companion.getEND_UPDATE(), data);
+    override fun disconnect() {
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(broadcastReceiver)
+        super.disconnect()
     }
 
-    private void createTraining(AugmentedTraining training) {
-        final byte[] data = ParcelableUtilKt.marshall(training);
-        sendMessage(WearableClientBase.Companion.getTRAINING_CREATE(), data);
+    private fun updateEnd(end: AugmentedEnd) {
+        val data = end.marshall()
+        sendMessage(WearableClientBase.END_UPDATE, data)
     }
 
-    public void sendTrainingUpdate(TrainingInfo info) {
-        Intent intent = new Intent(BROADCAST_TRAINING_UPDATED);
-        intent.putExtra(EXTRA_INFO, info);
-        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+    private fun createTraining(training: AugmentedTraining) {
+        val data = training.marshall()
+        sendMessage(WearableClientBase.TRAINING_CREATE, data)
     }
 
-    public void sendEndUpdate(AugmentedEnd end) {
-        Intent intent = new Intent(BROADCAST_UPDATE_END_FROM_LOCAL);
-        intent.putExtra(EXTRA_END, end);
-        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+    fun sendTrainingUpdate(info: TrainingInfo) {
+        val intent = Intent(BROADCAST_TRAINING_UPDATED)
+        intent.putExtra(EXTRA_INFO, info)
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
     }
 
-    public void requestNewTrainingTemplate() {
-        Intent intent = new Intent(BROADCAST_REQUEST_TRAINING_TEMPLATE);
-        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+    fun sendEndUpdate(end: AugmentedEnd) {
+        val intent = Intent(BROADCAST_UPDATE_END_FROM_LOCAL)
+        intent.putExtra(EXTRA_END, end)
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
     }
 
-    public void sendCreateTraining(AugmentedTraining training) {
-        Intent intent = new Intent(BROADCAST_TRAINING_CREATE);
-        intent.putExtra(EXTRA_TRAINING, training);
-        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+    fun requestNewTrainingTemplate() {
+        val intent = Intent(BROADCAST_REQUEST_TRAINING_TEMPLATE)
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
     }
 
-    public void sendTrainingTemplate(AugmentedTraining training) {
-        Intent intent = new Intent(BROADCAST_TRAINING_TEMPLATE);
-        intent.putExtra(EXTRA_TRAINING, training);
-        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+    fun sendCreateTraining(training: AugmentedTraining) {
+        val intent = Intent(BROADCAST_TRAINING_CREATE)
+        intent.putExtra(EXTRA_TRAINING, training)
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
     }
 
-    @Override
-    public void sendTimerSettingsFromLocal(TimerSettings settings) {
-        super.sendTimerSettingsFromLocal(settings);
-        WearSettingsManager.setTimerSettings(settings);
+    fun sendTrainingTemplate(training: AugmentedTraining) {
+        val intent = Intent(BROADCAST_TRAINING_TEMPLATE)
+        intent.putExtra(EXTRA_TRAINING, training)
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
+    }
+
+    override fun sendTimerSettingsFromLocal(settings: TimerSettings) {
+        super.sendTimerSettingsFromLocal(settings)
+        WearSettingsManager.timerSettings = settings
+    }
+
+    companion object {
+        const val BROADCAST_TRAINING_TEMPLATE = "training_template"
+        private const val BROADCAST_TRAINING_CREATE = "training_create"
+        const val BROADCAST_TRAINING_UPDATED = "training_updated"
+        private const val BROADCAST_UPDATE_END_FROM_LOCAL = "end_from_local"
+        private const val BROADCAST_REQUEST_TRAINING_TEMPLATE = "request_info"
+        const val EXTRA_TRAINING = "training"
+        private const val EXTRA_END = "end"
+        const val EXTRA_INFO = "info"
     }
 }

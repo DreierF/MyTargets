@@ -306,8 +306,8 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    public void initWithTarget(Target t) {
-        super.initWithTarget(t);
+    public void initWithTarget(Target target) {
+        super.initWithTarget(target);
         spotMatrices = new Matrix[getTarget().getModel().getFaceCount()];
         for (int i = 0; i < getTarget().getModel().getFaceCount(); i++) {
             spotMatrices[i] = new Matrix();

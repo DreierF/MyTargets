@@ -13,86 +13,91 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets;
+package de.dreier.mytargets
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Parcelable;
-import android.support.annotation.NonNull;
+import android.app.Notification
+import android.app.NotificationChannel.DEFAULT_CHANNEL_ID
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.os.Parcelable
+import android.support.v4.app.NotificationCompat
 
-import com.google.android.gms.wearable.MessageEvent;
-import com.google.android.gms.wearable.WearableListenerService;
+import com.google.android.gms.wearable.MessageEvent
+import com.google.android.gms.wearable.WearableListenerService
 
-import de.dreier.mytargets.shared.models.TimerSettings;
-import de.dreier.mytargets.shared.models.TrainingInfo;
-import de.dreier.mytargets.shared.models.augmented.AugmentedTraining;
-import de.dreier.mytargets.shared.utils.ParcelableUtilKt;
-import de.dreier.mytargets.utils.WearSettingsManager;
+import de.dreier.mytargets.shared.models.TimerSettings
+import de.dreier.mytargets.shared.models.TrainingInfo
+import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
+import de.dreier.mytargets.shared.utils.*
+import de.dreier.mytargets.utils.WearSettingsManager
 
-import static de.dreier.mytargets.shared.wearable.WearableClientBase.TIMER_SETTINGS;
-import static de.dreier.mytargets.shared.wearable.WearableClientBase.TRAINING_TEMPLATE;
-import static de.dreier.mytargets.shared.wearable.WearableClientBase.TRAINING_UPDATE;
+import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.REQUEST_TRAINING_TEMPLATE
+import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.TRAINING_CREATE
+import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.TRAINING_UPDATE
+import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.END_UPDATE
+import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.TIMER_SETTINGS
+import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.BROADCAST_TIMER_SETTINGS_FROM_LOCAL
+import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.BROADCAST_TIMER_SETTINGS_FROM_REMOTE
+import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.EXTRA_TIMER_SETTINGS
 
-public class WearWearableListener extends WearableListenerService {
+class WearWearableListener : WearableListenerService() {
 
-    private static final int NOTIFICATION_ID = 1;
-
-    @Override
-    public void onMessageReceived(@NonNull MessageEvent messageEvent) {
-        super.onMessageReceived(messageEvent);
-        byte[] data = messageEvent.getData();
-        switch (messageEvent.getPath()) {
-            case Companion.getTRAINING_UPDATE():
-                TrainingInfo info = ParcelableUtilKt.unmarshall(data, (Parcelable.Creator<TrainingInfo>) TrainingInfo.CREATOR);
-                showNotification(info);
-                ApplicationInstance.wearableClient.sendTrainingUpdate(info);
-                break;
-            case Companion.getTRAINING_TEMPLATE():
-                AugmentedTraining training = ParcelableUtilKt.unmarshall(data, (Parcelable.Creator<AugmentedTraining>) AugmentedTraining.CREATOR);
-                ApplicationInstance.wearableClient.sendTrainingTemplate(training);
-                break;
-            case Companion.getTIMER_SETTINGS():
-                TimerSettings settings = ParcelableUtilKt.unmarshall(data, (Parcelable.Creator<TimerSettings>) TimerSettings.CREATOR);
-                WearSettingsManager.setTimerSettings(settings);
-                ApplicationInstance.wearableClient.sendTimerSettingsFromRemote();
-                break;
-            default:
-                break;
+    override fun onMessageReceived(messageEvent: MessageEvent) {
+        super.onMessageReceived(messageEvent)
+        val data = messageEvent.data
+        when (messageEvent.path) {
+            TRAINING_UPDATE -> {
+                val info = data.unmarshall(TrainingInfo.CREATOR as Parcelable.Creator<TrainingInfo>)
+                showNotification(info)
+                ApplicationInstance.wearableClient.sendTrainingUpdate(info)
+            }
+            REQUEST_TRAINING_TEMPLATE -> {
+                val training = data.unmarshall(AugmentedTraining.CREATOR as Parcelable.Creator<AugmentedTraining>)
+                ApplicationInstance.wearableClient.sendTrainingTemplate(training)
+            }
+            TIMER_SETTINGS -> {
+                val settings = data.unmarshall(TimerSettings.CREATOR as Parcelable.Creator<TimerSettings>)
+                WearSettingsManager.timerSettings = settings
+                ApplicationInstance.wearableClient.sendTimerSettingsFromRemote()
+            }
+            else -> {
+            }
         }
     }
 
-    private void showNotification(@NonNull TrainingInfo info) {
+    private fun showNotification(info: TrainingInfo) {
         // Build the intent to display our custom notification
-        Intent notificationIntent = new Intent(this, RoundActivity.class);
-        notificationIntent.putExtra(RoundActivity.EXTRA_ROUND, info.getRound());
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        val notificationIntent = Intent(this, RoundActivity::class.java)
+        notificationIntent.putExtra(RoundActivity.EXTRA_ROUND, info.round)
+        val pendingIntent = PendingIntent.getActivity(
+                this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         // Create the ongoing notification
-        Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.wear_bg);
-        Notification.Builder notificationBuilder =
-                new Notification.Builder(this)
-                        .setContentTitle(info.getTitle())
-                        .setContentText(describe(info))
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentIntent(pendingIntent)
-                        .extend(new Notification.WearableExtender()
-                                .setBackground(image));
+        val image = BitmapFactory.decodeResource(resources, R.drawable.wear_bg)
+        val notificationBuilder = NotificationCompat.Builder(this, ApplicationInstance.DEFAULT_CHANNEL_ID)
+                .setContentTitle(info.title)
+                .setContentText(describe(info))
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentIntent(pendingIntent)
+                .extend(NotificationCompat.WearableExtender().setBackground(image))
 
         // Build the notification and show it
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancel(NOTIFICATION_ID);
-        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(NOTIFICATION_ID)
+        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
     }
 
-    private String describe(@NonNull TrainingInfo info) {
+    private fun describe(info: TrainingInfo): String {
         return info.getRoundDetails(this) + "\n" +
                 info.getEndDetails(this) + "\n" +
-                info.getRound().getRound().getDistance().toString();
+                info.round.round.distance.toString()
+    }
+
+    companion object {
+        private val NOTIFICATION_ID = 1
     }
 }

@@ -12,133 +12,132 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets;
+package de.dreier.mytargets
 
-import android.app.FragmentManager;
-import android.databinding.DataBindingUtil;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.wearable.activity.WearableActivity;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-
-import de.dreier.mytargets.databinding.ActivityTimerBinding;
-import de.dreier.mytargets.databinding.FragmentTimerBinding;
-import de.dreier.mytargets.shared.base.fragment.ETimerState;
-import de.dreier.mytargets.shared.base.fragment.TimerFragmentBase;
-import de.dreier.mytargets.shared.models.TimerSettings;
-
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
+import android.databinding.DataBindingUtil
+import android.os.Bundle
+import android.support.wearable.activity.WearableActivity
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.view.ViewGroup
+import de.dreier.mytargets.databinding.ActivityTimerBinding
+import de.dreier.mytargets.databinding.FragmentTimerBinding
+import de.dreier.mytargets.shared.base.fragment.ETimerState
+import de.dreier.mytargets.shared.base.fragment.TimerFragmentBase
+import de.dreier.mytargets.shared.models.TimerSettings
 
 /**
  * Demonstrates use of Navigation and Action Drawers on Android Wear.
  */
-public class TimerActivity extends WearableActivity implements MenuItem.OnMenuItemClickListener {
+class TimerActivity : WearableActivity(), MenuItem.OnMenuItemClickListener {
 
-    public static final String EXTRA_TIMER_SETTINGS = "timer_settings";
+    private lateinit var timerFragment: TimerFragment
+    private lateinit var binding: ActivityTimerBinding
 
-    private TimerFragment timerFragment;
-    private ActivityTimerBinding binding;
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_timer)
+        setAmbientEnabled()
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_timer);
-        setAmbientEnabled();
-
-        TimerSettings settings = getIntent().getParcelableExtra(EXTRA_TIMER_SETTINGS);
-        timerFragment = TimerFragment.getInstance(settings);
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, timerFragment).commit();
+        val settings = intent.getParcelableExtra<TimerSettings>(EXTRA_TIMER_SETTINGS)
+        timerFragment = TimerFragment.getInstance(settings)
+        val fragmentManager = fragmentManager
+        fragmentManager.beginTransaction().replace(R.id.content_frame, timerFragment).commit()
 
         binding.primaryActionPeek
-                .setOnClickListener(v -> binding.bottomActionDrawer.getController().openDrawer());
-        binding.bottomActionDrawer.setOnMenuItemClickListener(this);
-        binding.bottomActionDrawer.getMenu().findItem(R.id.menu_vibrate)
-                .setIcon(settings.getVibrate()
-                        ? R.drawable.ic_vibration_white_24dp
-                        : R.drawable.ic_vibration_off_white_24dp);
-        binding.bottomActionDrawer.getMenu().findItem(R.id.menu_sound)
-                .setIcon(settings.getSound()
-                        ? R.drawable.ic_volume_up_white_24dp
-                        : R.drawable.ic_volume_off_white_24dp);
-        binding.bottomActionDrawer.getController().peekDrawer();
+                .setOnClickListener { v -> binding.bottomActionDrawer.controller.openDrawer() }
+        binding.bottomActionDrawer.setOnMenuItemClickListener(this)
+        binding.bottomActionDrawer.menu.findItem(R.id.menu_vibrate)
+                .setIcon(if (settings.vibrate)
+                    R.drawable.ic_vibration_white_24dp
+                else
+                    R.drawable.ic_vibration_off_white_24dp)
+        binding.bottomActionDrawer.menu.findItem(R.id.menu_sound)
+                .setIcon(if (settings.sound)
+                    R.drawable.ic_volume_up_white_24dp
+                else
+                    R.drawable.ic_volume_off_white_24dp)
+        binding.bottomActionDrawer.controller.peekDrawer()
     }
 
-    @Override
-    public boolean onMenuItemClick(@NonNull MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.menu_stop:
-                finish();
-                return true;
-            case R.id.menu_vibrate:
-                timerFragment.getSettings().setVibrate(!timerFragment.getSettings().getVibrate());
-                menuItem.setIcon(timerFragment.getSettings().getVibrate()
-                        ? R.drawable.ic_vibration_white_24dp
-                        : R.drawable.ic_vibration_off_white_24dp);
+    override fun onMenuItemClick(menuItem: MenuItem): Boolean {
+        when (menuItem.itemId) {
+            R.id.menu_stop -> {
+                finish()
+                return true
+            }
+            R.id.menu_vibrate -> {
+                timerFragment.settings.vibrate = !timerFragment.settings.vibrate
+                menuItem.setIcon(if (timerFragment.settings.vibrate)
+                    R.drawable.ic_vibration_white_24dp
+                else
+                    R.drawable.ic_vibration_off_white_24dp)
                 ApplicationInstance.wearableClient
-                        .sendTimerSettingsFromLocal(timerFragment.getSettings());
-                return true;
-            case R.id.menu_sound:
-                timerFragment.getSettings().setSound(!timerFragment.getSettings().getSound());
-                menuItem.setIcon(timerFragment.getSettings().getSound()
-                        ? R.drawable.ic_volume_up_white_24dp
-                        : R.drawable.ic_volume_off_white_24dp);
+                        .sendTimerSettingsFromLocal(timerFragment.settings)
+                return true
+            }
+            R.id.menu_sound -> {
+                timerFragment.settings.sound = !timerFragment.settings.sound
+                menuItem.setIcon(if (timerFragment.settings.sound)
+                    R.drawable.ic_volume_up_white_24dp
+                else
+                    R.drawable.ic_volume_off_white_24dp)
                 ApplicationInstance.wearableClient
-                        .sendTimerSettingsFromLocal(timerFragment.getSettings());
-                return true;
-            default:
-                return false;
+                        .sendTimerSettingsFromLocal(timerFragment.settings)
+                return true
+            }
+            else -> return false
         }
     }
 
-    public void applyStatus(ETimerState status) {
-        binding.primaryActionPeek.setImageResource(status == ETimerState.WAIT_FOR_START
-                ? R.drawable.ic_more_vert_white_24dp
-                : R.drawable.ic_stop_white_24dp);
-        binding.primaryActionPeek.setOnClickListener(status == ETimerState.WAIT_FOR_START
-                ? null : view -> finish());
+    fun applyStatus(status: ETimerState) {
+        binding.primaryActionPeek.setImageResource(if (status === ETimerState.WAIT_FOR_START)
+            R.drawable.ic_more_vert_white_24dp
+        else
+            R.drawable.ic_stop_white_24dp)
+        binding.primaryActionPeek.setOnClickListener(if (status === ETimerState.WAIT_FOR_START)
+            null else View.OnClickListener { finish() })
     }
 
     /**
      * Fragment that appears in the "content_frame".
      */
-    public static class TimerFragment extends TimerFragmentBase {
+    class TimerFragment : TimerFragmentBase() {
 
-        private FragmentTimerBinding binding;
+        private lateinit var binding: FragmentTimerBinding
 
-        @NonNull
-        public static TimerFragment getInstance(TimerSettings settings) {
-            TimerFragment timer = new TimerFragment();
-            Bundle bundle = new Bundle();
-            bundle.putParcelable(Companion.getARG_TIMER_SETTINGS(), settings);
-            timer.setArguments(bundle);
-            return timer;
+        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle): View? {
+            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_timer, container, false)
+            binding.startTimer.setOnClickListener(this)
+            return binding.root
         }
 
-        @Override
-        public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_timer, container, false);
-            binding.startTimer.setOnClickListener(this);
-            return binding.getRoot();
+        override fun applyTime(text: String) {
+            binding.timerTime.text = text
         }
 
-        @Override
-        public void applyTime(@NonNull String text) {
-            binding.timerTime.setText(text);
+        override fun applyStatus(status: ETimerState) {
+            (activity as TimerActivity?)?.applyStatus(status)
+            binding.startTimer.visibility = if (status === ETimerState.WAIT_FOR_START) VISIBLE else GONE
+            binding.timerTime.visibility = if (status !== ETimerState.WAIT_FOR_START) VISIBLE else GONE
+            binding.root.setBackgroundResource(status.color)
         }
 
-        @Override
-        protected void applyStatus(@NonNull ETimerState status) {
-            if (getActivity() != null) {
-                ((TimerActivity) getActivity()).applyStatus(status);
+        companion object {
+            fun getInstance(settings: TimerSettings): TimerFragment {
+                val timer = TimerFragment()
+                val bundle = Bundle()
+                bundle.putParcelable(TimerFragmentBase.Companion.ARG_TIMER_SETTINGS, settings)
+                timer.arguments = bundle
+                return timer
             }
-            binding.startTimer.setVisibility(status == ETimerState.WAIT_FOR_START ? VISIBLE : GONE);
-            binding.timerTime.setVisibility(status != ETimerState.WAIT_FOR_START ? VISIBLE : GONE);
-            binding.getRoot().setBackgroundResource(status.getColor());
         }
+    }
+
+    companion object {
+        val EXTRA_TIMER_SETTINGS = "timer_settings"
     }
 }

@@ -13,138 +13,135 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets;
+package de.dreier.mytargets
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.databinding.DataBindingUtil;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.wearable.activity.WearableActivity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.databinding.DataBindingUtil
+import android.os.Bundle
+import android.support.v4.content.ContextCompat
+import android.support.v4.content.LocalBroadcastManager
+import android.support.wearable.activity.WearableActivity
+import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
+import de.dreier.mytargets.databinding.ActivityMainBinding
+import de.dreier.mytargets.shared.models.TrainingInfo
+import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
+import de.dreier.mytargets.utils.WearWearableClient
+import de.dreier.mytargets.utils.WearWearableClient.BROADCAST_TRAINING_TEMPLATE
+import de.dreier.mytargets.utils.WearWearableClient.BROADCAST_TRAINING_UPDATED
+import java.text.DateFormat
+import java.util.*
 
-import java.text.DateFormat;
-import java.util.Date;
+class MainActivity : WearableActivity() {
 
-import de.dreier.mytargets.databinding.ActivityMainBinding;
-import de.dreier.mytargets.shared.models.TrainingInfo;
-import de.dreier.mytargets.shared.models.augmented.AugmentedRound;
-import de.dreier.mytargets.shared.models.augmented.AugmentedTraining;
-import de.dreier.mytargets.utils.WearWearableClient;
-
-import static de.dreier.mytargets.utils.WearWearableClient.BROADCAST_TRAINING_TEMPLATE;
-import static de.dreier.mytargets.utils.WearWearableClient.BROADCAST_TRAINING_UPDATED;
-
-public class MainActivity extends WearableActivity {
-
-    @Nullable
-    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, @NonNull Intent intent) {
-            switch (intent.getAction()) {
-                case BROADCAST_TRAINING_TEMPLATE:
-                    AugmentedTraining training = intent.getParcelableExtra(WearWearableClient.EXTRA_TRAINING);
-                    setTraining(training);
-                    binding.root.setClickable(false);
-                    binding.wearableDrawerView.setVisibility(View.VISIBLE);
-
-                    // Replaces the on click behaviour that open the (empty) drawer
-                    LinearLayout peekView = ((LinearLayout) binding.primaryActionAdd.getParent());
-                    ViewGroup peekContainer = ((ViewGroup) peekView.getParent());
-                    peekContainer.setOnClickListener(view -> ApplicationInstance.wearableClient
-                            .sendCreateTraining(training));
-                    binding.wearableDrawerView.getController().peekDrawer();
-                    break;
-                case BROADCAST_TRAINING_UPDATED:
-                    TrainingInfo info = intent.getParcelableExtra(WearWearableClient.EXTRA_INFO);
-                    setTrainingInfo(info);
-                    binding.root.setClickable(true);
-                    binding.root.setOnClickListener(v -> {
-                        Intent i = new Intent(MainActivity.this, RoundActivity.class);
-                        i.putExtra(RoundActivity.EXTRA_ROUND, info.getRound());
-                        startActivity(i);
-                    });
-                    binding.wearableDrawerView.setVisibility(View.GONE);
-                    break;
-                default:
-                    break;
+    private val broadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            when (intent.action) {
+                BROADCAST_TRAINING_TEMPLATE -> {
+                    val training = intent.getParcelableExtra<AugmentedTraining>(WearWearableClient.EXTRA_TRAINING)
+                    trainingTemplateReceived(training)
+                }
+                BROADCAST_TRAINING_UPDATED -> {
+                    val info = intent.getParcelableExtra<TrainingInfo>(WearWearableClient.EXTRA_INFO)
+                    trainingUpdated(info)
+                }
+                else -> {}
             }
         }
-    };
-
-    private ActivityMainBinding binding;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-
-        setAmbientEnabled();
-
-        final IntentFilter filter = new IntentFilter();
-        filter.addAction(BROADCAST_TRAINING_TEMPLATE);
-        filter.addAction(BROADCAST_TRAINING_UPDATED);
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, filter);
-        ApplicationInstance.wearableClient.requestNewTrainingTemplate();
     }
 
-    @Override
-    public void onEnterAmbient(Bundle ambientDetails) {
-        super.onEnterAmbient(ambientDetails);
-        binding.drawerLayout.setBackgroundResource(R.color.md_black_1000);
-        binding.wearableDrawerView.setBackgroundResource(R.color.md_black_1000);
-        binding.date.setTextColor(ContextCompat.getColor(this, R.color.md_white_1000));
-        binding.icon.setVisibility(View.INVISIBLE);
-        binding.clock.time.setVisibility(View.VISIBLE);
-        binding.clock.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
+    private lateinit var binding: ActivityMainBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        setAmbientEnabled()
+
+        val filter = IntentFilter()
+        filter.addAction(BROADCAST_TRAINING_TEMPLATE)
+        filter.addAction(BROADCAST_TRAINING_UPDATED)
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, filter)
+        ApplicationInstance.wearableClient.requestNewTrainingTemplate()
     }
 
-    @Override
-    public void onUpdateAmbient() {
-        super.onUpdateAmbient();
-        binding.clock.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
+    override fun onEnterAmbient(ambientDetails: Bundle?) {
+        super.onEnterAmbient(ambientDetails)
+        binding.drawerLayout.setBackgroundResource(R.color.md_black_1000)
+        binding.wearableDrawerView.setBackgroundResource(R.color.md_black_1000)
+        binding.date.setTextColor(ContextCompat.getColor(this, R.color.md_white_1000))
+        binding.icon.visibility = View.INVISIBLE
+        binding.clock.time.visibility = View.VISIBLE
+        binding.clock.time.text = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date())
     }
 
-    @Override
-    public void onExitAmbient() {
-        super.onExitAmbient();
-        binding.drawerLayout.setBackgroundResource(R.color.md_wear_green_dark_background);
-        binding.wearableDrawerView.setBackgroundResource(R.color.md_wear_green_lighter_ui_element);
+    override fun onUpdateAmbient() {
+        super.onUpdateAmbient()
+        binding.clock.time.text = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date())
+    }
+
+    override fun onExitAmbient() {
+        super.onExitAmbient()
+        binding.drawerLayout.setBackgroundResource(R.color.md_wear_green_dark_background)
+        binding.wearableDrawerView.setBackgroundResource(R.color.md_wear_green_lighter_ui_element)
         binding.date.setTextColor(ContextCompat
-                .getColor(this, R.color.md_wear_green_lighter_ui_element));
-        binding.icon.setVisibility(View.VISIBLE);
-        binding.clock.time.setVisibility(View.GONE);
+                .getColor(this, R.color.md_wear_green_lighter_ui_element))
+        binding.icon.visibility = View.VISIBLE
+        binding.clock.time.visibility = View.GONE
     }
 
-    public void setTrainingInfo(@NonNull TrainingInfo info) {
-        setCommonTrainingInfo(info);
-        binding.date.setText(R.string.today);
+    private fun trainingUpdated(info: TrainingInfo) {
+        setTrainingInfo(info)
+        binding.root.isClickable = true
+        binding.root.setOnClickListener {
+            val i = Intent(this@MainActivity, RoundActivity::class.java)
+            i.putExtra(RoundActivity.EXTRA_ROUND, info.round)
+            startActivity(i)
+        }
+        binding.wearableDrawerView.visibility = View.GONE
     }
 
-    private void setTraining(@NonNull AugmentedTraining training) {
-        AugmentedRound round = training.getRounds().get(0);
-        TrainingInfo info = new TrainingInfo(training, round);
-        setCommonTrainingInfo(info);
-        binding.date.setText("");
+    private fun trainingTemplateReceived(training: AugmentedTraining) {
+        setTraining(training)
+        binding.root.isClickable = false
+        binding.wearableDrawerView.visibility = View.VISIBLE
+
+        // Replaces the on click behaviour that open the (empty) drawer
+        val peekView = binding.primaryActionAdd.parent as LinearLayout
+        val peekContainer = peekView.parent as ViewGroup
+        peekContainer.setOnClickListener {
+            ApplicationInstance
+                    .wearableClient
+                    .sendCreateTraining(training)
+        }
+        binding.wearableDrawerView.controller.peekDrawer()
     }
 
-    private void setCommonTrainingInfo(@NonNull TrainingInfo info) {
-        binding.title.setText(info.getTitle());
-        binding.rounds.setText(info.getRoundDetails(this));
-        binding.ends.setText(info.getEndDetails(this));
-        binding.distance.setText(info.getRound().getRound().getDistance().toString());
+    private fun setTrainingInfo(info: TrainingInfo) {
+        setCommonTrainingInfo(info)
+        binding.date.setText(R.string.today)
     }
 
-    @Override
-    protected void onDestroy() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
-        super.onDestroy();
+    private fun setTraining(training: AugmentedTraining) {
+        val round = training.rounds[0]
+        val info = TrainingInfo(training, round)
+        setCommonTrainingInfo(info)
+        binding.date.text = ""
+    }
+
+    private fun setCommonTrainingInfo(info: TrainingInfo) {
+        binding.title.text = info.title
+        binding.rounds.text = info.getRoundDetails(this)
+        binding.ends.text = info.getEndDetails(this)
+        binding.distance.text = info.round.round.distance.toString()
+    }
+
+    override fun onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
+        super.onDestroy()
     }
 }

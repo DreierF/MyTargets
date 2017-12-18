@@ -13,109 +13,100 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets;
+package de.dreier.mytargets
 
-import android.content.Context;
-import android.content.Intent;
-import android.databinding.DataBindingUtil;
-import android.os.Bundle;
-import android.os.Vibrator;
-import android.support.wearable.activity.ConfirmationActivity;
-import android.support.wearable.activity.WearableActivity;
-import android.view.View;
+import android.content.Context
+import android.content.Intent
+import android.databinding.DataBindingUtil
+import android.os.Bundle
+import android.os.Vibrator
+import android.support.wearable.activity.ConfirmationActivity
+import android.support.wearable.activity.WearableActivity
+import android.view.View
+import de.dreier.mytargets.databinding.ActivityInputBinding
+import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
+import de.dreier.mytargets.shared.models.db.End
+import de.dreier.mytargets.shared.models.db.Round
+import de.dreier.mytargets.shared.models.db.Shot
+import de.dreier.mytargets.shared.views.TargetViewBase
+import java.text.DateFormat
+import java.util.*
 
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.List;
+class InputActivity : WearableActivity(), TargetViewBase.OnEndFinishedListener {
+    private lateinit var round: Round
+    private lateinit var binding: ActivityInputBinding
 
-import de.dreier.mytargets.databinding.ActivityInputBinding;
-import de.dreier.mytargets.shared.models.augmented.AugmentedEnd;
-import de.dreier.mytargets.shared.models.db.End;
-import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.Shot;
-import de.dreier.mytargets.shared.views.TargetViewBase;
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_input)
 
-public class InputActivity extends WearableActivity implements TargetViewBase.OnEndFinishedListener {
+        setAmbientEnabled()
 
-    public static final String EXTRA_ROUND = "round";
-    private Round round;
-    private ActivityInputBinding binding;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_input);
-
-        setAmbientEnabled();
-
-        Intent intent = getIntent();
-        if (intent != null && intent.getExtras() != null) {
-            round = intent.getParcelableExtra(EXTRA_ROUND);
-        }
+        round = intent!!.getParcelableExtra(EXTRA_ROUND)
 
         // Workaround to avoid crash happening when setting invisible via xml layout
-        binding.circularProgress.setVisibility(View.INVISIBLE);
+        binding.circularProgress.visibility = View.INVISIBLE
 
         // Set up target view
-        binding.target.initWithTarget(round.getTarget());
-        binding.target.replaceWithEnd(new End(round.getShotsPerEnd(), 0));
-        binding.target.setOnTargetSetListener(this);
+        binding.target.initWithTarget(round.target)
+        binding.target.replaceWithEnd(End(round.shotsPerEnd, 0))
+        binding.target.setOnTargetSetListener(this)
 
         // Ensure Moto 360 is not cut off at the bottom
-        binding.getRoot().setOnApplyWindowInsetsListener((v, insets) -> {
-            int chinHeight = insets.getSystemWindowInsetBottom();
-            binding.target.setChinHeight(chinHeight);
-            return insets;
-        });
+        binding.root.setOnApplyWindowInsetsListener { _, insets ->
+            val chinHeight = insets.systemWindowInsetBottom
+            binding.target.setChinHeight(chinHeight)
+            insets
+        }
     }
 
-    @Override
-    public void onEnterAmbient(Bundle ambientDetails) {
-        super.onEnterAmbient(ambientDetails);
-        binding.target.setBackgroundResource(R.color.md_black_1000);
-        binding.target.setAmbientMode(true);
-        binding.clock.time.setVisibility(View.VISIBLE);
-        binding.clock.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
+    override fun onEnterAmbient(ambientDetails: Bundle?) {
+        super.onEnterAmbient(ambientDetails)
+        binding.target.setBackgroundResource(R.color.md_black_1000)
+        binding.target.setAmbientMode(true)
+        binding.clock.time.visibility = View.VISIBLE
+        binding.clock.time.text = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date())
     }
 
-    @Override
-    public void onUpdateAmbient() {
-        super.onUpdateAmbient();
-        binding.clock.time.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
+    override fun onUpdateAmbient() {
+        super.onUpdateAmbient()
+        binding.clock.time.text = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date())
     }
 
-    @Override
-    public void onExitAmbient() {
-        super.onExitAmbient();
-        binding.target.setBackgroundResource(R.color.md_wear_green_lighter_background);
-        binding.target.setAmbientMode(false);
-        binding.clock.time.setVisibility(View.GONE);
+    override fun onExitAmbient() {
+        super.onExitAmbient()
+        binding.target.setBackgroundResource(R.color.md_wear_green_lighter_background)
+        binding.target.setAmbientMode(false)
+        binding.clock.time.visibility = View.GONE
     }
 
-    @Override
-    public void onEndFinished(final List<Shot> shotList) {
-        binding.circularProgress.setVisibility(View.VISIBLE);
-        binding.circularProgress.setTotalTime(2500);
-        binding.circularProgress.startTimer();
-        binding.circularProgress.setOnClickListener(view -> {
-            binding.circularProgress.setVisibility(View.INVISIBLE);
-            binding.circularProgress.stopTimer();
-        });
-        binding.circularProgress.setOnTimerFinishedListener(layout -> {
-            Intent intent = new Intent(InputActivity.this, ConfirmationActivity.class);
+    override fun onEndFinished(shotList: List<Shot>) {
+        binding.circularProgress.visibility = View.VISIBLE
+        binding.circularProgress.totalTime = 2500
+        binding.circularProgress.startTimer()
+        binding.circularProgress.setOnClickListener {
+            binding.circularProgress.visibility = View.INVISIBLE
+            binding.circularProgress.stopTimer()
+        }
+        binding.circularProgress.setOnTimerFinishedListener {
+            val intent = Intent(this@InputActivity, ConfirmationActivity::class.java)
             intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
-                    ConfirmationActivity.SUCCESS_ANIMATION);
-            intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, InputActivity.this
-                    .getString(R.string.saved));
-            InputActivity.this.startActivity(intent);
-            Vibrator v = (Vibrator) InputActivity.this
-                    .getSystemService(Context.VIBRATOR_SERVICE);
-            v.vibrate(200);
-            InputActivity.this.finish();
-            End end = new End(round.getShotsPerEnd(), 0);
-            end.setRoundId(round.getId());
-            AugmentedEnd ae = new AugmentedEnd(end, shotList);
-            ApplicationInstance.wearableClient.sendEndUpdate(ae);
-        });
+                    ConfirmationActivity.SUCCESS_ANIMATION)
+            intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, this@InputActivity
+                    .getString(R.string.saved))
+            this@InputActivity.startActivity(intent)
+            val v = this@InputActivity
+                    .getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            v.vibrate(200)
+            this@InputActivity.finish()
+            val end = End(round.shotsPerEnd, 0)
+            end.roundId = round.id
+            val ae = AugmentedEnd(end, shotList.toMutableList())
+            ApplicationInstance.wearableClient.sendEndUpdate(ae)
+        }
+    }
+
+    companion object {
+        const val EXTRA_ROUND = "round"
     }
 }

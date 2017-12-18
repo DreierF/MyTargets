@@ -13,29 +13,46 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets;
+package de.dreier.mytargets
 
-import de.dreier.mytargets.shared.SharedApplicationInstance;
-import de.dreier.mytargets.utils.WearWearableClient;
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
+import de.dreier.mytargets.shared.SharedApplicationInstance
+import de.dreier.mytargets.utils.WearWearableClient
+
+
 
 /**
  * Application singleton. Gets instantiated exactly once and is used
  * throughout the app whenever a context is needed e.g. to query app
  * resources.
  */
-public class ApplicationInstance extends SharedApplicationInstance {
+class ApplicationInstance : SharedApplicationInstance() {
 
-    public static WearWearableClient wearableClient;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        wearableClient = new WearWearableClient(this);
+    override fun onCreate() {
+        super.onCreate()
+        wearableClient = WearWearableClient(this)
+        initChannels(this)
     }
 
-    @Override
-    public void onTerminate() {
-        wearableClient.disconnect();
-        super.onTerminate();
+    private fun initChannels(context: Context) {
+        if (Build.VERSION.SDK_INT < 26) {
+            return
+        }
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val channel = NotificationChannel(DEFAULT_CHANNEL_ID, getString(R.string.notification_channel_default), NotificationManager.IMPORTANCE_DEFAULT)
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    override fun onTerminate() {
+        wearableClient.disconnect()
+        super.onTerminate()
+    }
+
+    companion object {
+        lateinit var wearableClient: WearWearableClient
+        const val DEFAULT_CHANNEL_ID = "default"
     }
 }

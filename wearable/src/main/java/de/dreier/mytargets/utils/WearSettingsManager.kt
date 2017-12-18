@@ -13,45 +13,38 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils;
+package de.dreier.mytargets.utils
 
-import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
+import de.dreier.mytargets.shared.SharedApplicationInstance
+import de.dreier.mytargets.shared.models.TimerSettings
 
-import de.dreier.mytargets.ApplicationInstance;
-import de.dreier.mytargets.shared.models.TimerSettings;
+object WearSettingsManager {
+    private const val KEY_TIMER_ENABLED = "timer_enabled"
+    private const val KEY_TIMER_WARN_TIME = "timer_warn_time"
+    private const val KEY_TIMER_WAIT_TIME = "timer_wait_time"
+    private const val KEY_TIMER_SHOOT_TIME = "timer_shoot_time"
+    private const val KEY_TIMER_VIBRATE = "timer_vibrate"
+    private const val KEY_TIMER_SOUND = "timer_sound"
+    private val preferences = SharedApplicationInstance.sharedPreferences
 
-public class WearSettingsManager {
-    private static final String KEY_TIMER_ENABLED = "timer_enabled";
-    private static final String KEY_TIMER_WARN_TIME = "timer_warn_time";
-    private static final String KEY_TIMER_WAIT_TIME = "timer_wait_time";
-    private static final String KEY_TIMER_SHOOT_TIME = "timer_shoot_time";
-    private static final String KEY_TIMER_VIBRATE = "timer_vibrate";
-    private static final String KEY_TIMER_SOUND = "timer_sound";
-    private static final SharedPreferences preferences = ApplicationInstance.Companion
-            .getSharedPreferences();
-
-    @NonNull
-    public static TimerSettings getTimerSettings() {
-        TimerSettings settings = new TimerSettings();
-        settings.setEnabled(preferences.getBoolean(KEY_TIMER_ENABLED, false));
-        settings.setVibrate(preferences.getBoolean(KEY_TIMER_VIBRATE, false));
-        settings.setSound(preferences.getBoolean(KEY_TIMER_SOUND, true));
-        settings.setWaitTime(preferences.getInt(KEY_TIMER_WAIT_TIME, 10));
-        settings.setShootTime(preferences.getInt(KEY_TIMER_SHOOT_TIME, 120));
-        settings.setWarnTime(preferences.getInt(KEY_TIMER_WARN_TIME, 30));
-        return settings;
-    }
-
-    public static void setTimerSettings(@NonNull TimerSettings settings) {
-        preferences
+    var timerSettings: TimerSettings
+        get() {
+            val settings = TimerSettings()
+            settings.enabled = preferences.getBoolean(KEY_TIMER_ENABLED, false)
+            settings.vibrate = preferences.getBoolean(KEY_TIMER_VIBRATE, false)
+            settings.sound = preferences.getBoolean(KEY_TIMER_SOUND, true)
+            settings.waitTime = preferences.getInt(KEY_TIMER_WAIT_TIME, 10)
+            settings.shootTime = preferences.getInt(KEY_TIMER_SHOOT_TIME, 120)
+            settings.warnTime = preferences.getInt(KEY_TIMER_WARN_TIME, 30)
+            return settings
+        }
+        set(settings) = preferences
                 .edit()
-                .putBoolean(KEY_TIMER_ENABLED, settings.getEnabled())
-                .putBoolean(KEY_TIMER_VIBRATE, settings.getVibrate())
-                .putBoolean(KEY_TIMER_SOUND, settings.getSound())
-                .putInt(KEY_TIMER_WAIT_TIME, settings.getWaitTime())
-                .putInt(KEY_TIMER_SHOOT_TIME, settings.getShootTime())
-                .putInt(KEY_TIMER_WARN_TIME, settings.getWarnTime())
-                .apply();
-    }
+                .putBoolean(KEY_TIMER_ENABLED, settings.enabled)
+                .putBoolean(KEY_TIMER_VIBRATE, settings.vibrate)
+                .putBoolean(KEY_TIMER_SOUND, settings.sound)
+                .putInt(KEY_TIMER_WAIT_TIME, settings.waitTime)
+                .putInt(KEY_TIMER_SHOOT_TIME, settings.shootTime)
+                .putInt(KEY_TIMER_WARN_TIME, settings.warnTime)
+                .apply()
 }
