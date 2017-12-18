@@ -12,167 +12,151 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.features.rounds;
+package de.dreier.mytargets.features.rounds
 
-import android.content.Intent;
-import android.databinding.DataBindingUtil;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.content.Intent
+import android.databinding.DataBindingUtil
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import de.dreier.mytargets.R
+import de.dreier.mytargets.base.fragments.EditFragmentBase
+import de.dreier.mytargets.base.fragments.EditableListFragmentBase.ITEM_ID
+import de.dreier.mytargets.databinding.FragmentEditRoundBinding
+import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.features.training.EditRoundActivity
+import de.dreier.mytargets.features.training.RoundFragment
+import de.dreier.mytargets.features.training.input.InputActivity
+import de.dreier.mytargets.features.training.target.TargetListFragment
+import de.dreier.mytargets.shared.models.db.Round
+import de.dreier.mytargets.shared.models.db.Training
+import de.dreier.mytargets.utils.IntentWrapper
+import de.dreier.mytargets.utils.ToolbarUtils
+import de.dreier.mytargets.utils.transitions.FabTransformUtil
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
 
-import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
+class EditRoundFragment : EditFragmentBase() {
+    private var trainingId: Long? = null
+    private var roundId: Long? = null
+    private var binding: FragmentEditRoundBinding? = null
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.base.fragments.EditFragmentBase;
-import de.dreier.mytargets.databinding.FragmentEditRoundBinding;
-import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.features.training.EditRoundActivity;
-import de.dreier.mytargets.features.training.RoundFragment;
-import de.dreier.mytargets.features.training.input.InputActivity;
-import de.dreier.mytargets.features.training.target.TargetListFragment;
-import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.utils.IntentWrapper;
-import de.dreier.mytargets.utils.ToolbarUtils;
-import de.dreier.mytargets.utils.transitions.FabTransformUtil;
-
-import static de.dreier.mytargets.base.fragments.EditableListFragmentBase.ITEM_ID;
-
-public class EditRoundFragment extends EditFragmentBase {
-    private static final String ROUND_ID = "round_id";
-    @Nullable
-    private Long trainingId = null;
-    @Nullable
-    private Long roundId = null;
-    private FragmentEditRoundBinding binding;
-
-    @NonNull
-    public static IntentWrapper createIntent(@NonNull Training training) {
-        return new IntentWrapper(EditRoundActivity.class)
-                .with(ITEM_ID, training.getId());
-    }
-
-    @NonNull
-    public static IntentWrapper editIntent(@NonNull Training training, long roundId) {
-        return new IntentWrapper(EditRoundActivity.class)
-                .with(ITEM_ID, training.getId())
-                .with(ROUND_ID, roundId);
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil
-                .inflate(inflater, R.layout.fragment_edit_round, container, false);
+                .inflate(inflater, R.layout.fragment_edit_round, container, false)
 
-        Bundle arguments = getArguments();
-        trainingId = arguments.getLong(ITEM_ID);
+        val arguments = arguments
+        trainingId = arguments!!.getLong(ITEM_ID)
         if (arguments.containsKey(ROUND_ID)) {
-            roundId = arguments.getLong(ROUND_ID);
+            roundId = arguments.getLong(ROUND_ID)
         }
 
-        ToolbarUtils.setSupportActionBar(this, binding.toolbar);
-        ToolbarUtils.showUpAsX(this);
-        setHasOptionsMenu(true);
+        ToolbarUtils.setSupportActionBar(this, binding!!.toolbar)
+        ToolbarUtils.showUpAsX(this)
+        setHasOptionsMenu(true)
 
-        binding.arrows.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
-            @Override
-            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-                updateArrowsLabel();
+        binding!!.arrows.setOnProgressChangeListener(object : DiscreteSeekBar.OnProgressChangeListener {
+            override fun onProgressChanged(seekBar: DiscreteSeekBar, value: Int, fromUser: Boolean) {
+                updateArrowsLabel()
             }
 
-            @Override
-            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+            override fun onStartTrackingTouch(seekBar: DiscreteSeekBar) {
 
             }
 
-            @Override
-            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
-            }
-        });
-        binding.target.setOnActivityResultContext(this);
-        binding.distance.setOnActivityResultContext(this);
+            override fun onStopTrackingTouch(seekBar: DiscreteSeekBar) {}
+        })
+        binding!!.target.setOnActivityResultContext(this)
+        binding!!.distance.setOnActivityResultContext(this)
 
         if (roundId == null) {
-            ToolbarUtils.setTitle(this, R.string.new_round);
-            loadRoundDefaultValues();
+            ToolbarUtils.setTitle(this, R.string.new_round)
+            loadRoundDefaultValues()
         } else {
-            ToolbarUtils.setTitle(this, R.string.edit_round);
-            Round round = Round.Companion.get(roundId);
-            binding.distance.setItem(round.getDistance());
-            binding.target.setItem(round.getTarget());
-            binding.target.setFixedType(TargetListFragment.EFixedType.TARGET);
-            binding.notEditable.setVisibility(View.GONE);
-            if (round.getTraining().getStandardRoundId() != null) {
-                binding.distanceLayout.setVisibility(View.GONE);
+            ToolbarUtils.setTitle(this, R.string.edit_round)
+            val round = Round[roundId]
+            binding!!.distance.setItem(round!!.distance)
+            binding!!.target.setItem(round.target)
+            binding!!.target.setFixedType(TargetListFragment.EFixedType.TARGET)
+            binding!!.notEditable.visibility = View.GONE
+            if (round.training!!.standardRoundId != null) {
+                binding!!.distanceLayout.visibility = View.GONE
             }
         }
-        return binding.getRoot();
+        return binding!!.root
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        FabTransformUtil.setup(getActivity(), binding.getRoot());
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        FabTransformUtil.setup(activity!!, binding!!.root)
     }
 
-    @Override
-    protected void onSave() {
-        finish();
+    override fun onSave() {
+        finish()
         if (roundId == null) {
-            Round round = onSaveRound();
-            RoundFragment.getIntent(round)
+            val round = onSaveRound()
+            RoundFragment.getIntent(round!!)
                     .withContext(this)
                     .noAnimation()
-                    .start();
+                    .start()
             InputActivity.createIntent(round)
                     .withContext(this)
-                    .start();
+                    .start()
         } else {
-            onSaveRound();
-            getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
+            onSaveRound()
+            activity!!.overridePendingTransition(R.anim.left_in, R.anim.right_out)
         }
     }
 
-    @Nullable
-    private Round onSaveRound() {
-        Training training = Training.Companion.get(trainingId);
+    private fun onSaveRound(): Round? {
+        val training = Training[trainingId]
 
-        Round round;
+        val round: Round?
         if (roundId == null) {
-            round = new Round();
-            round.setTrainingId(trainingId);
-            round.setShotsPerEnd(binding.arrows.getProgress());
-            round.setMaxEndCount(null);
-            round.setIndex(training.loadRounds().size());
+            round = Round()
+            round.trainingId = trainingId
+            round.shotsPerEnd = binding!!.arrows.progress
+            round.maxEndCount = null
+            round.index = training!!.loadRounds()!!.size
         } else {
-            round = Round.Companion.get(roundId);
+            round = Round[roundId]
         }
-        round.setDistance(binding.distance.getSelectedItem());
-        round.setTarget(binding.target.getSelectedItem());
-        round.save();
-        return round;
+        round!!.distance = binding!!.distance.selectedItem!!
+        round.target = binding!!.target.selectedItem!!
+        round.save()
+        return round
     }
 
-    private void updateArrowsLabel() {
-        binding.arrowsLabel.setText(getResources()
-                .getQuantityString(R.plurals.arrow, binding.arrows.getProgress(),
-                        binding.arrows.getProgress()));
+    private fun updateArrowsLabel() {
+        binding!!.arrowsLabel.text = resources
+                .getQuantityString(R.plurals.arrow, binding!!.arrows.progress,
+                        binding!!.arrows.progress)
     }
 
-    private void loadRoundDefaultValues() {
-        binding.distance.setItem(SettingsManager.INSTANCE.getDistance());
-        binding.arrows.setProgress(SettingsManager.INSTANCE.getShotsPerEnd());
-        binding.target.setItem(SettingsManager.INSTANCE.getTarget());
+    private fun loadRoundDefaultValues() {
+        binding!!.distance.setItem(SettingsManager.distance)
+        binding!!.arrows.progress = SettingsManager.shotsPerEnd
+        binding!!.target.setItem(SettingsManager.target)
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        binding.target.onActivityResult(requestCode, resultCode, data);
-        binding.distance.onActivityResult(requestCode, resultCode, data);
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        super.onActivityResult(requestCode, resultCode, data)
+        binding!!.target.onActivityResult(requestCode, resultCode, data)
+        binding!!.distance.onActivityResult(requestCode, resultCode, data)
+    }
+
+    companion object {
+        private val ROUND_ID = "round_id"
+
+        fun createIntent(training: Training): IntentWrapper {
+            return IntentWrapper(EditRoundActivity::class.java)
+                    .with(ITEM_ID, training.id!!)
+        }
+
+        fun editIntent(training: Training, roundId: Long): IntentWrapper {
+            return IntentWrapper(EditRoundActivity::class.java)
+                    .with(ITEM_ID, training.id!!)
+                    .with(ROUND_ID, roundId)
+        }
     }
 }

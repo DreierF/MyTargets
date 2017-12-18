@@ -289,7 +289,7 @@ public class InputActivity extends ChildActivityBase
                         .start();
                 return true;
             case R.id.action_new_round:
-                EditRoundFragment.createIntent(data.getTraining())
+                EditRoundFragment.Companion.createIntent(data.getTraining())
                         .withContext(this)
                         .start();
                 return true;
