@@ -13,64 +13,54 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.views.selector;
+package de.dreier.mytargets.views.selector
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.AttributeSet;
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.util.AttributeSet
 
-import java.util.List;
+import de.dreier.mytargets.features.bows.BowListActivity
+import de.dreier.mytargets.features.bows.EditBowFragment
+import de.dreier.mytargets.shared.models.EBowType
+import de.dreier.mytargets.shared.models.db.Bow
+import de.dreier.mytargets.utils.IntentWrapper
 
-import de.dreier.mytargets.features.bows.BowListActivity;
-import de.dreier.mytargets.features.bows.EditBowFragment;
-import de.dreier.mytargets.shared.models.EBowType;
-import de.dreier.mytargets.shared.models.db.Bow;
-import de.dreier.mytargets.utils.IntentWrapper;
+class BowSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ImageSelectorBase<Bow>(context, attrs) {
 
-public class BowSelector extends ImageSelectorBase<Bow> {
-
-    private static final int BOW_REQUEST_CODE = 7;
-    private static final int BOW_ADD_REQUEST_CODE = 8;
-
-    public BowSelector(Context context) {
-        this(context, null);
+    init {
+        defaultActivity = BowListActivity::class.java
+        requestCode = BOW_REQUEST_CODE
     }
 
-    public BowSelector(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        defaultActivity = BowListActivity.class;
-        requestCode = BOW_REQUEST_CODE;
-    }
-
-    @NonNull
-    @Override
-    protected IntentWrapper getAddIntent() {
+    override fun getAddIntent(): IntentWrapper {
         return EditBowFragment.createIntent(EBowType.RECURVE_BOW)
-                .forResult(BOW_ADD_REQUEST_CODE);
+                .forResult(BOW_ADD_REQUEST_CODE)
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == BOW_ADD_REQUEST_CODE) {
-            setItemId(null);
+            setItemId(null)
         }
     }
 
-    public void setItemId(@Nullable Long bow) {
-        Bow item = null;
+    fun setItemId(bow: Long?) {
+        var item: Bow? = null
         if (bow != null) {
-            item = Bow.Companion.get(bow);
+            item = Bow[bow]
         }
         if (item == null) {
-            List<Bow> all = Bow.Companion.getAll();
-            if (all.size() > 0) {
-                item = all.get(0);
+            val all = Bow.all
+            if (all.isNotEmpty()) {
+                item = all[0]
             }
         }
-        setItem(item);
+        setItem(item)
+    }
+
+    companion object {
+        private val BOW_REQUEST_CODE = 7
+        private val BOW_ADD_REQUEST_CODE = 8
     }
 }

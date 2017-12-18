@@ -13,34 +13,30 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.views.selector;
+package de.dreier.mytargets.views.selector
 
-import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.util.AttributeSet;
+import android.content.Context
+import android.databinding.DataBindingUtil
+import android.util.AttributeSet
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.databinding.SelectorItemDistanceBinding;
-import de.dreier.mytargets.features.distance.DistanceActivity;
-import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.R
+import de.dreier.mytargets.databinding.SelectorItemDistanceBinding
+import de.dreier.mytargets.features.distance.DistanceActivity
+import de.dreier.mytargets.shared.models.Dimension
 
-public class DistanceSelector extends SelectorBase<Dimension> {
+class DistanceSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : SelectorBase<Dimension>(context, attrs, R.layout.selector_item_distance) {
 
-    public static final int DISTANCE_REQUEST_CODE = 1;
-
-    public DistanceSelector(Context context) {
-        this(context, null);
+    init {
+        defaultActivity = DistanceActivity::class.java
+        requestCode = DISTANCE_REQUEST_CODE
     }
 
-    public DistanceSelector(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.selector_item_distance);
-        defaultActivity = DistanceActivity.class;
-        requestCode = DISTANCE_REQUEST_CODE;
+    override fun bindView(item: Dimension) {
+        val binding = DataBindingUtil.bind<SelectorItemDistanceBinding>(view)
+        binding.distanceValue.text = item.toString()
     }
 
-    @Override
-    protected void bindView() {
-        SelectorItemDistanceBinding binding = DataBindingUtil.bind(view);
-        binding.distanceValue.setText(item.toString());
+    companion object {
+        val DISTANCE_REQUEST_CODE = 1
     }
 }

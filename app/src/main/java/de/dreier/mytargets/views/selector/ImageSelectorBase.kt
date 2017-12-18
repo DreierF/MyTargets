@@ -13,49 +13,41 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.views.selector;
+package de.dreier.mytargets.views.selector
 
-import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.os.Parcelable;
-import android.support.annotation.StringRes;
-import android.util.AttributeSet;
+import android.content.Context
+import android.databinding.DataBindingUtil
+import android.os.Parcelable
+import android.support.annotation.StringRes
+import android.util.AttributeSet
+import android.view.View
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding;
-import de.dreier.mytargets.shared.models.IDetailProvider;
-import de.dreier.mytargets.shared.models.IImageProvider;
+import de.dreier.mytargets.R
+import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding
+import de.dreier.mytargets.shared.models.IDetailProvider
+import de.dreier.mytargets.shared.models.IImageProvider
 
-public abstract class ImageSelectorBase<T extends IImageProvider & Parcelable> extends SelectorBase<T> {
+abstract class ImageSelectorBase<T> @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
+        SelectorBase<T>(context, attrs, R.layout.selector_item_image_details) where T : IImageProvider, T : Parcelable {
 
-    protected SelectorItemImageDetailsBinding binding;
+    protected lateinit var binding: SelectorItemImageDetailsBinding
 
-    public ImageSelectorBase(Context context) {
-        this(context, null);
+    override fun onFinishInflate() {
+        super.onFinishInflate()
+        binding = DataBindingUtil.bind(view)
     }
 
-    public ImageSelectorBase(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.selector_item_image_details);
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        binding = DataBindingUtil.bind(view);
-    }
-
-    @Override
-    protected void bindView() {
-        binding.name.setText(item.getName());
-        if (item instanceof IDetailProvider) {
-            binding.details.setVisibility(VISIBLE);
-            binding.details.setText(((IDetailProvider) item).getDetails(getContext()));
+    override fun bindView(item: T) {
+        binding.name.text = item.name
+        if (selectedItem is IDetailProvider) {
+            binding.details.visibility = View.VISIBLE
+            binding.details.text = (item as IDetailProvider).getDetails(context)
         }
-        binding.image.setImageDrawable(item.getDrawable(getContext()));
+        binding.image.setImageDrawable(item.getDrawable(context))
     }
 
-    protected void setTitle(@StringRes int title) {
-        binding.title.setVisibility(VISIBLE);
-        binding.title.setText(title);
+    protected fun setTitle(@StringRes title: Int) {
+        binding.title.visibility = View.VISIBLE
+        binding.title.setText(title)
     }
 }

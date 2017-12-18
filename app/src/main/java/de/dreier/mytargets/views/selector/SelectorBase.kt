@@ -13,147 +13,127 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.views.selector;
+package de.dreier.mytargets.views.selector
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.os.Parcelable
+import android.support.annotation.LayoutRes
+import android.support.v4.app.Fragment
+import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.Button
+import android.widget.LinearLayout
+import com.evernote.android.state.State
+import com.evernote.android.state.StateSaver
+import de.dreier.mytargets.R
+import de.dreier.mytargets.base.activities.ItemSelectActivity
+import de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM
+import de.dreier.mytargets.utils.IntentWrapper
 
-import com.evernote.android.state.State;
-import com.evernote.android.state.StateSaver;
+abstract class SelectorBase<T : Parcelable>(
+        context: Context, attrs: AttributeSet?,
+        @param:LayoutRes private val layout: Int) : LinearLayout(context, attrs) {
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.base.activities.ItemSelectActivity;
-import de.dreier.mytargets.utils.IntentWrapper;
-
-import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
-
-public abstract class SelectorBase<T extends Parcelable> extends LinearLayout {
-
-    public static final String INDEX = "index";
-    private final int layout;
-    protected View view;
-    protected int requestCode;
-    protected Class<?> defaultActivity;
-    @Nullable
+    protected lateinit var view: View
+    protected var requestCode: Int = 0
+    protected var defaultActivity: Class<*>? = null
     @State
-    protected T item = null;
-    private Button addButton;
-    private View progress;
-    private OnUpdateListener<T> updateListener;
-    private int index = -1;
-    private IntentWrapper addIntent;
+    open var selectedItem: T? = null
+    private var addButton: Button? = null
+    private var progress: View? = null
+    private var updateListener: OnUpdateListener<T>? = null
+    private var index = -1
+    private var addIntent: IntentWrapper? = null
 
-    public SelectorBase(Context context, AttributeSet attrs, @LayoutRes int layout) {
-        super(context, attrs);
-        this.layout = layout;
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        addButton = (Button) getChildAt(0);
-        if (addButton != null) {
-            addButton.setOnClickListener(v -> addIntent.start());
+    open protected val defaultIntent: IntentWrapper
+        get() {
+            val i = IntentWrapper(defaultActivity)
+                    .with<T>(ITEM, selectedItem)
+            if (index != -1) {
+                i.with(INDEX, index)
+            }
+            return i
         }
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        progress = inflater.inflate(R.layout.selector_item_process, this, false);
-        view = inflater.inflate(layout, this, false);
-        addView(progress);
-        addView(view);
-        updateView();
+
+    override fun onFinishInflate() {
+        super.onFinishInflate()
+        addButton = getChildAt(0) as Button
+        addButton?.setOnClickListener { addIntent!!.start() }
+        val inflater = LayoutInflater.from(context)
+        progress = inflater.inflate(R.layout.selector_item_process, this, false)
+        view = inflater.inflate(layout, this, false)
+        addView(progress)
+        addView(view)
+        updateView()
     }
 
-    private void updateView() {
-        boolean displayProgress = item == null && addButton == null;
-        if (addButton != null) {
-            addButton.setVisibility(item == null ? VISIBLE : GONE);
-        }
-        progress.setVisibility(displayProgress ? VISIBLE : GONE);
-        view.setVisibility(item != null ? VISIBLE : GONE);
-        if (item != null) {
-            bindView();
-        }
+    private fun updateView() {
+        val displayProgress = selectedItem == null && addButton == null
+        addButton?.visibility = if (selectedItem == null) View.VISIBLE else View.GONE
+        progress!!.visibility = if (displayProgress) View.VISIBLE else View.GONE
+        view.visibility = if (selectedItem != null) View.VISIBLE else View.GONE
+        selectedItem?.let{bindView(it)}
     }
 
-    public void setItemIndex(int index) {
-        this.index = index;
+    fun setItemIndex(index: Int) {
+        this.index = index
     }
 
-    protected IntentWrapper getDefaultIntent() {
-        IntentWrapper i = new IntentWrapper(defaultActivity)
-                .with(ITEM, getSelectedItem());
-        if (index != -1) {
-            i.with(INDEX, index);
-        }
-        return i;
+    protected open fun getAddIntent(): IntentWrapper? {
+        return null
     }
 
-    @Nullable
-    protected IntentWrapper getAddIntent() {
-        return null;
-    }
+    protected abstract fun bindView(item: T)
 
-    protected abstract void bindView();
-
-    @Nullable
-    public T getSelectedItem() {
-        return item;
-    }
-
-    public void setItem(@Nullable T item) {
-        this.item = item;
+    fun setItem(item: T?) {
+        this.selectedItem = item
         if (updateListener != null) {
-            updateListener.onUpdate(item);
+            updateListener!!.onUpdate(item)
         }
-        updateView();
+        updateView()
     }
 
-    public void setOnUpdateListener(OnUpdateListener<T> updateListener) {
-        this.updateListener = updateListener;
+    fun setOnUpdateListener(updateListener: OnUpdateListener<T>) {
+        this.updateListener = updateListener
     }
 
-    public final void setOnActivityResultContext(@NonNull Fragment fragment) {
+    fun setOnActivityResultContext(fragment: Fragment) {
         if (addButton != null) {
-            addIntent = getAddIntent().withContext(fragment);
+            addIntent = getAddIntent()!!.withContext(fragment)
         }
-        setOnClickListener(v -> getDefaultIntent()
-                .withContext(fragment)
-                .forResult(requestCode)
-                .start());
+        setOnClickListener { v ->
+            defaultIntent
+                    .withContext(fragment)
+                    .forResult(requestCode)
+                    .start()
+        }
     }
 
-    public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
+    open fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         if (resultCode == Activity.RESULT_OK && requestCode == this.requestCode) {
-            Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
-            if (index == -1 || (intentData != null && intentData.getInt(INDEX) == index)) {
-                setItem(data.getParcelableExtra(ITEM));
+            val intentData = data.getBundleExtra(ItemSelectActivity.INTENT)
+            if (index == -1 || intentData != null && intentData.getInt(INDEX) == index) {
+                setItem(data.getParcelableExtra(ITEM))
             }
         }
     }
 
-    @Override
-    public Parcelable onSaveInstanceState() {
-        return StateSaver.saveInstanceState(this, super.onSaveInstanceState());
+    public override fun onSaveInstanceState(): Parcelable? {
+        return StateSaver.saveInstanceState(this, super.onSaveInstanceState())
     }
 
-    @Override
-    public void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(StateSaver.restoreInstanceState(this, state));
+    public override fun onRestoreInstanceState(state: Parcelable) {
+        super.onRestoreInstanceState(StateSaver.restoreInstanceState(this, state))
     }
 
-    public interface OnUpdateListener<T> {
-        void onUpdate(T item);
+    interface OnUpdateListener<in T> {
+        fun onUpdate(item: T?)
+    }
+
+    companion object {
+        const val INDEX = "index"
     }
 }

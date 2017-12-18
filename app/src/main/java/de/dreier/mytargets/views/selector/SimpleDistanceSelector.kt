@@ -13,34 +13,30 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.views.selector;
+package de.dreier.mytargets.views.selector
 
-import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.util.AttributeSet;
+import android.content.Context
+import android.databinding.DataBindingUtil
+import android.util.AttributeSet
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.databinding.SelectorItemSimpleTextBinding;
-import de.dreier.mytargets.features.distance.DistanceActivity;
-import de.dreier.mytargets.shared.models.Dimension;
+import de.dreier.mytargets.R
+import de.dreier.mytargets.databinding.SelectorItemSimpleTextBinding
+import de.dreier.mytargets.features.distance.DistanceActivity
+import de.dreier.mytargets.shared.models.Dimension
 
-public class SimpleDistanceSelector extends SelectorBase<Dimension> {
+class SimpleDistanceSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : SelectorBase<Dimension>(context, attrs, R.layout.selector_item_simple_text) {
 
-    public static final int SIMPLE_DISTANCE_REQUEST_CODE = 2;
-
-    public SimpleDistanceSelector(Context context) {
-        this(context, null);
+    init {
+        defaultActivity = DistanceActivity::class.java
+        requestCode = SIMPLE_DISTANCE_REQUEST_CODE
     }
 
-    public SimpleDistanceSelector(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.selector_item_simple_text);
-        defaultActivity = DistanceActivity.class;
-        requestCode = SIMPLE_DISTANCE_REQUEST_CODE;
+    override fun bindView(item: Dimension) {
+        val binding = DataBindingUtil.bind<SelectorItemSimpleTextBinding>(view)
+        binding.text.text = item.toString()
     }
 
-    @Override
-    protected void bindView() {
-        SelectorItemSimpleTextBinding binding = DataBindingUtil.bind(view);
-        binding.text.setText(item.toString());
+    companion object {
+        val SIMPLE_DISTANCE_REQUEST_CODE = 2
     }
 }
