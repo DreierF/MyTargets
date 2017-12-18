@@ -13,102 +13,89 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.help;
+package de.dreier.mytargets.features.help
 
-import android.content.Intent;
-import android.databinding.DataBindingUtil;
-import android.os.Bundle;
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-
-import java.io.IOException;
-import java.io.InputStream;
-
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.databinding.FragmentWebBinding;
-import de.dreier.mytargets.features.help.licences.LicencesActivity;
-import de.dreier.mytargets.features.settings.about.AboutFragment;
-import de.dreier.mytargets.utils.IntentWrapper;
-import de.dreier.mytargets.utils.ToolbarUtils;
-import uk.co.hassie.library.versioninfomdialog.VersionInfoMDialog;
+import android.content.Intent
+import android.databinding.DataBindingUtil
+import android.os.Bundle
+import android.support.annotation.CallSuper
+import android.support.v4.app.Fragment
+import android.view.*
+import de.dreier.mytargets.R
+import de.dreier.mytargets.databinding.FragmentWebBinding
+import de.dreier.mytargets.features.help.licences.LicencesActivity
+import de.dreier.mytargets.features.settings.about.AboutFragment
+import de.dreier.mytargets.utils.IntentWrapper
+import de.dreier.mytargets.utils.ToolbarUtils
+import uk.co.hassie.library.versioninfomdialog.VersionInfoMDialog
+import java.io.IOException
 
 /**
  * Shows all rounds of one training.
  */
-public class HelpFragment extends Fragment {
+class HelpFragment : Fragment() {
 
-    protected FragmentWebBinding binding;
+    private lateinit var binding: FragmentWebBinding
 
-    @NonNull
-    public static IntentWrapper getIntent() {
-        return new IntentWrapper(HelpActivity.class);
-    }
+    private val helpHtmlPage: String
+        get() {
+            var prompt = ""
+            try {
+                val inputStream = resources.openRawResource(R.raw.help)
+                val buffer = ByteArray(inputStream.available())
+                inputStream.read(buffer)
+                prompt = String(buffer)
+                inputStream.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
 
-    @Override
-    @CallSuper
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_web, container, false);
-        String prompt = getHelpHtmlPage();
-        binding.webView
-                .loadDataWithBaseURL("file:///android_asset/", prompt, "text/html", "utf-8", "");
-        binding.webView.setHorizontalScrollBarEnabled(false);
-
-        return binding.getRoot();
-    }
-
-    @NonNull
-    private String getHelpHtmlPage() {
-        String prompt = "";
-        try {
-            InputStream inputStream = getResources().openRawResource(R.raw.help);
-            byte[] buffer = new byte[inputStream.available()];
-            inputStream.read(buffer);
-            prompt = new String(buffer);
-            inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            return prompt
         }
-        return prompt;
+
+    @CallSuper
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_web, container, false)
+        val prompt = helpHtmlPage
+        binding.webView
+                .loadDataWithBaseURL("file:///android_asset/", prompt, "text/html", "utf-8", "")
+        binding.webView.isHorizontalScrollBarEnabled = false
+        return binding.root
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        ToolbarUtils.showHomeAsUp(this);
-        setHasOptionsMenu(true);
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        ToolbarUtils.showHomeAsUp(this)
+        setHasOptionsMenu(true)
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.help, menu);
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
+        inflater.inflate(R.menu.help, menu)
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_version_info:
-                new VersionInfoMDialog.Builder(getContext())
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_version_info -> {
+                VersionInfoMDialog.Builder(context)
                         .setCopyrightText(R.string.app_copyright)
                         .setVersionPrefix(R.string.version_prefix)
-                        .show();
-                return true;
-            case R.id.action_open_source_licences:
-                startActivity(new Intent(getContext(), LicencesActivity.class));
-                return true;
-            case R.id.action_about:
-                AboutFragment.getIntent().withContext(this).start();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+                        .show()
+                return true
+            }
+            R.id.action_open_source_licences -> {
+                startActivity(Intent(context, LicencesActivity::class.java))
+                return true
+            }
+            R.id.action_about -> {
+                AboutFragment.getIntent().withContext(this).start()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
         }
     }
 
+    companion object {
+        val intent: IntentWrapper
+            get() = IntentWrapper(HelpActivity::class.java)
+    }
 }
