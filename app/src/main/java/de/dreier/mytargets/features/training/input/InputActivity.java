@@ -76,6 +76,7 @@ import de.dreier.mytargets.utils.transitions.TransitionAdapter;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static de.dreier.mytargets.shared.wearable.WearableClientBase.BROADCAST_TIMER_SETTINGS_FROM_REMOTE;
 import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE;
 import static de.dreier.mytargets.utils.Utils.getCurrentLocale;
 
@@ -161,7 +162,7 @@ public class InputActivity extends ChildActivityBase
         LocalBroadcastManager.getInstance(this).registerReceiver(updateReceiver,
                 new IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE));
         LocalBroadcastManager.getInstance(this).registerReceiver(timerReceiver,
-                new IntentFilter(Companion.getBROADCAST_TIMER_SETTINGS_FROM_REMOTE()));
+                new IntentFilter(BROADCAST_TIMER_SETTINGS_FROM_REMOTE));
     }
 
     @Override

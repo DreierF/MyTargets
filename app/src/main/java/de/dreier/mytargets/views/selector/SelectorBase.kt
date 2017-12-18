@@ -104,7 +104,7 @@ abstract class SelectorBase<T : Parcelable>(
         if (addButton != null) {
             addIntent = getAddIntent()!!.withContext(fragment)
         }
-        setOnClickListener { v ->
+        setOnClickListener {
             defaultIntent
                     .withContext(fragment)
                     .forResult(requestCode)

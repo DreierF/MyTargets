@@ -41,7 +41,7 @@ public class TimerSettingsFragment extends SettingsFragmentBase {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(timerReceiver,
-                new IntentFilter(Companion.getBROADCAST_TIMER_SETTINGS_FROM_REMOTE()));
+                new IntentFilter(BROADCAST_TIMER_SETTINGS_FROM_REMOTE));
     }
 
     @Override

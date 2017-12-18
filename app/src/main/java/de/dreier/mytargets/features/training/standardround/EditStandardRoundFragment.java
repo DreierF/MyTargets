@@ -176,13 +176,13 @@ public class EditStandardRoundFragment extends EditFragmentBase {
 
         if (resultCode == Activity.RESULT_OK) {
             Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
-            final int index = intentData.getInt(SelectorBase.Companion.getINDEX());
+            final int index = intentData.getInt(SelectorBase.INDEX);
             switch (requestCode) {
-                case DistanceSelector.Companion.getDISTANCE_REQUEST_CODE():
+                case DistanceSelector.DISTANCE_REQUEST_CODE:
                     standardRound.loadRounds().get(index).setDistance(data.getParcelableExtra(ITEM));
                     adapter.notifyItemChanged(index);
                     break;
-                case TargetSelector.Companion.getTARGET_REQUEST_CODE():
+                case TargetSelector.TARGET_REQUEST_CODE:
                     standardRound.loadRounds().get(index)
                             .setTargetTemplate(data.getParcelableExtra(ITEM));
                     adapter.notifyItemChanged(index);
