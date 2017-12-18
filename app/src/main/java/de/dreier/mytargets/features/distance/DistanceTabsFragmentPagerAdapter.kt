@@ -13,60 +13,42 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.distance;
+package de.dreier.mytargets.features.distance
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
+import android.support.v4.app.FragmentPagerAdapter
+import de.dreier.mytargets.R
+import de.dreier.mytargets.shared.models.Dimension
+import de.dreier.mytargets.shared.models.Dimension.Unit.*
 
-import java.util.Arrays;
-import java.util.List;
+class DistanceTabsFragmentPagerAdapter(
+        private val context: FragmentActivity,
+        distance: Dimension) : FragmentPagerAdapter(context.supportFragmentManager) {
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.Dimension.Unit;
+    private val fragments = arrayOf(
+            DistanceGridFragment.newInstance(distance, UNITS[0]),
+            DistanceGridFragment.newInstance(distance, UNITS[1]),
+            DistanceGridFragment.newInstance(distance, UNITS[2])
+    )
 
-import static de.dreier.mytargets.shared.models.Dimension.Unit.FEET;
-import static de.dreier.mytargets.shared.models.Dimension.Unit.METER;
-import static de.dreier.mytargets.shared.models.Dimension.Unit.YARDS;
-
-public class DistanceTabsFragmentPagerAdapter extends FragmentPagerAdapter {
-
-    public static final List<Unit> UNITS = Arrays.asList(METER, YARDS, FEET);
-
-    @NonNull
-    private final Context context;
-    private final DistanceGridFragment[] fragments = new DistanceGridFragment[3];
-
-    public DistanceTabsFragmentPagerAdapter(@NonNull FragmentActivity context, Dimension distance) {
-        super(context.getSupportFragmentManager());
-        this.context = context;
-        fragments[0] = DistanceGridFragment.newInstance(distance, UNITS.get(0));
-        fragments[1] = DistanceGridFragment.newInstance(distance, UNITS.get(1));
-        fragments[2] = DistanceGridFragment.newInstance(distance, UNITS.get(2));
+    override fun getItem(position: Int): Fragment {
+        return fragments[position]
     }
 
-    @Override
-    public Fragment getItem(int position) {
-        return fragments[position];
+    override fun getCount(): Int {
+        return fragments.size
     }
 
-    @Override
-    public int getCount() {
-        return fragments.length;
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        switch (position) {
-            case 0:
-                return context.getString(R.string.metric);
-            case 1:
-                return context.getString(R.string.imperial);
-            default:
-                return context.getString(R.string.us);
+    override fun getPageTitle(position: Int): CharSequence? {
+        return when (position) {
+            0 -> context.getString(R.string.metric)
+            1 -> context.getString(R.string.imperial)
+            else -> context.getString(R.string.us)
         }
+    }
+
+    companion object {
+        val UNITS = listOf(METER, YARDS, FEET)
     }
 }
