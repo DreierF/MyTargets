@@ -13,64 +13,54 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.distance;
+package de.dreier.mytargets.features.distance
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.support.annotation.NonNull;
-import android.text.InputType;
-import android.view.LayoutInflater;
-import android.widget.EditText;
+import android.app.AlertDialog
+import android.content.Context
+import android.databinding.DataBindingUtil
+import android.text.InputType
+import android.view.LayoutInflater
+import de.dreier.mytargets.R
+import de.dreier.mytargets.databinding.DialogCommentBinding
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.databinding.DialogCommentBinding;
+class DistanceInputDialog {
 
-public class DistanceInputDialog {
-
-    public interface OnClickListener {
-        void onOkClickListener(String input);
+    interface OnClickListener {
+        fun onOkClickListener(input: String)
     }
 
-    public static class Builder {
-        private final Context context;
-        private OnClickListener clickListener;
-        private String unit;
+    class Builder(private val context: Context) {
+        private var clickListener: OnClickListener? = null
+        private var unit: String? = null
 
-        public Builder(Context context) {
-            this.context = context;
-        }
+        fun show() {
+            val inflater = LayoutInflater.from(context)
+            val binding = DataBindingUtil
+                    .inflate<DialogCommentBinding>(inflater, R.layout.dialog_comment, null, false)
+            binding.shotComment.inputType = InputType.TYPE_CLASS_NUMBER
+            binding.unit.text = unit
+            val shotComment = binding.shotComment
 
-        public void show() {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            DialogCommentBinding binding = DataBindingUtil
-                    .inflate(inflater, R.layout.dialog_comment, null, false);
-            binding.shotComment.setInputType(InputType.TYPE_CLASS_NUMBER);
-            binding.unit.setText(unit);
-            final EditText shotComment = binding.shotComment;
-
-            new AlertDialog.Builder(context)
+            AlertDialog.Builder(context)
                     .setTitle(R.string.distance)
-                    .setView(binding.getRoot())
-                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                        String s = shotComment.getText().toString();
-                        clickListener.onOkClickListener(s);
-                        dialog.dismiss();
-                    })
-                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss())
-                    .show();
+                    .setView(binding.root)
+                    .setPositiveButton(android.R.string.ok) { dialog, _ ->
+                        val s = shotComment.text.toString()
+                        clickListener?.onOkClickListener(s)
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
+                    .show()
         }
 
-        @NonNull
-        public Builder setOnClickListener(OnClickListener listener) {
-            clickListener = listener;
-            return this;
+        fun setOnClickListener(listener: OnClickListener): Builder {
+            clickListener = listener
+            return this
         }
 
-        @NonNull
-        public Builder setUnit(String unit) {
-            this.unit = unit;
-            return this;
+        fun setUnit(unit: String): Builder {
+            this.unit = unit
+            return this
         }
     }
 }
