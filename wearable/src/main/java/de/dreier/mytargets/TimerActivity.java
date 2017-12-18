@@ -75,20 +75,20 @@ public class TimerActivity extends WearableActivity implements MenuItem.OnMenuIt
                 finish();
                 return true;
             case R.id.menu_vibrate:
-                timerFragment.settings.setVibrate(!timerFragment.settings.getVibrate());
-                menuItem.setIcon(timerFragment.settings.getVibrate()
+                timerFragment.getSettings().setVibrate(!timerFragment.getSettings().getVibrate());
+                menuItem.setIcon(timerFragment.getSettings().getVibrate()
                         ? R.drawable.ic_vibration_white_24dp
                         : R.drawable.ic_vibration_off_white_24dp);
                 ApplicationInstance.wearableClient
-                        .sendTimerSettingsFromLocal(timerFragment.settings);
+                        .sendTimerSettingsFromLocal(timerFragment.getSettings());
                 return true;
             case R.id.menu_sound:
-                timerFragment.settings.setSound(!timerFragment.settings.getSound());
-                menuItem.setIcon(timerFragment.settings.getSound()
+                timerFragment.getSettings().setSound(!timerFragment.getSettings().getSound());
+                menuItem.setIcon(timerFragment.getSettings().getSound()
                         ? R.drawable.ic_volume_up_white_24dp
                         : R.drawable.ic_volume_off_white_24dp);
                 ApplicationInstance.wearableClient
-                        .sendTimerSettingsFromLocal(timerFragment.settings);
+                        .sendTimerSettingsFromLocal(timerFragment.getSettings());
                 return true;
             default:
                 return false;
@@ -114,7 +114,7 @@ public class TimerActivity extends WearableActivity implements MenuItem.OnMenuIt
         public static TimerFragment getInstance(TimerSettings settings) {
             TimerFragment timer = new TimerFragment();
             Bundle bundle = new Bundle();
-            bundle.putParcelable(ARG_TIMER_SETTINGS, settings);
+            bundle.putParcelable(Companion.getARG_TIMER_SETTINGS(), settings);
             timer.setArguments(bundle);
             return timer;
         }
@@ -127,7 +127,7 @@ public class TimerActivity extends WearableActivity implements MenuItem.OnMenuIt
         }
 
         @Override
-        public void applyTime(String text) {
+        public void applyTime(@NonNull String text) {
             binding.timerTime.setText(text);
         }
 
@@ -138,7 +138,7 @@ public class TimerActivity extends WearableActivity implements MenuItem.OnMenuIt
             }
             binding.startTimer.setVisibility(status == ETimerState.WAIT_FOR_START ? VISIBLE : GONE);
             binding.timerTime.setVisibility(status != ETimerState.WAIT_FOR_START ? VISIBLE : GONE);
-            binding.getRoot().setBackgroundResource(status.color);
+            binding.getRoot().setBackgroundResource(status.getColor());
         }
     }
 }

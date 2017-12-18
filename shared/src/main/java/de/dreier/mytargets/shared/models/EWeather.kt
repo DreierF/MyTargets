@@ -12,62 +12,34 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models
 
-import android.support.annotation.NonNull;
+import android.support.annotation.DrawableRes
+import android.support.annotation.StringRes
+import de.dreier.mytargets.shared.R
+import de.dreier.mytargets.shared.SharedApplicationInstance
 
-import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.SharedApplicationInstance;
+enum class EWeather constructor(
+        @StringRes private val nameRes: Int,
+        @DrawableRes val colorDrawable: Int,
+        @DrawableRes private val outlineDrawable: Int,
+        @DrawableRes val drawable: Int
+) {
+    SUNNY(R.string.sunny, R.drawable.ic_sun_48dp, R.drawable.ic_sun_outline_48dp, R.drawable.ic_sun_outline_color_48dp),
+    PARTLY_CLOUDY(R.string.partly_cloudy, R.drawable.ic_partly_cloudy_48dp, R.drawable.ic_partly_cloudy_outline_48dp, R.drawable.ic_partly_cloudy_outline_color_48dp),
+    CLOUDY(R.string.cloudy, R.drawable.ic_cloudy_48dp, R.drawable.ic_cloudy_outline_48dp, R.drawable.ic_cloudy_outline_color_48dp),
+    LIGHT_RAIN(R.string.light_rain, R.drawable.ic_light_rain_48dp, R.drawable.ic_light_rain_outline_48dp, R.drawable.ic_light_rain_outline_color_48dp),
+    RAIN(R.string.rain, R.drawable.ic_rain_48dp, R.drawable.ic_rain_outline_48dp, R.drawable.ic_rain_outline_color_48dp);
 
-public enum EWeather {
-    SUNNY(0, R.string.sunny, R.drawable.ic_sun_48dp, R.drawable.ic_sun_outline_48dp, R.drawable.ic_sun_outline_color_48dp),
-    PARTLY_CLOUDY(1, R.string.partly_cloudy, R.drawable.ic_partly_cloudy_48dp, R.drawable.ic_partly_cloudy_outline_48dp, R.drawable.ic_partly_cloudy_outline_color_48dp),
-    CLOUDY(2, R.string.cloudy, R.drawable.ic_cloudy_48dp, R.drawable.ic_cloudy_outline_48dp, R.drawable.ic_cloudy_outline_color_48dp),
-    LIGHT_RAIN(3, R.string.light_rain, R.drawable.ic_light_rain_48dp, R.drawable.ic_light_rain_outline_48dp, R.drawable.ic_light_rain_outline_color_48dp),
-    RAIN(4, R.string.rain, R.drawable.ic_rain_48dp, R.drawable.ic_rain_outline_48dp, R.drawable.ic_rain_outline_color_48dp);
-
-    private final int value;
-    private final int name;
-    private final int colorDrawable;
-    private final int outlineDrawable;
-    private final int outlineColorDrawable;
-
-    EWeather(int value, int name, int colorDrawable, int outlineDrawable, int outlineColorDrawable) {
-        this.value = value;
-        this.name = name;
-        this.colorDrawable = colorDrawable;
-        this.outlineDrawable = outlineDrawable;
-        this.outlineColorDrawable = outlineColorDrawable;
+    fun getName(): String {
+        return SharedApplicationInstance.getStr(nameRes)
     }
 
-    public int getValue() {
-        return value;
+    fun getDrawable(selected: EWeather): Int {
+        return if (selected == this) drawable else outlineDrawable
     }
 
-    public String getName() {
-        return SharedApplicationInstance.Companion.getStr(name);
-    }
-
-    public int getDrawable() {
-        return outlineColorDrawable;
-    }
-
-    @NonNull
-    public static EWeather getOfValue(int value) {
-        for (EWeather e : EWeather.values()) {
-            if (e.getValue() == value) {
-                return e;
-            }
-        }
-        throw new IllegalArgumentException(
-                "No enum const " + EWeather.class.getName() + " for code \'" + value + "\'");
-    }
-
-    public int getColorDrawable() {
-        return colorDrawable;
-    }
-
-    public int getDrawable(EWeather selected) {
-        return selected == this ? outlineColorDrawable : outlineDrawable;
+    companion object {
+        fun getOfValue(value: Int) = EWeather.values()[value]
     }
 }

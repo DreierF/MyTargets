@@ -56,7 +56,7 @@ public class MobileWearableClient extends WearableClientBase {
 
     @Override
     public void disconnect() {
-        LocalBroadcastManager.getInstance(context).unregisterReceiver(updateReceiver);
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(updateReceiver);
         super.disconnect();
     }
 
@@ -72,7 +72,7 @@ public class MobileWearableClient extends WearableClientBase {
     public void sendUpdateTrainingFromLocalBroadcast(AugmentedTraining training) {
         Intent intent = new Intent(BROADCAST_UPDATE_TRAINING_FROM_LOCAL);
         intent.putExtra(EXTRA_TRAINING, training);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
     }
 
     public void sendUpdateTrainingFromRemoteBroadcast(@NonNull Round round, End end) {
@@ -80,12 +80,12 @@ public class MobileWearableClient extends WearableClientBase {
         intent.putExtra(EXTRA_TRAINING_ID, round.getTrainingId());
         intent.putExtra(EXTRA_ROUND_ID, round.getId());
         intent.putExtra(EXTRA_END, end);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
     }
 
     public void sendCreateTrainingFromRemoteBroadcast() {
         Intent intent = new Intent(BROADCAST_CREATE_TRAINING_FROM_REMOTE);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
     }
 
     public void updateTraining(@NonNull AugmentedTraining training) {
@@ -119,12 +119,12 @@ public class MobileWearableClient extends WearableClientBase {
 
     private void sendTrainingInfo(TrainingInfo trainingInfo) {
         final byte[] data = ParcelableUtilKt.marshall(trainingInfo);
-        sendMessage(WearableClientBase.TRAINING_UPDATE, data);
+        sendMessage(WearableClientBase.Companion.getTRAINING_UPDATE(), data);
     }
 
     public void sendTrainingTemplate(AugmentedTraining training) {
         final byte[] data = ParcelableUtilKt.marshall(training);
-        sendMessage(WearableClientBase.TRAINING_TEMPLATE, data);
+        sendMessage(WearableClientBase.Companion.getTRAINING_TEMPLATE(), data);
     }
 
     public abstract static class EndUpdateReceiver extends BroadcastReceiver {

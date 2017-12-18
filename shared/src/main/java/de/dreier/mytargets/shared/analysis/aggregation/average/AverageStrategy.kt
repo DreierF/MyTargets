@@ -13,29 +13,23 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.analysis.aggregation.average;
+package de.dreier.mytargets.shared.analysis.aggregation.average
 
-import android.support.annotation.NonNull;
+import de.dreier.mytargets.shared.analysis.aggregation.IAggregationResultRenderer
+import de.dreier.mytargets.shared.analysis.aggregation.NOPResultRenderer
+import de.dreier.mytargets.shared.analysis.aggregation.cluster.AggregationStrategyBase
+import de.dreier.mytargets.shared.models.db.Shot
 
-import java.util.List;
+class AverageStrategy : AggregationStrategyBase() {
 
-import de.dreier.mytargets.shared.analysis.aggregation.IAggregationResultRenderer;
-import de.dreier.mytargets.shared.analysis.aggregation.NOPResultRenderer;
-import de.dreier.mytargets.shared.analysis.aggregation.cluster.AggregationStrategyBase;
-import de.dreier.mytargets.shared.models.db.Shot;
-
-public class AverageStrategy extends AggregationStrategyBase {
-
-    @NonNull
-    @Override
-    protected IAggregationResultRenderer compute(@NonNull List<Shot> shots) {
-        if (shots.size() == 0) {
-            return new NOPResultRenderer();
+    override fun compute(shots: List<Shot>): IAggregationResultRenderer {
+        if (shots.isEmpty()) {
+            return NOPResultRenderer()
         }
-        Average average = new Average();
-        average.computeAll(shots);
-        final AverageResultRenderer averageResultRenderer = new AverageResultRenderer(average);
-        averageResultRenderer.onPrepareDraw();
-        return averageResultRenderer;
+        val average = Average()
+        average.computeAll(shots)
+        val averageResultRenderer = AverageResultRenderer(average)
+        averageResultRenderer.onPrepareDraw()
+        return averageResultRenderer
     }
 }

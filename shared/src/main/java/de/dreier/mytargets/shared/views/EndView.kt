@@ -13,113 +13,94 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.views;
+package de.dreier.mytargets.shared.views
 
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.RectF;
-import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.util.AttributeSet;
-import android.view.View;
+import android.content.Context
+import android.graphics.Canvas
+import android.graphics.RectF
+import android.os.Parcelable
+import android.util.AttributeSet
+import android.view.View
 
-import com.evernote.android.state.State;
-import com.evernote.android.state.StateSaver;
+import com.evernote.android.state.State
+import com.evernote.android.state.StateSaver
 
-import java.util.List;
+import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.models.db.Shot
+import de.dreier.mytargets.shared.utils.EndRenderer
 
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.Shot;
-import de.dreier.mytargets.shared.utils.EndRenderer;
+class EndView : View {
 
-public class EndView extends View {
+    private var shotCount: Int = 0
+    private var density: Float = 0.toFloat()
+    @State private var endRenderer = EndRenderer()
+    private val rect = RectF()
 
-    private int shotCount;
-    private float density;
-    @State
-    EndRenderer endRenderer = new EndRenderer();
-    private final RectF rect = new RectF();
+    constructor(context: Context) : super(context)
 
-    public EndView(Context context) {
-        super(context);
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle)
+
+    fun setShots(target: Target, shots: List<Shot>) {
+        shotCount = shots.size
+        density = resources.displayMetrics.density
+        endRenderer.init(this, density, target)
+        endRenderer.setShots(shots)
+        invalidate()
     }
 
-    public EndView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        endRenderer.draw(canvas)
     }
 
-    public EndView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        rect.left = 0f
+        rect.right = width.toFloat()
+        rect.top = 0f
+        rect.bottom = height.toFloat()
+        endRenderer.setRect(rect)
     }
 
-    public void setShots(Target target, @NonNull List<Shot> shots) {
-        shotCount = shots.size();
-        density = getResources().getDisplayMetrics().density;
-        endRenderer.init(this, density, target);
-        endRenderer.setShots(shots);
-        invalidate();
-    }
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val desiredWidth = (60f * shotCount.toFloat() * density).toInt()
+        val desiredHeight = (50 * density).toInt()
 
-    @Override
-    protected void onDraw(@NonNull Canvas canvas) {
-        super.onDraw(canvas);
-        endRenderer.draw(canvas);
-    }
+        val widthMode = View.MeasureSpec.getMode(widthMeasureSpec)
+        val widthSize = View.MeasureSpec.getSize(widthMeasureSpec)
+        val heightMode = View.MeasureSpec.getMode(heightMeasureSpec)
+        val heightSize = View.MeasureSpec.getSize(heightMeasureSpec)
 
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        rect.left = 0;
-        rect.right = getWidth();
-        rect.top = 0;
-        rect.bottom = getHeight();
-        endRenderer.setRect(rect);
-    }
+        val width: Int
+        val height: Int
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int desiredWidth = (int) (60 * shotCount * density);
-        int desiredHeight = (int) (50 * density);
-
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-
-        int width;
-        int height;
-
-        if (widthMode == MeasureSpec.EXACTLY) {
-            width = widthSize;
-        } else if (widthMode == MeasureSpec.AT_MOST) {
-            width = Math.min(desiredWidth, widthSize);
-        } else {
-            width = desiredWidth;
+        width = when (widthMode) {
+            View.MeasureSpec.EXACTLY -> widthSize
+            View.MeasureSpec.AT_MOST -> Math.min(desiredWidth, widthSize)
+            else -> desiredWidth
         }
 
-        if (heightMode == MeasureSpec.EXACTLY) {
-            height = heightSize;
-        } else if (heightMode == MeasureSpec.AT_MOST) {
-            height = Math.min(desiredHeight, heightSize);
-        } else {
-            height = desiredHeight;
+        height = when (heightMode) {
+            View.MeasureSpec.EXACTLY -> heightSize
+            View.MeasureSpec.AT_MOST -> Math.min(desiredHeight, heightSize)
+            else -> desiredHeight
         }
 
-        setMeasuredDimension(width, height);
+        setMeasuredDimension(width, height)
     }
 
-    @Override
-    public Parcelable onSaveInstanceState() {
-        return StateSaver.saveInstanceState(this, super.onSaveInstanceState());
+    public override fun onSaveInstanceState(): Parcelable? {
+        return StateSaver.saveInstanceState(this, super.onSaveInstanceState())
     }
 
-    @Override
-    public void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(StateSaver.restoreInstanceState(this, state));
+    public override fun onRestoreInstanceState(state: Parcelable) {
+        super.onRestoreInstanceState(StateSaver.restoreInstanceState(this, state))
     }
 
-    public void setAmbientMode(boolean ambient) {
-        endRenderer.setAmbientMode(ambient);
-        invalidate();
+    fun setAmbientMode(ambient: Boolean) {
+        endRenderer.setAmbientMode(ambient)
+        invalidate()
     }
 }

@@ -22,7 +22,7 @@ import de.dreier.mytargets.shared.models.EWeather
 class EWeatherConverter : TypeConverter<Int, EWeather>() {
 
     override fun getDBValue(model: EWeather?): Int? {
-        return model?.value
+        return model?.ordinal //TODO migrate to save name instead of ordinal
     }
 
     override fun getModelValue(data: Int?): EWeather? {

@@ -13,16 +13,14 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.analysis.aggregation;
+package de.dreier.mytargets.shared.analysis.aggregation
 
-import android.support.annotation.ColorInt;
+import android.support.annotation.ColorInt
 
-import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper;
+import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper
 
-public interface IAggregationResultRenderer {
-    void onPrepareDraw();
-
-    void onDraw(CanvasWrapper canvas);
-
-    void setColor(@ColorInt int color);
+interface IAggregationResultRenderer {
+    fun onPrepareDraw()
+    fun onDraw(canvas: CanvasWrapper)
+    fun setColor(@ColorInt color: Int)
 }

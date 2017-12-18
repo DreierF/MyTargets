@@ -76,7 +76,6 @@ import de.dreier.mytargets.utils.transitions.TransitionAdapter;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static de.dreier.mytargets.shared.wearable.WearableClientBase.BROADCAST_TIMER_SETTINGS_FROM_REMOTE;
 import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE;
 import static de.dreier.mytargets.utils.Utils.getCurrentLocale;
 
@@ -162,7 +161,7 @@ public class InputActivity extends ChildActivityBase
         LocalBroadcastManager.getInstance(this).registerReceiver(updateReceiver,
                 new IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE));
         LocalBroadcastManager.getInstance(this).registerReceiver(timerReceiver,
-                new IntentFilter(BROADCAST_TIMER_SETTINGS_FROM_REMOTE));
+                new IntentFilter(Companion.getBROADCAST_TIMER_SETTINGS_FROM_REMOTE()));
     }
 
     @Override
@@ -320,7 +319,7 @@ public class InputActivity extends ChildActivityBase
             binding.targetViewStub.getViewStub().inflate();
         }
         targetView = (TargetView) binding.targetViewStub.getBinding().getRoot();
-        targetView.setTarget(data.getCurrentRound().getTarget());
+        targetView.initWithTarget(data.getCurrentRound().getTarget());
         targetView.setArrow(data.getArrowDiameter(), data.getTraining().getArrowNumbering(), data
                 .getMaxArrowNumber());
         targetView.setOnTargetSetListener(InputActivity.this);
@@ -391,7 +390,7 @@ public class InputActivity extends ChildActivityBase
     }
 
     private void updateEnd() {
-        targetView.setEnd(data.getCurrentEnd());
+        targetView.replaceWithEnd(data.getCurrentEnd());
         final int totalEnds = data.getCurrentRound().getMaxEndCount() == null
                 ? data.getEnds().size()
                 : data.getCurrentRound().getMaxEndCount();

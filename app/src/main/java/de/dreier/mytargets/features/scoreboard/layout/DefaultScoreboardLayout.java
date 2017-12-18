@@ -202,7 +202,7 @@ public class DefaultScoreboardLayout {
         int hits = 0;
         int total = 0;
         for (Map.Entry<SelectableZone, Integer> score : scoreDistribution) {
-            if (!score.getKey().text.equals(ScoringStyle.Companion.getMISS_SYMBOL())) {
+            if (!score.getKey().getText().equals(ScoringStyle.Companion.getMISS_SYMBOL())) {
                 hits += score.getValue();
             }
             total += score.getValue();
@@ -231,7 +231,7 @@ public class DefaultScoreboardLayout {
         int sum = 0;
         int count = 0;
         for (Map.Entry<SelectableZone, Integer> entry : scoreDistribution) {
-            sum += entry.getValue() * entry.getKey().points;
+            sum += entry.getValue() * entry.getKey().getPoints();
             count += entry.getValue();
         }
         if (count == 0) {

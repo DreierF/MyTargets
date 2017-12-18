@@ -22,7 +22,7 @@ import de.dreier.mytargets.shared.models.EBowType
 class EBowTypeConverter : TypeConverter<Int, EBowType>() {
 
     override fun getDBValue(model: EBowType?): Int? {
-        return model?.id
+        return model?.ordinal
     }
 
     override fun getModelValue(data: Int?): EBowType? {

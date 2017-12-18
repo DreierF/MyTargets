@@ -13,183 +13,158 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.base.fragment;
+package de.dreier.mytargets.shared.base.fragment
 
-import android.app.Fragment;
-import android.content.Context;
-import android.media.MediaPlayer;
-import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Vibrator;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.View;
-import android.view.WindowManager;
+import android.app.Fragment
+import android.content.Context
+import android.media.MediaPlayer
+import android.os.Bundle
+import android.os.CountDownTimer
+import android.os.Vibrator
+import android.view.View
+import android.view.WindowManager
+import de.dreier.mytargets.shared.R
+import de.dreier.mytargets.shared.base.fragment.ETimerState.*
+import de.dreier.mytargets.shared.models.TimerSettings
 
-import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.models.TimerSettings;
+abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
 
-import static de.dreier.mytargets.shared.base.fragment.ETimerState.COUNTDOWN;
-import static de.dreier.mytargets.shared.base.fragment.ETimerState.FINISHED;
-import static de.dreier.mytargets.shared.base.fragment.ETimerState.PREPARATION;
-import static de.dreier.mytargets.shared.base.fragment.ETimerState.SHOOTING;
-import static de.dreier.mytargets.shared.base.fragment.ETimerState.WAIT_FOR_START;
+    private var currentStatus = WAIT_FOR_START
+    private var countdown: CountDownTimer? = null
+    private var horn: MediaPlayer? = null
+    var settings: TimerSettings? = null
+    private var exitAfterStop = true
 
-public abstract class TimerFragmentBase extends Fragment implements View.OnClickListener {
-    public static final String ARG_TIMER_SETTINGS = "timer_settings";
-    public static final String ARG_EXIT_AFTER_STOP = "exit_after_stop";
-
-    private ETimerState currentStatus = WAIT_FOR_START;
-    private CountDownTimer countdown;
-    private MediaPlayer horn;
-    public TimerSettings settings;
-    private boolean exitAfterStop = true;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        horn = MediaPlayer.create(context, R.raw.horn);
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        horn = MediaPlayer.create(context, R.raw.horn)
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        settings = getArguments().getParcelable(ARG_TIMER_SETTINGS);
-        exitAfterStop = getArguments().getBoolean(ARG_EXIT_AFTER_STOP);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        settings = arguments.getParcelable(ARG_TIMER_SETTINGS)
+        exitAfterStop = arguments.getBoolean(ARG_EXIT_AFTER_STOP)
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        activity.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        view.setOnClickListener(this);
-        changeStatus(currentStatus);
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view.setOnClickListener(this)
+        changeStatus(currentStatus)
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        if(horn.isPlaying()) {
-            horn.stop();
+    override fun onDetach() {
+        super.onDetach()
+        if (horn!!.isPlaying) {
+            horn!!.stop()
         }
-        horn.release();
-        if (countdown != null) {
-            countdown.cancel();
-        }
+        horn!!.release()
+        countdown?.cancel()
     }
 
-    @Override
-    public void onClick(View v) {
-        changeStatus(currentStatus.getNext());
+    override fun onClick(v: View) {
+        changeStatus(currentStatus.next)
     }
 
-    private void changeStatus(ETimerState status) {
-        if (countdown != null) {
-            countdown.cancel();
-        }
-        if (status == ETimerState.EXIT) {
+    private fun changeStatus(status: ETimerState) {
+        var status = status
+        countdown?.cancel()
+        if (status === ETimerState.EXIT) {
             if (exitAfterStop) {
-                getActivity().finish();
-                return;
+                activity.finish()
+                return
             } else {
-                status = WAIT_FOR_START;
+                status = WAIT_FOR_START
             }
         }
-        ETimerState finalStatus = status;
-        currentStatus = status;
-        applyStatus(status);
-        playSignal(status.signalCount);
+        val finalStatus = status
+        currentStatus = status
+        applyStatus(status)
+        playSignal(status.signalCount)
 
-        if (status == FINISHED) {
-            applyTime(getString(R.string.stop));
-            countdown = new CountDownTimer(6000, 100) {
-                public void onTick(long millisUntilFinished) {
-                }
+        if (status === FINISHED) {
+            applyTime(getString(R.string.stop))
+            countdown = object : CountDownTimer(6000, 100) {
+                override fun onTick(millisUntilFinished: Long) {}
 
-                public void onFinish() {
-                    changeStatus(finalStatus.getNext());
+                override fun onFinish() {
+                    changeStatus(finalStatus.next)
                 }
-            }.start();
+            }.start()
         } else {
-            if (status != PREPARATION && status != SHOOTING && status != COUNTDOWN) {
-                applyTime("");
+            if (status !== PREPARATION && status !== SHOOTING && status !== COUNTDOWN) {
+                applyTime("")
             } else {
-                final int offset = getOffset(status);
-                countdown = new CountDownTimer(getDuration(status) * 1000, 100) {
-                    public void onTick(long millisUntilFinished) {
-                        final String text = String
-                                .valueOf((millisUntilFinished / 1000) + offset);
-                        applyTime(text);
+                val offset = getOffset(status)
+                countdown = object : CountDownTimer((getDuration(status) * 1000).toLong(), 100) {
+                    override fun onTick(millisUntilFinished: Long) {
+                        val text = (millisUntilFinished / 1000 + offset).toString()
+                        applyTime(text)
                     }
 
-                    public void onFinish() {
-                        changeStatus(finalStatus.getNext());
+                    override fun onFinish() {
+                        changeStatus(finalStatus.next)
                     }
-                }.start();
+                }.start()
             }
         }
     }
 
-    protected int getDuration(@NonNull ETimerState status) {
-        switch (status) {
-            case PREPARATION:
-                return settings.getWaitTime();
-            case SHOOTING:
-                return settings.getShootTime() - settings.getWarnTime();
-            case COUNTDOWN:
-                return settings.getWarnTime();
-            default:
-                throw new IllegalArgumentException();
+    protected fun getDuration(status: ETimerState): Int {
+        when (status) {
+            PREPARATION -> return settings!!.waitTime
+            SHOOTING -> return settings!!.shootTime - settings!!.warnTime
+            COUNTDOWN -> return settings!!.warnTime
+            else -> throw IllegalArgumentException()
         }
     }
 
-    protected int getOffset(ETimerState status) {
-        if (status == SHOOTING) {
-            return settings.getWarnTime();
+    protected fun getOffset(status: ETimerState): Int {
+        return if (status === SHOOTING) {
+            settings!!.warnTime
         } else {
-            return 0;
+            0
         }
     }
 
-    private void playSignal(final int n) {
+    private fun playSignal(n: Int) {
         if (n > 0) {
-            if (settings.getSound()) {
-                playHorn(n);
+            if (settings!!.sound) {
+                playHorn(n)
             }
-            if (settings.getVibrate()) {
-                long[] pattern = new long[1 + n * 2];
-                Vibrator v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
-                pattern[0] = 150;
-                for (int i = 0; i < n; i++) {
-                    pattern[i * 2 + 1] = 400;
-                    pattern[i * 2 + 2] = 750;
+            if (settings!!.vibrate) {
+                val pattern = LongArray(1 + n * 2)
+                val v = activity.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                pattern[0] = 150
+                for (i in 0 until n) {
+                    pattern[i * 2 + 1] = 400
+                    pattern[i * 2 + 2] = 750
                 }
-                v.vibrate(pattern, -1);
+                v.vibrate(pattern, -1)
             }
         }
     }
 
-    private void playHorn(final int n) {
-        horn.start();
-        horn.setOnCompletionListener(mp -> {
+    private fun playHorn(n: Int) {
+        horn!!.start()
+        horn!!.setOnCompletionListener { mp ->
             if (n > 1) {
-                playHorn(n - 1);
+                playHorn(n - 1)
             }
-        });
+        }
     }
 
-    public abstract void applyTime(String text);
+    abstract fun applyTime(text: String)
 
-    protected abstract void applyStatus(ETimerState status);
+    protected abstract fun applyStatus(status: ETimerState)
+
+    companion object {
+        val ARG_TIMER_SETTINGS = "timer_settings"
+        val ARG_EXIT_AFTER_STOP = "exit_after_stop"
+    }
 
 }

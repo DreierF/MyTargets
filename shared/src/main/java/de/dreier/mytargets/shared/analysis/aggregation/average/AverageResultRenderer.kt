@@ -13,92 +13,80 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.analysis.aggregation.average;
+package de.dreier.mytargets.shared.analysis.aggregation.average
 
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.PointF;
-import android.graphics.RectF;
-import android.support.annotation.NonNull;
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.RectF
+import de.dreier.mytargets.shared.analysis.aggregation.IAggregationResultRenderer
+import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper
 
-import de.dreier.mytargets.shared.streamwrapper.Stream;
+class AverageResultRenderer(private val average: Average) : IAggregationResultRenderer {
+    private val stdDevPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val stdDevPath = Path()
+    private val symbolPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val symbolPath = Path()
 
-import de.dreier.mytargets.shared.analysis.aggregation.IAggregationResultRenderer;
-import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper;
-
-public class AverageResultRenderer implements IAggregationResultRenderer {
-
-    private final Average average;
-    private final Paint stdDevPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Path stdDevPath = new Path();
-    private final Paint symbolPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Path symbolPath = new Path();
-
-    public AverageResultRenderer(Average average) {
-        this.average = average;
-        symbolPaint.setARGB(255, 37, 155, 36);
-        symbolPaint.setStyle(Paint.Style.STROKE);
-        symbolPaint.setStrokeWidth(0.005f);
-        stdDevPaint.setARGB(150, 100, 0, 0);
-        stdDevPaint.setStyle(Paint.Style.FILL);
+    init {
+        symbolPaint.setARGB(255, 37, 155, 36)
+        symbolPaint.style = Paint.Style.STROKE
+        symbolPaint.strokeWidth = 0.005f
+        stdDevPaint.setARGB(150, 100, 0, 0)
+        stdDevPaint.style = Paint.Style.FILL
     }
 
-    @Override
-    public void setColor(int color) {
-        stdDevPaint.setColor(color);
+    override fun setColor(color: Int) {
+        stdDevPaint.color = color
     }
 
-    @Override
-    public void onPrepareDraw() {
-        PointF avg = average.getAverage();
-        RectF nUniStdDev = average.getNonUniformStdDev();
-        stdDevPath.rewind();
-        stdDevPath.arcTo(new RectF(
-                average.getWeightedAverage().x - nUniStdDev.right,
-                average.getWeightedAverage().y - nUniStdDev.bottom,
-                average.getWeightedAverage().x + nUniStdDev.right,
-                average.getWeightedAverage().y + nUniStdDev.bottom), 270.0f, 90.0f, true);
-        stdDevPath.arcTo(new RectF(
-                average.getWeightedAverage().x - nUniStdDev.right,
-                average.getWeightedAverage().y - nUniStdDev.top,
-                average.getWeightedAverage().x + nUniStdDev.right,
-                average.getWeightedAverage().y + nUniStdDev.top), 0.0f, 90.0f);
-        stdDevPath.arcTo(new RectF(
-                average.getWeightedAverage().x - nUniStdDev.left,
-                average.getWeightedAverage().y - nUniStdDev.top,
-                average.getWeightedAverage().x + nUniStdDev.left,
-                average.getWeightedAverage().y + nUniStdDev.top), 90.0f, 90.0f);
-        stdDevPath.arcTo(new RectF(
-                average.getWeightedAverage().x - nUniStdDev.left,
-                average.getWeightedAverage().y - nUniStdDev.bottom,
-                average.getWeightedAverage().x + nUniStdDev.left,
-                average.getWeightedAverage().y + nUniStdDev.bottom), 180.0f, 90.0f);
+    override fun onPrepareDraw() {
+        val avg = average.average
+        val nUniStdDev = average.nonUniformStdDev
+        stdDevPath.rewind()
+        stdDevPath.arcTo(RectF(
+                average.weightedAverage.x - nUniStdDev.right,
+                average.weightedAverage.y - nUniStdDev.bottom,
+                average.weightedAverage.x + nUniStdDev.right,
+                average.weightedAverage.y + nUniStdDev.bottom), 270.0f, 90.0f, true)
+        stdDevPath.arcTo(RectF(
+                average.weightedAverage.x - nUniStdDev.right,
+                average.weightedAverage.y - nUniStdDev.top,
+                average.weightedAverage.x + nUniStdDev.right,
+                average.weightedAverage.y + nUniStdDev.top), 0.0f, 90.0f)
+        stdDevPath.arcTo(RectF(
+                average.weightedAverage.x - nUniStdDev.left,
+                average.weightedAverage.y - nUniStdDev.top,
+                average.weightedAverage.x + nUniStdDev.left,
+                average.weightedAverage.y + nUniStdDev.top), 90.0f, 90.0f)
+        stdDevPath.arcTo(RectF(
+                average.weightedAverage.x - nUniStdDev.left,
+                average.weightedAverage.y - nUniStdDev.bottom,
+                average.weightedAverage.x + nUniStdDev.left,
+                average.weightedAverage.y + nUniStdDev.bottom), 180.0f, 90.0f)
 
-        float smallestNonUniStdDev = Stream.of(nUniStdDev.top, nUniStdDev.bottom,
-                nUniStdDev.left, nUniStdDev.right).min(Float::compare);
+        val smallestNonUniStdDev = listOf(nUniStdDev.top, nUniStdDev.bottom, nUniStdDev.left, nUniStdDev.right).min()!!
 
-        float tmp = smallestNonUniStdDev / 4.0f;
-        symbolPath.rewind();
-        symbolPath.addCircle(avg.x, avg.y, smallestNonUniStdDev / 2.0f, Path.Direction.CW);
-        symbolPath.moveTo(avg.x - nUniStdDev.left, avg.y - tmp);
-        symbolPath.lineTo(avg.x - nUniStdDev.left, avg.y + tmp);
-        symbolPath.moveTo(avg.x - nUniStdDev.left, avg.y);
-        symbolPath.lineTo(avg.x + nUniStdDev.right, avg.y);
-        symbolPath.moveTo(avg.x + nUniStdDev.right, avg.y - tmp);
-        symbolPath.lineTo(avg.x + nUniStdDev.right, avg.y + tmp);
-        symbolPath.moveTo(avg.x - tmp, avg.y + nUniStdDev.top);
-        symbolPath.lineTo(avg.x + tmp, avg.y + nUniStdDev.top);
-        symbolPath.moveTo(avg.x, avg.y + nUniStdDev.top);
-        symbolPath.lineTo(avg.x, avg.y - nUniStdDev.bottom);
-        symbolPath.moveTo(avg.x - tmp, avg.y - nUniStdDev.bottom);
-        symbolPath.lineTo(avg.x + tmp, avg.y - nUniStdDev.bottom);
+        val tmp = smallestNonUniStdDev / 4.0f
+        symbolPath.rewind()
+        symbolPath.addCircle(avg.x, avg.y, smallestNonUniStdDev / 2.0f, Path.Direction.CW)
+        symbolPath.moveTo(avg.x - nUniStdDev.left, avg.y - tmp)
+        symbolPath.lineTo(avg.x - nUniStdDev.left, avg.y + tmp)
+        symbolPath.moveTo(avg.x - nUniStdDev.left, avg.y)
+        symbolPath.lineTo(avg.x + nUniStdDev.right, avg.y)
+        symbolPath.moveTo(avg.x + nUniStdDev.right, avg.y - tmp)
+        symbolPath.lineTo(avg.x + nUniStdDev.right, avg.y + tmp)
+        symbolPath.moveTo(avg.x - tmp, avg.y + nUniStdDev.top)
+        symbolPath.lineTo(avg.x + tmp, avg.y + nUniStdDev.top)
+        symbolPath.moveTo(avg.x, avg.y + nUniStdDev.top)
+        symbolPath.lineTo(avg.x, avg.y - nUniStdDev.bottom)
+        symbolPath.moveTo(avg.x - tmp, avg.y - nUniStdDev.bottom)
+        symbolPath.lineTo(avg.x + tmp, avg.y - nUniStdDev.bottom)
     }
 
-    @Override
-    public void onDraw(@NonNull CanvasWrapper canvas) {
-        if (average.getDataPointCount() >= 3) {
-            canvas.drawPath(stdDevPath, stdDevPaint);
-            canvas.drawPath(symbolPath, symbolPaint);
+    override fun onDraw(canvas: CanvasWrapper) {
+        if (average.dataPointCount >= 3) {
+            canvas.drawPath(stdDevPath, stdDevPaint)
+            canvas.drawPath(symbolPath, symbolPaint)
         }
     }
 }

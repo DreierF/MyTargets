@@ -46,16 +46,16 @@ public class WearWearableListener extends WearableListenerService {
         super.onMessageReceived(messageEvent);
         byte[] data = messageEvent.getData();
         switch (messageEvent.getPath()) {
-            case TRAINING_UPDATE:
+            case Companion.getTRAINING_UPDATE():
                 TrainingInfo info = ParcelableUtilKt.unmarshall(data, (Parcelable.Creator<TrainingInfo>) TrainingInfo.CREATOR);
                 showNotification(info);
                 ApplicationInstance.wearableClient.sendTrainingUpdate(info);
                 break;
-            case TRAINING_TEMPLATE:
+            case Companion.getTRAINING_TEMPLATE():
                 AugmentedTraining training = ParcelableUtilKt.unmarshall(data, (Parcelable.Creator<AugmentedTraining>) AugmentedTraining.CREATOR);
                 ApplicationInstance.wearableClient.sendTrainingTemplate(training);
                 break;
-            case TIMER_SETTINGS:
+            case Companion.getTIMER_SETTINGS():
                 TimerSettings settings = ParcelableUtilKt.unmarshall(data, (Parcelable.Creator<TimerSettings>) TimerSettings.CREATOR);
                 WearSettingsManager.setTimerSettings(settings);
                 ApplicationInstance.wearableClient.sendTimerSettingsFromRemote();

@@ -13,52 +13,40 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import de.dreier.mytargets.shared.targets.zone.ZoneBase
 
-import de.dreier.mytargets.shared.targets.zone.ZoneBase;
+class SelectableZone(
+        val index: Int,
+        val zone: ZoneBase,
+        val text: String,
+        val points: Int
+) : Comparable<SelectableZone> {
 
-public class SelectableZone implements Comparable<SelectableZone> {
-    public final int index;
-    public final ZoneBase zone;
-    public final int points;
-    public final String text;
-
-    public SelectableZone(int index, ZoneBase zone, String text, int points) {
-        this.index = index;
-        this.zone = zone;
-        this.points = points;
-        this.text = text;
-    }
-
-    @Override
-    public boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
+    override fun equals(o: Any?): Boolean {
+        if (this === o) {
+            return true
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
+        if (o == null || javaClass != o.javaClass) {
+            return false
         }
 
-        SelectableZone that = (SelectableZone) o;
-        return points == that.points && text.equals(that.text);
+        val that = o as SelectableZone?
+        return points == that!!.points && text == that.text
     }
 
-    @Override
-    public int hashCode() {
-        return 31 * points + text.hashCode();
+    override fun hashCode(): Int {
+        return 31 * points + text.hashCode()
     }
 
-    @Override
-    public int compareTo(@NonNull SelectableZone another) {
-        if (another.index == index) {
-            return 0;
-        } else if (another.index >= 0 && index >= 0) {
-            return index - another.index;
+    override fun compareTo(other: SelectableZone): Int {
+        return if (other.index == index) {
+            0
+        } else if (other.index >= 0 && index >= 0) {
+            index - other.index
         } else {
-            return another.index - index;
+            other.index - index
         }
     }
 }

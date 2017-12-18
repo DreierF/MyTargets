@@ -13,76 +13,53 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.analysis.aggregation.cluster;
+package de.dreier.mytargets.shared.analysis.aggregation.cluster
 
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.PointF;
-import android.graphics.RectF;
-import android.support.annotation.NonNull;
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.RectF
+import de.dreier.mytargets.shared.analysis.aggregation.IAggregationResultRenderer
+import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper
 
-import java.util.List;
+class ClusterResultRenderer(private val clusters: List<Cluster>) : IAggregationResultRenderer {
 
-import de.dreier.mytargets.shared.analysis.aggregation.IAggregationResultRenderer;
-import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper;
-
-public class ClusterResultRenderer implements IAggregationResultRenderer {
-
-    @NonNull
-    private final Path[] clusterPaths;
-    @NonNull
-    private final Paint[] innerPaints;
-    @NonNull
-    private final List<Cluster> clusters;
-    @NonNull
-    private final Path[] outerClusterPaths;
-
-    public ClusterResultRenderer(@NonNull List<Cluster> clusters) {
-        this.clusters = clusters;
-        clusterPaths = new Path[clusters.size()];
-        outerClusterPaths = new Path[clusters.size()];
-        innerPaints = new Paint[clusters.size()];
-
-        for (int i = 0; i < clusters.size(); ++i) {
-            clusterPaths[i] = new Path();
-            outerClusterPaths[i] = new Path();
-            innerPaints[i] = new Paint(Paint.ANTI_ALIAS_FLAG);
-            innerPaints[i].setStrokeWidth(0.1F);
-            innerPaints[i].setARGB(255, 255, 0, 0);
-            innerPaints[i].setStyle(Paint.Style.FILL);
-        }
+    private val clusterPaths = Array(clusters.size) { Path() }
+    private val outerClusterPaths = Array(clusters.size) { Path() }
+    private var innerPaints = Array(clusters.size) {
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        paint.strokeWidth = 0.1f
+        paint.setARGB(255, 255, 0, 0)
+        paint.style = Paint.Style.FILL
+        paint
     }
 
-    @Override
-    public void onPrepareDraw() {
-        for (int index = 0; index < clusters.size(); index++) {
-            clusterPaths[index].rewind();
-            Cluster cluster = clusters.get(index);
-            PointF center = cluster.getCenterOfGroup();
-            float v = (float) cluster.stdDev;
+    override fun onPrepareDraw() {
+        for (index in clusters.indices) {
+            clusterPaths[index].rewind()
+            val cluster = clusters[index]
+            val center = cluster.getCenterOfGroup()
+            var v = cluster.stdDev.toFloat()
             clusterPaths[index]
-                    .addOval(new RectF(center.x - v, center.y - v, center.x + v, center.y + v),
-                            Path.Direction.CW);
-            v *= 2;
+                    .addOval(RectF(center.x - v, center.y - v, center.x + v, center.y + v),
+                            Path.Direction.CW)
+            v *= 2f
             outerClusterPaths[index]
-                    .addOval(new RectF(center.x - v, center.y - v, center.x + v, center.y + v),
-                            Path.Direction.CW);
+                    .addOval(RectF(center.x - v, center.y - v, center.x + v, center.y + v),
+                            Path.Direction.CW)
         }
     }
 
-    @Override
-    public void onDraw(@NonNull CanvasWrapper canvas) {
-        for (int index = 0; index < clusters.size(); index++) {
-            canvas.drawPath(outerClusterPaths[index], innerPaints[index]);
-            canvas.drawPath(clusterPaths[index], innerPaints[index]);
+    override fun onDraw(canvas: CanvasWrapper) {
+        for (index in clusters.indices) {
+            canvas.drawPath(outerClusterPaths[index], innerPaints[index])
+            canvas.drawPath(clusterPaths[index], innerPaints[index])
         }
     }
 
-    @Override
-    public void setColor(int color) {
-        for (Paint innerPaint : innerPaints) {
-            innerPaint.setARGB(120, Color.red(color), Color.green(color), Color.blue(color));
+    override fun setColor(color: Int) {
+        for (innerPaint in innerPaints) {
+            innerPaint.setARGB(120, Color.red(color), Color.green(color), Color.blue(color))
         }
     }
 }

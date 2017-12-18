@@ -47,12 +47,13 @@ public class TargetViewActions {
                 Tap.SINGLE,
                 view -> {
                     TargetView targetView = (TargetView) view;
-                    TargetViewBase.VirtualView vv = Stream.of(targetView.virtualViews)
-                            .filter(virtualView -> virtualView.description.equals(description))
+                    TargetViewBase.VirtualView vv = Stream.of(targetView.getVirtualViews())
+                            .filter(virtualView -> virtualView.getDescription().equals(description))
                             .findFirstOrNull();
                     assertNotNull("Did not find virtual view with description '" + description + "'", vv);
                     return LowLevelActions
-                            .getAbsoluteCoordinates(view, new float[]{vv.rect.exactCenterX(), vv.rect.exactCenterY()});
+                            .getAbsoluteCoordinates(view, new float[]{vv.getRect().exactCenterX(), vv
+                                    .getRect().exactCenterY()});
                 },
                 Press.PINPOINT, 0, 0);
     }

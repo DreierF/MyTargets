@@ -47,8 +47,8 @@ public class TimerFragment extends TimerFragmentBase {
     @NonNull
     public static IntentWrapper getIntent(boolean exitAfterStop) {
         return new IntentWrapper(TimerActivity.class)
-                .with(TimerFragmentBase.ARG_EXIT_AFTER_STOP, exitAfterStop)
-                .with(TimerFragmentBase.ARG_TIMER_SETTINGS, SettingsManager.INSTANCE.getTimerSettings());
+                .with(TimerFragmentBase.Companion.getARG_EXIT_AFTER_STOP(), exitAfterStop)
+                .with(TimerFragmentBase.Companion.getARG_TIMER_SETTINGS(), SettingsManager.INSTANCE.getTimerSettings());
     }
 
     @Override
@@ -66,17 +66,17 @@ public class TimerFragment extends TimerFragmentBase {
     }
 
     @Override
-    public void applyTime(String text) {
+    public void applyTime(@NonNull String text) {
         binding.timerTime.setText(text);
     }
 
     @Override
     protected void applyStatus(@NonNull ETimerState status) {
-        binding.getRoot().setBackgroundResource(status.color);
+        binding.getRoot().setBackgroundResource(status.getColor());
         if (Utils.isLollipop() && getActivity() != null) {
             Window window = getActivity().getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(status.color));
+            window.setStatusBarColor(getResources().getColor(status.getColor()));
         }
         binding.timerStatus.setText(getStatusText(status));
 

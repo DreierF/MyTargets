@@ -51,16 +51,16 @@ public class MobileWearableListener extends WearableListenerService {
     public void onMessageReceived(@NonNull MessageEvent messageEvent) {
         super.onMessageReceived(messageEvent);
         switch (messageEvent.getPath()) {
-            case WearableClientBase.TRAINING_CREATE:
+            case WearableClientBase.Companion.getTRAINING_CREATE():
                 createTraining(messageEvent);
                 break;
-            case WearableClientBase.END_UPDATE:
+            case WearableClientBase.Companion.getEND_UPDATE():
                 endUpdated(messageEvent);
                 break;
-            case WearableClientBase.TRAINING_TEMPLATE:
+            case WearableClientBase.Companion.getTRAINING_TEMPLATE():
                 trainingTemplate();
                 break;
-            case WearableClientBase.TIMER_SETTINGS:
+            case WearableClientBase.Companion.getTIMER_SETTINGS():
                 timerSettings(messageEvent);
                 break;
             default:
