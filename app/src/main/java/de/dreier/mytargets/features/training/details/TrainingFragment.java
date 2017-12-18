@@ -191,7 +191,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_scoreboard:
-                ScoreboardActivity.getIntent(trainingId)
+                ScoreboardActivity.Companion.getIntent(trainingId)
                         .withContext(this)
                         .start();
                 return true;

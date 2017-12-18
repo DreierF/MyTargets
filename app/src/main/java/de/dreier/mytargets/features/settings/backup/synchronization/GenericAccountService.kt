@@ -13,111 +13,91 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings.backup.synchronization;
+package de.dreier.mytargets.features.settings.backup.synchronization
 
-import android.accounts.AbstractAccountAuthenticator;
-import android.accounts.Account;
-import android.accounts.AccountAuthenticatorResponse;
-import android.accounts.NetworkErrorException;
-import android.app.Service;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.accounts.AbstractAccountAuthenticator
+import android.accounts.Account
+import android.accounts.AccountAuthenticatorResponse
+import android.accounts.NetworkErrorException
+import android.app.Service
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.os.IBinder
 
-import timber.log.Timber;
+import timber.log.Timber
 
-public class GenericAccountService extends Service {
+class GenericAccountService : Service() {
+    private var mAuthenticator: Authenticator? = null
 
-    public static final String ACCOUNT_NAME = "MyTargets";
-    private static final String ACCOUNT_TYPE = "mytargets.dreier.de";
-    private Authenticator mAuthenticator;
-
-    /**
-     * Obtain a handle to the {@link Account} used for sync in this application.
-     *
-     * @return Handle to application's account (not guaranteed to resolve unless createSyncAccount()
-     * has been called)
-     */
-    public static Account getAccount() {
-        return new Account(ACCOUNT_NAME, ACCOUNT_TYPE);
+    override fun onCreate() {
+        Timber.i("Service created")
+        mAuthenticator = Authenticator(this)
     }
 
-    @Override
-    public void onCreate() {
-        Timber.i("Service created");
-        mAuthenticator = new Authenticator(this);
+    override fun onDestroy() {
+        Timber.i("Service destroyed")
     }
 
-    @Override
-    public void onDestroy() {
-        Timber.i("Service destroyed");
+    override fun onBind(intent: Intent): IBinder? {
+        return mAuthenticator!!.iBinder
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mAuthenticator.getIBinder();
+    inner class Authenticator(context: Context) : AbstractAccountAuthenticator(context) {
+
+        override fun editProperties(accountAuthenticatorResponse: AccountAuthenticatorResponse,
+                                    s: String): Bundle {
+            throw UnsupportedOperationException()
+        }
+
+        @Throws(NetworkErrorException::class)
+        override fun addAccount(accountAuthenticatorResponse: AccountAuthenticatorResponse,
+                                s: String, s2: String, strings: Array<String>, bundle: Bundle): Bundle? {
+            return null
+        }
+
+        @Throws(NetworkErrorException::class)
+        override fun confirmCredentials(accountAuthenticatorResponse: AccountAuthenticatorResponse,
+                                        account: Account, bundle: Bundle): Bundle? {
+            return null
+        }
+
+        @Throws(NetworkErrorException::class)
+        override fun getAuthToken(accountAuthenticatorResponse: AccountAuthenticatorResponse,
+                                  account: Account, s: String, bundle: Bundle): Bundle {
+            throw UnsupportedOperationException()
+        }
+
+        override fun getAuthTokenLabel(s: String): String {
+            throw UnsupportedOperationException()
+        }
+
+        @Throws(NetworkErrorException::class)
+        override fun updateCredentials(accountAuthenticatorResponse: AccountAuthenticatorResponse,
+                                       account: Account, s: String, bundle: Bundle): Bundle {
+            throw UnsupportedOperationException()
+        }
+
+        @Throws(NetworkErrorException::class)
+        override fun hasFeatures(accountAuthenticatorResponse: AccountAuthenticatorResponse,
+                                 account: Account, strings: Array<String>): Bundle {
+            throw UnsupportedOperationException()
+        }
     }
 
-    public class Authenticator extends AbstractAccountAuthenticator {
-        public Authenticator(Context context) {
-            super(context);
-        }
+    companion object {
 
-        @NonNull
-        @Override
-        public Bundle editProperties(AccountAuthenticatorResponse accountAuthenticatorResponse,
-                                     String s) {
-            throw new UnsupportedOperationException();
-        }
+        private const val ACCOUNT_NAME = "MyTargets"
+        private const val ACCOUNT_TYPE = "mytargets.dreier.de"
 
-        @Nullable
-        @Override
-        public Bundle addAccount(AccountAuthenticatorResponse accountAuthenticatorResponse,
-                                 String s, String s2, String[] strings, Bundle bundle)
-                throws NetworkErrorException {
-            return null;
-        }
-
-        @Nullable
-        @Override
-        public Bundle confirmCredentials(AccountAuthenticatorResponse accountAuthenticatorResponse,
-                                         Account account, Bundle bundle)
-                throws NetworkErrorException {
-            return null;
-        }
-
-        @NonNull
-        @Override
-        public Bundle getAuthToken(AccountAuthenticatorResponse accountAuthenticatorResponse,
-                                   Account account, String s, Bundle bundle)
-                throws NetworkErrorException {
-            throw new UnsupportedOperationException();
-        }
-
-        @NonNull
-        @Override
-        public String getAuthTokenLabel(String s) {
-            throw new UnsupportedOperationException();
-        }
-
-        @NonNull
-        @Override
-        public Bundle updateCredentials(AccountAuthenticatorResponse accountAuthenticatorResponse,
-                                        Account account, String s, Bundle bundle)
-                throws NetworkErrorException {
-            throw new UnsupportedOperationException();
-        }
-
-        @NonNull
-        @Override
-        public Bundle hasFeatures(AccountAuthenticatorResponse accountAuthenticatorResponse,
-                                  Account account, String[] strings)
-                throws NetworkErrorException {
-            throw new UnsupportedOperationException();
-        }
+        /**
+         * Obtain a handle to the [Account] used for sync in this application.
+         *
+         * @return Handle to application's account (not guaranteed to resolve unless createSyncAccount()
+         * has been called)
+         */
+        val account: Account
+            get() = Account(ACCOUNT_NAME, ACCOUNT_TYPE)
     }
 }
 

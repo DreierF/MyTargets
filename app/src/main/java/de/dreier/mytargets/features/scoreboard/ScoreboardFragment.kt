@@ -102,8 +102,8 @@ class ScoreboardFragment : FragmentBase() {
         val witnessSignature = training!!.orCreateWitnessSignature
 
         val scoreboard = ScoreboardUtils
-                .getScoreboardView(context, Utils.getCurrentLocale(context!!),
-                        training, roundId, SettingsManager.scoreboardConfiguration)
+                .getScoreboardView(context!!, Utils.getCurrentLocale(context!!),
+                        training!!, roundId, SettingsManager.scoreboardConfiguration)
         return LoaderUICallback {
             binding!!.progressBar.visibility = GONE
             scoreboard.layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
@@ -187,8 +187,8 @@ class ScoreboardFragment : FragmentBase() {
                     val scoreboardFile = File(context!!
                             .cacheDir, getDefaultFileName(fileType))
                     val content = ScoreboardUtils
-                            .getScoreboardView(context, Utils
-                                    .getCurrentLocale(context!!), training, roundId, SettingsManager
+                            .getScoreboardView(context!!, Utils
+                                    .getCurrentLocale(context!!), training!!, roundId, SettingsManager
                                     .scoreboardConfiguration)
                     if (fileType === EFileType.PDF && Utils.isKitKat()) {
                         ScoreboardUtils.generatePdf(content, scoreboardFile)
@@ -226,8 +226,8 @@ class ScoreboardFragment : FragmentBase() {
     private fun print() {
         val fileName = getDefaultFileName(EFileType.PDF)
 
-        val content = ScoreboardUtils.getScoreboardView(context, Utils
-                .getCurrentLocale(context!!), training, roundId, SettingsManager
+        val content = ScoreboardUtils.getScoreboardView(context!!, Utils
+                .getCurrentLocale(context!!), training!!, roundId, SettingsManager
                 .scoreboardConfiguration)
 
         val jobName = getString(R.string.scoreboard) + " Document"

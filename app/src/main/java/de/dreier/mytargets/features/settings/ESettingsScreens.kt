@@ -13,54 +13,47 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings;
+package de.dreier.mytargets.features.settings
 
-import android.support.annotation.NonNull;
-
-import de.dreier.mytargets.features.settings.backup.BackupSettingsFragment;
+import de.dreier.mytargets.features.settings.backup.BackupSettingsFragment
 
 /**
  * All available settings screens. The identifiers implicitly match the keys used in the xml
  * definition.
  */
-public enum ESettingsScreens {
-    MAIN(MainSettingsFragment.class),
-    PROFILE(ProfileSettingsFragment.class),
-    OVERVIEW(OverviewSettingsFragment.class),
-    INPUT(InputSettingsFragment.class),
-    TIMER(TimerSettingsFragment.class),
-    STATISTICS(StatisticsSettingsFragment.class),
-    SCOREBOARD(ScoreboardSettingsFragment.class),
-    BACKUP(BackupSettingsFragment.class);
+enum class ESettingsScreens constructor(private val settingsFragment: Class<out SettingsFragmentBase>) {
+    MAIN(MainSettingsFragment::class.java),
+    PROFILE(ProfileSettingsFragment::class.java),
+    OVERVIEW(OverviewSettingsFragment::class.java),
+    INPUT(InputSettingsFragment::class.java),
+    TIMER(TimerSettingsFragment::class.java),
+    STATISTICS(StatisticsSettingsFragment::class.java),
+    SCOREBOARD(ScoreboardSettingsFragment::class.java),
+    BACKUP(BackupSettingsFragment::class.java);
 
-    private final Class<? extends SettingsFragmentBase> settingsFragment;
+    val key: String
+        get() = name.toLowerCase()
 
-    ESettingsScreens(Class<? extends SettingsFragmentBase> settingsFragment) {
-        this.settingsFragment = settingsFragment;
-    }
-
-    @NonNull
-    public static ESettingsScreens from(@NonNull String key) {
-        return valueOf(key.toUpperCase());
-    }
-
-    public String getKey() {
-        return name().toLowerCase();
-    }
-
-    public SettingsFragmentBase create() {
+    fun create(): SettingsFragmentBase {
         try {
-            return settingsFragment.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
+            return settingsFragment.newInstance()
+        } catch (e: InstantiationException) {
+            e.printStackTrace()
             // Should never happen, because Fragments should
             // always have a zero argument constructor.
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        } catch (e: IllegalAccessException) {
+            e.printStackTrace()
             // Should never happen, because Fragments should
             // always have a public constructor.
         }
+
         // Otherwise just show main fragment
-        return new MainSettingsFragment();
+        return MainSettingsFragment()
+    }
+
+    companion object {
+        fun from(key: String): ESettingsScreens {
+            return valueOf(key.toUpperCase())
+        }
     }
 }

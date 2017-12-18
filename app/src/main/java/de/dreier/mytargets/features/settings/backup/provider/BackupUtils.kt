@@ -13,213 +13,157 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings.backup.provider;
+package de.dreier.mytargets.features.settings.backup.provider
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.content.Context
+import com.raizlabs.android.dbflow.sql.language.SQLite
+import de.dreier.mytargets.shared.AppDatabase
+import de.dreier.mytargets.shared.models.db.ArrowImage
+import de.dreier.mytargets.shared.models.db.BowImage
+import de.dreier.mytargets.shared.models.db.EndImage
+import de.dreier.mytargets.shared.streamwrapper.Stream
+import java.io.*
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
+import java.util.zip.ZipOutputStream
 
-import com.raizlabs.android.dbflow.sql.language.SQLite;
+object BackupUtils {
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.channels.FileChannel;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
-
-import de.dreier.mytargets.shared.AppDatabase;
-import de.dreier.mytargets.shared.models.db.ArrowImage;
-import de.dreier.mytargets.shared.models.db.BowImage;
-import de.dreier.mytargets.shared.models.db.EndImage;
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-import de.dreier.mytargets.shared.utils.FileUtils;
-
-public class BackupUtils {
-
-    private static final int BUFFER = 1024;
-
-    public static void copy(@NonNull File src, @NonNull File dst) throws IOException {
-        FileInputStream inStream = new FileInputStream(src);
-        FileOutputStream outStream = new FileOutputStream(dst);
-        FileChannel inChannel = inStream.getChannel();
-        FileChannel outChannel = outStream.getChannel();
-        inChannel.transferTo(0, inChannel.size(), outChannel);
-        inStream.close();
-        outStream.flush();
-        outStream.close();
-    }
-
-    public static void copy(@NonNull InputStream in, @NonNull OutputStream out) throws IOException {
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) > 0) {
-            out.write(buf, 0, len);
+    val backupName: String
+        get() {
+            val format = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
+            return "MyTargets_backup_" + format.format(Date()) + ".zip"
         }
-        out.flush();
-        in.close();
-        out.close();
-    }
-
-    @NonNull
-    static String getBackupName() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
-        return "MyTargets_backup_" + format.format(new Date()) + ".zip";
-    }
-
-    public static void importZip(@NonNull Context context, InputStream in) throws IOException {
-        // Unzip all images and database
-        File file = unzip(context, in);
-
-        // Replace database file
-        File db_file = context.getDatabasePath(AppDatabase.DATABASE_IMPORT_FILE_NAME);
-        FileUtils.INSTANCE.copy(file, db_file);
-    }
 
     /**
      * Returns a list of file names, which are implicitly placed in the ../files/ folder of the app.
      */
-    public static String[] getImages() {
-        ArrayList<String> list = new ArrayList<>();
-        list.addAll(Stream.of(SQLite.select()
-                .from(BowImage.class)
-                .queryList())
-                .flatMap(bow -> Stream.of(bow.getFileName()))
-                .toList());
-        list.addAll(Stream.of(SQLite.select()
-                .from(EndImage.class)
-                .queryList())
-                .flatMap(end -> Stream.of(end.getFileName()))
-                .toList());
-        list.addAll(Stream.of(SQLite.select()
-                .from(ArrowImage.class)
-                .queryList())
-                .flatMap(arrow -> Stream.of(arrow.getFileName()))
-                .toList());
-        return list.toArray(new String[list.size()]);
+    val images: Array<String>
+        get() {
+            val list = ArrayList<String>()
+            list.addAll(Stream.of(SQLite.select()
+                    .from(BowImage::class.java)
+                    .queryList())
+                    .flatMap { (_, fileName) -> Stream.of(fileName) }
+                    .toList())
+            list.addAll(Stream.of(SQLite.select()
+                    .from(EndImage::class.java)
+                    .queryList())
+                    .flatMap { (_, fileName) -> Stream.of(fileName) }
+                    .toList())
+            list.addAll(Stream.of(SQLite.select()
+                    .from(ArrowImage::class.java)
+                    .queryList())
+                    .flatMap { (_, fileName) -> Stream.of(fileName) }
+                    .toList())
+            return list.toTypedArray()
+        }
+
+    @Throws(IOException::class)
+    fun copy(src: File, dst: File) {
+        src.copyTo(dst)
     }
 
-    public static void zip(@NonNull Context context, @NonNull OutputStream dest) throws IOException {
-        ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
-        try {
-            BufferedInputStream origin;
-            byte data[] = new byte[BUFFER];
+    @Throws(IOException::class)
+    fun copy(`in`: InputStream, out: OutputStream) {
+        `in`.copyTo(out)
+        out.flush()
+        `in`.close()
+        out.close()
+    }
 
-            File db = context.getDatabasePath(AppDatabase.DATABASE_FILE_NAME);
-            FileInputStream fi = new FileInputStream(db);
-            origin = new BufferedInputStream(fi, BUFFER);
+    @Throws(IOException::class)
+    fun importZip(context: Context, `in`: InputStream) {
+        // Unzip all images and database
+        val file = unzip(context, `in`)
 
-            ZipEntry entry = new ZipEntry("/data.db");
-            out.putNextEntry(entry);
-            int count;
-            while ((count = origin.read(data, 0, BUFFER)) != -1) {
-                out.write(data, 0, count);
-            }
-            origin.close();
+        // Replace database file
+        file!!.copyTo(context.getDatabasePath(AppDatabase.DATABASE_IMPORT_FILE_NAME))
+    }
 
-            String[] files = getImages();
-            for (String file : files) {
+    @Throws(IOException::class)
+    fun zip(context: Context, dest: OutputStream) {
+        ZipOutputStream(BufferedOutputStream(dest)).use { out ->
+            val db = context.getDatabasePath(AppDatabase.DATABASE_FILE_NAME)
+
+            var entry = ZipEntry("/data.db")
+            out.putNextEntry(entry)
+            FileInputStream(db).use { it.copyTo(out) }
+
+            val files = images
+            for (file in files) {
                 try {
-                    fi = new FileInputStream(new File(context.getFilesDir(), file));
-                    origin = new BufferedInputStream(fi, BUFFER);
-
-                    entry = new ZipEntry("/" + file);
-                    out.putNextEntry(entry);
-
-                    while ((count = origin.read(data, 0, BUFFER)) != -1) {
-                        out.write(data, 0, count);
+                    entry = ZipEntry("/" + file)
+                    out.putNextEntry(entry)
+                    FileInputStream(File(context.filesDir, file)).use {
+                        it.copyTo(out)
                     }
-                    origin.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                } catch (e: FileNotFoundException) {
+                    e.printStackTrace()
                 }
             }
-
-            out.close();
-        } finally {
-            safeCloseClosable(out);
         }
     }
 
-    private static void safeCloseClosable(@Nullable Closeable closeable) {
+    private fun safeCloseClosable(closeable: Closeable?) {
         try {
-            if (closeable != null) {
-                closeable.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+            closeable?.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
+
     }
 
-    @Nullable
-    private static File unzip(@NonNull Context context, InputStream in) throws IOException {
-        File tmpDb = null;
-        int dbFiles = 0;
+    @Throws(IOException::class)
+    private fun unzip(context: Context, `in`: InputStream): File? {
+        val tmpDb: File?
+        var dbFiles = 0
         try {
-            tmpDb = File.createTempFile("import", ".db");
+            tmpDb = File.createTempFile("import", ".db")
 
-            ZipInputStream zin = new ZipInputStream(in);
-            ZipEntry sourceEntry;
+            val zin = ZipInputStream(`in`)
+            var sourceEntry: ZipEntry?
             while (true) {
 
-                sourceEntry = zin.getNextEntry();
+                sourceEntry = zin.nextEntry
 
                 if (sourceEntry == null) {
-                    break;
+                    break
                 }
 
-                if (sourceEntry.isDirectory()) {
-                    zin.closeEntry();
-                    continue;
+                if (sourceEntry.isDirectory) {
+                    zin.closeEntry()
+                    continue
                 }
 
-                FileOutputStream fOut;
-                if (sourceEntry.getName().endsWith(".db")) {
+                val fOut: FileOutputStream
+                if (sourceEntry.name.endsWith(".db")) {
                     // Write database to tmp file
-                    fOut = new FileOutputStream(tmpDb);
-                    dbFiles++;
+                    fOut = FileOutputStream(tmpDb!!)
+                    dbFiles++
                 } else {
                     // Write all other files(images) to files dir in apps data
-                    int start = sourceEntry.getName().lastIndexOf("/") + 1;
-                    String name = sourceEntry.getName().substring(start);
-                    fOut = context.openFileOutput(name, Context.MODE_PRIVATE);
+                    val start = sourceEntry.name.lastIndexOf("/") + 1
+                    val name = sourceEntry.name.substring(start)
+                    fOut = context.openFileOutput(name, Context.MODE_PRIVATE)
                 }
 
-                final OutputStream targetStream = fOut;
                 try {
-                    int read;
-                    while (true) {
-                        byte[] buffer = new byte[1024];
-                        read = zin.read(buffer);
-                        if (read == -1) {
-                            break;
-                        }
-                        targetStream.write(buffer, 0, read);
-                    }
-                    targetStream.flush();
+                    zin.copyTo(fOut)
+                    fOut.flush()
                 } finally {
-                    safeCloseClosable(targetStream);
+                    safeCloseClosable(fOut)
                 }
-                zin.closeEntry();
+                zin.closeEntry()
             }
         } finally {
-            safeCloseClosable(in);
+            safeCloseClosable(`in`)
         }
         if (dbFiles != 1) {
-            throw new IllegalStateException("Input file is not a valid backup");
+            throw IllegalStateException("Input file is not a valid backup")
         }
-        return tmpDb;
+        return tmpDb
     }
 }

@@ -13,8 +13,6 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings;
+package de.dreier.mytargets.features.settings
 
-public class OverviewSettingsFragment extends SettingsFragmentBase {
-
-}
+class OverviewSettingsFragment : SettingsFragmentBase()

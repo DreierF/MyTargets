@@ -13,92 +13,81 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings;
+package de.dreier.mytargets.features.settings
 
-import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.preference.ListPreference;
-import android.support.v7.preference.PreferenceFragmentCompat;
-import android.view.View;
+import android.annotation.SuppressLint
+import android.content.SharedPreferences
+import android.os.Bundle
+import android.support.v4.content.ContextCompat
+import android.support.v7.preference.ListPreference
+import android.support.v7.preference.PreferenceFragmentCompat
+import android.view.View
+import de.dreier.mytargets.R
+import de.dreier.mytargets.shared.SharedApplicationInstance
+import de.dreier.mytargets.utils.ToolbarUtils
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.app.ApplicationInstance;
-import de.dreier.mytargets.utils.ToolbarUtils;
+abstract class SettingsFragmentBase : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
-public abstract class SettingsFragmentBase extends PreferenceFragmentCompat
-        implements SharedPreferences.OnSharedPreferenceChangeListener {
+    private var rootKey = "main"
 
-    @NonNull
-    private String rootKey = "main";
-
-    @Override
-    public final void onCreatePreferences(Bundle bundle, @Nullable String rootKey) {
-        this.rootKey = rootKey == null ? "main" : rootKey;
-        onCreatePreferences();
+    override fun onCreatePreferences(bundle: Bundle, rootKey: String?) {
+        this.rootKey = rootKey ?: "main"
+        onCreatePreferences()
     }
 
-    protected void onCreatePreferences() {
-        setPreferencesFromResource(R.xml.preferences, rootKey);
-        updateItemSummaries();
+    protected open fun onCreatePreferences() {
+        setPreferencesFromResource(R.xml.preferences, rootKey)
+        updateItemSummaries()
     }
 
     @SuppressLint("PrivateResource")
-    @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         // Set the default white background in the view so as to avoid transparency
         view.setBackgroundColor(
-                ContextCompat.getColor(getContext(), R.color.background_material_light));
+                ContextCompat.getColor(context!!, R.color.background_material_light))
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        updateItemSummaries();
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, s: String) {
+        updateItemSummaries()
     }
 
-    protected void updateItemSummaries() {
+    protected open fun updateItemSummaries() {
 
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        ToolbarUtils.showHomeAsUp(this);
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        ToolbarUtils.showHomeAsUp(this)
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        onFragmentResume();
-        ApplicationInstance.Companion.getSharedPreferences()
-                .registerOnSharedPreferenceChangeListener(this);
+    override fun onResume() {
+        super.onResume()
+        onFragmentResume()
+        SharedApplicationInstance.sharedPreferences
+                .registerOnSharedPreferenceChangeListener(this)
     }
 
-    protected void setActivityTitle() {
-        getActivity().setTitle(findPreference(rootKey).getTitle());
+    protected open fun setActivityTitle() {
+        activity!!.title = findPreference(rootKey).title
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        ApplicationInstance.Companion.getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(this);
+    override fun onPause() {
+        super.onPause()
+        SharedApplicationInstance.sharedPreferences
+                .unregisterOnSharedPreferenceChangeListener(this)
     }
 
-    protected void setDefaultSummary(String key) {
-        setSummary(key, ((ListPreference) findPreference(key)).getEntry().toString());
+    protected fun setDefaultSummary(key: String) {
+        setSummary(key, (findPreference(key) as ListPreference).entry.toString())
     }
 
-    protected void setSummary(String key, String value) {
-        findPreference(key).setSummary(value);
+    protected fun setSummary(key: String, value: String) {
+        findPreference(key).summary = value
     }
 
-    public void onFragmentResume() {
-        setActivityTitle();
+    fun onFragmentResume() {
+        setActivityTitle()
     }
 }

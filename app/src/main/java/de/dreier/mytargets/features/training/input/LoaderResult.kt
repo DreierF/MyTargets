@@ -19,19 +19,21 @@ import android.annotation.SuppressLint
 import android.os.Parcelable
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.Dimension
+import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
 import de.dreier.mytargets.shared.models.db.*
 import de.dreier.mytargets.shared.views.TargetViewBase
 import kotlinx.android.parcel.Parcelize
 
 @SuppressLint("ParcelCreator")
 @Parcelize
-internal class LoaderResult constructor(val training: Training) : Parcelable {
-    var standardRound: StandardRound? = null
-    var arrowDiameter: Dimension? = Dimension(5f, Dimension.Unit.MILLIMETER)
-    var sightMark: SightMark? = null
-    var roundIndex = 0
-    var endIndex: Int = 0
-    var maxArrowNumber = 12
+internal class LoaderResult @JvmOverloads constructor(
+        val training: AugmentedTraining,
+        var standardRound: StandardRound? = null,
+        var arrowDiameter: Dimension? = Dimension(5f, Dimension.Unit.MILLIMETER),
+        var sightMark: SightMark? = null,
+        var roundIndex: Int = 0,
+        var endIndex: Int = 0,
+        var maxArrowNumber: Int = 12) : Parcelable {
 
     val distance: Dimension?
         get() = currentRound.distance
@@ -40,7 +42,7 @@ internal class LoaderResult constructor(val training: Training) : Parcelable {
         get() = currentRound.loadEnds()!!
 
     val currentRound: Round
-        get() = training.loadRounds()!![roundIndex]
+        get() = training.training.loadRounds()!![roundIndex]
 
     val currentEnd: End?
         get() {
@@ -55,12 +57,11 @@ internal class LoaderResult constructor(val training: Training) : Parcelable {
         }
 
     init {
-        training.ensureLoaded()
-        this.standardRound = training.standardRound
+        this.standardRound = training.training.standardRound
     }
 
     fun setRoundId(roundId: Long) {
-        val rounds = training.loadRounds()
+        val rounds = training.training.loadRounds()
         roundIndex = 0
         for (i in rounds!!.indices) {
             if (rounds[i].id == roundId) {

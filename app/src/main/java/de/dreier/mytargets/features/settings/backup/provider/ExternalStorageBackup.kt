@@ -13,137 +13,120 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings.backup.provider;
+package de.dreier.mytargets.features.settings.backup.provider
 
-import android.app.Activity;
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.app.Activity
+import android.content.Context
+import de.dreier.mytargets.R
+import de.dreier.mytargets.features.settings.backup.BackupEntry
+import de.dreier.mytargets.features.settings.backup.BackupException
+import de.dreier.mytargets.shared.SharedApplicationInstance.Companion
+import timber.log.Timber
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.IOException
+import java.util.*
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+object ExternalStorageBackup {
+    private val FOLDER_NAME = "MyTargets"
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.settings.backup.BackupEntry;
-import de.dreier.mytargets.features.settings.backup.BackupException;
-import timber.log.Timber;
+    //If may get a full path that is not the right one, even if we don't have the SD Card there.
+    //We just need the "/mnt/extSdCard/" i.e and check if it's writable
+    //do what you need here
+    val microSdCardPath: File?
+        get() {
+            var strSDCardPath: String? = System.getenv("SECONDARY_STORAGE")
 
-import static de.dreier.mytargets.features.settings.backup.provider.BackupUtils.getBackupName;
-import static de.dreier.mytargets.shared.SharedApplicationInstance.Companion;
-
-public class ExternalStorageBackup {
-    private static final String FOLDER_NAME = "MyTargets";
-
-    private static void createDirectory(@NonNull File directory) throws IOException {
-        //noinspection ResultOfMethodCallIgnored
-        directory.mkdir();
-        if (!directory.exists() || !directory.isDirectory()) {
-            throw new IOException(Companion.getStr(R.string.dir_not_created));
-        }
-    }
-
-    public static File getMicroSdCardPath() {
-        String strSDCardPath = System.getenv("SECONDARY_STORAGE");
-
-        if ((strSDCardPath == null) || (strSDCardPath.length() == 0)) {
-            strSDCardPath = System.getenv("EXTERNAL_SDCARD_STORAGE");
-        }
-
-        //If may get a full path that is not the right one, even if we don't have the SD Card there.
-        //We just need the "/mnt/extSdCard/" i.e and check if it's writable
-        if (strSDCardPath != null) {
-            if (strSDCardPath.contains(":")) {
-                strSDCardPath = strSDCardPath.substring(0, strSDCardPath.indexOf(":"));
+            if (strSDCardPath == null || strSDCardPath.isEmpty()) {
+                strSDCardPath = System.getenv("EXTERNAL_SDCARD_STORAGE")
             }
-            Timber.d("getMicroSdCardPath: %s", strSDCardPath);
-            File externalFilePath = new File(strSDCardPath);
-
-            if (externalFilePath.exists() && externalFilePath.canWrite()) {
-                Timber.d("getMicroSdCardPath: %s", externalFilePath.getAbsolutePath());
-                //do what you need here
-                return externalFilePath;
-            }
-        }
-        return null;
-    }
-
-    public static class AsyncRestore implements IAsyncBackupRestore {
-        @Nullable
-        private Activity activity;
-
-        @Override
-        public void connect(Activity activity, @NonNull ConnectionListener listener) {
-            this.activity = activity;
-            listener.onConnected();
-        }
-
-        @Override
-        public void getBackups(@NonNull OnLoadFinishedListener listener) {
-            File backupDir = new File(getMicroSdCardPath(), FOLDER_NAME);
-            if (backupDir.isDirectory()) {
-                List<BackupEntry> backups = new ArrayList<>();
-                for (File file : backupDir.listFiles()) {
-                    if (isBackup(file)) {
-                        final BackupEntry entry = new BackupEntry(file.getAbsolutePath(),
-                                new Date(file.lastModified()),
-                                file.length());
-                        backups.add(entry);
-                    }
+            if (strSDCardPath != null) {
+                if (strSDCardPath.contains(":")) {
+                    strSDCardPath = strSDCardPath.substring(0, strSDCardPath.indexOf(":"))
                 }
-                Collections.sort(backups, (b1, b2) -> b2.getModifiedDate()
-                        .compareTo(b1.getModifiedDate()));
-                listener.onLoadFinished(backups);
+                Timber.d("getMicroSdCardPath: %s", strSDCardPath)
+                val externalFilePath = File(strSDCardPath)
+
+                if (externalFilePath.exists() && externalFilePath.canWrite()) {
+                    Timber.d("getMicroSdCardPath: %s", externalFilePath.absolutePath)
+                    return externalFilePath
+                }
             }
+            return null
         }
 
-        private boolean isBackup(@NonNull File file) {
-            return file.isFile() && file.getName().contains("backup_") && file.getName()
-                    .endsWith(".zip");
-        }
+    @Throws(IOException::class)
+    private fun createDirectory(directory: File) {
 
-        @Override
-        public void restoreBackup(@NonNull BackupEntry backup, @NonNull BackupStatusListener listener) {
-            File file = new File(backup.getFileId());
-            try {
-                BackupUtils.importZip(activity, new FileInputStream(file));
-                listener.onFinished();
-            } catch (IOException e) {
-                listener.onError(e.getLocalizedMessage());
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void deleteBackup(@NonNull BackupEntry backup, @NonNull BackupStatusListener listener) {
-            if (new File(backup.getFileId()).delete()) {
-                listener.onFinished();
-            } else {
-                listener.onError("Backup could not be deleted!");
-            }
-        }
-
-        @Override
-        public void stop() {
-            activity = null;
+        directory.mkdir()
+        if (!directory.exists() || !directory.isDirectory) {
+            throw IOException(Companion.getStr(R.string.dir_not_created))
         }
     }
 
-    public static class Backup implements IBlockingBackup {
-        @Override
-        public void performBackup(@NonNull Context context) throws BackupException {
+    class AsyncRestore : IAsyncBackupRestore {
+        private var activity: Activity? = null
+
+        override fun connect(activity: Activity, listener: IAsyncBackupRestore.ConnectionListener) {
+            this.activity = activity
+            listener.onConnected()
+        }
+
+        override fun getBackups(listener: IAsyncBackupRestore.OnLoadFinishedListener) {
+            val backupDir = File(microSdCardPath, FOLDER_NAME)
+            if (backupDir.isDirectory) {
+                val backups = backupDir.listFiles()
+                        .filter { isBackup(it) }
+                        .map {
+                            BackupEntry(it.absolutePath,
+                                    Date(it.lastModified()),
+                                    it.length())
+                        }
+                        .sortedByDescending { it.modifiedDate }
+                listener.onLoadFinished(backups)
+            }
+        }
+
+        private fun isBackup(file: File): Boolean {
+            return file.isFile && file.name.contains("backup_") && file.name.endsWith(".zip")
+        }
+
+        override fun restoreBackup(backup: BackupEntry, listener: IAsyncBackupRestore.BackupStatusListener) {
+            val file = File(backup.fileId)
             try {
-                File backupDir = new File(getMicroSdCardPath(), FOLDER_NAME);
-                createDirectory(backupDir);
-                final File zipFile = new File(backupDir, getBackupName());
-                BackupUtils.zip(context, new FileOutputStream(zipFile));
-            } catch (IOException e) {
-                throw new BackupException(e.getLocalizedMessage(), e);
+                BackupUtils.importZip(activity!!, FileInputStream(file))
+                listener.onFinished()
+            } catch (e: IOException) {
+                listener.onError(e.localizedMessage)
+                e.printStackTrace()
+            }
+
+        }
+
+        override fun deleteBackup(backup: BackupEntry, listener: IAsyncBackupRestore.BackupStatusListener) {
+            if (File(backup.fileId).delete()) {
+                listener.onFinished()
+            } else {
+                listener.onError("Backup could not be deleted!")
+            }
+        }
+
+        override fun stop() {
+            activity = null
+        }
+    }
+
+    class Backup : IBlockingBackup {
+        @Throws(BackupException::class)
+        override fun performBackup(context: Context) {
+            try {
+                val backupDir = File(microSdCardPath, FOLDER_NAME)
+                createDirectory(backupDir)
+                val zipFile = File(backupDir, BackupUtils.backupName)
+                BackupUtils.zip(context, FileOutputStream(zipFile))
+            } catch (e: IOException) {
+                throw BackupException(e.localizedMessage, e)
             }
         }
     }

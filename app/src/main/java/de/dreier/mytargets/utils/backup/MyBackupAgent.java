@@ -36,6 +36,6 @@ public class MyBackupAgent extends BackupAgentHelper {
         addHelper(PREFS_BACKUP_KEY, new SharedPreferencesBackupHelper(this, PREFS));
         addHelper(SQLITE_BACKUP_KEY, new DbBackupHelper(this));
         addHelper(IMAGES_BACKUP_KEY,
-                new FileBackupHelper(this, BackupUtils.getImages()));
+                new FileBackupHelper(this, BackupUtils.INSTANCE.getImages()));
     }
 }

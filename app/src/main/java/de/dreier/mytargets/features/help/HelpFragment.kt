@@ -87,7 +87,7 @@ class HelpFragment : Fragment() {
                 return true
             }
             R.id.action_about -> {
-                AboutFragment.getIntent().withContext(this).start()
+                AboutFragment.intent.withContext(this).start()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

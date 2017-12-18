@@ -13,57 +13,52 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings;
+package de.dreier.mytargets.features.settings
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.preference.DialogPreference;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceDialogFragmentCompat;
-import android.widget.DatePicker;
+import android.app.DatePickerDialog
+import android.app.Dialog
+import android.os.Bundle
+import android.support.v4.app.DialogFragment
+import android.support.v7.preference.DialogPreference
+import android.support.v7.preference.Preference
+import android.support.v7.preference.PreferenceDialogFragmentCompat
+import android.widget.DatePicker
 
-import org.threeten.bp.LocalDate;
+import org.threeten.bp.LocalDate
 
-public class DatePreferenceDialogFragmentCompat extends PreferenceDialogFragmentCompat implements DialogPreference.TargetFragment, DatePickerDialog.OnDateSetListener {
+class DatePreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat(), DialogPreference.TargetFragment, DatePickerDialog.OnDateSetListener {
 
-    @NonNull
-    public static DialogFragment newInstance(String key) {
-        DialogFragment dialogFragment = new DatePreferenceDialogFragmentCompat();
-        Bundle bundle = new Bundle(1);
-        bundle.putString("key", key);
-        dialogFragment.setArguments(bundle);
-        return dialogFragment;
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val pref = preference as DatePreference
+        return DatePickerDialog(context!!, this,
+                pref.date.year,
+                pref.date.monthValue - 1,
+                pref.date.dayOfMonth)
     }
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        DatePreference pref = (DatePreference) getPreference();
-        return new DatePickerDialog(getContext(), this,
-                pref.date.getYear(),
-                pref.date.getMonthValue() - 1,
-                pref.date.getDayOfMonth());
-    }
-
-    @Override
-    public void onDialogClosed(boolean b) {
+    override fun onDialogClosed(b: Boolean) {
 
     }
 
-    @Override
-    public Preference findPreference(CharSequence charSequence) {
-        return getPreference();
+    override fun findPreference(charSequence: CharSequence): Preference {
+        return preference
     }
 
-    @Override
-    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        DatePreference pref = (DatePreference) getPreference();
-        pref.date = LocalDate.of(year, monthOfYear + 1, dayOfMonth);
+    override fun onDateSet(view: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int) {
+        val pref = preference as DatePreference
+        pref.date = LocalDate.of(year, monthOfYear + 1, dayOfMonth)
         if (pref.callChangeListener(pref.date)) {
-            pref.persistDateValue(pref.date);
+            pref.persistDateValue(pref.date)
+        }
+    }
+
+    companion object {
+        fun newInstance(key: String): DialogFragment {
+            val dialogFragment = DatePreferenceDialogFragmentCompat()
+            val bundle = Bundle(1)
+            bundle.putString("key", key)
+            dialogFragment.arguments = bundle
+            return dialogFragment
         }
     }
 }

@@ -17,7 +17,15 @@ package de.dreier.mytargets.features.scoreboard.builder.model
 
 import java.util.*
 
-class Table(val wrapContent: Boolean) : Cell() {
+sealed class Cell {
+    var columnSpan = 1
+}
+
+data class TextCell(val content: String, var bold: Boolean) : Cell()
+
+data class EndCell(val score: String, val fillColor: Int, val textColor: Int, val arrowNumber: String) : Cell()
+
+data class Table(val wrapContent: Boolean) : Cell() {
 
     var rows: MutableList<Row> = ArrayList()
 

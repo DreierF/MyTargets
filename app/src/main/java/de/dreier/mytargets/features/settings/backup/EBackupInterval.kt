@@ -13,32 +13,18 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings.backup;
+package de.dreier.mytargets.features.settings.backup
 
-import android.support.annotation.StringRes;
+import android.support.annotation.StringRes
+import de.dreier.mytargets.R
+import de.dreier.mytargets.shared.SharedApplicationInstance
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.app.ApplicationInstance;
-
-public enum EBackupInterval {
+enum class EBackupInterval constructor(val days: Int, @param:StringRes private val textResId: Int) {
     DAILY(1, R.string.daily),
     WEEKLY(7, R.string.weekly),
     MONTHLY(30, R.string.monthly);
 
-    private final int days;
-    private final int textResId;
-
-    EBackupInterval(int days, @StringRes int textResId) {
-        this.days = days;
-        this.textResId = textResId;
-    }
-
-    public int getDays() {
-        return days;
-    }
-
-    @Override
-    public String toString() {
-        return ApplicationInstance.Companion.getStr(textResId);
+    override fun toString(): String {
+        return SharedApplicationInstance.getStr(textResId)
     }
 }

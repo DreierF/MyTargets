@@ -87,12 +87,12 @@ public final class MigrationTest extends InstrumentedTestBase {
                 .close();
 
         File tmpDb = getTargetContext().getDatabasePath(DatabaseHelperDelegate
-                .getTempDbFileName(FlowManager.getDatabase(AppDatabase.INSTANCE.getNAME())));
+                .getTempDbFileName(FlowManager.getDatabase(AppDatabase.NAME)));
 
-        BackupUtils.copy(getContext().getAssets().open("database.db"), new FileOutputStream(tmpDb));
+        BackupUtils.INSTANCE.copy(getContext().getAssets().open("database.db"), new FileOutputStream(tmpDb));
 
-        helper = FlowManager.getDatabase(AppDatabase.INSTANCE.getNAME()).getHelper().getDelegate();
-        upgradedDb = FlowManager.getDatabase(AppDatabase.INSTANCE.getNAME()).getWritableDatabase();
+        helper = FlowManager.getDatabase(AppDatabase.NAME).getHelper().getDelegate();
+        upgradedDb = FlowManager.getDatabase(AppDatabase.NAME).getWritableDatabase();
     }
 
     @After

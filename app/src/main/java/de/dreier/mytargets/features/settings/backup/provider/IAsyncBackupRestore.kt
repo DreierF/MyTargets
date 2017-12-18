@@ -13,40 +13,38 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings.backup.provider;
+package de.dreier.mytargets.features.settings.backup.provider
 
-import android.app.Activity;
+import android.app.Activity
 
-import java.util.List;
+import de.dreier.mytargets.features.settings.backup.BackupEntry
 
-import de.dreier.mytargets.features.settings.backup.BackupEntry;
+interface IAsyncBackupRestore {
+    fun connect(activity: Activity, listener: ConnectionListener)
 
-public interface IAsyncBackupRestore {
-    void connect(Activity activity, ConnectionListener listener);
+    fun getBackups(listener: OnLoadFinishedListener)
 
-    void getBackups(OnLoadFinishedListener listener);
+    fun restoreBackup(backup: BackupEntry, listener: BackupStatusListener)
 
-    void restoreBackup(BackupEntry backup, BackupStatusListener listener);
+    fun deleteBackup(backup: BackupEntry, listener: BackupStatusListener)
 
-    void deleteBackup(BackupEntry backup, BackupStatusListener listener);
-
-    void stop();
+    fun stop()
 
     interface ConnectionListener {
-        void onConnected();
+        fun onConnected()
 
-        void onConnectionSuspended();
+        fun onConnectionSuspended()
     }
 
     interface OnLoadFinishedListener {
-        void onLoadFinished(List<BackupEntry> backupEntries);
+        fun onLoadFinished(backupEntries: List<BackupEntry>)
 
-        void onError(String message);
+        fun onError(message: String)
     }
 
     interface BackupStatusListener {
-        void onFinished();
+        fun onFinished()
 
-        void onError(String message);
+        fun onError(message: String)
     }
 }

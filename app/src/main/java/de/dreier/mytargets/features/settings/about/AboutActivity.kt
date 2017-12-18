@@ -13,24 +13,20 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings.about;
+package de.dreier.mytargets.features.settings.about
 
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment
 
-import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase
 
-public class AboutActivity extends SimpleFragmentActivityBase {
+class AboutActivity : SimpleFragmentActivityBase() {
 
-    @NonNull
-    @Override
-    protected Fragment instantiateFragment() {
-        return new AboutFragment();
+    override fun instantiateFragment(): Fragment {
+        return AboutFragment()
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(0, 0);
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(0, 0)
     }
 }

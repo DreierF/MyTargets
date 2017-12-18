@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.features.training.input;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 public class SummaryConfiguration {
@@ -22,6 +23,7 @@ public class SummaryConfiguration {
     public boolean showRound;
     public boolean showTraining;
     public boolean showAverage;
+    @NonNull
     public ETrainingScope averageScope = ETrainingScope.ROUND;
 
     @Override

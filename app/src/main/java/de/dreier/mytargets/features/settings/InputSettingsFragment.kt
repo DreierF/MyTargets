@@ -13,43 +13,39 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings;
+package de.dreier.mytargets.features.settings
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.training.input.SummaryConfiguration;
-import de.dreier.mytargets.utils.Utils;
+import de.dreier.mytargets.R
+import de.dreier.mytargets.features.training.input.ETrainingScope
+import de.dreier.mytargets.features.training.input.TargetView.EKeyboardType.LEFT
+import de.dreier.mytargets.utils.Utils
 
-import static de.dreier.mytargets.features.training.input.TargetView.EKeyboardType.LEFT;
+class InputSettingsFragment : SettingsFragmentBase() {
 
-public class InputSettingsFragment extends SettingsFragmentBase {
-
-    @Override
-    protected void updateItemSummaries() {
-        setSummary(SettingsManager.KEY_INPUT_SUMMARY_AVERAGE_OF, getAverageOf());
-        setSummary(SettingsManager.KEY_INPUT_ARROW_DIAMETER_SCALE, String.format(Utils
-                .getCurrentLocale(getContext()), "%.1fx", SettingsManager.INSTANCE
-                .getInputArrowDiameterScale()));
-        setSummary(SettingsManager.KEY_INPUT_TARGET_ZOOM, String.format(Utils
-                .getCurrentLocale(getContext()), "%.1fx", SettingsManager.INSTANCE
-                .getInputTargetZoom()));
-        setSummary(SettingsManager.KEY_INPUT_KEYBOARD_TYPE,
-                SettingsManager.INSTANCE.getInputKeyboardType() == LEFT
-                        ? getString(R.string.left_handed) : getString(R.string.right_handed));
-        setDefaultSummary(SettingsManager.KEY_AGGREGATION_STRATEGY);
-        setDefaultSummary(SettingsManager.KEY_SHOW_MODE);
-    }
-
-    private String getAverageOf() {
-        final SummaryConfiguration configuration = SettingsManager.INSTANCE
-                .getInputSummaryConfiguration();
-        switch (configuration.averageScope) {
-            case END:
-                return getString(R.string.end);
-            case TRAINING:
-                return getString(R.string.training);
-            case ROUND:
-            default:
-                return getString(R.string.round);
+    private val averageOf: String
+        get() {
+            val configuration = SettingsManager.inputSummaryConfiguration
+            return when (configuration.averageScope) {
+                ETrainingScope.END -> getString(R.string.end)
+                ETrainingScope.TRAINING -> getString(R.string.training)
+                ETrainingScope.ROUND -> getString(R.string.round)
+            }
         }
+
+    override fun updateItemSummaries() {
+        setSummary(SettingsManager.KEY_INPUT_SUMMARY_AVERAGE_OF, averageOf)
+        setSummary(SettingsManager.KEY_INPUT_ARROW_DIAMETER_SCALE, String.format(Utils
+                .getCurrentLocale(context!!), "%.1fx", SettingsManager
+                .inputArrowDiameterScale))
+        setSummary(SettingsManager.KEY_INPUT_TARGET_ZOOM, String.format(Utils
+                .getCurrentLocale(context!!), "%.1fx", SettingsManager
+                .inputTargetZoom))
+        setSummary(SettingsManager.KEY_INPUT_KEYBOARD_TYPE,
+                if (SettingsManager.inputKeyboardType == LEFT)
+                    getString(R.string.left_handed)
+                else
+                    getString(R.string.right_handed))
+        setDefaultSummary(SettingsManager.KEY_AGGREGATION_STRATEGY)
+        setDefaultSummary(SettingsManager.KEY_SHOW_MODE)
     }
 }

@@ -13,89 +13,56 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings.about;
+package de.dreier.mytargets.features.settings.about
 
-import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.content.Context
+import android.databinding.DataBindingUtil
+import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.databinding.ItemDonationBinding;
+import de.dreier.mytargets.R
+import de.dreier.mytargets.databinding.ItemDonationBinding
 
-public class DonationAdapter extends RecyclerView.Adapter<DonationAdapter.DonationViewHolder> {
+class DonationAdapter(context: Context, private val listener: (Int) -> Unit) : RecyclerView.Adapter<DonationAdapter.DonationViewHolder>() {
 
-    private final LayoutInflater inflater;
-    private final OnItemClickListener listener;
+    private val inflater = LayoutInflater.from(context)
 
-    public DonationAdapter(Context context, OnItemClickListener listener) {
-        inflater = LayoutInflater.from(context);
-        this.listener = listener;
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DonationViewHolder {
+        val itemView = inflater.inflate(R.layout.item_donation, parent, false)
+        return DonationViewHolder(itemView)
     }
 
-    @NonNull
-    @Override
-    public DonationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View itemView = inflater.inflate(R.layout.item_donation, parent, false);
-        return new DonationViewHolder(itemView);
-    }
+    override fun onBindViewHolder(holder: DonationViewHolder, position: Int) {
+        holder.itemView.isEnabled = position < 4
+        holder.itemView.setOnClickListener { listener.invoke(position) }
 
-    @Override
-    public void onBindViewHolder(@NonNull DonationViewHolder holder, int position) {
-        holder.itemView.setEnabled(position < 4);
-        holder.itemView.setOnClickListener(view -> listener.onItemClicked(position));
-
-        switch (position) {
-            case 0:
-                holder.binding.desc.setText(R.string.donate_2);
-                break;
-            case 1:
-                holder.binding.desc.setText(R.string.donate_5);
-                break;
-            case 2:
-                holder.binding.desc.setText(R.string.donate_10);
-                break;
-            case 3:
-                holder.binding.desc.setText(R.string.donate_20);
-                break;
-            case 4:
-                holder.binding.desc.setText(R.string.donate_text);
-                break;
+        when (position) {
+            0 -> holder.binding.desc.setText(R.string.donate_2)
+            1 -> holder.binding.desc.setText(R.string.donate_5)
+            2 -> holder.binding.desc.setText(R.string.donate_10)
+            3 -> holder.binding.desc.setText(R.string.donate_20)
+            4 -> holder.binding.desc.setText(R.string.donate_text)
         }
 
         if (position < 4) {
-            String sku = DonateActivity.donations.get(position);
-            holder.binding.price.setText(DonateActivity.prices.get(sku));
+            val sku = DonateActivity.donations[position]
+            holder.binding.price.text = DonateActivity.prices[sku]
         } else {
-            holder.binding.price.setText("");
+            holder.binding.price.text = ""
         }
     }
 
-    @Override
-    public long getItemId(int position) {
-        return position;
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
     }
 
-    @Override
-    public int getItemCount() {
-        return 5;
+    override fun getItemCount(): Int {
+        return 5
     }
 
-    static class DonationViewHolder extends RecyclerView.ViewHolder {
-        ItemDonationBinding binding;
-
-        public DonationViewHolder(@NonNull View itemView) {
-            super(itemView);
-            binding = DataBindingUtil.bind(itemView);
-        }
-
-
-    }
-
-    public interface OnItemClickListener {
-        void onItemClicked(int position);
+    class DonationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var binding: ItemDonationBinding = DataBindingUtil.bind(itemView)
     }
 }

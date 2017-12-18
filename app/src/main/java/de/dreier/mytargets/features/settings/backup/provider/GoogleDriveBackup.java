@@ -155,7 +155,7 @@ public class GoogleDriveBackup {
                         DriveContents contents = result.getDriveContents();
                         InputStream input = contents.getInputStream();
                         try {
-                            BackupUtils.importZip(activity, input);
+                            BackupUtils.INSTANCE.importZip(activity, input);
                             listener.onFinished();
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -209,13 +209,13 @@ public class GoogleDriveBackup {
             OutputStream outputStream = driveContents.getOutputStream();
 
             try {
-                BackupUtils.zip(context, outputStream);
+                BackupUtils.INSTANCE.zip(context, outputStream);
             } catch (IOException e) {
                 throw new BackupException(e.getLocalizedMessage(), e);
             }
 
             MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                    .setTitle(BackupUtils.getBackupName())
+                    .setTitle(BackupUtils.INSTANCE.getBackupName())
                     .setMimeType(MYTARGETS_MIME_TYPE)
                     .setStarred(true)
                     .build();

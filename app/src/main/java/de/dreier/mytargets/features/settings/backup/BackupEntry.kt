@@ -13,49 +13,12 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings.backup;
+package de.dreier.mytargets.features.settings.backup
 
-import java.util.Date;
+import de.dreier.mytargets.utils.Utils
+import java.util.*
 
-import de.dreier.mytargets.utils.Utils;
-
-public class BackupEntry {
-
-    private String fileId;
-    private Date modifiedDate;
-    private long backupSize;
-
-    public BackupEntry(String fileId, Date modifiedDate, long backupSize) {
-        this.fileId = fileId;
-        this.modifiedDate = modifiedDate;
-        this.backupSize = backupSize;
-    }
-
-    public String getFileId() {
-        return fileId;
-    }
-
-    public void setFileId(String fileId) {
-        this.fileId = fileId;
-    }
-
-    public Date getModifiedDate() {
-        return modifiedDate;
-    }
-
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
-    public long getBackupSize() {
-        return backupSize;
-    }
-
-    public void setBackupSize(long backupSize) {
-        this.backupSize = backupSize;
-    }
-
-    public String getHumanReadableSize() {
-        return Utils.humanReadableByteCount(backupSize, true);
-    }
+data class BackupEntry(var fileId: String?, var modifiedDate: Date?, private var backupSize: Long) {
+    val humanReadableSize: String
+        get() = Utils.humanReadableByteCount(backupSize, true)
 }

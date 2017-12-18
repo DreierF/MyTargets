@@ -13,34 +13,31 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings;
+package de.dreier.mytargets.features.settings
 
-import android.support.v4.app.DialogFragment;
-import android.support.v7.preference.Preference;
+import android.support.v7.preference.Preference
 
-import static de.dreier.mytargets.features.settings.SettingsManager.INSTANCE;
+class ProfileSettingsFragment : SettingsFragmentBase() {
 
-public class ProfileSettingsFragment extends SettingsFragmentBase {
-
-    private static final String DIALOG_FRAGMENT_TAG = "android.support.v7.preference.PreferenceFragment.DIALOG";
-
-    @Override
-    public void updateItemSummaries() {
-        setSummary(SettingsManager.KEY_PROFILE_FIRST_NAME, INSTANCE.getProfileFirstName());
-        setSummary(SettingsManager.KEY_PROFILE_LAST_NAME, INSTANCE.getProfileLastName());
-        setSummary(SettingsManager.KEY_PROFILE_BIRTHDAY, INSTANCE.getProfileBirthDayFormatted());
-        setSummary(SettingsManager.KEY_PROFILE_CLUB, INSTANCE.getProfileClub());
-        setSummary(SettingsManager.KEY_PROFILE_LICENCE_NUMBER, INSTANCE.getProfileLicenceNumber());
+    public override fun updateItemSummaries() {
+        setSummary(SettingsManager.KEY_PROFILE_FIRST_NAME, SettingsManager.profileFirstName)
+        setSummary(SettingsManager.KEY_PROFILE_LAST_NAME, SettingsManager.profileLastName)
+        setSummary(SettingsManager.KEY_PROFILE_BIRTHDAY, SettingsManager.profileBirthDayFormatted ?: "")
+        setSummary(SettingsManager.KEY_PROFILE_CLUB, SettingsManager.profileClub)
+        setSummary(SettingsManager.KEY_PROFILE_LICENCE_NUMBER, SettingsManager.profileLicenceNumber)
     }
 
-    @Override
-    public void onDisplayPreferenceDialog(Preference preference) {
-        if (!(preference instanceof DatePreference)) {
-            super.onDisplayPreferenceDialog(preference);
-            return;
+    override fun onDisplayPreferenceDialog(preference: Preference) {
+        if (preference !is DatePreference) {
+            super.onDisplayPreferenceDialog(preference)
+            return
         }
-        DialogFragment f = DatePreferenceDialogFragmentCompat.newInstance(preference.getKey());
-        f.setTargetFragment(this, 0);
-        f.show(getFragmentManager(), DIALOG_FRAGMENT_TAG);
+        val f = DatePreferenceDialogFragmentCompat.newInstance(preference.getKey())
+        f.setTargetFragment(this, 0)
+        f.show(fragmentManager!!, DIALOG_FRAGMENT_TAG)
+    }
+
+    companion object {
+        private const val DIALOG_FRAGMENT_TAG = "android.support.v7.preference.PreferenceFragment.DIALOG"
     }
 }
