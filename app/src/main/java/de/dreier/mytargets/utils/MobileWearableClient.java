@@ -119,12 +119,12 @@ public class MobileWearableClient extends WearableClientBase {
 
     private void sendTrainingInfo(TrainingInfo trainingInfo) {
         final byte[] data = ParcelableUtilKt.marshall(trainingInfo);
-        sendMessage(WearableClientBase.Companion.getTRAINING_UPDATE(), data);
+        sendMessage(WearableClientBase.TRAINING_UPDATE, data);
     }
 
     public void sendTrainingTemplate(AugmentedTraining training) {
         final byte[] data = ParcelableUtilKt.marshall(training);
-        sendMessage(WearableClientBase.Companion.getTRAINING_TEMPLATE(), data);
+        sendMessage(WearableClientBase.REQUEST_TRAINING_TEMPLATE, data);
     }
 
     public abstract static class EndUpdateReceiver extends BroadcastReceiver {

@@ -19,8 +19,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-
-import de.dreier.mytargets.shared.streamwrapper.Stream;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.io.BufferedInputStream;
@@ -46,6 +44,7 @@ import de.dreier.mytargets.shared.AppDatabase;
 import de.dreier.mytargets.shared.models.db.ArrowImage;
 import de.dreier.mytargets.shared.models.db.BowImage;
 import de.dreier.mytargets.shared.models.db.EndImage;
+import de.dreier.mytargets.shared.streamwrapper.Stream;
 import de.dreier.mytargets.shared.utils.FileUtils;
 
 public class BackupUtils {
@@ -85,7 +84,7 @@ public class BackupUtils {
         File file = unzip(context, in);
 
         // Replace database file
-        File db_file = context.getDatabasePath(AppDatabase.INSTANCE.getDATABASE_IMPORT_FILE_NAME());
+        File db_file = context.getDatabasePath(AppDatabase.DATABASE_IMPORT_FILE_NAME);
         FileUtils.INSTANCE.copy(file, db_file);
     }
 
@@ -118,7 +117,7 @@ public class BackupUtils {
             BufferedInputStream origin;
             byte data[] = new byte[BUFFER];
 
-            File db = context.getDatabasePath(AppDatabase.INSTANCE.getDATABASE_FILE_NAME());
+            File db = context.getDatabasePath(AppDatabase.DATABASE_FILE_NAME);
             FileInputStream fi = new FileInputStream(db);
             origin = new BufferedInputStream(fi, BUFFER);
 

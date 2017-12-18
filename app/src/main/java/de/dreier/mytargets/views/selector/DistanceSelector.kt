@@ -37,6 +37,6 @@ class DistanceSelector @JvmOverloads constructor(context: Context, attrs: Attrib
     }
 
     companion object {
-        val DISTANCE_REQUEST_CODE = 1
+        const val DISTANCE_REQUEST_CODE = 1
     }
 }

@@ -45,7 +45,7 @@ class TargetImpactAggregationDrawable(target: Target) : TargetImpactDrawable(tar
 
     fun setColor(@ColorInt color: Int) {
         for (faceAggregation in faceAggregations) {
-            faceAggregation.setColor(color)
+            faceAggregation.color = color
         }
     }
 

@@ -49,6 +49,6 @@ class TargetSelector @JvmOverloads constructor(context: Context, attrs: Attribut
     }
 
     companion object {
-        val TARGET_REQUEST_CODE = 12
+        const val TARGET_REQUEST_CODE = 12
     }
 }
