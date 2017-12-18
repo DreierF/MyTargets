@@ -131,7 +131,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
         binding.fab.setVisibility(View.GONE);
         binding.fab.setOnClickListener(view -> {
             // New round to free training
-            EditRoundFragment.createIntent(training)
+            EditRoundFragment.Companion.createIntent(training)
                     .withContext(this)
                     .fromFab(binding.fab)
                     .start();
@@ -227,7 +227,7 @@ public class TrainingFragment extends EditableListFragment<Round> {
     }
 
     protected void onEdit(long itemId) {
-        EditRoundFragment.editIntent(training, itemId)
+        EditRoundFragment.Companion.editIntent(training, itemId)
                 .withContext(this)
                 .start();
     }
