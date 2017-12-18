@@ -156,7 +156,7 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_statistics:
-                StatisticsActivity
+                StatisticsActivity.Companion
                         .getIntent(Stream.of(Training.Companion.getAll())
                                 .flatMap((training) -> Stream.of(training.loadRounds()))
                                 .map(Round::getId)
@@ -176,7 +176,7 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
     }
 
     public void onStatistics(@NonNull List<Long> ids) {
-        StatisticsActivity.getIntent(Stream.of(ids)
+        StatisticsActivity.Companion.getIntent(Stream.of(ids)
                 .map(Training.Companion::get)
                 .flatMap(t -> Stream.of(t.loadRounds()))
                 .map(Round::getId)

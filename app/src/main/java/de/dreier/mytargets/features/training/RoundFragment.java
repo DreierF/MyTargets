@@ -170,7 +170,7 @@ public class RoundFragment extends EditableListFragment<End> {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_statistics:
-                StatisticsActivity
+                StatisticsActivity.Companion
                         .getIntent(Collections.singletonList(round.getId()))
                         .withContext(this)
                         .start();
