@@ -182,14 +182,14 @@ public class MainActivityTest extends UITestBase {
         onView(withId(R.id.action_bows)).perform(click());
         clickFabSpeedDialItem(R.id.fabBowRecurve);
         intended(allOf(hasClass(EditBowActivity.class),
-                hasExtra(EditBowFragment.BOW_TYPE, EBowType.RECURVE_BOW.name())));
+                hasExtra(EditBowFragment.Companion.getBOW_TYPE(), EBowType.RECURVE_BOW.name())));
 
         // openBow
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
                 .perform(click());
         final Bow firstBow = Stream.of(Bow.Companion.getAll()).sorted().findFirstOrNull();
         intended(allOf(hasClass(EditBowActivity.class),
-                hasExtra(EditBowFragment.BOW_ID, firstBow.getId())));
+                hasExtra(EditBowFragment.Companion.getBOW_ID(), firstBow.getId())));
 
         // newArrow
         onView(withId(R.id.action_arrows)).perform(click());

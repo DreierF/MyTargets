@@ -13,110 +13,97 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.bows;
+package de.dreier.mytargets.features.bows
 
-import android.databinding.DataBindingUtil;
-import android.os.Bundle;
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.util.SparseArray;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.databinding.DataBindingUtil
+import android.os.Bundle
+import android.support.annotation.CallSuper
+import android.util.SparseArray
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import de.dreier.mytargets.R
+import de.dreier.mytargets.base.fragments.EditableListFragment
+import de.dreier.mytargets.base.fragments.FragmentBase
+import de.dreier.mytargets.base.fragments.FragmentBase.LoaderUICallback
+import de.dreier.mytargets.base.fragments.ItemActionModeCallback
+import de.dreier.mytargets.databinding.FragmentBowsBinding
+import de.dreier.mytargets.shared.models.EBowType
+import de.dreier.mytargets.shared.models.EBowType.*
+import de.dreier.mytargets.shared.models.db.Bow
+import de.dreier.mytargets.utils.DividerItemDecoration
+import de.dreier.mytargets.utils.SlideInItemAnimator
 
-import java.util.List;
+class EditBowListFragment : EditableListFragment<Bow>() {
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.base.fragments.EditableListFragment;
-import de.dreier.mytargets.base.fragments.ItemActionModeCallback;
-import de.dreier.mytargets.databinding.FragmentBowsBinding;
-import de.dreier.mytargets.shared.models.EBowType;
-import de.dreier.mytargets.shared.models.db.Bow;
-import de.dreier.mytargets.utils.DividerItemDecoration;
-import de.dreier.mytargets.utils.SlideInItemAnimator;
+    private lateinit var binding: FragmentBowsBinding
 
-import static de.dreier.mytargets.shared.models.EBowType.BARE_BOW;
-import static de.dreier.mytargets.shared.models.EBowType.COMPOUND_BOW;
-import static de.dreier.mytargets.shared.models.EBowType.HORSE_BOW;
-import static de.dreier.mytargets.shared.models.EBowType.LONG_BOW;
-import static de.dreier.mytargets.shared.models.EBowType.RECURVE_BOW;
-import static de.dreier.mytargets.shared.models.EBowType.YUMI;
-
-public class EditBowListFragment extends EditableListFragment<Bow> {
-
-    protected FragmentBowsBinding binding;
-
-    @NonNull
-    static SparseArray<EBowType> bowTypeMap = new SparseArray<>();
-
-    static {
-        bowTypeMap.put(R.id.fabBowRecurve, RECURVE_BOW);
-        bowTypeMap.put(R.id.fabBowCompound, COMPOUND_BOW);
-        bowTypeMap.put(R.id.fabBowBare, BARE_BOW);
-        bowTypeMap.put(R.id.fabBowLong, LONG_BOW);
-        bowTypeMap.put(R.id.fabBowHorse, HORSE_BOW);
-        bowTypeMap.put(R.id.fabBowYumi, YUMI);
+    init {
+        itemTypeDelRes = R.plurals.bow_deleted
+        actionModeCallback = ItemActionModeCallback(this, selector,
+                R.plurals.bow_selected)
+        actionModeCallback.setEditCallback(this::onEdit)
+        actionModeCallback.setDeleteCallback(this::onDelete)
     }
 
-    public EditBowListFragment() {
-        itemTypeDelRes = R.plurals.bow_deleted;
-        actionModeCallback = new ItemActionModeCallback(this, selector,
-                R.plurals.bow_selected);
-        actionModeCallback.setEditCallback(this::onEdit);
-        actionModeCallback.setDeleteCallback(this::onDelete);
+    override fun onResume() {
+        super.onResume()
+        binding.fabSpeedDial.closeMenu()
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        binding.fabSpeedDial.closeMenu();
-    }
-
-    @Override
     @CallSuper
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bows, container, false);
-        binding.recyclerView.setHasFixedSize(true);
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bows, container, false)
+        binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.addItemDecoration(
-                new DividerItemDecoration(getContext(), R.drawable.full_divider));
-        adapter = new BowAdapter(selector, this, this);
-        binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
-        binding.recyclerView.setAdapter(adapter);
+                DividerItemDecoration(context!!, R.drawable.full_divider))
+        adapter = BowAdapter(selector, this, this)
+        binding.recyclerView.itemAnimator = SlideInItemAnimator()
+        binding.recyclerView.adapter = adapter
 
-        binding.fabSpeedDial.setMenuListener(menuItem -> {
-            int itemId = menuItem.getItemId();
-            EBowType bowType = bowTypeMap.get(itemId);
-            FloatingActionButton fab = binding.fabSpeedDial.getFabFromMenuId(itemId);
+        binding.fabSpeedDial.setMenuListener { menuItem ->
+            val itemId = menuItem.itemId
+            val bowType = bowTypeMap.get(itemId)
+            val fab = binding.fabSpeedDial.getFabFromMenuId(itemId)
             EditBowFragment
                     .createIntent(bowType)
-                    .withContext(EditBowListFragment.this)
-                    .fromFab(fab, R.color.fabBow, bowType.getDrawable())
-                    .start();
-            return false;
-        });
+                    .withContext(this@EditBowListFragment)
+                    .fromFab(fab, R.color.fabBow, bowType.drawable)
+                    .start()
+            false
+        }
 
-        return binding.getRoot();
+        return binding.root
     }
 
-    @NonNull
-    @Override
-    protected LoaderUICallback onLoad(Bundle args) {
-        List<Bow> bows = Bow.Companion.getAll();
-        return () -> {
-            adapter.setList(bows);
-            binding.emptyState.getRoot().setVisibility(bows.isEmpty() ? View.VISIBLE : View.GONE);
-        };
+    override fun onLoad(args: Bundle): FragmentBase.LoaderUICallback {
+        val bows = Bow.all
+        return LoaderUICallback {
+            adapter!!.setList(bows)
+            binding.emptyState!!.root.visibility = if (bows.isEmpty()) View.VISIBLE else View.GONE
+        }
     }
 
-    protected void onEdit(long itemId) {
+    private fun onEdit(itemId: Long) {
         EditBowFragment.editIntent(itemId)
                 .withContext(this)
-                .start();
+                .start()
     }
 
-    @Override
-    protected void onItemSelected(@NonNull Bow item) {
-        EditBowFragment.editIntent(item.getId()).withContext(this).start();
+    override fun onItemSelected(item: Bow) {
+        EditBowFragment.editIntent(item.id!!).withContext(this).start()
+    }
+
+    companion object {
+        internal var bowTypeMap = SparseArray<EBowType>()
+
+        init {
+            bowTypeMap.put(R.id.fabBowRecurve, RECURVE_BOW)
+            bowTypeMap.put(R.id.fabBowCompound, COMPOUND_BOW)
+            bowTypeMap.put(R.id.fabBowBare, BARE_BOW)
+            bowTypeMap.put(R.id.fabBowLong, LONG_BOW)
+            bowTypeMap.put(R.id.fabBowHorse, HORSE_BOW)
+            bowTypeMap.put(R.id.fabBowYumi, YUMI)
+        }
     }
 }

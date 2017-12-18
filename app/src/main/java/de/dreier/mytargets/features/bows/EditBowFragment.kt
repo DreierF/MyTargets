@@ -13,227 +13,200 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.bows;
+package de.dreier.mytargets.features.bows
 
-import android.app.Activity;
-import android.content.Intent;
-import android.databinding.DataBindingUtil;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
-import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.app.Activity
+import android.content.Intent
+import android.databinding.DataBindingUtil
+import android.os.Bundle
+import android.support.annotation.VisibleForTesting
+import android.support.v4.app.Fragment
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.evernote.android.state.State
+import de.dreier.mytargets.R
+import de.dreier.mytargets.base.activities.ItemSelectActivity
+import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemAdapter
+import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemHolder
+import de.dreier.mytargets.base.fragments.EditWithImageFragmentBase
+import de.dreier.mytargets.databinding.FragmentEditBowBinding
+import de.dreier.mytargets.databinding.ItemSightMarkBinding
+import de.dreier.mytargets.shared.models.Dimension
+import de.dreier.mytargets.shared.models.EBowType
+import de.dreier.mytargets.shared.models.db.Bow
+import de.dreier.mytargets.shared.models.db.BowImage
+import de.dreier.mytargets.shared.models.db.SightMark
+import de.dreier.mytargets.utils.IntentWrapper
+import de.dreier.mytargets.utils.ToolbarUtils
+import de.dreier.mytargets.views.selector.SelectorBase
+import de.dreier.mytargets.views.selector.SimpleDistanceSelector
+import java.util.*
 
-import com.evernote.android.state.State;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.base.activities.ItemSelectActivity;
-import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemAdapter;
-import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemHolder;
-import de.dreier.mytargets.base.fragments.EditWithImageFragmentBase;
-import de.dreier.mytargets.databinding.FragmentEditBowBinding;
-import de.dreier.mytargets.databinding.ItemSightMarkBinding;
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.EBowType;
-import de.dreier.mytargets.shared.models.db.Bow;
-import de.dreier.mytargets.shared.models.db.BowImage;
-import de.dreier.mytargets.shared.models.db.SightMark;
-import de.dreier.mytargets.utils.IntentWrapper;
-import de.dreier.mytargets.utils.ToolbarUtils;
-import de.dreier.mytargets.views.selector.SelectorBase;
-import de.dreier.mytargets.views.selector.SimpleDistanceSelector;
-
-public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
-
-    public static final String BOW_TYPE = "bow_type";
-    @VisibleForTesting
-    public static final String BOW_ID = "bow_id";
-
-    @Nullable
-    @State
-    Bow bow;
+class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_bow, BowImage::class.java) {
 
     @State
-    ArrayList<SightMark> sightMarks;
+    internal var bow: Bow? = null
 
-    private FragmentEditBowBinding contentBinding;
-    private SightMarksAdapter adapter;
+    @State
+    internal var sightMarks: ArrayList<SightMark>? = null
 
-    public EditBowFragment() {
-        super(R.drawable.recurve_bow, BowImage.class);
-    }
+    private var contentBinding: FragmentEditBowBinding? = null
+    private var adapter: SightMarksAdapter? = null
 
-    @NonNull
-    public static IntentWrapper createIntent(@NonNull EBowType bowType) {
-        return new IntentWrapper(EditBowActivity.class)
-                .with(EditBowFragment.BOW_TYPE, bowType.name());
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val rootView = super.onCreateView(inflater, container, savedInstanceState)
 
-    @NonNull
-    public static IntentWrapper editIntent(long bowId) {
-        return new IntentWrapper(EditBowActivity.class)
-                .with(BOW_ID, bowId);
-    }
+        contentBinding = FragmentEditBowBinding.inflate(inflater, binding.content, true)
+        contentBinding!!.addButton.setOnClickListener { v -> onAddSightSetting() }
+        contentBinding!!.moreFields.setOnClickListener { v -> contentBinding!!.showAll = true }
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-
-        contentBinding = FragmentEditBowBinding.inflate(inflater, binding.content, true);
-        contentBinding.addButton.setOnClickListener(v -> onAddSightSetting());
-        contentBinding.moreFields.setOnClickListener(v -> contentBinding.setShowAll(true));
-
-        EBowType bowType = EBowType
-                .valueOf(getArguments().getString(BOW_TYPE, EBowType.RECURVE_BOW.name()));
+        val bowType = EBowType
+                .valueOf(arguments!!.getString(BOW_TYPE, EBowType.RECURVE_BOW.name))
 
         if (savedInstanceState == null) {
-            Bundle bundle = getArguments();
+            val bundle = arguments
             if (bundle != null && bundle.containsKey(BOW_ID)) {
                 // Load data from database
-                bow = Bow.Companion.get(bundle.getLong(BOW_ID));
-                sightMarks = bow.loadSightMarks();
+                bow = Bow[bundle.getLong(BOW_ID)]
+                sightMarks = bow!!.loadSightMarks()!!
             } else {
                 // Set to default values
-                bow = new Bow();
-                bow.setName(getString(R.string.my_bow));
-                bow.setType(bowType);
-                sightMarks = new ArrayList<>();
-                sightMarks.add(new SightMark());
+                bow = Bow()
+                bow!!.name = getString(R.string.my_bow)
+                bow!!.type = bowType
+                sightMarks = ArrayList()
+                sightMarks!!.add(SightMark())
             }
-            setImageFiles(bow.loadImages());
+            imageFiles = bow!!.loadImages()!!
         }
-        ToolbarUtils.setTitle(this, bow.getName());
-        contentBinding.setBow(bow);
+        ToolbarUtils.setTitle(this, bow!!.name)
+        contentBinding!!.bow = bow
 
-        loadImage(imageFile);
-        adapter = new SightMarksAdapter(this, sightMarks);
-        contentBinding.sightMarks.setAdapter(adapter);
-        contentBinding.sightMarks.setNestedScrollingEnabled(false);
-        return rootView;
+        loadImage(imageFile)
+        adapter = SightMarksAdapter(this, sightMarks!!)
+        contentBinding!!.sightMarks.adapter = adapter
+        contentBinding!!.sightMarks.isNestedScrollingEnabled = false
+        return rootView
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        contentBinding.rootView.requestFocus();
+    override fun onResume() {
+        super.onResume()
+        contentBinding!!.rootView.requestFocus()
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        bow = buildBow();
-        super.onSaveInstanceState(outState);
+    override fun onSaveInstanceState(outState: Bundle) {
+        bow = buildBow()
+        super.onSaveInstanceState(outState)
     }
 
-    private void onAddSightSetting() {
-        sightMarks.add(new SightMark());
-        adapter.setList(sightMarks);
-        adapter.notifyItemInserted(sightMarks.size() - 1);
+    private fun onAddSightSetting() {
+        sightMarks!!.add(SightMark())
+        adapter!!.setList(sightMarks)
+        adapter!!.notifyItemInserted(sightMarks!!.size - 1)
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode == Activity.RESULT_OK &&
-                requestCode == SimpleDistanceSelector.Companion.getSIMPLE_DISTANCE_REQUEST_CODE()) {
-            Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
-            final int index = intentData.getInt(SelectorBase.INDEX);
-            final Dimension parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
-            sightMarks.get(index).setDistance(parcelable);
-            adapter.notifyItemChanged(index);
+        if (resultCode == Activity.RESULT_OK && requestCode == SimpleDistanceSelector.SIMPLE_DISTANCE_REQUEST_CODE) {
+            val intentData = data.getBundleExtra(ItemSelectActivity.INTENT)
+            val index = intentData.getInt(SelectorBase.INDEX)
+            val parcelable = data.getParcelableExtra<Dimension>(ItemSelectActivity.ITEM)
+            sightMarks!![index].distance = parcelable
+            adapter!!.notifyItemChanged(index)
         }
     }
 
-    @Override
-    public void onSave() {
-        super.onSave();
-        buildBow().save();
-        finish();
+    public override fun onSave() {
+        super.onSave()
+        buildBow()!!.save()
+        finish()
     }
 
-    @Nullable
-    private Bow buildBow() {
-        bow.setName(contentBinding.name.getText().toString());
-        bow.setBrand(contentBinding.brand.getText().toString());
-        bow.setSize(contentBinding.size.getText().toString());
-        bow.setBraceHeight(contentBinding.braceHeight.getText().toString());
-        bow.setTiller(contentBinding.tiller.getText().toString());
-        bow.setLimbs(contentBinding.limbs.getText().toString());
-        bow.setSight(contentBinding.sight.getText().toString());
-        bow.setDrawWeight(contentBinding.drawWeight.getText().toString());
-        bow.setStabilizer(contentBinding.stabilizer.getText().toString());
-        bow.setClicker(contentBinding.clicker.getText().toString());
-        bow.setDescription(contentBinding.description.getText().toString());
-        bow.setButton(contentBinding.button.getText().toString());
-        bow.setString(contentBinding.string.getText().toString());
-        bow.setNockingPoint(contentBinding.nockingPoint.getText().toString());
-        bow.setLetoffWeight(contentBinding.letoffWeight.getText().toString());
-        bow.setArrowRest(contentBinding.rest.getText().toString());
-        bow.setRestHorizontalPosition(contentBinding.restHorizontalPosition.getText().toString());
-        bow.setRestVerticalPosition(contentBinding.restVerticalPosition.getText().toString());
-        bow.setRestStiffness(contentBinding.restStiffness.getText().toString());
-        bow.setCamSetting(contentBinding.cam.getText().toString());
-        bow.setScopeMagnification(contentBinding.scopeMagnification.getText().toString());
-        bow.setImages(getImageFiles());
-        bow.thumbnail = getThumbnail();
-        bow.setSightMarks(sightMarks);
-        return bow;
+    private fun buildBow(): Bow? {
+        bow!!.name = contentBinding!!.name.text.toString()
+        bow!!.brand = contentBinding!!.brand.text.toString()
+        bow!!.size = contentBinding!!.size.text.toString()
+        bow!!.braceHeight = contentBinding!!.braceHeight.text.toString()
+        bow!!.tiller = contentBinding!!.tiller.text.toString()
+        bow!!.limbs = contentBinding!!.limbs.text.toString()
+        bow!!.sight = contentBinding!!.sight.text.toString()
+        bow!!.drawWeight = contentBinding!!.drawWeight.text.toString()
+        bow!!.stabilizer = contentBinding!!.stabilizer.text.toString()
+        bow!!.clicker = contentBinding!!.clicker.text.toString()
+        bow!!.description = contentBinding!!.description.text.toString()
+        bow!!.button = contentBinding!!.button.text.toString()
+        bow!!.string = contentBinding!!.string.text.toString()
+        bow!!.nockingPoint = contentBinding!!.nockingPoint.text.toString()
+        bow!!.letoffWeight = contentBinding!!.letoffWeight.text.toString()
+        bow!!.arrowRest = contentBinding!!.rest.text.toString()
+        bow!!.restHorizontalPosition = contentBinding!!.restHorizontalPosition.text.toString()
+        bow!!.restVerticalPosition = contentBinding!!.restVerticalPosition.text.toString()
+        bow!!.restStiffness = contentBinding!!.restStiffness.text.toString()
+        bow!!.camSetting = contentBinding!!.cam.text.toString()
+        bow!!.scopeMagnification = contentBinding!!.scopeMagnification.text.toString()
+        bow!!.images = imageFiles
+        bow!!.thumbnail = thumbnail
+        bow!!.sightMarks = sightMarks
+        return bow
     }
 
-    private static class SightSettingHolder extends DynamicItemHolder<SightMark> {
+    private class SightSettingHolder internal constructor(view: View) : DynamicItemHolder<SightMark>(view) {
 
-        private final ItemSightMarkBinding binding;
+        private val binding: ItemSightMarkBinding
 
-        SightSettingHolder(@NonNull View view) {
-            super(view);
-            binding = DataBindingUtil.bind(view);
-            binding.sightSetting.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        init {
+            binding = DataBindingUtil.bind(view)
+            binding.sightSetting.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
 
                 }
 
-                @Override
-                public void onTextChanged(@NonNull CharSequence s, int i, int i1, int i2) {
-                    item.setValue(s.toString());
+                override fun onTextChanged(s: CharSequence, i: Int, i1: Int, i2: Int) {
+                    item.value = s.toString()
                 }
 
-                @Override
-                public void afterTextChanged(Editable editable) {
+                override fun afterTextChanged(editable: Editable) {
 
                 }
-            });
+            })
         }
 
-        @Override
-        public void onBind(@NonNull SightMark sightMark, int position, @NonNull Fragment fragment, View.OnClickListener removeListener) {
-            item = sightMark;
-            binding.distance.setOnActivityResultContext(fragment);
-            binding.distance.setItemIndex(position);
-            binding.distance.setItem(sightMark.getDistance());
-            binding.sightSetting.setText(sightMark.getValue());
-            binding.removeSightSetting.setOnClickListener(removeListener);
+        override fun onBind(sightMark: SightMark, position: Int, fragment: Fragment, removeListener: View.OnClickListener) {
+            item = sightMark
+            binding.distance.setOnActivityResultContext(fragment)
+            binding.distance.setItemIndex(position)
+            binding.distance.setItem(sightMark.distance)
+            binding.sightSetting.setText(sightMark.value)
+            binding.removeSightSetting.setOnClickListener(removeListener)
         }
     }
 
-    private class SightMarksAdapter extends DynamicItemAdapter<SightMark> {
-        SightMarksAdapter(@NonNull Fragment fragment, List<SightMark> list) {
-            super(fragment, list, R.string.sight_setting_removed);
+    private inner class SightMarksAdapter internal constructor(fragment: Fragment, list: List<SightMark>) : DynamicItemAdapter<SightMark>(fragment, list, R.string.sight_setting_removed) {
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DynamicItemHolder<SightMark> {
+            val v = inflater.inflate(R.layout.item_sight_mark, parent, false)
+            return SightSettingHolder(v)
+        }
+    }
+
+    companion object {
+
+        val BOW_TYPE = "bow_type"
+        @VisibleForTesting
+        val BOW_ID = "bow_id"
+
+        fun createIntent(bowType: EBowType): IntentWrapper {
+            return IntentWrapper(EditBowActivity::class.java)
+                    .with(EditBowFragment.BOW_TYPE, bowType.name)
         }
 
-        @NonNull
-        @Override
-        public DynamicItemHolder<SightMark> onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = inflater.inflate(R.layout.item_sight_mark, parent, false);
-            return new SightSettingHolder(v);
+        fun editIntent(bowId: Long): IntentWrapper {
+            return IntentWrapper(EditBowActivity::class.java)
+                    .with(BOW_ID, bowId)
         }
     }
 }
