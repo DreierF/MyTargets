@@ -13,18 +13,15 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.bows;
+package de.dreier.mytargets.features.bows
 
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment
 
-import de.dreier.mytargets.base.activities.ItemSelectActivity;
+import de.dreier.mytargets.base.activities.ItemSelectActivity
 
-public class BowListActivity extends ItemSelectActivity {
+class BowListActivity : ItemSelectActivity() {
 
-    @NonNull
-    @Override
-    public Fragment instantiateFragment() {
-        return new BowListFragment();
+    public override fun instantiateFragment(): Fragment {
+        return BowListFragment()
     }
 }

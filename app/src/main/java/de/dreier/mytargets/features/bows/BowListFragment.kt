@@ -13,28 +13,23 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.bows;
+package de.dreier.mytargets.features.bows
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.os.Bundle
+import de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM
+import de.dreier.mytargets.base.fragments.FragmentBase
+import de.dreier.mytargets.base.fragments.FragmentBase.LoaderUICallback
+import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase
+import de.dreier.mytargets.shared.models.db.Bow
 
-import java.util.List;
+class BowListFragment : SelectPureListItemFragmentBase<Bow>() {
 
-import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase;
-import de.dreier.mytargets.shared.models.db.Bow;
-
-import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
-
-public class BowListFragment extends SelectPureListItemFragmentBase<Bow> {
-
-    @NonNull
-    @Override
-    protected LoaderUICallback onLoad(Bundle args) {
-        List<Bow> bows = Bow.Companion.getAll();
-        return () -> {
-            adapter.setList(bows);
-            Bow bow = getArguments().getParcelable(ITEM);
-            selectItem(binding.recyclerView, bow);
-        };
+    override fun onLoad(args: Bundle): FragmentBase.LoaderUICallback {
+        val bows = Bow.all
+        return LoaderUICallback {
+            adapter!!.setList(bows)
+            val bow = arguments!!.getParcelable<Bow>(ITEM)
+            selectItem(binding.recyclerView, bow!!)
+        }
     }
 }

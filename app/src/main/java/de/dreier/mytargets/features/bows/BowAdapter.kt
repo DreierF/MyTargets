@@ -13,73 +13,52 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.bows;
+package de.dreier.mytargets.features.bows
 
-import android.databinding.DataBindingUtil;
-import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.databinding.DataBindingUtil
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import de.dreier.mytargets.R
+import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
+import de.dreier.mytargets.databinding.ItemImageDetailsBinding
+import de.dreier.mytargets.features.training.details.HtmlInfoBuilder
+import de.dreier.mytargets.shared.models.db.Bow
+import de.dreier.mytargets.utils.Utils
+import de.dreier.mytargets.utils.multiselector.MultiSelector
+import de.dreier.mytargets.utils.multiselector.OnItemClickListener
+import de.dreier.mytargets.utils.multiselector.OnItemLongClickListener
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
-import de.dreier.mytargets.databinding.ItemImageDetailsBinding;
-import de.dreier.mytargets.features.training.details.HtmlInfoBuilder;
-import de.dreier.mytargets.shared.models.db.Bow;
-import de.dreier.mytargets.shared.models.db.SightMark;
-import de.dreier.mytargets.utils.Utils;
-import de.dreier.mytargets.utils.multiselector.MultiSelector;
-import de.dreier.mytargets.utils.multiselector.OnItemClickListener;
-import de.dreier.mytargets.utils.multiselector.OnItemLongClickListener;
-import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
+internal class BowAdapter(private val selector: MultiSelector, private val clickListener: OnItemClickListener<Bow>, private val longClickListener: OnItemLongClickListener<Bow>) : SimpleListAdapterBase<Bow>() {
 
-class BowAdapter extends SimpleListAdapterBase<Bow> {
-
-    private final OnItemClickListener<Bow> clickListener;
-    private final OnItemLongClickListener<Bow> longClickListener;
-    private final MultiSelector selector;
-
-    public BowAdapter(MultiSelector selector, OnItemClickListener<Bow> clickListener, OnItemLongClickListener<Bow> longClickListener) {
-        this.selector = selector;
-        this.clickListener = clickListener;
-        this.longClickListener = longClickListener;
+    public override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
+        val itemView = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_image_details, parent, false)
+        return ViewHolder(itemView)
     }
 
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_image_details, parent, false);
-        return new ViewHolder(itemView);
-    }
+    internal inner class ViewHolder(itemView: View) : SelectableViewHolder<Bow>(itemView, selector, clickListener, longClickListener) {
 
-    class ViewHolder extends SelectableViewHolder<Bow> {
+        val binding: ItemImageDetailsBinding = DataBindingUtil.bind(itemView)
 
-        final ItemImageDetailsBinding binding;
+        override fun bindItem() {
+            binding.name.text = item.name
+            binding.image.setImageDrawable(item.drawable)
+            binding.details.visibility = View.VISIBLE
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView, selector, clickListener, longClickListener);
-            binding = DataBindingUtil.bind(itemView);
-        }
-
-        @Override
-        public void bindItem() {
-            binding.name.setText(item.getName());
-            binding.image.setImageDrawable(item.getDrawable());
-            binding.details.setVisibility(View.VISIBLE);
-
-            HtmlInfoBuilder info = new HtmlInfoBuilder();
-            info.addLine(R.string.bow_type, item.getType());
-            if (!item.getBrand().trim().isEmpty()) {
-                info.addLine(R.string.brand, item.getBrand());
+            val info = HtmlInfoBuilder()
+            info.addLine(R.string.bow_type, item.type!!)
+            if (!item.brand!!.trim { it <= ' ' }.isEmpty()) {
+                info.addLine(R.string.brand, item.brand!!)
             }
-            if (!item.getSize().trim().isEmpty()) {
-                info.addLine(R.string.size, item.getSize());
+            if (!item.size!!.trim { it <= ' ' }.isEmpty()) {
+                info.addLine(R.string.size, item.size!!)
             }
-            for (SightMark s : item.loadSightMarks()) {
-                info.addLine(s.getDistance().toString(), s.getValue());
+            for ((_, _, distance, value) in item.loadSightMarks()!!) {
+                info.addLine(distance.toString(), value!!)
             }
-            binding.details.setText(Utils.fromHtml(info.toString()));
+            binding.details.text = Utils.fromHtml(info.toString())
         }
     }
 }
