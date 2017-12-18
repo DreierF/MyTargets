@@ -380,7 +380,7 @@ public class TargetView extends TargetViewBase {
 
     public void setInputMethod(EInputMethod mode) {
         if (mode != getInputMethod()) {
-            setInputMethod(mode);
+            super.setInputMethod(mode);
             getTargetDrawable().drawArrowsEnabled(getInputMethod() == PLOTTING);
             getTargetDrawable().setAggregationStrategy(getInputMethod() == PLOTTING
                     ? aggregationStrategy : EAggregationStrategy.NONE);

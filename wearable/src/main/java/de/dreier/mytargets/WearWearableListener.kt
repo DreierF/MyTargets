@@ -15,34 +15,23 @@
 
 package de.dreier.mytargets
 
-import android.app.Notification
-import android.app.NotificationChannel.DEFAULT_CHANNEL_ID
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Parcelable
 import android.support.v4.app.NotificationCompat
-
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.WearableListenerService
-
 import de.dreier.mytargets.shared.models.TimerSettings
 import de.dreier.mytargets.shared.models.TrainingInfo
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
-import de.dreier.mytargets.shared.utils.*
-import de.dreier.mytargets.utils.WearSettingsManager
-
+import de.dreier.mytargets.shared.utils.unmarshall
 import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.REQUEST_TRAINING_TEMPLATE
-import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.TRAINING_CREATE
-import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.TRAINING_UPDATE
-import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.END_UPDATE
 import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.TIMER_SETTINGS
-import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.BROADCAST_TIMER_SETTINGS_FROM_LOCAL
-import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.BROADCAST_TIMER_SETTINGS_FROM_REMOTE
-import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.EXTRA_TIMER_SETTINGS
+import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.TRAINING_UPDATE
+import de.dreier.mytargets.utils.WearSettingsManager
 
 class WearWearableListener : WearableListenerService() {
 
