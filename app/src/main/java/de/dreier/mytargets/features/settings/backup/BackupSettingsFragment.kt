@@ -13,455 +13,442 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings.backup;
+package de.dreier.mytargets.features.settings.backup
 
-import android.Manifest;
-import android.accounts.Account;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SyncStatusObserver;
-import android.databinding.DataBindingUtil;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.text.format.DateUtils;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.ContentResolver
+import android.content.Context
+import android.content.Intent
+import android.content.SyncStatusObserver
+import android.databinding.DataBindingUtil
+import android.net.Uri
+import android.os.AsyncTask
+import android.os.Bundle
+import android.os.Handler
+import android.support.annotation.StringRes
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DividerItemDecoration
+import android.text.format.DateUtils
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 
-import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.MaterialDialog
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.io.FileNotFoundException
+import java.text.SimpleDateFormat
+import java.util.Arrays
+import java.util.Locale
+import java.util.Timer
+import java.util.TimerTask
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.databinding.FragmentBackupBinding;
-import de.dreier.mytargets.features.settings.SettingsFragmentBase;
-import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.features.settings.backup.provider.BackupUtils;
-import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation;
-import de.dreier.mytargets.features.settings.backup.provider.IAsyncBackupRestore;
-import de.dreier.mytargets.features.settings.backup.synchronization.GenericAccountService;
-import de.dreier.mytargets.features.settings.backup.synchronization.SyncUtils;
-import de.dreier.mytargets.utils.ToolbarUtils;
-import de.dreier.mytargets.utils.Utils;
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.OnPermissionDenied;
-import permissions.dispatcher.RuntimePermissions;
+import de.dreier.mytargets.R
+import de.dreier.mytargets.databinding.FragmentBackupBinding
+import de.dreier.mytargets.features.settings.SettingsFragmentBase
+import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.features.settings.backup.provider.BackupUtils
+import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation
+import de.dreier.mytargets.features.settings.backup.provider.IAsyncBackupRestore
+import de.dreier.mytargets.features.settings.backup.synchronization.GenericAccountService
+import de.dreier.mytargets.features.settings.backup.synchronization.SyncUtils
+import de.dreier.mytargets.utils.ToolbarUtils
+import de.dreier.mytargets.utils.Utils
+import permissions.dispatcher.NeedsPermission
+import permissions.dispatcher.OnPermissionDenied
+import permissions.dispatcher.RuntimePermissions
 
-import static android.app.Activity.RESULT_OK;
-import static android.content.ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE;
-import static android.content.ContentResolver.SYNC_OBSERVER_TYPE_PENDING;
-import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-import static de.dreier.mytargets.features.settings.backup.BackupSettingsFragmentPermissionsDispatcher.showFilePickerWithPermissionCheck;
-import static de.dreier.mytargets.features.settings.backup.provider.GoogleDriveBackup.AsyncRestore.REQUEST_CODE_RESOLUTION;
+import android.app.Activity.RESULT_OK
+import android.content.ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE
+import android.content.ContentResolver.SYNC_OBSERVER_TYPE_PENDING
+import android.support.v7.widget.DividerItemDecoration.VERTICAL
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import de.dreier.mytargets.features.settings.backup.provider.GoogleDriveBackup.AsyncRestore.REQUEST_CODE_RESOLUTION
 
 @RuntimePermissions
-public class BackupSettingsFragment extends SettingsFragmentBase implements IAsyncBackupRestore.OnLoadFinishedListener {
+class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoadFinishedListener {
 
-    private static final int IMPORT_FROM_URI = 1234;
-
-    private IAsyncBackupRestore backup;
-    @Nullable
-    private BackupAdapter adapter;
-    private FragmentBackupBinding binding;
-    private Timer updateLabelTimer;
+    private var backup: IAsyncBackupRestore? = null
+    private var adapter: BackupAdapter? = null
+    private var binding: FragmentBackupBinding? = null
+    private var updateLabelTimer: Timer? = null
     /**
      * Handle to a SyncObserver. The ProgressBar element is visible until the SyncObserver reports
      * that the sync is complete.
-     * <p>
-     * <p>This allows us to delete our SyncObserver once the application is no longer in the
+     *
+     *
+     *
+     * This allows us to delete our SyncObserver once the application is no longer in the
      * foreground.
      */
-    @Nullable
-    private Object syncObserverHandle;
-    private boolean isRefreshing = false;
+    private var syncObserverHandle: Any? = null
+    private var isRefreshing = false
 
     /**
      * Create a new anonymous SyncStatusObserver. It's attached to the app's ContentResolver in
      * onResume(), and removed in onPause(). If status changes, it sets the state of the Progress
      * bar. If a sync is active or pending, the progress is shown.
      */
-    @NonNull
-    private SyncStatusObserver syncStatusObserver = which -> getActivity().runOnUiThread(() -> {
-        Account account = GenericAccountService.getAccount();
+    private val syncStatusObserver = SyncStatusObserver {
+        activity!!.runOnUiThread {
+            val account = GenericAccountService.account
 
-        boolean syncActive = ContentResolver.isSyncActive(account, SyncUtils.CONTENT_AUTHORITY);
-        boolean syncPending = ContentResolver.isSyncPending(account, SyncUtils.CONTENT_AUTHORITY);
-        boolean wasRefreshing = isRefreshing;
-        isRefreshing = syncActive || syncPending;
-        binding.backupNowButton.setEnabled(!isRefreshing);
-        binding.backupProgressBar.setIndeterminate(true);
-        binding.backupProgressBar.setVisibility(isRefreshing ? VISIBLE : GONE);
-        if (wasRefreshing && !isRefreshing && backup != null) {
-            backup.getBackups(this);
+            val syncActive = ContentResolver.isSyncActive(account, SyncUtils
+                    .CONTENT_AUTHORITY)
+            val syncPending = ContentResolver.isSyncPending(account, SyncUtils
+                    .CONTENT_AUTHORITY)
+            val wasRefreshing = isRefreshing
+            isRefreshing = syncActive || syncPending
+            binding!!.backupNowButton.isEnabled = !isRefreshing
+            binding!!.backupProgressBar.isIndeterminate = true
+            binding!!.backupProgressBar.visibility = if (isRefreshing) VISIBLE else GONE
+            if (wasRefreshing && !isRefreshing && backup != null) {
+                backup!!.getBackups(this)
+            }
         }
-    });
+    }
 
     /**
      * Create SyncAccount at launch, if needed.
-     * <p>
-     * <p>This will create a new account with the system for our application and register our
-     * {@link de.dreier.mytargets.features.settings.backup.synchronization.SyncService} with it.
+     *
+     *
+     *
+     * This will create a new account with the system for our application and register our
+     * [de.dreier.mytargets.features.settings.backup.synchronization.SyncService] with it.
      */
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
 
         // Create account, if needed
-        SyncUtils.createSyncAccount(context);
+        SyncUtils.createSyncAccount(context)
     }
 
-    @Override
-    public void onCreatePreferences() {
+    public override fun onCreatePreferences() {
         /* Overridden to no do anything. Normally this would try to inflate the preferences,
         * but in this case we want to show our own UI. */
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_backup, container, false);
-        ToolbarUtils.showHomeAsUp(this);
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_backup, container, false)
+        ToolbarUtils.showHomeAsUp(this)
 
-        binding.backupNowButton.setOnClickListener(v -> SyncUtils.triggerBackup());
+        binding!!.backupNowButton.setOnClickListener { SyncUtils.triggerBackup() }
 
-        binding.automaticBackupSwitch.setOnClickListener(v -> onAutomaticBackupChanged());
+        binding!!.automaticBackupSwitch.setOnClickListener { onAutomaticBackupChanged() }
 
-        binding.backupIntervalPreference.getRoot()
-                .setOnClickListener(view -> onBackupIntervalClicked());
-        binding.backupIntervalPreference.image
-                .setImageResource(R.drawable.ic_query_builder_grey600_24dp);
-        binding.backupIntervalPreference.name.setText(R.string.backup_interval);
-        updateInterval();
+        binding!!.backupIntervalPreference!!.root.setOnClickListener { onBackupIntervalClicked() }
+        binding!!.backupIntervalPreference!!.image
+                .setImageResource(R.drawable.ic_query_builder_grey600_24dp)
+        binding!!.backupIntervalPreference!!.name.setText(R.string.backup_interval)
+        updateInterval()
 
-        binding.backupLocation.getRoot().setOnClickListener(v -> onBackupLocationClicked());
+        binding!!.backupLocation!!.root.setOnClickListener { onBackupLocationClicked() }
 
-        binding.recentBackupsList.setNestedScrollingEnabled(false);
-        binding.recentBackupsList
-                .addItemDecoration(new DividerItemDecoration(getContext(), VERTICAL));
+        binding!!.recentBackupsList.isNestedScrollingEnabled = false
+        binding!!.recentBackupsList
+                .addItemDecoration(DividerItemDecoration(context!!, VERTICAL))
 
-        setHasOptionsMenu(true);
-        return binding.getRoot();
+        setHasOptionsMenu(true)
+        return binding!!.root
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.settings_backup, menu);
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.settings_backup, menu)
     }
 
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_import) {
-            showFilePickerWithPermissionCheck(this);
-            return true;
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_import) {
+            showFilePickerWithPermissionCheck()
+            return true
         }
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item)
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        applyBackupLocationWithPermissionCheck(SettingsManager.INSTANCE.getBackupLocation());
-        updateAutomaticBackupSwitch();
+    override fun onResume() {
+        super.onResume()
+        applyBackupLocationWithPermissionCheck(SettingsManager.backupLocation)
+        updateAutomaticBackupSwitch()
 
-        syncStatusObserver.onStatusChanged(0);
+        syncStatusObserver.onStatusChanged(0)
         syncObserverHandle = ContentResolver.addStatusChangeListener(
-                SYNC_OBSERVER_TYPE_PENDING | SYNC_OBSERVER_TYPE_ACTIVE, syncStatusObserver);
+                SYNC_OBSERVER_TYPE_PENDING or SYNC_OBSERVER_TYPE_ACTIVE, syncStatusObserver)
     }
 
-    @Override
-    public void onPause() {
+    override fun onPause() {
         if (backup != null) {
-            backup.stop();
+            backup!!.stop()
         }
         if (updateLabelTimer != null) {
-            updateLabelTimer.cancel();
+            updateLabelTimer!!.cancel()
         }
         if (syncObserverHandle != null) {
-            ContentResolver.removeStatusChangeListener(syncObserverHandle);
-            syncObserverHandle = null;
+            ContentResolver.removeStatusChangeListener(syncObserverHandle)
+            syncObserverHandle = null
         }
-        super.onPause();
+        super.onPause()
     }
 
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode, @NonNull final Intent data) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         if (requestCode == REQUEST_CODE_RESOLUTION && resultCode != RESULT_OK) {
-            leaveBackupSettings();
+            leaveBackupSettings()
         }
         if (requestCode == IMPORT_FROM_URI && resultCode == AppCompatActivity.RESULT_OK) {
-            importFromUri(data.getData());
+            importFromUri(data.data!!)
         }
-        super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
-    private void onAutomaticBackupChanged() {
-        boolean autoBackupEnabled = binding.automaticBackupSwitch.isChecked();
-        binding.backupIntervalLayout.setVisibility(autoBackupEnabled ? VISIBLE : GONE);
-        SyncUtils.setSyncAutomaticallyEnabled(autoBackupEnabled);
+    private fun onAutomaticBackupChanged() {
+        val autoBackupEnabled = binding!!.automaticBackupSwitch.isChecked
+        binding!!.backupIntervalLayout.visibility = if (autoBackupEnabled) VISIBLE else GONE
+        SyncUtils.isSyncAutomaticallyEnabled = autoBackupEnabled
     }
 
-    private void updateAutomaticBackupSwitch() {
-        boolean autoBackupEnabled = SyncUtils.isSyncAutomaticallyEnabled();
-        binding.automaticBackupSwitch.setChecked(autoBackupEnabled);
+    private fun updateAutomaticBackupSwitch() {
+        val autoBackupEnabled = SyncUtils.isSyncAutomaticallyEnabled
+        binding!!.automaticBackupSwitch.isChecked = autoBackupEnabled
     }
 
-    private void onBackupIntervalClicked() {
-        final List<EBackupInterval> backupIntervals = Arrays.asList(EBackupInterval.values());
-        new MaterialDialog.Builder(getContext())
+    private fun onBackupIntervalClicked() {
+        val backupIntervals = Arrays.asList(*EBackupInterval.values())
+        MaterialDialog.Builder(context!!)
                 .title(R.string.backup_interval)
                 .items(backupIntervals)
                 .itemsCallbackSingleChoice(
-                        backupIntervals.indexOf(SettingsManager.INSTANCE.getBackupInterval()),
-                        (dialog, v, index, text) -> {
-                            SettingsManager.INSTANCE.setBackupInterval(EBackupInterval.values()[index]);
-                            updateInterval();
-                            return true;
-                        })
-                .show();
+                        backupIntervals.indexOf(SettingsManager.backupInterval)
+                ) { dialog, v, index, text ->
+                    SettingsManager.backupInterval = EBackupInterval.values()[index]
+                    updateInterval()
+                    true
+                }
+                .show()
     }
 
-    private void updateInterval() {
-        boolean autoBackupEnabled = SyncUtils.isSyncAutomaticallyEnabled();
-        binding.backupIntervalLayout.setVisibility(autoBackupEnabled ? VISIBLE : GONE);
-        binding.backupIntervalPreference.summary
-                .setText(SettingsManager.INSTANCE.getBackupInterval().toString());
+    private fun updateInterval() {
+        val autoBackupEnabled = SyncUtils.isSyncAutomaticallyEnabled
+        binding!!.backupIntervalLayout.visibility = if (autoBackupEnabled) VISIBLE else GONE
+        binding!!.backupIntervalPreference!!.summary.text = SettingsManager.backupInterval.toString()
     }
 
-    private void onBackupLocationClicked() {
-        EBackupLocation item = SettingsManager.INSTANCE.getBackupLocation();
-        new MaterialDialog.Builder(getContext())
+    private fun onBackupLocationClicked() {
+        val item = SettingsManager.backupLocation
+        MaterialDialog.Builder(context!!)
                 .title(R.string.backup_location)
-                .items(EBackupLocation.getList())
-                .itemsCallbackSingleChoice(EBackupLocation.getList().indexOf(item),
-                        (dialog, itemView, index, text) -> {
-                            EBackupLocation location = EBackupLocation.getList().get(index);
-                            if (backup != null) {
-                                backup.stop();
-                            }
-                            applyBackupLocationWithPermissionCheck(location);
-                            return true;
-                        })
-                .show();
+                .items(EBackupLocation.list)
+                .itemsCallbackSingleChoice(EBackupLocation.list.indexOf(item)
+                ) { _, _, index, _ ->
+                    val location = EBackupLocation.list[index]
+                    if (backup != null) {
+                        backup!!.stop()
+                    }
+                    applyBackupLocationWithPermissionCheck(location)
+                    true
+                }
+                .show()
     }
 
-    private void updateBackupLocation() {
-        EBackupLocation backupLocation = SettingsManager.INSTANCE.getBackupLocation();
-        binding.backupLocation.image.setImageResource(backupLocation.getDrawableRes());
-        binding.backupLocation.name.setText(R.string.backup_location);
-        binding.backupLocation.summary.setText(backupLocation.toString());
+    private fun updateBackupLocation() {
+        val backupLocation = SettingsManager.backupLocation
+        binding!!.backupLocation!!.image.setImageResource(backupLocation.drawableRes)
+        binding!!.backupLocation!!.name.setText(R.string.backup_location)
+        binding!!.backupLocation!!.summary.text = backupLocation.toString()
     }
 
-    private void applyBackupLocationWithPermissionCheck(@NonNull EBackupLocation item) {
+    private fun applyBackupLocationWithPermissionCheck(item: EBackupLocation) {
         if (item.needsStoragePermissions()) {
-            BackupSettingsFragmentPermissionsDispatcher
-                    .applyBackupLocationWithPermissionCheck(this, item);
+            applyBackupLocationWithPermissionCheck(item)
         } else {
-            applyBackupLocation(item);
+            applyBackupLocation(item)
         }
     }
 
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    void applyBackupLocation(@NonNull EBackupLocation item) {
-        SettingsManager.INSTANCE.setBackupLocation(item);
-        backup = item.createAsyncRestore();
-        binding.recentBackupsProgress.setVisibility(VISIBLE);
-        binding.recentBackupsList.setVisibility(GONE);
-        adapter = new BackupAdapter(getContext(), this::showBackupDetails, this::deleteBackup);
-        binding.recentBackupsList.setAdapter(adapter);
-        backup.connect(getActivity(), new IAsyncBackupRestore.ConnectionListener() {
-            @Override
-            public void onConnected() {
-                updateBackupLocation();
-                backup.getBackups(BackupSettingsFragment.this);
+    internal fun applyBackupLocation(item: EBackupLocation) {
+        SettingsManager.backupLocation = item
+        backup = item.createAsyncRestore()
+        binding!!.recentBackupsProgress.visibility = VISIBLE
+        binding!!.recentBackupsList.visibility = GONE
+        adapter = BackupAdapter(context!!, object : OnItemClickListener<BackupEntry> {
+            override fun onItemClicked(item: BackupEntry) {
+                showBackupDetails(item)
+            }
+        }, object : OnItemClickListener<BackupEntry> {
+            override fun onItemClicked(item: BackupEntry) {
+                deleteBackup(item)
+            }
+        })
+        binding!!.recentBackupsList.adapter = adapter
+        backup!!.connect(activity!!, object : IAsyncBackupRestore.ConnectionListener {
+            override fun onConnected() {
+                updateBackupLocation()
+                backup!!.getBackups(this@BackupSettingsFragment)
             }
 
-            @Override
-            public void onConnectionSuspended() {
-                showError(R.string.loading_backups_failed, getString(R.string.connection_failed));
+            override fun onConnectionSuspended() {
+                showError(R.string.loading_backups_failed, getString(R.string.connection_failed))
             }
-        });
+        })
     }
 
-    @Override
-    protected void setActivityTitle() {
-        getActivity().setTitle(R.string.backup_action);
+    override fun setActivityTitle() {
+        activity!!.setTitle(R.string.backup_action)
     }
 
-    private void onBackupsLoaded(@NonNull List<BackupEntry> list) {
-        binding.recentBackupsProgress.setVisibility(GONE);
-        binding.recentBackupsList.setVisibility(VISIBLE);
-        adapter.setList(list);
-        binding.lastBackupLabel.setVisibility(list.size() > 0 ? VISIBLE : GONE);
+    private fun onBackupsLoaded(list: List<BackupEntry>) {
+        binding!!.recentBackupsProgress.visibility = GONE
+        binding!!.recentBackupsList.visibility = VISIBLE
+        adapter!!.setList(list.toMutableList())
+        binding!!.lastBackupLabel.visibility = if (list.isNotEmpty()) VISIBLE else GONE
         if (updateLabelTimer != null) {
-            updateLabelTimer.cancel();
+            updateLabelTimer!!.cancel()
         }
-        if (list.size() > 0) {
-            final long time = list.get(0).getModifiedDate().getTime();
-            updateLabelTimer = new Timer();
-            TimerTask timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    getActivity().runOnUiThread(() ->
-                            binding.lastBackupLabel
-                                    .setText(getString(R.string.last_backup, DateUtils
-                                            .getRelativeTimeSpanString(time))));
+        if (list.isNotEmpty()) {
+            val time = list[0].modifiedDate!!.time
+            updateLabelTimer = Timer()
+            val timerTask = object : TimerTask() {
+                override fun run() {
+                    activity!!.runOnUiThread {
+                        binding!!.lastBackupLabel.text = getString(R.string.last_backup, DateUtils
+                                .getRelativeTimeSpanString(time))
+                    }
                 }
-            };
-            updateLabelTimer.schedule(timerTask, 0, 10000);
+            }
+            updateLabelTimer!!.schedule(timerTask, 0, 10000)
         }
     }
 
-    private void showError(@StringRes int title, @NonNull String message) {
-        new MaterialDialog.Builder(getContext())
+    private fun showError(@StringRes title: Int, message: String) {
+        MaterialDialog.Builder(context!!)
                 .title(title)
                 .content(message)
                 .positiveText(android.R.string.ok)
-                .show();
+                .show()
     }
 
-    private MaterialDialog showRestoreProgressDialog() {
-        return new MaterialDialog.Builder(getContext())
+    private fun showRestoreProgressDialog(): MaterialDialog {
+        return MaterialDialog.Builder(context!!)
                 .content(R.string.restoring)
                 .progress(true, 0)
-                .show();
+                .show()
     }
 
-    private void showBackupDetails(@NonNull BackupEntry item) {
-        final String html = String.format(Locale.US,
+    private fun showBackupDetails(item: BackupEntry) {
+        val html = String.format(Locale.US,
                 "%s<br><br><b>%s</b><br>%s<br>%s",
                 getString(R.string.restore_desc),
                 getString(R.string.backup_details),
                 SimpleDateFormat.getDateTimeInstance()
-                        .format(item.getModifiedDate()),
-                item.getHumanReadableSize()
-        );
-        new MaterialDialog.Builder(getContext())
+                        .format(item.modifiedDate),
+                item.humanReadableSize
+        )
+        MaterialDialog.Builder(context!!)
                 .title(R.string.dialog_restore_title)
                 .content(Utils.fromHtml(html))
                 .positiveText(R.string.restore)
                 .negativeText(android.R.string.cancel)
-                .positiveColor(0xffe53935)
-                .negativeColor(0x88000000)
-                .onPositive((dialog, which) -> restoreBackup(item))
-                .show();
+                .positiveColor(-0x1ac6cb)
+                .negativeColor(-0x78000000)
+                .onPositive { dialog, which -> restoreBackup(item) }
+                .show()
     }
 
-    private void restoreBackup(BackupEntry item) {
-        MaterialDialog progress = showRestoreProgressDialog();
-        backup.restoreBackup(item,
-                new IAsyncBackupRestore.BackupStatusListener() {
-                    @Override
-                    public void onFinished() {
-                        progress.dismiss();
-                        Utils.doRestart(getContext());
+    private fun restoreBackup(item: BackupEntry) {
+        val progress = showRestoreProgressDialog()
+        backup!!.restoreBackup(item,
+                object : IAsyncBackupRestore.BackupStatusListener {
+                    override fun onFinished() {
+                        progress.dismiss()
+                        Utils.doRestart(context!!)
                     }
 
-                    @Override
-                    public void onError(@NonNull String message) {
-                        progress.dismiss();
-                        showError(R.string.restore_failed, message);
+                    override fun onError(message: String) {
+                        progress.dismiss()
+                        showError(R.string.restore_failed, message)
                     }
-                });
+                })
     }
 
-    private void deleteBackup(BackupEntry backupEntry) {
-        backup.deleteBackup(backupEntry, new IAsyncBackupRestore.BackupStatusListener() {
-            @Override
-            public void onFinished() {
-                adapter.remove(backupEntry);
-                backup.getBackups(BackupSettingsFragment.this);
+    private fun deleteBackup(backupEntry: BackupEntry) {
+        backup!!.deleteBackup(backupEntry, object : IAsyncBackupRestore.BackupStatusListener {
+            override fun onFinished() {
+                adapter!!.remove(backupEntry)
+                backup!!.getBackups(this@BackupSettingsFragment)
             }
 
-            @Override
-            public void onError(@NonNull String message) {
-                showError(R.string.delete_failed, message);
+            override fun onError(message: String) {
+                showError(R.string.delete_failed, message)
             }
-        });
+        })
     }
 
     @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-    void showFilePicker() {
-        final Intent getContentIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        getContentIntent.setType("application/zip");
-        getContentIntent.addCategory(Intent.CATEGORY_OPENABLE);
-        Intent intent = Intent.createChooser(getContentIntent, getString(R.string.select_a_file));
-        startActivityForResult(intent, IMPORT_FROM_URI);
+    internal fun showFilePicker() {
+        val getContentIntent = Intent(Intent.ACTION_GET_CONTENT)
+        getContentIntent.type = "application/zip"
+        getContentIntent.addCategory(Intent.CATEGORY_OPENABLE)
+        val intent = Intent.createChooser(getContentIntent, getString(R.string.select_a_file))
+        startActivityForResult(intent, IMPORT_FROM_URI)
     }
 
     @OnPermissionDenied(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    void showDeniedForWrite() {
-        leaveBackupSettings();
+    internal fun showDeniedForWrite() {
+        leaveBackupSettings()
     }
 
-    private void leaveBackupSettings() {
-        Handler h = new Handler();
-        h.post(() -> getActivity().getSupportFragmentManager().popBackStack());
+    private fun leaveBackupSettings() {
+        val h = Handler()
+        h.post { activity!!.supportFragmentManager.popBackStack() }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        BackupSettingsFragmentPermissionsDispatcher
-                .onRequestPermissionsResult(this, requestCode, grantResults);
+    @SuppressLint("NeedOnRequestPermissionsResult")
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        onRequestPermissionsResult(requestCode, grantResults)
     }
 
-    private void importFromUri(@NonNull final Uri uri) {
-        MaterialDialog progress = showRestoreProgressDialog();
-        new AsyncTask<Void, Void, String>() {
-            @Nullable
-            @Override
-            protected String doInBackground(Void... params) {
-                try {
-                    InputStream st = getContext().getContentResolver().openInputStream(uri);
-                    BackupUtils.importZip(getContext(), st);
-                    return null;
-                } catch (FileNotFoundException ioe) {
-                    ioe.printStackTrace();
-                    return getString(R.string.file_not_found);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return getString(R.string.failed_reading_file);
+    private fun importFromUri(uri: Uri) {
+        val progress = showRestoreProgressDialog()
+        object : AsyncTask<Void, Void, String>() {
+            override fun doInBackground(vararg params: Void): String? {
+                return try {
+                    val st = context!!.contentResolver.openInputStream(uri)
+                    BackupUtils.importZip(context!!, st!!)
+                    null
+                } catch (ioe: FileNotFoundException) {
+                    ioe.printStackTrace()
+                    getString(R.string.file_not_found)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    getString(R.string.failed_reading_file)
                 }
             }
 
-            @Override
-            protected void onPostExecute(@Nullable String errorMessage) {
-                progress.dismiss();
+            override fun onPostExecute(errorMessage: String?) {
+                progress.dismiss()
                 if (errorMessage == null) {
-                    Utils.doRestart(getContext());
+                    Utils.doRestart(context!!)
                 } else {
-                    showError(R.string.import_failed, errorMessage);
+                    showError(R.string.import_failed, errorMessage)
                 }
             }
-        }.execute();
+        }.execute()
     }
 
-    @Override
-    public void onLoadFinished(@NonNull List<BackupEntry> backupEntries) {
-        onBackupsLoaded(backupEntries);
+    override fun onLoadFinished(backupEntries: List<BackupEntry>) {
+        onBackupsLoaded(backupEntries)
     }
 
-    @Override
-    public void onError(@NonNull String message) {
-        showError(R.string.loading_backups_failed, message);
+    override fun onError(message: String) {
+        showError(R.string.loading_backups_failed, message)
+    }
+
+    companion object {
+
+        private val IMPORT_FROM_URI = 1234
     }
 }

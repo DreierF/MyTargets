@@ -13,21 +13,19 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings;
+package de.dreier.mytargets.features.settings
 
-import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
+import android.content.SharedPreferences
 
-import im.delight.android.languages.Language;
+import im.delight.android.languages.Language
 
-public class MainSettingsFragment extends SettingsFragmentBase {
+class MainSettingsFragment : SettingsFragmentBase() {
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @NonNull String key) {
-        super.onSharedPreferenceChanged(sharedPreferences, key);
-        if (key.equals(SettingsManager.KEY_LANGUAGE)) {
-            Language.setFromPreference(getActivity(), SettingsManager.KEY_LANGUAGE, true);
-            getActivity().recreate();
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
+        super.onSharedPreferenceChanged(sharedPreferences, key)
+        if (key == SettingsManager.KEY_LANGUAGE) {
+            Language.setFromPreference(activity, SettingsManager.KEY_LANGUAGE, true)
+            activity!!.recreate()
         }
     }
 }

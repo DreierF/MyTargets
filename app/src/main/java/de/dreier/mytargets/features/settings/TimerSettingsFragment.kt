@@ -13,53 +13,46 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings;
+package de.dreier.mytargets.features.settings
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.Bundle
+import android.support.v4.content.LocalBroadcastManager
+import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
+import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.BROADCAST_TIMER_SETTINGS_FROM_REMOTE
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.app.ApplicationInstance;
-import de.dreier.mytargets.shared.models.TimerSettings;
+class TimerSettingsFragment : SettingsFragmentBase() {
 
-import static de.dreier.mytargets.shared.wearable.WearableClientBase.BROADCAST_TIMER_SETTINGS_FROM_REMOTE;
-
-public class TimerSettingsFragment extends SettingsFragmentBase {
-
-    private final BroadcastReceiver timerReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            getActivity().recreate();
+    private val timerReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            activity!!.recreate()
         }
-    };
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver(timerReceiver,
-                new IntentFilter(BROADCAST_TIMER_SETTINGS_FROM_REMOTE));
     }
 
-    @Override
-    public void onDestroy() {
-        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(timerReceiver);
-        super.onDestroy();
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        LocalBroadcastManager.getInstance(context!!).registerReceiver(timerReceiver,
+                IntentFilter(BROADCAST_TIMER_SETTINGS_FROM_REMOTE))
     }
 
-    @Override
-    protected void updateItemSummaries() {
-        TimerSettings settings = SettingsManager.INSTANCE.getTimerSettings();
-        setSecondsSummary(SettingsManager.KEY_TIMER_WAIT_TIME, settings.getWaitTime());
-        setSecondsSummary(SettingsManager.KEY_TIMER_SHOOT_TIME, settings.getShootTime());
-        setSecondsSummary(SettingsManager.KEY_TIMER_WARN_TIME, settings.getWarnTime());
-        ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(settings);
+    override fun onDestroy() {
+        LocalBroadcastManager.getInstance(context!!).unregisterReceiver(timerReceiver)
+        super.onDestroy()
     }
 
-    private void setSecondsSummary(String key, int value) {
-        setSummary(key, getResources().getQuantityString(R.plurals.second, value, value));
+    override fun updateItemSummaries() {
+        val settings = SettingsManager.timerSettings
+        setSecondsSummary(SettingsManager.KEY_TIMER_WAIT_TIME, settings.waitTime)
+        setSecondsSummary(SettingsManager.KEY_TIMER_SHOOT_TIME, settings.shootTime)
+        setSecondsSummary(SettingsManager.KEY_TIMER_WARN_TIME, settings.warnTime)
+        ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(settings)
+    }
+
+    private fun setSecondsSummary(key: String, value: Int) {
+        setSummary(key, resources.getQuantityString(R.plurals.second, value, value))
     }
 }

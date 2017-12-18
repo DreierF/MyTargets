@@ -13,81 +13,56 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings.backup.provider;
+package de.dreier.mytargets.features.settings.backup.provider
 
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StringRes;
-
-import java.util.Arrays;
-import java.util.List;
-
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.app.ApplicationInstance;
-import de.dreier.mytargets.shared.models.IIdProvider;
+import android.support.annotation.DrawableRes
+import android.support.annotation.StringRes
+import de.dreier.mytargets.R
+import de.dreier.mytargets.shared.SharedApplicationInstance
+import de.dreier.mytargets.shared.models.IIdProvider
+import java.util.*
 
 //TODO : Parcelize?
-public enum EBackupLocation implements IIdProvider {
+enum class EBackupLocation constructor(
+        override var id: Long? = null,
+        @StringRes
+        private var nameRes: Int,
+        @DrawableRes
+        var drawableRes: Int) : IIdProvider {
     INTERNAL_STORAGE(1, R.string.internal_storage, R.drawable.ic_phone_android_grey600_24dp),
     EXTERNAL_STORAGE(2, R.string.external_storage, R.drawable.ic_micro_sd_card_grey600_24dp),
     GOOGLE_DRIVE(3, R.string.google_drive, R.drawable.ic_google_drive_grey600_24dp);
 
-    Long id;
-    int drawable;
-    int name;
-
-    EBackupLocation(long id, @StringRes int name, @DrawableRes int drawable) {
-        this.id = id;
-        this.name = name;
-        this.drawable = drawable;
-    }
-
-    public static List<EBackupLocation> getList() {
-        if (ExternalStorageBackup.getMicroSdCardPath() != null) {
-            return Arrays.asList(INTERNAL_STORAGE, EXTERNAL_STORAGE, GOOGLE_DRIVE);
-        } else {
-            return Arrays.asList(INTERNAL_STORAGE, GOOGLE_DRIVE);
+    fun createAsyncRestore(): IAsyncBackupRestore {
+        return when (this) {
+            EXTERNAL_STORAGE -> ExternalStorageBackup.AsyncRestore()
+            GOOGLE_DRIVE -> GoogleDriveBackup.AsyncRestore()
+            INTERNAL_STORAGE -> InternalStorageBackup.AsyncRestore()
         }
     }
 
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    public IAsyncBackupRestore createAsyncRestore() {
-        switch (this) {
-            case EXTERNAL_STORAGE:
-                return new ExternalStorageBackup.AsyncRestore();
-            case GOOGLE_DRIVE:
-                return new GoogleDriveBackup.AsyncRestore();
-            case INTERNAL_STORAGE:
-            default:
-                return new InternalStorageBackup.AsyncRestore();
+    fun createBackup(): IBlockingBackup {
+        return when (this) {
+            EXTERNAL_STORAGE -> ExternalStorageBackup.Backup()
+            GOOGLE_DRIVE -> GoogleDriveBackup.Backup()
+            INTERNAL_STORAGE -> InternalStorageBackup.Backup()
         }
     }
 
-    public IBlockingBackup createBackup() {
-        switch (this) {
-            case EXTERNAL_STORAGE:
-                return new ExternalStorageBackup.Backup();
-            case GOOGLE_DRIVE:
-                return new GoogleDriveBackup.Backup();
-            case INTERNAL_STORAGE:
-            default:
-                return new InternalStorageBackup.Backup();
-        }
+    override fun toString(): String {
+        return SharedApplicationInstance.getStr(nameRes)
     }
 
-    public int getDrawableRes() {
-        return drawable;
+    fun needsStoragePermissions(): Boolean {
+        return this == INTERNAL_STORAGE || this == EXTERNAL_STORAGE
     }
 
-    @Override
-    public String toString() {
-        return ApplicationInstance.Companion.getStr(name);
-    }
-
-    public boolean needsStoragePermissions() {
-        return this == INTERNAL_STORAGE || this == EXTERNAL_STORAGE;
+    companion object {
+        val list: List<EBackupLocation>
+            get() = if (ExternalStorageBackup.microSdCardPath != null) {
+                Arrays.asList(INTERNAL_STORAGE, EXTERNAL_STORAGE, GOOGLE_DRIVE)
+            } else {
+                Arrays.asList(INTERNAL_STORAGE, GOOGLE_DRIVE)
+            }
     }
 }

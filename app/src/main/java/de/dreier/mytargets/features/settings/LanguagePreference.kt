@@ -13,81 +13,64 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings;
+package de.dreier.mytargets.features.settings
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.preference.ListPreference;
-import android.util.AttributeSet;
-
-import java.util.Arrays;
-import java.util.List;
-
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-import im.delight.android.languages.LanguageList;
-import kotlin.Pair;
+import android.content.Context
+import android.support.v7.preference.ListPreference
+import android.util.AttributeSet
+import im.delight.android.languages.LanguageList
 
 /**
  * Preference that extends ListPreference and can be used in XML (or Java) to offer a custom language selection
  */
-public class LanguagePreference extends ListPreference {
+class LanguagePreference(context: Context, attrs: AttributeSet?) : ListPreference(context, attrs) {
 
-    @NonNull
-    private static List<String> SUPPORTED_LOCALES = Arrays.asList(
-            "",
-            "ca",
-            "zh-CN",
-            "zh-TW",
-            "cs",
-            "da",
-            "nl",
-            "et",
-            "en",
-            "fi",
-            "fr",
-            "de",
-            "he",
-            "hu",
-            "id",
-            "it",
-            "ja",
-            "no",
-            "pl",
-            "pt-PT",
-            "pt-BR",
-            "ru",
-            "sr",
-            "sk",
-            "sl",
-            "es",
-            "sv",
-            "tr",
-            "uk"
-    );
-
-    public LanguagePreference(@NonNull Context context) {
-        super(context);
-        init();
-    }
-
-    public LanguagePreference(@NonNull Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    private void init() {
-        List<Pair<String, String>> pairList = Stream
-                .zip(LanguageList.getHumanReadable(), LanguageList.getMachineReadable())
-                .filter(pair -> SUPPORTED_LOCALES.contains(pair.component2()))
-                .toList();
+    init {
+        val pairList = LanguageList.getHumanReadable().zip(LanguageList.getMachineReadable())
+                .filter { pair -> SUPPORTED_LOCALES.contains(pair.component2()) }
+                .toList()
 
         // use the list of human-readable language names for the displayed list
-        setEntries(Stream.of(pairList).map(Pair::component1).toArray(String[]::new));
+        entries = pairList.map { it.component1() }.toTypedArray()
         // use the list of machine-readable language names for the saved values
-        setEntryValues(Stream.of(pairList).map(Pair::component2).toArray(String[]::new));
+        entryValues = pairList.map { it.component2() }.toTypedArray()
         // use an empty language code (no custom language) as the default
-        setDefaultValue("");
+        setDefaultValue("")
         // set the summary to be auto-updated to the selected value
-        setSummary("%s");
+        summary = "%s"
+    }
+
+    companion object {
+        private val SUPPORTED_LOCALES = setOf(
+                "",
+                "ca",
+                "zh-CN",
+                "zh-TW",
+                "cs",
+                "da",
+                "nl",
+                "et",
+                "en",
+                "fi",
+                "fr",
+                "de",
+                "he",
+                "hu",
+                "id",
+                "it",
+                "ja",
+                "no",
+                "pl",
+                "pt-PT",
+                "pt-BR",
+                "ru",
+                "sr",
+                "sk",
+                "sl",
+                "es",
+                "sv",
+                "tr",
+                "uk"
+        )
     }
 }

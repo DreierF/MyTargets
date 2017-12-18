@@ -13,26 +13,25 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings;
+package de.dreier.mytargets.features.settings
 
-import android.support.v7.preference.Preference;
+import de.dreier.mytargets.utils.Utils
 
-import de.dreier.mytargets.utils.Utils;
+class ScoreboardSettingsFragment : SettingsFragmentBase() {
 
-public class ScoreboardSettingsFragment extends SettingsFragmentBase {
-
-    public static final String KEY_SCOREBOARD_SHARE = "scoreboard_share";
-
-    @Override
-    public void updateItemSummaries() {
+    public override fun updateItemSummaries() {
         // Disable file type selection for pre-Kitkat, since they do not support PDF generation
-        Preference shareCategory = getPreferenceManager().findPreference(KEY_SCOREBOARD_SHARE);
-        shareCategory.setVisible(Utils.isKitKat());
-        Preference shareFileType = getPreferenceManager().findPreference(SettingsManager
-                .KEY_SCOREBOARD_SHARE_FILE_TYPE);
-        shareFileType.setVisible(Utils.isKitKat());
+        val shareCategory = preferenceManager.findPreference(KEY_SCOREBOARD_SHARE)
+        shareCategory.isVisible = Utils.isKitKat()
+        val shareFileType = preferenceManager.findPreference(SettingsManager
+                .KEY_SCOREBOARD_SHARE_FILE_TYPE)
+        shareFileType.isVisible = Utils.isKitKat()
         if (Utils.isKitKat()) {
-            setDefaultSummary(SettingsManager.KEY_SCOREBOARD_SHARE_FILE_TYPE);
+            setDefaultSummary(SettingsManager.KEY_SCOREBOARD_SHARE_FILE_TYPE)
         }
+    }
+
+    companion object {
+        const val KEY_SCOREBOARD_SHARE = "scoreboard_share"
     }
 }

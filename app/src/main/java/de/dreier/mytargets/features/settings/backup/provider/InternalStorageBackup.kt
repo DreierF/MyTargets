@@ -13,116 +13,101 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings.backup.provider;
+package de.dreier.mytargets.features.settings.backup.provider
 
-import android.app.Activity;
-import android.content.Context;
-import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.app.Activity
+import android.content.Context
+import android.os.Environment
+import de.dreier.mytargets.R
+import de.dreier.mytargets.features.settings.backup.BackupEntry
+import de.dreier.mytargets.features.settings.backup.BackupException
+import de.dreier.mytargets.shared.SharedApplicationInstance.Companion
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.IOException
+import java.util.*
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+object InternalStorageBackup {
+    private val FOLDER_NAME = "MyTargets"
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.settings.backup.BackupEntry;
-import de.dreier.mytargets.features.settings.backup.BackupException;
+    @Throws(IOException::class)
+    private fun createDirectory(directory: File) {
 
-import static de.dreier.mytargets.features.settings.backup.provider.BackupUtils.getBackupName;
-import static de.dreier.mytargets.shared.SharedApplicationInstance.Companion;
-
-public class InternalStorageBackup {
-    private static final String FOLDER_NAME = "MyTargets";
-
-    private static void createDirectory(@NonNull File directory) throws IOException {
-        //noinspection ResultOfMethodCallIgnored
-        directory.mkdir();
-        if (!directory.exists() || !directory.isDirectory()) {
-            throw new IOException(Companion.getStr(R.string.dir_not_created));
+        directory.mkdir()
+        if (!directory.exists() || !directory.isDirectory) {
+            throw IOException(Companion.getStr(R.string.dir_not_created))
         }
     }
 
-    public static class AsyncRestore implements IAsyncBackupRestore {
+    class AsyncRestore : IAsyncBackupRestore {
 
-        @Nullable
-        private Activity activity;
+        private var activity: Activity? = null
 
-        @Override
-        public void connect(Activity activity, @NonNull ConnectionListener listener) {
-            this.activity = activity;
-            listener.onConnected();
+        override fun connect(activity: Activity, listener: IAsyncBackupRestore.ConnectionListener) {
+            this.activity = activity
+            listener.onConnected()
         }
 
-        @Override
-        public void getBackups(@NonNull OnLoadFinishedListener listener) {
-            File backupDir = new File(Environment.getExternalStorageDirectory(), FOLDER_NAME);
-            if (backupDir.isDirectory()) {
-                List<BackupEntry> backups = new ArrayList<>();
-                for (File file : backupDir.listFiles()) {
-                    if (isBackup(file)) {
-                        final BackupEntry entry = new BackupEntry(file.getAbsolutePath(),
-                                new Date(file.lastModified()),
-                                file.length());
-                        backups.add(entry);
-                    }
-                }
-                Collections.sort(backups, (b1, b2) -> b2.getModifiedDate()
-                        .compareTo(b1.getModifiedDate()));
-                listener.onLoadFinished(backups);
+        override fun getBackups(listener: IAsyncBackupRestore.OnLoadFinishedListener) {
+            val backupDir = File(Environment.getExternalStorageDirectory(), FOLDER_NAME)
+            if (backupDir.isDirectory) {
+                val backups = backupDir.listFiles()
+                        .filter { isBackup(it) }
+                        .map {
+                            BackupEntry(it.absolutePath,
+                                    Date(it.lastModified()),
+                                    it.length())
+                        }
+                        .sortedByDescending { it.modifiedDate }
+                listener.onLoadFinished(backups)
             }
         }
 
-        private boolean isBackup(@NonNull File file) {
-            return file.isFile() && file.getName().contains("backup_") && file.getName()
-                    .endsWith(".zip");
+        private fun isBackup(file: File): Boolean {
+            return file.isFile && file.name.contains("backup_") && file.name
+                    .endsWith(".zip")
         }
 
-        @Override
-        public void restoreBackup(@NonNull BackupEntry backup, @NonNull BackupStatusListener listener) {
-            File file = new File(backup.getFileId());
+        override fun restoreBackup(backup: BackupEntry, listener: IAsyncBackupRestore.BackupStatusListener) {
+            val file = File(backup.fileId)
             try {
-                BackupUtils.importZip(activity, new FileInputStream(file));
-                listener.onFinished();
-            } catch (IOException e) {
-                listener.onError(e.getLocalizedMessage());
-                e.printStackTrace();
+                BackupUtils.importZip(activity!!, FileInputStream(file))
+                listener.onFinished()
+            } catch (e: IOException) {
+                listener.onError(e.localizedMessage)
+                e.printStackTrace()
             }
+
         }
 
-        @Override
-        public void deleteBackup(@NonNull BackupEntry backup, @NonNull BackupStatusListener listener) {
-            if (new File(backup.getFileId()).delete()) {
-                listener.onFinished();
+        override fun deleteBackup(backup: BackupEntry, listener: IAsyncBackupRestore.BackupStatusListener) {
+            if (File(backup.fileId).delete()) {
+                listener.onFinished()
             } else {
-                listener.onError("Backup could not be deleted!");
+                listener.onError("Backup could not be deleted!")
             }
         }
 
-        @Override
-        public void stop() {
-            activity = null;
+        override fun stop() {
+            activity = null
         }
     }
 
-    public static class Backup implements IBlockingBackup {
+    class Backup : IBlockingBackup {
 
-        @Override
-        public void performBackup(@NonNull Context context) throws BackupException {
+        @Throws(BackupException::class)
+        override fun performBackup(context: Context) {
             try {
-                File backupDir = new File(Environment.getExternalStorageDirectory(),
-                        FOLDER_NAME);
-                createDirectory(backupDir);
-                final File zipFile = new File(backupDir, getBackupName());
-                BackupUtils.zip(context, new FileOutputStream(zipFile));
-            } catch (IOException e) {
-                throw new BackupException(e.getLocalizedMessage(), e);
+                val backupDir = File(Environment.getExternalStorageDirectory(),
+                        FOLDER_NAME)
+                createDirectory(backupDir)
+                val zipFile = File(backupDir, BackupUtils.backupName)
+                BackupUtils.zip(context, FileOutputStream(zipFile))
+            } catch (e: IOException) {
+                throw BackupException(e.localizedMessage, e)
             }
+
         }
     }
 }

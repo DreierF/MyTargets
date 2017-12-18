@@ -35,7 +35,7 @@ import java.lang.Integer.parseInt
 
 class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrows, ArrowImage::class.java) {
     @State
-    internal var arrow: Arrow? = null
+    var arrow: Arrow? = null
     private var contentBinding: FragmentEditArrowBinding? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

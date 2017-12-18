@@ -48,10 +48,10 @@ import java.util.*
 class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_bow, BowImage::class.java) {
 
     @State
-    internal var bow: Bow? = null
+    var bow: Bow? = null
 
     @State
-    internal var sightMarks: ArrayList<SightMark>? = null
+    var sightMarks: ArrayList<SightMark>? = null
 
     private var contentBinding: FragmentEditBowBinding? = null
     private var adapter: SightMarksAdapter? = null

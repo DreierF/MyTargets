@@ -106,7 +106,7 @@ public class DispersionPatternActivity extends ChildActivityBase {
                 print();
                 return true;
             case R.id.action_settings:
-                SettingsActivity.getIntent(ESettingsScreens.STATISTICS)
+                SettingsActivity.Companion.getIntent(ESettingsScreens.STATISTICS)
                         .withContext(this)
                         .start();
                 return true;

@@ -13,141 +13,113 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings.about;
+package de.dreier.mytargets.features.settings.about
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.LinearLayoutManager;
+import android.content.Intent
+import android.os.Bundle
+import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.app.AppCompatDelegate
+import android.support.v7.widget.LinearLayoutManager
+import com.afollestad.materialdialogs.MaterialDialog
+import com.anjlab.android.iab.v3.BillingProcessor
+import com.anjlab.android.iab.v3.TransactionDetails
+import de.dreier.mytargets.R
+import de.dreier.mytargets.features.settings.SettingsManager
+import im.delight.android.languages.Language
+import java.util.*
 
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.anjlab.android.iab.v3.BillingProcessor;
-import com.anjlab.android.iab.v3.SkuDetails;
-import com.anjlab.android.iab.v3.TransactionDetails;
+class DonateActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+    private lateinit var bp: BillingProcessor
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.settings.SettingsManager;
-import im.delight.android.languages.Language;
-
-public class DonateActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
-
-    static {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    public override fun onCreate(savedInstanceState: Bundle?) {
+        Language.setFromPreference(this, SettingsManager.KEY_LANGUAGE)
+        super.onCreate(savedInstanceState)
+        bp = BillingProcessor(this, getString(R.string.BASE64_PUB_KEY), this)
     }
 
-    @NonNull
-    public static final ArrayList<String> donations;
-    @NonNull
-    public static final HashMap<String, String> prices;
-
-    static {
-        donations = new ArrayList<>();
-        donations.add("donation_2");
-        donations.add("donation_5");
-        donations.add("donation_10");
-        donations.add("donation_20");
-        prices = new HashMap<>();
+    public override fun onDestroy() {
+        bp.release()
+        super.onDestroy()
     }
 
-    private BillingProcessor bp;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        Language.setFromPreference(this, SettingsManager.KEY_LANGUAGE);
-        super.onCreate(savedInstanceState);
-        bp = new BillingProcessor(this, getString(R.string.BASE64_PUB_KEY), this);
-    }
-
-    @Override
-    public void onDestroy() {
-        if (bp != null) {
-            bp.release();
-        }
-
-        super.onDestroy();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         if (!bp.handleActivityResult(requestCode, resultCode, data)) {
-            super.onActivityResult(requestCode, resultCode, data);
+            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
     // IBillingHandler implementation
 
-    @Override
-    public void onBillingInitialized() {
+    override fun onBillingInitialized() {
         /*
          * Called when BillingProcessor was initialized and it's ready to purchase
          */
-        List<SkuDetails> inventory = bp.getPurchaseListingDetails(donations);
-        for (SkuDetails sku : inventory) {
-            prices.put(sku.productId, sku.priceText);
-            TransactionDetails details = bp.getPurchaseTransactionDetails(sku.productId);
+        val inventory = bp.getPurchaseListingDetails(donations)
+        for (sku in inventory) {
+            prices.put(sku.productId, sku.priceText)
+            val details = bp.getPurchaseTransactionDetails(sku.productId)
 
             // If consumption failed last time try it again
             if (details != null && details.purchaseInfo.purchaseData.orderId != null) {
-                bp.consumePurchase(sku.productId);
+                bp.consumePurchase(sku.productId)
             }
         }
 
-        new MaterialDialog.Builder(this)
+        MaterialDialog.Builder(this)
                 .title(R.string.donate)
-                .adapter(new DonationAdapter(this, this::onDonate), new LinearLayoutManager(this))
-                .dismissListener(dialog1 -> {
-                    finish();
-                    overridePendingTransition(0, 0);
-                })
-                .show();
+                .adapter(DonationAdapter(this, this::onDonate), LinearLayoutManager(this))
+                .dismissListener {
+                    finish()
+                    overridePendingTransition(0, 0)
+                }
+                .show()
     }
 
-    public void onDonate(int position) {
-        final String item = donations.get(position);
+    fun onDonate(position: Int) {
+        val item = donations[position]
         if (position < 4) {
-            bp.purchase(this, item);
+            bp.purchase(this, item)
         } else {
-            bp.subscribe(this, item);
+            bp.subscribe(this, item)
         }
     }
 
-    @Override
-    public void onProductPurchased(@NonNull String productId, TransactionDetails details) {
-        bp.consumePurchase(productId);
+    override fun onProductPurchased(productId: String, details: TransactionDetails?) {
+        bp.consumePurchase(productId)
 
-        SettingsManager.INSTANCE.setDonated(true);
+        SettingsManager.donated = true
 
-        new AlertDialog.Builder(this)
+        AlertDialog.Builder(this)
                 .setMessage(getString(R.string.donation_thank))
                 .setNeutralButton(android.R.string.ok, null)
                 .setCancelable(false)
                 .create()
-                .show();
+                .show()
     }
 
-    @Override
-    public void onBillingError(int errorCode, @Nullable Throwable error) {
+    override fun onBillingError(errorCode: Int, error: Throwable?) {
         /*
          * Called when some error occurred. See Constants class for more details
          */
-        if (error != null) {
-            error.printStackTrace();
-        }
+        error?.printStackTrace()
     }
 
-    @Override
-    public void onPurchaseHistoryRestored() {
+    override fun onPurchaseHistoryRestored() {
         /*
          * Called when purchase history was restored and the list of all owned PRODUCT ID's
          * was loaded from Google Play
          */
+    }
+
+    companion object {
+
+        init {
+            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+        }
+
+        val donations = ArrayList(listOf("donation_2", "donation_5", "donation_10", "donation_20"))
+        val prices: HashMap<String, String> = HashMap()
     }
 }

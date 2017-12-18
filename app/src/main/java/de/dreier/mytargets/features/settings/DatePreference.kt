@@ -13,47 +13,37 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings;
+package de.dreier.mytargets.features.settings
 
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.preference.DialogPreference;
-import android.util.AttributeSet;
+import android.content.Context
+import android.content.res.TypedArray
+import android.support.v7.preference.DialogPreference
+import android.util.AttributeSet
 
-import org.threeten.bp.LocalDate;
+import org.threeten.bp.LocalDate
 
-public class DatePreference extends DialogPreference {
-    public LocalDate date = LocalDate.now();
+class DatePreference(context: Context, attrs: AttributeSet) : DialogPreference(context, attrs) {
+    var date = LocalDate.now()
 
-    public DatePreference(@NonNull Context context, AttributeSet attrs) {
-        super(context, attrs);
+    override fun onGetDefaultValue(a: TypedArray, index: Int): Any? {
+        return a.getString(index)
     }
 
-    @Nullable
-    @Override
-    protected Object onGetDefaultValue(@NonNull TypedArray a, int index) {
-        return a.getString(index);
-    }
-
-    @Override
-    protected void onSetInitialValue(boolean restoreValue, @Nullable Object defaultValue) {
-        String value;
-        if (restoreValue) {
+    override fun onSetInitialValue(restoreValue: Boolean, defaultValue: Any?) {
+        val value: String = if (restoreValue) {
             if (defaultValue == null) {
-                value = getPersistedString(LocalDate.now().toString());
+                getPersistedString(LocalDate.now().toString())
             } else {
-                value = getPersistedString(defaultValue.toString());
+                getPersistedString(defaultValue.toString())
             }
         } else {
-            value = defaultValue.toString();
+            defaultValue!!.toString()
         }
 
-        date = LocalDate.parse(value);
+        date = LocalDate.parse(value)
     }
 
-    public void persistDateValue(@NonNull LocalDate value) {
-        persistString(value.toString());
+    fun persistDateValue(value: LocalDate) {
+        persistString(value.toString())
     }
 }

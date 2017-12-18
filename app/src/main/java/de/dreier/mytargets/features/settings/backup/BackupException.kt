@@ -13,22 +13,6 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings.backup;
+package de.dreier.mytargets.features.settings.backup
 
-public class BackupException extends Exception {
-    private final String message;
-
-    public BackupException(String message) {
-        this.message = message;
-    }
-
-    public BackupException(String message, Exception e) {
-        super(e);
-        this.message = message;
-    }
-
-    @Override
-    public String getMessage() {
-        return message;
-    }
-}
+class BackupException @JvmOverloads constructor(message: String, e: Exception? = null) : Exception(message, e)

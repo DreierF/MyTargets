@@ -13,12 +13,13 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.settings.backup.provider;
+package de.dreier.mytargets.features.settings.backup.provider
 
-import android.content.Context;
+import android.content.Context
 
-import de.dreier.mytargets.features.settings.backup.BackupException;
+import de.dreier.mytargets.features.settings.backup.BackupException
 
-public interface IBlockingBackup {
-    void performBackup(Context context) throws BackupException;
+interface IBlockingBackup {
+    @Throws(BackupException::class)
+    fun performBackup(context: Context)
 }
