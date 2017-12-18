@@ -13,18 +13,15 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.arrows;
+package de.dreier.mytargets.features.arrows
 
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment
 
-import de.dreier.mytargets.base.activities.ItemSelectActivity;
+import de.dreier.mytargets.base.activities.ItemSelectActivity
 
-public class ArrowListActivity extends ItemSelectActivity {
+class ArrowListActivity : ItemSelectActivity() {
 
-    @NonNull
-    @Override
-    public Fragment instantiateFragment() {
-        return new ArrowListFragment();
+    public override fun instantiateFragment(): Fragment {
+        return ArrowListFragment()
     }
 }

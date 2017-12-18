@@ -13,28 +13,23 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.arrows;
+package de.dreier.mytargets.features.arrows
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.os.Bundle
+import de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM
+import de.dreier.mytargets.base.fragments.FragmentBase
+import de.dreier.mytargets.base.fragments.FragmentBase.LoaderUICallback
+import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase
+import de.dreier.mytargets.shared.models.db.Arrow
 
-import java.util.List;
+class ArrowListFragment : SelectPureListItemFragmentBase<Arrow>() {
 
-import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase;
-import de.dreier.mytargets.shared.models.db.Arrow;
-
-import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
-
-public class ArrowListFragment extends SelectPureListItemFragmentBase<Arrow> {
-
-    @NonNull
-    @Override
-    protected LoaderUICallback onLoad(Bundle args) {
-        List<Arrow> arrows = Arrow.Companion.getAll();
-        return () -> {
-            adapter.setList(arrows);
-            Arrow arrow = getArguments().getParcelable(ITEM);
-            selectItem(binding.recyclerView, arrow);
-        };
+    override fun onLoad(args: Bundle): FragmentBase.LoaderUICallback {
+        val arrows = Arrow.all
+        return LoaderUICallback {
+            adapter!!.setList(arrows)
+            val arrow = arguments!!.getParcelable<Arrow>(ITEM)
+            selectItem(binding.recyclerView, arrow!!)
+        }
     }
 }
