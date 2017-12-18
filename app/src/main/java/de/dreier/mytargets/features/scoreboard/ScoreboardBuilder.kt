@@ -13,16 +13,16 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.scoreboard;
+package de.dreier.mytargets.features.scoreboard
 
-import de.dreier.mytargets.features.scoreboard.builder.model.Table;
-import de.dreier.mytargets.shared.models.db.Signature;
+import de.dreier.mytargets.features.scoreboard.builder.model.Table
+import de.dreier.mytargets.shared.models.db.Signature
 
-public interface ScoreboardBuilder {
-    void title(String title);
-    void openSection();
-    void closeSection();
-    void subtitle(String subtitle);
-    void table(Table table);
-    void signature(Signature archerSignature, Signature witnessSignature);
+interface ScoreboardBuilder {
+    fun title(title: String)
+    fun openSection()
+    fun closeSection()
+    fun subtitle(subtitle: String)
+    fun table(table: Table)
+    fun signature(archerSignature: Signature, witnessSignature: Signature)
 }

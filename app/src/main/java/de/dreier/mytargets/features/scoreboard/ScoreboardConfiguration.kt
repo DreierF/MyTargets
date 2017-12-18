@@ -13,14 +13,14 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.scoreboard;
+package de.dreier.mytargets.features.scoreboard
 
-public class ScoreboardConfiguration {
-    public boolean showTitle;
-    public boolean showProperties;
-    public boolean showTable;
-    public boolean showStatistics;
-    public boolean showComments;
-    public boolean showPointsColored;
-    public boolean showSignature;
-}
+data class ScoreboardConfiguration (
+    var showTitle: Boolean = false,
+    var showProperties: Boolean = false,
+    var showTable: Boolean = false,
+    var showStatistics: Boolean = false,
+    var showComments: Boolean = false,
+    var showPointsColored: Boolean = false,
+    var showSignature: Boolean = false
+)

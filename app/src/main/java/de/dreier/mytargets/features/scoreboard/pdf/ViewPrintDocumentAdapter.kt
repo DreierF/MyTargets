@@ -13,79 +13,59 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.scoreboard.pdf;
+package de.dreier.mytargets.features.scoreboard.pdf
 
-import android.os.Build;
-import android.os.Bundle;
-import android.os.CancellationSignal;
-import android.os.ParcelFileDescriptor;
-import android.print.PageRange;
-import android.print.PrintAttributes;
-import android.print.PrintDocumentAdapter;
-import android.print.PrintDocumentInfo;
-import android.support.annotation.RequiresApi;
-import android.widget.LinearLayout;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
+import android.os.Build
+import android.os.Bundle
+import android.os.CancellationSignal
+import android.os.ParcelFileDescriptor
+import android.print.PageRange
+import android.print.PrintAttributes
+import android.print.PrintDocumentAdapter
+import android.print.PrintDocumentInfo
+import android.support.annotation.RequiresApi
+import android.widget.LinearLayout
+import java.io.FileOutputStream
 
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-public class ViewPrintDocumentAdapter extends PrintDocumentAdapter {
-    public static final PrintAttributes.Resolution DEFAULT_RESOLUTION = new PrintAttributes.Resolution("default", "Default", 300, 300);
-    public static final PrintAttributes.MediaSize DEFAULT_MEDIA_SIZE = PrintAttributes.MediaSize.ISO_A4;
+class ViewPrintDocumentAdapter(content: LinearLayout, private val fileName: String) : PrintDocumentAdapter() {
 
-    private final ViewToPdfWriter pdfWriter;
-    private final String fileName;
+    private val pdfWriter = ViewToPdfWriter(content)
 
-    public ViewPrintDocumentAdapter(LinearLayout content, String fileName) {
-        this.pdfWriter = new ViewToPdfWriter(content);
-        this.fileName = fileName;
-    }
-
-    @Override
-    public void onLayout(PrintAttributes oldAttributes, PrintAttributes newAttributes, CancellationSignal cancellationSignal, LayoutResultCallback callback, Bundle extras) {
-        if (cancellationSignal.isCanceled()) {
-            callback.onLayoutCancelled();
-            return;
+    override fun onLayout(oldAttributes: PrintAttributes, newAttributes: PrintAttributes, cancellationSignal: CancellationSignal, callback: PrintDocumentAdapter.LayoutResultCallback, extras: Bundle) {
+        if (cancellationSignal.isCanceled) {
+            callback.onLayoutCancelled()
+            return
         }
 
-        PrintAttributes.Resolution resolution = newAttributes.getResolution();
-        if (resolution == null) {
-            resolution = DEFAULT_RESOLUTION;
-        }
-        PrintAttributes.MediaSize mediaSize = newAttributes.getMediaSize();
-        if (mediaSize == null) {
-            mediaSize = DEFAULT_MEDIA_SIZE;
-        }
+        val resolution = newAttributes.resolution ?: DEFAULT_RESOLUTION
+        val mediaSize = newAttributes.mediaSize ?: DEFAULT_MEDIA_SIZE
+        val pageCount = pdfWriter.layoutPages(resolution, mediaSize)
 
-        int pageCount = pdfWriter.layoutPages(resolution, mediaSize);
-
-        PrintDocumentInfo pdi = new PrintDocumentInfo.Builder(fileName)
+        val pdi = PrintDocumentInfo.Builder(fileName)
                 .setContentType(PrintDocumentInfo.CONTENT_TYPE_DOCUMENT)
                 .setPageCount(pageCount)
-                .build();
+                .build()
 
-        callback.onLayoutFinished(pdi, true);
+        callback.onLayoutFinished(pdi, true)
     }
 
-    @Override
-    public void onWrite(PageRange[] pages, ParcelFileDescriptor destination, CancellationSignal cancellationSignal, WriteResultCallback callback) {
-        FileOutputStream outputStream = null;
+    override fun onWrite(pages: Array<PageRange>, destination: ParcelFileDescriptor, cancellationSignal: CancellationSignal, callback: PrintDocumentAdapter.WriteResultCallback) {
+        val outputStream = FileOutputStream(destination.fileDescriptor)
 
         try {
-            outputStream = new FileOutputStream(destination.getFileDescriptor());
-            pdfWriter.writePdfDocument(pages, outputStream);
-            callback.onWriteFinished(pages);
-        } catch (Exception e) {
-            //Catch exception
-            e.printStackTrace();
-            callback.onWriteFailed(e.getLocalizedMessage());
-        } finally {
-            try {
-                outputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            outputStream.use {
+                pdfWriter.writePdfDocument(pages, outputStream)
             }
+            callback.onWriteFinished(pages)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            callback.onWriteFailed(e.localizedMessage)
         }
+    }
+
+    companion object {
+        val DEFAULT_RESOLUTION = PrintAttributes.Resolution("default", "Default", 300, 300)
+        val DEFAULT_MEDIA_SIZE: PrintAttributes.MediaSize = PrintAttributes.MediaSize.ISO_A4
     }
 }

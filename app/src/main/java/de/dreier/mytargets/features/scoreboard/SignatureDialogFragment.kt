@@ -13,94 +13,85 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.scoreboard;
+package de.dreier.mytargets.features.scoreboard
 
-import android.app.Dialog;
-import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.text.InputType;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.os.Bundle
+import android.support.v4.app.DialogFragment
+import android.text.InputType
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.afollestad.materialdialogs.MaterialDialog
+import de.dreier.mytargets.R
+import de.dreier.mytargets.databinding.FragmentSignatureBinding
+import de.dreier.mytargets.shared.models.db.Signature
 
-import com.afollestad.materialdialogs.MaterialDialog;
+class SignatureDialogFragment : DialogFragment() {
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.databinding.FragmentSignatureBinding;
-import de.dreier.mytargets.shared.models.db.Signature;
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val binding = FragmentSignatureBinding.inflate(inflater, container, false)
+        val args = arguments
+        val signature = args!!.getParcelable<Signature>(ARG_SIGNATURE)
+        val defaultName = args.getString(ARG_DEFAULT_NAME)
 
-public class SignatureDialogFragment extends DialogFragment {
-
-    private static final String ARG_SIGNATURE = "signature_id";
-    private static final String ARG_DEFAULT_NAME = "default_name";
-
-    public static SignatureDialogFragment newInstance(Signature signature, String defaultName) {
-        SignatureDialogFragment fragment = new SignatureDialogFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_SIGNATURE, signature);
-        args.putString(ARG_DEFAULT_NAME, defaultName);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        FragmentSignatureBinding binding = FragmentSignatureBinding
-                .inflate(inflater, container, false);
-        Bundle args = getArguments();
-        Signature signature = args.getParcelable(ARG_SIGNATURE);
-        String defaultName = args.getString(ARG_DEFAULT_NAME);
-
-        if (signature.isSigned()) {
-            binding.signatureView.setSignatureBitmap(signature.bitmap);
+        if (signature!!.isSigned) {
+            binding.signatureView.signatureBitmap = signature.bitmap
         }
-        binding.editName.setOnClickListener(v -> new MaterialDialog.Builder(getContext())
-                .title(R.string.name)
-                .inputType(InputType.TYPE_CLASS_TEXT)
-                .input(defaultName, signature.getName(), (dialog, input) -> {
-                    signature.setName(input.toString());
-                    signature.save();
-                    binding.signer.setText(signature.getName());
-                })
-                .negativeText(android.R.string.cancel)
-                .show());
-        binding.signer.setText(signature.getName(defaultName));
-        binding.save.setOnClickListener(v -> {
-            Bitmap bitmap = null;
-            if (!binding.signatureView.isEmpty()) {
-                bitmap = binding.signatureView.getTransparentSignatureBitmap();
+        binding.editName.setOnClickListener {
+            MaterialDialog.Builder(context!!)
+                    .title(R.string.name)
+                    .inputType(InputType.TYPE_CLASS_TEXT)
+                    .input(defaultName, signature.name) { _, input ->
+                        signature.name = input.toString()
+                        signature.save()
+                        binding.signer.text = signature.name
+                    }
+                    .negativeText(android.R.string.cancel)
+                    .show()
+        }
+        binding.signer.text = signature.getName(defaultName!!)
+        binding.save.setOnClickListener {
+            var bitmap: Bitmap? = null
+            if (!binding.signatureView.isEmpty) {
+                bitmap = binding.signatureView.transparentSignatureBitmap
             }
-            signature.bitmap = bitmap;
-            signature.save();
-            dismiss();
-        });
-        binding.clear.setOnClickListener(v -> binding.signatureView.clear());
-        setCancelable(false);
-        return binding.getRoot();
+            signature.bitmap = bitmap
+            signature.save()
+            dismiss()
+        }
+        binding.clear.setOnClickListener { v -> binding.signatureView.clear() }
+        isCancelable = false
+        return binding.root
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        adjustDialogWidth();
+    override fun onStart() {
+        super.onStart()
+        adjustDialogWidth()
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        adjustDialogWidth();
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        adjustDialogWidth()
     }
 
-    private void adjustDialogWidth() {
-        Dialog dialog = getDialog();
-        if (dialog != null) {
-            int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.90);
-            dialog.getWindow().setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+    private fun adjustDialogWidth() {
+        val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+        dialog?.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
+    }
+
+    companion object {
+        private val ARG_SIGNATURE = "signature_id"
+        private val ARG_DEFAULT_NAME = "default_name"
+
+        fun newInstance(signature: Signature, defaultName: String): SignatureDialogFragment {
+            val fragment = SignatureDialogFragment()
+            val args = Bundle()
+            args.putParcelable(ARG_SIGNATURE, signature)
+            args.putString(ARG_DEFAULT_NAME, defaultName)
+            fragment.arguments = args
+            return fragment
         }
     }
 }

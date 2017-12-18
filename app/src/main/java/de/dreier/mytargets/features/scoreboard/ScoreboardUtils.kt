@@ -13,95 +13,91 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.scoreboard;
+package de.dreier.mytargets.features.scoreboard
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.os.Build;
-import android.print.PageRange;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.widget.LinearLayout;
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.os.Build
+import android.print.PageRange
+import android.support.annotation.RequiresApi
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.LinearLayout
+import de.dreier.mytargets.features.scoreboard.builder.ViewBuilder
+import de.dreier.mytargets.features.scoreboard.layout.DefaultScoreboardLayout
+import de.dreier.mytargets.features.scoreboard.pdf.ViewPrintDocumentAdapter
+import de.dreier.mytargets.features.scoreboard.pdf.ViewToPdfWriter
+import de.dreier.mytargets.shared.models.db.Round
+import de.dreier.mytargets.shared.models.db.Training
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.util.*
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+object ScoreboardUtils {
 
-import de.dreier.mytargets.features.scoreboard.builder.ViewBuilder;
-import de.dreier.mytargets.features.scoreboard.layout.DefaultScoreboardLayout;
-import de.dreier.mytargets.features.scoreboard.pdf.ViewPrintDocumentAdapter;
-import de.dreier.mytargets.features.scoreboard.pdf.ViewToPdfWriter;
-import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.Training;
+    private val PAGE_WIDTH = 600
+    private val MARGIN = 50
 
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-
-public class ScoreboardUtils {
-
-    private static final int PAGE_WIDTH = 600;
-    private static final int MARGIN = 50;
-
-    public static LinearLayout getScoreboardView(Context context, Locale locale, Training training, long roundId, @NonNull ScoreboardConfiguration configuration) {
-        List<Round> rounds;
-        if (roundId == -1) {
-            rounds = training.loadRounds();
+    fun getScoreboardView(context: Context, locale: Locale, training: Training, roundId: Long, configuration: ScoreboardConfiguration): LinearLayout {
+        val rounds: List<Round>? = if (roundId == -1L) {
+            training.loadRounds()
         } else {
-            rounds = Collections.singletonList(Round.Companion.get(roundId));
+            listOf(Round[roundId]!!)
         }
 
-        DefaultScoreboardLayout scoreboardLayout = new DefaultScoreboardLayout(context, locale, configuration);
-        ViewBuilder viewBuilder = new ViewBuilder(context);
-        scoreboardLayout.generateWithBuilder(viewBuilder, training, rounds);
-        return viewBuilder.build();
+        val scoreboardLayout = DefaultScoreboardLayout(context, locale, configuration)
+        val viewBuilder = ViewBuilder(context)
+        scoreboardLayout.generateWithBuilder(viewBuilder, training, rounds!!)
+        return viewBuilder.build()
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static void generatePdf(LinearLayout content, File file) throws IOException {
-        ViewToPdfWriter writer = new ViewToPdfWriter(content);
-        writer.layoutPages(ViewPrintDocumentAdapter.DEFAULT_RESOLUTION, ViewPrintDocumentAdapter.DEFAULT_MEDIA_SIZE);
+    @Throws(IOException::class)
+    fun generatePdf(content: LinearLayout, file: File) {
+        val writer = ViewToPdfWriter(content)
+        writer.layoutPages(ViewPrintDocumentAdapter
+                .DEFAULT_RESOLUTION, ViewPrintDocumentAdapter
+                .DEFAULT_MEDIA_SIZE)
 
-        OutputStream fileOutputStream = new FileOutputStream(file);
-        writer.writePdfDocument(new PageRange[]{PageRange.ALL_PAGES}, fileOutputStream);
-        fileOutputStream.flush();
-        fileOutputStream.close();
+        val fileOutputStream = FileOutputStream(file)
+        writer.writePdfDocument(arrayOf(PageRange.ALL_PAGES), fileOutputStream)
+        fileOutputStream.flush()
+        fileOutputStream.close()
     }
 
-    public static void generateBitmap(@NonNull Context context, @NonNull LinearLayout content, @NonNull File file) throws IOException {
-        float density = context.getResources().getDisplayMetrics().density;
-        int pageWidth = (int) (PAGE_WIDTH * density);
-        int margin = (int) (MARGIN * density);
+    @Throws(IOException::class)
+    fun generateBitmap(context: Context, content: LinearLayout, file: File) {
+        val density = context.resources.displayMetrics.density
+        val pageWidth = (PAGE_WIDTH * density).toInt()
+        val margin = (MARGIN * density).toInt()
 
-        content.measure(pageWidth - 2 * margin, WRAP_CONTENT);
-        int width = content.getMeasuredWidth();
-        int height = content.getMeasuredHeight();
-        content.layout(0, 0, width, height);
+        content.measure(pageWidth - 2 * margin, WRAP_CONTENT)
+        val width = content.measuredWidth
+        val height = content.measuredHeight
+        content.layout(0, 0, width, height)
 
-        Bitmap b = Bitmap
-                .createBitmap(width + 2 * margin, height + 2 * margin, Bitmap.Config.ARGB_8888);
+        val b = Bitmap
+                .createBitmap(width + 2 * margin, height + 2 * margin, Bitmap.Config.ARGB_8888)
 
-        Canvas canvas = new Canvas(b);
+        val canvas = Canvas(b)
 
-        Paint paint = new Paint();
-        paint.setColor(Color.WHITE);
-        paint.setStyle(Paint.Style.FILL);
-        canvas.drawPaint(paint);
+        val paint = Paint()
+        paint.color = Color.WHITE
+        paint.style = Paint.Style.FILL
+        canvas.drawPaint(paint)
 
-        canvas.save();
-        canvas.translate(margin, margin);
-        content.draw(canvas);
-        canvas.restore();
+        canvas.save()
+        canvas.translate(margin.toFloat(), margin.toFloat())
+        content.draw(canvas)
+        canvas.restore()
 
-        OutputStream fileOutputStream = new FileOutputStream(file);
-        b.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-        fileOutputStream.flush();
-        fileOutputStream.close();
-        b.recycle();
+        val fileOutputStream = FileOutputStream(file)
+        b.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+        fileOutputStream.flush()
+        fileOutputStream.close()
+        b.recycle()
     }
 }

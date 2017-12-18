@@ -13,45 +13,39 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.scoreboard;
+package de.dreier.mytargets.features.scoreboard
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
-import android.support.v4.app.Fragment;
+import android.os.Bundle
+import android.support.annotation.VisibleForTesting
+import android.support.v4.app.Fragment
 
-import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
-import de.dreier.mytargets.utils.IntentWrapper;
-import de.dreier.mytargets.utils.ToolbarUtils;
+import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase
+import de.dreier.mytargets.utils.IntentWrapper
+import de.dreier.mytargets.utils.ToolbarUtils
 
-public class ScoreboardActivity extends SimpleFragmentActivityBase {
+class ScoreboardActivity : SimpleFragmentActivityBase() {
 
-    @VisibleForTesting
-    public static final String TRAINING_ID = "training_id";
-    @VisibleForTesting
-    public static final String ROUND_ID = "round_id";
-
-    @NonNull
-    public static IntentWrapper getIntent(long trainingId) {
-        return getIntent(trainingId, -1);
+    override fun instantiateFragment(): Fragment {
+        return ScoreboardFragment()
     }
 
-    @NonNull
-    public static IntentWrapper getIntent(long trainingId, long roundId) {
-        return new IntentWrapper(ScoreboardActivity.class)
-                .with(TRAINING_ID, trainingId)
-                .with(ROUND_ID, roundId);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        ToolbarUtils.showHomeAsUp(this)
     }
 
-    @Override
-    protected Fragment instantiateFragment() {
-        return new ScoreboardFragment();
-    }
+    companion object {
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ToolbarUtils.showHomeAsUp(this);
+        @VisibleForTesting
+        val TRAINING_ID = "training_id"
+        @VisibleForTesting
+        val ROUND_ID = "round_id"
+
+        @JvmOverloads
+        fun getIntent(trainingId: Long, roundId: Long = -1): IntentWrapper {
+            return IntentWrapper(ScoreboardActivity::class.java)
+                    .with(TRAINING_ID, trainingId)
+                    .with(ROUND_ID, roundId)
+        }
     }
 }

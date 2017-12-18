@@ -13,81 +13,51 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.scoreboard.builder.model;
+package de.dreier.mytargets.features.scoreboard.builder.model
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*
 
-public class Table extends Cell {
+class Table(val wrapContent: Boolean) : Cell() {
 
-    public List<Row> rows = new ArrayList<>();
-    public final boolean wrapContent;
+    var rows: MutableList<Row> = ArrayList()
 
-    public Table(boolean wrapContent) {
-        this.wrapContent = wrapContent;
-    }
+    inner class Row {
 
-    public class Row {
+        var cells: MutableList<Cell> = ArrayList()
 
-        public List<Cell> cells = new ArrayList<>();
-
-        public class TextCell extends Cell {
-            public final String content;
-            public boolean bold;
-
-            public TextCell(String content, boolean bold) {
-                this.content = content;
-                this.bold = bold;
-            }
+        fun addCell(cell: Cell) {
+            cells.add(cell)
         }
 
-        public class EndCell extends Cell {
-            public final String score;
-            public final int fillColor;
-            public final int textColor;
-            public final String arrowNumber;
-
-            public EndCell(String score, int fillColor, int textColor, String arrowNumber) {
-                this.score = score;
-                this.fillColor = fillColor;
-                this.textColor = textColor;
-                this.arrowNumber = arrowNumber;
-            }
+        fun addCell(content: String): Row {
+            cells.add(TextCell(content, false))
+            return this
         }
 
-        public void addCell(Cell cell) {
-            cells.add(cell);
+        fun addCell(number: Int): Row {
+            return addCell(number.toString())
         }
 
-        public Row addCell(String content) {
-            cells.add(new TextCell(content, false));
-            return this;
+        fun addBoldCell(content: String): Row {
+            cells.add(TextCell(content, true))
+            return this
         }
 
-        public Row addCell(int number) {
-            return addCell(String.valueOf(number));
+        fun addBoldCell(content: String, columnSpan: Int): Row {
+            val textCell = TextCell(content, true)
+            textCell.columnSpan = columnSpan
+            cells.add(textCell)
+            return this
         }
 
-        public Row addBoldCell(String content) {
-            cells.add(new TextCell(content, true));
-            return this;
-        }
-
-        public Row addBoldCell(String content, int columnSpan) {
-            TextCell textCell = new TextCell(content, true);
-            textCell.columnSpan = columnSpan;
-            cells.add(textCell);
-            return this;
-        }
-
-        public void addEndCell(String content, int fillColor, int textColor, String arrowNumber) {
-            cells.add(new Row.EndCell(content, fillColor, textColor, arrowNumber));
+        fun addEndCell(content: String, fillColor: Int, textColor: Int, arrowNumber: String) {
+            cells.add(EndCell(content, fillColor, textColor, arrowNumber))
         }
     }
 
-    public Row startRow() {
-        Row row = new Row();
-        rows.add(row);
-        return row;
+    fun startRow(): Row {
+        val row = Row()
+        rows.add(row)
+        return row
     }
 }

@@ -13,8 +13,12 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.scoreboard.builder.model;
+package de.dreier.mytargets.features.scoreboard.builder.model
 
-public class Cell {
-    public int columnSpan = 1;
+sealed class Cell {
+    var columnSpan = 1
 }
+
+data class TextCell(val content: String, var bold: Boolean) : Cell()
+
+data class EndCell(val score: String, val fillColor: Int, val textColor: Int, val arrowNumber: String) : Cell()

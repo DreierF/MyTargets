@@ -131,7 +131,7 @@ public class DispersionPatternActivity extends ChildActivityBase {
 
                 // Build and fire intent to ask for share provider
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType(fileType.mimeType);
+                shareIntent.setType(fileType.getMimeType());
                 shareIntent.putExtra(Intent.EXTRA_STREAM,
                         FileUtilsKt.toUri(f, DispersionPatternActivity.this));
                 startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
