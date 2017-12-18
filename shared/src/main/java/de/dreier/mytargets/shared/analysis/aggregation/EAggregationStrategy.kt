@@ -13,30 +13,26 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.analysis.aggregation;
+package de.dreier.mytargets.shared.analysis.aggregation
 
-import de.dreier.mytargets.shared.analysis.aggregation.average.AverageStrategy;
-import de.dreier.mytargets.shared.analysis.aggregation.cluster.ClusterStrategy;
+import de.dreier.mytargets.shared.analysis.aggregation.average.AverageStrategy
+import de.dreier.mytargets.shared.analysis.aggregation.cluster.ClusterStrategy
 
-public enum EAggregationStrategy {
-    NONE(NoneStrategy.class),
-    AVERAGE(AverageStrategy.class),
-    CLUSTER(ClusterStrategy.class);
-    public final Class<? extends IAggregationStrategy> strategyClass;
+enum class EAggregationStrategy(private val strategyClass: Class<out IAggregationStrategy>) {
+    NONE(NoneStrategy::class.java),
+    AVERAGE(AverageStrategy::class.java),
+    CLUSTER(ClusterStrategy::class.java);
 
-    EAggregationStrategy(Class<? extends IAggregationStrategy> strategyClass) {
-        this.strategyClass = strategyClass;
-    }
-
-    public IAggregationStrategy newInstance() {
+    fun newInstance(): IAggregationStrategy {
         try {
-            return strategyClass.newInstance();
-        } catch (InstantiationException e) {
-            throw new IllegalArgumentException(
-                    "Strategy must have zero argument constructor!");
-        } catch (IllegalAccessException e) {
-            throw new IllegalArgumentException(
-                    "Strategy must have a public zero argument constructor!");
+            return strategyClass.newInstance()
+        } catch (e: InstantiationException) {
+            throw IllegalArgumentException(
+                    "Strategy must have zero argument constructor!")
+        } catch (e: IllegalAccessException) {
+            throw IllegalArgumentException(
+                    "Strategy must have a public zero argument constructor!")
         }
+
     }
 }

@@ -13,347 +13,323 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.views;
+package de.dreier.mytargets.shared.views
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.PointF;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
-import android.support.v4.widget.ExploreByTouchHelper;
-import android.util.AttributeSet;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.accessibility.AccessibilityEvent;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
+import android.annotation.TargetApi
+import android.content.Context
+import android.graphics.Canvas
+import android.graphics.PointF
+import android.graphics.Rect
+import android.graphics.RectF
+import android.graphics.drawable.Drawable
+import android.os.Build
+import android.os.Bundle
+import android.support.annotation.VisibleForTesting
+import android.support.v4.content.ContextCompat
+import android.support.v4.view.ViewCompat
+import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat
+import android.support.v4.widget.ExploreByTouchHelper
+import android.util.AttributeSet
+import android.view.KeyEvent
+import android.view.MotionEvent
+import android.view.View
+import android.view.accessibility.AccessibilityEvent
+import android.view.animation.AccelerateDecelerateInterpolator
+import de.dreier.mytargets.shared.R
+import de.dreier.mytargets.shared.models.SelectableZone
+import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.models.db.End
+import de.dreier.mytargets.shared.models.db.RoundTemplate
+import de.dreier.mytargets.shared.models.db.Shot
+import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable
+import de.dreier.mytargets.shared.targets.models.WAFull
+import de.dreier.mytargets.shared.utils.EndRenderer
+import de.dreier.mytargets.shared.utils.RectUtils
+import java.util.*
 
-import java.util.ArrayList;
-import java.util.List;
-
-import de.dreier.mytargets.shared.R;
-import de.dreier.mytargets.shared.models.SelectableZone;
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.End;
-import de.dreier.mytargets.shared.models.db.RoundTemplate;
-import de.dreier.mytargets.shared.models.db.Shot;
-import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable;
-import de.dreier.mytargets.shared.targets.models.WAFull;
-import de.dreier.mytargets.shared.utils.EndRenderer;
-import de.dreier.mytargets.shared.utils.RectUtils;
-
-public abstract class TargetViewBase extends View implements View.OnTouchListener {
-    private final TargetAccessibilityTouchHelper touchHelper = new TargetAccessibilityTouchHelper(
-            this);
+abstract class TargetViewBase : View, View.OnTouchListener {
+    private val touchHelper = TargetAccessibilityTouchHelper(
+            this)
     @VisibleForTesting
-    public final List<VirtualView> virtualViews = new ArrayList<>();
+    val virtualViews: MutableList<VirtualView> = ArrayList()
     /**
      * Zero-based index of the shot that is currently being changed.
      * If no shot is selected it is set to EndRenderer#NO_SELECTION.
      */
-    private int currentShotIndex;
-    @NonNull
-    protected EndRenderer endRenderer = new EndRenderer();
-    protected List<Shot> shots;
-    protected RoundTemplate round;
-    @Nullable
-    protected OnEndFinishedListener setListener = null;
-    protected EInputMethod inputMethod = EInputMethod.KEYBOARD;
-    protected float density;
-    protected List<SelectableZone> selectableZones;
-    protected Target target;
-    protected TargetImpactAggregationDrawable targetDrawable;
-    @Nullable
-    protected AnimatorSet animator;
+    protected var currentShotIndex: Int = 0
+        set(currentArrow) {
+            field = currentArrow
+            if (target.model.dependsOnArrowIndex()) {
+                updateSelectableZones()
+            }
+        }
+    protected var endRenderer = EndRenderer()
+    protected lateinit var shots: List<Shot>
+    protected var round: RoundTemplate? = null
+    protected var setListener: OnEndFinishedListener? = null
+    protected var inputMethod = EInputMethod.KEYBOARD
+    protected var density: Float = 0.toFloat()
+    protected lateinit var selectableZones: List<SelectableZone>
+    protected lateinit var target: Target
+    protected var targetDrawable: TargetImpactAggregationDrawable? = null
+    protected var animator: AnimatorSet? = null
 
-    protected Drawable backspaceSymbol;
-    private Rect backspaceButtonBounds;
+    protected var backspaceSymbol: Drawable
+    private var backspaceButtonBounds: Rect? = null
 
     /**
      * The screen area reserved to show the already entered shots.
      */
-    private RectF endRect;
+    private var endRect: RectF? = null
 
-    public TargetViewBase(Context context) {
-        super(context);
-        setOnTouchListener(this);
-        initForDesigner();
+    protected abstract val selectedShotCircleRadius: Int
+
+    @JvmOverloads
+    constructor(
+            context: Context,
+            attrs: AttributeSet? = null,
+            defStyleAttr: Int = 0)
+            : super(context, attrs, defStyleAttr)
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    constructor(
+            context: Context,
+            attrs: AttributeSet?,
+            defStyleAttr: Int,
+            defStyleRes: Int)
+            : super(context, attrs, defStyleAttr, defStyleRes)
+
+    init {
+        setOnTouchListener(this)
+        density = resources.displayMetrics.density
+        ViewCompat.setAccessibilityDelegate(this, touchHelper)
+        ViewCompat.setImportantForAccessibility(this, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES)
+        backspaceSymbol = ContextCompat.getDrawable(context, R.drawable.ic_backspace_grey600_24dp)!!
+        initForDesigner()
     }
 
-    protected TargetViewBase(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        setOnTouchListener(this);
-        initForDesigner();
-    }
+    protected val isCurrentlySelecting: Boolean
+        get() = currentShotIndex != EndRenderer.NO_SELECTION && shots[currentShotIndex].scoringRing != Shot.NOTHING_SELECTED
 
-    protected TargetViewBase(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        setOnTouchListener(this);
-        initForDesigner();
-    }
-
-    private void initForDesigner() {
-        density = getResources().getDisplayMetrics().density;
-        ViewCompat.setAccessibilityDelegate(this, touchHelper);
-        ViewCompat.setImportantForAccessibility(this, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES);
-        backspaceSymbol = getResources().getDrawable(R.drawable.ic_backspace_grey600_24dp);
-        if (isInEditMode()) {
-            shots = new ArrayList<>();
-            for (int i = 0; i < 3; i++) {
-                shots.add(new Shot(i));
+    protected val circleAnimation: Animator?
+        get() {
+            var pos: PointF? = null
+            if (isCurrentlySelecting) {
+                pos = getShotCoordinates(shots[currentShotIndex])
             }
-            shots.get(0).setScoringRing(0);
-            shots.get(0).setX(0.01f);
-            shots.get(0).setY(0.05f);
-            target = new Target(WAFull.Companion.getID(), 0);
-            targetDrawable = target.getImpactAggregationDrawable();
-            endRenderer.init(this, density, target);
-            endRenderer.setShots(shots);
-            setCurrentShotIndex(1);
+            val initialSize = selectedShotCircleRadius
+            return endRenderer
+                    .getAnimationToSelection(currentShotIndex, pos, initialSize, endRect)
+        }
+
+    private fun initForDesigner() {
+        if (isInEditMode) {
+            shots = listOf(Shot(i = 0), Shot(i = 1), Shot(i = 2))
+            shots[0].scoringRing = 0
+            shots[0].x = 0.01f
+            shots[0].y = 0.05f
+            target = Target(WAFull.ID, 0)
+            targetDrawable = target.impactAggregationDrawable
+            endRenderer.init(this, density, target)
+            endRenderer.setShots(shots)
+            currentShotIndex = 1
         }
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        if (targetDrawable != null) {
-            targetDrawable.setCallback(null);
-            targetDrawable.cleanup();
-        }
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        targetDrawable?.callback = null
+        targetDrawable?.cleanup()
     }
 
-    public void setTarget(Target t) {
-        target = t;
-        targetDrawable = target.getImpactAggregationDrawable();
-        targetDrawable.setCallback(this);
-        endRenderer.init(this, density, target);
-        updateSelectableZones();
+    open fun initWithTarget(t: Target) {
+        target = t
+        targetDrawable = target.impactAggregationDrawable
+        targetDrawable?.callback = this
+        endRenderer.init(this, density, target)
+        updateSelectableZones()
     }
 
-    public void setEnd(@NonNull End end) {
-        shots = end.loadShots();
-        setCurrentShotIndex(getNextShotIndex(-1));
-        endRenderer.setShots(shots);
-        endRenderer.setSelection(getCurrentShotIndex(), null, EndRenderer.Companion
-                .getMAX_CIRCLE_SIZE());
-        animateToNewState();
-        notifyTargetShotsChanged();
+    open fun replaceWithEnd(end: End) {
+        shots = end.loadShots()!!
+        currentShotIndex = getNextShotIndex(-1)
+        endRenderer.setShots(shots)
+        endRenderer.setSelection(currentShotIndex, null, EndRenderer
+                .MAX_CIRCLE_SIZE)
+        animateToNewState()
+        notifyTargetShotsChanged()
     }
 
-    @Override
-    public void invalidateDrawable(@NonNull Drawable drawable) {
-        super.invalidateDrawable(drawable);
-        invalidate();
+    override fun invalidateDrawable(drawable: Drawable) {
+        super.invalidateDrawable(drawable)
+        invalidate()
     }
 
-    @Override
-    public boolean dispatchHoverEvent(@NonNull MotionEvent event) {
-        return touchHelper.dispatchHoverEvent(event) || super.dispatchHoverEvent(event);
+    public override fun dispatchHoverEvent(event: MotionEvent): Boolean {
+        return touchHelper.dispatchHoverEvent(event) || super.dispatchHoverEvent(event)
     }
 
-    @Override
-    public boolean dispatchKeyEvent(@NonNull KeyEvent event) {
-        return touchHelper.dispatchKeyEvent(event) || super.dispatchKeyEvent(event);
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        return touchHelper.dispatchKeyEvent(event) || super.dispatchKeyEvent(event)
     }
 
-    @Override
-    public void onFocusChanged(boolean gainFocus, int direction,
-                               Rect previouslyFocusedRect) {
-        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
-        touchHelper.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+    public override fun onFocusChanged(gainFocus: Boolean, direction: Int,
+                                       previouslyFocusedRect: Rect?) {
+        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect)
+        touchHelper.onFocusChanged(gainFocus, direction, previouslyFocusedRect)
     }
 
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        updateLayout();
-        animateToNewState();
-        updateVirtualViews();
-        invalidate();
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        updateLayout()
+        animateToNewState()
+        updateVirtualViews()
+        invalidate()
     }
 
-    protected void updateLayout() {
-        updateLayoutBounds(getWidth(), getHeight());
-        backspaceButtonBounds = getBackspaceButtonBounds();
-        endRect = getEndRect();
-        applyBoundsToBackspaceSymbol();
+    protected fun updateLayout() {
+        updateLayoutBounds(width, height)
+        backspaceButtonBounds = getBackspaceButtonBounds()
+        endRect = getEndRect()
+        applyBoundsToBackspaceSymbol()
     }
 
-    private void applyBoundsToBackspaceSymbol() {
-        Rect innerButtonBounds = new Rect(backspaceButtonBounds);
-        innerButtonBounds.inset((int) (8 * density), (int) (8 * density));
-        Rect bounds = new Rect(0, 0, backspaceSymbol.getIntrinsicWidth(), backspaceSymbol
-                .getIntrinsicHeight());
-        Rect backspaceSymbolBounds = RectUtils.INSTANCE.fitRectWithin(bounds, innerButtonBounds);
-        backspaceSymbol.setBounds(backspaceSymbolBounds);
+    private fun applyBoundsToBackspaceSymbol() {
+        val innerButtonBounds = Rect(backspaceButtonBounds)
+        innerButtonBounds.inset((8 * density).toInt(), (8 * density).toInt())
+        val bounds = Rect(0, 0, backspaceSymbol.intrinsicWidth, backspaceSymbol
+                .intrinsicHeight)
+        val backspaceSymbolBounds = RectUtils.fitRectWithin(bounds, innerButtonBounds)
+        backspaceSymbol.bounds = backspaceSymbolBounds
     }
 
-    protected void drawBackspaceButton(@NonNull Canvas canvas) {
-        backspaceSymbol.draw(canvas);
+    protected fun drawBackspaceButton(canvas: Canvas) {
+        backspaceSymbol.draw(canvas)
     }
 
-    protected abstract Rect getBackspaceButtonBounds();
+    protected abstract fun getBackspaceButtonBounds(): Rect
 
-    protected abstract void updateLayoutBounds(int width, int height);
+    protected abstract fun updateLayoutBounds(width: Int, height: Int)
 
-    protected abstract RectF getEndRect();
+    protected abstract fun getEndRect(): RectF
 
-    protected int getSelectableZoneIndexFromShot(@NonNull Shot shot) {
-        int i = 0;
-        for (SelectableZone selectableZone : selectableZones) {
-            if (shot.getScoringRing() == selectableZone.index) {
-                return i;
-            }
-            i++;
-        }
-        return -1;
+    protected fun getSelectableZoneIndexFromShot(shot: Shot): Int {
+        return selectableZones.indexOfFirst { shot.scoringRing == it.index }
     }
 
-    public void setOnTargetSetListener(OnEndFinishedListener listener) {
-        setListener = listener;
+    fun setOnTargetSetListener(listener: OnEndFinishedListener) {
+        setListener = listener
     }
 
-    @NonNull
-    protected abstract Rect getSelectableZonePosition(int i);
+    protected abstract fun getSelectableZonePosition(i: Int): Rect
 
-    public boolean onTouch(View view, @NonNull MotionEvent motionEvent) {
-        float x = motionEvent.getX();
-        float y = motionEvent.getY();
+    override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
+        val x = motionEvent.x
+        val y = motionEvent.y
 
-        if (!isCurrentlySelecting() &&
-                (selectPreviousShots(motionEvent, x, y) || pressBackspace(motionEvent, x, y))) {
-            return true;
+        if (!isCurrentlySelecting && (selectPreviousShots(motionEvent, x, y) || pressBackspace(motionEvent, x, y))) {
+            return true
         }
 
-        if (getCurrentShotIndex() == EndRenderer.Companion.getNO_SELECTION()) {
-            return true;
+        if (currentShotIndex == EndRenderer.NO_SELECTION) {
+            return true
         }
 
-        Shot shot = shots.get(getCurrentShotIndex());
+        val shot = shots[currentShotIndex]
         if (updateShotToPosition(shot, x, y)) {
             endRenderer.setSelection(
-                    getCurrentShotIndex(), getShotCoordinates(shot),
-                    getSelectedShotCircleRadius());
-            invalidate();
+                    currentShotIndex, getShotCoordinates(shot),
+                    selectedShotCircleRadius)
+            invalidate()
 
             // If finger is released go to next shoot
-            if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                onShotSelectionFinished();
+            if (motionEvent.action == MotionEvent.ACTION_UP) {
+                onShotSelectionFinished()
             }
         }
-        return true;
+        return true
     }
 
-    protected abstract int getSelectedShotCircleRadius();
-
-    protected boolean isCurrentlySelecting() {
-        return getCurrentShotIndex() != EndRenderer.Companion.getNO_SELECTION()
-                && shots.get(getCurrentShotIndex()).getScoringRing() !=
-                Shot.Companion.getNOTHING_SELECTED();
-    }
-
-    protected void onShotSelectionFinished() {
-        setCurrentShotIndex(getNextShotIndex(currentShotIndex));
-        animateToNewState();
-        notifyTargetShotsChanged();
-        notifyEndFinished();
+    protected open fun onShotSelectionFinished() {
+        currentShotIndex = getNextShotIndex(this.currentShotIndex)
+        animateToNewState()
+        notifyTargetShotsChanged()
+        notifyEndFinished()
     }
 
     /**
      * Returns the index of the next shot, after the given one, which does not have a zone set yet.
      *
      * @param currentShotIndex Index of the current shot.
-     *                         Can also be set to -1, to start the search from the first shot.
+     * Can also be set to -1, to start the search from the first shot.
      * @return Returns a valid index or EndRenderer.NO_SELECTION
      */
-    protected int getNextShotIndex(int currentShotIndex) {
-        int nextShotIndex = currentShotIndex + 1;
-        while (nextShotIndex < shots.size() && shots
-                .get(nextShotIndex).getScoringRing() != Shot.Companion.getNOTHING_SELECTED()) {
-            nextShotIndex++;
+    protected fun getNextShotIndex(currentShotIndex: Int): Int {
+        var nextShotIndex = currentShotIndex + 1
+        while (nextShotIndex < shots.size && shots[nextShotIndex].scoringRing != Shot.NOTHING_SELECTED) {
+            nextShotIndex++
         }
-        if (nextShotIndex == shots.size()) {
-            return EndRenderer.Companion.getNO_SELECTION();
-        }
-        return nextShotIndex;
+        return if (nextShotIndex == shots.size) {
+            EndRenderer.NO_SELECTION
+        } else nextShotIndex
     }
 
-    protected void notifyTargetShotsChanged() {
-        invalidate();
+    protected open fun notifyTargetShotsChanged() {
+        invalidate()
     }
 
-    protected void notifyEndFinished() {
-        if (currentShotIndex == EndRenderer.Companion.getNO_SELECTION() && setListener != null) {
-            setListener.onEndFinished(shots);
+    protected fun notifyEndFinished() {
+        if (this.currentShotIndex == EndRenderer.NO_SELECTION) {
+            setListener?.onEndFinished(shots)
         }
     }
 
-    protected abstract PointF getShotCoordinates(Shot shot);
+    protected abstract fun getShotCoordinates(shot: Shot): PointF
 
-    protected void animateToNewState() {
+    protected fun animateToNewState() {
         if (endRect == null) {
-            return;
+            return
         }
         // Extension point for sub-classes making use of spots
-        List<Animator> animations = new ArrayList<>();
-        collectAnimations(animations);
-        playAnimations(animations);
+        val animations = ArrayList<Animator>()
+        collectAnimations(animations)
+        playAnimations(animations)
     }
 
-    protected void collectAnimations(@NonNull List<Animator> animations) {
-        final Animator animation = getCircleAnimation();
+    protected open fun collectAnimations(animations: MutableList<Animator>) {
+        val animation = circleAnimation
         if (animation != null) {
-            animations.add(animation);
+            animations.add(animation)
         }
     }
 
-    @Nullable
-    protected Animator getCircleAnimation() {
-        PointF pos = null;
-        if (isCurrentlySelecting()) {
-            pos = getShotCoordinates(shots.get(getCurrentShotIndex()));
-        }
-        int initialSize = getSelectedShotCircleRadius();
-        return endRenderer
-                .getAnimationToSelection(getCurrentShotIndex(), pos, initialSize, endRect);
-    }
-
-    protected void playAnimations(List<Animator> setList) {
-        cancelPendingAnimations();
-        animator = new AnimatorSet();
-        animator.playTogether(setList);
-        animator.setInterpolator(new AccelerateDecelerateInterpolator());
-        animator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                onAnimationEnd(animation);
+    protected fun playAnimations(setList: List<Animator>) {
+        cancelPendingAnimations()
+        animator = AnimatorSet()
+        animator!!.playTogether(setList)
+        animator!!.interpolator = AccelerateDecelerateInterpolator()
+        animator!!.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationCancel(animation: Animator) {
+                onAnimationEnd(animation)
             }
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                animator = null;
-                updateVirtualViews();
-                invalidate();
+            override fun onAnimationEnd(animation: Animator) {
+                animator = null
+                updateVirtualViews()
+                invalidate()
             }
-        });
-        animator.setDuration(300);
-        animator.start();
+        })
+        animator!!.duration = 300
+        animator!!.start()
     }
 
-    protected void cancelPendingAnimations() {
+    protected fun cancelPendingAnimations() {
         if (animator != null) {
-            AnimatorSet tmp = animator;
-            animator = null;
-            tmp.cancel();
+            val tmp = animator!!
+            animator = null
+            tmp.cancel()
         }
     }
 
@@ -365,174 +341,141 @@ public abstract class TargetViewBase extends View implements View.OnTouchListene
      * @param y    Y-Coordinate
      * @return Returns true if the update was successful and false if the position is invalid
      */
-    protected abstract boolean updateShotToPosition(Shot shot, float x, float y);
+    protected abstract fun updateShotToPosition(shot: Shot, x: Float, y: Float): Boolean
 
-    protected abstract boolean selectPreviousShots(MotionEvent motionEvent, float x, float y);
+    protected abstract fun selectPreviousShots(motionEvent: MotionEvent, x: Float, y: Float): Boolean
 
-    private boolean pressBackspace(@NonNull MotionEvent motionEvent, float x, float y) {
-        if (backspaceButtonBounds.contains((int) x, (int) y)) {
-            if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                int currentShotIndex = getCurrentShotIndex();
+    private fun pressBackspace(motionEvent: MotionEvent, x: Float, y: Float): Boolean {
+        if (backspaceButtonBounds!!.contains(x.toInt(), y.toInt())) {
+            if (motionEvent.action == MotionEvent.ACTION_UP) {
+                var currentShotIndex = currentShotIndex
                 if (currentShotIndex != 0) {
-                    if (currentShotIndex == EndRenderer.Companion.getNO_SELECTION()) {
-                        currentShotIndex = shots.size();
+                    if (currentShotIndex == EndRenderer.NO_SELECTION) {
+                        currentShotIndex = shots.size
                     }
-                    Shot shot = shots.get(currentShotIndex - 1);
-                    shot.setScoringRing(Shot.Companion.getNOTHING_SELECTED());
-                    setCurrentShotIndex(currentShotIndex - 1);
-                    notifyTargetShotsChanged();
-                    animateToNewState();
+                    val shot = shots[currentShotIndex - 1]
+                    shot.scoringRing = Shot.NOTHING_SELECTED
+                    currentShotIndex -= 1
+                    notifyTargetShotsChanged()
+                    animateToNewState()
                 }
             }
-            return true;
+            return true
         }
-        return false;
+        return false
     }
 
-    protected int getCurrentShotIndex() {
-        return currentShotIndex;
-    }
-
-    protected void setCurrentShotIndex(int currentArrow) {
-        this.currentShotIndex = currentArrow;
-        if (target.getModel().dependsOnArrowIndex()) {
-            updateSelectableZones();
-        }
-    }
-
-    protected void updateSelectableZones() {
-        if (getCurrentShotIndex() != EndRenderer.Companion.getNO_SELECTION()) {
-            selectableZones = target.getSelectableZoneList(getCurrentShotIndex());
-            if (virtualViews.size() > 0) {
-                updateVirtualViews();
+    protected fun updateSelectableZones() {
+        if (currentShotIndex != EndRenderer.NO_SELECTION) {
+            selectableZones = target.getSelectableZoneList(currentShotIndex)
+            if (virtualViews.size > 0) {
+                updateVirtualViews()
             }
         }
     }
 
-    public enum EInputMethod {
+    enum class EInputMethod {
         KEYBOARD, PLOTTING
     }
 
-    public interface OnEndFinishedListener {
-        void onEndFinished(List<Shot> shotList);
+    interface OnEndFinishedListener {
+        fun onEndFinished(shotList: List<Shot>?)
     }
 
-    private void updateVirtualViews() {
-        virtualViews.clear();
-        VirtualView vv = new VirtualView();
-        vv.description = getResources().getString(R.string.backspace);
-        vv.rect = backspaceButtonBounds;
-        vv.id = 0;
-        vv.shot = false;
-        virtualViews.add(vv);
+    private fun updateVirtualViews() {
+        virtualViews.clear()
+        var vv = VirtualView()
+        vv.description = resources.getString(R.string.backspace)
+        vv.rect = backspaceButtonBounds
+        vv.id = 0
+        vv.shot = false
+        virtualViews.add(vv)
         if (inputMethod == EInputMethod.KEYBOARD) {
-            for (int i = 0; i < selectableZones.size(); i++) {
-                vv = new VirtualView();
-                vv.id = i + 1;
-                vv.shot = false;
-                vv.description = selectableZones.get(i).text;
-                if ("M".equals(vv.description)) {
-                    vv.description = getResources().getString(R.string.miss);
+            for (i in selectableZones.indices) {
+                vv = VirtualView()
+                vv.id = i + 1
+                vv.shot = false
+                vv.description = selectableZones[i].text
+                if ("M" == vv.description) {
+                    vv.description = resources.getString(R.string.miss)
                 }
-                vv.rect = getSelectableZonePosition(i);
-                virtualViews.add(vv);
+                vv.rect = getSelectableZonePosition(i)
+                virtualViews.add(vv)
             }
         }
-        int firstId = virtualViews.size();
-        for (Shot s : shots) {
-            if (s.getScoringRing() == Shot.Companion.getNOTHING_SELECTED()) {
-                continue;
+        val firstId = virtualViews.size
+        for ((_, index, _, _, _, scoringRing) in shots) {
+            if (scoringRing == Shot.NOTHING_SELECTED) {
+                continue
             }
-            vv = new VirtualView();
-            vv.id = firstId + s.getIndex();
-            vv.shot = true;
-            String score = target.zoneToString(s.getScoringRing(), s.getIndex());
-            if ("M".equals(score)) {
-                score = getResources().getString(R.string.miss);
+            vv = VirtualView()
+            vv.id = firstId + index
+            vv.shot = true
+            var score = target.zoneToString(scoringRing, index)
+            if ("M" == score) {
+                score = resources.getString(R.string.miss)
             }
-            vv.description = getResources()
-                    .getString(R.string.accessibility_description_shot_n_score, s.getIndex() + 1, score);
-            vv.rect = endRenderer.getBoundsForShot(s.getIndex());
-            virtualViews.add(vv);
+            vv.description = resources
+                    .getString(R.string.accessibility_description_shot_n_score, index + 1, score)
+            vv.rect = endRenderer.getBoundsForShot(index)
+            virtualViews.add(vv)
         }
     }
 
-    private static class TargetAccessibilityTouchHelper extends ExploreByTouchHelper {
+    private class TargetAccessibilityTouchHelper internal constructor(private val targetView: TargetViewBase) : ExploreByTouchHelper(targetView) {
 
-        @NonNull
-        private final TargetViewBase targetView;
-
-        TargetAccessibilityTouchHelper(@NonNull TargetViewBase targetView) {
-            super(targetView);
-            this.targetView = targetView;
+        override fun getVirtualViewAt(x: Float, y: Float): Int {
+            val vw = findVirtualViewByPosition(x, y) ?: return ExploreByTouchHelper.INVALID_ID
+            return vw.id
         }
 
-        @Override
-        protected int getVirtualViewAt(float x, float y) {
-            final VirtualView vw = findVirtualViewByPosition(x, y);
-            if (vw == null) {
-                return ExploreByTouchHelper.INVALID_ID;
-            }
-            return vw.id;
-        }
-
-        private VirtualView findVirtualViewByPosition(float x, float y) {
-            for (VirtualView virtualView : targetView.virtualViews) {
-                if (virtualView.rect.contains((int) x, (int) y)) {
-                    return virtualView;
+        private fun findVirtualViewByPosition(x: Float, y: Float): VirtualView? {
+            for (virtualView in targetView.virtualViews) {
+                if (virtualView.rect!!.contains(x.toInt(), y.toInt())) {
+                    return virtualView
                 }
             }
-            return null;
+            return null
         }
 
-        @Override
-        protected void getVisibleVirtualViews(@NonNull List<Integer> virtualViewIds) {
-            for (int i = 0; i < targetView.virtualViews.size(); i++) {
-                virtualViewIds.add(targetView.virtualViews.get(i).id);
+        override fun getVisibleVirtualViews(virtualViewIds: MutableList<Int>) {
+            for (i in targetView.virtualViews.indices) {
+                virtualViewIds.add(targetView.virtualViews[i].id)
             }
         }
 
-        @Override
-        protected void onPopulateEventForVirtualView(int virtualViewId, @NonNull AccessibilityEvent event) {
-            final VirtualView vw = findVirtualViewById(virtualViewId);
-            if (vw == null) {
-                return;
-            }
-            event.getText().add(vw.description);
+        override fun onPopulateEventForVirtualView(virtualViewId: Int, event: AccessibilityEvent) {
+            val vw = findVirtualViewById(virtualViewId) ?: return
+            event.text.add(vw.description)
         }
 
-        private VirtualView findVirtualViewById(int virtualViewId) {
-            for (VirtualView virtualView : targetView.virtualViews) {
+        private fun findVirtualViewById(virtualViewId: Int): VirtualView? {
+            for (virtualView in targetView.virtualViews) {
                 if (virtualView.id == virtualViewId) {
-                    return virtualView;
+                    return virtualView
                 }
             }
-            return null;
+            return null
         }
 
-        @Override
-        protected void onPopulateNodeForVirtualView(int virtualViewId, @NonNull AccessibilityNodeInfoCompat node) {
-            final VirtualView vw = findVirtualViewById(virtualViewId);
-            if (vw == null) {
-                return;
-            }
+        override fun onPopulateNodeForVirtualView(virtualViewId: Int, node: AccessibilityNodeInfoCompat) {
+            val vw = findVirtualViewById(virtualViewId) ?: return
 
-            node.setText(vw.description);
-            node.setContentDescription(vw.description);
-            node.setClassName(targetView.getClass().getName());
-            node.setBoundsInParent(vw.rect);
+            node.text = vw.description
+            node.contentDescription = vw.description
+            node.className = targetView.javaClass.name
+            node.setBoundsInParent(vw.rect)
         }
 
-        @Override
-        protected boolean onPerformActionForVirtualView(int virtualViewId, int action, Bundle arguments) {
-            return false;
+        override fun onPerformActionForVirtualView(virtualViewId: Int, action: Int, arguments: Bundle?): Boolean {
+            return false
         }
     }
 
-    public class VirtualView {
-        public int id;
-        public boolean shot;
-        public Rect rect;
-        public String description;
+    inner class VirtualView {
+        var id: Int = 0
+        var shot: Boolean = false
+        var rect: Rect? = null
+        var description: String? = null
     }
 }

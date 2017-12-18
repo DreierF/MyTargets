@@ -47,7 +47,7 @@ public class WearWearableClient extends WearableClientBase {
         public void onReceive(Context context, @NonNull Intent intent) {
             switch (intent.getAction()) {
                 case BROADCAST_REQUEST_TRAINING_TEMPLATE:
-                    sendMessage(TRAINING_TEMPLATE, null);
+                    sendMessage(Companion.getTRAINING_TEMPLATE(), null);
                     break;
                 case BROADCAST_TRAINING_CREATE:
                     AugmentedTraining training = intent.getParcelableExtra(EXTRA_TRAINING);
@@ -74,47 +74,47 @@ public class WearWearableClient extends WearableClientBase {
 
     @Override
     public void disconnect() {
-        LocalBroadcastManager.getInstance(context).unregisterReceiver(broadcastReceiver);
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(broadcastReceiver);
         super.disconnect();
     }
 
     private void updateEnd(AugmentedEnd end) {
         final byte[] data = ParcelableUtilKt.marshall(end);
-        sendMessage(WearableClientBase.END_UPDATE, data);
+        sendMessage(WearableClientBase.Companion.getEND_UPDATE(), data);
     }
 
     private void createTraining(AugmentedTraining training) {
         final byte[] data = ParcelableUtilKt.marshall(training);
-        sendMessage(WearableClientBase.TRAINING_CREATE, data);
+        sendMessage(WearableClientBase.Companion.getTRAINING_CREATE(), data);
     }
 
     public void sendTrainingUpdate(TrainingInfo info) {
         Intent intent = new Intent(BROADCAST_TRAINING_UPDATED);
         intent.putExtra(EXTRA_INFO, info);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
     }
 
     public void sendEndUpdate(AugmentedEnd end) {
         Intent intent = new Intent(BROADCAST_UPDATE_END_FROM_LOCAL);
         intent.putExtra(EXTRA_END, end);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
     }
 
     public void requestNewTrainingTemplate() {
         Intent intent = new Intent(BROADCAST_REQUEST_TRAINING_TEMPLATE);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
     }
 
     public void sendCreateTraining(AugmentedTraining training) {
         Intent intent = new Intent(BROADCAST_TRAINING_CREATE);
         intent.putExtra(EXTRA_TRAINING, training);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
     }
 
     public void sendTrainingTemplate(AugmentedTraining training) {
         Intent intent = new Intent(BROADCAST_TRAINING_TEMPLATE);
         intent.putExtra(EXTRA_TRAINING, training);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
     }
 
     @Override

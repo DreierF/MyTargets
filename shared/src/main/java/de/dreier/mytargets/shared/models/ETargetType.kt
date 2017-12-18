@@ -13,25 +13,19 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models
 
-import de.dreier.mytargets.shared.R;
+import android.support.annotation.StringRes
+import de.dreier.mytargets.shared.R
 
-import de.dreier.mytargets.shared.SharedApplicationInstance;
+import de.dreier.mytargets.shared.SharedApplicationInstance
 
-public enum ETargetType {
+enum class ETargetType constructor(@StringRes private val nameRes: Int) {
     TARGET(R.string.target_type_target_archery),
     FIELD(R.string.target_type_field_archery),
     THREE_D(R.string.target_type_3d_archery);
 
-    private final int name;
-
-    ETargetType(int name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return SharedApplicationInstance.Companion.getStr(name);
+    override fun toString(): String {
+        return SharedApplicationInstance.getStr(nameRes)
     }
 }

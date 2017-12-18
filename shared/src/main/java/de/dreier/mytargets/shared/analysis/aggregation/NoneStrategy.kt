@@ -13,43 +13,25 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.analysis.aggregation;
+package de.dreier.mytargets.shared.analysis.aggregation
 
-import android.support.annotation.NonNull;
+import de.dreier.mytargets.shared.models.db.Shot
 
-import java.util.List;
+class NoneStrategy : IAggregationStrategy {
 
-public class NoneStrategy implements IAggregationStrategy {
+    override var color: Int = 0
+    override val result: IAggregationResultRenderer = NOPResultRenderer()
+    private var resultListener: IAggregationStrategy.OnAggregationResult? = null
 
-    @NonNull
-    private NOPResultRenderer resultRenderer = new NOPResultRenderer();
-    private OnAggregationResult resultListener;
-
-    @Override
-    public void setOnAggregationResultListener(OnAggregationResult resultListener) {
-        this.resultListener = resultListener;
+    override fun setOnAggregationResultListener(resultListener: IAggregationStrategy.OnAggregationResult) {
+        this.resultListener = resultListener
     }
 
-    @NonNull
-    @Override
-    public IAggregationResultRenderer getResult() {
-        return resultRenderer;
-    }
-
-    @Override
-    public void cleanup() {
+    override fun cleanup() {
 
     }
 
-    @Override
-    public void setColor(int color) {
-
-    }
-
-    @Override
-    public void calculate(List list) {
-        if (resultListener != null) {
-            resultListener.onResult();
-        }
+    override fun calculate(shots: List<Shot>) {
+        resultListener?.onResult()
     }
 }

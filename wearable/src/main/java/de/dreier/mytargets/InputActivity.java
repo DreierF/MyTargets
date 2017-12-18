@@ -57,8 +57,8 @@ public class InputActivity extends WearableActivity implements TargetViewBase.On
         binding.circularProgress.setVisibility(View.INVISIBLE);
 
         // Set up target view
-        binding.target.setTarget(round.getTarget());
-        binding.target.setEnd(new End(round.getShotsPerEnd(), 0));
+        binding.target.initWithTarget(round.getTarget());
+        binding.target.replaceWithEnd(new End(round.getShotsPerEnd(), 0));
         binding.target.setOnTargetSetListener(this);
 
         // Ensure Moto 360 is not cut off at the bottom

@@ -13,14 +13,13 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.base.fragment;
+package de.dreier.mytargets.shared.base.fragment
 
-import android.support.annotation.ColorRes;
-import android.support.annotation.NonNull;
+import android.support.annotation.ColorRes
 
-import de.dreier.mytargets.shared.R;
+import de.dreier.mytargets.shared.R
 
-public enum ETimerState {
+enum class ETimerState constructor(@param:ColorRes var color: Int, var signalCount: Int) {
     WAIT_FOR_START(R.color.timer_red, 0),
     PREPARATION(R.color.timer_red, 2),
     SHOOTING(R.color.timer_green, 1),
@@ -28,29 +27,15 @@ public enum ETimerState {
     FINISHED(R.color.timer_red, 3),
     EXIT(R.color.timer_red, 0);
 
-    public int color;
-    public int signalCount;
-
-    ETimerState(@ColorRes int color, int signalCount) {
-        this.color = color;
-        this.signalCount = signalCount;
-    }
-
-    @NonNull
-    public ETimerState getNext() {
-        switch (this) {
-            case WAIT_FOR_START:
-                return PREPARATION;
-            case PREPARATION:
-                return SHOOTING;
-            case SHOOTING:
-                return COUNTDOWN;
-            case COUNTDOWN:
-                return FINISHED;
-            case FINISHED:
-                return EXIT;
-            default:
-                return WAIT_FOR_START;
+    val next: ETimerState
+        get() {
+            return when (this) {
+                WAIT_FOR_START -> PREPARATION
+                PREPARATION -> SHOOTING
+                SHOOTING -> COUNTDOWN
+                COUNTDOWN -> FINISHED
+                FINISHED -> EXIT
+                EXIT -> WAIT_FOR_START
+            }
         }
-    }
 }

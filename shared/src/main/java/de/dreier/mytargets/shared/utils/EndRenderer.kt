@@ -180,7 +180,7 @@ class EndRenderer(
         }
     }
 
-    fun getAnimationToSelection(selectedShot: Int, c: PointF, radius: Int, rect: RectF?): Animator? {
+    fun getAnimationToSelection(selectedShot: Int, c: PointF?, radius: Int, rect: RectF?): Animator? {
         if (rect == null) {
             setSelection(selectedShot, c, radius)
             return null

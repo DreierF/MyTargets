@@ -13,189 +13,178 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared;
+package de.dreier.mytargets.shared
 
-import android.database.Cursor;
-import android.support.annotation.NonNull;
-
-import com.raizlabs.android.dbflow.annotation.Database;
-import com.raizlabs.android.dbflow.annotation.Migration;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
-import com.raizlabs.android.dbflow.structure.BaseModel;
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-import de.dreier.mytargets.shared.models.db.ArrowImage;
-import de.dreier.mytargets.shared.models.db.BowImage;
-import de.dreier.mytargets.shared.models.db.EndImage;
-import de.dreier.mytargets.shared.models.db.Image;
-import de.dreier.mytargets.shared.models.db.StandardRound;
-import de.dreier.mytargets.shared.utils.FileUtils;
-import de.dreier.mytargets.shared.utils.StandardRoundFactory;
+import com.raizlabs.android.dbflow.annotation.Database
+import com.raizlabs.android.dbflow.annotation.Migration
+import com.raizlabs.android.dbflow.sql.language.SQLite
+import com.raizlabs.android.dbflow.sql.migration.BaseMigration
+import com.raizlabs.android.dbflow.structure.BaseModel
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
+import de.dreier.mytargets.shared.models.db.ArrowImage
+import de.dreier.mytargets.shared.models.db.BowImage
+import de.dreier.mytargets.shared.models.db.EndImage
+import de.dreier.mytargets.shared.models.db.Image
+import de.dreier.mytargets.shared.utils.FileUtils
+import de.dreier.mytargets.shared.utils.StandardRoundFactory
+import java.io.File
+import java.io.IOException
 
 @Database(name = AppDatabase.NAME, version = AppDatabase.VERSION, foreignKeysSupported = true)
-public class AppDatabase {
+object AppDatabase {
 
-    public static final String NAME = "database";
-    public static final String DATABASE_FILE_NAME = "database.db";
-    public static final String DATABASE_IMPORT_FILE_NAME = "database";
+    const val NAME = "database"
+    const val DATABASE_FILE_NAME = "database.db"
+    const val DATABASE_IMPORT_FILE_NAME = "database"
+    const val VERSION = 24
 
-    public static final int VERSION = 24;
+    @Migration(version = 0, database = AppDatabase::class)
+    class Migration0 : BaseMigration() {
 
-    @Migration(version = 0, database = AppDatabase.class)
-    public static class Migration0 extends BaseMigration {
-
-        @Override
-        public void migrate(DatabaseWrapper database) {
-            fillStandardRound(database);
+        override fun migrate(database: DatabaseWrapper) {
+            fillStandardRound(database)
         }
     }
 
-    @Migration(version = 22, database = AppDatabase.class)
-    public static class Migration22 extends BaseMigration {
+    @Migration(version = 22, database = AppDatabase::class)
+    class Migration22 : BaseMigration() {
 
-        @Override
-        public void migrate(DatabaseWrapper database) {
-            fillStandardRound(database);
+        override fun migrate(database: DatabaseWrapper) {
+            fillStandardRound(database)
         }
     }
 
-    @Migration(version = 23, database = AppDatabase.class)
-    public static class Migration23 extends BaseMigration {
+    @Migration(version = 23, database = AppDatabase::class)
+    class Migration23 : BaseMigration() {
 
-        @Override
-        public void migrate(DatabaseWrapper database) {
-            removeFilePath(database, EndImage.class);
-            removeFilePath(database, BowImage.class);
-            removeFilePath(database, ArrowImage.class);
+        override fun migrate(database: DatabaseWrapper) {
+            removeFilePath(database, EndImage::class.java)
+            removeFilePath(database, BowImage::class.java)
+            removeFilePath(database, ArrowImage::class.java)
         }
 
-        private <T extends BaseModel & Image> void removeFilePath(DatabaseWrapper database, Class<? extends T> clazz) {
-            List<? extends T> images = SQLite.select().from(clazz).queryList(database);
-            for (T image : images) {
-                File filesDir = SharedApplicationInstance.Companion.getContext().getFilesDir();
-                File imageFile = new File(filesDir, image.getFileName());
+        private fun <T> removeFilePath(database: DatabaseWrapper, clazz: Class<out T>) where T : BaseModel, T : Image {
+            val images = SQLite.select().from(clazz).queryList(database)
+            for (image in images) {
+                val filesDir = SharedApplicationInstance.context.filesDir
+                var imageFile = File(filesDir, image.fileName)
 
-                File imageFromSomewhere = new File(image.getFileName());
-                File imageFileFromSomewhere = new File(filesDir, imageFromSomewhere.getName());
+                val imageFromSomewhere = File(image.fileName)
+                val imageFileFromSomewhere = File(filesDir, imageFromSomewhere.name)
 
                 // If imagePath is just the name and is placed inside files directory or
                 // In case the image was already copied to the files, but does still contain the wrong path
                 if (imageFile.exists() || imageFileFromSomewhere.exists()) {
-                    image.setFileName(imageFile.getName());
-                    image.save(database);
-                    continue;
+                    image.fileName = imageFile.name
+                    image.save(database)
+                    continue
                 }
 
                 // In case the image is placed somewhere else, but still exists
                 if (imageFromSomewhere.exists()) {
                     try {
                         imageFile = File
-                                .createTempFile("img", imageFromSomewhere.getName(), filesDir);
-                        FileUtils.INSTANCE.move(imageFromSomewhere, imageFile);
-                        image.setFileName(imageFile.getName());
-                        image.save(database);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                                .createTempFile("img", imageFromSomewhere.name, filesDir)
+                        FileUtils.move(imageFromSomewhere, imageFile)
+                        image.fileName = imageFile.name
+                        image.save(database)
+                    } catch (e: IOException) {
+                        e.printStackTrace()
                     }
+
                 } else {
-                    image.delete(database);
+                    image.delete(database)
                 }
             }
         }
     }
 
-    private static void fillStandardRound(DatabaseWrapper db) {
-        List<StandardRound> rounds = StandardRoundFactory.INSTANCE.initTable();
-        for (StandardRound round : rounds) {
-            round.save(db);
+    private fun fillStandardRound(db: DatabaseWrapper) {
+        val rounds = StandardRoundFactory.initTable()
+        for (round in rounds) {
+            round.save(db)
         }
     }
 
-    @Migration(version = 3, database = AppDatabase.class)
-    public static class Migration3 extends BaseMigration {
+    @Migration(version = 3, database = AppDatabase::class)
+    class Migration3 : BaseMigration() {
 
-        @Override
-        public void migrate(@NonNull DatabaseWrapper database) {
-            database.execSQL("ALTER TABLE SHOOT ADD COLUMN x REAL");
-            database.execSQL("ALTER TABLE SHOOT ADD COLUMN y REAL");
-            Cursor cur = database.rawQuery("SELECT s._id, s.points, r.target " +
+        override fun migrate(database: DatabaseWrapper) {
+            database.execSQL("ALTER TABLE SHOOT ADD COLUMN x REAL")
+            database.execSQL("ALTER TABLE SHOOT ADD COLUMN y REAL")
+            val cur = database.rawQuery("SELECT s._id, s.points, r.target " +
                     "FROM SHOOT s, PASSE p, ROUND r " +
                     "WHERE s.passe=p._id " +
-                    "AND p.round=r._id", null);
+                    "AND p.round=r._id", null)
             if (cur.moveToFirst()) {
                 do {
-                    int shoot = cur.getInt(0);
-                    database.execSQL("UPDATE SHOOT SET x=0, y=0 WHERE _id=" + shoot);
-                } while (cur.moveToNext());
+                    val shoot = cur.getInt(0)
+                    database.execSQL("UPDATE SHOOT SET x=0, y=0 WHERE _id=" + shoot)
+                } while (cur.moveToNext())
             }
-            cur.close();
+            cur.close()
         }
     }
 
-    @Migration(version = 4, database = AppDatabase.class)
-    public static class Migration4 extends BaseMigration {
+    @Migration(version = 4, database = AppDatabase::class)
+    class Migration4 : BaseMigration() {
 
-        @Override
-        public void migrate(@NonNull DatabaseWrapper database) {
+        override fun migrate(database: DatabaseWrapper) {
             database.execSQL(
                     "CREATE TABLE IF NOT EXISTS VISIER ( _id INTEGER PRIMARY KEY AUTOINCREMENT," +
                             "bow REFERENCES BOW ON DELETE CASCADE," +
                             "distance INTEGER," +
-                            "setting TEXT);");
-            int[] valuesMetric = {10, 15, 18, 20, 25, 30, 40, 50, 60, 70, 90};
-            for (String table : new String[]{"ROUND", "VISIER"}) {
-                for (int i = 10; i >= 0; i--) {
+                            "setting TEXT);")
+            val valuesMetric = intArrayOf(10, 15, 18, 20, 25, 30, 40, 50, 60, 70, 90)
+            for (table in arrayOf("ROUND", "VISIER")) {
+                for (i in 10 downTo 0) {
                     database.execSQL("UPDATE " + table + " SET distance=" +
-                            valuesMetric[i] + " WHERE distance=" + i);
+                            valuesMetric[i] + " WHERE distance=" + i)
                 }
             }
-            database.execSQL("ALTER TABLE BOW ADD COLUMN height TEXT DEFAULT '';");
+            database.execSQL("ALTER TABLE BOW ADD COLUMN height TEXT DEFAULT '';")
         }
     }
 
-    @Migration(version = 6, database = AppDatabase.class)
-    public static class Migration6 extends BaseMigration {
+    @Migration(version = 6, database = AppDatabase::class)
+    class Migration6 : BaseMigration() {
 
-        @Override
-        public void migrate(@NonNull DatabaseWrapper database) {
-            File filesDir = SharedApplicationInstance.Companion.getContext().getFilesDir();
+        override fun migrate(database: DatabaseWrapper) {
+            val filesDir = SharedApplicationInstance.context.filesDir
 
             // Migrate all bow images
-            Cursor cur = database.rawQuery("SELECT image FROM BOW WHERE image IS NOT NULL", null);
+            var cur = database.rawQuery("SELECT image FROM BOW WHERE image IS NOT NULL", null)
             if (cur.moveToFirst()) {
-                String fileName = cur.getString(0);
+                val fileName = cur.getString(0)
                 try {
-                    File file = File.createTempFile("img_", ".png", filesDir);
-                    FileUtils.INSTANCE.copy(new File(fileName), file);
+                    val file = File.createTempFile("img_", ".png", filesDir)
+                    FileUtils.copy(File(fileName), file)
                     database.execSQL(
-                            "UPDATE BOW SET image=\"" + file.getName() + "\" WHERE image=\"" +
-                                    fileName + "\"");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                            "UPDATE BOW SET image=\"" + file.name + "\" WHERE image=\"" +
+                                    fileName + "\"")
+                } catch (e: IOException) {
+                    e.printStackTrace()
                 }
+
             }
-            cur.close();
+            cur.close()
 
             // Migrate all arrows images
-            cur = database.rawQuery("SELECT image FROM ARROW WHERE image IS NOT NULL", null);
+            cur = database.rawQuery("SELECT image FROM ARROW WHERE image IS NOT NULL", null)
             if (cur.moveToFirst()) {
-                String fileName = cur.getString(0);
+                val fileName = cur.getString(0)
                 try {
-                    File file = File.createTempFile("img_", ".png", filesDir);
-                    FileUtils.INSTANCE.copy(new File(fileName), file);
+                    val file = File.createTempFile("img_", ".png", filesDir)
+                    FileUtils.copy(File(fileName), file)
                     database.execSQL(
-                            "UPDATE ARROW SET image=\"" + file.getName() + "\" WHERE image=\"" +
-                                    fileName + "\"");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                            "UPDATE ARROW SET image=\"" + file.name + "\" WHERE image=\"" +
+                                    fileName + "\"")
+                } catch (e: IOException) {
+                    e.printStackTrace()
                 }
+
             }
-            cur.close();
+            cur.close()
         }
     }
 }

@@ -304,15 +304,15 @@ public class StatisticsFragment extends FragmentBase {
         for (Map.Entry<SelectableZone, Integer> s : scores) {
             if (s.getValue() > 0) {
                 yValues.add(new PieEntry(s.getValue(), s.getKey()));
-                colors.add(s.getKey().zone.getFillColor());
-                textColors.add(s.getKey().zone.getTextColor());
+                colors.add(s.getKey().getZone().getFillColor());
+                textColors.add(s.getKey().getZone().getTextColor());
             }
         }
 
         // create pie data set
         PieDataSet dataSet = new PieDataSet(yValues, "");
         dataSet.setValueFormatter(
-                (value, entry, dsi, vph) -> ((SelectableZone) entry.getData()).text);
+                (value, entry, dsi, vph) -> ((SelectableZone) entry.getData()).getText());
         dataSet.setSliceSpace(3);
         dataSet.setSelectionShift(5);
 
@@ -337,7 +337,7 @@ public class StatisticsFragment extends FragmentBase {
                         final SelectableZone selectableZone = (SelectableZone) e.getData();
                         final String s = String.format(Locale.US,
                                 PIE_CHART_CENTER_TEXT_FORMAT,
-                                getString(R.string.points), selectableZone.text,
+                                getString(R.string.points), selectableZone.getText(),
                                 getString(R.string.count), (int) e.getY());
                         binding.distributionChart.setCenterText(Utils.fromHtml(s));
                     }

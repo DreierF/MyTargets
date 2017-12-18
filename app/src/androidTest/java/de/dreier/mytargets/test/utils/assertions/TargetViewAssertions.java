@@ -33,8 +33,8 @@ public class TargetViewAssertions {
             }
 
             TargetView targetView = (TargetView) view;
-            TargetViewBase.VirtualView vv = Stream.of(targetView.virtualViews)
-                    .filter(virtualView -> virtualView.description.equals(desc))
+            TargetViewBase.VirtualView vv = Stream.of(targetView.getVirtualViews())
+                    .filter(virtualView -> virtualView.getDescription().equals(desc))
                     .findFirstOrNull();
             assertNull("Virtual button does exist", vv);
         };
@@ -47,8 +47,8 @@ public class TargetViewAssertions {
             }
 
             TargetView targetView = (TargetView) view;
-            TargetViewBase.VirtualView vv = Stream.of(targetView.virtualViews)
-                    .filter(virtualView -> virtualView.description.equals(desc))
+            TargetViewBase.VirtualView vv = Stream.of(targetView.getVirtualViews())
+                    .filter(virtualView -> virtualView.getDescription().equals(desc))
                     .findFirstOrNull();
             assertNotNull("Virtual button does not exist", vv);
         };

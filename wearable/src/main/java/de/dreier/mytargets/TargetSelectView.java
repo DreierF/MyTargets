@@ -61,7 +61,7 @@ public class TargetSelectView extends TargetViewBase {
     }
 
     private void init() {
-        backspaceSymbol.setTint(0xFFFFFFFF);
+        getBackspaceSymbol().setTint(0xFFFFFFFF);
         backspaceBackground
                 .setColor(ContextCompat
                         .getColor(getContext(), R.color.md_wear_green_active_ui_element));
@@ -73,35 +73,35 @@ public class TargetSelectView extends TargetViewBase {
     }
 
     @Override
-    public void setTarget(Target target) {
-        super.setTarget(target);
-        circle = new Circle(density, target);
+    public void initWithTarget(Target target) {
+        super.initWithTarget(target);
+        circle = new Circle(getDensity(), target);
     }
 
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
         // Draw all possible points in a circular
         int curZone = getCurrentlySelectedZone();
-        for (int i = 0; i < selectableZones.size(); i++) {
+        for (int i = 0; i < getSelectableZones().size(); i++) {
             PointF coordinate = getCircularCoordinates(i);
             if (i != curZone) {
-                circle.draw(canvas, coordinate.x, coordinate.y, selectableZones.get(i).index,
+                circle.draw(canvas, coordinate.x, coordinate.y, getSelectableZones().get(i).getIndex(),
                         17, getCurrentShotIndex(), null, ambientMode);
             }
         }
 
         if (!ambientMode) {
-            canvas.drawCircle(radius, radius + 30 * density, 20 * density, backspaceBackground);
+            canvas.drawCircle(radius, radius + 30 * getDensity(), 20 * getDensity(), backspaceBackground);
             drawBackspaceButton(canvas);
         }
 
         // Draw all points of this end in the center
-        endRenderer.draw(canvas);
+        getEndRenderer().draw(canvas);
     }
 
     private int getCurrentlySelectedZone() {
         if (getCurrentShotIndex() != EndRenderer.Companion.getNO_SELECTION()) {
-            return shots.get(getCurrentShotIndex()).getScoringRing();
+            return getShots().get(getCurrentShotIndex()).getScoringRing();
         } else {
             return Shot.Companion.getNOTHING_SELECTED();
         }
@@ -109,7 +109,7 @@ public class TargetSelectView extends TargetViewBase {
 
     @NonNull
     private PointF getCircularCoordinates(int zone) {
-        double degree = Math.toRadians(zone * 360.0 / (double) selectableZones.size());
+        double degree = Math.toRadians(zone * 360.0 / (double) getSelectableZones().size());
         PointF coordinate = new PointF();
         coordinate.x = (float) (radius + (Math.cos(degree) * circleRadius));
         coordinate.y = (float) (radius + (Math.sin(degree) * circleRadius));
@@ -128,16 +128,16 @@ public class TargetSelectView extends TargetViewBase {
     @Override
     protected void updateLayoutBounds(int width, int height) {
         radius = (int) (width / 2.0);
-        chinBound = height - (chinHeight + 15) * density;
-        circleRadius = radius - 25 * density;
+        chinBound = height - (chinHeight + 15) * getDensity();
+        circleRadius = radius - 25 * getDensity();
     }
 
     @NonNull
     @Override
     protected RectF getEndRect() {
         RectF endRect = new RectF();
-        endRect.left = radius - 45 * density;
-        endRect.right = radius + 45 * density;
+        endRect.left = radius - 45 * getDensity();
+        endRect.right = radius + 45 * getDensity();
         endRect.top = radius / 2;
         endRect.bottom = radius;
         return endRect;
@@ -147,10 +147,10 @@ public class TargetSelectView extends TargetViewBase {
     @Override
     protected Rect getBackspaceButtonBounds() {
         Rect backspaceBounds = new Rect();
-        backspaceBounds.left = (int) (radius - 20 * density);
-        backspaceBounds.right = (int) (radius + 20 * density);
-        backspaceBounds.top = (int) (radius + 10 * density);
-        backspaceBounds.bottom = (int) (radius + 50 * density);
+        backspaceBounds.left = (int) (radius - 20 * getDensity());
+        backspaceBounds.right = (int) (radius + 20 * getDensity());
+        backspaceBounds.top = (int) (radius + 10 * getDensity());
+        backspaceBounds.bottom = (int) (radius + 50 * getDensity());
         return backspaceBounds;
     }
 
@@ -169,12 +169,12 @@ public class TargetSelectView extends TargetViewBase {
 
     @Override
     protected boolean updateShotToPosition(@NonNull Shot shot, float x, float y) {
-        int zones = selectableZones.size();
+        int zones = getSelectableZones().size();
 
         double xDiff = x - radius;
         double yDiff = y - radius;
 
-        float perception_rad = radius - 50 * density;
+        float perception_rad = radius - 50 * getDensity();
         // Select current arrow
         if (xDiff * xDiff + yDiff * yDiff > perception_rad * perception_rad) {
             double degree = Math.toDegrees(Math.atan2(-yDiff, xDiff)) - (180.0 / (double) zones);
@@ -182,7 +182,7 @@ public class TargetSelectView extends TargetViewBase {
                 degree += 360.0;
             }
             int index = (int) (zones * ((360.0 - degree) / 360.0));
-            shot.setScoringRing(selectableZones.get(index).index);
+            shot.setScoringRing(getSelectableZones().get(index).getIndex());
             return true;
         }
 
@@ -201,7 +201,7 @@ public class TargetSelectView extends TargetViewBase {
 
     public void setAmbientMode(boolean ambientMode) {
         this.ambientMode = ambientMode;
-        endRenderer.setAmbientMode(ambientMode);
+        getEndRenderer().setAmbientMode(ambientMode);
         invalidate();
     }
 }

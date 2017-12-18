@@ -13,29 +13,25 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.analysis.aggregation;
+package de.dreier.mytargets.shared.analysis.aggregation
 
-import android.support.annotation.NonNull;
-import android.support.annotation.UiThread;
+import android.support.annotation.UiThread
 
-import java.util.List;
+import de.dreier.mytargets.shared.models.db.Shot
 
-import de.dreier.mytargets.shared.models.db.Shot;
+interface IAggregationStrategy {
 
-public interface IAggregationStrategy {
-    void setOnAggregationResultListener(final OnAggregationResult onAggregationResult);
+    val result: IAggregationResultRenderer
+    var color: Int
 
-    void calculate(List<Shot> shots);
+    fun setOnAggregationResultListener(resultListener: OnAggregationResult)
 
-    @NonNull
-    IAggregationResultRenderer getResult();
+    fun calculate(shots: List<Shot>)
 
-    void cleanup();
-
-    void setColor(int color);
+    fun cleanup()
 
     interface OnAggregationResult {
         @UiThread
-        void onResult();
+        fun onResult()
     }
 }

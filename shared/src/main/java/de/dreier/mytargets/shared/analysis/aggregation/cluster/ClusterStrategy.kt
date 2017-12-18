@@ -13,66 +13,46 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.analysis.aggregation.cluster;
+package de.dreier.mytargets.shared.analysis.aggregation.cluster
 
-import android.support.annotation.NonNull;
+import de.dreier.mytargets.shared.analysis.aggregation.IAggregationResultRenderer
+import de.dreier.mytargets.shared.models.db.Shot
+import java.util.*
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+class ClusterStrategy : AggregationStrategyBase() {
+    private val clusters = ArrayList<Cluster>()
 
-import de.dreier.mytargets.shared.analysis.aggregation.IAggregationResultRenderer;
-import de.dreier.mytargets.shared.models.db.Shot;
-
-public class ClusterStrategy extends AggregationStrategyBase {
-
-    private static final double EPS = 0.4;
-    private static final int MINIMUM_POINTS_FOR_CLUSTER = 2;
-    @NonNull
-    private final ArrayList<Cluster> clusters = new ArrayList<>();
-
-    public ClusterStrategy() {
-        this.isDirty = false;
-    }
-
-    @Override
-    protected void reset() {
-        super.reset();
-        clusters.clear();
+    override fun reset() {
+        super.reset()
+        clusters.clear()
     }
 
     /**
      * DBSCAN
      */
-    @NonNull
-    @Override
-    protected IAggregationResultRenderer compute(@NonNull List<Shot> shots) {
-        clusters.clear();
-        final Map<Shot, PointStatus> visited = new HashMap<>();
+    override fun compute(shots: List<Shot>): IAggregationResultRenderer {
+        clusters.clear()
+        val visited = HashMap<Shot, PointStatus>()
 
-        for (final Shot point : shots) {
-            if (isCancelled()) {
-                break;
+        for (point in shots) {
+            if (isCancelled) {
+                break
             }
-            if (visited.get(point) != null) {
-                continue;
+            if (visited[point] != null) {
+                continue
             }
-            final List<Shot> neighbors = getNeighbors(point, shots);
-            if (neighbors.size() + 1 >= MINIMUM_POINTS_FOR_CLUSTER) {
+            val neighbors = getNeighbors(point, shots)
+            if (neighbors.size + 1 >= MINIMUM_POINTS_FOR_CLUSTER) {
                 // DBSCAN does not care about center points
-                final Cluster cluster = new Cluster(shots.size());
-                clusters.add(expandCluster(cluster, point, neighbors, shots, visited));
+                val cluster = Cluster(shots.size)
+                clusters.add(expandCluster(cluster, point, neighbors, shots, visited))
             } else {
-                visited.put(point, PointStatus.NOISE);
+                visited.put(point, PointStatus.NOISE)
             }
         }
-        final ClusterResultRenderer clusterResultRenderer = new ClusterResultRenderer(clusters);
-        clusterResultRenderer.onPrepareDraw();
-        return clusterResultRenderer;
+        val clusterResultRenderer = ClusterResultRenderer(clusters)
+        clusterResultRenderer.onPrepareDraw()
+        return clusterResultRenderer
     }
 
     /**
@@ -85,54 +65,46 @@ public class ClusterStrategy extends AggregationStrategyBase {
      * @param visited   the set of already visited points
      * @return the expanded cluster
      */
-    @NonNull
-    private Cluster expandCluster(@NonNull final Cluster cluster,
-                                  final Shot point,
-                                  @NonNull final List<Shot> neighbors,
-                                  @NonNull final Collection<Shot> points,
-                                  @NonNull final Map<Shot, PointStatus> visited) {
-        cluster.add(point);
-        visited.put(point, PointStatus.PART_OF_CLUSTER);
+    private fun expandCluster(cluster: Cluster,
+                              point: Shot,
+                              neighbors: List<Shot>,
+                              points: Collection<Shot>,
+                              visited: MutableMap<Shot, PointStatus>): Cluster {
+        cluster.add(point)
+        visited.put(point, PointStatus.PART_OF_CLUSTER)
 
-        List<Shot> seeds = new ArrayList<>(neighbors);
-        int index = 0;
-        while (index < seeds.size()) {
-            final Shot current = seeds.get(index);
-            PointStatus pStatus = visited.get(current);
+        var seeds: MutableList<Shot> = ArrayList(neighbors)
+        var index = 0
+        while (index < seeds.size) {
+            val current = seeds[index]
+            val pStatus = visited[current]
             // only check non-visited points
             if (pStatus == null) {
-                final List<Shot> currentNeighbors = getNeighbors(current, points);
-                if (currentNeighbors.size() >= MINIMUM_POINTS_FOR_CLUSTER) {
-                    seeds = merge(seeds, currentNeighbors);
+                val currentNeighbors = getNeighbors(current, points)
+                if (currentNeighbors.size >= MINIMUM_POINTS_FOR_CLUSTER) {
+                    seeds = merge(seeds, currentNeighbors)
                 }
             }
 
             if (pStatus != PointStatus.PART_OF_CLUSTER) {
-                visited.put(current, PointStatus.PART_OF_CLUSTER);
-                cluster.add(current);
+                visited.put(current, PointStatus.PART_OF_CLUSTER)
+                cluster.add(current)
             }
 
-            index++;
+            index++
         }
-        return cluster;
+        return cluster
     }
 
     /**
-     * Returns a list of density-reachable neighbors of a {@code point}.
+     * Returns a list of density-reachable neighbors of a `point`.
      *
      * @param point  the point to look for
      * @param points possible neighbors
      * @return the List of neighbors
      */
-    @NonNull
-    private List<Shot> getNeighbors(@NonNull final Shot point, @NonNull final Collection<Shot> points) {
-        final List<Shot> neighbors = new ArrayList<>();
-        for (final Shot neighbor : points) {
-            if (!point.equals(neighbor) && distanceFrom(neighbor, point) <= EPS) {
-                neighbors.add(neighbor);
-            }
-        }
-        return neighbors;
+    private fun getNeighbors(point: Shot, points: Collection<Shot>): List<Shot> {
+        return points.filter { point != it && distanceFrom(it, point) <= EPS }
     }
 
     /**
@@ -142,24 +114,19 @@ public class ClusterStrategy extends AggregationStrategyBase {
      * @param two second list
      * @return merged lists
      */
-    @NonNull
-    private List<Shot> merge(@NonNull final List<Shot> one, @NonNull final List<Shot> two) {
-        final Set<Shot> oneSet = new HashSet<>(one);
-        for (Shot item : two) {
-            if (!oneSet.contains(item)) {
-                one.add(item);
-            }
-        }
-        return one;
+    private fun merge(one: MutableList<Shot>, two: List<Shot>): MutableList<Shot> {
+        val oneSet = HashSet(one)
+        two.filterNotTo(one) { oneSet.contains(it) }
+        return one
     }
 
-    private double distanceFrom(@NonNull Shot p1, @NonNull Shot p2) {
-        final double diffX = p1.getX() - p2.getX();
-        final double diffY = p1.getY() - p2.getY();
-        return Math.sqrt(diffX * diffX + diffY * diffY);
+    private fun distanceFrom(p1: Shot, p2: Shot): Double {
+        val diffX = (p1.x - p2.x).toDouble()
+        val diffY = (p1.y - p2.y).toDouble()
+        return Math.sqrt(diffX * diffX + diffY * diffY)
     }
 
-    private enum PointStatus {
+    private enum class PointStatus {
         /**
          * The point has is considered to be noise.
          */
@@ -168,5 +135,11 @@ public class ClusterStrategy extends AggregationStrategyBase {
          * The point is already part of a cluster.
          */
         PART_OF_CLUSTER
+    }
+
+    companion object {
+
+        private val EPS = 0.4
+        private val MINIMUM_POINTS_FOR_CLUSTER = 2
     }
 }

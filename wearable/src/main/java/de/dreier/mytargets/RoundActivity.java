@@ -70,7 +70,7 @@ public class RoundActivity extends WearableActivity {
                     round = info.getRound();
                     showRoundData();
                     break;
-                case BROADCAST_TIMER_SETTINGS_FROM_REMOTE:
+                case Companion.getBROADCAST_TIMER_SETTINGS_FROM_REMOTE():
                     applyTimerState();
                     break;
                 default:
@@ -106,7 +106,7 @@ public class RoundActivity extends WearableActivity {
 
         final IntentFilter filter = new IntentFilter();
         filter.addAction(BROADCAST_TRAINING_UPDATED);
-        filter.addAction(BROADCAST_TIMER_SETTINGS_FROM_REMOTE);
+        filter.addAction(Companion.getBROADCAST_TIMER_SETTINGS_FROM_REMOTE());
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
     }
 

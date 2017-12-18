@@ -13,13 +13,12 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models;
+package de.dreier.mytargets.shared.models
 
-import com.raizlabs.android.dbflow.structure.Model;
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
+import com.raizlabs.android.dbflow.structure.Model
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
 
-public interface IRecursiveModel extends Model {
-    void saveRecursively();
-
-    void saveRecursively(DatabaseWrapper databaseWrapper);
+interface IRecursiveModel : Model {
+    fun saveRecursively()
+    fun saveRecursively(databaseWrapper: DatabaseWrapper)
 }

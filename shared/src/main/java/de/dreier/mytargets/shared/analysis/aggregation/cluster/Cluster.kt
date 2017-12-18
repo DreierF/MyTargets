@@ -13,71 +13,62 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.analysis.aggregation.cluster;
+package de.dreier.mytargets.shared.analysis.aggregation.cluster
 
-import android.graphics.PointF;
-import android.support.annotation.NonNull;
+import android.graphics.PointF
+import de.dreier.mytargets.shared.analysis.aggregation.average.Average
+import de.dreier.mytargets.shared.models.db.Shot
+import java.util.*
 
-import java.util.ArrayList;
+class Cluster(private val totalNumber: Int) {
+    val points = ArrayList<Shot>()
+    private val centerOfGroup = PointF()
+    private var isDirty = false
+    private val weight = 0.0
+    var stdDev: Double = 0.toDouble()
 
-import de.dreier.mytargets.shared.analysis.aggregation.average.Average;
-import de.dreier.mytargets.shared.models.db.Shot;
+    val size: Int
+        get() = points.size
 
-public class Cluster {
-    public final ArrayList<Shot> points = new ArrayList<>();
-    private final PointF centerOfGroup = new PointF();
-    private final int totalNumber;
-    private boolean isDirty;
-    private double weight = 0.0;
-    public double stdDev;
-
-    public Cluster(int paramInt) {
-        totalNumber = paramInt;
-        isDirty = true;
+    init {
+        isDirty = true
     }
 
-    private void compute() {
+    private fun compute() {
         if (!isDirty) {
-            return;
+            return
         }
-        Average average = new Average();
-        average.computeAverage(points);
-        average.computeStdDevX(points);
-        average.computeStdDevY(points);
-        centerOfGroup.set(average.getAverage());
-        stdDev = average.getStdDev();
-        isDirty = false;
+        val average = Average()
+        average.computeAverage(points)
+        average.computeStdDevX(points)
+        average.computeStdDevY(points)
+        centerOfGroup.set(average.average)
+        stdDev = average.stdDev
+        isDirty = false
     }
 
-    public void add(Shot paramPointF) {
-        points.add(paramPointF);
-        isDirty = true;
+    fun add(paramPointF: Shot) {
+        points.add(paramPointF)
+        isDirty = true
     }
 
-    @NonNull
-    public PointF getCenterOfGroup() {
-        compute();
-        return centerOfGroup;
+    fun getCenterOfGroup(): PointF {
+        compute()
+        return centerOfGroup
     }
 
-    public int getSize() {
-        return points.size();
+    fun getWeight(): Double {
+        compute()
+        return weight
     }
 
-    public double getWeight() {
-        compute();
-        return weight;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
+    override fun toString(): String {
         return "Cluster{" +
                 "points=" + points +
                 ", centerOfGroup=" + centerOfGroup +
                 ", totalNumber=" + totalNumber +
                 ", isDirty=" + isDirty +
                 ", weight=" + weight +
-                '}';
+                '}'
     }
 }

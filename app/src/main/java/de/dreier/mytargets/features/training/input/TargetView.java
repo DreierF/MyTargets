@@ -69,13 +69,13 @@ public class TargetView extends TargetViewBase {
 
         @Override
         public void set(@NonNull TargetView targetView, Matrix matrix) {
-            targetView.targetDrawable.setSpotMatrix(matrix);
+            targetView.getTargetDrawable().setSpotMatrix(matrix);
             targetView.invalidate();
         }
 
         @Override
         public Matrix get(@NonNull TargetView targetView) {
-            return targetView.targetDrawable.getSpotMatrix();
+            return targetView.getTargetDrawable().getSpotMatrix();
         }
     };
 
@@ -88,7 +88,7 @@ public class TargetView extends TargetViewBase {
 
         @Override
         public void set(@NonNull TargetView targetView, Matrix matrix) {
-            targetView.targetDrawable.setMatrix(matrix);
+            targetView.getTargetDrawable().setMatrix(matrix);
             targetView.invalidate();
         }
 
@@ -182,7 +182,7 @@ public class TargetView extends TargetViewBase {
         textPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         textPaint.setTextAlign(Paint.Align.LEFT);
         textPaint.setColor(Color.BLACK);
-        textPaint.setTextSize(22 * density);
+        textPaint.setTextSize(22 * getDensity());
         textPaint.setTextAlign(Paint.Align.CENTER);
 
         fillPaint = new Paint();
@@ -195,7 +195,7 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    public void setEnd(@NonNull End end) {
+    public void replaceWithEnd(@NonNull End end) {
         EInputMethod inputMethod;
         if (!end.isEmpty()) {
             inputMethod = end.getExact() ? PLOTTING : KEYBOARD;
@@ -203,14 +203,14 @@ public class TargetView extends TargetViewBase {
             inputMethod = SettingsManager.INSTANCE.getInputMethod();
         }
         setInputMethod(inputMethod);
-        super.setEnd(end);
+        super.replaceWithEnd(end);
     }
 
     public void setArrow(@NonNull Dimension diameter, boolean numbers, int maxArrowNumber) {
         this.arrowNumbering = numbers;
         this.arrowDiameter = diameter;
         this.maxArrowNumber = maxArrowNumber;
-        targetDrawable.setArrowDiameter(diameter, SettingsManager.INSTANCE.getInputArrowDiameterScale());
+        getTargetDrawable().setArrowDiameter(diameter, SettingsManager.INSTANCE.getInputArrowDiameterScale());
     }
 
     public void setAggregationStrategy(EAggregationStrategy aggregationStrategy) {
@@ -220,7 +220,7 @@ public class TargetView extends TargetViewBase {
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
         // Draw target
-        if (inputMethod == PLOTTING && isCurrentlySelecting()) {
+        if (getInputMethod() == PLOTTING && isCurrentlySelecting()) {
             drawZoomedInTarget(canvas);
         } else {
             drawTarget(canvas);
@@ -234,50 +234,50 @@ public class TargetView extends TargetViewBase {
         }
 
         // Draw all points of this end at the top
-        endRenderer.draw(canvas);
+        getEndRenderer().draw(canvas);
     }
 
     private void drawZoomedInTarget(@NonNull Canvas canvas) {
-        Shot shot = shots.get(getCurrentShotIndex());
+        Shot shot = getShots().get(getCurrentShotIndex());
 
-        targetDrawable.setMatrix(fullExtendedMatrix);
-        targetDrawable.setSpotMatrix(
-                spotMatrices[getCurrentShotIndex() % target.getModel().getFaceCount()]);
-        targetDrawable.setZoom(targetZoomFactor);
-        targetDrawable.setFocusedArrow(shot);
-        targetDrawable.setOffset(0, POINTER_OFFSET_Y_DP * density);
+        getTargetDrawable().setMatrix(fullExtendedMatrix);
+        getTargetDrawable().setSpotMatrix(
+                spotMatrices[getCurrentShotIndex() % getTarget().getModel().getFaceCount()]);
+        getTargetDrawable().setZoom(targetZoomFactor);
+        getTargetDrawable().setFocusedArrow(shot);
+        getTargetDrawable().setOffset(0, POINTER_OFFSET_Y_DP * getDensity());
 
-        targetDrawable.draw(canvas);
+        getTargetDrawable().draw(canvas);
     }
 
     // Draw actual target face
     private void drawTarget(@NonNull Canvas canvas) {
-        targetDrawable.setOffset(0, 0);
-        targetDrawable.setZoom(1);
-        targetDrawable.setFocusedArrow(null);
-        if (animator == null) {
-            targetDrawable.setMatrix(fullMatrix);
-            if (getCurrentShotIndex() == EndRenderer.Companion.getNO_SELECTION() || inputMethod == KEYBOARD) {
-                targetDrawable.setSpotMatrix(new Matrix());
+        getTargetDrawable().setOffset(0, 0);
+        getTargetDrawable().setZoom(1);
+        getTargetDrawable().setFocusedArrow(null);
+        if (getAnimator() == null) {
+            getTargetDrawable().setMatrix(fullMatrix);
+            if (getCurrentShotIndex() == EndRenderer.Companion.getNO_SELECTION() || getInputMethod() == KEYBOARD) {
+                getTargetDrawable().setSpotMatrix(new Matrix());
             } else {
-                targetDrawable.setSpotMatrix(
-                        spotMatrices[getCurrentShotIndex() % target.getModel().getFaceCount()]);
+                getTargetDrawable().setSpotMatrix(
+                        spotMatrices[getCurrentShotIndex() % getTarget().getModel().getFaceCount()]);
             }
         }
-        targetDrawable.draw(canvas);
+        getTargetDrawable().draw(canvas);
     }
 
     protected void notifyTargetShotsChanged() {
         List<Shot> displayedShots = new ArrayList<>();
-        for (Shot shot : shots) {
+        for (Shot shot : getShots()) {
             if (shot.getScoringRing() != Shot.Companion.getNOTHING_SELECTED() && shot.getIndex() != getCurrentShotIndex()) {
                 displayedShots.add(shot);
             }
         }
-        targetDrawable.replaceShotsWith(displayedShots);
+        getTargetDrawable().replaceShotsWith(displayedShots);
         super.notifyTargetShotsChanged();
         if (updateListener != null) {
-            updateListener.onEndUpdated(shots);
+            updateListener.onEndUpdated(getShots());
         }
     }
 
@@ -285,14 +285,14 @@ public class TargetView extends TargetViewBase {
     @Override
     protected PointF getShotCoordinates(@NonNull Shot shot) {
         PointF coordinate = new PointF();
-        if (inputMethod == KEYBOARD) {
+        if (getInputMethod() == KEYBOARD) {
             coordinate.x = keyboardRect.left;
             if (keyboardType == LEFT) {
-                coordinate.x += (KEYBOARD_WIDTH_DP + KEYBOARD_INNER_PADDING_DP) * density;
+                coordinate.x += (KEYBOARD_WIDTH_DP + KEYBOARD_INNER_PADDING_DP) * getDensity();
             } else {
-                coordinate.x -= KEYBOARD_INNER_PADDING_DP * density;
+                coordinate.x -= KEYBOARD_INNER_PADDING_DP * getDensity();
             }
-            float indicatorHeight = keyboardRect.height() / selectableZones.size();
+            float indicatorHeight = keyboardRect.height() / getSelectableZones().size();
             int index = getSelectableZoneIndexFromShot(shot);
             coordinate.y = keyboardRect.top + indicatorHeight * index + indicatorHeight / 2.0f;
         } else {
@@ -306,24 +306,24 @@ public class TargetView extends TargetViewBase {
     }
 
     @Override
-    public void setTarget(Target t) {
-        super.setTarget(t);
-        spotMatrices = new Matrix[target.getModel().getFaceCount()];
-        for (int i = 0; i < target.getModel().getFaceCount(); i++) {
+    public void initWithTarget(Target t) {
+        super.initWithTarget(t);
+        spotMatrices = new Matrix[getTarget().getModel().getFaceCount()];
+        for (int i = 0; i < getTarget().getModel().getFaceCount(); i++) {
             spotMatrices[i] = new Matrix();
-            targetDrawable.getPreCalculatedFaceMatrix(i).invert(spotMatrices[i]);
+            getTargetDrawable().getPreCalculatedFaceMatrix(i).invert(spotMatrices[i]);
         }
     }
 
     @Override
     protected void updateLayoutBounds(int width, int height) {
-        targetRect = new RectF(0, MIN_END_RECT_HEIGHT_DP * density, width, height);
-        targetRect.inset(TARGET_PADDING_DP * density, TARGET_PADDING_DP * density);
-        if (inputMethod == KEYBOARD) {
+        targetRect = new RectF(0, MIN_END_RECT_HEIGHT_DP * getDensity(), width, height);
+        targetRect.inset(TARGET_PADDING_DP * getDensity(), TARGET_PADDING_DP * getDensity());
+        if (getInputMethod() == KEYBOARD) {
             if (keyboardType == LEFT) {
-                targetRect.left += KEYBOARD_TOTAL_WIDTH_DP * density;
+                targetRect.left += KEYBOARD_TOTAL_WIDTH_DP * getDensity();
             } else {
-                targetRect.right -= KEYBOARD_TOTAL_WIDTH_DP * density;
+                targetRect.right -= KEYBOARD_TOTAL_WIDTH_DP * getDensity();
             }
         }
         if (targetRect.height() > targetRect.width()) {
@@ -334,7 +334,7 @@ public class TargetView extends TargetViewBase {
         fullMatrix.setRectToRect(TargetDrawable.Companion.getSRC_RECT(), targetRect, Matrix.ScaleToFit.CENTER);
 
         RectF targetRectExt = new RectF(targetRect);
-        targetRectExt.inset(30 * density, 30 * density);
+        targetRectExt.inset(30 * getDensity(), 30 * getDensity());
         fullExtendedMatrix = new Matrix();
         fullExtendedMatrix
                 .setRectToRect(TargetDrawable.Companion.getSRC_RECT(), targetRectExt, Matrix.ScaleToFit.CENTER);
@@ -343,12 +343,12 @@ public class TargetView extends TargetViewBase {
 
         keyboardRect = new RectF();
         if (keyboardType == LEFT) {
-            keyboardRect.left = KEYBOARD_OUTER_PADDING_DP * density;
+            keyboardRect.left = KEYBOARD_OUTER_PADDING_DP * getDensity();
         } else {
-            keyboardRect.left = width - KEYBOARD_TOTAL_WIDTH_DP * density;
+            keyboardRect.left = width - KEYBOARD_TOTAL_WIDTH_DP * getDensity();
         }
-        keyboardRect.right = keyboardRect.left + KEYBOARD_WIDTH_DP * density;
-        keyboardRect.top = height / (selectableZones.size() + 1);
+        keyboardRect.right = keyboardRect.left + KEYBOARD_WIDTH_DP * getDensity();
+        keyboardRect.top = height / (getSelectableZones().size() + 1);
         keyboardRect.bottom = height;
     }
 
@@ -357,7 +357,7 @@ public class TargetView extends TargetViewBase {
     protected Rect getBackspaceButtonBounds() {
         Rect backspaceButtonBounds = new Rect();
         backspaceButtonBounds.top = 0;
-        backspaceButtonBounds.bottom = (int) (keyboardRect.top - density);
+        backspaceButtonBounds.bottom = (int) (keyboardRect.top - getDensity());
         backspaceButtonBounds.left = (int) keyboardRect.left;
         backspaceButtonBounds.right = (int) keyboardRect.right;
         return backspaceButtonBounds;
@@ -374,15 +374,15 @@ public class TargetView extends TargetViewBase {
         } else {
             endRect.right = keyboardRect.left;
         }
-        endRect.inset(20 * density, TARGET_PADDING_DP * density);
+        endRect.inset(20 * getDensity(), TARGET_PADDING_DP * getDensity());
         return endRect;
     }
 
     public void setInputMethod(EInputMethod mode) {
-        if (mode != inputMethod) {
-            inputMethod = mode;
-            targetDrawable.drawArrowsEnabled(inputMethod == PLOTTING);
-            targetDrawable.setAggregationStrategy(inputMethod == PLOTTING
+        if (mode != getInputMethod()) {
+            setInputMethod(mode);
+            getTargetDrawable().drawArrowsEnabled(getInputMethod() == PLOTTING);
+            getTargetDrawable().setAggregationStrategy(getInputMethod() == PLOTTING
                     ? aggregationStrategy : EAggregationStrategy.NONE);
         }
     }
@@ -392,12 +392,12 @@ public class TargetView extends TargetViewBase {
      */
     @Override
     protected boolean updateShotToPosition(@NonNull Shot s, float x, float y) {
-        if (inputMethod == KEYBOARD) {
+        if (getInputMethod() == KEYBOARD) {
             if (keyboardRect.contains(x, y)) {
-                int index = (int) ((y - keyboardRect.top) * selectableZones.size() /
+                int index = (int) ((y - keyboardRect.top) * getSelectableZones().size() /
                         keyboardRect.height());
-                index = Math.min(Math.max(0, index), selectableZones.size() - 1);
-                s.setScoringRing(selectableZones.get(index).index);
+                index = Math.min(Math.max(0, index), getSelectableZones().size() - 1);
+                s.setScoringRing(getSelectableZones().get(index).getIndex());
             } else {
                 return false;
             }
@@ -407,7 +407,7 @@ public class TargetView extends TargetViewBase {
             fullExtendedMatrixInverse.mapPoints(pt);
             s.setX(pt[0]);
             s.setY(pt[1]);
-            s.setScoringRing(targetDrawable.getZoneFromPoint(s.getX(), s.getY()));
+            s.setScoringRing(getTargetDrawable().getZoneFromPoint(s.getX(), s.getY()));
             slipDetector.addShot(s.getX(), s.getY());
         }
         return true;
@@ -416,8 +416,8 @@ public class TargetView extends TargetViewBase {
     @Override
     protected boolean selectPreviousShots(@NonNull MotionEvent motionEvent, float x, float y) {
         // Handle selection of already saved shoots
-        int shotIndex = endRenderer.getPressedPosition(x, y);
-        endRenderer.setPressed(shotIndex);
+        int shotIndex = getEndRenderer().getPressedPosition(x, y);
+        getEndRenderer().setPressed(shotIndex);
         if (shotIndex != EndRenderer.Companion.getNO_SELECTION()) {
             if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 setCurrentShotIndex(shotIndex);
@@ -434,7 +434,7 @@ public class TargetView extends TargetViewBase {
         updateLayout();
         Matrix endMatrix = getSpotEndMatrix();
 
-        float newVisibility = inputMethod == KEYBOARD ? 1 : 0;
+        float newVisibility = getInputMethod() == KEYBOARD ? 1 : 0;
         ValueAnimator inputAnimator = ValueAnimator.ofFloat(keyboardVisibility, newVisibility);
         inputAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         inputAnimator.addUpdateListener(valueAnimator -> {
@@ -452,10 +452,10 @@ public class TargetView extends TargetViewBase {
 
     private Matrix getSpotEndMatrix() {
         Matrix endMatrix;
-        if ((getCurrentShotIndex() == EndRenderer.Companion.getNO_SELECTION() || inputMethod == KEYBOARD)) {
+        if ((getCurrentShotIndex() == EndRenderer.Companion.getNO_SELECTION() || getInputMethod() == KEYBOARD)) {
             endMatrix = new Matrix();
         } else {
-            endMatrix = spotMatrices[getCurrentShotIndex() % target.getModel().getFaceCount()];
+            endMatrix = spotMatrices[getCurrentShotIndex() % getTarget().getModel().getFaceCount()];
         }
         return endMatrix;
     }
@@ -464,11 +464,11 @@ public class TargetView extends TargetViewBase {
     protected void onShotSelectionFinished() {
         // Replace shot position with final position from slip detector
         PointF position = slipDetector.getFinalPosition();
-        Shot shot = shots.get(getCurrentShotIndex());
+        Shot shot = getShots().get(getCurrentShotIndex());
         if (position != null) {
             shot.setX(position.x);
             shot.setY(position.y);
-            shot.setScoringRing(targetDrawable.getZoneFromPoint(shot.getX(), shot.getY()));
+            shot.setScoringRing(getTargetDrawable().getZoneFromPoint(shot.getX(), shot.getY()));
             slipDetector.reset();
         }
 
@@ -493,7 +493,7 @@ public class TargetView extends TargetViewBase {
                     new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, numbers));
             gridView.setNumColumns(4);
             gridView.setOnItemClickListener((parent, view, pos, id) -> {
-                if (getCurrentShotIndex() < shots.size()) {
+                if (getCurrentShotIndex() < getShots().size()) {
                     shot.setArrowNumber(numbers.get(pos));
                 }
                 dialog.dismiss();
@@ -512,20 +512,20 @@ public class TargetView extends TargetViewBase {
      * @param canvas Canvas to draw on
      */
     private void drawKeyboard(@NonNull Canvas canvas) {
-        for (int i = 0; i < selectableZones.size(); i++) {
-            SelectableZone zone = selectableZones.get(i);
+        for (int i = 0; i < getSelectableZones().size(); i++) {
+            SelectableZone zone = getSelectableZones().get(i);
 
             Rect rect = getSelectableZonePosition(i);
 
-            fillPaint.setColor(zone.zone.getFillColor());
+            fillPaint.setColor(zone.getZone().getFillColor());
             canvas.drawRect(rect, fillPaint);
 
-            borderPaint.setColor(zone.zone.getStrokeColor());
+            borderPaint.setColor(zone.getZone().getStrokeColor());
             canvas.drawRect(rect, borderPaint);
 
             // For yellow and white background use black font color
-            textPaint.setColor(zone.zone.getTextColor());
-            canvas.drawText(zone.text, rect.centerX(), rect.centerY() + 10 * density,
+            textPaint.setColor(zone.getZone().getTextColor());
+            canvas.drawText(zone.getText(), rect.centerX(), rect.centerY() + 10 * getDensity(),
                     textPaint);
         }
     }
@@ -534,13 +534,13 @@ public class TargetView extends TargetViewBase {
     @NonNull
     protected Rect getSelectableZonePosition(int i) {
         final Rect rect = new Rect();
-        final float singleZoneHeight = keyboardRect.height() / selectableZones.size();
-        rect.top = (int) (singleZoneHeight * i + density + keyboardRect.top);
-        rect.bottom = (int) (singleZoneHeight * (i + 1) - density + keyboardRect.top);
+        final float singleZoneHeight = keyboardRect.height() / getSelectableZones().size();
+        rect.top = (int) (singleZoneHeight * i + getDensity() + keyboardRect.top);
+        rect.bottom = (int) (singleZoneHeight * (i + 1) - getDensity() + keyboardRect.top);
         rect.left = (int) keyboardRect.left;
         rect.right = (int) keyboardRect.right;
         final int visibilityXOffset = (int) (KEYBOARD_TOTAL_WIDTH_DP * (1 - keyboardVisibility) *
-                density);
+                getDensity());
         if (keyboardType == LEFT) {
             rect.offset(-visibilityXOffset, 0);
         } else {
@@ -552,7 +552,7 @@ public class TargetView extends TargetViewBase {
     @Override
     public boolean onTouch(View view, @NonNull MotionEvent motionEvent) {
         // Cancel animation
-        if (animator != null) {
+        if (getAnimator() != null) {
             cancelPendingAnimations();
             return true;
         }
@@ -561,7 +561,7 @@ public class TargetView extends TargetViewBase {
     }
 
     public EInputMethod getInputMode() {
-        return inputMethod;
+        return getInputMethod();
     }
 
     public void setUpdateListener(OnEndUpdatedListener updateListener) {
@@ -571,17 +571,17 @@ public class TargetView extends TargetViewBase {
     public void reloadSettings() {
         this.targetZoomFactor = SettingsManager.INSTANCE.getInputTargetZoom();
         this.keyboardType = SettingsManager.INSTANCE.getInputKeyboardType();
-        targetDrawable
+        getTargetDrawable()
                 .setArrowDiameter(arrowDiameter, SettingsManager.INSTANCE.getInputArrowDiameterScale());
     }
 
     public void setTransparentShots(@NonNull List<Shot> shotStream) {
-        targetDrawable.replacedTransparentShots(shotStream);
+        getTargetDrawable().replacedTransparentShots(shotStream);
     }
 
     @Override
     protected int getSelectedShotCircleRadius() {
-        return inputMethod == KEYBOARD ? EndRenderer.Companion.getMAX_CIRCLE_SIZE() : 0;
+        return getInputMethod() == KEYBOARD ? EndRenderer.Companion.getMAX_CIRCLE_SIZE() : 0;
     }
 
     public enum EKeyboardType {

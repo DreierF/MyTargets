@@ -13,99 +13,89 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.wearable;
+package de.dreier.mytargets.shared.wearable
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.support.annotation.NonNull;
-import android.support.v4.content.LocalBroadcastManager;
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.support.v4.content.LocalBroadcastManager
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.wearable.Node
+import com.google.android.gms.wearable.Wearable
+import de.dreier.mytargets.shared.models.TimerSettings
+import de.dreier.mytargets.shared.utils.marshall
+import timber.log.Timber
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.Wearable;
+open class WearableClientBase(protected val context: Context) {
 
-import de.dreier.mytargets.shared.models.TimerSettings;
-import de.dreier.mytargets.shared.utils.ParcelableUtilKt;
-import timber.log.Timber;
+    private val googleApiClient: GoogleApiClient = GoogleApiClient.Builder(context)
+            .addApi(Wearable.API)
+            .build()
 
-public class WearableClientBase {
-
-    public static final String TRAINING_TEMPLATE = "/de/dreier/mytargets/training/last";
-    public static final String TRAINING_CREATE = "/de/dreier/mytargets/training/create";
-    public static final String TRAINING_UPDATE = "/de/dreier/mytargets/training/update";
-    public static final String END_UPDATE = "/de/dreier/mytargets/end/update";
-    public static final String TIMER_SETTINGS = "/de/dreier/mytargets/timer/settings";
-
-    private static final String BROADCAST_TIMER_SETTINGS_FROM_LOCAL = "timer_settings_local";
-    public static final String BROADCAST_TIMER_SETTINGS_FROM_REMOTE = "timer_settings_remote";
-    private static final String EXTRA_TIMER_SETTINGS = "timer_settings";
-
-    private GoogleApiClient googleApiClient;
-    @NonNull
-    protected final Context context;
-
-    @NonNull
-    private BroadcastReceiver timerReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, @NonNull Intent intent) {
-            TimerSettings settings = intent.getParcelableExtra(EXTRA_TIMER_SETTINGS);
-            sendTimerSettings(settings);
+    private val timerReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val settings = intent.getParcelableExtra<TimerSettings>(EXTRA_TIMER_SETTINGS)
+            sendTimerSettings(settings)
         }
-    };
-
-    public WearableClientBase(@NonNull Context context) {
-        this.context = context;
-        googleApiClient = new GoogleApiClient.Builder(context)
-                .addApi(Wearable.API)
-                .build();
-
-        googleApiClient.connect();
-        IntentFilter filter = new IntentFilter(BROADCAST_TIMER_SETTINGS_FROM_LOCAL);
-        LocalBroadcastManager.getInstance(context).registerReceiver(timerReceiver, filter);
     }
 
-    public void disconnect() {
-        LocalBroadcastManager.getInstance(context).unregisterReceiver(timerReceiver);
-        googleApiClient.disconnect();
+    init {
+        googleApiClient.connect()
+        val filter = IntentFilter(BROADCAST_TIMER_SETTINGS_FROM_LOCAL)
+        LocalBroadcastManager.getInstance(context).registerReceiver(timerReceiver, filter)
     }
 
-    protected void sendMessage(String path, byte[] data) {
+    open fun disconnect() {
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(timerReceiver)
+        googleApiClient.disconnect()
+    }
+
+    protected fun sendMessage(path: String, data: ByteArray) {
         Wearable.NodeApi.getConnectedNodes(googleApiClient)
-                .setResultCallback(nodes -> {
-                    for (Node node : nodes.getNodes()) {
-                        sendToNode(node, path, data);
+                .setResultCallback { nodes ->
+                    for (node in nodes.nodes) {
+                        sendToNode(node, path, data)
                     }
-                });
+                }
     }
 
-    private void sendToNode(@NonNull Node node, String path, byte[] data) {
+    private fun sendToNode(node: Node, path: String, data: ByteArray) {
         Wearable.MessageApi.sendMessage(
-                googleApiClient, node.getId(), path, data)
-                .setResultCallback(
-                        sendMessageResult -> {
-                            if (!sendMessageResult.getStatus().isSuccess()) {
-                                Timber.e("Failed to send message with status code: %d",
-                                        sendMessageResult.getStatus().getStatusCode());
-                            }
-                        }
-                );
+                googleApiClient, node.id, path, data)
+                .setResultCallback { sendMessageResult ->
+                    if (!sendMessageResult.status.isSuccess) {
+                        Timber.e("Failed to send message with status code: %d",
+                                sendMessageResult.status.statusCode)
+                    }
+                }
     }
 
-    protected void sendTimerSettings(TimerSettings settings) {
-        final byte[] data = ParcelableUtilKt.marshall(settings);
-        sendMessage(TIMER_SETTINGS, data);
+    protected fun sendTimerSettings(settings: TimerSettings) {
+        val data = settings.marshall()
+        sendMessage(TIMER_SETTINGS, data)
     }
 
-    public void sendTimerSettingsFromLocal(TimerSettings settings) {
-        Intent intent = new Intent(BROADCAST_TIMER_SETTINGS_FROM_LOCAL);
-        intent.putExtra(EXTRA_TIMER_SETTINGS, settings);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    open fun sendTimerSettingsFromLocal(settings: TimerSettings) {
+        val intent = Intent(BROADCAST_TIMER_SETTINGS_FROM_LOCAL)
+        intent.putExtra(EXTRA_TIMER_SETTINGS, settings)
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
     }
 
-    public void sendTimerSettingsFromRemote() {
-        Intent intent = new Intent(BROADCAST_TIMER_SETTINGS_FROM_REMOTE);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    fun sendTimerSettingsFromRemote() {
+        val intent = Intent(BROADCAST_TIMER_SETTINGS_FROM_REMOTE)
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
+    }
+
+    companion object {
+        val TRAINING_TEMPLATE = "/de/dreier/mytargets/training/last"
+        val TRAINING_CREATE = "/de/dreier/mytargets/training/create"
+        val TRAINING_UPDATE = "/de/dreier/mytargets/training/update"
+        val END_UPDATE = "/de/dreier/mytargets/end/update"
+        val TIMER_SETTINGS = "/de/dreier/mytargets/timer/settings"
+
+        private val BROADCAST_TIMER_SETTINGS_FROM_LOCAL = "timer_settings_local"
+        val BROADCAST_TIMER_SETTINGS_FROM_REMOTE = "timer_settings_remote"
+        private val EXTRA_TIMER_SETTINGS = "timer_settings"
     }
 }
