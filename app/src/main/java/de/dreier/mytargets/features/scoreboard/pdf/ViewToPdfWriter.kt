@@ -13,24 +13,21 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.scoreboard.pdf;
+package de.dreier.mytargets.features.scoreboard.pdf
 
-import android.annotation.SuppressLint;
-import android.graphics.Canvas;
-import android.graphics.RectF;
-import android.graphics.pdf.PdfDocument;
-import android.os.Build;
-import android.print.PageRange;
-import android.print.PrintAttributes;
-import android.support.annotation.RequiresApi;
-import android.view.View;
-import android.widget.LinearLayout;
-
-import java.io.IOException;
-import java.io.OutputStream;
-
-import static android.view.View.MeasureSpec.EXACTLY;
-import static android.view.View.MeasureSpec.makeMeasureSpec;
+import android.annotation.SuppressLint
+import android.graphics.RectF
+import android.graphics.pdf.PdfDocument
+import android.os.Build
+import android.print.PageRange
+import android.print.PrintAttributes
+import android.support.annotation.RequiresApi
+import android.view.View
+import android.view.View.MeasureSpec.EXACTLY
+import android.view.View.MeasureSpec.makeMeasureSpec
+import android.widget.LinearLayout
+import java.io.IOException
+import java.io.OutputStream
 
 /**
  * Handles printing the content view to a PDF stream.
@@ -39,109 +36,94 @@ import static android.view.View.MeasureSpec.makeMeasureSpec;
  * it gets placed on the next page.
  */
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-public class ViewToPdfWriter {
-
-    /**
-     * Left and Right page margin in inches
-     */
-    private static final float MARGIN_HORIZONTAL = 0.78f;
-
-    /**
-     * Top and Bottom page margin in inches
-     */
-    private static final float MARGIN_VERTICAL = 0.78f;
-
-    private final LinearLayout content;
-    private RectF contentRect;
-    private RectF fullPage;
-
-    public ViewToPdfWriter(LinearLayout content) {
-        this.content = content;
-    }
+class ViewToPdfWriter(private val content: LinearLayout) {
+    private var contentRect: RectF? = null
+    private var fullPage: RectF? = null
 
     /**
      * Calculates the number of pages it takes to print the content to the given print medium.
-     * MUST be called before {@link #writePdfDocument(PageRange[], OutputStream)}.
+     * MUST be called before [.writePdfDocument].
      */
     @SuppressLint("Range")
-    public int layoutPages(PrintAttributes.Resolution resolution, PrintAttributes.MediaSize mediaSize) {
-        fullPage = new RectF(0, 0,
-                mediaSize.getWidthMils() * resolution.getHorizontalDpi() / 1000,
-                mediaSize.getHeightMils() * resolution.getVerticalDpi() / 1000);
+    fun layoutPages(resolution: PrintAttributes.Resolution, mediaSize: PrintAttributes.MediaSize): Int {
+        fullPage = RectF(0f, 0f,
+                (mediaSize.widthMils * resolution.horizontalDpi / 1000).toFloat(),
+                (mediaSize.heightMils * resolution.verticalDpi / 1000).toFloat())
 
-        contentRect = new RectF(fullPage);
-        contentRect.inset(resolution.getHorizontalDpi() * MARGIN_HORIZONTAL,
-                resolution.getVerticalDpi() * MARGIN_VERTICAL);
+        contentRect = RectF(fullPage)
+        contentRect!!.inset(resolution.horizontalDpi * MARGIN_HORIZONTAL,
+                resolution.verticalDpi * MARGIN_VERTICAL)
 
-        content.measure(makeMeasureSpec((int) (contentRect.width()), EXACTLY),
-                makeMeasureSpec((int) (contentRect.height()), View.MeasureSpec.UNSPECIFIED));
-        content.layout(0, 0, (int) contentRect.width(), (int) contentRect.height());
+        content.measure(makeMeasureSpec(contentRect!!.width().toInt(), EXACTLY),
+                makeMeasureSpec(contentRect!!.height().toInt(), View.MeasureSpec.UNSPECIFIED))
+        content.layout(0, 0, contentRect!!.width().toInt(), contentRect!!.height().toInt())
 
-        int sumHeight = 0;
-        int pageCount = 1;
-        for (int i = 0; i < content.getChildCount(); i++) {
-            int measuredHeight = content.getChildAt(i).getMeasuredHeight();
-            sumHeight += measuredHeight;
-            if (sumHeight > (int) contentRect.height()) {
-                sumHeight = measuredHeight;
-                pageCount++;
+        var sumHeight = 0
+        var pageCount = 1
+        for (i in 0 until content.childCount) {
+            val measuredHeight = content.getChildAt(i).measuredHeight
+            sumHeight += measuredHeight
+            if (sumHeight > contentRect!!.height().toInt()) {
+                sumHeight = measuredHeight
+                pageCount++
             }
         }
-        return pageCount;
+        return pageCount
     }
 
     /**
      * Writes the given pages as PDF to the output stream.
      */
-    public void writePdfDocument(PageRange[] pages, OutputStream outputStream) throws IOException {
-        PdfDocument document = new PdfDocument();
+    @Throws(IOException::class)
+    fun writePdfDocument(pages: Array<PageRange>, outputStream: OutputStream) {
+        val document = PdfDocument()
 
-        int sumHeight = 0;
-        int pageNumber = 0;
-        int topAnchor = 0;
-        PdfDocument.Page page = null;
+        var sumHeight = 0
+        var pageNumber = 0
+        var topAnchor = 0
+        var page: PdfDocument.Page? = null
         if (containsPage(pages, pageNumber)) {
-            PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder((int) fullPage
-                    .width(), (int) fullPage.height(), pageNumber).create();
-            page = document.startPage(pageInfo);
+            val pageInfo = PdfDocument.PageInfo.Builder(fullPage!!
+                    .width().toInt(), fullPage!!.height().toInt(), pageNumber).create()
+            page = document.startPage(pageInfo)
         }
 
-        for (int i = 0; i < content.getChildCount(); i++) {
-            View view = content.getChildAt(i);
-            int measuredHeight = view.getMeasuredHeight();
-            if (sumHeight + measuredHeight > contentRect.height()) {
-                sumHeight = 0;
-                topAnchor = view.getTop();
-                pageNumber++;
+        for (i in 0 until content.childCount) {
+            val view = content.getChildAt(i)
+            val measuredHeight = view.measuredHeight
+            if (sumHeight + measuredHeight > contentRect!!.height()) {
+                sumHeight = 0
+                topAnchor = view.top
+                pageNumber++
 
                 if (page != null) {
-                    document.finishPage(page);
-                    page = null;
+                    document.finishPage(page)
+                    page = null
                 }
 
                 if (containsPage(pages, pageNumber)) {
-                    PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder((int) fullPage
-                            .width(), (int) fullPage.height(), pageNumber).create();
-                    page = document.startPage(pageInfo);
+                    val pageInfo = PdfDocument.PageInfo.Builder(fullPage!!
+                            .width().toInt(), fullPage!!.height().toInt(), pageNumber).create()
+                    page = document.startPage(pageInfo)
                 }
             }
 
             if (page != null) {
-                Canvas canvas = page.getCanvas();
-                canvas.save();
-                canvas.translate(contentRect.left, contentRect.top + view.getTop() - topAnchor);
-                view.draw(canvas);
-                canvas.restore();
+                val canvas = page.canvas
+                canvas.save()
+                canvas.translate(contentRect!!.left, contentRect!!.top + view.top - topAnchor)
+                view.draw(canvas)
+                canvas.restore()
             }
-            sumHeight += measuredHeight;
+            sumHeight += measuredHeight
         }
 
         if (page != null) {
-            document.finishPage(page);
+            document.finishPage(page)
         }
 
-        document.writeTo(outputStream);
-        document.close();
+        document.writeTo(outputStream)
+        document.close()
     }
 
     /**
@@ -150,12 +132,20 @@ public class ViewToPdfWriter {
      * @param pages      Page ranges (zero-based indices)
      * @param pageNumber Page to search for (zero-based)
      */
-    private boolean containsPage(PageRange[] pages, int pageNumber) {
-        for (PageRange pageRange : pages) {
-            if (pageRange.getStart() <= pageNumber && pageRange.getEnd() >= pageNumber) {
-                return true;
-            }
-        }
-        return false;
+    private fun containsPage(pages: Array<PageRange>, pageNumber: Int): Boolean {
+        return pages.any { (it.start..it.end).contains(pageNumber) }
+    }
+
+    companion object {
+
+        /**
+         * Left and Right page margin in inches
+         */
+        private val MARGIN_HORIZONTAL = 0.78f
+
+        /**
+         * Top and Bottom page margin in inches
+         */
+        private val MARGIN_VERTICAL = 0.78f
     }
 }

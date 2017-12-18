@@ -187,7 +187,7 @@ public class RoundFragment extends EditableListFragment<End> {
                         .show();
                 return true;
             case R.id.action_scoreboard:
-                ScoreboardActivity
+                ScoreboardActivity.Companion
                         .getIntent(round.getTrainingId(), round.getId())
                         .withContext(this)
                         .start();

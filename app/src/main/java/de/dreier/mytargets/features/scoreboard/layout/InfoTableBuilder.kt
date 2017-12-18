@@ -13,38 +13,32 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.scoreboard.layout;
+package de.dreier.mytargets.features.scoreboard.layout
 
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
+import android.support.annotation.StringRes
+import de.dreier.mytargets.features.scoreboard.builder.model.Table
+import de.dreier.mytargets.shared.SharedApplicationInstance
 
-import de.dreier.mytargets.app.ApplicationInstance;
-import de.dreier.mytargets.features.scoreboard.builder.model.Table;
+class InfoTableBuilder {
+    val info = Table(true)
 
-public class InfoTableBuilder {
-    public final Table info = new Table(true);
-
-    public void addLine(int key, @NonNull Object value) {
-        getKeyValueLine(info.startRow(), key, value);
+    fun addLine(key: Int, value: Any) {
+        getKeyValueLine(info.startRow(), key, value)
     }
 
-    public void addLine(String key, @NonNull Object value) {
-        getKeyValueLine(info.startRow(), key, value);
+    fun addLine(key: String, value: Any) {
+        getKeyValueLine(info.startRow(), key, value)
     }
 
-    @NonNull
-    private void getKeyValueLine(Table.Row row, String key, @NonNull Object value) {
-        row.addCell(key).addBoldCell(value.toString());
+    private fun getKeyValueLine(row: Table.Row, key: String, value: Any) {
+        row.addCell(key).addBoldCell(value.toString())
     }
 
-    @NonNull
-    private void getKeyValueLine(Table.Row row, @StringRes int key, @NonNull Object value) {
-        getKeyValueLine(row, ApplicationInstance.Companion.getStr(key), value);
+    private fun getKeyValueLine(row: Table.Row, @StringRes key: Int, value: Any) {
+        getKeyValueLine(row, SharedApplicationInstance.getStr(key), value)
     }
 
-    @NonNull
-    @Override
-    public String toString() {
-        return info.toString();
+    override fun toString(): String {
+        return info.toString()
     }
 }

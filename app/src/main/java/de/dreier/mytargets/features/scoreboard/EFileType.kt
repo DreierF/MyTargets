@@ -13,15 +13,9 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.scoreboard;
+package de.dreier.mytargets.features.scoreboard
 
-public enum EFileType {
+enum class EFileType constructor(val mimeType: String) {
     PDF("application/pdf"),
-    JPG("image/jpeg");
-
-    public final String mimeType;
-
-    EFileType(String mimeType) {
-        this.mimeType = mimeType;
-    }
+    JPG("image/jpeg")
 }
