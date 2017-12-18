@@ -13,63 +13,52 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.views.selector;
+package de.dreier.mytargets.views.selector
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.AttributeSet;
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.util.AttributeSet
 
-import java.util.List;
+import de.dreier.mytargets.features.arrows.ArrowListActivity
+import de.dreier.mytargets.features.arrows.EditArrowFragment
+import de.dreier.mytargets.shared.models.db.Arrow
+import de.dreier.mytargets.utils.IntentWrapper
 
-import de.dreier.mytargets.features.arrows.ArrowListActivity;
-import de.dreier.mytargets.features.arrows.EditArrowFragment;
-import de.dreier.mytargets.shared.models.db.Arrow;
-import de.dreier.mytargets.utils.IntentWrapper;
+class ArrowSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ImageSelectorBase<Arrow>(context, attrs) {
 
-public class ArrowSelector extends ImageSelectorBase<Arrow> {
-
-    private static final int ARROW_REQUEST_CODE = 5;
-    private static final int ARROW_ADD_REQUEST_CODE = 6;
-
-    public ArrowSelector(Context context) {
-        this(context, null);
+    init {
+        defaultActivity = ArrowListActivity::class.java
+        requestCode = ARROW_REQUEST_CODE
     }
 
-    public ArrowSelector(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        defaultActivity = ArrowListActivity.class;
-        requestCode = ARROW_REQUEST_CODE;
+    override fun getAddIntent(): IntentWrapper {
+        return EditArrowFragment.createIntent().forResult(ARROW_ADD_REQUEST_CODE)
     }
 
-    @NonNull
-    @Override
-    protected IntentWrapper getAddIntent() {
-        return EditArrowFragment.createIntent()
-                .forResult(ARROW_ADD_REQUEST_CODE);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == ARROW_ADD_REQUEST_CODE) {
-            setItemId(null);
+            setItemId(null)
         }
     }
 
-    public void setItemId(@Nullable Long arrowId) {
-        Arrow item = null;
+    fun setItemId(arrowId: Long?) {
+        var item: Arrow? = null
         if (arrowId != null) {
-            item = Arrow.Companion.get(arrowId);
+            item = Arrow[arrowId]
         }
         if (item == null) {
-            List<Arrow> all = Arrow.Companion.getAll();
-            if (all.size() > 0) {
-                item = all.get(0);
+            val all = Arrow.all
+            if (all.isNotEmpty()) {
+                item = all[0]
             }
         }
-        setItem(item);
+        setItem(item)
+    }
+
+    companion object {
+        private val ARROW_REQUEST_CODE = 5
+        private val ARROW_ADD_REQUEST_CODE = 6
     }
 }

@@ -13,36 +13,32 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.views.selector;
+package de.dreier.mytargets.views.selector
 
-import android.content.Context;
-import android.util.AttributeSet;
+import android.content.Context
+import android.util.AttributeSet
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.training.environment.WindSpeedActivity;
-import de.dreier.mytargets.shared.models.WindSpeed;
+import de.dreier.mytargets.R
+import de.dreier.mytargets.features.training.environment.WindSpeedActivity
+import de.dreier.mytargets.shared.models.WindSpeed
 
-public class WindSpeedSelector extends ImageSelectorBase<WindSpeed> {
+class WindSpeedSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ImageSelectorBase<WindSpeed>(context, attrs) {
 
-    private static final int WIND_SPEED_REQUEST_CODE = 4;
-
-    public WindSpeedSelector(Context context) {
-        this(context, null);
+    init {
+        defaultActivity = WindSpeedActivity::class.java
+        requestCode = WIND_SPEED_REQUEST_CODE
     }
 
-    public WindSpeedSelector(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        defaultActivity = WindSpeedActivity.class;
-        requestCode = WIND_SPEED_REQUEST_CODE;
+    fun setItemId(speed: Long) {
+        setItem(WindSpeed.getList(context)[speed.toInt()])
     }
 
-    public void setItemId(long speed) {
-        setItem(WindSpeed.Companion.getList(getContext()).get((int) speed));
+    override fun bindView(item: WindSpeed) {
+        super.bindView(item)
+        setTitle(R.string.wind_speed)
     }
 
-    @Override
-    protected void bindView() {
-        super.bindView();
-        setTitle(R.string.wind_speed);
+    companion object {
+        private val WIND_SPEED_REQUEST_CODE = 4
     }
 }

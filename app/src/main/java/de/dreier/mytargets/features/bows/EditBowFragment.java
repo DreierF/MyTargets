@@ -143,9 +143,9 @@ public class EditBowFragment extends EditWithImageFragmentBase<BowImage> {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK &&
-                requestCode == SimpleDistanceSelector.SIMPLE_DISTANCE_REQUEST_CODE) {
+                requestCode == SimpleDistanceSelector.Companion.getSIMPLE_DISTANCE_REQUEST_CODE()) {
             Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
-            final int index = intentData.getInt(SelectorBase.INDEX);
+            final int index = intentData.getInt(SelectorBase.Companion.getINDEX());
             final Dimension parcelable = data.getParcelableExtra(ItemSelectActivity.ITEM);
             sightMarks.get(index).setDistance(parcelable);
             adapter.notifyItemChanged(index);

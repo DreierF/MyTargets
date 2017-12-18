@@ -13,46 +13,42 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.views.selector;
+package de.dreier.mytargets.views.selector
 
-import android.content.Context;
-import android.util.AttributeSet;
+import android.content.Context
+import android.util.AttributeSet
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.training.target.TargetActivity;
-import de.dreier.mytargets.features.training.target.TargetListFragment;
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.utils.IntentWrapper;
+import de.dreier.mytargets.R
+import de.dreier.mytargets.features.training.target.TargetActivity
+import de.dreier.mytargets.features.training.target.TargetListFragment
+import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.utils.IntentWrapper
 
-public class TargetSelector extends ImageSelectorBase<Target> {
+class TargetSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ImageSelectorBase<Target>(context, attrs) {
+    private var fixedType: TargetListFragment.EFixedType = TargetListFragment.EFixedType.NONE
 
-    public static final int TARGET_REQUEST_CODE = 12;
-    private TargetListFragment.EFixedType fixedType = TargetListFragment.EFixedType.NONE;
+    override val defaultIntent: IntentWrapper
+        get() {
+            val i = super.defaultIntent
+            i.with(TargetListFragment.FIXED_TYPE, fixedType.name)
+            return i
+        }
 
-    public TargetSelector(Context context) {
-        this(context, null);
+    init {
+        defaultActivity = TargetActivity::class.java
+        requestCode = TARGET_REQUEST_CODE
     }
 
-    public TargetSelector(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        defaultActivity = TargetActivity.class;
-        requestCode = TARGET_REQUEST_CODE;
+    fun setFixedType(fixedType: TargetListFragment.EFixedType) {
+        this.fixedType = fixedType
     }
 
-    public void setFixedType(TargetListFragment.EFixedType fixedType) {
-        this.fixedType = fixedType;
+    override fun bindView(item: Target) {
+        super.bindView(item)
+        setTitle(R.string.target_face)
     }
 
-    @Override
-    protected IntentWrapper getDefaultIntent() {
-        IntentWrapper i = super.getDefaultIntent();
-        i.with(TargetListFragment.FIXED_TYPE, fixedType.name());
-        return i;
-    }
-
-    @Override
-    protected void bindView() {
-        super.bindView();
-        setTitle(R.string.target_face);
+    companion object {
+        val TARGET_REQUEST_CODE = 12
     }
 }

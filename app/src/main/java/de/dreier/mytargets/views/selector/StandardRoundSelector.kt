@@ -13,34 +13,32 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.views.selector;
+package de.dreier.mytargets.views.selector
 
-import android.content.Context;
-import android.util.AttributeSet;
+import android.content.Context
+import android.util.AttributeSet
 
-import de.dreier.mytargets.features.training.standardround.StandardRoundActivity;
-import de.dreier.mytargets.shared.models.db.StandardRound;
+import de.dreier.mytargets.features.training.standardround.StandardRoundActivity
+import de.dreier.mytargets.shared.models.db.StandardRound
 
-public class StandardRoundSelector extends ImageSelectorBase<StandardRound> {
+class StandardRoundSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null)
+    : ImageSelectorBase<StandardRound>(context, attrs) {
 
-    private static final int STANDARD_ROUND_REQUEST_CODE = 10;
-
-    public StandardRoundSelector(Context context) {
-        this(context, null);
+    init {
+        defaultActivity = StandardRoundActivity::class.java
+        requestCode = STANDARD_ROUND_REQUEST_CODE
     }
 
-    public StandardRoundSelector(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        defaultActivity = StandardRoundActivity.class;
-        requestCode = STANDARD_ROUND_REQUEST_CODE;
-    }
-
-    public void setItemId(Long standardRoundId) {
-        StandardRound standardRound = StandardRound.Companion.get(standardRoundId);
+    fun setItemId(standardRoundId: Long?) {
+        var standardRound = StandardRound[standardRoundId]
         // If the round has been removed, choose default one
-        if (standardRound == null || standardRound.loadRounds().isEmpty()) {
-            standardRound = StandardRound.Companion.get(32L);
+        if (standardRound == null || standardRound.loadRounds()!!.isEmpty()) {
+            standardRound = StandardRound[32L]
         }
-        setItem(standardRound);
+        setItem(standardRound)
+    }
+
+    companion object {
+        private val STANDARD_ROUND_REQUEST_CODE = 10
     }
 }

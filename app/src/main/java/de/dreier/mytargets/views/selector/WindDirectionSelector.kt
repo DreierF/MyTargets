@@ -13,36 +13,32 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.views.selector;
+package de.dreier.mytargets.views.selector
 
-import android.content.Context;
-import android.util.AttributeSet;
+import android.content.Context
+import android.util.AttributeSet
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.training.environment.WindDirectionActivity;
-import de.dreier.mytargets.shared.models.WindDirection;
+import de.dreier.mytargets.R
+import de.dreier.mytargets.features.training.environment.WindDirectionActivity
+import de.dreier.mytargets.shared.models.WindDirection
 
-public class WindDirectionSelector extends ImageSelectorBase<WindDirection> {
+class WindDirectionSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ImageSelectorBase<WindDirection>(context, attrs) {
 
-    private static final int WIND_DIRECTION_REQUEST_CODE = 3;
-
-    public WindDirectionSelector(Context context) {
-        this(context, null);
+    init {
+        defaultActivity = WindDirectionActivity::class.java
+        requestCode = WIND_DIRECTION_REQUEST_CODE
     }
 
-    public WindDirectionSelector(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        defaultActivity = WindDirectionActivity.class;
-        requestCode = WIND_DIRECTION_REQUEST_CODE;
+    fun setItemId(direction: Long) {
+        setItem(WindDirection.getList(context)[direction.toInt()])
     }
 
-    public void setItemId(long direction) {
-        setItem(WindDirection.Companion.getList(getContext()).get((int) direction));
+    override fun bindView(item: WindDirection) {
+        super.bindView(item)
+        setTitle(R.string.wind_direction)
     }
 
-    @Override
-    protected void bindView() {
-        super.bindView();
-        setTitle(R.string.wind_direction);
+    companion object {
+        private val WIND_DIRECTION_REQUEST_CODE = 3
     }
 }

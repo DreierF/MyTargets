@@ -13,136 +13,119 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.views.selector;
+package de.dreier.mytargets.views.selector
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresPermission;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.util.AttributeSet;
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
+import android.support.annotation.RequiresPermission
+import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
+import android.util.AttributeSet
+import de.dreier.mytargets.R
+import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.features.training.environment.CurrentWeather
+import de.dreier.mytargets.features.training.environment.EnvironmentActivity
+import de.dreier.mytargets.features.training.environment.Locator
+import de.dreier.mytargets.features.training.environment.WeatherService
+import de.dreier.mytargets.shared.models.Environment
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.features.training.environment.CurrentWeather;
-import de.dreier.mytargets.features.training.environment.EnvironmentActivity;
-import de.dreier.mytargets.features.training.environment.Locator;
-import de.dreier.mytargets.features.training.environment.WeatherService;
-import de.dreier.mytargets.shared.models.Environment;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ImageSelectorBase<Environment>(context, attrs) {
 
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-
-public class EnvironmentSelector extends ImageSelectorBase<Environment> {
-
-    private static final int ENVIRONMENT_REQUEST_CODE = 9;
-
-    public EnvironmentSelector(Context context) {
-        this(context, null);
-    }
-
-    public EnvironmentSelector(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        defaultActivity = EnvironmentActivity.class;
-        requestCode = ENVIRONMENT_REQUEST_CODE;
-    }
-
-    @Override
-    protected void bindView() {
-        super.bindView();
-        setTitle(R.string.environment);
-    }
-
-    private static boolean isTestMode() {
-        boolean result;
-        try {
-            Class.forName("de.dreier.mytargets.test.base.InstrumentedTestBase");
-            result = true;
-        } catch (@NonNull final Exception e) {
-            result = false;
+    override var selectedItem: Environment?
+        get() = if (super.selectedItem == null) {
+            Environment.getDefault(SettingsManager.indoor)
+        } else super.selectedItem
+        set(value) {
+            super.selectedItem = value
         }
-        return result;
+
+    init {
+        defaultActivity = EnvironmentActivity::class.java
+        requestCode = ENVIRONMENT_REQUEST_CODE
     }
 
-    public void queryWeather(@NonNull Fragment fragment, int request_code) {
-        if (isTestMode()) {
-            setDefaultWeather();
-            return;
+    override fun bindView(item: Environment) {
+        super.bindView(item)
+        setTitle(R.string.environment)
+    }
+
+    fun queryWeather(fragment: Fragment, request_code: Int) {
+        if (isTestMode) {
+            setDefaultWeather()
+            return
         }
-        if (ContextCompat.checkSelfPermission(fragment.getContext(), ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            setDefaultWeather();
-            fragment.requestPermissions(new String[]{ACCESS_FINE_LOCATION},
-                    request_code);
+        if (ContextCompat.checkSelfPermission(fragment.context!!, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            setDefaultWeather()
+            fragment.requestPermissions(arrayOf(ACCESS_FINE_LOCATION),
+                    request_code)
         } else {
-            queryWeatherInfo(fragment.getContext());
+            queryWeatherInfo(fragment.context)
         }
     }
 
     @SuppressLint("MissingPermission")
-    public void onPermissionResult(Activity activity, @NonNull int[] grantResult) {
-        if (grantResult.length > 0 && grantResult[0] == PackageManager.PERMISSION_GRANTED) {
-            //noinspection MissingPermission
-            queryWeatherInfo(activity);
+    fun onPermissionResult(activity: Activity, grantResult: IntArray) {
+        if (grantResult.isNotEmpty() && grantResult[0] == PackageManager.PERMISSION_GRANTED) {
+            queryWeatherInfo(activity)
         } else {
-            setDefaultWeather();
+            setDefaultWeather()
         }
     }
 
     // Start getting weather for current location
-    @SuppressWarnings("MissingPermission")
-    @RequiresPermission(anyOf = {ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION})
-    private void queryWeatherInfo(Context context) {
-        setItem(null);
-        new Locator(context).getLocation(Locator.Method.NETWORK_THEN_GPS, new Locator.Listener() {
-            @Override
-            public void onLocationFound(@NonNull Location location) {
-                final WeatherService weatherService = new WeatherService();
-                final Call<CurrentWeather> weatherCall = weatherService
-                        .fetchCurrentWeather(location.getLongitude(), location.getLatitude());
-                weatherCall.enqueue(new Callback<CurrentWeather>() {
-                    @Override
-                    public void onResponse(@NonNull Call<CurrentWeather> call, @NonNull Response<CurrentWeather> response) {
-                        if (response.isSuccessful() && response.body().httpCode == 200) {
-                            setItem(response.body().toEnvironment());
+    @SuppressLint("MissingPermission")
+    @RequiresPermission(anyOf = [ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION])
+    private fun queryWeatherInfo(context: Context?) {
+        setItem(null)
+        Locator(context!!).getLocation(Locator.Method.NETWORK_THEN_GPS, object : Locator.Listener {
+            override fun onLocationFound(location: Location) {
+                val weatherService = WeatherService()
+                val weatherCall = weatherService
+                        .fetchCurrentWeather(location.longitude, location.latitude)
+                weatherCall.enqueue(object : Callback<CurrentWeather> {
+                    override fun onResponse(call: Call<CurrentWeather>, response: Response<CurrentWeather>) {
+                        if (response.isSuccessful && response.body()!!.httpCode == 200) {
+                            setItem(response.body()!!.toEnvironment())
                         } else {
-                            setDefaultWeather();
+                            setDefaultWeather()
                         }
                     }
 
-                    @Override
-                    public void onFailure(@NonNull Call<CurrentWeather> call, @NonNull Throwable t) {
-                        setDefaultWeather();
+                    override fun onFailure(call: Call<CurrentWeather>, t: Throwable) {
+                        setDefaultWeather()
                     }
-                });
+                })
             }
 
-            @Override
-            public void onLocationNotFound() {
-                setDefaultWeather();
+            override fun onLocationNotFound() {
+                setDefaultWeather()
             }
-        });
+        })
     }
 
-    private void setDefaultWeather() {
-        setItem(Environment.Companion.getDefault(SettingsManager.INSTANCE.getIndoor()));
+    private fun setDefaultWeather() {
+        setItem(Environment.getDefault(SettingsManager.indoor))
     }
 
-    @Nullable
-    @Override
-    public Environment getSelectedItem() {
-        if (item == null) {
-            return Environment.Companion.getDefault(SettingsManager.INSTANCE.getIndoor());
-        }
-        return item;
-    }
+    companion object {
+        private const val ENVIRONMENT_REQUEST_CODE = 9
 
+        private val isTestMode: Boolean
+            get() {
+                return try {
+                    Class.forName("de.dreier.mytargets.test.base.InstrumentedTestBase")
+                    true
+                } catch (e: Exception) {
+                    false
+                }
+            }
+    }
 }
