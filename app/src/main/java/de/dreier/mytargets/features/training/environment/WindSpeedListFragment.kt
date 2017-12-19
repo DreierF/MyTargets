@@ -13,27 +13,25 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training.environment;
+package de.dreier.mytargets.features.training.environment
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 
-import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase;
-import de.dreier.mytargets.shared.models.WindSpeed;
+import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase
+import de.dreier.mytargets.shared.models.WindSpeed
 
-import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
+import de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM
 
-public class WindSpeedListFragment extends SelectPureListItemFragmentBase<WindSpeed> {
+class WindSpeedListFragment : SelectPureListItemFragmentBase<WindSpeed>() {
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        adapter.setList(WindSpeed.Companion.getList(getContext()));
-        WindSpeed windSpeed = getArguments().getParcelable(ITEM);
-        selectItem(binding.recyclerView, windSpeed);
-        return binding.getRoot();
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
+        adapter!!.setList(WindSpeed.getList(context!!))
+        val windSpeed = arguments!!.getParcelable<WindSpeed>(ITEM)
+        selectItem(binding.recyclerView, windSpeed!!)
+        return binding.root
     }
 }

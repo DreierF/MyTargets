@@ -13,27 +13,25 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training.environment;
+package de.dreier.mytargets.features.training.environment
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 
-import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase;
-import de.dreier.mytargets.shared.models.WindDirection;
+import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase
+import de.dreier.mytargets.shared.models.WindDirection
 
-import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
+import de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM
 
-public class WindDirectionListFragment extends SelectPureListItemFragmentBase<WindDirection> {
+class WindDirectionListFragment : SelectPureListItemFragmentBase<WindDirection>() {
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        adapter.setList(WindDirection.Companion.getList(getContext()));
-        WindDirection windDirection = getArguments().getParcelable(ITEM);
-        selectItem(binding.recyclerView, windDirection);
-        return binding.getRoot();
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
+        adapter!!.setList(WindDirection.getList(context!!))
+        val windDirection = arguments!!.getParcelable<WindDirection>(ITEM)
+        selectItem(binding.recyclerView, windDirection!!)
+        return binding.root
     }
 }
