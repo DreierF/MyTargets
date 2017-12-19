@@ -360,4 +360,7 @@
   <string name="tap_to_sign">Tippen zum Unterschreiben</string>
   <string name="pdf_file">PDF-Datei</string>
   <string name="image_file">Bild-Datei</string>
+  <string name="settings_summary_statistics">Statistik anpassen</string>
+  <string name="settings_statistics_spots_to_single_target">Fasse Spots zu einer einzigen Zielscheibe zusammen</string>
+  <string name="keep_above_lockscreen">Auf dem Sperrbildschirm anzeigen</string>
 </resources>

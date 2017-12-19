@@ -26,7 +26,7 @@
   <string name="cloudy">Berawan</string>
   <string name="light_rain">Hujan ringan</string>
   <string name="rain">Hujan</string>
-  <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
+  <string name="round_desc">% 1 $ s: % 2 $ d &amp; # 215; % 3 $ d panah ( % 4 $ s wajah)</string>
   <string name="mini">Mini</string>
   <string name="small">Kecil</string>
   <string name="medium">Sedang</string>
@@ -54,18 +54,18 @@
   <string name="right_front">dari depan kanan</string>
   <string name="left_back">dari belakang kiri</string>
   <string name="right_back">dari belakang kanan</string>
-  <string name="stop">STOP</string>
-  <string name="end_n">End %d</string>
-  <string name="miss">Miss</string>
-  <string name="backspace">Backspace</string>
-  <string name="accessibility_description_shot_n_score">Shot %d: %s</string>
+  <string name="stop">BERHENTI</string>
+  <string name="end_n">Akhir %d</string>
+  <string name="miss">Kehilangan</string>
+  <string name="backspace">Menghapus</string>
+  <string name="accessibility_description_shot_n_score">Tembakan %d: %s</string>
   <plurals name="rounds">
-    <item quantity="other">%d rounds</item>
+    <item quantity="other">%d putaran</item>
   </plurals>
   <plurals name="ends_arrow">
-    <item quantity="other">%1$d \u00D7 %2$d arrows</item>
+    <item quantity="other">% 1 $ d \ u00D7 % 2 $ d panah</item>
   </plurals>
   <plurals name="arrows_per_end">
-    <item quantity="other">%d arrows per end</item>
+    <item quantity="other">%d panah per akhir</item>
   </plurals>
 </resources>

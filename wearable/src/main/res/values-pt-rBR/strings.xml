@@ -23,4 +23,5 @@
   <string name="vibration">Vibração</string>
   <string name="sound">Som</string>
   <string name="today">hoje</string>
+  <string name="notification_channel_default">Default</string>
 </resources>

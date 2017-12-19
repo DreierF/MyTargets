@@ -56,9 +56,9 @@
   <string name="right_back">hátulról  jobbról</string>
   <string name="stop">ÁLLJ!</string>
   <string name="end_n">%d sorozat</string>
-  <string name="miss">Miss</string>
-  <string name="backspace">Backspace</string>
-  <string name="accessibility_description_shot_n_score">Shot %d: %s</string>
+  <string name="miss">Mellé</string>
+  <string name="backspace">Visszatörlés</string>
+  <string name="accessibility_description_shot_n_score">%d lövés a %s-ból</string>
   <plurals name="rounds">
     <item quantity="one">%d. forduló</item>
     <item quantity="other">%d. forduló</item>
