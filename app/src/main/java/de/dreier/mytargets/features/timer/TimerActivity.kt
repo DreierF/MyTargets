@@ -13,52 +13,46 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.timer;
+package de.dreier.mytargets.features.timer
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.app.Fragment
+import android.os.Bundle
+import de.dreier.mytargets.base.activities.ChildActivityBase
+import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.utils.Utils
 
-import de.dreier.mytargets.base.activities.ChildActivityBase;
-import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.utils.Utils;
+class TimerActivity : ChildActivityBase() {
+    private var childFragment: Fragment? = null
 
-public class TimerActivity extends ChildActivityBase {
-
-    private static final String FRAGMENT_TAG = "fragment";
-    Fragment childFragment;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         if (savedInstanceState == null) {
             // Create the fragment only when the activity is created for the first time.
             // ie. not after orientation changes
-            childFragment = getFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+            childFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG)
             if (childFragment == null) {
-                childFragment = instantiateFragment();
-                Bundle bundle = getIntent() != null ? getIntent().getExtras() : null;
-                childFragment.setArguments(bundle);
+                childFragment = instantiateFragment()
+                childFragment?.arguments = intent?.extras
             }
 
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(android.R.id.content, childFragment, FRAGMENT_TAG);
-            ft.commit();
+            fragmentManager.beginTransaction()
+                    .replace(android.R.id.content, childFragment, FRAGMENT_TAG)
+                    .commit()
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Utils.setShowWhenLocked(this, SettingsManager.INSTANCE.getTimerKeepAboveLockscreen());
+    override fun onResume() {
+        super.onResume()
+        Utils.setShowWhenLocked(this, SettingsManager.timerKeepAboveLockscreen)
     }
 
-    @NonNull
-    public Fragment instantiateFragment() {
-        return new TimerFragment();
+    fun instantiateFragment(): Fragment {
+        return TimerFragment()
+    }
+
+    companion object {
+        private val FRAGMENT_TAG = "fragment"
     }
 
 }

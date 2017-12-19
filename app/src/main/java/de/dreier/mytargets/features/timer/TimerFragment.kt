@@ -13,94 +13,78 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.timer;
+package de.dreier.mytargets.features.timer
 
-import android.databinding.DataBindingUtil;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.databinding.FragmentTimerBinding;
-import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.shared.base.fragment.ETimerState;
-import de.dreier.mytargets.shared.base.fragment.TimerFragmentBase;
-import de.dreier.mytargets.utils.IntentWrapper;
-import de.dreier.mytargets.utils.ToolbarUtils;
-import de.dreier.mytargets.utils.Utils;
-
-import static de.dreier.mytargets.shared.base.fragment.ETimerState.FINISHED;
+import android.databinding.DataBindingUtil
+import android.os.Bundle
+import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
+import de.dreier.mytargets.R
+import de.dreier.mytargets.databinding.FragmentTimerBinding
+import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.shared.base.fragment.ETimerState
+import de.dreier.mytargets.shared.base.fragment.ETimerState.*
+import de.dreier.mytargets.shared.base.fragment.TimerFragmentBase
+import de.dreier.mytargets.utils.IntentWrapper
+import de.dreier.mytargets.utils.ToolbarUtils
+import de.dreier.mytargets.utils.Utils
 
 /**
  * Shows the archery timer
  */
-public class TimerFragment extends TimerFragmentBase {
+class TimerFragment : TimerFragmentBase() {
 
-    private FragmentTimerBinding binding;
+    private lateinit var binding: FragmentTimerBinding
 
-    @NonNull
-    public static IntentWrapper getIntent(boolean exitAfterStop) {
-        return new IntentWrapper(TimerActivity.class)
-                .with(TimerFragmentBase.Companion.getARG_EXIT_AFTER_STOP(), exitAfterStop)
-                .with(TimerFragmentBase.Companion.getARG_TIMER_SETTINGS(), SettingsManager.INSTANCE.getTimerSettings());
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_timer, container, false)
+        return binding.root
     }
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_timer, container, false);
-        return binding.getRoot();
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val activity = activity as AppCompatActivity
+        activity.setSupportActionBar(binding.toolbar)
+        ToolbarUtils.showHomeAsUp(activity)
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.setSupportActionBar(binding.toolbar);
-        ToolbarUtils.showHomeAsUp(activity);
+    override fun applyTime(text: String) {
+        binding.timerTime.text = text
     }
 
-    @Override
-    public void applyTime(@NonNull String text) {
-        binding.timerTime.setText(text);
-    }
-
-    @Override
-    protected void applyStatus(@NonNull ETimerState status) {
-        binding.getRoot().setBackgroundResource(status.getColor());
-        if (Utils.isLollipop() && getActivity() != null) {
-            Window window = getActivity().getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(status.getColor()));
+    override fun applyStatus(status: ETimerState) {
+        binding.root.setBackgroundResource(status.color)
+        if (Utils.isLollipop() && activity != null) {
+            val window = activity.window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.statusBarColor = ContextCompat.getColor(activity, status.color)
         }
-        binding.timerStatus.setText(getStatusText(status));
+        binding.timerStatus.setText(getStatusText(status))
 
-        if (status == FINISHED) {
-            binding.timerStatus.setText("");
+        if (status === FINISHED) {
+            binding.timerStatus.text = ""
         }
     }
 
-    private int getStatusText(@NonNull ETimerState state) {
-        switch (state) {
-            case WAIT_FOR_START:
-                return R.string.touch_to_start;
-            case PREPARATION:
-                return R.string.preparation;
-            case SHOOTING:
-                /* intended fallthrough */
-            case COUNTDOWN:
-                return R.string.shooting;
-            case FINISHED:
-                /* intended fallthrough */
-            case EXIT:
-                /* intended fallthrough */
-            default:
-                return R.string.stop;
+    private fun getStatusText(state: ETimerState): Int {
+        return when (state) {
+            WAIT_FOR_START -> R.string.touch_to_start
+            PREPARATION -> R.string.preparation
+            SHOOTING, COUNTDOWN -> R.string.shooting
+            FINISHED, EXIT -> R.string.stop
+            else -> R.string.stop
+        }
+    }
+
+    companion object {
+        fun getIntent(exitAfterStop: Boolean): IntentWrapper {
+            return IntentWrapper(TimerActivity::class.java)
+                    .with(TimerFragmentBase.ARG_EXIT_AFTER_STOP, exitAfterStop)
+                    .with(TimerFragmentBase.ARG_TIMER_SETTINGS, SettingsManager.timerSettings)
         }
     }
 }

@@ -13,621 +13,569 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.views.speeddial;
+package de.dreier.mytargets.views.speeddial
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.res.ColorStateList;
-import android.content.res.TypedArray;
-import android.graphics.Typeface;
-import android.graphics.drawable.Animatable;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.internal.NavigationMenu;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewPropertyAnimatorListenerAdapter;
-import android.support.v4.view.animation.FastOutLinearInInterpolator;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
-import android.support.v7.view.SupportMenuInflater;
-import android.support.v7.view.menu.MenuBuilder;
-import android.support.v7.widget.CardView;
-import android.text.TextUtils;
-import android.util.AndroidRuntimeException;
-import android.util.AttributeSet;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.res.ColorStateList
+import android.content.res.TypedArray
+import android.graphics.Typeface
+import android.graphics.drawable.Animatable
+import android.graphics.drawable.Drawable
+import android.os.Build
+import android.os.Parcel
+import android.os.Parcelable
+import android.support.annotation.IdRes
+import android.support.design.internal.NavigationMenu
+import android.support.design.widget.CoordinatorLayout
+import android.support.design.widget.FloatingActionButton
+import android.support.v4.content.ContextCompat
+import android.support.v4.view.ViewCompat
+import android.support.v4.view.ViewPropertyAnimatorListenerAdapter
+import android.support.v4.view.animation.FastOutLinearInInterpolator
+import android.support.v4.view.animation.FastOutSlowInInterpolator
+import android.support.v7.view.SupportMenuInflater
+import android.support.v7.view.menu.MenuBuilder
+import android.support.v7.widget.CardView
+import android.text.TextUtils
+import android.util.AndroidRuntimeException
+import android.util.AttributeSet
+import android.view.*
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
+import de.dreier.mytargets.R
+import timber.log.Timber
+import java.util.*
 
-import java.util.HashMap;
-import java.util.Map;
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-import timber.log.Timber;
+typealias MenuListener = (menuItem: MenuItem) -> Boolean
 
 /**
  * Adopted from https://github.com/yavski/fab-speed-dial
  */
 @SuppressLint("RestrictedApi")
-@CoordinatorLayout.DefaultBehavior(FabSpeedDialBehaviour.class)
-public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
+@CoordinatorLayout.DefaultBehavior(FabSpeedDialBehaviour::class)
+class FabSpeedDial : LinearLayout, View.OnClickListener {
 
-    private static final int VSYNC_RHYTHM = 16;
+    private var menuListener: MenuListener? = null
+    private var closeListener: CloseListener? = null
+    private var navigationMenu: NavigationMenu? = null
+    private var fabMenuItemMap: MutableMap<FloatingActionButton, MenuItem>? = null
+    private var cardViewMenuItemMap: MutableMap<CardView, MenuItem>? = null
 
-    private MenuListener menuListener;
-    private CloseListener closeListener;
-    private NavigationMenu navigationMenu;
-    private Map<FloatingActionButton, MenuItem> fabMenuItemMap;
-    private Map<CardView, MenuItem> cardViewMenuItemMap;
+    private var menuItemsLayout: LinearLayout? = null
+    internal lateinit var fab: FloatingActionButton
+    private var touchGuard: View? = null
 
-    private LinearLayout menuItemsLayout;
-    FloatingActionButton fab;
-    @Nullable
-    private View touchGuard = null;
+    private var menuId: Int = 0
+    private var fabDrawable: Drawable? = null
+    private var fabDrawableTint: ColorStateList? = null
+    private var fabBackgroundTint: ColorStateList? = null
+    private var miniFabDrawableTint: ColorStateList? = null
+    private var miniFabBackgroundTint: ColorStateList? = null
+    private var miniFabBackgroundTintArray: IntArray? = null
+    private var miniFabTitleBackgroundTint: ColorStateList? = null
+    private var miniFabTitlesEnabled: Boolean = false
+    private var miniFabTitleTextColor: Int = 0
+    private var miniFabTitleTextColorArray: IntArray? = null
+    private var touchGuardDrawable: Drawable? = null
+    private var useTouchGuard: Boolean = false
 
-    private int menuId;
-    @Nullable
-    private Drawable fabDrawable;
-    @Nullable
-    private ColorStateList fabDrawableTint;
-    @Nullable
-    private ColorStateList fabBackgroundTint;
-    @Nullable
-    private ColorStateList miniFabDrawableTint;
-    @Nullable
-    private ColorStateList miniFabBackgroundTint;
-    private int[] miniFabBackgroundTintArray;
-    @Nullable
-    private ColorStateList miniFabTitleBackgroundTint;
-    private boolean miniFabTitlesEnabled;
-    private int miniFabTitleTextColor;
-    private int[] miniFabTitleTextColorArray;
-    @Nullable
-    private Drawable touchGuardDrawable;
-    private boolean useTouchGuard;
-
-    private boolean isAnimating;
+    private var isAnimating: Boolean = false
 
     // Variable to hold whether the menu was open or not on config change
-    private boolean shouldOpenMenu;
+    private var shouldOpenMenu: Boolean = false
 
-    public FabSpeedDial(@NonNull Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(context, attrs);
+    val isMenuOpen: Boolean
+        get() = menuItemsLayout!!.childCount > 0
+
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+        init(context, attrs)
     }
 
-    public FabSpeedDial(@NonNull Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init(context, attrs);
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        init(context, attrs)
     }
 
-    private void init(@NonNull Context context, AttributeSet attrs) {
-        TypedArray typedArray = context.getTheme()
-                .obtainStyledAttributes(attrs, R.styleable.FabSpeedDial, 0, 0);
-        resolveCompulsoryAttributes(typedArray);
-        resolveOptionalAttributes(typedArray);
-        typedArray.recycle();
+    private fun init(context: Context, attrs: AttributeSet) {
+        val typedArray = context.theme
+                .obtainStyledAttributes(attrs, R.styleable.FabSpeedDial, 0, 0)
+        resolveCompulsoryAttributes(typedArray)
+        resolveOptionalAttributes(typedArray)
+        typedArray.recycle()
 
-        LayoutInflater.from(context).inflate(R.layout.fab_speed_dial_bottom, this, true);
-        setGravity(Gravity.END);
+        LayoutInflater.from(context).inflate(R.layout.fab_speed_dial_bottom, this, true)
+        gravity = Gravity.END
 
-        menuItemsLayout = findViewById(R.id.menu_items_layout);
+        menuItemsLayout = findViewById(R.id.menu_items_layout)
 
-        setOrientation(VERTICAL);
+        orientation = LinearLayout.VERTICAL
 
-        newNavigationMenu();
+        newNavigationMenu()
 
-        int menuItemCount = navigationMenu.size();
-        fabMenuItemMap = new HashMap<>(menuItemCount);
-        cardViewMenuItemMap = new HashMap<>(menuItemCount);
+        val menuItemCount = navigationMenu!!.size()
+        fabMenuItemMap = HashMap(menuItemCount)
+        cardViewMenuItemMap = HashMap(menuItemCount)
     }
 
-    private void resolveCompulsoryAttributes(@NonNull TypedArray typedArray) {
+    private fun resolveCompulsoryAttributes(typedArray: TypedArray) {
         if (typedArray.hasValue(R.styleable.FabSpeedDial_fabMenu)) {
-            menuId = typedArray.getResourceId(R.styleable.FabSpeedDial_fabMenu, 0);
+            menuId = typedArray.getResourceId(R.styleable.FabSpeedDial_fabMenu, 0)
         } else {
-            throw new AndroidRuntimeException("You must provide the id of the menu resource.");
+            throw AndroidRuntimeException("You must provide the id of the menu resource.")
         }
     }
 
-    private void resolveOptionalAttributes(@NonNull TypedArray typedArray) {
-        fabDrawable = typedArray.getDrawable(R.styleable.FabSpeedDial_fabDrawable);
+    private fun resolveOptionalAttributes(typedArray: TypedArray) {
+        fabDrawable = typedArray.getDrawable(R.styleable.FabSpeedDial_fabDrawable)
         if (fabDrawable == null) {
-            fabDrawable = ContextCompat.getDrawable(getContext(), R.drawable.fab_buttonstates);
+            fabDrawable = ContextCompat.getDrawable(context, R.drawable.fab_buttonstates)
         }
 
-        fabDrawableTint = typedArray.getColorStateList(R.styleable.FabSpeedDial_fabDrawableTint);
+        fabDrawableTint = typedArray.getColorStateList(R.styleable.FabSpeedDial_fabDrawableTint)
         if (fabDrawableTint == null) {
-            fabDrawableTint = getColorStateList(R.color.fab_drawable_tint);
+            fabDrawableTint = getColorStateList(R.color.fab_drawable_tint)
         }
 
         if (typedArray.hasValue(R.styleable.FabSpeedDial_fabBackgroundTint)) {
             fabBackgroundTint = typedArray
-                    .getColorStateList(R.styleable.FabSpeedDial_fabBackgroundTint);
+                    .getColorStateList(R.styleable.FabSpeedDial_fabBackgroundTint)
         }
 
         miniFabBackgroundTint = typedArray
-                .getColorStateList(R.styleable.FabSpeedDial_miniFabBackgroundTint);
+                .getColorStateList(R.styleable.FabSpeedDial_miniFabBackgroundTint)
         if (miniFabBackgroundTint == null) {
-            miniFabBackgroundTint = getColorStateList(R.color.fab_background_tint);
+            miniFabBackgroundTint = getColorStateList(R.color.fab_background_tint)
         }
 
         if (typedArray.hasValue(R.styleable.FabSpeedDial_miniFabBackgroundTintList)) {
-            int miniFabBackgroundTintListId = typedArray
-                    .getResourceId(R.styleable.FabSpeedDial_miniFabBackgroundTintList, 0);
-            TypedArray miniFabBackgroundTintRes = getResources()
-                    .obtainTypedArray(miniFabBackgroundTintListId);
-            miniFabBackgroundTintArray = new int[miniFabBackgroundTintRes.length()];
-            for (int i = 0; i < miniFabBackgroundTintRes.length(); i++) {
-                miniFabBackgroundTintArray[i] = miniFabBackgroundTintRes.getResourceId(i, 0);
+            val miniFabBackgroundTintListId = typedArray
+                    .getResourceId(R.styleable.FabSpeedDial_miniFabBackgroundTintList, 0)
+            val miniFabBackgroundTintRes = resources
+                    .obtainTypedArray(miniFabBackgroundTintListId)
+            miniFabBackgroundTintArray = IntArray(miniFabBackgroundTintRes.length())
+            for (i in 0 until miniFabBackgroundTintRes.length()) {
+                miniFabBackgroundTintArray!![i] = miniFabBackgroundTintRes.getResourceId(i, 0)
             }
-            miniFabBackgroundTintRes.recycle();
+            miniFabBackgroundTintRes.recycle()
         }
 
         miniFabDrawableTint = typedArray
-                .getColorStateList(R.styleable.FabSpeedDial_miniFabDrawableTint);
+                .getColorStateList(R.styleable.FabSpeedDial_miniFabDrawableTint)
         if (miniFabDrawableTint == null) {
-            miniFabDrawableTint = getColorStateList(R.color.mini_fab_drawable_tint);
+            miniFabDrawableTint = getColorStateList(R.color.mini_fab_drawable_tint)
         }
 
         miniFabTitleBackgroundTint = typedArray
-                .getColorStateList(R.styleable.FabSpeedDial_miniFabTitleBackgroundTint);
+                .getColorStateList(R.styleable.FabSpeedDial_miniFabTitleBackgroundTint)
         if (miniFabTitleBackgroundTint == null) {
-            miniFabTitleBackgroundTint = getColorStateList(R.color.mini_fab_title_background_tint);
+            miniFabTitleBackgroundTint = getColorStateList(R.color.mini_fab_title_background_tint)
         }
 
         miniFabTitlesEnabled = typedArray
-                .getBoolean(R.styleable.FabSpeedDial_miniFabTitlesEnabled, true);
+                .getBoolean(R.styleable.FabSpeedDial_miniFabTitlesEnabled, true)
 
 
         miniFabTitleTextColor = typedArray.getColor(R.styleable.FabSpeedDial_miniFabTitleTextColor,
-                ContextCompat.getColor(getContext(), R.color.title_text_color));
+                ContextCompat.getColor(context, R.color.title_text_color))
 
         if (typedArray.hasValue(R.styleable.FabSpeedDial_miniFabTitleTextColorList)) {
-            int miniFabTitleTextColorListId = typedArray
-                    .getResourceId(R.styleable.FabSpeedDial_miniFabTitleTextColorList, 0);
-            TypedArray miniFabTitleTextColorTa = getResources()
-                    .obtainTypedArray(miniFabTitleTextColorListId);
-            miniFabTitleTextColorArray = new int[miniFabTitleTextColorTa.length()];
-            for (int i = 0; i < miniFabTitleTextColorTa.length(); i++) {
-                miniFabTitleTextColorArray[i] = miniFabTitleTextColorTa.getResourceId(i, 0);
+            val miniFabTitleTextColorListId = typedArray
+                    .getResourceId(R.styleable.FabSpeedDial_miniFabTitleTextColorList, 0)
+            val miniFabTitleTextColorTa = resources
+                    .obtainTypedArray(miniFabTitleTextColorListId)
+            miniFabTitleTextColorArray = IntArray(miniFabTitleTextColorTa.length())
+            for (i in 0 until miniFabTitleTextColorTa.length()) {
+                miniFabTitleTextColorArray!![i] = miniFabTitleTextColorTa.getResourceId(i, 0)
             }
-            miniFabTitleTextColorTa.recycle();
+            miniFabTitleTextColorTa.recycle()
         }
 
-        touchGuardDrawable = typedArray.getDrawable(R.styleable.FabSpeedDial_touchGuardDrawable);
+        touchGuardDrawable = typedArray.getDrawable(R.styleable.FabSpeedDial_touchGuardDrawable)
 
-        useTouchGuard = typedArray.getBoolean(R.styleable.FabSpeedDial_touchGuard, true);
+        useTouchGuard = typedArray.getBoolean(R.styleable.FabSpeedDial_touchGuard, true)
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
 
-        LayoutParams layoutParams =
-                new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        int coordinatorLayoutOffset = getResources()
-                .getDimensionPixelSize(R.dimen.coordinator_layout_offset);
-        layoutParams.setMargins(0, 0, coordinatorLayoutOffset, 0);
-        menuItemsLayout.setLayoutParams(layoutParams);
+        val layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        val coordinatorLayoutOffset = resources
+                .getDimensionPixelSize(R.dimen.coordinator_layout_offset)
+        layoutParams.setMargins(0, 0, coordinatorLayoutOffset, 0)
+        menuItemsLayout!!.layoutParams = layoutParams
 
         // Set up the client's FAB
-        fab = findViewById(R.id.fab);
-        fab.setImageDrawable(fabDrawable);
+        fab = findViewById(R.id.fab)
+        fab.setImageDrawable(fabDrawable)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            fab.setImageTintList(fabDrawableTint);
+            fab.imageTintList = fabDrawableTint
         }
         if (fabBackgroundTint != null) {
-            fab.setBackgroundTintList(fabBackgroundTint);
+            fab.backgroundTintList = fabBackgroundTint
         }
 
-        fab.setOnClickListener(v -> {
+        fab.setOnClickListener {
             if (isAnimating) {
-                return;
+                return@setOnClickListener
             }
 
-            if (isMenuOpen()) {
-                closeMenu();
+            if (isMenuOpen) {
+                closeMenu()
             } else {
-                openMenu();
+                openMenu()
             }
-        });
+        }
 
         // Needed in order to intercept key events
-        setFocusableInTouchMode(true);
+        isFocusableInTouchMode = true
 
         if (useTouchGuard) {
-            ViewParent parent = getParent();
+            val parent = parent
 
-            touchGuard = new View(getContext());
-            touchGuard.setOnClickListener(this);
-            touchGuard.setWillNotDraw(true);
-            touchGuard.setVisibility(GONE);
+            touchGuard = View(context)
+            touchGuard!!.setOnClickListener(this)
+            touchGuard!!.setWillNotDraw(true)
+            touchGuard!!.visibility = View.GONE
 
             if (touchGuardDrawable != null) {
-                touchGuard.setBackground(touchGuardDrawable);
+                touchGuard!!.background = touchGuardDrawable
             }
 
-            if (parent instanceof FrameLayout) {
-                FrameLayout frameLayout = (FrameLayout) parent;
-                frameLayout.addView(touchGuard);
-                bringToFront();
-            } else if (parent instanceof CoordinatorLayout) {
-                CoordinatorLayout coordinatorLayout = (CoordinatorLayout) parent;
-                coordinatorLayout.addView(touchGuard);
-                bringToFront();
-            } else if (parent instanceof RelativeLayout) {
-                RelativeLayout relativeLayout = (RelativeLayout) parent;
-                relativeLayout.addView(touchGuard,
-                        new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.MATCH_PARENT));
-                bringToFront();
+            if (parent is FrameLayout) {
+                parent.addView(touchGuard)
+                bringToFront()
+            } else if (parent is CoordinatorLayout) {
+                parent.addView(touchGuard)
+                bringToFront()
+            } else if (parent is RelativeLayout) {
+                parent.addView(touchGuard,
+                        RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                ViewGroup.LayoutParams.MATCH_PARENT))
+                bringToFront()
             } else {
-                Timber.d("touchGuard requires that the parent of this FabSpeedDialer be a FrameLayout or RelativeLayout");
+                Timber.d("touchGuard requires that the parent of this FabSpeedDialer be a FrameLayout or RelativeLayout")
             }
         }
 
-        setOnClickListener(this);
+        setOnClickListener(this)
 
         if (shouldOpenMenu) {
-            openMenu();
+            openMenu()
         }
     }
 
-    public FloatingActionButton getFabFromMenuId(@IdRes int id) {
-        return Stream.of(fabMenuItemMap.entrySet())
-                .filter(entry -> entry.getValue().getItemId() == id)
-                .map(Map.Entry::getKey).findFirstOrNull();
+    fun getFabFromMenuId(@IdRes id: Int): FloatingActionButton {
+        return fabMenuItemMap!!.entries
+                .filter { entry -> entry.value.itemId == id }
+                .map { it.key }
+                .first()
     }
 
-    private void newNavigationMenu() {
-        navigationMenu = new NavigationMenu(getContext());
-        new SupportMenuInflater(getContext()).inflate(menuId, navigationMenu);
+    private fun newNavigationMenu() {
+        navigationMenu = NavigationMenu(context)
+        SupportMenuInflater(context).inflate(menuId, navigationMenu)
 
-        navigationMenu.setCallback(new MenuBuilder.Callback() {
-            @Override
-            public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
-                return menuListener != null && menuListener.onMenuItemSelected(item);
+        navigationMenu!!.setCallback(object : MenuBuilder.Callback {
+            override fun onMenuItemSelected(menu: MenuBuilder, item: MenuItem): Boolean {
+                return menuListener?.invoke(item) ?: false
             }
 
-            @Override
-            public void onMenuModeChange(MenuBuilder menu) {
-            }
-        });
+            override fun onMenuModeChange(menu: MenuBuilder) {}
+        })
     }
 
-    @Override
-    public void onClick(View v) {
-        fab.setSelected(false);
-        removeFabMenuItems();
+    override fun onClick(v: View) {
+        fab.isSelected = false
+        removeFabMenuItems()
 
         if (menuListener != null) {
-            if (v != this && v != touchGuard) {
-                if (v instanceof FloatingActionButton) {
-                    menuListener.onMenuItemSelected(fabMenuItemMap.get(v));
-                } else if (v instanceof CardView) {
-                    menuListener.onMenuItemSelected(cardViewMenuItemMap.get(v));
+            if (v !== this && v !== touchGuard) {
+                if (v is FloatingActionButton) {
+                    menuListener!!.invoke(fabMenuItemMap!![v]!!)
+                } else if (v is CardView) {
+                    menuListener!!.invoke(cardViewMenuItemMap!![v]!!)
                 }
             }
         } else {
-            Timber.d("You haven't provided a MenuListener.");
+            Timber.d("You haven't provided a MenuListener.")
         }
 
-        if (closeListener != null && (v == this || v == touchGuard)) {
-            closeListener.onMenuClosed();
+        if (closeListener != null && (v === this || v === touchGuard)) {
+            closeListener!!.onMenuClosed()
         }
     }
 
-    @Override
-    protected Parcelable onSaveInstanceState() {
-        Parcelable superState = super.onSaveInstanceState();
-        SavedState ss = new SavedState(superState);
+    override fun onSaveInstanceState(): Parcelable? {
+        val superState = super.onSaveInstanceState()
+        val ss = SavedState(superState)
 
-        ss.isShowingMenu = isMenuOpen();
+        ss.isShowingMenu = isMenuOpen
 
-        return ss;
+        return ss
     }
 
-    @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-        if (!(state instanceof SavedState)) {
-            super.onRestoreInstanceState(state);
-            return;
+    override fun onRestoreInstanceState(state: Parcelable) {
+        if (state !is SavedState) {
+            super.onRestoreInstanceState(state)
+            return
         }
 
-        SavedState ss = (SavedState) state;
-        super.onRestoreInstanceState(ss.getSuperState());
+        super.onRestoreInstanceState(state.superState)
 
-        this.shouldOpenMenu = ss.isShowingMenu;
+        this.shouldOpenMenu = state.isShowingMenu
     }
 
-    public void setMenuListener(MenuListener menuListener) {
-        this.menuListener = menuListener;
+    fun setMenuListener(menuListener: MenuListener) {
+        this.menuListener = menuListener
     }
 
-    public void setCloseListener(CloseListener closeListener) {
-        this.closeListener = closeListener;
+    fun setCloseListener(closeListener: CloseListener) {
+        this.closeListener = closeListener
     }
 
-    public boolean isMenuOpen() {
-        return menuItemsLayout.getChildCount() > 0;
-    }
-
-    public void openMenu() {
+    fun openMenu() {
         if (!ViewCompat.isAttachedToWindow(this)) {
-            return;
+            return
         }
-        requestFocus();
+        requestFocus()
 
-        addMenuItems();
-        fab.setSelected(true);
-        Drawable fabDrawable = fab.getDrawable();
-        if (fabDrawable.getCurrent() instanceof Animatable) {
-            ((Animatable) fabDrawable.getCurrent()).start();
+        addMenuItems()
+        fab.isSelected = true
+        val fabDrawable = fab.drawable
+        if (fabDrawable.current is Animatable) {
+            (fabDrawable.current as Animatable).start()
         }
     }
 
-    public void closeMenu() {
+    fun closeMenu() {
         if (!ViewCompat.isAttachedToWindow(this)) {
-            return;
+            return
         }
 
-        if (isMenuOpen()) {
-            fab.setSelected(false);
-            Drawable fabDrawable = fab.getDrawable();
-            if (fabDrawable.getCurrent() instanceof Animatable) {
-                ((Animatable) fabDrawable.getCurrent()).start();
+        if (isMenuOpen) {
+            fab.isSelected = false
+            val fabDrawable = fab.drawable
+            if (fabDrawable.current is Animatable) {
+                (fabDrawable.current as Animatable).start()
             }
-            removeFabMenuItems();
+            removeFabMenuItems()
             if (closeListener != null) {
-                closeListener.onMenuClosed();
+                closeListener!!.onMenuClosed()
             }
         }
     }
 
-    public void show() {
+    fun show() {
         if (!ViewCompat.isAttachedToWindow(this)) {
-            return;
+            return
         }
-        setVisibility(View.VISIBLE);
-        fab.show();
+        visibility = View.VISIBLE
+        fab.show()
     }
 
-    public void hide() {
+    fun hide() {
         if (!ViewCompat.isAttachedToWindow(this)) {
-            return;
+            return
         }
 
-        if (isMenuOpen()) {
-            closeMenu();
+        if (isMenuOpen) {
+            closeMenu()
         }
-        fab.hide();
+        fab.hide()
     }
 
-    private void addMenuItems() {
-        menuItemsLayout.setAlpha(1f);
-        for (int i = 0; i < navigationMenu.size(); i++) {
-            MenuItem menuItem = navigationMenu.getItem(i);
-            if (menuItem.isVisible()) {
-                menuItemsLayout.addView(createFabMenuItem(menuItem));
+    private fun addMenuItems() {
+        menuItemsLayout!!.alpha = 1f
+        for (i in 0 until navigationMenu!!.size()) {
+            val menuItem = navigationMenu!!.getItem(i)
+            if (menuItem.isVisible) {
+                menuItemsLayout!!.addView(createFabMenuItem(menuItem))
             }
         }
-        animateFabMenuItemsIn();
+        animateFabMenuItemsIn()
     }
 
-    @NonNull
-    private View createFabMenuItem(@NonNull MenuItem menuItem) {
-        ViewGroup fabMenuItem = (ViewGroup) LayoutInflater.from(getContext())
-                .inflate(R.layout.fab_menu_item_end, this, false);
+    private fun createFabMenuItem(menuItem: MenuItem): View {
+        val fabMenuItem = LayoutInflater.from(context)
+                .inflate(R.layout.fab_menu_item_end, this, false) as ViewGroup
 
-        FloatingActionButton miniFab = fabMenuItem.findViewById(R.id.mini_fab);
-        CardView cardView = fabMenuItem.findViewById(R.id.card_view);
-        TextView titleView = fabMenuItem.findViewById(R.id.title_view);
+        val miniFab = fabMenuItem.findViewById<FloatingActionButton>(R.id.mini_fab)
+        val cardView = fabMenuItem.findViewById<CardView>(R.id.card_view)
+        val titleView = fabMenuItem.findViewById<TextView>(R.id.title_view)
 
-        fabMenuItemMap.put(miniFab, menuItem);
-        cardViewMenuItemMap.put(cardView, menuItem);
+        fabMenuItemMap!!.put(miniFab, menuItem)
+        cardViewMenuItemMap!!.put(cardView, menuItem)
 
-        miniFab.setImageDrawable(menuItem.getIcon());
-        miniFab.setOnClickListener(this);
-        cardView.setOnClickListener(this);
+        miniFab.setImageDrawable(menuItem.icon)
+        miniFab.setOnClickListener(this)
+        cardView.setOnClickListener(this)
 
-        miniFab.setAlpha(0f);
-        cardView.setAlpha(0f);
+        miniFab.alpha = 0f
+        cardView.alpha = 0f
 
-        final CharSequence title = menuItem.getTitle();
+        val title = menuItem.title
         if (!TextUtils.isEmpty(title) && miniFabTitlesEnabled) {
-            cardView.setCardBackgroundColor(miniFabTitleBackgroundTint.getDefaultColor());
-            titleView.setText(title);
-            titleView.setTypeface(null, Typeface.BOLD);
-            titleView.setTextColor(miniFabTitleTextColor);
+            cardView.setCardBackgroundColor(miniFabTitleBackgroundTint!!.defaultColor)
+            titleView.text = title
+            titleView.setTypeface(null, Typeface.BOLD)
+            titleView.setTextColor(miniFabTitleTextColor)
 
             if (miniFabTitleTextColorArray != null) {
-                titleView.setTextColor(ContextCompat.getColorStateList(getContext(),
-                        miniFabTitleTextColorArray[menuItem.getOrder()]));
+                titleView.setTextColor(ContextCompat.getColorStateList(context,
+                        miniFabTitleTextColorArray!![menuItem.order]))
             }
         } else {
-            fabMenuItem.removeView(cardView);
+            fabMenuItem.removeView(cardView)
         }
 
-        miniFab.setBackgroundTintList(miniFabBackgroundTint);
+        miniFab.backgroundTintList = miniFabBackgroundTint
 
         if (miniFabBackgroundTintArray != null) {
-            miniFab.setBackgroundTintList(ContextCompat.getColorStateList(getContext(),
-                    miniFabBackgroundTintArray[menuItem.getOrder()]));
+            miniFab.backgroundTintList = ContextCompat.getColorStateList(context,
+                    miniFabBackgroundTintArray!![menuItem.order])
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            miniFab.setImageTintList(miniFabDrawableTint);
+            miniFab.imageTintList = miniFabDrawableTint
         }
 
-        return fabMenuItem;
+        return fabMenuItem
     }
 
-    private void removeFabMenuItems() {
+    private fun removeFabMenuItems() {
         if (touchGuard != null) {
-            touchGuard.setVisibility(GONE);
+            touchGuard!!.visibility = View.GONE
         }
 
         ViewCompat.animate(menuItemsLayout)
-                .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
+                .setDuration(resources.getInteger(android.R.integer.config_shortAnimTime).toLong())
                 .alpha(0f)
-                .setInterpolator(new FastOutLinearInInterpolator())
-                .setListener(new ViewPropertyAnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationStart(View view) {
-                        super.onAnimationStart(view);
-                        isAnimating = true;
+                .setInterpolator(FastOutLinearInInterpolator())
+                .setListener(object : ViewPropertyAnimatorListenerAdapter() {
+                    override fun onAnimationStart(view: View?) {
+                        super.onAnimationStart(view)
+                        isAnimating = true
                     }
 
-                    @Override
-                    public void onAnimationEnd(View view) {
-                        super.onAnimationEnd(view);
-                        menuItemsLayout.removeAllViews();
-                        isAnimating = false;
+                    override fun onAnimationEnd(view: View?) {
+                        super.onAnimationEnd(view)
+                        menuItemsLayout!!.removeAllViews()
+                        isAnimating = false
                     }
                 })
-                .start();
+                .start()
     }
 
-    private void animateFabMenuItemsIn() {
+    private fun animateFabMenuItemsIn() {
         if (touchGuard != null) {
-            touchGuard.setVisibility(VISIBLE);
+            touchGuard!!.visibility = View.VISIBLE
         }
 
-        final int count = menuItemsLayout.getChildCount();
+        val count = menuItemsLayout!!.childCount
 
-        for (int i = count - 1; i >= 0; i--) {
-            final View fabMenuItem = menuItemsLayout.getChildAt(i);
-            animateViewIn(fabMenuItem.findViewById(R.id.mini_fab), Math.abs(count - 1 - i));
-            View cardView = fabMenuItem.findViewById(R.id.card_view);
+        for (i in count - 1 downTo 0) {
+            val fabMenuItem = menuItemsLayout!!.getChildAt(i)
+            animateViewIn(fabMenuItem.findViewById(R.id.mini_fab), Math.abs(count - 1 - i))
+            val cardView = fabMenuItem.findViewById<View>(R.id.card_view)
             if (cardView != null) {
-                animateViewIn(cardView, Math.abs(count - 1 - i));
+                animateViewIn(cardView, Math.abs(count - 1 - i))
             }
         }
     }
 
-    private void animateViewIn(@NonNull final View view, int position) {
-        final float offsetY = getResources().getDimensionPixelSize(R.dimen.keyline_1);
+    private fun animateViewIn(view: View, position: Int) {
+        val offsetY = resources.getDimensionPixelSize(R.dimen.keyline_1).toFloat()
 
-        view.setScaleX(0.25f);
-        view.setScaleY(0.25f);
-        view.setY(view.getY() + offsetY);
+        view.scaleX = 0.25f
+        view.scaleY = 0.25f
+        view.y = view.y + offsetY
 
         ViewCompat.animate(view)
-                .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
+                .setDuration(resources.getInteger(android.R.integer.config_shortAnimTime).toLong())
                 .scaleX(1f)
                 .scaleY(1f)
                 .translationYBy(-offsetY)
                 .alpha(1f)
-                .setStartDelay(4 * position * VSYNC_RHYTHM)
-                .setInterpolator(new FastOutSlowInInterpolator())
-                .setListener(new ViewPropertyAnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationStart(View view) {
-                        super.onAnimationStart(view);
-                        isAnimating = true;
+                .setStartDelay((4 * position * VSYNC_RHYTHM).toLong())
+                .setInterpolator(FastOutSlowInInterpolator())
+                .setListener(object : ViewPropertyAnimatorListenerAdapter() {
+                    override fun onAnimationStart(view: View?) {
+                        super.onAnimationStart(view)
+                        isAnimating = true
                     }
 
-                    @Override
-                    public void onAnimationEnd(View view) {
-                        super.onAnimationEnd(view);
-                        isAnimating = false;
+                    override fun onAnimationEnd(view: View?) {
+                        super.onAnimationEnd(view)
+                        isAnimating = false
                     }
                 })
-                .start();
+                .start()
     }
 
-    private ColorStateList getColorStateList(int colorRes) {
-        int[][] states = new int[][]{
-                new int[]{android.R.attr.state_enabled}, // enabled
-                new int[]{-android.R.attr.state_enabled}, // disabled
-                new int[]{-android.R.attr.state_checked}, // unchecked
-                new int[]{android.R.attr.state_pressed}  // pressed
-        };
+    private fun getColorStateList(colorRes: Int): ColorStateList {
+        val states = arrayOf(intArrayOf(android.R.attr.state_enabled), // enabled
+                intArrayOf(-android.R.attr.state_enabled), // disabled
+                intArrayOf(-android.R.attr.state_checked), // unchecked
+                intArrayOf(android.R.attr.state_pressed)  // pressed
+        )
 
-        int color = ContextCompat.getColor(getContext(), colorRes);
+        val color = ContextCompat.getColor(context, colorRes)
 
-        int[] colors = new int[]{color, color, color, color};
-        return new ColorStateList(states, colors);
+        val colors = intArrayOf(color, color, color, color)
+        return ColorStateList(states, colors)
     }
 
-    @Override
-    public boolean dispatchKeyEventPreIme(@NonNull KeyEvent event) {
-        if (isMenuOpen()
-                && event.getKeyCode() == KeyEvent.KEYCODE_BACK
-                && event.getAction() == KeyEvent.ACTION_UP
-                && event.getRepeatCount() == 0) {
-            closeMenu();
-            return true;
+    override fun dispatchKeyEventPreIme(event: KeyEvent): Boolean {
+        if (isMenuOpen
+                && event.keyCode == KeyEvent.KEYCODE_BACK
+                && event.action == KeyEvent.ACTION_UP
+                && event.repeatCount == 0) {
+            closeMenu()
+            return true
         }
 
-        return super.dispatchKeyEventPreIme(event);
+        return super.dispatchKeyEventPreIme(event)
     }
 
-    static class SavedState extends BaseSavedState {
+    internal class SavedState : View.BaseSavedState {
 
-        boolean isShowingMenu;
+        var isShowingMenu: Boolean = false
 
-        public SavedState(@NonNull Parcel source) {
-            super(source);
-            this.isShowingMenu = source.readInt() == 1;
+        constructor(source: Parcel) : super(source) {
+            this.isShowingMenu = source.readInt() == 1
         }
 
-        public SavedState(Parcelable superState) {
-            super(superState);
+        constructor(superState: Parcelable) : super(superState)
+
+        override fun writeToParcel(out: Parcel, flags: Int) {
+            super.writeToParcel(out, flags)
+            out.writeInt(if (this.isShowingMenu) 1 else 0)
         }
 
-        @Override
-        public void writeToParcel(@NonNull Parcel out, int flags) {
-            super.writeToParcel(out, flags);
-            out.writeInt(this.isShowingMenu ? 1 : 0);
-        }
+        companion object {
+            @JvmStatic
+            val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
+                override fun createFromParcel(parcel: Parcel): SavedState {
+                    return SavedState(parcel)
+                }
 
-        public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
-            @Override
-            public SavedState createFromParcel(@NonNull Parcel parcel) {
-                return new SavedState(parcel);
+                override fun newArray(i: Int): Array<SavedState> {
+                    return arrayOfNulls<SavedState>(i) as Array<SavedState>
+                }
             }
-
-            @Override
-            public SavedState[] newArray(int i) {
-                return new SavedState[i];
-            }
-        };
+        }
 
     }
 
-    /**
-     * Called to notify of close and selection changes.
-     */
-    public interface MenuListener {
-
-        /**
-         * Called when a menu item is selected.
-         *
-         * @param menuItem The menu item that is selected
-         * @return whether the menu item selection was handled
-         */
-        boolean onMenuItemSelected(MenuItem menuItem);
+    interface CloseListener {
+        fun onMenuClosed()
     }
 
-    public interface CloseListener {
-        void onMenuClosed();
+    companion object {
+
+        private val VSYNC_RHYTHM = 16
     }
 }
