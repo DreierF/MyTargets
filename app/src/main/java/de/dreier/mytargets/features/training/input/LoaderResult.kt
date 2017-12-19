@@ -30,7 +30,7 @@ import kotlinx.android.parcel.Parcelize
 
 @SuppressLint("ParcelCreator")
 @Parcelize
-internal class LoaderResult @JvmOverloads constructor(
+class LoaderResult @JvmOverloads constructor(
         val training: AugmentedTraining,
         var standardRound: StandardRound? = null,
         var arrowDiameter: Dimension? = Dimension(5f, Dimension.Unit.MILLIMETER),

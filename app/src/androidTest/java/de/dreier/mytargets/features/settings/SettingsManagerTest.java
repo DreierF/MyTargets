@@ -269,11 +269,11 @@ public class SettingsManagerTest extends InstrumentedTestBase {
     @Test
     public void setInputSummaryConfiguration() {
         SummaryConfiguration config = new SummaryConfiguration();
-        config.showEnd = false;
-        config.showRound = true;
-        config.showTraining = true;
-        config.showAverage = true;
-        config.averageScope = ETrainingScope.TRAINING;
+        config.setShowEnd(false);
+        config.setShowRound(true);
+        config.setShowTraining(true);
+        config.setShowAverage(true);
+        config.setAverageScope(ETrainingScope.TRAINING);
         SettingsManager.INSTANCE.setInputSummaryConfiguration(config);
         assertThat(SettingsManager.INSTANCE.getInputSummaryConfiguration()).isEqualTo(config);
     }

@@ -100,7 +100,7 @@ open class TrainingFragment : EditableListFragment<Round>() {
         trainingId = arguments!!.getLong(EditableListFragmentBase.ITEM_ID)
 
         binding.fab.visibility = View.GONE
-        binding.fab.setOnClickListener { view ->
+        binding.fab.setOnClickListener {
             // New round to free training
             EditRoundFragment.createIntent(training!!)
                     .withContext(this)
