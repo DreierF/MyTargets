@@ -13,54 +13,52 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training.environment;
+package de.dreier.mytargets.features.training.environment
 
-import android.support.annotation.NonNull;
+import okhttp3.OkHttpClient
+import retrofit2.Call
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
+import retrofit2.http.Query
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import retrofit2.Call;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
+class WeatherService {
 
-public class WeatherService {
-    private static final String BASE_URL = "http://api.openweathermap.org/data/2.5/";
-    private static final String APPID = "180ecfe968fb986c95cf0f8da8620530";
-
-    private final OpenWeatherMapWebService mWebService;
+    private val mWebService: OpenWeatherMapWebService
 
     private interface OpenWeatherMapWebService {
-        @NonNull
         @GET("weather?units=metric")
-        Call<CurrentWeather> fetchCurrentWeather(@Query("lon") double longitude,
-                                                 @Query("lat") double latitude,
-                                                 @Query("APPID") String appId);
+        fun fetchCurrentWeather(@Query("lon") longitude: Double,
+                                @Query("lat") latitude: Double,
+                                @Query("APPID") appId: String): Call<CurrentWeather>
     }
 
-    public WeatherService() {
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(chain -> {
-                    Request original = chain.request();
-                    Request request = original.newBuilder()
+    init {
+        val client = OkHttpClient.Builder()
+                .addInterceptor { chain ->
+                    val original = chain.request()
+                    val request = original.newBuilder()
                             .header("Accept", "application/json")
                             .method(original.method(), original.body())
-                            .build();
-                    return chain.proceed(request);
-                })
-                .build();
+                            .build()
+                    chain.proceed(request)
+                }
+                .build()
 
-        mWebService = new Retrofit.Builder()
+        mWebService = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .baseUrl(BASE_URL)
                 .build()
-                .create(OpenWeatherMapWebService.class);
+                .create(OpenWeatherMapWebService::class.java)
     }
 
-    @NonNull
-    public Call<CurrentWeather> fetchCurrentWeather(final double longitude, final double latitude) {
-        return mWebService.fetchCurrentWeather(longitude, latitude, APPID);
+    fun fetchCurrentWeather(longitude: Double, latitude: Double): Call<CurrentWeather> {
+        return mWebService.fetchCurrentWeather(longitude, latitude, APPID)
+    }
+
+    companion object {
+        private val BASE_URL = "http://api.openweathermap.org/data/2.5/"
+        private val APPID = "180ecfe968fb986c95cf0f8da8620530"
     }
 }

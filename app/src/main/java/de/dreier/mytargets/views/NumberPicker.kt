@@ -39,7 +39,7 @@ class NumberPicker(context: Context, attributeSet: AttributeSet) : LinearLayout(
     var minimum = 1
     var maximum = 30
 
-    private var value: Int = minimum
+    var value: Int = minimum
         set(value) {
             var adjValue = value
             if (adjValue > maximum) {
@@ -87,10 +87,10 @@ class NumberPicker(context: Context, attributeSet: AttributeSet) : LinearLayout(
     private inner class RepetitiveUpdater : Runnable {
         override fun run() {
             if (autoIncrement) {
-                increment()
+                value += 1
                 repeatUpdateHandler.postDelayed(RepetitiveUpdater(), REPEAT_DELAY)
             } else if (autoDecrement) {
-                decrement()
+                value -= 1
                 repeatUpdateHandler.postDelayed(RepetitiveUpdater(), REPEAT_DELAY)
             }
         }
@@ -105,7 +105,9 @@ class NumberPicker(context: Context, attributeSet: AttributeSet) : LinearLayout(
 
     private fun initIncrementButton() {
         // Increment once for a click
-        binding.numberIncrement.setOnClickListener { increment() }
+        binding.numberIncrement.setOnClickListener {
+            value += 1
+        }
 
         // Auto increment for a long click
         binding.numberIncrement.setOnLongClickListener {
@@ -125,10 +127,12 @@ class NumberPicker(context: Context, attributeSet: AttributeSet) : LinearLayout(
 
     private fun initDecrementButton() {
         // Decrement once for a click
-        binding.numberDecrement.setOnClickListener { v -> decrement() }
+        binding.numberDecrement.setOnClickListener {
+            value -= 1
+        }
 
         // Auto Decrement for a long click
-        binding.numberDecrement.setOnLongClickListener { arg0 ->
+        binding.numberDecrement.setOnLongClickListener {
             autoDecrement = true
             repeatUpdateHandler.post(RepetitiveUpdater())
             false
@@ -145,14 +149,6 @@ class NumberPicker(context: Context, attributeSet: AttributeSet) : LinearLayout(
 
     fun setTextPattern(@PluralsRes textPattern: Int) {
         this.textPattern = textPattern
-    }
-
-    private fun increment() {
-        value += 1
-    }
-
-    private fun decrement() {
-        value -= 1
     }
 
     companion object {

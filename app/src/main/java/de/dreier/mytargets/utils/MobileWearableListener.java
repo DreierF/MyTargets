@@ -90,6 +90,7 @@ public class MobileWearableListener extends WearableListenerService {
             training.setBowId(SettingsManager.INSTANCE.getBow());
             training.setArrowId(SettingsManager.INSTANCE.getArrow());
             training.setArrowNumbering(false);
+            AugmentedTraining aTraining = new AugmentedTraining(training);
 
             boolean freeTraining = !(lastTraining != null &&
                     lastTraining.getStandardRoundId() != null);
@@ -99,12 +100,12 @@ public class MobileWearableListener extends WearableListenerService {
                 round.setShotsPerEnd(SettingsManager.INSTANCE.getShotsPerEnd());
                 round.setMaxEndCount(null);
                 round.setDistance(SettingsManager.INSTANCE.getDistance());
-                training.setRounds(new ArrayList<>());
-                training.getRounds().add(round);
+                aTraining.setRounds(new ArrayList<>());
+                aTraining.getRounds().add(new AugmentedRound(round));
             } else {
-                training.initRoundsFromTemplate(lastTraining.getStandardRound());
+                aTraining.initRoundsFromTemplate(lastTraining.getStandardRound());
             }
-            ApplicationInstance.wearableClient.sendTrainingTemplate(new AugmentedTraining(training));
+            ApplicationInstance.wearableClient.sendTrainingTemplate(aTraining);
         }
     }
 

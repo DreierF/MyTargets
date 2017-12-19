@@ -13,17 +13,14 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training.environment;
+package de.dreier.mytargets.features.training.environment
 
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment
 
-import de.dreier.mytargets.base.activities.ItemSelectActivity;
+import de.dreier.mytargets.base.activities.ItemSelectActivity
 
-public class WindSpeedActivity extends ItemSelectActivity {
-    @NonNull
-    @Override
-    protected Fragment instantiateFragment() {
-        return new WindSpeedListFragment();
+class WindSpeedActivity : ItemSelectActivity() {
+    override fun instantiateFragment(): Fragment {
+        return WindSpeedListFragment()
     }
 }

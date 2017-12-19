@@ -13,39 +13,36 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training.environment;
+package de.dreier.mytargets.features.training.environment
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.support.annotation.NonNull;
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 
-class Connectivity {
+internal object Connectivity {
 
     /**
      * Get the network info
      */
-    private static NetworkInfo getNetworkInfo(@NonNull Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        return cm.getActiveNetworkInfo();
+    private fun getNetworkInfo(context: Context): NetworkInfo? {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return cm.activeNetworkInfo
     }
 
     /**
      * Check if there is any connectivity
      */
-    public static boolean isConnected(@NonNull Context context) {
-        NetworkInfo info = Connectivity.getNetworkInfo(context);
-        return (info != null && info.isConnected());
+    fun isConnected(context: Context): Boolean {
+        return getNetworkInfo(context)?.isConnected ?: false
     }
 
     /**
      * Check if there is any connectivity to a mobile network
      */
-    public static boolean isConnectedMobile(@NonNull Context context) {
-        NetworkInfo info = Connectivity.getNetworkInfo(context);
-        return (info != null && info.isConnected() && info
-                .getType() == ConnectivityManager.TYPE_MOBILE);
+    fun isConnectedMobile(context: Context): Boolean {
+        val info = Connectivity.getNetworkInfo(context)
+        return info != null && info.isConnected && info
+                .type == ConnectivityManager.TYPE_MOBILE
     }
 
 }

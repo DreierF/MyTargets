@@ -13,87 +13,70 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training.environment;
+package de.dreier.mytargets.features.training.environment
 
-import android.support.annotation.NonNull;
+import com.google.gson.annotations.SerializedName
+import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.shared.models.EWeather
+import de.dreier.mytargets.shared.models.Environment
+import java.util.*
 
-import com.google.gson.annotations.SerializedName;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.shared.models.EWeather;
-import de.dreier.mytargets.shared.models.Environment;
-
-public class CurrentWeather {
+class CurrentWeather {
 
     @SerializedName("cod")
-    public Integer httpCode;
+    var httpCode: Int? = null
     @SerializedName("name")
-    public String cityName;
-    @NonNull
+    var cityName: String = ""
     @SerializedName("weather")
-    public List<Weather> weather = new ArrayList<>();
+    var weather: List<Weather> = ArrayList()
     @SerializedName("wind")
-    public Wind wind;
+    var wind: Wind? = null
 
-    private static Double mpsToKmh(Double mps) {
-        return mps / 0.277777778;
+    private fun mpsToKmh(mps: Double): Double {
+        return mps / 0.277777778
     }
 
-    private static int kmhToBeaufort(Double kmh) {
-        return (int) Math.round(Math.pow(kmh / 3.01, 0.666666666));
+    private fun kmhToBeaufort(kmh: Double): Int {
+        return Math.round(Math.pow(kmh / 3.01, 0.666666666)).toInt()
     }
 
-    @NonNull
-    public Environment toEnvironment() {
-        int code = Integer.parseInt(weather.get(0).icon.substring(0, 2));
-        Environment e = new Environment();
-        e.setIndoor(SettingsManager.INSTANCE.getIndoor());
-        e.setWeather(imageCodeToWeather(code));
-        e.setWindDirection(0);
-        e.setLocation(cityName);
-        e.setWindDirection(0);
-        e.setWindSpeed(kmhToBeaufort(mpsToKmh(wind.speed)));
-        return e;
+    fun toEnvironment(): Environment {
+        val code = Integer.parseInt(weather[0].icon!!.substring(0, 2))
+        val e = Environment()
+        e.indoor = SettingsManager.indoor
+        e.weather = imageCodeToWeather(code)
+        e.windDirection = 0
+        e.location = cityName
+        e.windDirection = 0
+        e.windSpeed = kmhToBeaufort(mpsToKmh(wind!!.speed!!))
+        return e
     }
 
-    @NonNull
-    private EWeather imageCodeToWeather(int code) {
-        switch (code) {
-            case 1:
-                return EWeather.SUNNY;
-            case 2:
-                return EWeather.PARTLY_CLOUDY;
-            case 3:
-            case 4:
-                return EWeather.CLOUDY;
-            case 9:
-                return EWeather.RAIN;
-            case 10:
-                return EWeather.LIGHT_RAIN;
-            default:
-                return EWeather.CLOUDY;
+    private fun imageCodeToWeather(code: Int): EWeather {
+        return when (code) {
+            1 -> EWeather.SUNNY
+            2 -> EWeather.PARTLY_CLOUDY
+            3, 4 -> EWeather.CLOUDY
+            9 -> EWeather.RAIN
+            10 -> EWeather.LIGHT_RAIN
+            else -> EWeather.CLOUDY
         }
     }
 
-    public class Wind {
+    inner class Wind {
         @SerializedName("speed")
-        public Double speed;
-        @SerializedName("deg")
-        public Double deg;
+        var speed: Double? = null
     }
 
-    public class Weather {
+    inner class Weather {
         @SerializedName("id")
-        public Integer id;
+        var id: Int? = null
         @SerializedName("main")
-        public String main;
+        var main: String? = null
         @SerializedName("description")
-        public String description;
+        var description: String? = null
         @SerializedName("icon")
-        public String icon;
+        var icon: String? = null
     }
 }
 

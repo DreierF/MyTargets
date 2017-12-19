@@ -152,7 +152,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
         binding.bow.setOnActivityResultContext(this)
         binding.bow.setOnUpdateListener { this.setScoringStyleForCompoundBow(it) }
         binding.environment.setOnActivityResultContext(this)
-        binding.trainingDate.setOnClickListener { view -> onDateClick() }
+        binding.trainingDate.setOnClickListener { onDateClick() }
 
         if (trainingId == null) {
             ToolbarUtils.setTitle(this, R.string.new_training)
@@ -316,12 +316,12 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
     }
 
     companion object {
-        val CREATE_FREE_TRAINING_ACTION = "free_training"
-        val CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION = "with_standard_round"
+        const val CREATE_FREE_TRAINING_ACTION = "free_training"
+        const val CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION = "with_standard_round"
 
-        private val REQUEST_LOCATION_PERMISSION = 1
-        private val REQ_SELECTED_DATE = 2
-        private val SR_TARGET_REQUEST_CODE = 11
+        private const val REQUEST_LOCATION_PERMISSION = 1
+        private const val REQ_SELECTED_DATE = 2
+        private const val SR_TARGET_REQUEST_CODE = 11
 
         fun createIntent(trainingTypeAction: String): IntentWrapper {
             return IntentWrapper(EditTrainingActivity::class.java)

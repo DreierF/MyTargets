@@ -115,7 +115,7 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
             switch (menuItem.getItemId()) {
                 case R.id.fab1:
                     EditTrainingFragment.Companion
-                            .createIntent(Companion.getCREATE_FREE_TRAINING_ACTION())
+                            .createIntent(CREATE_FREE_TRAINING_ACTION)
                             .withContext(TrainingsFragment.this)
                             .fromFab(binding.fabSpeedDial
                                             .getFabFromMenuId(R.id.fab1), R.color.fabFreeTraining,
@@ -124,7 +124,7 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
                     break;
                 case R.id.fab2:
                     EditTrainingFragment.Companion
-                            .createIntent(Companion.getCREATE_TRAINING_WITH_STANDARD_ROUND_ACTION())
+                            .createIntent(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)
                             .withContext(TrainingsFragment.this)
                             .fromFab(binding.fabSpeedDial
                                             .getFabFromMenuId(R.id.fab2), R.color.fabTrainingWithStandardRound,

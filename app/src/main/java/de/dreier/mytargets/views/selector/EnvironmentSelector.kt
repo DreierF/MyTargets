@@ -82,10 +82,10 @@ class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: Att
     private fun queryWeatherInfo(context: Context?) {
         setItem(null)
         Locator(context!!).getLocation(Locator.Method.NETWORK_THEN_GPS, object : Locator.Listener {
-            override fun onLocationFound(location: Location) {
+            override fun onLocationFound(location: Location?) {
                 val weatherService = WeatherService()
                 val weatherCall = weatherService
-                        .fetchCurrentWeather(location.longitude, location.latitude)
+                        .fetchCurrentWeather(location!!.longitude, location.latitude)
                 weatherCall.enqueue(object : Callback<CurrentWeather> {
                     override fun onResponse(call: Call<CurrentWeather>, response: Response<CurrentWeather>) {
                         if (response.isSuccessful && response.body()!!.httpCode == 200) {
