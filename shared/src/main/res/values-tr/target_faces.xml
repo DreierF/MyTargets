@@ -16,16 +16,16 @@
   -->
 <resources>
   <!-- Target groups -->
-  <string name="target_type_target_archery">Regular</string>
-  <string name="target_type_field_archery">Field</string>
-  <string name="target_type_3d_archery">3D</string>
+  <string name="target_type_target_archery">Standart</string>
+  <string name="target_type_field_archery">Saha</string>
+  <string name="target_type_3d_archery">3 boyutlu</string>
   <!-- Target names -->
   <string name="wa_full">WA Tam</string>
   <string name="wa_6_ring">WA 6 Halka</string>
   <string name="wa_5_ring">WA 5 Halka</string>
   <string name="wa_3_ring">WA 3 Halka</string>
   <string name="vegas_3_spot">Vegas 3 Nokta</string>
-  <string name="vertical_3_spot">WA Vertical 3 Spot</string>
+  <string name="vertical_3_spot">WA Dikey 3 Nokta</string>
   <string name="wa_3_ring_3_spot">WA 3 Halka 3 Nokta</string>
   <string name="nfaa_field">NFAA Arazi</string>
   <string name="nfaa_expert_field">NFAA Uzman Arazi</string>
@@ -44,20 +44,20 @@
   <string name="nfaa_animal">NFAA Hayvan</string>
   <string name="nfas_field">NFAS Arazi</string>
   <string name="beursault">Beursault</string>
-  <string name="sca_period">SCA Period</string>
-  <string name="wa_field_3_spot">WA Field 3 Spot</string>
+  <string name="sca_period">SCA Dönemi</string>
+  <string name="wa_field_3_spot">WA Alan 3 Nokta</string>
   <string name="wa_danage_3_spot">WA Danage 3 Spot</string>
   <string name="wa_danage_6_spot">WA Danage 6 Spot</string>
-  <string name="dbsc_blowpipe">DBSC Blowpipe</string>
+  <string name="dbsc_blowpipe">DBSC Havalandırma Borusu</string>
   <!-- Scoring styles -->
-  <string name="fcfs_color_reversed">FCFS Color (Reversed 10–1)</string>
-  <string name="recurve_style_x_1">Recurve style (X–1)</string>
-  <string name="recurve_style_10_1">Recurve style (10–1)</string>
-  <string name="recurve_style_x_5">Recurve style (X–5)</string>
-  <string name="recurve_style_10_5">Recurve style (10–5)</string>
-  <string name="recurve_style_x_6">Recurve style (X–6)</string>
-  <string name="recurve_style_10_6">Recurve style (10–6)</string>
-  <string name="recurve_style_x_8">Recurve style (X–8)</string>
-  <string name="recurve_style_10_8">Recurve style (10–8)</string>
-  <string name="compound_style">Compound style</string>
+  <string name="fcfs_color_reversed">FCFS Renkli (10-1 ters)</string>
+  <string name="recurve_style_x_1">Yansım biçimi (X-1)</string>
+  <string name="recurve_style_10_1">Yansım biçimi (10-1)</string>
+  <string name="recurve_style_x_5">Yansım biçimi (X-5)</string>
+  <string name="recurve_style_10_5">Yansım biçimi (10-5)</string>
+  <string name="recurve_style_x_6">Yansım biçimi (X-6)</string>
+  <string name="recurve_style_10_6">Yansım biçimi (10-6)</string>
+  <string name="recurve_style_x_8">Yansım biçimi (X-8)</string>
+  <string name="recurve_style_10_8">Yansım biçimi (10-8)</string>
+  <string name="compound_style">Bileşik stil</string>
 </resources>

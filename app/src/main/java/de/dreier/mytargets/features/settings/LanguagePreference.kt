@@ -57,6 +57,7 @@ class LanguagePreference(context: Context, attrs: AttributeSet?) : ListPreferenc
                 "he",
                 "hu",
                 "id",
+                "in",
                 "it",
                 "ja",
                 "no",

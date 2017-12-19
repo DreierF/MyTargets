@@ -6,8 +6,8 @@
     </head>
     <body>
         <main>
-            <h1>Get started with MyTargets</h1>
-            <p>MyTargets allows you to record all results of you archery training rendering pen and paper obsolete. MyTargets is divided into three main categories: Trainings, bows and arrows. Trainings contains all the information you have collected during your training sessions. The bows section is the place to document your equipment properties and settings e.g. your sight marks. And the arrows section contains information about different arrow types.</p>
+            <h1>Aan de slag met MyTargets</h1>
+            <p>Met MyTargets kunt u alle resultaten van u boogschiet training opnemen, wat pen en papier onnodig maakt. MyTargets is onderverdeeld in drie hoofdcategorieën: trainingen, bogen en pijlen. Trainingen bevat alle informatie die u hebt verzameld tijdens uw trainingen. De bogen-sectie is de plek voor het documenteren van uw apparatuur eigenschappen en instellingen voor bijvoorbeeld uw vizier. En de pijlen sectie bevat informatie over verschillende soorten pijlen.</p>
            
             <section> 
                 <h2>Organize trainings</h2>
@@ -47,17 +47,32 @@
                 <details>
                     <summary>What is a Standard Round?</summary>
                     <p>A standard round is a predefined training template, which specified the exact number of rounds, ends and arrows shot per end. Additionally the distances and target faces are fixed.</p>
-                    <p>The app provides you with a variety of standard rounds that are commonly used. </p>
+                    <p>The app provides you with a variety of standard rounds that are commonly used.</p>
+                </details>
+                <details>
+                    <summary>How to change the target face for a standard round?</summary>
+                    <p>A standard round defines only which type of target should be used, but not which exact target face. So you can adjust the target face to that one you actually use. Just tap on "Change target face" below the standard round.</p>
+                    <img src="images/change_target_face.png" />
                 </details>
             </section>
             <section> 
                 <h2>Input</h2>
-                <p></p>
+                <p>MyTargets supports an exact arrow plotting and a keyboard based input mode. Switching between them is possible via the settings.</p>
+                <details>
+                    <summary>Exact arrow plotting</summary>
+                    <p>The exact arrow plotting is the default input method. To enter a shot tap and hold on the target face adjust the position until you are satisfied with the arrow position and then release the finger.</p>
+                    <img src="images/input_plotting.png"/>
+                    <p><strong>Note: </strong>The finger slip detection will recognize unintended moves while releasing the finger and ignore them.</p>
+                </details>
                 <details>
                     <summary>Keyboard mode</summary>
-                    <p>MyTargets supports a keyboard mode as an alternative to the default detailed shot entry. In the keyboard mode you only enter the ring hit by the arrow and not its exact location.</p>
+                    <p>The keyboard mode as an alternative to the default detailed shot entry. In the keyboard mode you only enter the ring hit by the arrow and not its exact location.</p>
                     <img src="images/input_keyboard.png"/>
-                    <p>The lefthanded setting brings the keyboard to the left side to make selection with a single hand possible.</p>
+                    <p>The left-handed setting brings the keyboard to the left side to make selection with a single hand possible.</p>
+                </details>
+                <details>
+                    <summary>Editing and deleting shots</summary>
+                    <p>To edit an already entered shot just tap on the circle on the top that shows the respective shot, then change the shot as you like. To delete the last shot you have entered press the backspace key at the top of the input screen.</p>
                 </details>
             </section>
             <section> 
@@ -68,7 +83,7 @@
                     <p>In the following the main UI components are described:</p>
                     <ul>
                         <li><strong>Line chart</strong>: Shows the average score per arrow per end. The orange linear regression line shows the overall trend. The chart can be zoomed by pinching two fingers horizontally.</li>
-                        <li><strong>Distribution chart</strong>: Shows the distribution of arrows amonst the available rings. If no segment is selected, the overall count of hits and misses is shown. By tapping on a segment the exact number of shots in this category is shown.</li>
+                        <li><strong>Distribution chart</strong>: Shows the distribution of arrows amongst the available rings. If no segment is selected, the overall count of hits and misses is shown. By tapping on a segment the exact number of shots in this category is shown.</li>
                         <li><strong>Dispersion pattern</strong>: Shows all shots on a single target face including the selected grouping method (can be changed in the app's settings). If you tap on the dispersion pattern you get a bigger version of the dispersion pattern. From the details screen you can also share the dispersion pattern image or print it.</li>
                         <li><strong>Arrow ranking</strong>: If you have used the arrow numbering feature in one of the selected trainings, the arrow rankings are shown below. The arrows with the best grouping are placed at the top of the list. Tapping on an arrow number takes you to a dispersion pattern, which only shows the shots of the selected arrow.</li>
                     </ul>

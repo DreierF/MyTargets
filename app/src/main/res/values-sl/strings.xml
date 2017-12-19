@@ -210,13 +210,13 @@
     <item quantity="one">Round %d</item>
     <item quantity="two">Round %d</item>
     <item quantity="few">Round %d</item>
-    <item quantity="other">Krog %d</item>
+    <item quantity="other">Round %d</item>
   </plurals>
   <plurals name="round_selected">
-    <item quantity="one">Krog %d</item>
-    <item quantity="two">Krog %d</item>
-    <item quantity="few">Krog %d</item>
-    <item quantity="other">Krog %d</item>
+    <item quantity="one">%d round selected</item>
+    <item quantity="two">%d rounds selected</item>
+    <item quantity="few">%d rounds selected</item>
+    <item quantity="other">%d rounds selected</item>
   </plurals>
   <plurals name="round_deleted">
     <item quantity="one">%d round deleted</item>
@@ -388,4 +388,7 @@
   <string name="tap_to_sign">Tap to sign</string>
   <string name="pdf_file">PDF file</string>
   <string name="image_file">Image file</string>
+  <string name="settings_summary_statistics">Adjust statistics screen</string>
+  <string name="settings_statistics_spots_to_single_target">Aggregate spots to single target</string>
+  <string name="keep_above_lockscreen">Keep above lockscreen</string>
 </resources>
