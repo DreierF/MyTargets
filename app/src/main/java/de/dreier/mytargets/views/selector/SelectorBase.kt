@@ -33,6 +33,8 @@ import de.dreier.mytargets.base.activities.ItemSelectActivity
 import de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM
 import de.dreier.mytargets.utils.IntentWrapper
 
+typealias OnUpdateListener<T> = (T?) -> Unit
+
 abstract class SelectorBase<T : Parcelable>(
         context: Context, attrs: AttributeSet?,
         @param:LayoutRes private val layout: Int) : LinearLayout(context, attrs) {
@@ -90,9 +92,7 @@ abstract class SelectorBase<T : Parcelable>(
 
     fun setItem(item: T?) {
         this.selectedItem = item
-        if (updateListener != null) {
-            updateListener!!.onUpdate(item)
-        }
+        updateListener?.invoke(item)
         updateView()
     }
 
@@ -127,10 +127,6 @@ abstract class SelectorBase<T : Parcelable>(
 
     public override fun onRestoreInstanceState(state: Parcelable) {
         super.onRestoreInstanceState(StateSaver.restoreInstanceState(this, state))
-    }
-
-    interface OnUpdateListener<in T> {
-        fun onUpdate(item: T?)
     }
 
     companion object {

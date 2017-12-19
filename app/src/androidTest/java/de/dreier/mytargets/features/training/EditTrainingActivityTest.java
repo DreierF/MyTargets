@@ -85,7 +85,7 @@ public class EditTrainingActivityTest extends UITestBase {
     @Test
     public void createFreeTraining() {
         Intent intent = new Intent();
-        intent.setAction(CREATE_FREE_TRAINING_ACTION);
+        intent.setAction(Companion.getCREATE_FREE_TRAINING_ACTION());
         activityTestRule.launchActivity(intent);
 
         //allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
@@ -148,7 +148,7 @@ public class EditTrainingActivityTest extends UITestBase {
     @Test
     public void createTrainingWithStandardRound() {
         Intent intent = new Intent();
-        intent.setAction(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION);
+        intent.setAction(Companion.getCREATE_TRAINING_WITH_STANDARD_ROUND_ACTION());
         activityTestRule.launchActivity(intent);
 
         //allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);

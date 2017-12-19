@@ -20,6 +20,7 @@ import de.dreier.mytargets.shared.SharedApplicationInstance
 import de.dreier.mytargets.shared.models.Score
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Shot
+import de.dreier.mytargets.shared.models.sum
 
 open class ScoringStyle private constructor(title: String?, private val showAsX: Boolean, protected val points: Array<IntArray>) {
     private val title: String?
@@ -112,9 +113,7 @@ open class ScoringStyle private constructor(title: String?, private val showAsX:
     open fun getReachedScore(end: End): Score {
         return end.loadShots()!!
                 .map { shot: Shot -> this.getReachedScore(shot) }
-                .fold(Score()) { score, s ->
-                    score.add(s)
-                }
+                .sum()
     }
 
     companion object {

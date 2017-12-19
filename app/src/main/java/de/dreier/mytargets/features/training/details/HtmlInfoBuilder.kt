@@ -13,44 +13,38 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training.details;
+package de.dreier.mytargets.features.training.details
 
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
-import android.text.TextUtils;
+import android.support.annotation.StringRes
+import android.text.TextUtils
+import de.dreier.mytargets.shared.SharedApplicationInstance
 
-import de.dreier.mytargets.app.ApplicationInstance;
+class HtmlInfoBuilder {
+    private val info = StringBuilder()
 
-public class HtmlInfoBuilder {
-    private final StringBuilder info = new StringBuilder();
-
-    public void addLine(int key, @NonNull Object value) {
-        if (info.length() != 0) {
-            info.append("<br>");
+    fun addLine(key: Int, value: Any) {
+        if (info.isNotEmpty()) {
+            info.append("<br>")
         }
-        info.append(getKeyValueLine(key, value));
+        info.append(getKeyValueLine(key, value))
     }
 
-    public void addLine(String key, @NonNull Object value) {
-        if (info.length() != 0) {
-            info.append("<br>");
+    fun addLine(key: String, value: Any) {
+        if (info.isNotEmpty()) {
+            info.append("<br>")
         }
-        info.append(getKeyValueLine(key, value));
+        info.append(getKeyValueLine(key, value))
     }
 
-    @NonNull
-    private String getKeyValueLine(String key, @NonNull Object value) {
-        return String.format("%s: <b>%s</b>", key, TextUtils.htmlEncode(value.toString()));
+    private fun getKeyValueLine(key: String, value: Any): String {
+        return String.format("%s: <b>%s</b>", key, TextUtils.htmlEncode(value.toString()))
     }
 
-    @NonNull
-    private String getKeyValueLine(@StringRes int key, @NonNull Object value) {
-        return getKeyValueLine(ApplicationInstance.Companion.getStr(key), value);
+    private fun getKeyValueLine(@StringRes key: Int, value: Any): String {
+        return getKeyValueLine(SharedApplicationInstance.getStr(key), value)
     }
 
-    @NonNull
-    @Override
-    public String toString() {
-        return info.toString();
+    override fun toString(): String {
+        return info.toString()
     }
 }

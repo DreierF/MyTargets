@@ -12,342 +12,325 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.features.training.edit;
+package de.dreier.mytargets.features.training.edit
 
-import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.content.Intent;
-import android.databinding.DataBindingUtil;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.DatePicker;
+import android.app.Activity
+import android.app.DatePickerDialog
+import android.content.Intent
+import android.databinding.DataBindingUtil
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.view.ViewGroup
+import android.widget.DatePicker
+import de.dreier.mytargets.R
+import de.dreier.mytargets.base.activities.ItemSelectActivity
+import de.dreier.mytargets.base.fragments.EditFragmentBase
+import de.dreier.mytargets.base.fragments.EditableListFragmentBase.ITEM_ID
+import de.dreier.mytargets.databinding.FragmentEditTrainingBinding
+import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.features.training.ETrainingType
+import de.dreier.mytargets.features.training.ETrainingType.FREE_TRAINING
+import de.dreier.mytargets.features.training.ETrainingType.TRAINING_WITH_STANDARD_ROUND
+import de.dreier.mytargets.features.training.RoundFragment
+import de.dreier.mytargets.features.training.details.TrainingFragment
+import de.dreier.mytargets.features.training.input.InputActivity
+import de.dreier.mytargets.features.training.target.TargetListFragment
+import de.dreier.mytargets.shared.models.EBowType
+import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.models.augmented.AugmentedRound
+import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
+import de.dreier.mytargets.shared.models.db.Bow
+import de.dreier.mytargets.shared.models.db.Round
+import de.dreier.mytargets.shared.models.db.Training
+import de.dreier.mytargets.shared.targets.models.WA3Ring3Spot
+import de.dreier.mytargets.utils.IntentWrapper
+import de.dreier.mytargets.utils.ToolbarUtils
+import de.dreier.mytargets.utils.transitions.FabTransformUtil
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.format.FormatStyle
+import java.util.*
 
-import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.format.DateTimeFormatter;
-import org.threeten.bp.format.FormatStyle;
+class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListener {
 
-import java.util.ArrayList;
+    private var trainingId: Long? = null
+    private var trainingType = FREE_TRAINING
+    private var date: LocalDate? = LocalDate.now()
+    private lateinit var binding: FragmentEditTrainingBinding
+    private var roundTarget: Target? = null
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.base.activities.ItemSelectActivity;
-import de.dreier.mytargets.base.fragments.EditFragmentBase;
-import de.dreier.mytargets.databinding.FragmentEditTrainingBinding;
-import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.features.training.ETrainingType;
-import de.dreier.mytargets.features.training.RoundFragment;
-import de.dreier.mytargets.features.training.details.TrainingFragment;
-import de.dreier.mytargets.features.training.input.InputActivity;
-import de.dreier.mytargets.features.training.target.TargetListFragment;
-import de.dreier.mytargets.shared.models.EBowType;
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.Bow;
-import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.StandardRound;
-import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-import de.dreier.mytargets.shared.targets.models.WA3Ring3Spot;
-import de.dreier.mytargets.utils.IntentWrapper;
-import de.dreier.mytargets.utils.ToolbarUtils;
-import de.dreier.mytargets.utils.transitions.FabTransformUtil;
+    private val training: Training
+        get() {
+            val training: Training?
+            if (trainingId == null) {
+                training = Training()
+            } else {
+                training = Training[trainingId]
+            }
+            training!!.title = binding.training.text.toString()
+            training.date = date
+            training.environment = binding.environment.selectedItem!!
+            training.bowId = if (binding.bow.selectedItem == null)
+                null
+            else
+                binding.bow
+                        .selectedItem!!
+                        .id
+            training.arrowId = if (binding.arrow.selectedItem == null)
+                null
+            else
+                binding.arrow
+                        .selectedItem!!.id
+            training.arrowNumbering = binding.numberArrows.isChecked
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-import static de.dreier.mytargets.base.fragments.EditableListFragmentBase.ITEM_ID;
-import static de.dreier.mytargets.features.training.ETrainingType.FREE_TRAINING;
-import static de.dreier.mytargets.features.training.ETrainingType.TRAINING_WITH_STANDARD_ROUND;
+            SettingsManager.bow = training.bowId
+            SettingsManager.arrow = training.arrowId
+            SettingsManager.arrowNumbersEnabled = training.arrowNumbering
+            SettingsManager.indoor = training.indoor
+            return training
+        }
 
-public class EditTrainingFragment extends EditFragmentBase implements DatePickerDialog.OnDateSetListener {
-    public static final String CREATE_FREE_TRAINING_ACTION = "free_training";
-    public static final String CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION = "with_standard_round";
+    private val round: Round
+        get() {
+            val round = Round()
+            round.target = binding.target.selectedItem!!
+            round.shotsPerEnd = binding.arrows.progress
+            round.maxEndCount = null
+            round.distance = binding.distance.selectedItem!!
 
-    private static final int REQUEST_LOCATION_PERMISSION = 1;
-    private static final int REQ_SELECTED_DATE = 2;
-    private static final int SR_TARGET_REQUEST_CODE = 11;
+            SettingsManager.target = binding.target.selectedItem!!
+            SettingsManager.distance = round.distance
+            SettingsManager.shotsPerEnd = round.shotsPerEnd
+            return round
+        }
 
-    @Nullable
-    private Long trainingId = null;
-    @NonNull
-    private ETrainingType trainingType = FREE_TRAINING;
-    @Nullable
-    private LocalDate date = LocalDate.now();
-    private FragmentEditTrainingBinding binding;
-    @Nullable
-    private Target roundTarget;
-
-    @NonNull
-    public static IntentWrapper createIntent(String trainingTypeAction) {
-        return new IntentWrapper(EditTrainingActivity.class)
-                .action(trainingTypeAction);
-    }
-
-    @NonNull
-    public static IntentWrapper editIntent(long trainingId) {
-        return new IntentWrapper(EditTrainingActivity.class)
-                .with(ITEM_ID, trainingId);
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil
-                .inflate(inflater, R.layout.fragment_edit_training, container, false);
+                .inflate(inflater, R.layout.fragment_edit_training, container, false)
 
-        Bundle arguments = getArguments();
+        val arguments = arguments
         if (arguments != null && arguments.containsKey(ITEM_ID)) {
-            trainingId = arguments.getLong(ITEM_ID);
+            trainingId = arguments.getLong(ITEM_ID)
         }
-        Intent i = getActivity().getIntent();
-        if (i != null && CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION.equals(i.getAction())) {
-            trainingType = TRAINING_WITH_STANDARD_ROUND;
+        val i = activity!!.intent
+        if (i != null && CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION == i.action) {
+            trainingType = TRAINING_WITH_STANDARD_ROUND
         } else {
-            trainingType = FREE_TRAINING;
+            trainingType = FREE_TRAINING
         }
 
-        ToolbarUtils.setSupportActionBar(this, binding.toolbar);
-        ToolbarUtils.showUpAsX(this);
-        setHasOptionsMenu(true);
+        ToolbarUtils.setSupportActionBar(this, binding.toolbar)
+        ToolbarUtils.showUpAsX(this)
+        setHasOptionsMenu(true)
 
-        binding.arrows.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
-            @Override
-            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-                updateArrowsLabel();
+        binding.arrows.setOnProgressChangeListener(object : DiscreteSeekBar.OnProgressChangeListener {
+            override fun onProgressChanged(seekBar: DiscreteSeekBar, value: Int, fromUser: Boolean) {
+                updateArrowsLabel()
             }
 
-            @Override
-            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+            override fun onStartTrackingTouch(seekBar: DiscreteSeekBar) {
 
             }
 
-            @Override
-            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
-            }
-        });
-        binding.target.setOnActivityResultContext(this);
-        binding.distance.setOnActivityResultContext(this);
-        binding.standardRound.setOnActivityResultContext(this);
-        binding.standardRound.setOnUpdateListener(
-                item -> roundTarget = item.loadRounds().get(0).getTargetTemplate());
-        binding.changeTargetFace.setOnClickListener(v ->
-                TargetListFragment.getIntent(roundTarget)
-                        .withContext(this)
-                        .forResult(SR_TARGET_REQUEST_CODE)
-                        .start());
-        binding.arrow.setOnActivityResultContext(this);
-        binding.bow.setOnActivityResultContext(this);
-        binding.bow.setOnUpdateListener(this::setScoringStyleForCompoundBow);
-        binding.environment.setOnActivityResultContext(this);
-        binding.trainingDate.setOnClickListener(view -> onDateClick());
+            override fun onStopTrackingTouch(seekBar: DiscreteSeekBar) {}
+        })
+        binding.target.setOnActivityResultContext(this)
+        binding.distance.setOnActivityResultContext(this)
+        binding.standardRound.setOnActivityResultContext(this)
+        binding.standardRound.setOnUpdateListener { item -> roundTarget = item!!.loadRounds()!!.get(0).targetTemplate }
+        binding.changeTargetFace.setOnClickListener {
+            TargetListFragment.getIntent(roundTarget)
+                    .withContext(this)
+                    .forResult(SR_TARGET_REQUEST_CODE)
+                    .start()
+        }
+        binding.arrow.setOnActivityResultContext(this)
+        binding.bow.setOnActivityResultContext(this)
+        binding.bow.setOnUpdateListener { this.setScoringStyleForCompoundBow(it) }
+        binding.environment.setOnActivityResultContext(this)
+        binding.trainingDate.setOnClickListener { view -> onDateClick() }
 
         if (trainingId == null) {
-            ToolbarUtils.setTitle(this, R.string.new_training);
+            ToolbarUtils.setTitle(this, R.string.new_training)
             binding.training.setText(getString(
-                    trainingType == ETrainingType.COMPETITION ? R.string.competition :
-                            R.string.training));
-            setTrainingDate();
-            loadRoundDefaultValues();
-            binding.bow.setItemId(SettingsManager.INSTANCE.getBow());
-            binding.arrow.setItemId(SettingsManager.INSTANCE.getArrow());
-            binding.standardRound.setItemId(SettingsManager.INSTANCE.getStandardRound());
-            binding.numberArrows.setChecked(SettingsManager.INSTANCE.getArrowNumbersEnabled());
+                    if (trainingType == ETrainingType.COMPETITION)
+                        R.string.competition
+                    else
+                        R.string.training))
+            setTrainingDate()
+            loadRoundDefaultValues()
+            binding.bow.setItemId(SettingsManager.bow)
+            binding.arrow.setItemId(SettingsManager.arrow)
+            binding.standardRound.setItemId(SettingsManager.standardRound)
+            binding.numberArrows.isChecked = SettingsManager.arrowNumbersEnabled
             if (savedInstanceState == null) {
-                binding.environment.queryWeather(this, REQUEST_LOCATION_PERMISSION);
+                binding.environment.queryWeather(this, REQUEST_LOCATION_PERMISSION)
             }
-            binding.changeTargetFace.setVisibility(trainingType == TRAINING_WITH_STANDARD_ROUND
-                    ? VISIBLE : GONE);
+            binding.changeTargetFace.visibility = if (trainingType == TRAINING_WITH_STANDARD_ROUND)
+                VISIBLE
+            else
+                GONE
         } else {
-            ToolbarUtils.setTitle(this, R.string.edit_training);
-            Training train = Training.Companion.get(trainingId);
-            binding.training.setText(train.getTitle());
-            date = train.getDate();
-            binding.bow.setItemId(train.getBowId());
-            binding.arrow.setItemId(train.getArrowId());
-            binding.environment.setItem(train.getEnvironment());
-            setTrainingDate();
-            binding.notEditable.setVisibility(GONE);
-            binding.changeTargetFace.setVisibility(
-                    train.getStandardRoundId() != null ? VISIBLE : GONE);
+            ToolbarUtils.setTitle(this, R.string.edit_training)
+            val train = Training[trainingId]
+            binding.training.setText(train!!.title)
+            date = train.date
+            binding.bow.setItemId(train.bowId)
+            binding.arrow.setItemId(train.arrowId)
+            binding.environment.setItem(train.environment)
+            setTrainingDate()
+            binding.notEditable.visibility = GONE
+            binding.changeTargetFace.visibility = if (train.standardRoundId != null) VISIBLE else GONE
         }
-        applyTrainingType();
-        updateArrowsLabel();
+        applyTrainingType()
+        updateArrowsLabel()
 
-        return binding.getRoot();
+        return binding.root
     }
 
-    private void updateArrowsLabel() {
-        binding.arrowsLabel.setText(getResources()
-                .getQuantityString(R.plurals.arrow, binding.arrows.getProgress(),
-                        binding.arrows.getProgress()));
+    private fun updateArrowsLabel() {
+        binding.arrowsLabel.text = resources
+                .getQuantityString(R.plurals.arrow, binding.arrows.progress, binding.arrows.progress)
     }
 
-    protected void setScoringStyleForCompoundBow(@Nullable Bow bow) {
-        final Target target = binding.target.getSelectedItem();
-        if (bow != null && target != null && target.getId() <= WA3Ring3Spot.Companion.getID()) {
-            if (bow.getType() == EBowType.COMPOUND_BOW && target.getScoringStyleIndex() == 0) {
-                target.setScoringStyleIndex(2);
-                binding.target.setItem(target);
-            } else if (bow.getType() != EBowType.COMPOUND_BOW && target.getScoringStyleIndex() == 2) {
-                target.setScoringStyleIndex(0);
-                binding.target.setItem(target);
+    protected fun setScoringStyleForCompoundBow(bow: Bow?) {
+        val target = binding.target.selectedItem
+        if (bow != null && target != null && target.id!! <= WA3Ring3Spot.ID) {
+            if (bow.type === EBowType.COMPOUND_BOW && target.scoringStyleIndex == 0) {
+                target.scoringStyleIndex = 2
+                binding.target.setItem(target)
+            } else if (bow.type !== EBowType.COMPOUND_BOW && target.scoringStyleIndex == 2) {
+                target.scoringStyleIndex = 0
+                binding.target.setItem(target)
             }
         }
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        FabTransformUtil.setup(getActivity(), binding.getRoot());
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        FabTransformUtil.setup(activity!!, binding.root)
     }
 
-    private void applyTrainingType() {
-        View in;
-        View out;
+    private fun applyTrainingType() {
+        val `in`: View
+        val out: View
         if (trainingType == FREE_TRAINING) {
-            in = binding.practiceLayout;
-            out = binding.standardRound;
+            `in` = binding.practiceLayout
+            out = binding.standardRound
         } else {
-            out = binding.practiceLayout;
-            in = binding.standardRound;
+            out = binding.practiceLayout
+            `in` = binding.standardRound
         }
-        in.setVisibility(VISIBLE);
-        out.setVisibility(GONE);
+        `in`.visibility = VISIBLE
+        out.visibility = GONE
     }
 
-    private void onDateClick() {
-        DatePickerFragment datePickerDialog = DatePickerFragment.newInstance(date);
-        datePickerDialog.setTargetFragment(this, REQ_SELECTED_DATE);
-        datePickerDialog.show(getActivity().getSupportFragmentManager(), "date_picker");
+    private fun onDateClick() {
+        val datePickerDialog = DatePickerFragment.newInstance(date!!)
+        datePickerDialog.setTargetFragment(this, REQ_SELECTED_DATE)
+        datePickerDialog.show(activity!!.supportFragmentManager, "date_picker")
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
-            binding.environment.onPermissionResult(getActivity(), grantResults);
+            binding.environment.onPermissionResult(activity!!, grantResults)
         }
     }
 
-    @Override
-    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        date = LocalDate.of(year, monthOfYear + 1, dayOfMonth);
-        setTrainingDate();
+    override fun onDateSet(view: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int) {
+        date = LocalDate.of(year, monthOfYear + 1, dayOfMonth)
+        setTrainingDate()
     }
 
-    private void setTrainingDate() {
-        binding.trainingDate
-                .setText(date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
+    private fun setTrainingDate() {
+        binding.trainingDate.text = date!!.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
     }
 
-    @Override
-    protected void onSave() {
-        Training training = getTraining();
-        finish();
+    override fun onSave() {
+        val training = AugmentedTraining(training)
+        finish()
 
         if (trainingId == null) {
             if (trainingType == FREE_TRAINING) {
-                training.setStandardRoundId(null);
-                training.setRounds(new ArrayList<>());
-                training.loadRounds().add(getRound());
+                training.training.standardRoundId = null
+                training.rounds = ArrayList()
+                training.rounds.add(AugmentedRound(round))
             } else {
-                StandardRound standardRound = binding.standardRound.getSelectedItem();
-                SettingsManager.INSTANCE.setStandardRound(standardRound.getId());
-                if (standardRound.getId() == null) {
-                    standardRound.save();
+                val standardRound = binding.standardRound.selectedItem
+                SettingsManager.standardRound = standardRound!!.id!!
+                if (standardRound.id == null) {
+                    standardRound.save()
                 }
-                training.setStandardRoundId(standardRound.getId());
-                training.initRoundsFromTemplate(standardRound);
-                for (Round round : training.loadRounds()) {
-                    round.setTarget(roundTarget);
+                training.training.standardRoundId = standardRound.id
+                training.initRoundsFromTemplate(standardRound)
+                for (round in training.rounds) {
+                    round.round.target = roundTarget!!
                 }
             }
-            training.save();
+            training.toTraining().save()
 
-            Round round = training.loadRounds().get(0);
+            val round = training.rounds[0]
 
-            TrainingFragment.getIntent(training)
+            TrainingFragment.getIntent(training.training)
                     .withContext(this)
                     .noAnimation()
-                    .start();
-            RoundFragment.getIntent(round)
+                    .start()
+            RoundFragment.getIntent(round.round)
                     .withContext(this)
                     .noAnimation()
-                    .start();
-            InputActivity.createIntent(round)
+                    .start()
+            InputActivity.createIntent(round.round)
                     .withContext(this)
-                    .start();
+                    .start()
         } else {
             // Edit training
-            training.update();
-            getActivity().overridePendingTransition(R.anim.left_in, R.anim.right_out);
+            training.toTraining().update()
+            activity!!.overridePendingTransition(R.anim.left_in, R.anim.right_out)
         }
     }
 
-    @NonNull
-    private Training getTraining() {
-        Training training;
-        if (trainingId == null) {
-            training = new Training();
-        } else {
-            training = Training.Companion.get(trainingId);
-        }
-        training.setTitle(binding.training.getText().toString());
-        training.setDate(date);
-        training.setEnvironment(binding.environment.getSelectedItem());
-        training.setBowId(binding.bow.getSelectedItem() == null ? null : binding.bow
-                .getSelectedItem()
-                .getId());
-        training.setArrowId(binding.arrow.getSelectedItem() == null ? null : binding.arrow
-                .getSelectedItem().getId());
-        training.setArrowNumbering(binding.numberArrows.isChecked());
-
-        SettingsManager.INSTANCE.setBow(training.getBowId());
-        SettingsManager.INSTANCE.setArrow(training.getArrowId());
-        SettingsManager.INSTANCE.setArrowNumbersEnabled(training.getArrowNumbering());
-        SettingsManager.INSTANCE.setIndoor(training.getIndoor());
-        return training;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        binding.target.onActivityResult(requestCode, resultCode, data);
-        binding.distance.onActivityResult(requestCode, resultCode, data);
-        binding.standardRound.onActivityResult(requestCode, resultCode, data);
-        binding.arrow.onActivityResult(requestCode, resultCode, data);
-        binding.bow.onActivityResult(requestCode, resultCode, data);
-        binding.environment.onActivityResult(requestCode, resultCode, data);
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        super.onActivityResult(requestCode, resultCode, data)
+        binding.target.onActivityResult(requestCode, resultCode, data)
+        binding.distance.onActivityResult(requestCode, resultCode, data)
+        binding.standardRound.onActivityResult(requestCode, resultCode, data)
+        binding.arrow.onActivityResult(requestCode, resultCode, data)
+        binding.bow.onActivityResult(requestCode, resultCode, data)
+        binding.environment.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == SR_TARGET_REQUEST_CODE) {
-            Target target = data.getParcelableExtra(ItemSelectActivity.ITEM);
-            final StandardRound item = binding.standardRound.getSelectedItem();
-            Stream.of(item.loadRounds())
-                    .forEach(r -> {
-                        r.setTargetTemplate(target);
-                        return null;
-                    });
-            binding.standardRound.setItem(item);
+            val target = data.getParcelableExtra<Target>(ItemSelectActivity.ITEM)
+            val item = binding.standardRound.selectedItem
+            item!!.loadRounds()!!.forEach { it.targetTemplate = target }
+            binding.standardRound.setItem(item)
         }
     }
 
-    private void loadRoundDefaultValues() {
-        binding.distance.setItem(SettingsManager.INSTANCE.getDistance());
-        binding.arrows.setProgress(SettingsManager.INSTANCE.getShotsPerEnd());
-        binding.target.setItem(SettingsManager.INSTANCE.getTarget());
+    private fun loadRoundDefaultValues() {
+        binding.distance.setItem(SettingsManager.distance)
+        binding.arrows.progress = SettingsManager.shotsPerEnd
+        binding.target.setItem(SettingsManager.target)
     }
 
-    @NonNull
-    private Round getRound() {
-        Round round = new Round();
-        round.setTarget(binding.target.getSelectedItem());
-        round.setShotsPerEnd(binding.arrows.getProgress());
-        round.setMaxEndCount(null);
-        round.setDistance(binding.distance.getSelectedItem());
+    companion object {
+        val CREATE_FREE_TRAINING_ACTION = "free_training"
+        val CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION = "with_standard_round"
 
-        SettingsManager.INSTANCE.setTarget(binding.target.getSelectedItem());
-        SettingsManager.INSTANCE.setDistance(round.getDistance());
-        SettingsManager.INSTANCE.setShotsPerEnd(round.getShotsPerEnd());
-        return round;
+        private val REQUEST_LOCATION_PERMISSION = 1
+        private val REQ_SELECTED_DATE = 2
+        private val SR_TARGET_REQUEST_CODE = 11
+
+        fun createIntent(trainingTypeAction: String): IntentWrapper {
+            return IntentWrapper(EditTrainingActivity::class.java)
+                    .action(trainingTypeAction)
+        }
+
+        fun editIntent(trainingId: Long): IntentWrapper {
+            return IntentWrapper(EditTrainingActivity::class.java)
+                    .with(ITEM_ID, trainingId)
+        }
     }
 }

@@ -53,7 +53,7 @@ data class Round(
         var distance: Dimension = Dimension.UNKNOWN,
 
         @Column
-        var comment: String? = "",
+        var comment: String = "",
 
         @Column
         var targetId: Int = 0,
@@ -106,9 +106,7 @@ data class Round(
             val target = target
             return loadEnds()!!.
                     map { end: End -> target.getReachedScore(end) }
-                    .fold(Score()) { score, s ->
-                        score.add(s as Score)
-                    }
+                    .sum()
         }
 
     val training: Training?

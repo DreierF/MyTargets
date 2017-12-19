@@ -114,8 +114,8 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
         binding.fabSpeedDial.setMenuListener(menuItem -> {
             switch (menuItem.getItemId()) {
                 case R.id.fab1:
-                    EditTrainingFragment
-                            .createIntent(CREATE_FREE_TRAINING_ACTION)
+                    EditTrainingFragment.Companion
+                            .createIntent(Companion.getCREATE_FREE_TRAINING_ACTION())
                             .withContext(TrainingsFragment.this)
                             .fromFab(binding.fabSpeedDial
                                             .getFabFromMenuId(R.id.fab1), R.color.fabFreeTraining,
@@ -123,8 +123,8 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
                             .start();
                     break;
                 case R.id.fab2:
-                    EditTrainingFragment
-                            .createIntent(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)
+                    EditTrainingFragment.Companion
+                            .createIntent(Companion.getCREATE_TRAINING_WITH_STANDARD_ROUND_ACTION())
                             .withContext(TrainingsFragment.this)
                             .fromFab(binding.fabSpeedDial
                                             .getFabFromMenuId(R.id.fab2), R.color.fabTrainingWithStandardRound,
@@ -170,7 +170,7 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
 
     @Override
     public void onSelected(Training item) {
-        TrainingFragment.getIntent(item)
+        TrainingFragment.Companion.getIntent(item)
                 .withContext(this)
                 .start();
     }
@@ -186,7 +186,7 @@ public class TrainingsFragment extends ExpandableListFragment<Header, Training> 
     }
 
     protected void onEdit(Long itemId) {
-        EditTrainingFragment.editIntent(itemId)
+        EditTrainingFragment.Companion.editIntent(itemId)
                 .withContext(this)
                 .start();
     }

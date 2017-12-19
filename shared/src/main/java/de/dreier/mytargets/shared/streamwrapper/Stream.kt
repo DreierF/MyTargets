@@ -28,20 +28,8 @@ class Stream<T>(private val list: Iterable<T>) {
         return Stream(list.distinct())
     }
 
-    fun <R> reducing(initial: R, operation: (acc: R, T) -> R): R {
-        return list.fold(initial, operation)
-    }
-
-    fun <R> reduce(initial: R, operation: (acc: R, T) -> R): R {
-        return list.fold(initial, operation)
-    }
-
     fun filter(predicate: (T) -> Boolean): Stream<T> {
         return Stream(list.filter(predicate))
-    }
-
-    fun filterNot(predicate: (T) -> Boolean): Stream<T> {
-        return Stream(list.filterNot(predicate))
     }
 
     fun <S> flatMap(func: (T) -> Stream<S>): Stream<S> {
@@ -62,10 +50,6 @@ class Stream<T>(private val list: Iterable<T>) {
         return ArrayList(list.toMutableList())
     }
 
-    fun <U, V> toMap(key: (T) -> U, value: (T) -> V): Map<U, V> {
-        return list.map { Pair(key(it), value(it)) }.toMap()
-    }
-
     fun scoreSum(): Score {
         return list.fold(Score()) { score, s ->
             score.add(s as Score)
@@ -80,28 +64,12 @@ class Stream<T>(private val list: Iterable<T>) {
 
     fun toSet(): Set<T> = list.toSet()
 
-    fun <U> groupingBy(group: (T) -> U): Map<U, List<T>> {
-        return list.groupBy { group(it) }
-    }
-
-    fun <U> groupBy(group: (T) -> U): Stream<Map.Entry<U, List<T>>> {
-        return Stream.of(list.groupBy { group(it) })
-    }
-
-    fun <U : Comparable<U>> sortBy(value: (T) -> U): Stream<T> {
-        return Stream(list.sortedBy(value))
-    }
-
     fun anyMatch(predicate: (T) -> Boolean): Boolean {
         return list.any(predicate)
     }
 
     fun allMatch(predicate: (T) -> Boolean): Boolean {
         return list.all(predicate)
-    }
-
-    fun findFirst(elseValue: T): T {
-        return list.firstOrNull() ?: elseValue
     }
 
     fun findFirstOrNull(): T? {
@@ -112,33 +80,10 @@ class Stream<T>(private val list: Iterable<T>) {
         return list.minWith(comp)
     }
 
-    fun forEach(l: (T) -> Unit) {
-        list.forEach(l)
-    }
-
-    fun withoutNulls(): Stream<T> {
-        return Stream(list.filterNot { it == null })
-    }
-
-    fun toArray(a: (Int)->Array<T>): Array<T> {
-        return ArrayList(list.toList()).toArray(a(list.count()))
-    }
-
     companion object {
-//        @JvmStatic
-//        fun <T> of(iterable: Array<T>): Stream<T> {
-//            return Stream(iterable.toList())
-//        }
-
-
         @JvmStatic
         fun rangeClosed(from: Int, to: Int): Stream<Int> {
             return Stream(from..to)
-        }
-
-        @JvmStatic
-        fun <T> zip(a1: Array<T>, a2: Array<T>): Stream<Pair<T, T>> {
-            return Stream(a1.zip(a2))
         }
 
         @JvmStatic
