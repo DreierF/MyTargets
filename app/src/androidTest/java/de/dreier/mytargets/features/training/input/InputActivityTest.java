@@ -85,7 +85,7 @@ public class InputActivityTest extends UITestBase {
 
     @Test
     public void inputActivityTest() throws UiObjectNotFoundException {
-        activityTestRule.launchActivity(InputActivity.getIntent(round1, 0).build());
+        activityTestRule.launchActivity(InputActivity.Companion.getIntent(round1, 0).build());
 
         onView(withId(R.id.targetViewContainer))
                 .perform(TargetViewActions.clickVirtualButton("10"));

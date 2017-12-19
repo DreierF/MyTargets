@@ -13,548 +13,502 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training.input;
+package de.dreier.mytargets.features.training.input
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.databinding.DataBindingUtil;
-import android.graphics.Color;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.content.LocalBroadcastManager;
-import android.text.InputType;
-import android.transition.Transition;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.databinding.DataBindingUtil
+import android.graphics.Color
+import android.os.Build
+import android.os.Bundle
+import android.support.annotation.RequiresApi
+import android.support.v4.app.LoaderManager
+import android.support.v4.content.AsyncTaskLoader
+import android.support.v4.content.ContextCompat
+import android.support.v4.content.Loader
+import android.support.v4.content.LocalBroadcastManager
+import android.text.InputType
+import android.transition.Transition
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import com.afollestad.materialdialogs.MaterialDialog
+import com.evernote.android.state.State
+import com.evernote.android.state.StateSaver
+import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
+import de.dreier.mytargets.base.activities.ChildActivityBase
+import de.dreier.mytargets.base.gallery.GalleryActivity
+import de.dreier.mytargets.databinding.ActivityInputBinding
+import de.dreier.mytargets.features.rounds.EditRoundFragment
+import de.dreier.mytargets.features.settings.ESettingsScreens
+import de.dreier.mytargets.features.settings.SettingsActivity
+import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.features.timer.TimerFragment
+import de.dreier.mytargets.features.training.RoundFragment
+import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
+import de.dreier.mytargets.shared.models.db.End
+import de.dreier.mytargets.shared.models.db.Round
+import de.dreier.mytargets.shared.models.db.Shot
+import de.dreier.mytargets.shared.models.db.Training
+import de.dreier.mytargets.shared.models.sum
+import de.dreier.mytargets.shared.utils.ImageList
+import de.dreier.mytargets.shared.utils.SharedUtils
+import de.dreier.mytargets.shared.views.TargetViewBase
+import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod
+import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.BROADCAST_TIMER_SETTINGS_FROM_REMOTE
+import de.dreier.mytargets.utils.IntentWrapper
+import de.dreier.mytargets.utils.MobileWearableClient
+import de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
+import de.dreier.mytargets.utils.ToolbarUtils
+import de.dreier.mytargets.utils.Utils
+import de.dreier.mytargets.utils.Utils.getCurrentLocale
+import de.dreier.mytargets.utils.transitions.FabTransform
+import de.dreier.mytargets.utils.transitions.FabTransformUtil
+import de.dreier.mytargets.utils.transitions.TransitionAdapter
+import java.io.File
 
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.evernote.android.state.State;
-import com.evernote.android.state.StateSaver;
-
-import java.io.File;
-import java.util.List;
-
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.app.ApplicationInstance;
-import de.dreier.mytargets.base.activities.ChildActivityBase;
-import de.dreier.mytargets.base.gallery.GalleryActivity;
-import de.dreier.mytargets.databinding.ActivityInputBinding;
-import de.dreier.mytargets.features.rounds.EditRoundFragment;
-import de.dreier.mytargets.features.settings.ESettingsScreens;
-import de.dreier.mytargets.features.settings.SettingsActivity;
-import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.features.timer.TimerFragment;
-import de.dreier.mytargets.features.training.RoundFragment;
-import de.dreier.mytargets.shared.models.Score;
-import de.dreier.mytargets.shared.models.augmented.AugmentedEnd;
-import de.dreier.mytargets.shared.models.augmented.AugmentedTraining;
-import de.dreier.mytargets.shared.models.db.Arrow;
-import de.dreier.mytargets.shared.models.db.Bow;
-import de.dreier.mytargets.shared.models.db.End;
-import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.Shot;
-import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-import de.dreier.mytargets.shared.utils.ImageList;
-import de.dreier.mytargets.shared.utils.SharedUtils;
-import de.dreier.mytargets.shared.views.TargetViewBase;
-import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod;
-import de.dreier.mytargets.utils.IntentWrapper;
-import de.dreier.mytargets.utils.MobileWearableClient;
-import de.dreier.mytargets.utils.ToolbarUtils;
-import de.dreier.mytargets.utils.Utils;
-import de.dreier.mytargets.utils.transitions.FabTransform;
-import de.dreier.mytargets.utils.transitions.FabTransformUtil;
-import de.dreier.mytargets.utils.transitions.TransitionAdapter;
-
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-import static de.dreier.mytargets.shared.wearable.WearableClientBase.BROADCAST_TIMER_SETTINGS_FROM_REMOTE;
-import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE;
-import static de.dreier.mytargets.utils.Utils.getCurrentLocale;
-
-public class InputActivity extends ChildActivityBase
-        implements TargetViewBase.OnEndFinishedListener, TargetView.OnEndUpdatedListener,
-        LoaderManager.LoaderCallbacks<LoaderResult> {
-
-    static final String TRAINING_ID = "training_id";
-    static final String ROUND_ID = "round_id";
-    static final String END_INDEX = "end_ind";
-    private static final int GALLERY_REQUEST_CODE = 1;
+class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener, TargetView.OnEndUpdatedListener, LoaderManager.LoaderCallbacks<LoaderResult> {
 
     @State
-    LoaderResult data;
+    var data: LoaderResult? = null
 
-    private ActivityInputBinding binding;
-    private boolean transitionFinished = true;
-    @NonNull
-    private ETrainingScope summaryShowScope = ETrainingScope.END;
-    private TargetView targetView;
+    private var binding: ActivityInputBinding? = null
+    private var transitionFinished = true
+    private var summaryShowScope = ETrainingScope.END
+    private var targetView: TargetView? = null
 
-    @NonNull
-    private BroadcastReceiver updateReceiver = new MobileWearableClient.EndUpdateReceiver() {
+    private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
-        @Override
-        protected void onUpdate(Long trainingId, Long roundId, @NonNull End end) {
-            Bundle extras = getIntent().getExtras();
-            extras.putLong(TRAINING_ID, trainingId);
-            extras.putLong(ROUND_ID, roundId);
-            extras.putInt(END_INDEX, end.getIndex());
-            getSupportLoaderManager().restartLoader(0, extras, InputActivity.this).forceLoad();
+        override fun onUpdate(trainingId: Long?, roundId: Long?, end: End) {
+            val extras = intent.extras
+            extras!!.putLong(TRAINING_ID, trainingId!!)
+            extras.putLong(ROUND_ID, roundId!!)
+            extras.putInt(END_INDEX, end.index)
+            supportLoaderManager.restartLoader(0, extras, this@InputActivity).forceLoad()
         }
-    };
+    }
 
-    private final BroadcastReceiver timerReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            supportInvalidateOptionsMenu();
+    private val timerReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            supportInvalidateOptionsMenu()
         }
-    };
-
-    @NonNull
-    public static IntentWrapper createIntent(@NonNull Round round) {
-        return getIntent(round, 0);
     }
 
-    @NonNull
-    public static IntentWrapper getIntent(@NonNull Round round, int endIndex) {
-        return new IntentWrapper(InputActivity.class)
-                .with(TRAINING_ID, round.getTrainingId())
-                .with(ROUND_ID, round.getId())
-                .with(END_INDEX, endIndex);
-    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_input)
 
-    private static boolean shouldShowRound(@NonNull Round r, ETrainingScope shotShowScope, Long roundId) {
-        return shotShowScope != ETrainingScope.END
-                && (shotShowScope == ETrainingScope.TRAINING || r.getId().equals(roundId));
-    }
-
-    private static boolean shouldShowEnd(@NonNull End end, Long currentEndId) {
-        return !SharedUtils.INSTANCE.equals(end.getId(), currentEndId) && end.getExact();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_input);
-
-        setSupportActionBar(binding.toolbar);
-        ToolbarUtils.showHomeAsUp(this);
-        FabTransformUtil.setup(this, binding.getRoot());
+        setSupportActionBar(binding!!.toolbar)
+        ToolbarUtils.showHomeAsUp(this)
+        FabTransformUtil.setup(this, binding!!.root)
 
         if (Utils.isLollipop()) {
-            setupTransitionListener();
+            setupTransitionListener()
         }
 
-        updateSummaryVisibility();
+        updateSummaryVisibility()
 
-        StateSaver.restoreInstanceState(this, savedInstanceState);
+        StateSaver.restoreInstanceState(this, savedInstanceState)
         if (data == null) {
-            getSupportLoaderManager().initLoader(0, getIntent().getExtras(), this).forceLoad();
+            supportLoaderManager.initLoader(0, intent.extras, this).forceLoad()
         }
         LocalBroadcastManager.getInstance(this).registerReceiver(updateReceiver,
-                new IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE));
+                IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE))
         LocalBroadcastManager.getInstance(this).registerReceiver(timerReceiver,
-                new IntentFilter(BROADCAST_TIMER_SETTINGS_FROM_REMOTE));
+                IntentFilter(BROADCAST_TIMER_SETTINGS_FROM_REMOTE))
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    override fun onResume() {
+        super.onResume()
         if (data != null) {
-            onDataLoadFinished();
-            updateEnd();
+            onDataLoadFinished()
+            updateEnd()
         }
-        Utils.setShowWhenLocked(this, SettingsManager.INSTANCE.getInputKeepAboveLockscreen());
+        Utils.setShowWhenLocked(this, SettingsManager.inputKeepAboveLockscreen)
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
-            ImageList imageList = GalleryActivity.getResult(data);
-            this.data.getCurrentEnd().setImages(imageList.toEndImageList());
-            for (String image : imageList.getRemovedImages()) {
-                new File(getFilesDir(), image).delete();
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val imageList = GalleryActivity.getResult(data)
+            this.data!!.currentEnd.images = imageList.toEndImageList().toMutableList()
+            for (image in imageList.removedImages) {
+                File(filesDir, image).delete()
             }
-            this.data.getCurrentEnd().toEnd().save();
-            updateEnd();
-            supportInvalidateOptionsMenu();
+            this.data!!.currentEnd.toEnd().save()
+            updateEnd()
+            supportInvalidateOptionsMenu()
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(updateReceiver);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(timerReceiver);
-        super.onDestroy();
+    override fun onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(updateReceiver)
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(timerReceiver)
+        super.onDestroy()
     }
 
-    private void updateSummaryVisibility() {
-        SummaryConfiguration config = SettingsManager.INSTANCE.getInputSummaryConfiguration();
-        binding.endSummary.setVisibility(config.showEnd ? VISIBLE : GONE);
-        binding.roundSummary.setVisibility(config.showRound ? VISIBLE : GONE);
-        binding.trainingSummary.setVisibility(config.showTraining ? VISIBLE : GONE);
-        binding.averageSummary.setVisibility(config.showAverage ? VISIBLE : GONE);
-        summaryShowScope = config.averageScope;
+    private fun updateSummaryVisibility() {
+        val (showEnd, showRound, showTraining, showAverage, averageScope) = SettingsManager.inputSummaryConfiguration
+        binding!!.endSummary.visibility = if (showEnd) VISIBLE else GONE
+        binding!!.roundSummary.visibility = if (showRound) VISIBLE else GONE
+        binding!!.trainingSummary.visibility = if (showTraining) VISIBLE else GONE
+        binding!!.averageSummary.visibility = if (showAverage) VISIBLE else GONE
+        summaryShowScope = averageScope
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void setupTransitionListener() {
-        final Transition sharedElementEnterTransition = getWindow()
-                .getSharedElementEnterTransition();
-        if (sharedElementEnterTransition != null &&
-                sharedElementEnterTransition instanceof FabTransform) {
-            transitionFinished = false;
-            getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
-                @Override
-                public void onTransitionEnd(Transition transition) {
-                    transitionFinished = true;
-                    getWindow().getSharedElementEnterTransition().removeListener(this);
+    private fun setupTransitionListener() {
+        val sharedElementEnterTransition = window
+                .sharedElementEnterTransition
+        if (sharedElementEnterTransition != null && sharedElementEnterTransition is FabTransform) {
+            transitionFinished = false
+            window.sharedElementEnterTransition.addListener(object : TransitionAdapter() {
+                override fun onTransitionEnd(transition: Transition) {
+                    transitionFinished = true
+                    window.sharedElementEnterTransition.removeListener(this)
                 }
-            });
+            })
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.input_end, menu);
-        return true;
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.input_end, menu)
+        return true
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
-        final MenuItem timer = menu.findItem(R.id.action_timer);
-        final MenuItem newRound = menu.findItem(R.id.action_new_round);
-        final MenuItem takePicture = menu.findItem(R.id.action_photo);
-        if (targetView == null || data.getEnds().size() == 0) {
-            takePicture.setVisible(false);
-            timer.setVisible(false);
-            newRound.setVisible(false);
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        val timer = menu.findItem(R.id.action_timer)
+        val newRound = menu.findItem(R.id.action_new_round)
+        val takePicture = menu.findItem(R.id.action_photo)
+        if (targetView == null || data!!.ends.size == 0) {
+            takePicture.isVisible = false
+            timer.isVisible = false
+            newRound.isVisible = false
         } else {
-            takePicture.setVisible(Utils.hasCameraHardware(this));
-            timer.setIcon(SettingsManager.INSTANCE.getTimerEnabled()
-                    ? R.drawable.ic_timer_off_white_24dp
-                    : R.drawable.ic_timer_white_24dp);
-            timer.setVisible(true);
-            timer.setChecked(SettingsManager.INSTANCE.getTimerEnabled());
-            newRound.setVisible(data.getTraining().getTraining().getStandardRoundId() == null);
-            takePicture.setVisible(Utils.hasCameraHardware(this));
-            takePicture.setIcon(data.getCurrentEnd().getImages().isEmpty() ?
-                    R.drawable.ic_photo_camera_white_24dp : R.drawable.ic_image_white_24dp);
+            takePicture.isVisible = Utils.hasCameraHardware(this)
+            timer.setIcon(if (SettingsManager.timerEnabled)
+                R.drawable.ic_timer_off_white_24dp
+            else
+                R.drawable.ic_timer_white_24dp)
+            timer.isVisible = true
+            timer.isChecked = SettingsManager.timerEnabled
+            newRound.isVisible = data!!.training.training.standardRoundId == null
+            takePicture.isVisible = Utils.hasCameraHardware(this)
+            takePicture.setIcon(if (data!!.currentEnd.images.isEmpty())
+                R.drawable.ic_photo_camera_white_24dp
+            else
+                R.drawable.ic_image_white_24dp)
         }
-        return true;
+        return true
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_photo:
-                GalleryActivity.getIntent(new ImageList(data.getCurrentEnd().getImages()), getString(R.string.end_n, data.getEndIndex() + 1))
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_photo -> {
+                GalleryActivity.getIntent(ImageList(data!!.currentEnd.images), getString(R.string.end_n, data!!.endIndex + 1))
                         .withContext(this)
                         .forResult(GALLERY_REQUEST_CODE)
-                        .start();
-                return true;
-            case R.id.action_comment:
-                new MaterialDialog.Builder(this)
+                        .start()
+                return true
+            }
+            R.id.action_comment -> {
+                MaterialDialog.Builder(this)
                         .title(R.string.comment)
-                        .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE)
-                        .input("", data.getCurrentEnd().getEnd().getComment(), (dialog, input) -> {
-                            data.getCurrentEnd().getEnd().setComment(input.toString());
-                            data.getCurrentEnd().toEnd().save();
-                        })
+                        .inputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
+                        .input("", data!!.currentEnd.end.comment) { dialog, input ->
+                            data!!.currentEnd.end.comment = input.toString()
+                            data!!.currentEnd.toEnd().save()
+                        }
                         .negativeText(android.R.string.cancel)
-                        .show();
-                return true;
-            case R.id.action_timer:
-                boolean timerEnabled = !SettingsManager.INSTANCE.getTimerEnabled();
-                SettingsManager.INSTANCE.setTimerEnabled(timerEnabled);
+                        .show()
+                return true
+            }
+            R.id.action_timer -> {
+                val timerEnabled = !SettingsManager.timerEnabled
+                SettingsManager.timerEnabled = timerEnabled
                 ApplicationInstance.wearableClient
-                        .sendTimerSettingsFromLocal(SettingsManager.INSTANCE.getTimerSettings());
-                openTimer();
-                item.setChecked(timerEnabled);
-                supportInvalidateOptionsMenu();
-                return true;
-            case R.id.action_settings:
-                SettingsActivity.Companion.getIntent(ESettingsScreens.INPUT)
+                        .sendTimerSettingsFromLocal(SettingsManager.timerSettings)
+                openTimer()
+                item.isChecked = timerEnabled
+                supportInvalidateOptionsMenu()
+                return true
+            }
+            R.id.action_settings -> {
+                SettingsActivity.getIntent(ESettingsScreens.INPUT)
                         .withContext(this)
-                        .start();
-                return true;
-            case R.id.action_new_round:
-                EditRoundFragment.Companion.createIntent(data.getTraining().getTraining())
+                        .start()
+                return true
+            }
+            R.id.action_new_round -> {
+                EditRoundFragment.createIntent(data!!.training.training)
                         .withContext(this)
-                        .start();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+                        .start()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
         }
     }
 
-    @NonNull
-    @Override
-    public Loader<LoaderResult> onCreateLoader(int id, @NonNull Bundle args) {
-        long trainingId = args.getLong(TRAINING_ID);
-        long roundId = args.getLong(ROUND_ID);
-        int endIndex = args.getInt(END_INDEX);
-        return new UITaskAsyncTaskLoader(this, trainingId, roundId, endIndex);
+    override fun onCreateLoader(id: Int, args: Bundle): Loader<LoaderResult> {
+        val trainingId = args.getLong(TRAINING_ID)
+        val roundId = args.getLong(ROUND_ID)
+        val endIndex = args.getInt(END_INDEX)
+        return UITaskAsyncTaskLoader(this, trainingId, roundId, endIndex)
     }
 
-    @Override
-    public void onLoadFinished(Loader<LoaderResult> loader, @NonNull LoaderResult data) {
-        this.data = data;
-        onDataLoadFinished();
-        showEnd(data.getEndIndex());
+    override fun onLoadFinished(loader: Loader<LoaderResult>, data: LoaderResult) {
+        this.data = data
+        onDataLoadFinished()
+        showEnd(data.endIndex)
     }
 
-    private void onDataLoadFinished() {
-        setTitle(data.getTraining().getTraining().getTitle());
-        if (!binding.targetViewStub.isInflated()) {
-            binding.targetViewStub.getViewStub().inflate();
+    private fun onDataLoadFinished() {
+        title = data!!.training.training.title
+        if (!binding!!.targetViewStub.isInflated) {
+            binding!!.targetViewStub.viewStub.inflate()
         }
-        targetView = (TargetView) binding.targetViewStub.getBinding().getRoot();
-        targetView.initWithTarget(data.getCurrentRound().getRound().getTarget());
-        targetView.setArrow(data.getArrowDiameter(), data.getTraining().getTraining().getArrowNumbering(), data
-                .getMaxArrowNumber());
-        targetView.setOnTargetSetListener(InputActivity.this);
-        targetView.setUpdateListener(InputActivity.this);
-        targetView.reloadSettings();
-        targetView.setAggregationStrategy(SettingsManager.INSTANCE.getAggregationStrategy());
-        targetView.setInputMethod(SettingsManager.INSTANCE.getInputMethod());
-        updateOldShoots();
+        targetView = binding!!.targetViewStub.binding.root as TargetView
+        targetView!!.initWithTarget(data!!.currentRound.round.target)
+        targetView!!.setArrow(data!!.arrowDiameter!!, data!!.training.training.arrowNumbering, data!!
+                .maxArrowNumber)
+        targetView!!.setOnTargetSetListener(this@InputActivity)
+        targetView!!.setUpdateListener(this@InputActivity)
+        targetView!!.reloadSettings()
+        targetView!!.setAggregationStrategy(SettingsManager.aggregationStrategy)
+        targetView!!.inputMethod = SettingsManager.inputMethod
+        updateOldShoots()
     }
 
-    @Override
-    public void onLoaderReset(Loader<LoaderResult> loader) {
+    override fun onLoaderReset(loader: Loader<LoaderResult>) {
 
     }
 
-    private void showEnd(int endIndex) {
+    private fun showEnd(endIndex: Int) {
         // Create a new end
-        data.setAdjustEndIndex(endIndex);
-        if (endIndex >= data.getEnds().size()) {
-            AugmentedEnd end = data.getCurrentRound().addEnd();
-            end.getEnd().setExact(SettingsManager.INSTANCE.getInputMethod() == EInputMethod.PLOTTING);
-            updateOldShoots();
+        data!!.setAdjustEndIndex(endIndex)
+        if (endIndex >= data!!.ends.size) {
+            val end = data!!.currentRound.addEnd()
+            end.end.exact = SettingsManager.inputMethod === EInputMethod.PLOTTING
+            updateOldShoots()
         }
 
         // Open timer if end has not been saved yet
-        openTimer();
-        updateEnd();
-        supportInvalidateOptionsMenu();
+        openTimer()
+        updateEnd()
+        supportInvalidateOptionsMenu()
     }
 
-    public void updateOldShoots() {
-        final AugmentedEnd currentEnd = data.getCurrentEnd();
-        final Long currentRoundId = data.getCurrentRound().getRound().getId();
-        final Long currentEndId = currentEnd.getEnd().getId();
-        final ETrainingScope shotShowScope = SettingsManager.INSTANCE.getShowMode();
-        final LoaderResult data = this.data;
-        final Stream<Shot> shotStream = Stream.of(data.getTraining().getRounds())
-                .filter((r) -> shouldShowRound(r.getRound(), shotShowScope, currentRoundId))
-                .flatMap(r -> Stream.of(r.getEnds()))
-                .filter((end) -> shouldShowEnd(end.getEnd(), currentEndId))
-                .flatMap(p -> Stream.of(p.getShots()));
-        targetView.setTransparentShots(shotStream.toList());
+    fun updateOldShoots() {
+        val currentEnd = data!!.currentEnd
+        val currentRoundId = data!!.currentRound.round.id
+        val currentEndId = currentEnd.end.id
+        val shotShowScope = SettingsManager.showMode
+        val data = this.data
+        val shots = data!!.training.rounds
+                .filter { r -> shouldShowRound(r.round, shotShowScope, currentRoundId) }
+                .flatMap { r -> r.ends }
+                .filter { end -> shouldShowEnd(end.end, currentEndId) }
+                .flatMap { (_, shots) -> shots }
+        targetView!!.setTransparentShots(shots)
     }
 
-    private void openTimer() {
-        if (data.getCurrentEnd().isEmpty() && SettingsManager.INSTANCE.getTimerEnabled()) {
+    private fun openTimer() {
+        if (data!!.currentEnd.isEmpty && SettingsManager.timerEnabled) {
             if (transitionFinished) {
-                TimerFragment.Companion.getIntent(true)
+                TimerFragment.getIntent(true)
                         .withContext(this)
-                        .start();
+                        .start()
             } else if (Utils.isLollipop()) {
-                startTimerDelayed();
+                startTimerDelayed()
             }
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void startTimerDelayed() {
-        getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
-            @Override
-            public void onTransitionEnd(Transition transition) {
-                TimerFragment.Companion.getIntent(true)
-                        .withContext(InputActivity.this)
-                        .start();
-                getWindow().getSharedElementEnterTransition().removeListener(this);
+    private fun startTimerDelayed() {
+        window.sharedElementEnterTransition.addListener(object : TransitionAdapter() {
+            override fun onTransitionEnd(transition: Transition) {
+                TimerFragment.getIntent(true)
+                        .withContext(this@InputActivity)
+                        .start()
+                window.sharedElementEnterTransition.removeListener(this)
             }
-        });
+        })
     }
 
-    private void updateEnd() {
-        targetView.replaceWithEnd(data.getCurrentEnd().toEnd());
-        final int totalEnds = data.getCurrentRound().getRound().getMaxEndCount() == null
-                ? data.getEnds().size()
-                : data.getCurrentRound().getRound().getMaxEndCount();
-        binding.endTitle.setText(getString(R.string.end_x_of_y, data.getEndIndex() + 1, totalEnds));
-        binding.roundTitle.setText(getString(
+    private fun updateEnd() {
+        targetView!!.replaceWithEnd(data!!.currentEnd.toEnd())
+        val totalEnds = if (data!!.currentRound.round.maxEndCount == null)
+            data!!.ends.size
+        else
+            data!!.currentRound.round.maxEndCount
+        binding!!.endTitle.text = getString(R.string.end_x_of_y, data!!.endIndex + 1, totalEnds)
+        binding!!.roundTitle.text = getString(
                 R.string.round_x_of_y,
-                data.getCurrentRound().getRound().getIndex() + 1,
-                data.getTraining().getRounds().size()));
-        updateNavigationButtons();
-        updateWearNotification();
+                data!!.currentRound.round.index + 1,
+                data!!.training.rounds.size)
+        updateNavigationButtons()
+        updateWearNotification()
     }
 
-    private void updateWearNotification() {
-        ApplicationInstance.wearableClient.sendUpdateTrainingFromLocalBroadcast(data.getTraining());
+    private fun updateWearNotification() {
+        ApplicationInstance.wearableClient.sendUpdateTrainingFromLocalBroadcast(data!!.training)
     }
 
-    private void updateNavigationButtons() {
-        updatePreviousButton();
-        updateNextButton();
+    private fun updateNavigationButtons() {
+        updatePreviousButton()
+        updateNextButton()
     }
 
-    private void updatePreviousButton() {
-        final boolean isFirstEnd = data.getEndIndex() == 0;
-        final boolean isFirstRound = data.getRoundIndex() == 0;
-        boolean showPreviousRound = isFirstEnd && !isFirstRound;
-        final boolean isEnabled = !isFirstEnd || !isFirstRound;
-        final int color;
+    private fun updatePreviousButton() {
+        val isFirstEnd = data!!.endIndex == 0
+        val isFirstRound = data!!.roundIndex == 0
+        val showPreviousRound = isFirstEnd && !isFirstRound
+        val isEnabled = !isFirstEnd || !isFirstRound
+        val color: Int
         if (showPreviousRound) {
-            final Round round = data.getTraining().getRounds().get(data.getRoundIndex() - 1).getRound();
-            binding.prev.setOnClickListener(view -> openRound(round, round.loadEnds().size() - 1));
-            binding.prev.setText(R.string.previous_round);
-            color = getResources().getColor(R.color.colorPrimary);
+            val round = data!!.training.rounds[data!!.roundIndex - 1]
+            binding!!.prev.setOnClickListener { openRound(round.round, round.ends.size - 1) }
+            binding!!.prev.setText(R.string.previous_round)
+            color = ContextCompat.getColor(this, R.color.colorPrimary)
         } else {
-            binding.prev.setOnClickListener(view -> showEnd(data.getEndIndex() - 1));
-            binding.prev.setText(R.string.prev);
-            color = Color.BLACK;
+            binding!!.prev.setOnClickListener { showEnd(data!!.endIndex - 1) }
+            binding!!.prev.setText(R.string.prev)
+            color = Color.BLACK
         }
-        binding.prev.setTextColor(Utils.argb(isEnabled ? 0xFF : 0x42, color));
-        binding.prev.setEnabled(isEnabled);
+        binding!!.prev.setTextColor(Utils.argb(if (isEnabled) 0xFF else 0x42, color))
+        binding!!.prev.isEnabled = isEnabled
     }
 
-    private void updateNextButton() {
-        final boolean dataLoaded = data != null;
-        boolean isLastEnd = dataLoaded &&
-                data.getCurrentRound().getRound().getMaxEndCount() != null &&
-                data.getEndIndex() + 1 == data.getCurrentRound().getRound().getMaxEndCount();
-        final boolean hasOneMoreRound = dataLoaded &&
-                data.getRoundIndex() + 1 < data.getTraining().getRounds().size();
-        boolean showNextRound = isLastEnd && hasOneMoreRound;
-        final boolean isEnabled = dataLoaded && (!isLastEnd || hasOneMoreRound);
-        final int color;
+    private fun updateNextButton() {
+        val dataLoaded = data != null
+        val isLastEnd = dataLoaded &&
+                data!!.currentRound.round.maxEndCount != null &&
+                data!!.endIndex + 1 == data!!.currentRound.round.maxEndCount
+        val hasOneMoreRound = dataLoaded && data!!.roundIndex + 1 < data!!.training.rounds.size
+        val showNextRound = isLastEnd && hasOneMoreRound
+        val isEnabled = dataLoaded && (!isLastEnd || hasOneMoreRound)
+        val color: Int
         if (showNextRound) {
-            final Round round = data.getTraining().getRounds().get(data.getRoundIndex() + 1).getRound();
-            binding.next.setOnClickListener(view -> openRound(round, 0));
-            binding.next.setText(R.string.next_round);
-            color = getResources().getColor(R.color.colorPrimary);
+            val round = data!!.training.rounds[data!!.roundIndex + 1].round
+            binding!!.next.setOnClickListener { openRound(round, 0) }
+            binding!!.next.setText(R.string.next_round)
+            color = ContextCompat.getColor(this, R.color.colorPrimary)
         } else {
-            binding.next.setOnClickListener(view -> showEnd(data.getEndIndex() + 1));
-            binding.next.setText(R.string.next);
-            color = Color.BLACK;
+            binding!!.next.setOnClickListener { view -> showEnd(data!!.endIndex + 1) }
+            binding!!.next.setText(R.string.next)
+            color = Color.BLACK
         }
-        binding.next.setTextColor(Utils.argb(isEnabled ? 0xFF : 0x42, color));
-        binding.next.setEnabled(isEnabled);
+        binding!!.next.setTextColor(Utils.argb(if (isEnabled) 0xFF else 0x42, color))
+        binding!!.next.isEnabled = isEnabled
     }
 
-    private void openRound(@NonNull Round round, int endIndex) {
-        finish();
+    private fun openRound(round: Round, endIndex: Int) {
+        finish()
         RoundFragment.getIntent(round)
                 .noAnimation()
                 .withContext(this)
-                .start();
+                .start()
         InputActivity.getIntent(round, endIndex)
                 .withContext(this)
-                .start();
+                .start()
     }
 
-    @Override
-    public void onEndUpdated(List<Shot> changedEnd) {
-        data.getCurrentEnd().setShots(changedEnd);
-        data.getCurrentEnd().toEnd().save();
+    override fun onEndUpdated(shots: List<Shot>) {
+        data!!.currentEnd.shots = shots.toMutableList()
+        data!!.currentEnd.toEnd().save()
 
         // Set current end score
-        Score reachedEndScore = data.getCurrentRound().getRound().getTarget()
-                .getReachedScore(data.getCurrentEnd().toEnd());
-        binding.endScore.setText(reachedEndScore.toString());
+        val reachedEndScore = data!!.currentRound.round.target
+                .getReachedScore(data!!.currentEnd.toEnd())
+        binding!!.endScore.text = reachedEndScore.toString()
 
         // Set current round score
-        Score reachedRoundScore = Stream.of(data.getEnds())
-                .map(end -> data.getCurrentRound().getRound().getTarget().getReachedScore(end.toEnd()))
-                .scoreSum();
-        binding.roundScore.setText(reachedRoundScore.toString());
+        val reachedRoundScore = data!!.ends
+                .map { end -> data!!.currentRound.round.target.getReachedScore(end.toEnd()) }
+                .sum()
+        binding!!.roundScore.text = reachedRoundScore.toString()
 
         // Set current training score
-        Score reachedTrainingScore = Stream.of(data.getTraining().getRounds())
-                .flatMap(r -> Stream.of(r.getEnds())
-                        .map(end -> r.getRound().getTarget().getReachedScore(end.getEnd())))
-                .scoreSum();
-        binding.trainingScore.setText(reachedTrainingScore.toString());
+        val reachedTrainingScore = data!!.training.rounds
+                .flatMap { r -> r.ends.map { end -> r.round.target.getReachedScore(end.end) } }
+                .sum()
+        binding!!.trainingScore.text = reachedTrainingScore.toString()
 
-        switch (summaryShowScope) {
-            case END:
-                binding.averageScore
-                        .setText(reachedEndScore.getShotAverageFormatted(getCurrentLocale(this)));
-                break;
-            case ROUND:
-                binding.averageScore
-                        .setText(reachedRoundScore.getShotAverageFormatted(getCurrentLocale(this)));
-                break;
-            case TRAINING:
-                binding.averageScore.setText(reachedTrainingScore
-                        .getShotAverageFormatted(getCurrentLocale(this)));
-                break;
-            default:
-                break;
+        when (summaryShowScope) {
+            ETrainingScope.END -> binding!!.averageScore.text = reachedEndScore.getShotAverageFormatted(getCurrentLocale(this))
+            ETrainingScope.ROUND -> binding!!.averageScore.text = reachedRoundScore.getShotAverageFormatted(getCurrentLocale(this))
+            ETrainingScope.TRAINING -> binding!!.averageScore.text = reachedTrainingScore
+                    .getShotAverageFormatted(getCurrentLocale(this))
         }
     }
 
-    @Override
-    public void onEndFinished(@NonNull List<Shot> shots) {
-        data.getCurrentEnd().setShots(shots);
-        data.getCurrentEnd().getEnd().setExact(targetView.getInputMode() == EInputMethod.PLOTTING);
-        data.getCurrentEnd().toEnd().save();
+    override fun onEndFinished(shotList: List<Shot>) {
+        data!!.currentEnd.shots = shotList.toMutableList()
+        data!!.currentEnd.end.exact = targetView!!.inputMode === EInputMethod.PLOTTING
+        data!!.currentEnd.toEnd().save()
 
-        updateWearNotification();
-        updateNavigationButtons();
-        supportInvalidateOptionsMenu();
+        updateWearNotification()
+        updateNavigationButtons()
+        supportInvalidateOptionsMenu()
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        StateSaver.saveInstanceState(this, outState);
+    public override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        StateSaver.saveInstanceState(this, outState!!)
     }
 
-    private static class UITaskAsyncTaskLoader extends AsyncTaskLoader<LoaderResult> {
-        private final long trainingId;
-        private final long roundId;
-        private final int endIndex;
+    private class UITaskAsyncTaskLoader(context: Context, private val trainingId: Long, private val roundId: Long, private val endIndex: Int) : AsyncTaskLoader<LoaderResult>(context) {
 
-        public UITaskAsyncTaskLoader(@NonNull Context context, long trainingId, long roundId, int endIndex) {
-            super(context);
-            this.trainingId = trainingId;
-            this.roundId = roundId;
-            this.endIndex = endIndex;
-        }
+        override fun loadInBackground(): LoaderResult? {
+            val training = Training[trainingId]
+            val result = LoaderResult(AugmentedTraining(training!!))
+            result.setRoundId(roundId)
+            result.setAdjustEndIndex(endIndex)
 
-        @Override
-        public LoaderResult loadInBackground() {
-            Training training = Training.Companion.get(trainingId);
-            final LoaderResult result = new LoaderResult(new AugmentedTraining(training));
-            result.setRoundId(roundId);
-            result.setAdjustEndIndex(endIndex);
-
-            if (training.getArrowId() != null) {
-                Arrow arrow = training.getArrow();
+            if (training.arrowId != null) {
+                val arrow = training.arrow
                 if (arrow != null) {
-                    result.setArrow(arrow);
+                    result.setArrow(arrow)
                 }
             }
-            final Bow bow = training.getBow();
+            val bow = training.bow
             if (bow != null) {
-                result.setSightMark(bow.loadSightSetting(result.getDistance()));
+                result.sightMark = bow.loadSightSetting(result.distance!!)
             }
-            return result;
+            return result
+        }
+    }
+
+    companion object {
+
+        internal val TRAINING_ID = "training_id"
+        internal val ROUND_ID = "round_id"
+        internal val END_INDEX = "end_ind"
+        private val GALLERY_REQUEST_CODE = 1
+
+        fun createIntent(round: Round): IntentWrapper {
+            return getIntent(round, 0)
+        }
+
+        fun getIntent(round: Round, endIndex: Int): IntentWrapper {
+            return IntentWrapper(InputActivity::class.java)
+                    .with(TRAINING_ID, round.trainingId!!)
+                    .with(ROUND_ID, round.id!!)
+                    .with(END_INDEX, endIndex)
+        }
+
+        private fun shouldShowRound(r: Round, shotShowScope: ETrainingScope, roundId: Long?): Boolean {
+            return shotShowScope !== ETrainingScope.END && (shotShowScope === ETrainingScope.TRAINING || r.id == roundId)
+        }
+
+        private fun shouldShowEnd(end: End, currentEndId: Long?): Boolean {
+            return !SharedUtils.equals(end.id, currentEndId) && end.exact
         }
     }
 

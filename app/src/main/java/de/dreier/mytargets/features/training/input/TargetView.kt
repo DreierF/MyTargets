@@ -13,496 +13,416 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training.input;
+package de.dreier.mytargets.features.training.input
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.PointF;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.text.TextPaint;
-import android.util.AttributeSet;
-import android.util.Property;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
+import android.animation.Animator
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
+import android.app.AlertDialog
+import android.content.Context
+import android.graphics.*
+import android.text.TextPaint
+import android.util.AttributeSet
+import android.util.Property
+import android.view.MotionEvent
+import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.ArrayAdapter
+import android.widget.GridView
+import de.dreier.mytargets.R
+import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.features.training.input.TargetView.EKeyboardType.LEFT
+import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy
+import de.dreier.mytargets.shared.models.Dimension
+import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.models.db.End
+import de.dreier.mytargets.shared.models.db.Shot
+import de.dreier.mytargets.shared.targets.drawable.TargetDrawable
+import de.dreier.mytargets.shared.utils.EndRenderer
+import de.dreier.mytargets.shared.utils.MatrixEvaluator
+import de.dreier.mytargets.shared.views.TargetViewBase
+import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod.KEYBOARD
+import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod.PLOTTING
+import java.util.*
 
-import java.util.ArrayList;
-import java.util.List;
-
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy;
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.SelectableZone;
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.End;
-import de.dreier.mytargets.shared.models.db.Shot;
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-import de.dreier.mytargets.shared.targets.drawable.TargetDrawable;
-import de.dreier.mytargets.shared.utils.EndRenderer;
-import de.dreier.mytargets.shared.utils.MatrixEvaluator;
-import de.dreier.mytargets.shared.views.TargetViewBase;
-
-import static de.dreier.mytargets.features.training.input.TargetView.EKeyboardType.LEFT;
-import static de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod.KEYBOARD;
-import static de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod.PLOTTING;
-
-public class TargetView extends TargetViewBase {
-
-    /**
-     * This property is passed to ObjectAnimator when animating the spot matrix of TargetView
-     */
-    private static final Property<TargetView, Matrix> ANIMATED_SPOT_TRANSFORM_PROPERTY = new Property<TargetView, Matrix>(
-            Matrix.class, "animatedSpotTransform") {
-
-        @Override
-        public void set(@NonNull TargetView targetView, Matrix matrix) {
-            targetView.getTargetDrawable().setSpotMatrix(matrix);
-            targetView.invalidate();
-        }
-
-        @Override
-        public Matrix get(@NonNull TargetView targetView) {
-            return targetView.getTargetDrawable().getSpotMatrix();
-        }
-    };
-
-    /**
-     * This property is passed to ObjectAnimator when animating the full matrix of TargetView
-     */
-    @Nullable
-    private static final Property<TargetView, Matrix> ANIMATED_FULL_TRANSFORM_PROPERTY = new Property<TargetView, Matrix>(
-            Matrix.class, "animatedFullTransform") {
-
-        @Override
-        public void set(@NonNull TargetView targetView, Matrix matrix) {
-            targetView.getTargetDrawable().setMatrix(matrix);
-            targetView.invalidate();
-        }
-
-        @Override
-        public Matrix get(TargetView targetView) {
-            return null;
-        }
-    };
-
-    private static final int TARGET_PADDING_DP = 10;
-    private static final int KEYBOARD_OUTER_PADDING_DP = 20;
-    private static final int KEYBOARD_WIDTH_DP = 40;
-    private static final int KEYBOARD_TOTAL_WIDTH_DP =
-            KEYBOARD_WIDTH_DP + KEYBOARD_OUTER_PADDING_DP;
-    private static final int POINTER_OFFSET_Y_DP = -60;
-    private static final int MIN_END_RECT_HEIGHT_DP = 80;
-    private static final int KEYBOARD_INNER_PADDING_DP = 40;
-    private Matrix[] spotMatrices;
-    private boolean arrowNumbering;
-    private Dimension arrowDiameter;
-    private int maxArrowNumber;
-    private float targetZoomFactor;
-    private OnEndUpdatedListener updateListener;
+class TargetView : TargetViewBase {
+    private var spotMatrices: Array<Matrix>? = null
+    private var arrowNumbering: Boolean = false
+    private var arrowDiameter: Dimension? = null
+    private var maxArrowNumber: Int = 0
+    private var targetZoomFactor: Float = 0.toFloat()
+    private var updateListener: OnEndUpdatedListener? = null
     /**
      * Matrix to translate the target face with -1..1 coordinate system
      * to the correct area on the screen.
      */
-    private Matrix fullMatrix;
+    private var fullMatrix: Matrix? = null
     /**
      * Matrix to translate the target face with -1..1 coordinate system
      * to the correct area on the screen when selecting a shot position.
      * This area is inset by 30dp to allow easier placement outside of the target face.
      */
-    private Matrix fullExtendedMatrix;
+    private var fullExtendedMatrix: Matrix? = null
     /**
-     * Inverse of {@link #fullExtendedMatrix}.
+     * Inverse of [.fullExtendedMatrix].
      * Allows to map screen coordinates to -1..1 coordinate system.
      */
-    private Matrix fullExtendedMatrixInverse;
+    private var fullExtendedMatrixInverse: Matrix? = null
     /**
      * Temporary point vector used to translate between different coordinate systems.
      */
-    @NonNull
-    private float[] pt = new float[2];
-    private EAggregationStrategy aggregationStrategy = EAggregationStrategy.NONE;
+    private val pt = FloatArray(2)
+    private var aggregationStrategy = EAggregationStrategy.NONE
     /**
      * Left-handed or right-handed mode.
      */
-    private EKeyboardType keyboardType;
+    private var keyboardType: EKeyboardType? = null
     /**
      * Used to draw the keyboard buttons.
      */
-    private Paint fillPaint;
+    private var fillPaint = Paint()
     /**
      * Used to draw the keyboard button borders.
      */
-    private Paint borderPaint;
+    private var borderPaint = Paint()
     /**
      * Used to draw the keyboard button texts.
      */
-    private TextPaint textPaint;
+    private var textPaint = TextPaint()
 
     /**
      * Percentage of the keyboard that is currently supposed to be shown. (0..1).
      */
-    private float keyboardVisibility = 0;
-    private RectF keyboardRect;
-    private RectF targetRect;
+    private var keyboardVisibility = 0f
+    private var keyboardRect: RectF? = null
+    private var targetRect: RectF? = null
 
-    @NonNull
-    private FingerSlipDetector slipDetector = new FingerSlipDetector();
+    private val slipDetector = FingerSlipDetector()
 
-    public TargetView(Context context) {
-        super(context);
-        init();
+    public override var inputMethod: TargetViewBase.EInputMethod
+        get() = super.inputMethod
+        set(mode) {
+            if (mode !== inputMethod) {
+                super.inputMethod = mode
+                targetDrawable!!.drawArrowsEnabled(inputMethod === PLOTTING)
+                targetDrawable!!.setAggregationStrategy(if (inputMethod === PLOTTING)
+                    aggregationStrategy
+                else
+                    EAggregationStrategy.NONE)
+            }
+        }
+
+    private val spotEndMatrix: Matrix
+        get() {
+            val endMatrix: Matrix
+            if (currentShotIndex == EndRenderer.NO_SELECTION || inputMethod === KEYBOARD) {
+                endMatrix = Matrix()
+            } else {
+                endMatrix = spotMatrices!![currentShotIndex % target.model.faceCount]
+            }
+            return endMatrix
+        }
+
+    val inputMode: TargetViewBase.EInputMethod
+        get() = inputMethod
+
+    override val selectedShotCircleRadius: Int
+        get() = if (inputMethod === KEYBOARD) EndRenderer.MAX_CIRCLE_SIZE else 0
+
+    constructor(context: Context) : super(context) {
+        init()
     }
 
-    public TargetView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+        init()
     }
 
-    public TargetView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        init();
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
+        init()
     }
 
-    private void init() {
+    private fun init() {
         // Set up a default TextPaint object
-        textPaint = new TextPaint();
-        textPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setTextAlign(Paint.Align.LEFT);
-        textPaint.setColor(Color.BLACK);
-        textPaint.setTextSize(22 * getDensity());
-        textPaint.setTextAlign(Paint.Align.CENTER);
+        textPaint.flags = Paint.ANTI_ALIAS_FLAG
+        textPaint.textAlign = Paint.Align.LEFT
+        textPaint.color = Color.BLACK
+        textPaint.textSize = 22 * density
+        textPaint.textAlign = Paint.Align.CENTER
 
-        fillPaint = new Paint();
-        fillPaint.setAntiAlias(true);
+        fillPaint.isAntiAlias = true
 
-        borderPaint = new Paint();
-        borderPaint.setColor(0xFF1C1C1B);
-        borderPaint.setAntiAlias(true);
-        borderPaint.setStyle(Paint.Style.STROKE);
+        borderPaint.color = -0xe3e3e5
+        borderPaint.isAntiAlias = true
+        borderPaint.style = Paint.Style.STROKE
     }
 
-    @Override
-    public void replaceWithEnd(@NonNull End end) {
-        EInputMethod inputMethod;
-        if (!end.isEmpty()) {
-            inputMethod = end.getExact() ? PLOTTING : KEYBOARD;
+    override fun replaceWithEnd(end: End) {
+        if (!end.isEmpty) {
+            inputMethod = if (end.exact) PLOTTING else KEYBOARD
         } else {
-            inputMethod = SettingsManager.INSTANCE.getInputMethod();
+            inputMethod = SettingsManager.inputMethod
         }
-        setInputMethod(inputMethod);
-        super.replaceWithEnd(end);
+        super.replaceWithEnd(end)
     }
 
-    public void setArrow(@NonNull Dimension diameter, boolean numbers, int maxArrowNumber) {
-        this.arrowNumbering = numbers;
-        this.arrowDiameter = diameter;
-        this.maxArrowNumber = maxArrowNumber;
-        getTargetDrawable().setArrowDiameter(diameter, SettingsManager.INSTANCE.getInputArrowDiameterScale());
+    fun setArrow(diameter: Dimension, numbers: Boolean, maxArrowNumber: Int) {
+        this.arrowNumbering = numbers
+        this.arrowDiameter = diameter
+        this.maxArrowNumber = maxArrowNumber
+        targetDrawable!!.setArrowDiameter(diameter, SettingsManager.inputArrowDiameterScale)
     }
 
-    public void setAggregationStrategy(EAggregationStrategy aggregationStrategy) {
-        this.aggregationStrategy = aggregationStrategy;
+    fun setAggregationStrategy(aggregationStrategy: EAggregationStrategy) {
+        this.aggregationStrategy = aggregationStrategy
     }
 
-    @Override
-    protected void onDraw(@NonNull Canvas canvas) {
+    override fun onDraw(canvas: Canvas) {
         // Draw target
-        if (getInputMethod() == PLOTTING && isCurrentlySelecting()) {
-            drawZoomedInTarget(canvas);
+        if (inputMethod === PLOTTING && isCurrentlySelecting) {
+            drawZoomedInTarget(canvas)
         } else {
-            drawTarget(canvas);
+            drawTarget(canvas)
         }
 
-        drawBackspaceButton(canvas);
+        drawBackspaceButton(canvas)
 
         // Draw right indicator
         if (keyboardVisibility > 0) {
-            drawKeyboard(canvas);
+            drawKeyboard(canvas)
         }
 
         // Draw all points of this end at the top
-        getEndRenderer().draw(canvas);
+        endRenderer.draw(canvas)
     }
 
-    private void drawZoomedInTarget(@NonNull Canvas canvas) {
-        Shot shot = getShots().get(getCurrentShotIndex());
+    private fun drawZoomedInTarget(canvas: Canvas) {
+        val shot = shots[currentShotIndex]
 
-        getTargetDrawable().setMatrix(fullExtendedMatrix);
-        getTargetDrawable().setSpotMatrix(
-                spotMatrices[getCurrentShotIndex() % getTarget().getModel().getFaceCount()]);
-        getTargetDrawable().setZoom(targetZoomFactor);
-        getTargetDrawable().setFocusedArrow(shot);
-        getTargetDrawable().setOffset(0, POINTER_OFFSET_Y_DP * getDensity());
+        targetDrawable!!.setMatrix(fullExtendedMatrix!!)
+        targetDrawable!!.spotMatrix = spotMatrices!![currentShotIndex % target.model.faceCount]
+        targetDrawable!!.setZoom(targetZoomFactor)
+        targetDrawable!!.setFocusedArrow(shot)
+        targetDrawable!!.setOffset(0f, POINTER_OFFSET_Y_DP * density)
 
-        getTargetDrawable().draw(canvas);
+        targetDrawable!!.draw(canvas)
     }
 
     // Draw actual target face
-    private void drawTarget(@NonNull Canvas canvas) {
-        getTargetDrawable().setOffset(0, 0);
-        getTargetDrawable().setZoom(1);
-        getTargetDrawable().setFocusedArrow(null);
-        if (getAnimator() == null) {
-            getTargetDrawable().setMatrix(fullMatrix);
-            if (getCurrentShotIndex() == EndRenderer.Companion.getNO_SELECTION() || getInputMethod() == KEYBOARD) {
-                getTargetDrawable().setSpotMatrix(new Matrix());
+    private fun drawTarget(canvas: Canvas) {
+        targetDrawable!!.setOffset(0f, 0f)
+        targetDrawable!!.setZoom(1f)
+        targetDrawable!!.setFocusedArrow(null)
+        if (animator == null) {
+            targetDrawable!!.setMatrix(fullMatrix!!)
+            if (currentShotIndex == EndRenderer.NO_SELECTION || inputMethod === KEYBOARD) {
+                targetDrawable!!.spotMatrix = Matrix()
             } else {
-                getTargetDrawable().setSpotMatrix(
-                        spotMatrices[getCurrentShotIndex() % getTarget().getModel().getFaceCount()]);
+                targetDrawable!!.spotMatrix = spotMatrices!![currentShotIndex % target.model.faceCount]
             }
         }
-        getTargetDrawable().draw(canvas);
+        targetDrawable!!.draw(canvas)
     }
 
-    protected void notifyTargetShotsChanged() {
-        List<Shot> displayedShots = new ArrayList<>();
-        for (Shot shot : getShots()) {
-            if (shot.getScoringRing() != Shot.Companion.getNOTHING_SELECTED() && shot.getIndex() != getCurrentShotIndex()) {
-                displayedShots.add(shot);
+    override fun notifyTargetShotsChanged() {
+        val displayedShots = ArrayList<Shot>()
+        for (shot in shots) {
+            if (shot.scoringRing != Shot.NOTHING_SELECTED && shot.index != currentShotIndex) {
+                displayedShots.add(shot)
             }
         }
-        getTargetDrawable().replaceShotsWith(displayedShots);
-        super.notifyTargetShotsChanged();
+        targetDrawable!!.replaceShotsWith(displayedShots)
+        super.notifyTargetShotsChanged()
         if (updateListener != null) {
-            updateListener.onEndUpdated(getShots());
+            updateListener!!.onEndUpdated(shots)
         }
     }
 
-    @NonNull
-    @Override
-    protected PointF getShotCoordinates(@NonNull Shot shot) {
-        PointF coordinate = new PointF();
-        if (getInputMethod() == KEYBOARD) {
-            coordinate.x = keyboardRect.left;
+    override fun getShotCoordinates(shot: Shot): PointF {
+        val coordinate = PointF()
+        if (inputMethod === KEYBOARD) {
+            coordinate.x = keyboardRect!!.left
             if (keyboardType == LEFT) {
-                coordinate.x += (KEYBOARD_WIDTH_DP + KEYBOARD_INNER_PADDING_DP) * getDensity();
+                coordinate.x += (KEYBOARD_WIDTH_DP + KEYBOARD_INNER_PADDING_DP) * density
             } else {
-                coordinate.x -= KEYBOARD_INNER_PADDING_DP * getDensity();
+                coordinate.x -= KEYBOARD_INNER_PADDING_DP * density
             }
-            float indicatorHeight = keyboardRect.height() / getSelectableZones().size();
-            int index = getSelectableZoneIndexFromShot(shot);
-            coordinate.y = keyboardRect.top + indicatorHeight * index + indicatorHeight / 2.0f;
+            val indicatorHeight = keyboardRect!!.height() / selectableZones.size
+            val index = getSelectableZoneIndexFromShot(shot)
+            coordinate.y = keyboardRect!!.top + indicatorHeight * index + indicatorHeight / 2.0f
         } else {
-            pt[0] = shot.getX();
-            pt[1] = shot.getY();
-            fullMatrix.mapPoints(pt);
-            coordinate.x = pt[0];
-            coordinate.y = pt[1];
+            pt[0] = shot.x
+            pt[1] = shot.y
+            fullMatrix!!.mapPoints(pt)
+            coordinate.x = pt[0]
+            coordinate.y = pt[1]
         }
-        return coordinate;
+        return coordinate
     }
 
-    @Override
-    public void initWithTarget(Target target) {
-        super.initWithTarget(target);
-        spotMatrices = new Matrix[getTarget().getModel().getFaceCount()];
-        for (int i = 0; i < getTarget().getModel().getFaceCount(); i++) {
-            spotMatrices[i] = new Matrix();
-            getTargetDrawable().getPreCalculatedFaceMatrix(i).invert(spotMatrices[i]);
+    override fun initWithTarget(target: Target) {
+        super.initWithTarget(target)
+        spotMatrices = Array(target.model.faceCount) { Matrix() }
+        for (i in 0 until target.model.faceCount) {
+            targetDrawable!!.getPreCalculatedFaceMatrix(i).invert(spotMatrices!![i])
         }
     }
 
-    @Override
-    protected void updateLayoutBounds(int width, int height) {
-        targetRect = new RectF(0, MIN_END_RECT_HEIGHT_DP * getDensity(), width, height);
-        targetRect.inset(TARGET_PADDING_DP * getDensity(), TARGET_PADDING_DP * getDensity());
-        if (getInputMethod() == KEYBOARD) {
+    override fun updateLayoutBounds(width: Int, height: Int) {
+        targetRect = RectF(0f, MIN_END_RECT_HEIGHT_DP * density, width.toFloat(), height.toFloat())
+        targetRect!!.inset(TARGET_PADDING_DP * density, TARGET_PADDING_DP * density)
+        if (inputMethod === KEYBOARD) {
             if (keyboardType == LEFT) {
-                targetRect.left += KEYBOARD_TOTAL_WIDTH_DP * getDensity();
+                targetRect!!.left += KEYBOARD_TOTAL_WIDTH_DP * density
             } else {
-                targetRect.right -= KEYBOARD_TOTAL_WIDTH_DP * getDensity();
+                targetRect!!.right -= KEYBOARD_TOTAL_WIDTH_DP * density
             }
         }
-        if (targetRect.height() > targetRect.width()) {
-            targetRect.top = targetRect.bottom - targetRect.width();
+        if (targetRect!!.height() > targetRect!!.width()) {
+            targetRect!!.top = targetRect!!.bottom - targetRect!!.width()
         }
 
-        fullMatrix = new Matrix();
-        fullMatrix.setRectToRect(TargetDrawable.Companion.getSRC_RECT(), targetRect, Matrix.ScaleToFit.CENTER);
+        fullMatrix = Matrix()
+        fullMatrix!!.setRectToRect(TargetDrawable.SRC_RECT, targetRect, Matrix.ScaleToFit.CENTER)
 
-        RectF targetRectExt = new RectF(targetRect);
-        targetRectExt.inset(30 * getDensity(), 30 * getDensity());
-        fullExtendedMatrix = new Matrix();
-        fullExtendedMatrix
-                .setRectToRect(TargetDrawable.Companion.getSRC_RECT(), targetRectExt, Matrix.ScaleToFit.CENTER);
-        fullExtendedMatrixInverse = new Matrix();
-        fullExtendedMatrix.invert(fullExtendedMatrixInverse);
+        val targetRectExt = RectF(targetRect)
+        targetRectExt.inset(30 * density, 30 * density)
+        fullExtendedMatrix = Matrix()
+        fullExtendedMatrix!!
+                .setRectToRect(TargetDrawable.SRC_RECT, targetRectExt, Matrix.ScaleToFit.CENTER)
+        fullExtendedMatrixInverse = Matrix()
+        fullExtendedMatrix!!.invert(fullExtendedMatrixInverse)
 
-        keyboardRect = new RectF();
+        keyboardRect = RectF()
         if (keyboardType == LEFT) {
-            keyboardRect.left = KEYBOARD_OUTER_PADDING_DP * getDensity();
+            keyboardRect!!.left = KEYBOARD_OUTER_PADDING_DP * density
         } else {
-            keyboardRect.left = width - KEYBOARD_TOTAL_WIDTH_DP * getDensity();
+            keyboardRect!!.left = width - KEYBOARD_TOTAL_WIDTH_DP * density
         }
-        keyboardRect.right = keyboardRect.left + KEYBOARD_WIDTH_DP * getDensity();
-        keyboardRect.top = height / (getSelectableZones().size() + 1);
-        keyboardRect.bottom = height;
+        keyboardRect!!.right = keyboardRect!!.left + KEYBOARD_WIDTH_DP * density
+        keyboardRect!!.top = (height / (selectableZones.size + 1)).toFloat()
+        keyboardRect!!.bottom = height.toFloat()
     }
 
-    @NonNull
-    @Override
-    protected Rect getBackspaceButtonBounds() {
-        Rect backspaceButtonBounds = new Rect();
-        backspaceButtonBounds.top = 0;
-        backspaceButtonBounds.bottom = (int) (keyboardRect.top - getDensity());
-        backspaceButtonBounds.left = (int) keyboardRect.left;
-        backspaceButtonBounds.right = (int) keyboardRect.right;
-        return backspaceButtonBounds;
+    override fun getBackspaceButtonBounds(): Rect {
+        val backspaceButtonBounds = Rect()
+        backspaceButtonBounds.top = 0
+        backspaceButtonBounds.bottom = (keyboardRect!!.top - density).toInt()
+        backspaceButtonBounds.left = keyboardRect!!.left.toInt()
+        backspaceButtonBounds.right = keyboardRect!!.right.toInt()
+        return backspaceButtonBounds
     }
 
-    @NonNull
-    @Override
-    protected RectF getEndRect() {
-        RectF endRect = new RectF(targetRect);
-        endRect.top = 0;
-        endRect.bottom = targetRect.top;
+    override fun getEndRect(): RectF {
+        val endRect = RectF(targetRect)
+        endRect.top = 0f
+        endRect.bottom = targetRect!!.top
         if (keyboardType == LEFT) {
-            endRect.left = keyboardRect.right;
+            endRect.left = keyboardRect!!.right
         } else {
-            endRect.right = keyboardRect.left;
+            endRect.right = keyboardRect!!.left
         }
-        endRect.inset(20 * getDensity(), TARGET_PADDING_DP * getDensity());
-        return endRect;
-    }
-
-    public void setInputMethod(EInputMethod mode) {
-        if (mode != getInputMethod()) {
-            super.setInputMethod(mode);
-            getTargetDrawable().drawArrowsEnabled(getInputMethod() == PLOTTING);
-            getTargetDrawable().setAggregationStrategy(getInputMethod() == PLOTTING
-                    ? aggregationStrategy : EAggregationStrategy.NONE);
-        }
+        endRect.inset(20 * density, TARGET_PADDING_DP * density)
+        return endRect
     }
 
     /**
      * {@inheritDoc}
      */
-    @Override
-    protected boolean updateShotToPosition(@NonNull Shot s, float x, float y) {
-        if (getInputMethod() == KEYBOARD) {
-            if (keyboardRect.contains(x, y)) {
-                int index = (int) ((y - keyboardRect.top) * getSelectableZones().size() /
-                        keyboardRect.height());
-                index = Math.min(Math.max(0, index), getSelectableZones().size() - 1);
-                s.setScoringRing(getSelectableZones().get(index).getIndex());
+    override fun updateShotToPosition(shot: Shot, x: Float, y: Float): Boolean {
+        if (inputMethod === KEYBOARD) {
+            if (keyboardRect!!.contains(x, y)) {
+                var index = ((y - keyboardRect!!.top) * selectableZones.size / keyboardRect!!.height()).toInt()
+                index = Math.min(Math.max(0, index), selectableZones.size - 1)
+                shot.scoringRing = selectableZones[index].index
             } else {
-                return false;
+                return false
             }
         } else {
-            pt[0] = x;
-            pt[1] = y;
-            fullExtendedMatrixInverse.mapPoints(pt);
-            s.setX(pt[0]);
-            s.setY(pt[1]);
-            s.setScoringRing(getTargetDrawable().getZoneFromPoint(s.getX(), s.getY()));
-            slipDetector.addShot(s.getX(), s.getY());
+            pt[0] = x
+            pt[1] = y
+            fullExtendedMatrixInverse!!.mapPoints(pt)
+            shot.x = pt[0]
+            shot.y = pt[1]
+            shot.scoringRing = targetDrawable!!.getZoneFromPoint(shot.x, shot.y)
+            slipDetector.addShot(shot.x, shot.y)
         }
-        return true;
+        return true
     }
 
-    @Override
-    protected boolean selectPreviousShots(@NonNull MotionEvent motionEvent, float x, float y) {
+    override fun selectPreviousShots(motionEvent: MotionEvent, x: Float, y: Float): Boolean {
         // Handle selection of already saved shoots
-        int shotIndex = getEndRenderer().getPressedPosition(x, y);
-        getEndRenderer().setPressed(shotIndex);
-        if (shotIndex != EndRenderer.Companion.getNO_SELECTION()) {
-            if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                setCurrentShotIndex(shotIndex);
-                animateToNewState();
+        val shotIndex = endRenderer.getPressedPosition(x, y)
+        endRenderer.setPressed(shotIndex)
+        if (shotIndex != EndRenderer.NO_SELECTION) {
+            if (motionEvent.action == MotionEvent.ACTION_UP) {
+                currentShotIndex = shotIndex
+                animateToNewState()
             }
-            return true;
+            return true
         }
-        return false;
+        return false
     }
 
-    @Override
-    protected void collectAnimations(@NonNull List<Animator> animations) {
-        Matrix initFullMatrix = new Matrix(fullMatrix);
-        updateLayout();
-        Matrix endMatrix = getSpotEndMatrix();
+    override fun collectAnimations(animations: MutableList<Animator>) {
+        val initFullMatrix = Matrix(fullMatrix)
+        updateLayout()
+        val endMatrix = spotEndMatrix
 
-        float newVisibility = getInputMethod() == KEYBOARD ? 1 : 0;
-        ValueAnimator inputAnimator = ValueAnimator.ofFloat(keyboardVisibility, newVisibility);
-        inputAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-        inputAnimator.addUpdateListener(valueAnimator -> {
-            keyboardVisibility = (Float) valueAnimator.getAnimatedValue();
-            invalidate();
-        });
-        animations.add(inputAnimator);
+        val newVisibility = (if (inputMethod === KEYBOARD) 1 else 0).toFloat()
+        val inputAnimator = ValueAnimator.ofFloat(keyboardVisibility, newVisibility)
+        inputAnimator.interpolator = AccelerateDecelerateInterpolator()
+        inputAnimator.addUpdateListener { valueAnimator ->
+            keyboardVisibility = valueAnimator.animatedValue as Float
+            invalidate()
+        }
+        animations.add(inputAnimator)
 
         animations.add(ObjectAnimator.ofObject(this, ANIMATED_FULL_TRANSFORM_PROPERTY,
-                new MatrixEvaluator(), initFullMatrix, fullMatrix));
+                MatrixEvaluator(), initFullMatrix, fullMatrix))
         animations.add(ObjectAnimator.ofObject(this, ANIMATED_SPOT_TRANSFORM_PROPERTY,
-                new MatrixEvaluator(), endMatrix));
-        super.collectAnimations(animations);
+                MatrixEvaluator(), endMatrix))
+        super.collectAnimations(animations)
     }
 
-    private Matrix getSpotEndMatrix() {
-        Matrix endMatrix;
-        if ((getCurrentShotIndex() == EndRenderer.Companion.getNO_SELECTION() || getInputMethod() == KEYBOARD)) {
-            endMatrix = new Matrix();
-        } else {
-            endMatrix = spotMatrices[getCurrentShotIndex() % getTarget().getModel().getFaceCount()];
-        }
-        return endMatrix;
-    }
-
-    @Override
-    protected void onShotSelectionFinished() {
+    override fun onShotSelectionFinished() {
         // Replace shot position with final position from slip detector
-        PointF position = slipDetector.getFinalPosition();
-        Shot shot = getShots().get(getCurrentShotIndex());
+        val position = slipDetector.finalPosition
+        val shot = shots[currentShotIndex]
         if (position != null) {
-            shot.setX(position.x);
-            shot.setY(position.y);
-            shot.setScoringRing(getTargetDrawable().getZoneFromPoint(shot.getX(), shot.getY()));
-            slipDetector.reset();
+            shot.x = position.x
+            shot.y = position.y
+            shot.scoringRing = targetDrawable!!.getZoneFromPoint(shot.x, shot.y)
+            slipDetector.reset()
         }
 
         if (!arrowNumbering) {
-            super.onShotSelectionFinished();
+            super.onShotSelectionFinished()
         } else {
 
             // Prepare grid view
-            GridView gridView = new GridView(getContext());
+            val gridView = GridView(context)
 
             // Set grid view to alertDialog
-            AlertDialog dialog = new AlertDialog.Builder(getContext())
+            val dialog = AlertDialog.Builder(context)
                     .setView(gridView)
                     .setCancelable(false)
                     .setTitle(R.string.arrow_numbers)
-                    .create();
+                    .create()
 
-            List<String> numbers = Stream.rangeClosed(1, maxArrowNumber)
-                    .map(String::valueOf)
-                    .toList();
-            gridView.setAdapter(
-                    new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, numbers));
-            gridView.setNumColumns(4);
-            gridView.setOnItemClickListener((parent, view, pos, id) -> {
-                if (getCurrentShotIndex() < getShots().size()) {
-                    shot.setArrowNumber(numbers.get(pos));
+            val numbers = (1..maxArrowNumber).map { it.toString() }
+            gridView.adapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, numbers)
+            gridView.numColumns = 4
+            gridView.setOnItemClickListener { _, _, pos, _ ->
+                if (currentShotIndex < shots.size) {
+                    shot.arrowNumber = numbers[pos]
                 }
-                dialog.dismiss();
-                setOnTouchListener(this);
-                super.onShotSelectionFinished();
-            });
+                dialog.dismiss()
+                setOnTouchListener(this)
+                super.onShotSelectionFinished()
+            }
             // Disable touch input while dialog is visible
-            setOnTouchListener(null);
-            dialog.show();
+            setOnTouchListener(null)
+            dialog.show()
         }
     }
 
@@ -511,84 +431,115 @@ public class TargetView extends TargetViewBase {
      *
      * @param canvas Canvas to draw on
      */
-    private void drawKeyboard(@NonNull Canvas canvas) {
-        for (int i = 0; i < getSelectableZones().size(); i++) {
-            SelectableZone zone = getSelectableZones().get(i);
+    private fun drawKeyboard(canvas: Canvas) {
+        for (i in 0 until selectableZones.size) {
+            val zone = selectableZones[i]
 
-            Rect rect = getSelectableZonePosition(i);
+            val rect = getSelectableZonePosition(i)
 
-            fillPaint.setColor(zone.getZone().getFillColor());
-            canvas.drawRect(rect, fillPaint);
+            fillPaint.color = zone.zone.fillColor
+            canvas.drawRect(rect, fillPaint)
 
-            borderPaint.setColor(zone.getZone().getStrokeColor());
-            canvas.drawRect(rect, borderPaint);
+            borderPaint.color = zone.zone.strokeColor
+            canvas.drawRect(rect, borderPaint)
 
             // For yellow and white background use black font color
-            textPaint.setColor(zone.getZone().getTextColor());
-            canvas.drawText(zone.getText(), rect.centerX(), rect.centerY() + 10 * getDensity(),
-                    textPaint);
+            textPaint.color = zone.zone.textColor
+            canvas.drawText(zone.text, rect.centerX().toFloat(), rect.centerY() + 10 * density,
+                    textPaint)
         }
     }
 
-    @Override
-    @NonNull
-    protected Rect getSelectableZonePosition(int i) {
-        final Rect rect = new Rect();
-        final float singleZoneHeight = keyboardRect.height() / getSelectableZones().size();
-        rect.top = (int) (singleZoneHeight * i + getDensity() + keyboardRect.top);
-        rect.bottom = (int) (singleZoneHeight * (i + 1) - getDensity() + keyboardRect.top);
-        rect.left = (int) keyboardRect.left;
-        rect.right = (int) keyboardRect.right;
-        final int visibilityXOffset = (int) (KEYBOARD_TOTAL_WIDTH_DP * (1 - keyboardVisibility) *
-                getDensity());
+    override fun getSelectableZonePosition(i: Int): Rect {
+        val rect = Rect()
+        val singleZoneHeight = keyboardRect!!.height() / selectableZones.size
+        rect.top = (singleZoneHeight * i + density + keyboardRect!!.top).toInt()
+        rect.bottom = (singleZoneHeight * (i + 1) - density + keyboardRect!!.top).toInt()
+        rect.left = keyboardRect!!.left.toInt()
+        rect.right = keyboardRect!!.right.toInt()
+        val visibilityXOffset = (KEYBOARD_TOTAL_WIDTH_DP.toFloat() * (1 - keyboardVisibility) *
+                density).toInt()
         if (keyboardType == LEFT) {
-            rect.offset(-visibilityXOffset, 0);
+            rect.offset(-visibilityXOffset, 0)
         } else {
-            rect.offset(visibilityXOffset, 0);
+            rect.offset(visibilityXOffset, 0)
         }
-        return rect;
+        return rect
     }
 
-    @Override
-    public boolean onTouch(View view, @NonNull MotionEvent motionEvent) {
+    override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
         // Cancel animation
-        if (getAnimator() != null) {
-            cancelPendingAnimations();
-            return true;
+        if (animator != null) {
+            cancelPendingAnimations()
+            return true
         }
 
-        return super.onTouch(view, motionEvent);
+        return super.onTouch(view, motionEvent)
     }
 
-    public EInputMethod getInputMode() {
-        return getInputMethod();
+    fun setUpdateListener(updateListener: OnEndUpdatedListener) {
+        this.updateListener = updateListener
     }
 
-    public void setUpdateListener(OnEndUpdatedListener updateListener) {
-        this.updateListener = updateListener;
+    fun reloadSettings() {
+        this.targetZoomFactor = SettingsManager.inputTargetZoom
+        this.keyboardType = SettingsManager.inputKeyboardType
+        targetDrawable!!
+                .setArrowDiameter(arrowDiameter!!, SettingsManager.inputArrowDiameterScale)
     }
 
-    public void reloadSettings() {
-        this.targetZoomFactor = SettingsManager.INSTANCE.getInputTargetZoom();
-        this.keyboardType = SettingsManager.INSTANCE.getInputKeyboardType();
-        getTargetDrawable()
-                .setArrowDiameter(arrowDiameter, SettingsManager.INSTANCE.getInputArrowDiameterScale());
+    fun setTransparentShots(shotStream: List<Shot>) {
+        targetDrawable!!.replacedTransparentShots(shotStream)
     }
 
-    public void setTransparentShots(@NonNull List<Shot> shotStream) {
-        getTargetDrawable().replacedTransparentShots(shotStream);
-    }
-
-    @Override
-    protected int getSelectedShotCircleRadius() {
-        return getInputMethod() == KEYBOARD ? EndRenderer.Companion.getMAX_CIRCLE_SIZE() : 0;
-    }
-
-    public enum EKeyboardType {
+    enum class EKeyboardType {
         LEFT, RIGHT
     }
 
-    public interface OnEndUpdatedListener {
-        void onEndUpdated(List<Shot> shots);
+    interface OnEndUpdatedListener {
+        fun onEndUpdated(shots: List<Shot>)
+    }
+
+    companion object {
+
+        /**
+         * This property is passed to ObjectAnimator when animating the spot matrix of TargetView
+         */
+        private val ANIMATED_SPOT_TRANSFORM_PROPERTY = object : Property<TargetView, Matrix>(
+                Matrix::class.java, "animatedSpotTransform") {
+
+            override fun set(targetView: TargetView, matrix: Matrix) {
+                targetView.targetDrawable!!.spotMatrix = matrix
+                targetView.invalidate()
+            }
+
+            override fun get(targetView: TargetView): Matrix {
+                return targetView.targetDrawable!!.spotMatrix
+            }
+        }
+
+        /**
+         * This property is passed to ObjectAnimator when animating the full matrix of TargetView
+         */
+        private val ANIMATED_FULL_TRANSFORM_PROPERTY = object : Property<TargetView, Matrix>(
+                Matrix::class.java, "animatedFullTransform") {
+
+            override fun set(targetView: TargetView, matrix: Matrix) {
+                targetView.targetDrawable!!.setMatrix(matrix)
+                targetView.invalidate()
+            }
+
+            override fun get(targetView: TargetView): Matrix? {
+                return null
+            }
+        }
+
+        private val TARGET_PADDING_DP = 10
+        private val KEYBOARD_OUTER_PADDING_DP = 20
+        private val KEYBOARD_WIDTH_DP = 40
+        private val KEYBOARD_TOTAL_WIDTH_DP = KEYBOARD_WIDTH_DP + KEYBOARD_OUTER_PADDING_DP
+        private val POINTER_OFFSET_Y_DP = -60
+        private val MIN_END_RECT_HEIGHT_DP = 80
+        private val KEYBOARD_INNER_PADDING_DP = 40
     }
 }

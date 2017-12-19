@@ -13,8 +13,8 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training.input;
+package de.dreier.mytargets.features.training.input
 
-public enum ETrainingScope {
+enum class ETrainingScope {
     END, ROUND, TRAINING
 }

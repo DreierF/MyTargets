@@ -563,6 +563,7 @@ class FabSpeedDial : LinearLayout, View.OnClickListener {
                 }
 
                 override fun newArray(i: Int): Array<SavedState> {
+                    @Suppress("UNCHECKED_CAST")
                     return arrayOfNulls<SavedState>(i) as Array<SavedState>
                 }
             }

@@ -13,77 +13,70 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training.input;
+package de.dreier.mytargets.features.training.input
 
-import android.graphics.PointF;
-import android.support.annotation.Nullable;
-
-import java.util.LinkedList;
-import java.util.Stack;
+import android.graphics.PointF
+import java.util.*
 
 /**
  * Detects finger slipping while releasing the finger from the screen.
  * This simply ignores the positions recorded during the last 100ms.
  */
-class FingerSlipDetector {
-    private static final long TIME_WINDOW = 100; // in milliseconds
-    private static final int INITIAL_CACHE_SIZE = 20;
+internal class FingerSlipDetector {
 
-    private Stack<TimedPoint> cache;
-    private LinkedList<TimedPoint> list;
-    @Nullable
-    private TimedPoint currentMaturePosition = null;
+    private val cache = Stack<TimedPoint>()
+    private val list = LinkedList<TimedPoint>()
+    private var currentMaturePosition: TimedPoint? = null
 
-    public FingerSlipDetector() {
-        list = new LinkedList<>();
-        cache = new Stack<>();
-        for (int i = 0; i < INITIAL_CACHE_SIZE; i++) {
-            cache.push(new TimedPoint());
+    val finalPosition: PointF?
+        get() = if (currentMaturePosition == null) {
+            null
+        } else PointF(currentMaturePosition!!.x, currentMaturePosition!!.y)
+
+    init {
+        for (i in 0 until INITIAL_CACHE_SIZE) {
+            cache.push(TimedPoint())
         }
     }
 
-    public void addShot(float x, float y) {
+    fun addShot(x: Float, y: Float) {
         if (cache.isEmpty()) {
-            cache.push(new TimedPoint());
+            cache.push(TimedPoint())
         }
-        TimedPoint point = cache.pop();
-        point.time = System.currentTimeMillis();
-        point.x = x;
-        point.y = y;
+        val point = cache.pop()
+        point.time = System.currentTimeMillis()
+        point.x = x
+        point.y = y
         if (currentMaturePosition == null) {
-            currentMaturePosition = point;
+            currentMaturePosition = point
         } else {
-            list.add(point);
+            list.add(point)
         }
-        while (!list.isEmpty() && list.getFirst().time < point.time - TIME_WINDOW) {
-            cache.push(currentMaturePosition);
-            currentMaturePosition = list.removeFirst();
+        while (!list.isEmpty() && list.first.time < point.time - TIME_WINDOW) {
+            cache.push(currentMaturePosition)
+            currentMaturePosition = list.removeFirst()
         }
     }
 
-    @Nullable
-    public PointF getFinalPosition() {
+    fun reset() {
         if (currentMaturePosition == null) {
-            return null;
+            return
         }
 
-        return new PointF(currentMaturePosition.x, currentMaturePosition.y);
+        cache.push(currentMaturePosition)
+        currentMaturePosition = null
+        cache.addAll(list)
+        list.clear()
     }
 
-    public void reset() {
-        if (currentMaturePosition == null) {
-            return;
-        }
-
-        cache.push(currentMaturePosition);
-        currentMaturePosition = null;
-        cache.addAll(list);
-        list.clear();
+    private inner class TimedPoint {
+        internal var time: Long = 0
+        internal var x: Float = 0f
+        internal var y: Float = 0f
     }
 
-    private class TimedPoint {
-        Long time;
-        float x;
-        float y;
+    companion object {
+        private const val TIME_WINDOW = 100L // in milliseconds
+        private const val INITIAL_CACHE_SIZE = 20
     }
 }

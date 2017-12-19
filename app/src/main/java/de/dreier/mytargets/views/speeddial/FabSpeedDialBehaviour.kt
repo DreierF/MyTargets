@@ -50,12 +50,12 @@ class FabSpeedDialBehaviour : CoordinatorLayout.Behavior<FabSpeedDial> {
 
     override fun onDependentViewChanged(parent: CoordinatorLayout, child: FabSpeedDial, dependency: View?): Boolean {
         if (dependency is Snackbar.SnackbarLayout) {
-            updateFabTranslationForSnackbar(parent, child, dependency)
+            updateFabTranslationForSnackbar(parent, child)
         }
         return false
     }
 
-    private fun updateFabTranslationForSnackbar(parent: CoordinatorLayout, fab: FabSpeedDial, snackbar: View) {
+    private fun updateFabTranslationForSnackbar(parent: CoordinatorLayout, fab: FabSpeedDial) {
         if (fab.visibility != View.VISIBLE) {
             return
         }

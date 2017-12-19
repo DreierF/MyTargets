@@ -122,7 +122,7 @@ public class RoundFragment extends EditableListFragment<End> {
         binding.recyclerView.setAdapter(adapter);
         binding.fab.setVisibility(View.GONE);
         binding.fab.setOnClickListener(
-                v -> InputActivity
+                v -> InputActivity.Companion
                         .getIntent(round, binding.recyclerView.getAdapter().getItemCount())
                         .withContext(this)
                         .fromFab(binding.fab)
@@ -199,13 +199,13 @@ public class RoundFragment extends EditableListFragment<End> {
 
     @Override
     protected void onItemSelected(@NonNull End item) {
-        InputActivity.getIntent(round, item.getIndex())
+        InputActivity.Companion.getIntent(round, item.getIndex())
                 .withContext(this)
                 .start();
     }
 
     protected void onEdit(Long itemId) {
-        InputActivity.getIntent(round, adapter.getItemById(itemId).getIndex())
+        InputActivity.Companion.getIntent(round, adapter.getItemById(itemId).getIndex())
                 .withContext(this)
                 .start();
     }

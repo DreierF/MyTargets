@@ -161,8 +161,8 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
         if (!equals[1]) {
             info.addLine(R.string.target_face, round.target.name)
         }
-        if (!round.comment!!.isEmpty() && configuration.showComments) {
-            info.addLine(R.string.comment, round.comment!!)
+        if (!round.comment.isEmpty() && configuration.showComments) {
+            info.addLine(R.string.comment, round.comment)
         }
         return info.info
     }

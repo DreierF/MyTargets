@@ -74,7 +74,7 @@ class EnvironmentFragment : FragmentBase() {
     }
 
     private fun setOnClickWeather(b: ImageButton, w: EWeather) {
-        b.setOnClickListener { v -> setWeather(w) }
+        b.setOnClickListener { setWeather(w) }
     }
 
     private fun setWeather(weather: EWeather) {

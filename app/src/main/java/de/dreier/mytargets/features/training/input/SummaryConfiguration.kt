@@ -13,45 +13,12 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training.input;
+package de.dreier.mytargets.features.training.input
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
-public class SummaryConfiguration {
-    public boolean showEnd;
-    public boolean showRound;
-    public boolean showTraining;
-    public boolean showAverage;
-    @NonNull
-    public ETrainingScope averageScope = ETrainingScope.ROUND;
-
-    @Override
-    public boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        SummaryConfiguration that = (SummaryConfiguration) o;
-
-        return showEnd == that.showEnd
-                && showRound == that.showRound
-                && showTraining == that.showTraining
-                && showAverage == that.showAverage
-                && averageScope == that.averageScope;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (showEnd ? 1 : 0);
-        result = 31 * result + (showRound ? 1 : 0);
-        result = 31 * result + (showTraining ? 1 : 0);
-        result = 31 * result + (showAverage ? 1 : 0);
-        result = 31 * result + averageScope.hashCode();
-        return result;
-    }
-}
+data class SummaryConfiguration (
+    var showEnd: Boolean = false,
+    var showRound: Boolean = false,
+    var showTraining: Boolean = false,
+    var showAverage: Boolean = false,
+    var averageScope: ETrainingScope = ETrainingScope.ROUND
+)
