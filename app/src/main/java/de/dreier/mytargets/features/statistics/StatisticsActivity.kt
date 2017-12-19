@@ -30,7 +30,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.util.LongSparseArray
-import android.support.v4.util.Pair
 import android.support.v4.view.GravityCompat.END
 import android.view.Menu
 import android.view.MenuItem
@@ -45,7 +44,6 @@ import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
-import de.dreier.mytargets.shared.streamwrapper.Stream
 import de.dreier.mytargets.shared.utils.LongUtils
 import de.dreier.mytargets.shared.utils.toUri
 import de.dreier.mytargets.utils.IntentWrapper
@@ -57,30 +55,30 @@ import java.util.*
 
 class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<List<Pair<Training, Round>>> {
 
-    private var binding: ActivityStatisticsBinding? = null
+    private lateinit var binding: ActivityStatisticsBinding
     private var rounds: List<Pair<Training, Round>>? = null
     private var filteredRounds: List<Pair<Target, List<Round>>>? = null
 
     @State
-    var distanceTags: Set<String>? = null
+    var distanceTags: HashSet<String>? = null
 
     @State
-    var diameterTags: Set<String>? = null
+    var diameterTags: HashSet<String>? = null
 
     @State
-    var arrowTags: Set<Long>? = null
+    var arrowTags: HashSet<Long?>? = null
 
     @State
-    var bowTags: Set<Long>? = null
+    var bowTags: HashSet<Long?>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_statistics)
-        setSupportActionBar(binding!!.toolbar)
+        setSupportActionBar(binding.toolbar)
 
-        binding!!.reset.setOnClickListener { v -> resetFilter() }
+        binding.reset.setOnClickListener { resetFilter() }
 
-        binding!!.progressBar.show()
+        binding.progressBar.show()
 
         ToolbarUtils.showHomeAsUp(this)
         StateSaver.restoreInstanceState(this, savedInstanceState)
@@ -108,15 +106,15 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
 
     override fun onLoadFinished(loader: Loader<List<Pair<Training, Round>>>, data: List<Pair<Training, Round>>) {
         rounds = data
-        binding!!.progressBar.hide()
-        binding!!.distanceTags.tags = getDistanceTags()
-        binding!!.distanceTags.setOnTagClickListener({ applyFilter() })
-        binding!!.diameterTags.tags = getDiameterTags()
-        binding!!.diameterTags.setOnTagClickListener({ applyFilter() })
-        binding!!.arrowTags.tags = getArrowTags()
-        binding!!.arrowTags.setOnTagClickListener({ applyFilter() })
-        binding!!.bowTags.tags = getBowTags()
-        binding!!.bowTags.setOnTagClickListener({ applyFilter() })
+        binding.progressBar.hide()
+        binding.distanceTags.tags = getDistanceTags()
+        binding.distanceTags.setOnTagClickListener({ applyFilter() })
+        binding.diameterTags.tags = getDiameterTags()
+        binding.diameterTags.setOnTagClickListener({ applyFilter() })
+        binding.arrowTags.tags = getArrowTags()
+        binding.arrowTags.setOnTagClickListener({ applyFilter() })
+        binding.bowTags.tags = getBowTags()
+        binding.bowTags.setOnTagClickListener({ applyFilter() })
 
         if (distanceTags != null && diameterTags != null && arrowTags != null && bowTags != null) {
             restoreCheckedStates()
@@ -127,14 +125,14 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
     }
 
     private fun restoreCheckedStates() {
-        binding!!.distanceTags.tags.forEach { it.isChecked = distanceTags!!.contains(it.text) }
-        binding!!.diameterTags.tags.forEach { it.isChecked = diameterTags!!.contains(it.text) }
-        binding!!.arrowTags.tags.forEach { it.isChecked = arrowTags!!.contains(it.id) }
-        binding!!.bowTags.tags.forEach { it.isChecked = bowTags!!.contains(it.id) }
-        binding!!.distanceTags.tags = binding!!.distanceTags.tags
-        binding!!.diameterTags.tags = binding!!.diameterTags.tags
-        binding!!.arrowTags.tags = binding!!.arrowTags.tags
-        binding!!.bowTags.tags = binding!!.bowTags.tags
+        binding.distanceTags.tags.forEach { it.isChecked = distanceTags!!.contains(it.text) }
+        binding.diameterTags.tags.forEach { it.isChecked = diameterTags!!.contains(it.text) }
+        binding.arrowTags.tags.forEach { it.isChecked = arrowTags!!.contains(it.id) }
+        binding.bowTags.tags.forEach { it.isChecked = bowTags!!.contains(it.id) }
+        binding.distanceTags.tags = binding.distanceTags.tags
+        binding.diameterTags.tags = binding.diameterTags.tags
+        binding.arrowTags.tags = binding.arrowTags.tags
+        binding.bowTags.tags = binding.bowTags.tags
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -147,69 +145,70 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
         val filter = menu.findItem(R.id.action_filter)
         val export = menu.findItem(R.id.action_export)
         // only show filter if we have at least one category to filter by
-        val filterAvailable = (binding!!.distanceTags.tags.size > 1
-                || binding!!.diameterTags.tags.size > 1
-                || binding!!.bowTags.tags.size > 1
-                || binding!!.arrowTags.tags.size > 1)
+        val filterAvailable = (binding.distanceTags.tags.size > 1
+                || binding.diameterTags.tags.size > 1
+                || binding.bowTags.tags.size > 1
+                || binding.arrowTags.tags.size > 1)
         filter.isVisible = rounds != null && filterAvailable
         export.isVisible = rounds != null
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.action_export -> {
                 export()
-                return true
+                true
             }
             R.id.action_filter -> {
-                if (!binding!!.drawerLayout.isDrawerOpen(END)) {
-                    binding!!.drawerLayout.openDrawer(END)
+                if (!binding.drawerLayout.isDrawerOpen(END)) {
+                    binding.drawerLayout.openDrawer(END)
                 } else {
-                    binding!!.drawerLayout.closeDrawer(END)
+                    binding.drawerLayout.closeDrawer(END)
                 }
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
     private fun resetFilter() {
-        binding!!.distanceTags.tags.forEach { it.isChecked = true }
-        binding!!.diameterTags.tags.forEach { it.isChecked = true }
-        binding!!.arrowTags.tags.forEach { it.isChecked = true }
-        binding!!.bowTags.tags.forEach { it.isChecked = true }
-        binding!!.distanceTags.tags = binding!!.distanceTags.tags
-        binding!!.diameterTags.tags = binding!!.diameterTags.tags
-        binding!!.arrowTags.tags = binding!!.arrowTags.tags
-        binding!!.bowTags.tags = binding!!.bowTags.tags
+        binding.distanceTags.tags.forEach { it.isChecked = true }
+        binding.diameterTags.tags.forEach { it.isChecked = true }
+        binding.arrowTags.tags.forEach { it.isChecked = true }
+        binding.bowTags.tags.forEach { it.isChecked = true }
+        binding.distanceTags.tags = binding.distanceTags.tags
+        binding.diameterTags.tags = binding.diameterTags.tags
+        binding.arrowTags.tags = binding.arrowTags.tags
+        binding.bowTags.tags = binding.bowTags.tags
         applyFilter()
     }
 
     private fun applyFilter() {
-        distanceTags = binding!!.distanceTags.checkedTags.map { t -> t.text }.toSet()
-        diameterTags = binding!!.diameterTags.checkedTags.map { t -> t.text }.toSet()
-        arrowTags = binding!!.arrowTags.checkedTags.map { t -> t.id!! }.toSet()
-        bowTags = binding!!.bowTags.checkedTags.map { t -> t.id!! }.toSet()
-        filteredRounds = rounds!!.filter { pair ->
-            (distanceTags!!.contains(pair.second!!.distance.toString())
-                    && diameterTags!!.contains(pair.second!!.target.diameter!!.toString())
-                    && arrowTags!!.contains(pair.first!!.arrowId)
-                    && bowTags!!.contains(pair.first!!.bowId))
-        }
+        distanceTags = binding.distanceTags.checkedTags.map { t -> t.text }.toHashSet()
+        diameterTags = binding.diameterTags.checkedTags.map { t -> t.text }.toHashSet()
+        arrowTags = binding.arrowTags.checkedTags.map { t -> t.id }.toHashSet()
+        bowTags = binding.bowTags.checkedTags.map { t -> t.id }.toHashSet()
+        filteredRounds = rounds!!
+                .filter { (training, round) ->
+                    distanceTags!!.contains(round.distance.toString())
+                            && diameterTags!!.contains(round.target.diameter!!.toString())
+                            && arrowTags!!.contains(training.arrowId)
+                            && bowTags!!.contains(training.bowId)
+                }
                 .map { p -> p.second }
-                .map { it!! }
                 .groupBy { value -> Pair(value.target.id, value.target.getScoringStyle()) }
                 .map { value1 -> Pair(value1.value[0].target, value1.value) }
-        val animate = binding!!.viewPager.adapter == null
+                .sortedByDescending { it.second.size }
+        val animate = binding.viewPager.adapter == null
         val adapter = StatisticsPagerAdapter(
                 supportFragmentManager, filteredRounds!!, animate)
-        binding!!.viewPager.adapter = adapter
+        binding.viewPager.adapter = adapter
     }
 
     private fun getBowTags(): List<Tag> {
         return rounds!!
-                .map { it.first!!.id }
+                .map { it.first.bowId }
                 .distinct()
                 .map { bid ->
                     if (bid != null) {
@@ -223,7 +222,7 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
 
     private fun getArrowTags(): List<Tag> {
         return rounds!!
-                .map { it.first!!.arrowId }
+                .map { it.first.arrowId }
                 .distinct()
                 .map { aid ->
                     if (aid != null) {
@@ -236,21 +235,19 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
     }
 
     private fun getDistanceTags(): List<Tag> {
-        return Stream.of(rounds!!)
-                .map { p -> p.second!!.distance }
+        return rounds!!
+                .map { it.second.distance }
                 .distinct()
                 .sorted()
                 .map { d -> Tag(d.id, d.toString()) }
-                .toList()
     }
 
     private fun getDiameterTags(): List<Tag> {
-        return Stream.of(rounds!!)
-                .map { p -> p.second!!.target.diameter }
+        return rounds!!
+                .map { it.second.target.diameter!! }
                 .distinct()
                 .sorted()
-                .map { Tag(it!!.id, it.toString()) }
-                .toList()
+                .map { Tag(it.id, it.toString()) }
     }
 
     public override fun onSaveInstanceState(outState: Bundle?) {
@@ -274,7 +271,7 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
                 return try {
                     val f = File(cacheDir, exportFileName)
                     CsvExporter(applicationContext)
-                            .exportAll(f, filteredRounds!!.flatMap { it.second!! }.map { it.id!! })
+                            .exportAll(f, filteredRounds!!.flatMap { it.second }.map { it.id!! })
                     f.toUri(this@StatisticsActivity)
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -291,7 +288,7 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
                     email.type = "text/csv"
                     startActivity(Intent.createChooser(email, getString(R.string.send_exported)))
                 } else {
-                    Snackbar.make(binding!!.root, R.string.exporting_failed,
+                    Snackbar.make(binding.root, R.string.exporting_failed,
                             Snackbar.LENGTH_LONG).show()
                 }
             }
@@ -300,15 +297,9 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
 
     inner class StatisticsPagerAdapter internal constructor(fm: FragmentManager, private val targets: List<Pair<Target, List<Round>>>, private val animate: Boolean) : FragmentStatePagerAdapter(fm) {
 
-        init {
-            Collections.sort(targets) { p1, p2 -> p2.second!!.size - p1.second!!.size }
-        }
-
         override fun getItem(position: Int): Fragment {
             val item = targets[position]
-            val roundIds = Stream.of(item.second!!)
-                    .map { it.id!! }
-                    .toList()
+            val roundIds = item.second.map { it.id!! }
             return StatisticsFragment.newInstance(roundIds, item.first, animate)
         }
 
@@ -317,7 +308,7 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
         }
 
         override fun getPageTitle(position: Int): CharSequence? {
-            return targets[position].first!!.toString()
+            return targets[position].first.toString()
         }
     }
 

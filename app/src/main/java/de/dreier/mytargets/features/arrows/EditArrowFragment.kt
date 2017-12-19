@@ -36,12 +36,12 @@ import java.lang.Integer.parseInt
 class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrows, ArrowImage::class.java) {
     @State
     var arrow: Arrow? = null
-    private var contentBinding: FragmentEditArrowBinding? = null
+    private lateinit var contentBinding: FragmentEditArrowBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = super.onCreateView(inflater, container, savedInstanceState)
         contentBinding = FragmentEditArrowBinding.inflate(inflater, binding.content, true)
-        contentBinding!!.moreFields.setOnClickListener { v -> contentBinding!!.showAll = true }
+        contentBinding.moreFields.setOnClickListener { contentBinding.showAll = true }
 
         if (savedInstanceState == null) {
             val bundle = arguments
@@ -54,11 +54,11 @@ class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrow
             }
 
             imageFiles = arrow!!.loadImages()!!
-            contentBinding!!.diameterUnit.setSelection(
+            contentBinding.diameterUnit.setSelection(
                     if (arrow!!.diameter.unit === MILLIMETER) 0 else 1)
         }
         ToolbarUtils.setTitle(this, arrow!!.name)
-        contentBinding!!.arrow = arrow
+        contentBinding.arrow = arrow
         loadImage(imageFile)
         return rootView
     }
@@ -80,50 +80,50 @@ class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrow
     private fun validateInput(): Boolean {
         val diameterValue: Float
         try {
-            diameterValue = java.lang.Float.parseFloat(contentBinding!!.diameter.text.toString())
+            diameterValue = java.lang.Float.parseFloat(contentBinding.diameter.text.toString())
         } catch (ignored: NumberFormatException) {
-            contentBinding!!.diameterTextInputLayout.error = getString(R.string.invalid_decimal_number)
+            contentBinding.diameterTextInputLayout.error = getString(R.string.invalid_decimal_number)
             return false
         }
 
-        val selectedUnit = contentBinding!!.diameterUnit.selectedItemPosition
+        val selectedUnit = contentBinding.diameterUnit.selectedItemPosition
         val diameterUnit = if (selectedUnit == 0) MILLIMETER else INCH
         if (diameterUnit === MILLIMETER) {
             if (diameterValue < 1 || diameterValue > 20) {
-                contentBinding!!.diameterTextInputLayout.error = getString(R.string.not_within_expected_range_mm)
+                contentBinding.diameterTextInputLayout.error = getString(R.string.not_within_expected_range_mm)
                 return false
             }
         } else {
             if (diameterValue < 0 || diameterValue > 1) {
-                contentBinding!!.diameterTextInputLayout.error = getString(R.string.not_within_expected_range_inch)
+                contentBinding.diameterTextInputLayout.error = getString(R.string.not_within_expected_range_inch)
                 return false
             }
         }
-        contentBinding!!.diameterTextInputLayout.error = null
+        contentBinding.diameterTextInputLayout.error = null
         return true
     }
 
     private fun buildArrow(): Arrow? {
-        arrow!!.name = contentBinding!!.name.text.toString()
-        arrow!!.maxArrowNumber = parseInt(contentBinding!!.maxArrowNumber.text.toString())
-        arrow!!.length = contentBinding!!.length.text.toString()
-        arrow!!.material = contentBinding!!.material.text.toString()
-        arrow!!.spine = contentBinding!!.spine.text.toString()
-        arrow!!.weight = contentBinding!!.weight.text.toString()
-        arrow!!.tipWeight = contentBinding!!.tipWeight.text.toString()
-        arrow!!.vanes = contentBinding!!.vanes.text.toString()
-        arrow!!.nock = contentBinding!!.nock.text.toString()
-        arrow!!.comment = contentBinding!!.comment.text.toString()
+        arrow!!.name = contentBinding.name.text.toString()
+        arrow!!.maxArrowNumber = parseInt(contentBinding.maxArrowNumber.text.toString())
+        arrow!!.length = contentBinding.length.text.toString()
+        arrow!!.material = contentBinding.material.text.toString()
+        arrow!!.spine = contentBinding.spine.text.toString()
+        arrow!!.weight = contentBinding.weight.text.toString()
+        arrow!!.tipWeight = contentBinding.tipWeight.text.toString()
+        arrow!!.vanes = contentBinding.vanes.text.toString()
+        arrow!!.nock = contentBinding.nock.text.toString()
+        arrow!!.comment = contentBinding.comment.text.toString()
         arrow!!.images = imageFiles
         arrow!!.thumbnail = thumbnail
         var diameterValue: Float
         try {
-            diameterValue = java.lang.Float.parseFloat(contentBinding!!.diameter.text.toString())
+            diameterValue = java.lang.Float.parseFloat(contentBinding.diameter.text.toString())
         } catch (ignored: NumberFormatException) {
             diameterValue = 5f
         }
 
-        val selectedUnit = contentBinding!!.diameterUnit.selectedItemPosition
+        val selectedUnit = contentBinding.diameterUnit.selectedItemPosition
         val diameterUnit = if (selectedUnit == 0) MILLIMETER else INCH
         arrow!!.diameter = Dimension(diameterValue, diameterUnit)
         return arrow

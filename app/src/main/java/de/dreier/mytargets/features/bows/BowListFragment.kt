@@ -24,7 +24,7 @@ import de.dreier.mytargets.shared.models.db.Bow
 
 class BowListFragment : SelectPureListItemFragmentBase<Bow>() {
 
-    override fun onLoad(args: Bundle): FragmentBase.LoaderUICallback {
+    override fun onLoad(args: Bundle?): FragmentBase.LoaderUICallback {
         val bows = Bow.all
         return LoaderUICallback {
             adapter!!.setList(bows)

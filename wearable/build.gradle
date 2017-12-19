@@ -80,7 +80,7 @@ dependencies {
     implementation "com.github.Raizlabs.DBFlow:dbflow:$libraryVersion.dbFlow"
 
     implementation "com.evernote:android-state:$libraryVersion.androidState"
-    annotationProcessor "com.evernote:android-state-processor:$libraryVersion.androidState"
+    kapt "com.evernote:android-state-processor:$libraryVersion.androidState"
 
     implementation project(':shared')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"

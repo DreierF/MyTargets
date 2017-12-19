@@ -53,15 +53,15 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
     @State
     var sightMarks: ArrayList<SightMark>? = null
 
-    private var contentBinding: FragmentEditBowBinding? = null
+    private lateinit var contentBinding: FragmentEditBowBinding
     private var adapter: SightMarksAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = super.onCreateView(inflater, container, savedInstanceState)
 
         contentBinding = FragmentEditBowBinding.inflate(inflater, binding.content, true)
-        contentBinding!!.addButton.setOnClickListener { v -> onAddSightSetting() }
-        contentBinding!!.moreFields.setOnClickListener { v -> contentBinding!!.showAll = true }
+        contentBinding.addButton.setOnClickListener { onAddSightSetting() }
+        contentBinding.moreFields.setOnClickListener { contentBinding.showAll = true }
 
         val bowType = EBowType
                 .valueOf(arguments!!.getString(BOW_TYPE, EBowType.RECURVE_BOW.name))
@@ -83,18 +83,18 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
             imageFiles = bow!!.loadImages()!!
         }
         ToolbarUtils.setTitle(this, bow!!.name)
-        contentBinding!!.bow = bow
+        contentBinding.bow = bow
 
         loadImage(imageFile)
         adapter = SightMarksAdapter(this, sightMarks!!)
-        contentBinding!!.sightMarks.adapter = adapter
-        contentBinding!!.sightMarks.isNestedScrollingEnabled = false
+        contentBinding.sightMarks.adapter = adapter
+        contentBinding.sightMarks.isNestedScrollingEnabled = false
         return rootView
     }
 
     override fun onResume() {
         super.onResume()
-        contentBinding!!.rootView.requestFocus()
+        contentBinding.rootView.requestFocus()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -127,27 +127,27 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
     }
 
     private fun buildBow(): Bow? {
-        bow!!.name = contentBinding!!.name.text.toString()
-        bow!!.brand = contentBinding!!.brand.text.toString()
-        bow!!.size = contentBinding!!.size.text.toString()
-        bow!!.braceHeight = contentBinding!!.braceHeight.text.toString()
-        bow!!.tiller = contentBinding!!.tiller.text.toString()
-        bow!!.limbs = contentBinding!!.limbs.text.toString()
-        bow!!.sight = contentBinding!!.sight.text.toString()
-        bow!!.drawWeight = contentBinding!!.drawWeight.text.toString()
-        bow!!.stabilizer = contentBinding!!.stabilizer.text.toString()
-        bow!!.clicker = contentBinding!!.clicker.text.toString()
-        bow!!.description = contentBinding!!.description.text.toString()
-        bow!!.button = contentBinding!!.button.text.toString()
-        bow!!.string = contentBinding!!.string.text.toString()
-        bow!!.nockingPoint = contentBinding!!.nockingPoint.text.toString()
-        bow!!.letoffWeight = contentBinding!!.letoffWeight.text.toString()
-        bow!!.arrowRest = contentBinding!!.rest.text.toString()
-        bow!!.restHorizontalPosition = contentBinding!!.restHorizontalPosition.text.toString()
-        bow!!.restVerticalPosition = contentBinding!!.restVerticalPosition.text.toString()
-        bow!!.restStiffness = contentBinding!!.restStiffness.text.toString()
-        bow!!.camSetting = contentBinding!!.cam.text.toString()
-        bow!!.scopeMagnification = contentBinding!!.scopeMagnification.text.toString()
+        bow!!.name = contentBinding.name.text.toString()
+        bow!!.brand = contentBinding.brand.text.toString()
+        bow!!.size = contentBinding.size.text.toString()
+        bow!!.braceHeight = contentBinding.braceHeight.text.toString()
+        bow!!.tiller = contentBinding.tiller.text.toString()
+        bow!!.limbs = contentBinding.limbs.text.toString()
+        bow!!.sight = contentBinding.sight.text.toString()
+        bow!!.drawWeight = contentBinding.drawWeight.text.toString()
+        bow!!.stabilizer = contentBinding.stabilizer.text.toString()
+        bow!!.clicker = contentBinding.clicker.text.toString()
+        bow!!.description = contentBinding.description.text.toString()
+        bow!!.button = contentBinding.button.text.toString()
+        bow!!.string = contentBinding.string.text.toString()
+        bow!!.nockingPoint = contentBinding.nockingPoint.text.toString()
+        bow!!.letoffWeight = contentBinding.letoffWeight.text.toString()
+        bow!!.arrowRest = contentBinding.rest.text.toString()
+        bow!!.restHorizontalPosition = contentBinding.restHorizontalPosition.text.toString()
+        bow!!.restVerticalPosition = contentBinding.restVerticalPosition.text.toString()
+        bow!!.restStiffness = contentBinding.restStiffness.text.toString()
+        bow!!.camSetting = contentBinding.cam.text.toString()
+        bow!!.scopeMagnification = contentBinding.scopeMagnification.text.toString()
         bow!!.images = imageFiles
         bow!!.thumbnail = thumbnail
         bow!!.sightMarks = sightMarks

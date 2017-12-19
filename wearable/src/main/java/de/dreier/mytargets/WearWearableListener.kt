@@ -20,14 +20,11 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.os.Parcelable
 import android.support.v4.app.NotificationCompat
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.WearableListenerService
-import de.dreier.mytargets.shared.models.TimerSettings
 import de.dreier.mytargets.shared.models.TrainingInfo
-import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
-import de.dreier.mytargets.shared.utils.unmarshall
+import de.dreier.mytargets.shared.utils.ParcelableUtil
 import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.REQUEST_TRAINING_TEMPLATE
 import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.TIMER_SETTINGS
 import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.TRAINING_UPDATE
@@ -40,16 +37,16 @@ class WearWearableListener : WearableListenerService() {
         val data = messageEvent.data
         when (messageEvent.path) {
             TRAINING_UPDATE -> {
-                val info = data.unmarshall(TrainingInfo.CREATOR as Parcelable.Creator<TrainingInfo>)
+                val info = ParcelableUtil.unmarshallTrainingInfo(data)
                 showNotification(info)
                 ApplicationInstance.wearableClient.sendTrainingUpdate(info)
             }
             REQUEST_TRAINING_TEMPLATE -> {
-                val training = data.unmarshall(AugmentedTraining.CREATOR as Parcelable.Creator<AugmentedTraining>)
+                val training = ParcelableUtil.unmarshallAugmentedTraining(data)
                 ApplicationInstance.wearableClient.sendTrainingTemplate(training)
             }
             TIMER_SETTINGS -> {
-                val settings = data.unmarshall(TimerSettings.CREATOR as Parcelable.Creator<TimerSettings>)
+                val settings = ParcelableUtil.unmarshallTimerSettings(data)
                 WearSettingsManager.timerSettings = settings
                 ApplicationInstance.wearableClient.sendTimerSettingsFromRemote()
             }

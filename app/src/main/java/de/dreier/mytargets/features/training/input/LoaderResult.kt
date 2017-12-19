@@ -19,8 +19,12 @@ import android.annotation.SuppressLint
 import android.os.Parcelable
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.Dimension
+import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
+import de.dreier.mytargets.shared.models.augmented.AugmentedRound
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
-import de.dreier.mytargets.shared.models.db.*
+import de.dreier.mytargets.shared.models.db.Arrow
+import de.dreier.mytargets.shared.models.db.SightMark
+import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.views.TargetViewBase
 import kotlinx.android.parcel.Parcelize
 
@@ -35,23 +39,21 @@ internal class LoaderResult @JvmOverloads constructor(
         var endIndex: Int = 0,
         var maxArrowNumber: Int = 12) : Parcelable {
 
+    val currentRound: AugmentedRound
+        get() = training.rounds[roundIndex]
+
     val distance: Dimension?
-        get() = currentRound.distance
+        get() = currentRound.round.distance
 
-    val ends: List<End>
-        get() = currentRound.loadEnds()!!
+    val ends: MutableList<AugmentedEnd>
+        get() = currentRound.ends
 
-    val currentRound: Round
-        get() = training.training.loadRounds()!![roundIndex]
-
-    val currentEnd: End?
+    val currentEnd: AugmentedEnd
         get() {
-            var ends = ends
             if (ends.size <= endIndex || endIndex < 0 || ends.isEmpty()) {
                 endIndex = ends.size
                 val end = currentRound.addEnd()
-                end.exact = SettingsManager.inputMethod == TargetViewBase.EInputMethod.PLOTTING
-                ends = ends
+                end.end.exact = SettingsManager.inputMethod == TargetViewBase.EInputMethod.PLOTTING
             }
             return ends[endIndex]
         }
@@ -72,7 +74,7 @@ internal class LoaderResult @JvmOverloads constructor(
     }
 
     fun setAdjustEndIndex(endIndex: Int) {
-        this.endIndex = Math.min(endIndex, currentRound.loadEnds()!!.size)
+        this.endIndex = Math.min(endIndex, currentRound.ends.size)
     }
 
     fun setArrow(arrow: Arrow) {

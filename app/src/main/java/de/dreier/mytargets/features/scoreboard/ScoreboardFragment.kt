@@ -96,7 +96,7 @@ class ScoreboardFragment : FragmentBase() {
         LocalBroadcastManager.getInstance(context!!).unregisterReceiver(updateReceiver)
     }
 
-    override fun onLoad(args: Bundle): FragmentBase.LoaderUICallback {
+    override fun onLoad(args: Bundle?): FragmentBase.LoaderUICallback {
         training = Training[trainingId]
         val archerSignature = training!!.orCreateArcherSignature
         val witnessSignature = training!!.orCreateWitnessSignature
@@ -120,9 +120,9 @@ class ScoreboardFragment : FragmentBase() {
             val finalArcher = archer
 
             signatures.editSignatureArcher
-                    .setOnClickListener { view -> onSignatureClicked(archerSignature, finalArcher) }
+                    .setOnClickListener { onSignatureClicked(archerSignature, finalArcher) }
             signatures.editSignatureWitness
-                    .setOnClickListener { view -> onSignatureClicked(witnessSignature, getString(R.string.target_captain)) }
+                    .setOnClickListener { onSignatureClicked(witnessSignature, getString(R.string.target_captain)) }
 
             signatures.archerSignaturePlaceholder.visibility = if (archerSignature.isSigned) GONE else VISIBLE
             signatures.witnessSignaturePlaceholder.visibility = if (witnessSignature.isSigned) GONE else VISIBLE

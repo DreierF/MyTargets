@@ -30,7 +30,7 @@ abstract class SettingsFragmentBase : PreferenceFragmentCompat(), SharedPreferen
 
     private var rootKey = "main"
 
-    override fun onCreatePreferences(bundle: Bundle, rootKey: String?) {
+    override fun onCreatePreferences(bundle: Bundle?, rootKey: String?) {
         this.rootKey = rootKey ?: "main"
         onCreatePreferences()
     }
@@ -49,7 +49,7 @@ abstract class SettingsFragmentBase : PreferenceFragmentCompat(), SharedPreferen
                 ContextCompat.getColor(context!!, R.color.background_material_light))
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, s: String) {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         updateItemSummaries()
     }
 

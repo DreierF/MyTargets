@@ -24,7 +24,8 @@ import de.dreier.mytargets.features.training.target.TargetListFragment
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.utils.IntentWrapper
 
-class TargetSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ImageSelectorBase<Target>(context, attrs) {
+class TargetSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null)
+    : ImageSelectorBase<Target>(context, attrs, R.string.target_face) {
     private var fixedType: TargetListFragment.EFixedType = TargetListFragment.EFixedType.NONE
 
     override val defaultIntent: IntentWrapper
@@ -41,11 +42,6 @@ class TargetSelector @JvmOverloads constructor(context: Context, attrs: Attribut
 
     fun setFixedType(fixedType: TargetListFragment.EFixedType) {
         this.fixedType = fixedType
-    }
-
-    override fun bindView(item: Target) {
-        super.bindView(item)
-        setTitle(R.string.target_face)
     }
 
     companion object {

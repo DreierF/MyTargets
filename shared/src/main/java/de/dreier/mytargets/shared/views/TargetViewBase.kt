@@ -348,14 +348,13 @@ abstract class TargetViewBase : View, View.OnTouchListener {
     private fun pressBackspace(motionEvent: MotionEvent, x: Float, y: Float): Boolean {
         if (backspaceButtonBounds!!.contains(x.toInt(), y.toInt())) {
             if (motionEvent.action == MotionEvent.ACTION_UP) {
-                var currentShotIndex = currentShotIndex
                 if (currentShotIndex != 0) {
                     if (currentShotIndex == EndRenderer.NO_SELECTION) {
                         currentShotIndex = shots.size
                     }
-                    val shot = shots[currentShotIndex - 1]
-                    shot.scoringRing = Shot.NOTHING_SELECTED
                     currentShotIndex -= 1
+                    val shot = shots[currentShotIndex]
+                    shot.scoringRing = Shot.NOTHING_SELECTED
                     notifyTargetShotsChanged()
                     animateToNewState()
                 }

@@ -67,7 +67,7 @@ class EditArrowListFragment : EditableListFragment<Arrow>() {
         return binding.root
     }
 
-    override fun onLoad(args: Bundle): FragmentBase.LoaderUICallback {
+    override fun onLoad(args: Bundle?): FragmentBase.LoaderUICallback {
         val arrows = Arrow.all
         return LoaderUICallback {
             adapter!!.setList(arrows)

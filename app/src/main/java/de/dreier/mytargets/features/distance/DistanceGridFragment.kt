@@ -72,7 +72,7 @@ class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapter
         finish()
     }
 
-    override fun onLoad(args: Bundle): FragmentBase.LoaderUICallback {
+    override fun onLoad(args: Bundle?): FragmentBase.LoaderUICallback {
         val distances = Dimension.getAll(distance!!, unit!!)
         return LoaderUICallback {
             adapter!!.setList(distances)

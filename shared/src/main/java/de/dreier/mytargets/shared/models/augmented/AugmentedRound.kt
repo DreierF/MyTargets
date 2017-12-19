@@ -18,6 +18,7 @@ package de.dreier.mytargets.shared.models.augmented
 import android.annotation.SuppressLint
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.Score
+import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import kotlinx.android.parcel.Parcelize
 
@@ -36,12 +37,25 @@ data class AugmentedRound(
             val target = round.target
             return ends.map { target.getReachedScore(it.end) }
                     .fold(Score()) { score, s ->
-                        score.add(s as Score)
+                        score.add(s)
                     }
         }
 
     fun toRound(): Round {
         round.ends = ends.map { it.toEnd() }
         return round
+    }
+
+    /**
+     * Adds a new end to the internal list of ends, but does not yet save it.
+     *
+     * @return Returns the newly created end
+     */
+    fun addEnd(): AugmentedEnd {
+        val end = AugmentedEnd(End(round.shotsPerEnd, ends.size))
+        end.end.roundId = round.id
+        end.end.save()
+        ends.add(end)
+        return end
     }
 }

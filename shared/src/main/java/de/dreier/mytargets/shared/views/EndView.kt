@@ -33,7 +33,8 @@ class EndView : View {
 
     private var shotCount: Int = 0
     private var density: Float = 0.toFloat()
-    @State private var endRenderer = EndRenderer()
+    @State
+    var endRenderer = EndRenderer()
     private val rect = RectF()
 
     constructor(context: Context) : super(context)
@@ -79,12 +80,14 @@ class EndView : View {
         width = when (widthMode) {
             View.MeasureSpec.EXACTLY -> widthSize
             View.MeasureSpec.AT_MOST -> Math.min(desiredWidth, widthSize)
+            View.MeasureSpec.UNSPECIFIED -> desiredWidth
             else -> desiredWidth
         }
 
         height = when (heightMode) {
             View.MeasureSpec.EXACTLY -> heightSize
             View.MeasureSpec.AT_MOST -> Math.min(desiredHeight, heightSize)
+            View.MeasureSpec.UNSPECIFIED -> desiredHeight
             else -> desiredHeight
         }
 

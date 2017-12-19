@@ -21,7 +21,7 @@ import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 
-class CircleDrawable(density: Float, private val score: String, private val arrowNumber: String, private val fillColor: Int, private val textColor: Int) : Drawable() {
+class CircleDrawable(density: Float, private val score: String, private val arrowNumber: String?, private val fillColor: Int, private val textColor: Int) : Drawable() {
 
     private val circle = Circle(density)
     private var x = 0f

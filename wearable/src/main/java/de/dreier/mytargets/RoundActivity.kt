@@ -110,13 +110,13 @@ class RoundActivity : WearableActivity() {
         binding.drawerLayout.setBackgroundResource(R.color.md_black_1000)
         binding.recyclerViewEnds.adapter.notifyDataSetChanged()
         binding.wearableDrawerView.visibility = View.INVISIBLE
-        binding.clock.time.visibility = View.VISIBLE
-        binding.clock.time.text = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date())
+        binding.clock!!.time.visibility = View.VISIBLE
+        binding.clock!!.time.text = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date())
     }
 
     override fun onUpdateAmbient() {
         super.onUpdateAmbient()
-        binding.clock.time.text = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date())
+        binding.clock!!.time.text = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date())
     }
 
     override fun onExitAmbient() {
@@ -124,7 +124,7 @@ class RoundActivity : WearableActivity() {
         binding.drawerLayout.setBackgroundResource(R.color.md_wear_green_dark_background)
         binding.recyclerViewEnds.adapter.notifyDataSetChanged()
         binding.wearableDrawerView.visibility = View.VISIBLE
-        binding.clock.time.visibility = View.GONE
+        binding.clock!!.time.visibility = View.GONE
     }
 
     private fun showRoundData() {

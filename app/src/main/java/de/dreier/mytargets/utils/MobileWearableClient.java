@@ -94,7 +94,7 @@ public class MobileWearableClient extends WearableClientBase {
         if (roundCount < 1) {
             return;
         }
-        AugmentedRound round = rounds.get(roundCount - 1);
+        AugmentedRound round = new AugmentedRound(rounds.get(roundCount - 1).toRound());
         for (AugmentedRound r : rounds) {
             if (r.getRound().getMaxEndCount() != null && r.getEnds().size() < r.getRound().getMaxEndCount()) {
                 round = r;
@@ -109,7 +109,7 @@ public class MobileWearableClient extends WearableClientBase {
                     if(!SettingsManager.INSTANCE.shouldSortTarget(target)) {
                         return end;
                     }
-                    return new AugmentedEnd(end.getEnd(), Stream.of(end.getShots()).sorted().toList());
+                    return new AugmentedEnd(end.getEnd(), Stream.of(end.getShots()).sorted().toList(), end.getImages());
                 })
                 .toList());
         TrainingInfo trainingInfo = new TrainingInfo(training, round);

@@ -23,7 +23,7 @@ sealed class Cell {
 
 data class TextCell(val content: String, var bold: Boolean) : Cell()
 
-data class EndCell(val score: String, val fillColor: Int, val textColor: Int, val arrowNumber: String) : Cell()
+data class EndCell(val score: String, val fillColor: Int, val textColor: Int, val arrowNumber: String?) : Cell()
 
 data class Table(val wrapContent: Boolean) : Cell() {
 
@@ -58,7 +58,7 @@ data class Table(val wrapContent: Boolean) : Cell() {
             return this
         }
 
-        fun addEndCell(content: String, fillColor: Int, textColor: Int, arrowNumber: String) {
+        fun addEndCell(content: String, fillColor: Int, textColor: Int, arrowNumber: String?) {
             cells.add(EndCell(content, fillColor, textColor, arrowNumber))
         }
     }

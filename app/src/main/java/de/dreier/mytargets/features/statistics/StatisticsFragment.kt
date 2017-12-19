@@ -67,7 +67,7 @@ class StatisticsFragment : FragmentBase() {
     private var roundIds: LongArray? = null
     private var rounds: List<Round>? = null
     private var adapter: ArrowStatisticAdapter? = null
-    private var binding: FragmentStatisticsBinding? = null
+    private lateinit var binding: FragmentStatisticsBinding
     private var target: Target? = null
     private var animate: Boolean = false
 
@@ -81,8 +81,7 @@ class StatisticsFragment : FragmentBase() {
         }
     }
 
-    private//TODO: Refactor to not save NOTHING_SELECTED at all
-    val hitMissText: String
+    private val hitMissText: String
         get() {
             val shots = Stream.of(rounds!!)
                     .flatMap { r -> Stream.of(r.loadEnds()!!) }
@@ -120,7 +119,7 @@ class StatisticsFragment : FragmentBase() {
             }
 
             val eval = getEntryEvaluator(values)
-            binding!!.chartView.xAxis.setValueFormatter { value, _ -> eval.getXValueFormatted(value) }
+            binding.chartView.xAxis.setValueFormatter { value, _ -> eval.getXValueFormatted(value) }
 
             val data: LineData
             if (values.size < 2) {
@@ -156,16 +155,16 @@ class StatisticsFragment : FragmentBase() {
         roundIds = arguments!!.getLongArray(ARG_ROUND_IDS)
         animate = arguments!!.getBoolean(ARG_ANIMATE)
 
-        binding!!.arrows.setHasFixedSize(true)
+        binding.arrows.setHasFixedSize(true)
         adapter = ArrowStatisticAdapter()
-        binding!!.arrows.adapter = adapter
-        binding!!.arrows.isNestedScrollingEnabled = false
+        binding.arrows.adapter = adapter
+        binding.arrows.isNestedScrollingEnabled = false
 
         ToolbarUtils.showHomeAsUp(this)
-        return binding!!.root
+        return binding.root
     }
 
-    override fun onLoad(args: Bundle): FragmentBase.LoaderUICallback {
+    override fun onLoad(args: Bundle?): FragmentBase.LoaderUICallback {
         rounds = roundIds!!
                 .map { Round[it] }
                 .filterNotNull()
@@ -177,10 +176,10 @@ class StatisticsFragment : FragmentBase() {
             showLineChart()
             showPieChart()
             showDispersionView()
-            binding!!.distributionChart.invalidate()
-            binding!!.chartView.invalidate()
+            binding.distributionChart.invalidate()
+            binding.chartView.invalidate()
 
-            binding!!.arrowRankingLabel.visibility = if (data.isEmpty()) View.GONE else View.VISIBLE
+            binding.arrowRankingLabel.visibility = if (data.isEmpty()) View.GONE else View.VISIBLE
             Collections.sort(data)
             adapter!!.setData(data)
         }
@@ -194,7 +193,7 @@ class StatisticsFragment : FragmentBase() {
                 .filter { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }
                 .toList()
         if (exactShots.isEmpty()) {
-            binding!!.dispersionPatternLayout.visibility = View.GONE
+            binding.dispersionPatternLayout.visibility = View.GONE
             return
         }
         val stats = ArrowStatistic(target!!, exactShots)
@@ -205,9 +204,9 @@ class StatisticsFragment : FragmentBase() {
         drawable.setAggregationStrategy(strategy)
         drawable.replaceShotsWith(stats.shots)
         drawable.setArrowDiameter(stats.arrowDiameter, SettingsManager.inputArrowDiameterScale)
-        binding!!.dispersionView.setImageDrawable(drawable)
+        binding.dispersionView.setImageDrawable(drawable)
 
-        binding!!.dispersionViewOverlay.setOnClickListener { view ->
+        binding.dispersionViewOverlay.setOnClickListener {
             val statistics = ArrowStatistic(target!!, exactShots)
             DispersionPatternActivity.getIntent(statistics)
                     .withContext(this)
@@ -217,25 +216,25 @@ class StatisticsFragment : FragmentBase() {
 
     private fun showLineChart() {
         val data = lineChartDataSet ?: return
-        binding!!.chartView.xAxis.textSize = 10f
-        binding!!.chartView.xAxis.textColor = -0x7b7b7c
-        binding!!.chartView.axisRight.isEnabled = false
-        binding!!.chartView.legend.isEnabled = false
-        binding!!.chartView.data = data
+        binding.chartView.xAxis.textSize = 10f
+        binding.chartView.xAxis.textColor = -0x7b7b7c
+        binding.chartView.axisRight.isEnabled = false
+        binding.chartView.legend.isEnabled = false
+        binding.chartView.data = data
         val desc = Description()
         desc.text = getString(R.string.average_arrow_score_per_end)
-        binding!!.chartView.description = desc
+        binding.chartView.description = desc
         val maxCeil = Math.ceil(data.yMax.toDouble()).toInt()
-        binding!!.chartView.axisLeft.axisMaximum = maxCeil.toFloat()
-        binding!!.chartView.axisLeft.labelCount = maxCeil
-        binding!!.chartView.axisLeft.axisMinimum = 0f
-        binding!!.chartView.xAxis.setDrawGridLines(false)
-        binding!!.chartView.isDoubleTapToZoomEnabled = false
+        binding.chartView.axisLeft.axisMaximum = maxCeil.toFloat()
+        binding.chartView.axisLeft.labelCount = maxCeil
+        binding.chartView.axisLeft.axisMinimum = 0f
+        binding.chartView.xAxis.setDrawGridLines(false)
+        binding.chartView.isDoubleTapToZoomEnabled = false
         if (animate) {
-            binding!!.chartView.animateXY(2000, 2000)
+            binding.chartView.animateXY(2000, 2000)
         }
-        binding!!.chartView.renderer = object : LineChartRenderer(binding!!.chartView, binding!!.chartView.animator,
-                binding!!.chartView.viewPortHandler) {
+        binding.chartView.renderer = object : LineChartRenderer(binding.chartView, binding.chartView.animator,
+                binding.chartView.viewPortHandler) {
             override fun drawHighlighted(canvas: Canvas, indices: Array<Highlight>) {
                 mRenderPaint.style = Paint.Style.FILL
 
@@ -266,19 +265,19 @@ class StatisticsFragment : FragmentBase() {
 
     private fun showPieChart() {
         // enable hole and configure
-        binding!!.distributionChart.transparentCircleRadius = 15f
-        binding!!.distributionChart.setHoleColor(ContextCompat.getColor(context!!, R.color.md_grey_50))
-        binding!!.distributionChart.legend.isEnabled = false
-        binding!!.distributionChart.description = EMPTY_DESCRIPTION
+        binding.distributionChart.transparentCircleRadius = 15f
+        binding.distributionChart.setHoleColor(ContextCompat.getColor(context!!, R.color.md_grey_50))
+        binding.distributionChart.legend.isEnabled = false
+        binding.distributionChart.description = EMPTY_DESCRIPTION
 
         // enable rotation of the chart by touch
-        binding!!.distributionChart.rotationAngle = 0f
-        binding!!.distributionChart.isRotationEnabled = true
+        binding.distributionChart.rotationAngle = 0f
+        binding.distributionChart.isRotationEnabled = true
 
-        binding!!.distributionChart.setUsePercentValues(false)
-        binding!!.distributionChart.highlightValues(null)
-        binding!!.distributionChart.setBackgroundColor(ContextCompat.getColor(context!!, R.color.md_grey_50))
-        binding!!.distributionChart.invalidate()
+        binding.distributionChart.setUsePercentValues(false)
+        binding.distributionChart.highlightValues(null)
+        binding.distributionChart.setBackgroundColor(ContextCompat.getColor(context!!, R.color.md_grey_50))
+        binding.distributionChart.invalidate()
         addPieData()
     }
 
@@ -300,7 +299,7 @@ class StatisticsFragment : FragmentBase() {
 
         // create pie data set
         val dataSet = PieDataSet(yValues, "")
-        dataSet.setValueFormatter { value, entry, dsi, vph -> (entry.data as SelectableZone).text }
+        dataSet.setValueFormatter { _, entry, _, _ -> (entry.data as SelectableZone).text }
         dataSet.sliceSpace = 3f
         dataSet.selectionShift = 5f
 
@@ -314,11 +313,11 @@ class StatisticsFragment : FragmentBase() {
         data.setDrawValues(true)
         data.setValueTextColors(textColors)
 
-        binding!!.distributionChart.data = data
+        binding.distributionChart.data = data
         val hitMissText = hitMissText
-        binding!!.distributionChart.centerText = Utils.fromHtml(hitMissText)
+        binding.distributionChart.centerText = Utils.fromHtml(hitMissText)
 
-        binding!!.distributionChart
+        binding.distributionChart
                 .setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                     override fun onValueSelected(e: Entry, h: Highlight) {
                         val selectableZone = e.data as SelectableZone
@@ -326,11 +325,11 @@ class StatisticsFragment : FragmentBase() {
                                 PIE_CHART_CENTER_TEXT_FORMAT,
                                 getString(R.string.points), selectableZone.text,
                                 getString(R.string.count), e.y.toInt())
-                        binding!!.distributionChart.centerText = Utils.fromHtml(s)
+                        binding.distributionChart.centerText = Utils.fromHtml(s)
                     }
 
                     override fun onNothingSelected() {
-                        binding!!.distributionChart.centerText = Utils.fromHtml(hitMissText)
+                        binding.distributionChart.centerText = Utils.fromHtml(hitMissText)
                     }
                 })
     }
@@ -349,12 +348,12 @@ class StatisticsFragment : FragmentBase() {
                 private val dateFormat = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
 
                 override fun getXValue(values: List<Pair<Float, LocalDateTime>>, i: Int): Long {
-                    return Duration.between(values[0].second!!, values[i].second).seconds
+                    return Duration.between(values[0].second, values[i].second).seconds
                 }
 
                 override fun getXValueFormatted(value: Float): String {
                     val diffToFirst = value.toLong()
-                    return values[0].second!!.plusSeconds(diffToFirst).format(dateFormat)
+                    return values[0].second.plusSeconds(diffToFirst).format(dateFormat)
                 }
             }
         } else {
@@ -367,7 +366,7 @@ class StatisticsFragment : FragmentBase() {
 
                 override fun getXValueFormatted(value: Float): String {
                     val index = Math.max(Math.min(value.toInt(), values.size - 1), 0)
-                    return dateFormat.format(values[index].second!!)
+                    return dateFormat.format(values[index].second)
                 }
             }
         }
@@ -383,7 +382,7 @@ class StatisticsFragment : FragmentBase() {
     private fun convertToLineData(values: List<Pair<Float, LocalDateTime>>, evaluator: Evaluator): LineDataSet {
         val seriesEntries = ArrayList<Entry>()
         for (i in values.indices) {
-            seriesEntries.add(Entry(evaluator.getXValue(values, i).toFloat(), values[i].first!!))
+            seriesEntries.add(Entry(evaluator.getXValue(values, i).toFloat(), values[i].first))
         }
 
         val series = LineDataSet(seriesEntries, "")
@@ -414,7 +413,7 @@ class StatisticsFragment : FragmentBase() {
         var maxX = java.lang.Long.MIN_VALUE
         for (i in 0 until dataSetSize) {
             x[n] = eval.getXValue(values, i).toDouble()
-            y[n] = values[i].first!!.toDouble()
+            y[n] = values[i].first.toDouble()
             sumX += x[n]
             sumY += y[n]
             if (x[n] < minX) {
@@ -492,7 +491,7 @@ class StatisticsFragment : FragmentBase() {
         init {
             itemView.isClickable = true
             binding = DataBindingUtil.bind(itemView)
-            binding.content.setOnClickListener { v -> onItemClicked() }
+            binding.content.setOnClickListener { onItemClicked() }
         }
 
         private fun onItemClicked() {
