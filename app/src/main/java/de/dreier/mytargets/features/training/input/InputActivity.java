@@ -24,7 +24,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -54,6 +53,7 @@ import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.features.timer.TimerFragment;
 import de.dreier.mytargets.features.training.RoundFragment;
 import de.dreier.mytargets.shared.models.Score;
+import de.dreier.mytargets.shared.models.augmented.AugmentedEnd;
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining;
 import de.dreier.mytargets.shared.models.db.Arrow;
 import de.dreier.mytargets.shared.models.db.Bow;
@@ -94,8 +94,8 @@ public class InputActivity extends ChildActivityBase
 
     private ActivityInputBinding binding;
     private boolean transitionFinished = true;
-    @Nullable
-    private ETrainingScope summaryShowScope = null;
+    @NonNull
+    private ETrainingScope summaryShowScope = ETrainingScope.END;
     private TargetView targetView;
 
     @NonNull
@@ -184,7 +184,7 @@ public class InputActivity extends ChildActivityBase
             for (String image : imageList.getRemovedImages()) {
                 new File(getFilesDir(), image).delete();
             }
-            this.data.getCurrentEnd().save();
+            this.data.getCurrentEnd().toEnd().save();
             updateEnd();
             supportInvalidateOptionsMenu();
         }
@@ -247,7 +247,7 @@ public class InputActivity extends ChildActivityBase
             timer.setChecked(SettingsManager.INSTANCE.getTimerEnabled());
             newRound.setVisible(data.getTraining().getTraining().getStandardRoundId() == null);
             takePicture.setVisible(Utils.hasCameraHardware(this));
-            takePicture.setIcon(data.getCurrentEnd().loadImages().isEmpty() ?
+            takePicture.setIcon(data.getCurrentEnd().getImages().isEmpty() ?
                     R.drawable.ic_photo_camera_white_24dp : R.drawable.ic_image_white_24dp);
         }
         return true;
@@ -257,8 +257,7 @@ public class InputActivity extends ChildActivityBase
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_photo:
-                GalleryActivity.getIntent(new ImageList(data.getCurrentEnd()
-                        .loadImages()), getString(R.string.end_n, data.getEndIndex() + 1))
+                GalleryActivity.getIntent(new ImageList(data.getCurrentEnd().getImages()), getString(R.string.end_n, data.getEndIndex() + 1))
                         .withContext(this)
                         .forResult(GALLERY_REQUEST_CODE)
                         .start();
@@ -267,9 +266,9 @@ public class InputActivity extends ChildActivityBase
                 new MaterialDialog.Builder(this)
                         .title(R.string.comment)
                         .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE)
-                        .input("", data.getCurrentEnd().getComment(), (dialog, input) -> {
-                            data.getCurrentEnd().setComment(input.toString());
-                            data.getCurrentEnd().save();
+                        .input("", data.getCurrentEnd().getEnd().getComment(), (dialog, input) -> {
+                            data.getCurrentEnd().getEnd().setComment(input.toString());
+                            data.getCurrentEnd().toEnd().save();
                         })
                         .negativeText(android.R.string.cancel)
                         .show();
@@ -320,7 +319,7 @@ public class InputActivity extends ChildActivityBase
             binding.targetViewStub.getViewStub().inflate();
         }
         targetView = (TargetView) binding.targetViewStub.getBinding().getRoot();
-        targetView.initWithTarget(data.getCurrentRound().getTarget());
+        targetView.initWithTarget(data.getCurrentRound().getRound().getTarget());
         targetView.setArrow(data.getArrowDiameter(), data.getTraining().getTraining().getArrowNumbering(), data
                 .getMaxArrowNumber());
         targetView.setOnTargetSetListener(InputActivity.this);
@@ -340,8 +339,8 @@ public class InputActivity extends ChildActivityBase
         // Create a new end
         data.setAdjustEndIndex(endIndex);
         if (endIndex >= data.getEnds().size()) {
-            End end = data.getCurrentRound().addEnd();
-            end.setExact(SettingsManager.INSTANCE.getInputMethod() == EInputMethod.PLOTTING);
+            AugmentedEnd end = data.getCurrentRound().addEnd();
+            end.getEnd().setExact(SettingsManager.INSTANCE.getInputMethod() == EInputMethod.PLOTTING);
             updateOldShoots();
         }
 
@@ -352,9 +351,9 @@ public class InputActivity extends ChildActivityBase
     }
 
     public void updateOldShoots() {
-        final End currentEnd = data.getCurrentEnd();
-        final Long currentRoundId = data.getCurrentRound().getId();
-        final Long currentEndId = currentEnd.getId();
+        final AugmentedEnd currentEnd = data.getCurrentEnd();
+        final Long currentRoundId = data.getCurrentRound().getRound().getId();
+        final Long currentEndId = currentEnd.getEnd().getId();
         final ETrainingScope shotShowScope = SettingsManager.INSTANCE.getShowMode();
         final LoaderResult data = this.data;
         final Stream<Shot> shotStream = Stream.of(data.getTraining().getRounds())
@@ -391,14 +390,14 @@ public class InputActivity extends ChildActivityBase
     }
 
     private void updateEnd() {
-        targetView.replaceWithEnd(data.getCurrentEnd());
-        final int totalEnds = data.getCurrentRound().getMaxEndCount() == null
+        targetView.replaceWithEnd(data.getCurrentEnd().toEnd());
+        final int totalEnds = data.getCurrentRound().getRound().getMaxEndCount() == null
                 ? data.getEnds().size()
-                : data.getCurrentRound().getMaxEndCount();
+                : data.getCurrentRound().getRound().getMaxEndCount();
         binding.endTitle.setText(getString(R.string.end_x_of_y, data.getEndIndex() + 1, totalEnds));
         binding.roundTitle.setText(getString(
                 R.string.round_x_of_y,
-                data.getCurrentRound().getIndex() + 1,
+                data.getCurrentRound().getRound().getIndex() + 1,
                 data.getTraining().getRounds().size()));
         updateNavigationButtons();
         updateWearNotification();
@@ -436,8 +435,8 @@ public class InputActivity extends ChildActivityBase
     private void updateNextButton() {
         final boolean dataLoaded = data != null;
         boolean isLastEnd = dataLoaded &&
-                data.getCurrentRound().getMaxEndCount() != null &&
-                data.getEndIndex() + 1 == data.getCurrentRound().getMaxEndCount();
+                data.getCurrentRound().getRound().getMaxEndCount() != null &&
+                data.getEndIndex() + 1 == data.getCurrentRound().getRound().getMaxEndCount();
         final boolean hasOneMoreRound = dataLoaded &&
                 data.getRoundIndex() + 1 < data.getTraining().getRounds().size();
         boolean showNextRound = isLastEnd && hasOneMoreRound;
@@ -471,16 +470,16 @@ public class InputActivity extends ChildActivityBase
     @Override
     public void onEndUpdated(List<Shot> changedEnd) {
         data.getCurrentEnd().setShots(changedEnd);
-        data.getCurrentEnd().save();
+        data.getCurrentEnd().toEnd().save();
 
         // Set current end score
-        Score reachedEndScore = data.getCurrentRound().getTarget()
-                .getReachedScore(data.getCurrentEnd());
+        Score reachedEndScore = data.getCurrentRound().getRound().getTarget()
+                .getReachedScore(data.getCurrentEnd().toEnd());
         binding.endScore.setText(reachedEndScore.toString());
 
         // Set current round score
         Score reachedRoundScore = Stream.of(data.getEnds())
-                .map(end -> data.getCurrentRound().getTarget().getReachedScore(end))
+                .map(end -> data.getCurrentRound().getRound().getTarget().getReachedScore(end.toEnd()))
                 .scoreSum();
         binding.roundScore.setText(reachedRoundScore.toString());
 
@@ -512,8 +511,8 @@ public class InputActivity extends ChildActivityBase
     @Override
     public void onEndFinished(@NonNull List<Shot> shots) {
         data.getCurrentEnd().setShots(shots);
-        data.getCurrentEnd().setExact(targetView.getInputMode() == EInputMethod.PLOTTING);
-        data.getCurrentEnd().save();
+        data.getCurrentEnd().getEnd().setExact(targetView.getInputMode() == EInputMethod.PLOTTING);
+        data.getCurrentEnd().toEnd().save();
 
         updateWearNotification();
         updateNavigationButtons();

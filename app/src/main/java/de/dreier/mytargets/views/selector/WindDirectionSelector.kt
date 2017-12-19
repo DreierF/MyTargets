@@ -17,12 +17,12 @@ package de.dreier.mytargets.views.selector
 
 import android.content.Context
 import android.util.AttributeSet
-
 import de.dreier.mytargets.R
 import de.dreier.mytargets.features.training.environment.WindDirectionActivity
 import de.dreier.mytargets.shared.models.WindDirection
 
-class WindDirectionSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ImageSelectorBase<WindDirection>(context, attrs) {
+class WindDirectionSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null
+) : ImageSelectorBase<WindDirection>(context, attrs, R.string.wind_direction) {
 
     init {
         defaultActivity = WindDirectionActivity::class.java
@@ -31,11 +31,6 @@ class WindDirectionSelector @JvmOverloads constructor(context: Context, attrs: A
 
     fun setItemId(direction: Long) {
         setItem(WindDirection.getList(context)[direction.toInt()])
-    }
-
-    override fun bindView(item: WindDirection) {
-        super.bindView(item)
-        setTitle(R.string.wind_direction)
     }
 
     companion object {

@@ -46,9 +46,9 @@ class BackupAdapter(context: Context, private val primaryActionListener: OnItemC
         holder.binding.name.text = modified
         holder.binding.details.text = p.humanReadableSize
         holder.binding.primaryAction
-                .setOnClickListener { view -> primaryActionListener.onItemClicked(p) }
+                .setOnClickListener { primaryActionListener.onItemClicked(p) }
         holder.binding.secondaryAction
-                .setOnClickListener { view -> secondaryActionListener.onItemClicked(p) }
+                .setOnClickListener { secondaryActionListener.onItemClicked(p) }
     }
 
     override fun getItemId(position: Int): Long {
@@ -73,7 +73,7 @@ class BackupAdapter(context: Context, private val primaryActionListener: OnItemC
     }
 
     class BackupViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val binding = ItemDetailsSecondaryActionBinding.bind(itemView)!!
+        val binding = ItemDetailsSecondaryActionBinding.bind(itemView)
     }
 }
 

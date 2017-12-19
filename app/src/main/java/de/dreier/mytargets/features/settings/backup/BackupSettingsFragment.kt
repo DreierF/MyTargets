@@ -17,7 +17,10 @@ package de.dreier.mytargets.features.settings.backup
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
 import android.content.ContentResolver
+import android.content.ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE
+import android.content.ContentResolver.SYNC_OBSERVER_TYPE_PENDING
 import android.content.Context
 import android.content.Intent
 import android.content.SyncStatusObserver
@@ -29,29 +32,19 @@ import android.os.Handler
 import android.support.annotation.StringRes
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.text.format.DateUtils
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-
+import android.view.*
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import com.afollestad.materialdialogs.MaterialDialog
-
-import java.io.FileNotFoundException
-import java.text.SimpleDateFormat
-import java.util.Arrays
-import java.util.Locale
-import java.util.Timer
-import java.util.TimerTask
-
 import de.dreier.mytargets.R
 import de.dreier.mytargets.databinding.FragmentBackupBinding
 import de.dreier.mytargets.features.settings.SettingsFragmentBase
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.features.settings.backup.provider.BackupUtils
 import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation
+import de.dreier.mytargets.features.settings.backup.provider.GoogleDriveBackup.AsyncRestore.REQUEST_CODE_RESOLUTION
 import de.dreier.mytargets.features.settings.backup.provider.IAsyncBackupRestore
 import de.dreier.mytargets.features.settings.backup.synchronization.GenericAccountService
 import de.dreier.mytargets.features.settings.backup.synchronization.SyncUtils
@@ -60,14 +53,9 @@ import de.dreier.mytargets.utils.Utils
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.OnPermissionDenied
 import permissions.dispatcher.RuntimePermissions
-
-import android.app.Activity.RESULT_OK
-import android.content.ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE
-import android.content.ContentResolver.SYNC_OBSERVER_TYPE_PENDING
-import android.support.v7.widget.DividerItemDecoration.VERTICAL
-import android.view.View.GONE
-import android.view.View.VISIBLE
-import de.dreier.mytargets.features.settings.backup.provider.GoogleDriveBackup.AsyncRestore.REQUEST_CODE_RESOLUTION
+import java.io.FileNotFoundException
+import java.text.SimpleDateFormat
+import java.util.*
 
 @RuntimePermissions
 class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoadFinishedListener {
@@ -221,7 +209,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
                 .items(backupIntervals)
                 .itemsCallbackSingleChoice(
                         backupIntervals.indexOf(SettingsManager.backupInterval)
-                ) { dialog, v, index, text ->
+                ) { _, _, index, _ ->
                     SettingsManager.backupInterval = EBackupInterval.values()[index]
                     updateInterval()
                     true
@@ -353,7 +341,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
                 .negativeText(android.R.string.cancel)
                 .positiveColor(-0x1ac6cb)
                 .negativeColor(-0x78000000)
-                .onPositive { dialog, which -> restoreBackup(item) }
+                .onPositive { _, _ -> restoreBackup(item) }
                 .show()
     }
 

@@ -157,19 +157,6 @@ data class Round(
         return index - other.index
     }
 
-    /**
-     * Adds a new end to the internal list of ends, but does not yet save it.
-     *
-     * @return Returns the newly created end
-     */
-    fun addEnd(): End {
-        val end = End(shotsPerEnd, loadEnds()!!.size)
-        end.roundId = id
-        end.save()
-        loadEnds()?.add(end)
-        return end
-    }
-
     override fun saveRecursively() {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.saveRecursively(it) })
     }

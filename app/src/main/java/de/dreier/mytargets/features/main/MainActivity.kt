@@ -165,7 +165,7 @@ class MainActivity : AppCompatActivity() {
             userName.text = profileFullName
         }
         userDetails.text = SettingsManager.profileClub
-        headerLayout.setOnClickListener { view -> closeDrawerAndStart(SettingsActivity.getIntent(PROFILE)) }
+        headerLayout.setOnClickListener { closeDrawerAndStart(SettingsActivity.getIntent(PROFILE)) }
     }
 
     private fun closeDrawerAndStart(intent: IntentWrapper) {

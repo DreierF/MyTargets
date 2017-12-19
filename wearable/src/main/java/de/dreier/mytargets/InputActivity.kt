@@ -25,15 +25,15 @@ import android.support.wearable.activity.WearableActivity
 import android.view.View
 import de.dreier.mytargets.databinding.ActivityInputBinding
 import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
+import de.dreier.mytargets.shared.models.augmented.AugmentedRound
 import de.dreier.mytargets.shared.models.db.End
-import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.views.TargetViewBase
 import java.text.DateFormat
 import java.util.*
 
 class InputActivity : WearableActivity(), TargetViewBase.OnEndFinishedListener {
-    private lateinit var round: Round
+    private lateinit var round: AugmentedRound
     private lateinit var binding: ActivityInputBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,8 +48,8 @@ class InputActivity : WearableActivity(), TargetViewBase.OnEndFinishedListener {
         binding.circularProgress.visibility = View.INVISIBLE
 
         // Set up target view
-        binding.target.initWithTarget(round.target)
-        binding.target.replaceWithEnd(End(round.shotsPerEnd, 0))
+        binding.target.initWithTarget(round.round.target)
+        binding.target.replaceWithEnd(End(round.round.shotsPerEnd, 0))
         binding.target.setOnTargetSetListener(this)
 
         // Ensure Moto 360 is not cut off at the bottom
@@ -64,20 +64,20 @@ class InputActivity : WearableActivity(), TargetViewBase.OnEndFinishedListener {
         super.onEnterAmbient(ambientDetails)
         binding.target.setBackgroundResource(R.color.md_black_1000)
         binding.target.setAmbientMode(true)
-        binding.clock.time.visibility = View.VISIBLE
-        binding.clock.time.text = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date())
+        binding.clock!!.time.visibility = View.VISIBLE
+        binding.clock!!.time.text = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date())
     }
 
     override fun onUpdateAmbient() {
         super.onUpdateAmbient()
-        binding.clock.time.text = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date())
+        binding.clock!!.time.text = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date())
     }
 
     override fun onExitAmbient() {
         super.onExitAmbient()
         binding.target.setBackgroundResource(R.color.md_wear_green_lighter_background)
         binding.target.setAmbientMode(false)
-        binding.clock.time.visibility = View.GONE
+        binding.clock!!.time.visibility = View.GONE
     }
 
     override fun onEndFinished(shotList: List<Shot>) {
@@ -99,9 +99,9 @@ class InputActivity : WearableActivity(), TargetViewBase.OnEndFinishedListener {
                     .getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             v.vibrate(200)
             this@InputActivity.finish()
-            val end = End(round.shotsPerEnd, 0)
-            end.roundId = round.id
-            val ae = AugmentedEnd(end, shotList.toMutableList())
+            val end = End(round.round.shotsPerEnd, 0)
+            end.roundId = round.round.id
+            val ae = AugmentedEnd(end, shotList.toMutableList(), mutableListOf())
             ApplicationInstance.wearableClient.sendEndUpdate(ae)
         }
     }

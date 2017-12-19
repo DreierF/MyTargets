@@ -155,7 +155,7 @@ class ChipGroup @JvmOverloads constructor(context: Context, attrs: AttributeSet?
      */
     private fun appendTag(tag: Tag) {
         val binding = tag.getView(context, this)
-        binding.root.setOnClickListener { v ->
+        binding.root.setOnClickListener {
             tag.isChecked = !tag.isChecked
             binding.root.isActivated = !tag.isChecked
             onSelectionChangedListener?.invoke(tag)

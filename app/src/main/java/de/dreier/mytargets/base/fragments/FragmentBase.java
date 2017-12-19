@@ -85,7 +85,7 @@ public abstract class FragmentBase extends Fragment implements LoaderManager.Loa
 
     @WorkerThread
     @NonNull
-    protected LoaderUICallback onLoad(Bundle args) {
+    protected LoaderUICallback onLoad(@Nullable Bundle args) {
         return () -> {
         };
     }

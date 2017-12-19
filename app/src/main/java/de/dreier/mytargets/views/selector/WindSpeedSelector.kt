@@ -22,7 +22,8 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.features.training.environment.WindSpeedActivity
 import de.dreier.mytargets.shared.models.WindSpeed
 
-class WindSpeedSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ImageSelectorBase<WindSpeed>(context, attrs) {
+class WindSpeedSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null
+) : ImageSelectorBase<WindSpeed>(context, attrs, R.string.wind_speed) {
 
     init {
         defaultActivity = WindSpeedActivity::class.java
@@ -31,11 +32,6 @@ class WindSpeedSelector @JvmOverloads constructor(context: Context, attrs: Attri
 
     fun setItemId(speed: Long) {
         setItem(WindSpeed.getList(context)[speed.toInt()])
-    }
-
-    override fun bindView(item: WindSpeed) {
-        super.bindView(item)
-        setTitle(R.string.wind_speed)
     }
 
     companion object {

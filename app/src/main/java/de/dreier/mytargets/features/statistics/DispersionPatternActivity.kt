@@ -134,10 +134,7 @@ class DispersionPatternActivity : ChildActivityBase() {
 
         // Get the image
         val image = DispersionPatternUtils.getDispersionPatternBitmap(800, statistic!!)
-        if (image != null) {
-            // Send it to the print helper
-            printHelper.printBitmap("Dispersion Pattern", image)
-        }
+        printHelper.printBitmap("Dispersion Pattern", image)
     }
 
     companion object {

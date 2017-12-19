@@ -60,7 +60,7 @@ abstract class SelectorBase<T : Parcelable>(
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-        addButton = getChildAt(0) as Button
+        addButton = getChildAt(0) as Button?
         addButton?.setOnClickListener { addIntent!!.start() }
         val inflater = LayoutInflater.from(context)
         progress = inflater.inflate(R.layout.selector_item_process, this, false)
@@ -75,7 +75,7 @@ abstract class SelectorBase<T : Parcelable>(
         addButton?.visibility = if (selectedItem == null) View.VISIBLE else View.GONE
         progress!!.visibility = if (displayProgress) View.VISIBLE else View.GONE
         view.visibility = if (selectedItem != null) View.VISIBLE else View.GONE
-        selectedItem?.let{bindView(it)}
+        selectedItem?.let { bindView(it) }
     }
 
     fun setItemIndex(index: Int) {

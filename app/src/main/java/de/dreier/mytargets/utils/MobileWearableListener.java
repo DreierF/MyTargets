@@ -32,6 +32,7 @@ import de.dreier.mytargets.features.settings.SettingsManager;
 import de.dreier.mytargets.shared.models.Environment;
 import de.dreier.mytargets.shared.models.TimerSettings;
 import de.dreier.mytargets.shared.models.augmented.AugmentedEnd;
+import de.dreier.mytargets.shared.models.augmented.AugmentedRound;
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining;
 import de.dreier.mytargets.shared.models.db.End;
 import de.dreier.mytargets.shared.models.db.Round;
@@ -119,22 +120,22 @@ public class MobileWearableListener extends WearableListenerService {
     private void endUpdated(@NonNull MessageEvent messageEvent) {
         byte[] data = messageEvent.getData();
         AugmentedEnd augmentedEnd = ParcelableUtilKt.unmarshall(data, (Parcelable.Creator<AugmentedEnd>) AugmentedEnd.CREATOR);
-        Round round = Round.Companion.get(augmentedEnd.getEnd().getRoundId());
-        End newEnd = getLastEmptyOrCreateNewEnd(round);
-        newEnd.setExact(false);
+        AugmentedRound round = new AugmentedRound(Round.Companion.get(augmentedEnd.getEnd().getRoundId()));
+        AugmentedEnd newEnd = getLastEmptyOrCreateNewEnd(round);
+        newEnd.getEnd().setExact(false);
         newEnd.setShots(augmentedEnd.getShots());
-        newEnd.save();
+        newEnd.toEnd().save();
 
-        ApplicationInstance.wearableClient.sendUpdateTrainingFromRemoteBroadcast(round, newEnd);
+        ApplicationInstance.wearableClient.sendUpdateTrainingFromRemoteBroadcast(round.getRound(), newEnd.getEnd());
         ApplicationInstance.wearableClient
-                .sendUpdateTrainingFromLocalBroadcast(new AugmentedTraining(Training.Companion.get(round.getTrainingId())));
+                .sendUpdateTrainingFromLocalBroadcast(new AugmentedTraining(Training.Companion.get(round.getRound().getTrainingId())));
     }
 
-    private End getLastEmptyOrCreateNewEnd(@NonNull Round round) {
-        if (round.loadEnds().isEmpty()) {
+    private AugmentedEnd getLastEmptyOrCreateNewEnd(@NonNull AugmentedRound round) {
+        if (round.getEnds().isEmpty()) {
             return round.addEnd();
         }
-        End lastEnd = round.loadEnds().get(round.loadEnds().size() - 1);
+        AugmentedEnd lastEnd = round.getEnds().get(round.getEnds().size() - 1);
         if (lastEnd.isEmpty()) {
             return lastEnd;
         } else {

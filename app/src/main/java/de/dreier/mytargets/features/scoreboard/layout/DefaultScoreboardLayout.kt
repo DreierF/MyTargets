@@ -262,7 +262,7 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
         if (configuration.showPointsColored) {
             val fillColor = target.model.getZone(shot.scoringRing).fillColor
             val color = target.model.getZone(shot.scoringRing).textColor
-            row.addEndCell(points, fillColor, color, shot.arrowNumber!!)
+            row.addEndCell(points, fillColor, color, shot.arrowNumber)
         } else {
             row.addCell(points)
         }

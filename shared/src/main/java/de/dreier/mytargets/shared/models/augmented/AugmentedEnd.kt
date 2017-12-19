@@ -18,6 +18,7 @@ package de.dreier.mytargets.shared.models.augmented
 import android.annotation.SuppressLint
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.db.End
+import de.dreier.mytargets.shared.models.db.EndImage
 import de.dreier.mytargets.shared.models.db.Shot
 import kotlinx.android.parcel.Parcelize
 
@@ -25,12 +26,17 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class AugmentedEnd(
         val end: End,
-        var shots: MutableList<Shot>
+        var shots: MutableList<Shot>,
+        var images: MutableList<EndImage>
 ) : Parcelable {
-    constructor(end: End) : this(end, end.loadShots()!!.toMutableList())
+    constructor(end: End) : this(end, end.loadShots()!!.toMutableList(), end.loadImages()!!.toMutableList())
 
     fun toEnd(): End {
         end.shots = shots
+        end.images = images
         return end
     }
+
+    val isEmpty: Boolean
+        get() = shots.any { it.scoringRing == Shot.NOTHING_SELECTED } && images.isEmpty()
 }

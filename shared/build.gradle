@@ -59,7 +59,7 @@ dependencies {
     implementation "com.github.Raizlabs.DBFlow:dbflow:$libraryVersion.dbFlow"
 
     implementation "com.evernote:android-state:$libraryVersion.androidState"
-    annotationProcessor "com.evernote:android-state-processor:$libraryVersion.androidState"
+    kapt "com.evernote:android-state-processor:$libraryVersion.androidState"
 
     api "com.google.android.gms:play-services-wearable:$libraryVersion.playService"
     api "com.jakewharton.timber:timber:$libraryVersion.timber"

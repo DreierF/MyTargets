@@ -31,8 +31,8 @@ import de.dreier.mytargets.databinding.ActivityMainBinding
 import de.dreier.mytargets.shared.models.TrainingInfo
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
 import de.dreier.mytargets.utils.WearWearableClient
-import de.dreier.mytargets.utils.WearWearableClient.BROADCAST_TRAINING_TEMPLATE
-import de.dreier.mytargets.utils.WearWearableClient.BROADCAST_TRAINING_UPDATED
+import de.dreier.mytargets.utils.WearWearableClient.Companion.BROADCAST_TRAINING_TEMPLATE
+import de.dreier.mytargets.utils.WearWearableClient.Companion.BROADCAST_TRAINING_UPDATED
 import java.text.DateFormat
 import java.util.*
 
@@ -75,13 +75,13 @@ class MainActivity : WearableActivity() {
         binding.wearableDrawerView.setBackgroundResource(R.color.md_black_1000)
         binding.date.setTextColor(ContextCompat.getColor(this, R.color.md_white_1000))
         binding.icon.visibility = View.INVISIBLE
-        binding.clock.time.visibility = View.VISIBLE
-        binding.clock.time.text = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date())
+        binding.clock!!.time.visibility = View.VISIBLE
+        binding.clock!!.time.text = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date())
     }
 
     override fun onUpdateAmbient() {
         super.onUpdateAmbient()
-        binding.clock.time.text = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date())
+        binding.clock!!.time.text = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date())
     }
 
     override fun onExitAmbient() {
@@ -91,7 +91,7 @@ class MainActivity : WearableActivity() {
         binding.date.setTextColor(ContextCompat
                 .getColor(this, R.color.md_wear_green_lighter_ui_element))
         binding.icon.visibility = View.VISIBLE
-        binding.clock.time.visibility = View.GONE
+        binding.clock!!.time.visibility = View.GONE
     }
 
     private fun trainingUpdated(info: TrainingInfo) {

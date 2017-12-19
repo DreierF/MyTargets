@@ -61,7 +61,7 @@ class SignatureDialogFragment : DialogFragment() {
             signature.save()
             dismiss()
         }
-        binding.clear.setOnClickListener { v -> binding.signatureView.clear() }
+        binding.clear.setOnClickListener { binding.signatureView.clear() }
         isCancelable = false
         return binding.root
     }

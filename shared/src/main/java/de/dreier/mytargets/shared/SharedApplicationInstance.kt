@@ -18,12 +18,9 @@ package de.dreier.mytargets.shared
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.StrictMode
 import android.preference.PreferenceManager
 import android.support.annotation.StringRes
-
 import com.jakewharton.threetenabp.AndroidThreeTen
-
 import timber.log.Timber
 
 open class SharedApplicationInstance : Application() {
@@ -35,15 +32,15 @@ open class SharedApplicationInstance : Application() {
     }
 
     protected fun enableDebugLogging() {
-        StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
-                .detectAll()
-                .penaltyLog()
-                .build())
-        StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder()
-                .detectLeakedSqlLiteObjects()
-                .detectLeakedClosableObjects()
-                .penaltyLog()
-                .build())
+//        StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
+//                .detectAll()
+//                .penaltyLog()
+//                .build())
+//        StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder()
+//                .detectLeakedSqlLiteObjects()
+//                .detectLeakedClosableObjects()
+//                .penaltyLog()
+//                .build())
         Timber.plant(Timber.DebugTree())
     }
 
