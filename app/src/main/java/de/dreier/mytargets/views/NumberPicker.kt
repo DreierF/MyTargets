@@ -13,20 +13,19 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.views;
+package de.dreier.mytargets.views
 
-import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.PluralsRes;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.widget.LinearLayout;
+import android.content.Context
+import android.databinding.DataBindingUtil
+import android.os.Handler
+import android.support.annotation.PluralsRes
+import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.widget.LinearLayout
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.databinding.LayoutNumberPickerBinding;
+import de.dreier.mytargets.R
+import de.dreier.mytargets.databinding.LayoutNumberPickerBinding
 
 /**
  * A simple layout group that provides a numeric text area with two buttons to
@@ -35,31 +34,47 @@ import de.dreier.mytargets.databinding.LayoutNumberPickerBinding;
  *
  * @author Jeffrey F. Cole
  */
-public class NumberPicker extends LinearLayout {
+class NumberPicker(context: Context, attributeSet: AttributeSet) : LinearLayout(context, attributeSet) {
 
-    private static final long REPEAT_DELAY = 50;
+    var minimum = 1
+    var maximum = 30
 
-    private int minimum = 1;
-    private int maximum = 30;
+    private var value: Int = minimum
+        set(value) {
+            var adjValue = value
+            if (adjValue > maximum) {
+                adjValue = maximum
+                autoIncrement = false
+            }
+            if (adjValue < minimum) {
+                adjValue = minimum
+                autoDecrement = false
+            }
+            field = adjValue
+            if (textPattern == 0) {
+                binding.numberValue.text = field.toString()
+            } else {
+                binding.numberValue.text = resources.getQuantityString(textPattern, field, field)
+            }
+            changeListener?.onValueChanged(field)
+        }
 
-    private Integer value;
+    private val repeatUpdateHandler = Handler()
 
-    private final Handler repeatUpdateHandler = new Handler();
-
-    private boolean autoIncrement = false;
-    private boolean autoDecrement = false;
-    private OnValueChangedListener changeListener;
+    private var autoIncrement = false
+    private var autoDecrement = false
+    private var changeListener: OnValueChangedListener? = null
 
     @PluralsRes
-    private int textPattern;
-    private final LayoutNumberPickerBinding binding;
+    private var textPattern: Int = 0
+    private val binding: LayoutNumberPickerBinding
 
-    public interface OnValueChangedListener {
-        void onValueChanged(int val);
+    interface OnValueChangedListener {
+        fun onValueChanged(`val`: Int)
     }
 
-    public void setOnValueChangedListener(OnValueChangedListener listener) {
-        changeListener = listener;
+    fun setOnValueChangedListener(listener: OnValueChangedListener) {
+        changeListener = listener
     }
 
     /**
@@ -69,116 +84,78 @@ public class NumberPicker extends LinearLayout {
      *
      * @author Jeffrey F. Cole
      */
-    private class RepetitiveUpdater implements Runnable {
-        public void run() {
+    private inner class RepetitiveUpdater : Runnable {
+        override fun run() {
             if (autoIncrement) {
-                increment();
-                repeatUpdateHandler.postDelayed(new RepetitiveUpdater(), REPEAT_DELAY);
+                increment()
+                repeatUpdateHandler.postDelayed(RepetitiveUpdater(), REPEAT_DELAY)
             } else if (autoDecrement) {
-                decrement();
-                repeatUpdateHandler.postDelayed(new RepetitiveUpdater(), REPEAT_DELAY);
+                decrement()
+                repeatUpdateHandler.postDelayed(RepetitiveUpdater(), REPEAT_DELAY)
             }
         }
     }
 
-    public NumberPicker(@NonNull Context context, AttributeSet attributeSet) {
-        super(context, attributeSet);
-
-        LayoutInflater inflater = LayoutInflater.from(context);
-        binding = DataBindingUtil.inflate(inflater, R.layout.layout_number_picker, this, true);
-
-        // init the individual elements
-        initDecrementButton();
-        setValue(minimum);
-        initIncrementButton();
+    init {
+        val inflater = LayoutInflater.from(context)
+        binding = DataBindingUtil.inflate(inflater, R.layout.layout_number_picker, this, true)
+        initDecrementButton()
+        initIncrementButton()
     }
 
-    private void initIncrementButton() {
+    private fun initIncrementButton() {
         // Increment once for a click
-        binding.numberIncrement.setOnClickListener(v -> increment());
+        binding.numberIncrement.setOnClickListener { increment() }
 
         // Auto increment for a long click
-        binding.numberIncrement.setOnLongClickListener(
-                arg0 -> {
-                    autoIncrement = true;
-                    repeatUpdateHandler.post(new RepetitiveUpdater());
-                    return false;
-                }
-        );
+        binding.numberIncrement.setOnLongClickListener {
+            autoIncrement = true
+            repeatUpdateHandler.post(RepetitiveUpdater())
+            false
+        }
 
         // When the button is released, if we're auto incrementing, stop
-        binding.numberIncrement.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP && autoIncrement) {
-                autoIncrement = false;
+        binding.numberIncrement.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP && autoIncrement) {
+                autoIncrement = false
             }
-            return false;
-        });
+            false
+        }
     }
 
-    private void initDecrementButton() {
+    private fun initDecrementButton() {
         // Decrement once for a click
-        binding.numberDecrement.setOnClickListener(v -> decrement());
+        binding.numberDecrement.setOnClickListener { v -> decrement() }
 
         // Auto Decrement for a long click
-        binding.numberDecrement.setOnLongClickListener(
-                arg0 -> {
-                    autoDecrement = true;
-                    repeatUpdateHandler.post(new RepetitiveUpdater());
-                    return false;
-                }
-        );
+        binding.numberDecrement.setOnLongClickListener { arg0 ->
+            autoDecrement = true
+            repeatUpdateHandler.post(RepetitiveUpdater())
+            false
+        }
 
         // When the button is released, if we're auto decrementing, stop
-        binding.numberDecrement.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP && autoDecrement) {
-                autoDecrement = false;
+        binding.numberDecrement.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP && autoDecrement) {
+                autoDecrement = false
             }
-            return false;
-        });
-    }
-
-    public void setTextPattern(@PluralsRes int textPattern) {
-        this.textPattern = textPattern;
-    }
-
-    private void increment() {
-        setValue(value + 1);
-    }
-
-    private void decrement() {
-        setValue(value - 1);
-    }
-
-    public void setMinimum(int minimum) {
-        this.minimum = minimum;
-    }
-
-    public void setMaximum(int maximum) {
-        this.maximum = maximum;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    public void setValue(int val) {
-        if (val > maximum) {
-            val = maximum;
-            autoIncrement = false;
+            false
         }
-        if (val < minimum) {
-            val = minimum;
-            autoDecrement = false;
-        }
-        value = val;
-        if (textPattern == 0) {
-            binding.numberValue.setText(String.valueOf(value));
-        } else {
-            binding.numberValue
-                    .setText(getResources().getQuantityString(textPattern, value, value));
-        }
-        if (changeListener != null) {
-            changeListener.onValueChanged(val);
-        }
+    }
+
+    fun setTextPattern(@PluralsRes textPattern: Int) {
+        this.textPattern = textPattern
+    }
+
+    private fun increment() {
+        value += 1
+    }
+
+    private fun decrement() {
+        value -= 1
+    }
+
+    companion object {
+        private val REPEAT_DELAY: Long = 50
     }
 }

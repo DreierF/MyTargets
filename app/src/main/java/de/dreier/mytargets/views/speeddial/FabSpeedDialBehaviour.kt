@@ -13,102 +13,91 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.views.speeddial;
+package de.dreier.mytargets.views.speeddial
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
-import android.util.AttributeSet;
-import android.view.View;
-import android.view.ViewPropertyAnimator;
+import android.content.Context
+import android.support.design.widget.CoordinatorLayout
+import android.support.design.widget.Snackbar
+import android.support.v4.view.animation.FastOutSlowInInterpolator
+import android.util.AttributeSet
+import android.view.View
+import android.view.ViewPropertyAnimator
 
-import java.util.List;
+class FabSpeedDialBehaviour : CoordinatorLayout.Behavior<FabSpeedDial> {
 
-@SuppressWarnings("unused")
-public class FabSpeedDialBehaviour extends CoordinatorLayout.Behavior<FabSpeedDial> {
+    private var fabTranslationYAnimator: ViewPropertyAnimator? = null
+    private var fabTranslationY: Float = 0.toFloat()
 
-    private static final FastOutSlowInInterpolator FAST_OUT_SLOW_IN_INTERPOLATOR =
-            new FastOutSlowInInterpolator();
+    constructor()
 
-    private ViewPropertyAnimator fabTranslationYAnimator;
-    private float fabTranslationY;
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
-    public FabSpeedDialBehaviour() {
-
+    override fun layoutDependsOn(parent: CoordinatorLayout?, child: FabSpeedDial?, dependency: View?): Boolean {
+        return dependency is Snackbar.SnackbarLayout
     }
 
-    public FabSpeedDialBehaviour(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    @Override
-    public boolean layoutDependsOn(CoordinatorLayout parent, FabSpeedDial child, View dependency) {
-        return dependency instanceof Snackbar.SnackbarLayout;
-    }
-
-    @Override
-    public void onDependentViewRemoved(CoordinatorLayout parent, @NonNull FabSpeedDial fab, View dependency) {
-        super.onDependentViewRemoved(parent, fab, dependency);
+    override fun onDependentViewRemoved(parent: CoordinatorLayout?, fab: FabSpeedDial, dependency: View?) {
+        super.onDependentViewRemoved(parent, fab, dependency)
 
         // Make sure that any current animation is cancelled
         if (fabTranslationYAnimator != null) {
-            fabTranslationYAnimator.cancel();
+            fabTranslationYAnimator!!.cancel()
         }
 
-        fab.setTranslationY(0);
-        fabTranslationY = 0;
+        fab.translationY = 0f
+        fabTranslationY = 0f
     }
 
-    @Override
-    public boolean onDependentViewChanged(@NonNull CoordinatorLayout parent, @NonNull FabSpeedDial child, View dependency) {
-        if (dependency instanceof Snackbar.SnackbarLayout) {
-            updateFabTranslationForSnackbar(parent, child, dependency);
+    override fun onDependentViewChanged(parent: CoordinatorLayout, child: FabSpeedDial, dependency: View?): Boolean {
+        if (dependency is Snackbar.SnackbarLayout) {
+            updateFabTranslationForSnackbar(parent, child, dependency)
         }
-        return false;
+        return false
     }
 
-    private void updateFabTranslationForSnackbar(@NonNull CoordinatorLayout parent, @NonNull final FabSpeedDial fab, View snackbar) {
-        if (fab.getVisibility() != View.VISIBLE) {
-            return;
+    private fun updateFabTranslationForSnackbar(parent: CoordinatorLayout, fab: FabSpeedDial, snackbar: View) {
+        if (fab.visibility != View.VISIBLE) {
+            return
         }
 
-        final float targetTransY = getFabTranslationYForSnackbar(parent, fab);
+        val targetTransY = getFabTranslationYForSnackbar(parent, fab)
         if (fabTranslationY == targetTransY) {
             // We're already at (or currently animating to) the target value, return...
-            return;
+            return
         }
 
-        final float currentTransY = fab.getTranslationY();
+        val currentTransY = fab.translationY
 
         // Make sure that any current animation is cancelled
-        if (fabTranslationYAnimator != null) {
-            fabTranslationYAnimator.cancel();
-        }
+        fabTranslationYAnimator?.cancel()
 
-        if (Math.abs(currentTransY - targetTransY) > (fab.getHeight() * 0.667f)) {
+        if (Math.abs(currentTransY - targetTransY) > fab.height * 0.667f) {
             fabTranslationYAnimator = fab.animate()
                     .setInterpolator(FAST_OUT_SLOW_IN_INTERPOLATOR)
-                    .translationY(targetTransY);
-            fabTranslationYAnimator.start();
+                    .translationY(targetTransY)
+            fabTranslationYAnimator!!.start()
         } else {
-            fab.setTranslationY(targetTransY);
+            fab.translationY = targetTransY
         }
 
-        fabTranslationY = targetTransY;
+        fabTranslationY = targetTransY
     }
 
-    private float getFabTranslationYForSnackbar(@NonNull CoordinatorLayout parent, @NonNull FabSpeedDial fab) {
-        float minOffset = 0;
-        final List<View> dependencies = parent.getDependencies(fab);
-        for (int i = 0; i < dependencies.size(); i++) {
-            final View view = dependencies.get(i);
-            if (view instanceof Snackbar.SnackbarLayout && parent.doViewsOverlap(fab, view)) {
+    private fun getFabTranslationYForSnackbar(parent: CoordinatorLayout, fab: FabSpeedDial): Float {
+        var minOffset = 0f
+        val dependencies = parent.getDependencies(fab)
+        for (i in dependencies.indices) {
+            val view = dependencies[i]
+            if (view is Snackbar.SnackbarLayout && parent.doViewsOverlap(fab, view)) {
                 minOffset = Math.min(minOffset,
-                        view.getTranslationY() - view.getHeight());
+                        view.getTranslationY() - view.getHeight())
             }
         }
-        return minOffset;
+        return minOffset
+    }
+
+    companion object {
+
+        private val FAST_OUT_SLOW_IN_INTERPOLATOR = FastOutSlowInInterpolator()
     }
 }

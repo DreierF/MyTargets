@@ -367,7 +367,7 @@ public class InputActivity extends ChildActivityBase
     private void openTimer() {
         if (data.getCurrentEnd().isEmpty() && SettingsManager.INSTANCE.getTimerEnabled()) {
             if (transitionFinished) {
-                TimerFragment.getIntent(true)
+                TimerFragment.Companion.getIntent(true)
                         .withContext(this)
                         .start();
             } else if (Utils.isLollipop()) {
@@ -381,7 +381,7 @@ public class InputActivity extends ChildActivityBase
         getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
             @Override
             public void onTransitionEnd(Transition transition) {
-                TimerFragment.getIntent(true)
+                TimerFragment.Companion.getIntent(true)
                         .withContext(InputActivity.this)
                         .start();
                 getWindow().getSharedElementEnterTransition().removeListener(this);
