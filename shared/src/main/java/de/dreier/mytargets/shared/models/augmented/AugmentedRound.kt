@@ -20,6 +20,7 @@ import android.os.Parcelable
 import de.dreier.mytargets.shared.models.Score
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
+import de.dreier.mytargets.shared.models.sum
 import kotlinx.android.parcel.Parcelize
 
 @SuppressLint("ParcelCreator")
@@ -35,10 +36,7 @@ data class AugmentedRound(
     val reachedScore: Score
         get() {
             val target = round.target
-            return ends.map { target.getReachedScore(it.end) }
-                    .fold(Score()) { score, s ->
-                        score.add(s)
-                    }
+            return ends.map { target.getReachedScore(it.end) }.sum()
         }
 
     fun toRound(): Round {

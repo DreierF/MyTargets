@@ -17,6 +17,8 @@ package de.dreier.mytargets.shared.models.augmented
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
+import de.dreier.mytargets.shared.models.db.Round
+import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.models.db.Training
 import kotlinx.android.parcel.Parcelize
 
@@ -33,5 +35,17 @@ data class AugmentedTraining(
     fun toTraining(): Training {
         training.rounds = rounds.map {it.toRound()}.toMutableList()
         return training
+    }
+
+    fun initRoundsFromTemplate(standardRound: StandardRound) {
+        rounds = mutableListOf()
+        for (template in standardRound.loadRounds()!!) {
+            val round = AugmentedRound(Round(template))
+            round.round.trainingId = training.id
+            round.round.target = template.targetTemplate
+            round.round.comment = ""
+            round.round.save()
+            rounds.add(round)
+        }
     }
 }

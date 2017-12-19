@@ -13,94 +13,86 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training.details;
+package de.dreier.mytargets.features.training.details
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.text.TextUtils;
+import android.content.Context
+import android.text.TextUtils
+import de.dreier.mytargets.R
+import de.dreier.mytargets.shared.models.db.*
+import de.dreier.mytargets.shared.utils.SharedUtils
 
-import java.util.List;
+object HtmlUtils {
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.shared.models.db.Arrow;
-import de.dreier.mytargets.shared.models.db.Bow;
-import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.StandardRound;
-import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.shared.utils.SharedUtils;
-
-public class HtmlUtils {
-
-    public static String getTrainingInfoHTML(Context context, @NonNull Training training, @NonNull List<Round> rounds, boolean[] equals) {
-        HtmlInfoBuilder info = new HtmlInfoBuilder();
-        addStaticTrainingHeaderInfo(context, info, training);
-        addDynamicTrainingHeaderInfo(rounds, equals, info);
-        return info.toString();
+    fun getTrainingInfoHTML(context: Context, training: Training, rounds: List<Round>, equals: BooleanArray): String {
+        val info = HtmlInfoBuilder()
+        addStaticTrainingHeaderInfo(context, info, training)
+        addDynamicTrainingHeaderInfo(rounds, equals, info)
+        return info.toString()
     }
 
-    private static void addStaticTrainingHeaderInfo(Context context, @NonNull HtmlInfoBuilder info, @NonNull Training training) {
-        if (training.getIndoor()) {
-            info.addLine(R.string.environment, context.getString(R.string.indoor));
+    private fun addStaticTrainingHeaderInfo(context: Context, info: HtmlInfoBuilder, training: Training) {
+        if (training.indoor) {
+            info.addLine(R.string.environment, context.getString(R.string.indoor))
         } else {
-            info.addLine(R.string.weather, training.getEnvironment().getWeather().getName());
+            info.addLine(R.string.weather, training.environment.weather.getName())
             info.addLine(R.string.wind,
-                    training.getEnvironment().getWindSpeed(context));
-            if (!TextUtils.isEmpty(training.getEnvironment().getLocation())) {
-                info.addLine(R.string.location, training.getEnvironment().getLocation());
+                    training.environment.getWindSpeed(context))
+            if (!TextUtils.isEmpty(training.environment.location)) {
+                info.addLine(R.string.location, training.environment.location)
             }
         }
 
-        Bow bow = Bow.Companion.get(training.getBowId());
+        val bow = Bow[training.bowId]
         if (bow != null) {
-            info.addLine(R.string.bow, bow.getName());
+            info.addLine(R.string.bow, bow.name)
         }
 
-        Arrow arrow = Arrow.Companion.get(training.getArrowId());
+        val arrow = Arrow[training.arrowId]
         if (arrow != null) {
-            info.addLine(R.string.arrow, arrow.getName());
+            info.addLine(R.string.arrow, arrow.name)
         }
 
-        if (training.getStandardRoundId() != null) {
-            StandardRound standardRound = StandardRound.Companion.get(training.getStandardRoundId());
-            info.addLine(R.string.standard_round, standardRound.getName());
+        if (training.standardRoundId != null) {
+            val standardRound = StandardRound[training.standardRoundId]
+            info.addLine(R.string.standard_round, standardRound!!.name)
         }
     }
 
-    private static void addDynamicTrainingHeaderInfo(@NonNull List<Round> rounds, boolean[] equals, @NonNull HtmlInfoBuilder info) {
-        if (rounds.size() > 0) {
-            getEqualValues(rounds, equals);
-            Round round = rounds.get(0);
+    private fun addDynamicTrainingHeaderInfo(rounds: List<Round>, equals: BooleanArray, info: HtmlInfoBuilder) {
+        if (rounds.isNotEmpty()) {
+            getEqualValues(rounds, equals)
+            val round = rounds[0]
             if (equals[0]) {
-                info.addLine(R.string.distance, round.getDistance());
+                info.addLine(R.string.distance, round.distance)
             }
             if (equals[1]) {
-                info.addLine(R.string.target_face, round.getTarget().getName());
+                info.addLine(R.string.target_face, round.target.name)
             }
         }
     }
 
-    private static void getEqualValues(@NonNull List<Round> rounds, boolean[] equals) {
+    private fun getEqualValues(rounds: List<Round>, equals: BooleanArray) {
         // Aggregate round information
-        equals[0] = true;
-        equals[1] = true;
-        Round round = rounds.get(0);
-        for (Round r : rounds) {
-            equals[0] = SharedUtils.INSTANCE.equals(r.getDistance(), round.getDistance()) && equals[0];
-            equals[1] = SharedUtils.INSTANCE.equals(r.getTarget(), round.getTarget()) && equals[1];
+        equals[0] = true
+        equals[1] = true
+        val round = rounds[0]
+        for (r in rounds) {
+            equals[0] = SharedUtils.equals(r.distance, round.distance) && equals[0]
+            equals[1] = SharedUtils.equals(r.target, round.target) && equals[1]
         }
     }
 
-    public static String getRoundInfo(@NonNull Round round, boolean[] equals) {
-        HtmlInfoBuilder info = new HtmlInfoBuilder();
+    fun getRoundInfo(round: Round, equals: BooleanArray): String {
+        val info = HtmlInfoBuilder()
         if (!equals[0]) {
-            info.addLine(R.string.distance, round.getDistance());
+            info.addLine(R.string.distance, round.distance)
         }
         if (!equals[1]) {
-            info.addLine(R.string.target_face, round.getTarget().getName());
+            info.addLine(R.string.target_face, round.target.name)
         }
-        if (!round.getComment().isEmpty()) {
-            info.addLine(R.string.comment, round.getComment());
+        if (!round.comment.isEmpty()) {
+            info.addLine(R.string.comment, round.comment)
         }
-        return info.toString();
+        return info.toString()
     }
 }

@@ -76,7 +76,7 @@ public class EditStandardRoundActivityTest extends UITestBase {
     @Test
     public void editStandardRoundActivity() {
         Intent intent = new Intent();
-        intent.setAction(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION);
+        intent.setAction(Companion.getCREATE_TRAINING_WITH_STANDARD_ROUND_ACTION());
         activityTestRule.launchActivity(intent);
 
         //allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);

@@ -60,12 +60,13 @@ public class BowSelectorTest extends UITestBase {
 
     @Test
     public void freeTrainingBowSelectionTest() {
-        bowSelectionTest(EditTrainingFragment.CREATE_FREE_TRAINING_ACTION);
+        bowSelectionTest(EditTrainingFragment.Companion.getCREATE_FREE_TRAINING_ACTION());
     }
 
     @Test
     public void standardRoundBowSelectionTest() {
-        bowSelectionTest(EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION);
+        bowSelectionTest(EditTrainingFragment.Companion
+                .getCREATE_TRAINING_WITH_STANDARD_ROUND_ACTION());
     }
 
     private void bowSelectionTest(String type) {

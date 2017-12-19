@@ -58,7 +58,7 @@ public class TrainingActivityTest extends UITestBase {
         final List<Training> trainings = Training.Companion.getAll();
         Collections.sort(trainings, Collections.reverseOrder());
         Training training = trainings.get(0);
-        activityTestRule.launchActivity(TrainingFragment.getIntent(training).build());
+        activityTestRule.launchActivity(TrainingFragment.Companion.getIntent(training).build());
 
 //        intending(isInternal())
 //                .respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));

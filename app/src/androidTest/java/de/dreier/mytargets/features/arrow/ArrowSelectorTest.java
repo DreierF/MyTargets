@@ -60,12 +60,13 @@ public class ArrowSelectorTest extends UITestBase {
 
     @Test
     public void freeTrainingArrowSelectionTest() {
-        arrowSelectionTest(EditTrainingFragment.CREATE_FREE_TRAINING_ACTION);
+        arrowSelectionTest(EditTrainingFragment.Companion.getCREATE_FREE_TRAINING_ACTION());
     }
 
     @Test
     public void standardRoundArrowSelectionTest() {
-        arrowSelectionTest(EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION);
+        arrowSelectionTest(EditTrainingFragment.Companion
+                .getCREATE_TRAINING_WITH_STANDARD_ROUND_ACTION());
     }
 
     private void arrowSelectionTest(String type) {

@@ -155,10 +155,8 @@ data class Training(
 
     val reachedScore: Score
         get() = loadRounds()!!
-                .map { obj: Round -> obj.reachedScore }
-                .fold(Score()) { score, s ->
-                    score.add(s)
-                }
+                .map { it.reachedScore }
+                .sum()
 
     @OneToMany(methods = [], variableName = "rounds")
     fun loadRounds(): List<Round>? {
@@ -206,18 +204,6 @@ data class Training(
             round.loadEnds()?.forEach { end -> end.loadShots() }
         }
         return this
-    }
-
-    fun initRoundsFromTemplate(standardRound: StandardRound) {
-        rounds = mutableListOf()
-        for (template in standardRound.loadRounds()!!) {
-            val round = Round(template)
-            round.trainingId = id
-            round.target = template.targetTemplate
-            round.comment = ""
-            round.save()
-            rounds!!.add(round)
-        }
     }
 
     override fun saveRecursively() {

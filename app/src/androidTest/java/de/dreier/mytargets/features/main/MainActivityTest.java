@@ -115,13 +115,14 @@ public class MainActivityTest extends UITestBase {
         clickFabSpeedDialItem(R.id.fab1);
 
         intended(allOf(hasClass(EditTrainingActivity.class),
-                hasAction(EditTrainingFragment.CREATE_FREE_TRAINING_ACTION)));
+                hasAction(EditTrainingFragment.Companion.getCREATE_FREE_TRAINING_ACTION())));
         onView(withId(R.id.action_trainings)).perform(click());
 
         // newTraining_withStandardRound
         clickFabSpeedDialItem(R.id.fab2);
         intended(allOf(hasClass(EditTrainingActivity.class),
-                hasAction(EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)));
+                hasAction(EditTrainingFragment.Companion
+                        .getCREATE_TRAINING_WITH_STANDARD_ROUND_ACTION())));
         onView(withId(R.id.action_trainings)).perform(click());
 
         // openTraining

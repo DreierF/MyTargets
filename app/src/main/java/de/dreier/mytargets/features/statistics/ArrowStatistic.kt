@@ -26,6 +26,7 @@ import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
+import de.dreier.mytargets.shared.models.sum
 import kotlinx.android.parcel.Parcelize
 import java.lang.Math.ceil
 import java.util.*
@@ -59,9 +60,7 @@ data class ArrowStatistic(
         this.shots.addAll(shots)
         this.totalScore = shots
                 .map { shot -> target.getScoringStyle().getReachedScore(shot) }
-                .fold(Score()) { score, s ->
-                    score.add(s)
-                }
+                .sum()
     }
 
     override fun compareTo(other: ArrowStatistic) = compareByDescending<ArrowStatistic>({ totalScore.shotAverage }).compare(this, other)

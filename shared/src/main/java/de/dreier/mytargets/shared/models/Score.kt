@@ -60,9 +60,7 @@ data class Score(
         } else 0f
 
     private val percentString: String
-        get() = if (totalScore > 0) {
-            (reachedScore * 100 / totalScore).toString() + "%"
-        } else ""
+        get() = if (totalScore > 0) "${reachedScore * 100 / totalScore}%" else ""
 
     fun add(other: Score): Score {
         reachedScore += other.reachedScore
@@ -72,7 +70,7 @@ data class Score(
     }
 
     override fun toString(): String {
-        return reachedScore.toString() + "/" + totalScore
+        return "$reachedScore/$totalScore"
     }
 
     fun format(locale: Locale, config: Configuration): String {
@@ -112,3 +110,5 @@ data class Score(
             var showAverage: Boolean = false
     )
 }
+
+fun Iterable<Score>.sum() = fold(Score(), Score::add)
