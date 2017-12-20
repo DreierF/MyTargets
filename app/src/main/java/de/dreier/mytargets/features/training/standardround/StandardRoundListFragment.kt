@@ -13,272 +13,233 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training.standardround;
+package de.dreier.mytargets.features.training.standardround
 
-import android.content.Context;
-import android.content.Intent;
-import android.databinding.DataBindingUtil;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.util.LongSparseArray;
-import android.support.v7.widget.SearchView;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
+import android.app.Activity.RESULT_OK
+import android.content.Context
+import android.content.Intent
+import android.databinding.DataBindingUtil
+import android.os.Bundle
+import android.support.v4.util.LongSparseArray
+import android.support.v7.widget.SearchView
+import android.view.*
+import android.widget.EditText
+import android.widget.ImageView
+import com.afollestad.materialdialogs.MaterialDialog
+import com.evernote.android.state.State
+import de.dreier.mytargets.R
+import de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM
+import de.dreier.mytargets.base.adapters.header.HeaderListAdapter
+import de.dreier.mytargets.base.adapters.header.PartitionDelegate
+import de.dreier.mytargets.base.fragments.FragmentBase
+import de.dreier.mytargets.base.fragments.FragmentBase.LoaderUICallback
+import de.dreier.mytargets.base.fragments.SelectItemFragmentBase
+import de.dreier.mytargets.databinding.FragmentListBinding
+import de.dreier.mytargets.databinding.ItemStandardRoundBinding
+import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.shared.models.db.StandardRound
+import de.dreier.mytargets.shared.utils.StandardRoundFactory
+import de.dreier.mytargets.shared.utils.contains
+import de.dreier.mytargets.utils.IntentWrapper
+import de.dreier.mytargets.utils.SlideInItemAnimator
+import de.dreier.mytargets.utils.ToolbarUtils
+import de.dreier.mytargets.utils.multiselector.OnItemLongClickListener
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.evernote.android.state.State;
+class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderListAdapter<StandardRound>>(), SearchView.OnQueryTextListener {
 
-import java.util.List;
-
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.base.adapters.header.HeaderListAdapter;
-import de.dreier.mytargets.base.fragments.SelectItemFragmentBase;
-import de.dreier.mytargets.databinding.FragmentListBinding;
-import de.dreier.mytargets.databinding.ItemStandardRoundBinding;
-import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.shared.models.db.StandardRound;
-import de.dreier.mytargets.shared.utils.LongSparseArrayUtilsKt;
-import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-import de.dreier.mytargets.utils.IntentWrapper;
-import de.dreier.mytargets.utils.SlideInItemAnimator;
-import de.dreier.mytargets.utils.ToolbarUtils;
-import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
-
-import static android.app.Activity.RESULT_OK;
-import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
-
-public class StandardRoundListFragment extends SelectItemFragmentBase<StandardRound, HeaderListAdapter<StandardRound>>
-        implements SearchView.OnQueryTextListener {
-
-    private static final int NEW_STANDARD_ROUND = 1;
-    private static final int EDIT_STANDARD_ROUND = 2;
-    private static final String KEY_QUERY = "query";
-
-    @Nullable
     @State
-    StandardRound currentSelection;
-    private SearchView searchView;
+    internal var currentSelection: StandardRound? = null
+    private var searchView: SearchView? = null
 
-    protected FragmentListBinding binding;
+    protected lateinit var binding: FragmentListBinding
 
-    @NonNull
-    public static IntentWrapper getIntent(StandardRound standardRound) {
-        return new IntentWrapper(StandardRoundActivity.class)
-                .with(ITEM, standardRound);
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            currentSelection = getArguments().getParcelable(ITEM);
+            currentSelection = arguments!!.getParcelable(ITEM)
         }
     }
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
-        binding.recyclerView.setHasFixedSize(true);
-        binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
-        LongSparseArray<Integer> usedRounds = SettingsManager.INSTANCE.getStandardRoundsLastUsed();
-        adapter = new StandardRoundListAdapter(getContext(), usedRounds);
-        binding.recyclerView.setAdapter(adapter);
-        binding.fab.setVisibility(View.GONE);
-        ToolbarUtils.showUpAsX(this);
-        binding.recyclerView.setHasFixedSize(false);
-        binding.fab.setVisibility(View.VISIBLE);
-        binding.fab.setOnClickListener(view -> EditStandardRoundFragment.createIntent()
-                .withContext(StandardRoundListFragment.this)
-                .fromFab(binding.fab).forResult(NEW_STANDARD_ROUND)
-                .start());
-        useDoubleClickSelection = true;
-        setHasOptionsMenu(true);
-        return binding.getRoot();
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false)
+        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.itemAnimator = SlideInItemAnimator()
+        val usedRounds = SettingsManager.standardRoundsLastUsed
+        adapter = StandardRoundListAdapter(context!!, usedRounds)
+        binding.recyclerView.adapter = adapter
+        binding.fab.visibility = View.GONE
+        ToolbarUtils.showUpAsX(this)
+        binding.recyclerView.setHasFixedSize(false)
+        binding.fab.visibility = View.VISIBLE
+        binding.fab.setOnClickListener { view ->
+            EditStandardRoundFragment.createIntent()
+                    .withContext(this@StandardRoundListFragment)
+                    .fromFab(binding.fab).forResult(NEW_STANDARD_ROUND)
+                    .start()
+        }
+        useDoubleClickSelection = true
+        setHasOptionsMenu(true)
+        return binding.root
     }
 
-    @NonNull
-    @Override
-    protected LoaderUICallback onLoad(@Nullable Bundle args) {
-        List<StandardRound> data;
-        if (args != null && args.containsKey(KEY_QUERY)) {
-            String query = args.getString(KEY_QUERY);
-            data = StandardRound.Companion.getAllSearch(query);
+    override fun onLoad(args: Bundle?): FragmentBase.LoaderUICallback {
+        val data: List<StandardRound>
+        data = if (args != null && args.containsKey(KEY_QUERY)) {
+            val query = args.getString(KEY_QUERY)
+            StandardRound.getAllSearch(query!!)
         } else {
-            data = StandardRound.Companion.getAll();
+            StandardRound.all
         }
-        return () -> {
-            adapter.setList(data);
-            selectItem(binding.recyclerView, currentSelection);
-        };
+        return LoaderUICallback {
+            adapter!!.setList(data)
+            selectItem(binding.recyclerView, currentSelection!!)
+        }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    override fun onResume() {
+        super.onResume()
         if (searchView != null) {
-            Bundle args = new Bundle();
-            args.putString(KEY_QUERY, searchView.getQuery().toString());
-            reloadData(args);
+            val args = Bundle()
+            args.putString(KEY_QUERY, searchView!!.query.toString())
+            reloadData(args)
         } else {
-            reloadData();
+            reloadData()
         }
     }
 
-    @Override
-    public void onClick(@NonNull SelectableViewHolder<StandardRound> holder, StandardRound item) {
-        currentSelection = item;
-        super.onClick(holder, item);
+    override fun onClick(holder: SelectableViewHolder<StandardRound>, item: StandardRound) {
+        currentSelection = item
+        super.onClick(holder, item)
     }
 
-    public void onLongClick(@NonNull SelectableViewHolder<StandardRound> holder) {
-        StandardRound item = holder.getItem();
-        if (item.getClub() == StandardRoundFactory.INSTANCE.getCUSTOM()) {
+    fun onLongClick(holder: SelectableViewHolder<StandardRound>) {
+        val item = holder.item
+        if (item.club == StandardRoundFactory.CUSTOM) {
             EditStandardRoundFragment.editIntent(item)
                     .withContext(this)
                     .forResult(EDIT_STANDARD_ROUND)
-                    .start();
+                    .start()
         } else {
-            new MaterialDialog.Builder(getContext())
+            MaterialDialog.Builder(context!!)
                     .title(R.string.use_as_template)
                     .content(R.string.create_copy)
                     .positiveText(android.R.string.yes)
                     .negativeText(android.R.string.cancel)
-                    .onPositive((dialog1, which1) -> EditStandardRoundFragment
-                            .editIntent(item)
-                            .withContext(this)
-                            .forResult(NEW_STANDARD_ROUND)
-                            .start())
-                    .show();
+                    .onPositive { dialog1, which1 ->
+                        EditStandardRoundFragment
+                                .editIntent(item)
+                                .withContext(this)
+                                .forResult(NEW_STANDARD_ROUND)
+                                .start()
+                    }
+                    .show()
         }
     }
 
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.search, menu);
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        searchView = (SearchView) searchItem.getActionView();
-        searchView.setOnQueryTextListener(this);
-        ImageView closeButton = searchView.findViewById(R.id.search_close_btn);
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.search, menu)
+        val searchItem = menu.findItem(R.id.action_search)
+        searchView = searchItem.actionView as SearchView
+        searchView!!.setOnQueryTextListener(this)
+        val closeButton = searchView!!.findViewById<ImageView>(R.id.search_close_btn)
         // Set on click listener
-        closeButton.setOnClickListener(v -> {
-            EditText et = searchView.findViewById(R.id.search_src_text);
-            et.setText("");
-            searchView.setQuery("", false);
-            searchView.onActionViewCollapsed();
-            searchItem.collapseActionView();
-        });
+        closeButton.setOnClickListener { v ->
+            val et = searchView!!.findViewById<EditText>(R.id.search_src_text)
+            et.setText("")
+            searchView!!.setQuery("", false)
+            searchView!!.onActionViewCollapsed()
+            searchItem.collapseActionView()
+        }
     }
 
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
+    override fun onQueryTextSubmit(query: String): Boolean {
+        return false
     }
 
-    @Override
-    public boolean onQueryTextChange(String query) {
-        Bundle args = new Bundle();
-        args.putString(KEY_QUERY, query);
-        reloadData(args);
-        return false;
+    override fun onQueryTextChange(query: String): Boolean {
+        val args = Bundle()
+        args.putString(KEY_QUERY, query)
+        reloadData(args)
+        return false
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == NEW_STANDARD_ROUND) {
-            persistSelection(data.getParcelableExtra(ITEM));
-            getActivity().setResult(resultCode, data);
-            finish();
+            persistSelection(data.getParcelableExtra(ITEM))
+            activity!!.setResult(resultCode, data)
+            finish()
         } else if (requestCode == EDIT_STANDARD_ROUND) {
             if (resultCode == RESULT_OK) {
-                currentSelection = data.getParcelableExtra(ITEM);
-                reloadData();
+                currentSelection = data.getParcelableExtra(ITEM)
+                reloadData()
             } else if (resultCode == EditStandardRoundFragment.RESULT_STANDARD_ROUND_DELETED) {
-                currentSelection = StandardRound.Companion.get(32L);
-                saveItem();
-                reloadData();
+                currentSelection = StandardRound[32L]
+                saveItem()
+                reloadData()
             }
         }
     }
 
-    @NonNull
-    @Override
-    protected StandardRound onSave() {
-        persistSelection(currentSelection);
-        return currentSelection;
+    override fun onSave(): StandardRound {
+        persistSelection(currentSelection!!)
+        return currentSelection!!
     }
 
-    private void persistSelection(@NonNull StandardRound standardRound) {
-        LongSparseArray<Integer> map = SettingsManager.INSTANCE.getStandardRoundsLastUsed();
-        Integer counter = map.get(standardRound.getId());
+    private fun persistSelection(standardRound: StandardRound) {
+        val map = SettingsManager.standardRoundsLastUsed
+        val counter = map.get(standardRound.id!!)
         if (counter == null) {
-            map.put(standardRound.getId(), 1);
+            map.put(standardRound.id!!, 1)
         } else {
-            map.put(standardRound.getId(), counter + 1);
+            map.put(standardRound.id!!, counter + 1)
         }
-        SettingsManager.INSTANCE.setStandardRoundsLastUsed(map);
+        SettingsManager.standardRoundsLastUsed = map
     }
 
-    private class StandardRoundListAdapter extends HeaderListAdapter<StandardRound> {
-        StandardRoundListAdapter(@NonNull Context context, @NonNull LongSparseArray<Integer> usedIds) {
-            super(child -> {
-                if (LongSparseArrayUtilsKt.contains(usedIds, child.getId())) {
-                    return new SimpleHeader(0L, context.getString(R.string.recently_used));
-                } else{
-                    return new SimpleHeader(1L, "");
-                }
-            }, (r1, r2) -> {
-                Integer usagesR1 = usedIds.get(r1.getId());
-                Integer usagesR2 = usedIds.get(r2.getId());
-                if (usagesR1 == null) {
-                    usagesR1 = 0;
-                }
-                if (usagesR2 == null) {
-                    usagesR2 = 0;
-                }
-                final int i = usagesR2.compareTo(usagesR1);
-                return i == 0 ? r1.compareTo(r2) : i;
-            });
+    private inner class StandardRoundListAdapter internal constructor(
+            context: Context,
+            usedIds: LongSparseArray<Int>
+    ) : HeaderListAdapter<StandardRound>(PartitionDelegate { (id) ->
+        if (usedIds.contains(id!!)) {
+            HeaderListAdapter.SimpleHeader(0L, context.getString(R.string.recently_used))
+        } else {
+            HeaderListAdapter.SimpleHeader(1L, "")
         }
+    }, compareBy { usedIds.get(it.id!!) ?: 0 }) {
 
-        @NonNull
-        @Override
-        protected ViewHolder getSecondLevelViewHolder(@NonNull ViewGroup parent) {
-            return new ViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
-                    R.layout.item_standard_round, parent, false));
+        override fun getSecondLevelViewHolder(parent: ViewGroup): ViewHolder {
+            return ViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context),
+                    R.layout.item_standard_round, parent, false))
         }
     }
 
-    public class ViewHolder extends SelectableViewHolder<StandardRound> {
-        @NonNull
-        private final ItemStandardRoundBinding binding;
+    inner class ViewHolder(private val binding: ItemStandardRoundBinding) : SelectableViewHolder<StandardRound>(binding.root, selector, this@StandardRoundListFragment, OnItemLongClickListener<StandardRound> { this@StandardRoundListFragment.onLongClick(it) }) {
 
-        public ViewHolder(@NonNull ItemStandardRoundBinding binding) {
-            super(binding.getRoot(), selector, StandardRoundListFragment.this,
-                    StandardRoundListFragment.this::onLongClick);
-            this.binding = binding;
-        }
+        override fun bindItem() {
+            binding.name.text = item.name
 
-        @Override
-        public void bindItem() {
-            binding.name.setText(item.getName());
-
-            if (item.equals(currentSelection)) {
-                binding.image.setVisibility(View.VISIBLE);
-                binding.details.setVisibility(View.VISIBLE);
-                binding.details.setText(item.getDescription(getActivity()));
-                binding.image.setImageDrawable(item.getTargetDrawable());
+            if (item == currentSelection) {
+                binding.image.visibility = View.VISIBLE
+                binding.details.visibility = View.VISIBLE
+                binding.details.text = item.getDescription(activity!!)
+                binding.image.setImageDrawable(item.targetDrawable)
             } else {
-                binding.image.setVisibility(View.GONE);
-                binding.details.setVisibility(View.GONE);
+                binding.image.visibility = View.GONE
+                binding.details.visibility = View.GONE
             }
+        }
+    }
+
+    companion object {
+        private val NEW_STANDARD_ROUND = 1
+        private val EDIT_STANDARD_ROUND = 2
+        private val KEY_QUERY = "query"
+
+        fun getIntent(standardRound: StandardRound): IntentWrapper {
+            return IntentWrapper(StandardRoundActivity::class.java)
+                    .with(ITEM, standardRound)
         }
     }
 }

@@ -12,243 +12,222 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.features.training.standardround;
+package de.dreier.mytargets.features.training.standardround
 
-import android.app.Activity;
-import android.content.Intent;
-import android.databinding.DataBindingUtil;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.app.Activity
+import android.content.Intent
+import android.databinding.DataBindingUtil
+import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.evernote.android.state.State
+import de.dreier.mytargets.R
+import de.dreier.mytargets.base.activities.ItemSelectActivity
+import de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM
+import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemAdapter
+import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemHolder
+import de.dreier.mytargets.base.fragments.EditFragmentBase
+import de.dreier.mytargets.databinding.FragmentEditStandardRoundBinding
+import de.dreier.mytargets.databinding.ItemRoundTemplateBinding
+import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.shared.models.db.RoundTemplate
+import de.dreier.mytargets.shared.models.db.StandardRound
+import de.dreier.mytargets.shared.utils.StandardRoundFactory
+import de.dreier.mytargets.utils.IntentWrapper
+import de.dreier.mytargets.utils.ToolbarUtils
+import de.dreier.mytargets.utils.transitions.FabTransformUtil
+import de.dreier.mytargets.views.selector.DistanceSelector
+import de.dreier.mytargets.views.selector.SelectorBase
+import de.dreier.mytargets.views.selector.TargetSelector
 
-import com.evernote.android.state.State;
-
-import java.util.List;
-
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.base.activities.ItemSelectActivity;
-import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemAdapter;
-import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemHolder;
-import de.dreier.mytargets.base.fragments.EditFragmentBase;
-import de.dreier.mytargets.databinding.FragmentEditStandardRoundBinding;
-import de.dreier.mytargets.databinding.ItemRoundTemplateBinding;
-import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.shared.models.db.RoundTemplate;
-import de.dreier.mytargets.shared.models.db.StandardRound;
-import de.dreier.mytargets.shared.utils.StandardRoundFactory;
-import de.dreier.mytargets.utils.IntentWrapper;
-import de.dreier.mytargets.utils.ToolbarUtils;
-import de.dreier.mytargets.utils.transitions.FabTransformUtil;
-import de.dreier.mytargets.views.selector.DistanceSelector;
-import de.dreier.mytargets.views.selector.SelectorBase;
-import de.dreier.mytargets.views.selector.TargetSelector;
-
-import static de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM;
-
-public class EditStandardRoundFragment extends EditFragmentBase {
-
-    public static final int RESULT_STANDARD_ROUND_DELETED = Activity.RESULT_FIRST_USER;
+class EditStandardRoundFragment : EditFragmentBase() {
 
     @State
-    StandardRound standardRound;
-    private RoundTemplateAdapter adapter;
-    private FragmentEditStandardRoundBinding binding;
+    internal var standardRound: StandardRound? = null
+    private var adapter: RoundTemplateAdapter? = null
+    private lateinit var binding: FragmentEditStandardRoundBinding
 
-    @NonNull
-    public static IntentWrapper createIntent() {
-        return new IntentWrapper(EditStandardRoundActivity.class);
-    }
-
-    @NonNull
-    public static IntentWrapper editIntent(StandardRound item) {
-        return new IntentWrapper(EditStandardRoundActivity.class)
-                .with(ITEM, item);
-    }
-
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil
-                .inflate(inflater, R.layout.fragment_edit_standard_round, container, false);
+                .inflate(inflater, R.layout.fragment_edit_standard_round, container, false)
 
-        ToolbarUtils.setSupportActionBar(this, binding.toolbar);
-        ToolbarUtils.showUpAsX(this);
-        setHasOptionsMenu(true);
+        ToolbarUtils.setSupportActionBar(this, binding.toolbar)
+        ToolbarUtils.showUpAsX(this)
+        setHasOptionsMenu(true)
 
         if (savedInstanceState == null) {
-            if (getArguments() != null) {
-                standardRound = getArguments().getParcelable(ITEM);
+            if (arguments != null) {
+                standardRound = arguments!!.getParcelable(ITEM)
             }
             if (standardRound == null) {
-                standardRound = new StandardRound();
-                ToolbarUtils.setTitle(this, R.string.new_round_template);
-                binding.name.setText(R.string.custom_round);
+                standardRound = StandardRound()
+                ToolbarUtils.setTitle(this, R.string.new_round_template)
+                binding.name.setText(R.string.custom_round)
                 // Initialize with default values
-                addDefaultRound();
+                addDefaultRound()
             } else {
-                ToolbarUtils.setTitle(this, R.string.edit_standard_round);
+                ToolbarUtils.setTitle(this, R.string.edit_standard_round)
                 // Load saved values
-                if (standardRound.getClub() == StandardRoundFactory.INSTANCE.getCUSTOM()) {
-                    binding.name.setText(standardRound.getName());
+                if (standardRound!!.club == StandardRoundFactory.CUSTOM) {
+                    binding.name.setText(standardRound!!.name)
                 } else {
-                    standardRound.setId(null);
+                    standardRound!!.id = null
                     binding.name.setText(
-                            String.format("%s %s", getString(R.string.custom), standardRound
-                                    .getName()));
+                            String.format("%s %s", getString(R.string.custom), standardRound!!
+                                    .name))
                     // When copying an existing standard round make sure
                     // we don't overwrite the other rounds templates
-                    for (RoundTemplate round : standardRound.loadRounds()) {
-                        round.setId(null);
+                    for (round in standardRound!!.loadRounds()!!) {
+                        round.id = null
                     }
                 }
             }
         }
 
-        adapter = new RoundTemplateAdapter(this, standardRound.loadRounds());
-        binding.rounds.setAdapter(adapter);
-        binding.addButton.setOnClickListener((view) -> onAddRound());
-        binding.deleteStandardRound.setOnClickListener((view) -> onDeleteStandardRound());
+        adapter = RoundTemplateAdapter(this, standardRound!!.loadRounds()!!)
+        binding.rounds.adapter = adapter
+        binding.addButton.setOnClickListener { view -> onAddRound() }
+        binding.deleteStandardRound.setOnClickListener { view -> onDeleteStandardRound() }
 
-        return binding.getRoot();
+        return binding.root
     }
 
-    private void addDefaultRound() {
-        RoundTemplate round = new RoundTemplate();
-        round.setShotsPerEnd(SettingsManager.INSTANCE.getShotsPerEnd());
-        round.setEndCount(SettingsManager.INSTANCE.getEndCount());
-        round.setTargetTemplate(SettingsManager.INSTANCE.getTarget());
-        round.setDistance(SettingsManager.INSTANCE.getDistance());
-        standardRound.loadRounds().add(round);
+    private fun addDefaultRound() {
+        val round = RoundTemplate()
+        round.shotsPerEnd = SettingsManager.shotsPerEnd
+        round.endCount = SettingsManager.endCount
+        round.targetTemplate = SettingsManager.target
+        round.distance = SettingsManager.distance
+        standardRound!!.loadRounds()!!.add(round)
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        FabTransformUtil.setup(getActivity(), binding.getRoot());
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        FabTransformUtil.setup(activity!!, binding.root)
     }
 
-    private void onAddRound() {
-        int newItemIndex = standardRound.loadRounds().size();
+    private fun onAddRound() {
+        val newItemIndex = standardRound!!.loadRounds()!!.size
         if (newItemIndex > 0) {
-            RoundTemplate r = standardRound.loadRounds().get(newItemIndex - 1);
-            RoundTemplate roundTemplate = new RoundTemplate();
-            roundTemplate.setEndCount(r.getEndCount());
-            roundTemplate.setShotsPerEnd(r.getShotsPerEnd());
-            roundTemplate.setDistance(r.getDistance());
-            roundTemplate.setTargetTemplate(r.getTargetTemplate());
-            standardRound.loadRounds().add(roundTemplate);
+            val r = standardRound!!.loadRounds()!![newItemIndex - 1]
+            val roundTemplate = RoundTemplate()
+            roundTemplate.endCount = r.endCount
+            roundTemplate.shotsPerEnd = r.shotsPerEnd
+            roundTemplate.distance = r.distance
+            roundTemplate.targetTemplate = r.targetTemplate
+            standardRound!!.loadRounds()!!.add(roundTemplate)
         } else {
-            addDefaultRound();
+            addDefaultRound()
         }
-        adapter.notifyItemInserted(newItemIndex);
+        adapter!!.notifyItemInserted(newItemIndex)
     }
 
-    private void onDeleteStandardRound() {
-        standardRound.delete();
-        getActivity().setResult(RESULT_STANDARD_ROUND_DELETED, null);
-        finish();
+    private fun onDeleteStandardRound() {
+        standardRound!!.delete()
+        activity!!.setResult(RESULT_STANDARD_ROUND_DELETED, null)
+        finish()
     }
 
-    @Override
-    protected void onSave() {
-        standardRound.setClub(StandardRoundFactory.INSTANCE.getCUSTOM());
-        standardRound.setName(binding.name.getText().toString());
-        standardRound.save();
+    override fun onSave() {
+        standardRound!!.club = StandardRoundFactory.CUSTOM
+        standardRound!!.name = binding.name.text.toString()
+        standardRound!!.save()
 
-        RoundTemplate round = standardRound.loadRounds().get(0); //FIXME how is this possible?
-        SettingsManager.INSTANCE.setShotsPerEnd(round.getShotsPerEnd());
-        SettingsManager.INSTANCE.setEndCount(round.getEndCount());
-        SettingsManager.INSTANCE.setTarget(round.getTargetTemplate());
-        SettingsManager.INSTANCE.setDistance(round.getDistance());
+        val round = standardRound!!.loadRounds()!![0] //FIXME how is this possible?
+        SettingsManager.shotsPerEnd = round.shotsPerEnd
+        SettingsManager.endCount = round.endCount
+        SettingsManager.target = round.targetTemplate
+        SettingsManager.distance = round.distance
 
-        Intent data = new Intent();
-        data.putExtra(ITEM, standardRound);
-        getActivity().setResult(Activity.RESULT_OK, data);
-        finish();
+        val data = Intent()
+        data.putExtra(ITEM, standardRound)
+        activity!!.setResult(Activity.RESULT_OK, data)
+        finish()
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK) {
-            Bundle intentData = data.getBundleExtra(ItemSelectActivity.INTENT);
-            final int index = intentData.getInt(SelectorBase.INDEX);
-            switch (requestCode) {
-                case DistanceSelector.DISTANCE_REQUEST_CODE:
-                    standardRound.loadRounds().get(index).setDistance(data.getParcelableExtra(ITEM));
-                    adapter.notifyItemChanged(index);
-                    break;
-                case TargetSelector.TARGET_REQUEST_CODE:
-                    standardRound.loadRounds().get(index)
-                            .setTargetTemplate(data.getParcelableExtra(ITEM));
-                    adapter.notifyItemChanged(index);
-                    break;
+            val intentData = data.getBundleExtra(ItemSelectActivity.INTENT)
+            val index = intentData.getInt(SelectorBase.INDEX)
+            when (requestCode) {
+                DistanceSelector.DISTANCE_REQUEST_CODE -> {
+                    standardRound!!.loadRounds()!![index].distance = data.getParcelableExtra(ITEM)
+                    adapter!!.notifyItemChanged(index)
+                }
+                TargetSelector.TARGET_REQUEST_CODE -> {
+                    standardRound!!.loadRounds()!![index]
+                            .targetTemplate = data.getParcelableExtra(ITEM)
+                    adapter!!.notifyItemChanged(index)
+                }
             }
         }
     }
 
-    private static class RoundTemplateHolder extends DynamicItemHolder<RoundTemplate> {
+    private class RoundTemplateHolder internal constructor(view: View) : DynamicItemHolder<RoundTemplate>(view) {
 
-        ItemRoundTemplateBinding binding;
+        internal var binding: ItemRoundTemplateBinding = DataBindingUtil.bind(view)
 
-        RoundTemplateHolder(@NonNull View view) {
-            super(view);
-            binding = DataBindingUtil.bind(view);
-        }
-
-        @Override
-        public void onBind(RoundTemplate roundTemplate, int position, @NonNull Fragment fragment, View.OnClickListener removeListener) {
-            item = roundTemplate;
+        override fun onBind(roundTemplate: RoundTemplate, position: Int, fragment: Fragment, removeListener: View.OnClickListener) {
+            item = roundTemplate
 
             // Set title of round
-            binding.roundNumber.setText(fragment.getResources()
-                    .getQuantityString(R.plurals.rounds, position + 1, position + 1));
-            item.setIndex(position);
+            binding.roundNumber.text = fragment.resources
+                    .getQuantityString(R.plurals.rounds, position + 1, position + 1)
+            item.index = position
 
-            binding.distance.setOnActivityResultContext(fragment);
-            binding.distance.setItemIndex(position);
-            binding.distance.setItem(item.getDistance());
+            binding.distance.setOnActivityResultContext(fragment)
+            binding.distance.setItemIndex(position)
+            binding.distance.setItem(item.distance)
 
             // Target round
-            binding.target.setOnActivityResultContext(fragment);
-            binding.target.setItemIndex(position);
-            binding.target.setItem(item.getTargetTemplate());
+            binding.target.setOnActivityResultContext(fragment)
+            binding.target.setItemIndex(position)
+            binding.target.setItem(item.targetTemplate)
 
             // Ends
-            binding.endCount.setTextPattern(R.plurals.passe);
-            binding.endCount.setOnValueChangedListener(val -> item.setEndCount(val));
-            binding.endCount.setValue(item.getEndCount());
+            binding.endCount.setTextPattern(R.plurals.passe)
+            binding.endCount.setOnValueChangedListener { item.endCount = it }
+            binding.endCount.value = item.endCount
 
             // Shots per end
-            binding.shotCount.setTextPattern(R.plurals.arrow);
-            binding.shotCount.setMinimum(1);
-            binding.shotCount.setMaximum(12);
-            binding.shotCount.setOnValueChangedListener(val -> item.setShotsPerEnd(val));
-            binding.shotCount.setValue(item.getShotsPerEnd());
+            binding.shotCount.setTextPattern(R.plurals.arrow)
+            binding.shotCount.minimum = 1
+            binding.shotCount.maximum = 12
+            binding.shotCount.setOnValueChangedListener { item.shotsPerEnd = it }
+            binding.shotCount.value = item.shotsPerEnd
 
             if (position == 0) {
-                binding.remove.setVisibility(View.GONE);
+                binding.remove.visibility = View.GONE
             } else {
-                binding.remove.setVisibility(View.VISIBLE);
-                binding.remove.setOnClickListener(removeListener);
+                binding.remove.visibility = View.VISIBLE
+                binding.remove.setOnClickListener(removeListener)
             }
         }
     }
 
-    private class RoundTemplateAdapter extends DynamicItemAdapter<RoundTemplate> {
-        RoundTemplateAdapter(@NonNull Fragment fragment, List<RoundTemplate> list) {
-            super(fragment, list, R.string.round_removed);
+    private inner class RoundTemplateAdapter internal constructor(fragment: Fragment, list: List<RoundTemplate>) : DynamicItemAdapter<RoundTemplate>(fragment, list, R.string.round_removed) {
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DynamicItemHolder<RoundTemplate> {
+            val v = inflater.inflate(R.layout.item_round_template, parent, false)
+            return RoundTemplateHolder(v)
+        }
+    }
+
+    companion object {
+
+        val RESULT_STANDARD_ROUND_DELETED = Activity.RESULT_FIRST_USER
+
+        fun createIntent(): IntentWrapper {
+            return IntentWrapper(EditStandardRoundActivity::class.java)
         }
 
-        @NonNull
-        @Override
-        public DynamicItemHolder<RoundTemplate> onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = inflater.inflate(R.layout.item_round_template, parent, false);
-            return new RoundTemplateHolder(v);
+        fun editIntent(item: StandardRound): IntentWrapper {
+            return IntentWrapper(EditStandardRoundActivity::class.java)
+                    .with(ITEM, item)
         }
     }
 }
