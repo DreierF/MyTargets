@@ -34,6 +34,10 @@ import de.dreier.mytargets.databinding.LayoutNumberPickerBinding
  *
  * @author Jeffrey F. Cole
  */
+
+
+typealias OnValueChangedListener = (Int) -> Unit
+
 class NumberPicker(context: Context, attributeSet: AttributeSet) : LinearLayout(context, attributeSet) {
 
     var minimum = 1
@@ -56,7 +60,7 @@ class NumberPicker(context: Context, attributeSet: AttributeSet) : LinearLayout(
             } else {
                 binding.numberValue.text = resources.getQuantityString(textPattern, field, field)
             }
-            changeListener?.onValueChanged(field)
+            changeListener?.invoke(field)
         }
 
     private val repeatUpdateHandler = Handler()
@@ -68,10 +72,6 @@ class NumberPicker(context: Context, attributeSet: AttributeSet) : LinearLayout(
     @PluralsRes
     private var textPattern: Int = 0
     private val binding: LayoutNumberPickerBinding
-
-    interface OnValueChangedListener {
-        fun onValueChanged(`val`: Int)
-    }
 
     fun setOnValueChangedListener(listener: OnValueChangedListener) {
         changeListener = listener
