@@ -13,15 +13,17 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.test.base;
+package de.dreier.mytargets.test.base
 
-import org.junit.BeforeClass;
+import de.dreier.mytargets.features.settings.SettingsManager
+import org.junit.BeforeClass
 
-import de.dreier.mytargets.features.settings.SettingsManager;
-
-public class InstrumentedTestBase {
-    @BeforeClass
-    public static void setLanguage() {
-        SettingsManager.INSTANCE.setLanguage("en");
+open class InstrumentedTestBase {
+    companion object {
+        @BeforeClass
+        @JvmStatic
+        fun setLanguage() {
+            SettingsManager.language = "en"
+        }
     }
 }

@@ -13,55 +13,43 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.test.utils.matchers;
+package de.dreier.mytargets.test.utils.matchers
 
-import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.support.annotation.IdRes
+import android.support.annotation.StringRes
+import android.support.design.widget.FloatingActionButton
+import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.action.ViewActions.click
+import android.support.test.espresso.contrib.RecyclerViewActions.actionOnItem
+import android.support.test.espresso.matcher.ViewMatchers.*
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
+import android.view.View
+import de.dreier.mytargets.R
+import de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isOnForegroundFragment
+import de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.withSpeedDialItem
+import org.hamcrest.CoreMatchers.*
+import org.hamcrest.Matcher
+import org.hamcrest.Matchers
 
-import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
-
-import de.dreier.mytargets.R;
-
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItem;
-import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withParent;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isOnForegroundFragment;
-import static de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.withSpeedDialItem;
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-
-public class ViewMatcher {
-    public static Matcher<View> androidHomeMatcher() {
-        return allOf(withParent(withClassName(is(Toolbar.class.getName()))),
+object ViewMatcher {
+    fun androidHomeMatcher(): Matcher<View> {
+        return allOf(withParent(withClassName(`is`(Toolbar::class.java.name))),
                 withClassName(containsString("ImageButton"))
-        );
+        )
     }
 
-    @NonNull
-    public static Matcher<View> supportFab() {
-        return allOf(withId(R.id.fab), isDisplayed(), instanceOf(FloatingActionButton.class));
+    fun supportFab(): Matcher<View> {
+        return allOf(withId(R.id.fab), isDisplayed(), instanceOf(FloatingActionButton::class.java))
     }
 
-    public static void clickFabSpeedDialItem(@IdRes int id) {
-        onView(ViewMatcher.supportFab()).perform(click());
-        onView(withSpeedDialItem(withId(R.id.fabSpeedDial), id)).perform(click());
+    fun clickFabSpeedDialItem(@IdRes id: Int) {
+        onView(ViewMatcher.supportFab()).perform(click())
+        onView(withSpeedDialItem(withId(R.id.fabSpeedDial), id)).perform(click())
     }
 
-    public static void clickOnPreference(@StringRes int text) {
+    fun clickOnPreference(@StringRes text: Int) {
         onView(Matchers.allOf(withId(R.id.list), isOnForegroundFragment()))
-                .perform(actionOnItem(hasDescendant(withText(text)),click()));
+                .perform(actionOnItem<RecyclerView.ViewHolder>(hasDescendant(withText(text)), click()))
     }
 }

@@ -13,42 +13,33 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.test.utils.matchers;
+package de.dreier.mytargets.test.utils.matchers
 
-import android.content.Intent;
-import android.support.annotation.NonNull;
+import android.content.Intent
+import android.support.test.espresso.intent.matcher.ComponentNameMatchers.hasClassName
+import android.support.test.espresso.intent.matcher.ComponentNameMatchers.hasMyPackageName
+import android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.Description
+import org.hamcrest.Matcher
+import org.hamcrest.TypeSafeMatcher
+import java.util.*
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
-
-import java.util.Set;
-import java.util.TreeSet;
-
-import de.dreier.mytargets.shared.utils.LongUtils;
-
-import static android.support.test.espresso.intent.matcher.ComponentNameMatchers.hasClassName;
-import static android.support.test.espresso.intent.matcher.ComponentNameMatchers.hasMyPackageName;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static org.hamcrest.CoreMatchers.allOf;
-
-public class IntentMatcher {
-    public static Matcher<? super Intent> hasLongArrayExtra(String key, Set<Long> values) {
-        return new TypeSafeMatcher<Intent>() {
-            @Override
-            public void describeTo(Description description) {
+object IntentMatcher {
+    fun hasLongArrayExtra(key: String, values: Set<Long>): Matcher<in Intent> {
+        return object : TypeSafeMatcher<Intent>() {
+            override fun describeTo(description: Description) {
 
             }
 
-            @Override
-            protected boolean matchesSafely(@NonNull Intent intent) {
-                long[] items = intent.getLongArrayExtra(key);
-                return items != null && new TreeSet<>(LongUtils.toList(items)).equals(values);
+            override fun matchesSafely(intent: Intent): Boolean {
+                val items = intent.getLongArrayExtra(key)
+                return items != null && TreeSet(items.toList()) == values
             }
-        };
+        }
     }
 
-    public static Matcher<Intent> hasClass(@NonNull Class<?> clazz) {
-        return hasComponent(allOf(hasClassName(clazz.getName()), hasMyPackageName()));
+    fun hasClass(clazz: Class<*>): Matcher<Intent> {
+        return hasComponent(allOf(hasClassName(clazz.name), hasMyPackageName()))
     }
 }

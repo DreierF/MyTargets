@@ -13,86 +13,78 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training.standardround;
+package de.dreier.mytargets.features.training.standardround
 
-import android.support.annotation.NonNull;
-import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.support.v4.util.LongSparseArray;
-
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.shared.models.db.StandardRound;
-import de.dreier.mytargets.test.base.UITestBase;
-
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
-import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher.withRecyclerView;
+import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.action.ViewActions.*
+import android.support.test.espresso.assertion.ViewAssertions.matches
+import android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
+import android.support.test.espresso.intent.rule.IntentsTestRule
+import android.support.test.espresso.matcher.ViewMatchers.*
+import android.support.test.runner.AndroidJUnit4
+import android.support.v4.util.LongSparseArray
+import android.support.v7.widget.RecyclerView
+import de.dreier.mytargets.R
+import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.shared.models.db.StandardRound
+import de.dreier.mytargets.test.base.UITestBase
+import de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher.Companion.withRecyclerView
+import org.junit.Before
+import org.junit.Ignore
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
 
 @Ignore
-@RunWith(AndroidJUnit4.class)
-public class StandardRoundActivityTest extends UITestBase {
+@RunWith(AndroidJUnit4::class)
+class StandardRoundActivityTest : UITestBase() {
 
-    @NonNull
     @Rule
-    public IntentsTestRule<StandardRoundActivity> activityTestRule = new IntentsTestRule<>(
-            StandardRoundActivity.class, true, false);
+    var activityTestRule = IntentsTestRule(
+            StandardRoundActivity::class.java, true, false)
 
     @Before
-    public void setUp() {
-        LongSparseArray<Integer> map = new LongSparseArray<>();
-        map.put(32L, 3);
-        map.put(31L, 2);
-        SettingsManager.INSTANCE.setStandardRoundsLastUsed(map);
+    fun setUp() {
+        val map = LongSparseArray<Int>()
+        map.put(32L, 3)
+        map.put(31L, 2)
+        SettingsManager.standardRoundsLastUsed = map
     }
 
     @Test
-    public void searchTest() {
+    fun searchTest() {
         activityTestRule.launchActivity(
-                StandardRoundListFragment.Companion.getIntent(StandardRound.Companion.get(32L)).build());
+                StandardRoundListFragment.getIntent(StandardRound[32L]!!).build())
 
-        clickActionBarItem(R.id.action_search, R.string.search);
+        clickActionBarItem(R.id.action_search, R.string.search)
 
-        onView(withId(R.id.search_src_text)).perform(replaceText("wa 18"), closeSoftKeyboard());
+        onView(withId(R.id.search_src_text)).perform(replaceText("wa 18"), closeSoftKeyboard())
 
         onView(withRecyclerView(R.id.recyclerView).atPosition(1))
-                .check(matches(hasDescendant(withText(R.string.wa_18_40cm))));
+                .check(matches(hasDescendant(withText(R.string.wa_18_40cm))))
 
         onView(withRecyclerView(R.id.recyclerView).atPosition(2))
-                .check(matches(hasDescendant(withText(R.string.wa_18_60cm))));
+                .check(matches(hasDescendant(withText(R.string.wa_18_60cm))))
 
         onView(withId(R.id.recyclerView))
-                .perform(actionOnItemAtPosition(1, click()));
+                .perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(1, click()))
     }
 
     @Test
-    public void recentlyUsedTest() {
+    fun recentlyUsedTest() {
         activityTestRule.launchActivity(
-                StandardRoundListFragment.Companion.getIntent(StandardRound.Companion.get(32L)).build());
+                StandardRoundListFragment.getIntent(StandardRound[32L]!!).build())
 
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
-                .check(matches(hasDescendant(withText(R.string.recently_used))));
+                .check(matches(hasDescendant(withText(R.string.recently_used))))
 
         onView(withRecyclerView(R.id.recyclerView).atPosition(1))
-                .check(matches(hasDescendant(withText(R.string.wa_standard))));
+                .check(matches(hasDescendant(withText(R.string.wa_standard))))
 
         onView(withRecyclerView(R.id.recyclerView).atPosition(2))
-                .check(matches(hasDescendant(withText(R.string.wa_cub))));
+                .check(matches(hasDescendant(withText(R.string.wa_cub))))
 
         onView(withRecyclerView(R.id.recyclerView).atPosition(4))
-                .check(matches(hasDescendant(withText(R.string.adelaide))));
+                .check(matches(hasDescendant(withText(R.string.adelaide))))
     }
 }

@@ -13,132 +13,121 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.arrow;
+package de.dreier.mytargets.features.arrow
 
 
-import android.support.annotation.NonNull;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+import android.support.test.espresso.Espresso.onData
+import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.action.ViewActions.*
+import android.support.test.espresso.assertion.ViewAssertions.matches
+import android.support.test.espresso.matcher.ViewMatchers.*
+import android.support.test.rule.ActivityTestRule
+import android.support.test.runner.AndroidJUnit4
+import de.dreier.mytargets.R
+import de.dreier.mytargets.features.main.MainActivity
+import de.dreier.mytargets.test.base.UITestBase
+import de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher.Companion.withRecyclerView
+import de.dreier.mytargets.test.utils.matchers.ViewMatcher.supportFab
+import de.dreier.mytargets.test.utils.rules.EmptyDbTestRule
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.instanceOf
+import org.hamcrest.Matchers.allOf
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.RuleChain
+import org.junit.runner.RunWith
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.RuleChain;
-import org.junit.runner.RunWith;
+@RunWith(AndroidJUnit4::class)
+class EditArrowTest : UITestBase() {
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.main.MainActivity;
-import de.dreier.mytargets.test.base.UITestBase;
-import de.dreier.mytargets.test.utils.rules.EmptyDbTestRule;
-
-import static android.support.test.espresso.Espresso.onData;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.longClick;
-import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher.withRecyclerView;
-import static de.dreier.mytargets.test.utils.matchers.ViewMatcher.supportFab;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.allOf;
-
-@RunWith(AndroidJUnit4.class)
-public class EditArrowTest extends UITestBase {
-
-    @NonNull
-    private ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(
-            MainActivity.class);
+    private val activityTestRule = ActivityTestRule(
+            MainActivity::class.java)
 
     @Rule
-    public final RuleChain rule = RuleChain.outerRule(new EmptyDbTestRule())
-            .around(activityTestRule);
+    val rule = RuleChain.outerRule(EmptyDbTestRule())
+            .around(activityTestRule)
 
     @Test
-    public void editArrowTest() {
-        onView(withId(R.id.action_arrows)).perform(click());
+    fun editArrowTest() {
+        onView(withId(R.id.action_arrows)).perform(click())
 
         // Add new arrow and change some properties
-        onView(supportFab()).perform(click());
+        onView(supportFab()).perform(click())
         onView(withId(R.id.name))
-                .perform(nestedScrollTo(), replaceText("Arrow"), closeSoftKeyboard());
+                .perform(nestedScrollTo(), replaceText("Arrow"), closeSoftKeyboard())
         onView(withText(R.string.more_fields))
-                .perform(nestedScrollTo(), click());
+                .perform(nestedScrollTo(), click())
         onView(withId(R.id.length))
-                .perform(nestedScrollTo(), replaceText("Length"));
+                .perform(nestedScrollTo(), replaceText("Length"))
         onView(withId(R.id.diameter))
-                .perform(nestedScrollTo(), replaceText("680"), closeSoftKeyboard());
+                .perform(nestedScrollTo(), replaceText("680"), closeSoftKeyboard())
 
         // Attempt to save and check if error is shown
-        save();
+        save()
         onView(withId(R.id.diameterTextInputLayout))
-                .check(matches(hasDescendant(withText(R.string.not_within_expected_range_mm))));
+                .check(matches(hasDescendant(withText(R.string.not_within_expected_range_mm))))
 
         // Fix input
         onView(withId(R.id.diameter))
-                .perform(nestedScrollTo(), replaceText("6.8"), closeSoftKeyboard());
-        save();
+                .perform(nestedScrollTo(), replaceText("6.8"), closeSoftKeyboard())
+        save()
 
         // Check if arrow has been saved
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
-                .check(matches(hasDescendant(withText("Arrow"))));
+                .check(matches(hasDescendant(withText("Arrow"))))
 
         // Open arrow again via CAB
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
-                .perform(longClick());
-        clickContextualActionBarItem(R.id.action_edit, R.string.edit);
+                .perform(longClick())
+        clickContextualActionBarItem(R.id.action_edit, R.string.edit)
 
         // Check if properties have been saved and are shown
         onView(withId(R.id.length))
-                .check(matches(withText("Length")));
+                .check(matches(withText("Length")))
         onView(withId(R.id.diameter))
-                .check(matches(withText("6.8")));
+                .check(matches(withText("6.8")))
         onView(withId(R.id.diameterUnit))
-                .check(matches(withSpinnerText("mm")));
+                .check(matches(withSpinnerText("mm")))
 
         // Change unit to inch
-        onView(withId(R.id.diameterUnit)).perform(nestedScrollTo(), click());
-        onData(allOf(is(instanceOf(String.class)), is("inch"))).perform(click());
-        save();
+        onView(withId(R.id.diameterUnit)).perform(nestedScrollTo(), click())
+        onData(allOf(`is`(instanceOf<Any>(String::class.java)), `is`("inch"))).perform(click())
+        save()
 
         // Correct value and save
         onView(withId(R.id.diameterTextInputLayout))
-                .check(matches(hasDescendant(withText(R.string.not_within_expected_range_inch))));
+                .check(matches(hasDescendant(withText(R.string.not_within_expected_range_inch))))
         onView(withId(R.id.diameter))
-                .perform(nestedScrollTo(), replaceText("0.5"), closeSoftKeyboard());
+                .perform(nestedScrollTo(), replaceText("0.5"), closeSoftKeyboard())
 
         // TODO Fix camera test
-//        onView(withId(R.id.coordinatorLayout)).perform(swipeDown());
-//        onView(supportFab()).perform(click());
-//        intendingImageCapture(getInstrumentation().getContext(),
-//                de.dreier.mytargets.debug.test.R.raw.mocked_image_capture);
-//        onView(withText(R.string.take_picture))
-//                .perform(click());
-//
-//        allowPermissionsIfNeeded(activityTestRule.getActivity(), CAMERA);
-//
-//        intendedImageCapture();
+        //        onView(withId(R.id.coordinatorLayout)).perform(swipeDown());
+        //        onView(supportFab()).perform(click());
+        //        intendingImageCapture(getInstrumentation().getContext(),
+        //                de.dreier.mytargets.debug.test.R.raw.mocked_image_capture);
+        //        onView(withText(R.string.take_picture))
+        //                .perform(click());
+        //
+        //        allowPermissionsIfNeeded(activityTestRule.getActivity(), CAMERA);
+        //
+        //        intendedImageCapture();
 
-        save();
+        save()
 
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
-                .perform(click());
+                .perform(click())
 
-        onView(withId(R.id.diameter)).check(matches(withText("0.5")));
+        onView(withId(R.id.diameter)).check(matches(withText("0.5")))
         onView(withId(R.id.diameterUnit))
-                .check(matches(withSpinnerText("inch")));
+                .check(matches(withSpinnerText("inch")))
 
         // Change name and discard it
         onView(withId(R.id.name))
-                .perform(nestedScrollTo(), replaceText("Arrrr"), closeSoftKeyboard());
-        navigateUp();
+                .perform(nestedScrollTo(), replaceText("Arrrr"), closeSoftKeyboard())
+        navigateUp()
 
         // Check if arrow has not been saved
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
-                .check(matches(hasDescendant(withText("Arrow"))));
+                .check(matches(hasDescendant(withText("Arrow"))))
     }
 }

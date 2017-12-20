@@ -13,44 +13,35 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.test.utils.assertions;
+package de.dreier.mytargets.test.utils.assertions
 
-import android.support.annotation.NonNull;
-import android.support.test.espresso.ViewAssertion;
+import android.support.test.espresso.ViewAssertion
+import de.dreier.mytargets.features.training.input.TargetView
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 
-import de.dreier.mytargets.features.training.input.TargetView;
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-import de.dreier.mytargets.shared.views.TargetViewBase;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-public class TargetViewAssertions {
-    public static ViewAssertion virtualButtonNotExists(@NonNull String desc) {
-        return (view, noViewFoundException) -> {
+object TargetViewAssertions {
+    fun virtualButtonNotExists(desc: String): ViewAssertion {
+        return ViewAssertion { view, noViewFoundException ->
             if (noViewFoundException != null) {
-                throw noViewFoundException;
+                throw noViewFoundException
             }
 
-            TargetView targetView = (TargetView) view;
-            TargetViewBase.VirtualView vv = Stream.of(targetView.getVirtualViews())
-                    .filter(virtualView -> virtualView.getDescription().equals(desc))
-                    .findFirstOrNull();
-            assertNull("Virtual button does exist", vv);
-        };
+            val targetView = view as TargetView
+            val vv = targetView.virtualViews.firstOrNull { it.description == desc }
+            assertNull("Virtual button does exist", vv)
+        }
     }
 
-    public static ViewAssertion virtualButtonExists(@NonNull String desc) {
-        return (view, noViewFoundException) -> {
+    fun virtualButtonExists(desc: String): ViewAssertion {
+        return ViewAssertion { view, noViewFoundException ->
             if (noViewFoundException != null) {
-                throw noViewFoundException;
+                throw noViewFoundException
             }
 
-            TargetView targetView = (TargetView) view;
-            TargetViewBase.VirtualView vv = Stream.of(targetView.getVirtualViews())
-                    .filter(virtualView -> virtualView.getDescription().equals(desc))
-                    .findFirstOrNull();
-            assertNotNull("Virtual button does not exist", vv);
-        };
+            val targetView = view as TargetView
+            val vv = targetView.virtualViews.firstOrNull { it.description == desc }
+            assertNotNull("Virtual button does not exist", vv)
+        }
     }
 }

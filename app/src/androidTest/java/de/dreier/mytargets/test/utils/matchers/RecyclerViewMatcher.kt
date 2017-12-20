@@ -13,96 +13,83 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.test.utils.matchers;
+package de.dreier.mytargets.test.utils.matchers
 
-import android.content.res.Resources;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
+import android.content.res.Resources
+import android.support.test.espresso.matcher.ViewMatchers.*
+import android.support.v7.widget.RecyclerView
+import android.view.View
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.Description
+import org.hamcrest.Matcher
+import org.hamcrest.TypeSafeMatcher
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
+class RecyclerViewMatcher(private val recyclerViewMatcher: Matcher<View>) {
 
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withParent;
-import static org.hamcrest.CoreMatchers.allOf;
-
-public class RecyclerViewMatcher {
-    private final Matcher<View> recyclerViewMatcher;
-
-    public RecyclerViewMatcher(Matcher<View> recyclerViewMatcher) {
-        this.recyclerViewMatcher = recyclerViewMatcher;
+    fun atPosition(position: Int): Matcher<View> {
+        return atPositionOnView(position, -1)
     }
 
-    public static RecyclerViewMatcher withRecyclerView(Matcher<View> recyclerViewMatcher) {
-        return new RecyclerViewMatcher(recyclerViewMatcher);
-    }
+    fun atPositionOnView(position: Int, targetViewId: Int): Matcher<View> {
+        return object : TypeSafeMatcher<View>() {
+            internal var resources: Resources? = null
+            internal var childView: View? = null
 
-    public static RecyclerViewMatcher withRecyclerView(int recyclerViewId) {
-        return new RecyclerViewMatcher(allOf(withId(recyclerViewId), isDisplayed()));
-    }
-
-    public static RecyclerViewMatcher withNestedRecyclerView(int recyclerViewId) {
-        return new RecyclerViewMatcher(allOf(withId(recyclerViewId),
-                withParent(withParent(isDisplayed()))));
-    }
-
-    @Nullable
-    public Matcher<View> atPosition(final int position) {
-        return atPositionOnView(position, -1);
-    }
-
-    @Nullable
-    public Matcher<View> atPositionOnView(final int position, final int targetViewId) {
-        return new TypeSafeMatcher<View>() {
-            @Nullable
-            Resources resources = null;
-            View childView;
-
-            public void describeTo(@NonNull Description description) {
-                recyclerViewMatcher.describeTo(description);
-                description.appendText(" at position " + position);
+            override fun describeTo(description: Description) {
+                recyclerViewMatcher.describeTo(description)
+                description.appendText(" at position " + position)
                 if (targetViewId != -1) {
-                    String idDescription = Integer.toString(targetViewId);
+                    var idDescription = Integer.toString(targetViewId)
                     if (resources != null) {
                         try {
-                            idDescription = resources.getResourceName(targetViewId);
-                        } catch (Resources.NotFoundException var4) {
-                            idDescription = targetViewId + " (resource name not found)";
+                            idDescription = resources!!.getResourceName(targetViewId)
+                        } catch (var4: Resources.NotFoundException) {
+                            idDescription = targetViewId.toString() + " (resource name not found)"
                         }
+
                     }
-                    description.appendText(" on view with id " + idDescription);
+                    description.appendText(" on view with id " + idDescription)
                 }
             }
 
-            public boolean matchesSafely(@NonNull View view) {
-                resources = view.getResources();
+            public override fun matchesSafely(view: View): Boolean {
+                resources = view.resources
 
                 if (childView == null) {
-                    View parent = MatcherUtils.getMatchingParent(view, recyclerViewMatcher);
-                    if (parent == null || !(parent instanceof RecyclerView)) {
-                        return false;
+                    val parent = MatcherUtils.getMatchingParent(view, recyclerViewMatcher)
+                    if (parent == null || parent !is RecyclerView) {
+                        return false
                     }
-                    RecyclerView recyclerView = (RecyclerView) parent;
-                    RecyclerView.ViewHolder viewHolder = recyclerView
-                            .findViewHolderForAdapterPosition(position);
-                    if (viewHolder == null) {
-                        return false;
-                    }
-                    childView = viewHolder.itemView;
+                    val recyclerView = parent as RecyclerView?
+                    val viewHolder = recyclerView!!
+                            .findViewHolderForAdapterPosition(position) ?: return false
+                    childView = viewHolder.itemView
                 }
 
-                if (targetViewId == -1) {
-                    return view == childView;
+                return if (targetViewId == -1) {
+                    view === childView
                 } else {
-                    View targetView = childView.findViewById(targetViewId);
-                    return view == targetView;
+                    val targetView = childView!!.findViewById<View>(targetViewId)
+                    view === targetView
                 }
 
             }
-        };
+        }
+    }
+
+    companion object {
+
+        fun withRecyclerView(recyclerViewMatcher: Matcher<View>): RecyclerViewMatcher {
+            return RecyclerViewMatcher(recyclerViewMatcher)
+        }
+
+        fun withRecyclerView(recyclerViewId: Int): RecyclerViewMatcher {
+            return RecyclerViewMatcher(allOf(withId(recyclerViewId), isDisplayed()))
+        }
+
+        fun withNestedRecyclerView(recyclerViewId: Int): RecyclerViewMatcher {
+            return RecyclerViewMatcher(allOf(withId(recyclerViewId),
+                    withParent(withParent(isDisplayed()))))
+        }
     }
 }

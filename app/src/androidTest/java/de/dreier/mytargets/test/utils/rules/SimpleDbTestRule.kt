@@ -13,165 +13,151 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.test.utils.rules;
+package de.dreier.mytargets.test.utils.rules
 
-import android.support.annotation.NonNull;
-import android.support.test.InstrumentationRegistry;
+import android.support.test.InstrumentationRegistry
+import de.dreier.mytargets.R
+import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.shared.models.Dimension
+import de.dreier.mytargets.shared.models.EWeather
+import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.models.augmented.AugmentedRound
+import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
+import de.dreier.mytargets.shared.models.db.*
+import de.dreier.mytargets.shared.targets.models.WAFull
+import de.dreier.mytargets.shared.views.TargetViewBase
+import org.threeten.bp.LocalDate
+import java.util.*
 
-import org.threeten.bp.LocalDate;
+class SimpleDbTestRule : DbTestRuleBase() {
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+    private val customRounds: List<RoundTemplate>
+        get() = Arrays.asList(getRoundTemplate(0, 50), getRoundTemplate(1, 30))
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.EWeather;
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.Bow;
-import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.RoundTemplate;
-import de.dreier.mytargets.shared.models.db.StandardRound;
-import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.shared.targets.models.WAFull;
-import de.dreier.mytargets.shared.views.TargetViewBase;
-
-public class SimpleDbTestRule extends DbTestRuleBase {
-
-    @Override
-    protected void addDatabaseContent() {
-        SettingsManager.INSTANCE.setTarget(
-                new Target(WAFull.Companion.getID(), 0, new Dimension(122, Dimension.Unit.CENTIMETER)));
-        SettingsManager.INSTANCE.setDistance(new Dimension(50, Dimension.Unit.METER));
-        SettingsManager.INSTANCE.setIndoor(false);
-        SettingsManager.INSTANCE.setInputMethod(TargetViewBase.EInputMethod.PLOTTING);
-        SettingsManager.INSTANCE.setTimerEnabled(true);
-        SettingsManager.INSTANCE.setShotsPerEnd(6);
-        Bow bow = addBow("PSE Fever");
-        addBow("PSE Something");
-        addArrow("Arrow 1");
-        addArrow("Arrow 2");
-        addRandomTraining(578459341);
-        addRandomTraining(454459456);
-        addRandomTraining(763478984);
-        addRandomTraining(453891238);
-        addRandomTraining(719789367);
-        addRandomTraining(658795439);
-        addFullTraining(bow);
-        addPracticeTraining(438573454);
+    override fun addDatabaseContent() {
+        SettingsManager.target = Target(WAFull.ID, 0, Dimension(122f, Dimension.Unit.CENTIMETER))
+        SettingsManager.distance = Dimension(50f, Dimension.Unit.METER)
+        SettingsManager.indoor = false
+        SettingsManager.inputMethod = TargetViewBase.EInputMethod.PLOTTING
+        SettingsManager.timerEnabled = true
+        SettingsManager.shotsPerEnd = 6
+        val bow = addBow("PSE Fever")
+        addBow("PSE Something")
+        addArrow("Arrow 1")
+        addArrow("Arrow 2")
+        addRandomTraining(578459341)
+        addRandomTraining(454459456)
+        addRandomTraining(763478984)
+        addRandomTraining(453891238)
+        addRandomTraining(719789367)
+        addRandomTraining(658795439)
+        addFullTraining(bow)
+        addPracticeTraining(438573454)
     }
 
-    private void addPracticeTraining(int seed) {
-        Random generator = new Random(seed);
-        List<RoundTemplate> rounds = getCustomRounds();
+    private fun addPracticeTraining(seed: Int) {
+        val generator = Random(seed.toLong())
+        val rounds = customRounds
 
-        Training training = saveDefaultTraining(null, generator);
+        val (id) = saveDefaultTraining(null, generator)
 
-        Round round1 = new Round(rounds.get(0));
-        round1.setTrainingId(training.getId());
-        round1.save();
+        val round1 = Round(rounds[0])
+        round1.trainingId = id
+        round1.save()
+        val r1 = AugmentedRound(round1)
 
-        Round round2 = new Round(rounds.get(1));
-        round2.setTrainingId(training.getId());
-        round2.save();
+        val round2 = Round(rounds[1])
+        round2.trainingId = id
+        round2.save()
+        val r2 = AugmentedRound(round2)
 
-        randomEnd(round1, 6, generator, 0).save();
-        randomEnd(round1, 6, generator, 1).save();
-        randomEnd(round1, 6, generator, 2).save();
-        randomEnd(round1, 6, generator, 3).save();
-        randomEnd(round1, 6, generator, 4).save();
-        randomEnd(round1, 6, generator, 5).save();
+        randomEnd(r1, 6, generator).toEnd().save()
+        randomEnd(r1, 6, generator).toEnd().save()
+        randomEnd(r1, 6, generator).toEnd().save()
+        randomEnd(r1, 6, generator).toEnd().save()
+        randomEnd(r1, 6, generator).toEnd().save()
+        randomEnd(r1, 6, generator).toEnd().save()
 
-        randomEnd(round2, 6, generator, 0).save();
-        randomEnd(round2, 6, generator, 1).save();
-        randomEnd(round2, 6, generator, 2).save();
-        randomEnd(round2, 6, generator, 3).save();
-        randomEnd(round2, 6, generator, 4).save();
-        randomEnd(round2, 6, generator, 5).save();
+        randomEnd(r2, 6, generator).toEnd().save()
+        randomEnd(r2, 6, generator).toEnd().save()
+        randomEnd(r2, 6, generator).toEnd().save()
+        randomEnd(r2, 6, generator).toEnd().save()
+        randomEnd(r2, 6, generator).toEnd().save()
+        randomEnd(r2, 6, generator).toEnd().save()
     }
 
-    @NonNull
-    private List<RoundTemplate> getCustomRounds() {
-        return Arrays.asList(getRoundTemplate(0, 50), getRoundTemplate(1, 30));
+    private fun getRoundTemplate(index: Int, distance: Int): RoundTemplate {
+        val roundTemplate = RoundTemplate()
+        roundTemplate.index = index
+        roundTemplate.targetTemplate = Target(WAFull.ID, 0, Dimension(60f, Dimension.Unit.CENTIMETER))
+        roundTemplate.shotsPerEnd = 6
+        roundTemplate.endCount = 6
+        roundTemplate.distance = Dimension(distance.toFloat(), Dimension.Unit.METER)
+        return roundTemplate
     }
 
-    @NonNull
-    private RoundTemplate getRoundTemplate(int index, int distance) {
-        RoundTemplate roundTemplate = new RoundTemplate();
-        roundTemplate.setIndex(index);
-        roundTemplate.setTargetTemplate(
-                new Target(WAFull.Companion.getID(), 0, new Dimension(60, Dimension.Unit.CENTIMETER)));
-        roundTemplate.setShotsPerEnd(6);
-        roundTemplate.setEndCount(6);
-        roundTemplate.setDistance(new Dimension(distance, Dimension.Unit.METER));
-        return roundTemplate;
+    private fun addRandomTraining(seed: Int) {
+        val generator = Random(seed.toLong())
+        val standardRound = StandardRound[32L]
+
+        val training = saveDefaultTraining(standardRound!!.id, generator)
+
+        val at = AugmentedTraining(training)
+        at.initRoundsFromTemplate(standardRound)
+        at.toTraining().save()
+
+        val round1 = at.rounds[0]
+
+        val round2 = at.rounds[1]
+
+        randomEnd(round1, 6, generator).toEnd().save()
+        randomEnd(round1, 6, generator).toEnd().save()
+        randomEnd(round1, 6, generator).toEnd().save()
+        randomEnd(round1, 6, generator).toEnd().save()
+        randomEnd(round1, 6, generator).toEnd().save()
+        randomEnd(round1, 6, generator).toEnd().save()
+
+        randomEnd(round2, 6, generator).toEnd().save()
+        randomEnd(round2, 6, generator).toEnd().save()
+        randomEnd(round2, 6, generator).toEnd().save()
+        randomEnd(round2, 6, generator).toEnd().save()
+        randomEnd(round2, 6, generator).toEnd().save()
+        randomEnd(round2, 6, generator).toEnd().save()
     }
 
-    private void addRandomTraining(int seed) {
-        Random generator = new Random(seed);
-        StandardRound standardRound = StandardRound.Companion.get(32L);
+    private fun addFullTraining(bow: Bow) {
+        val standardRound = StandardRound[32L]
 
-        Training training = saveDefaultTraining(standardRound.getId(), generator);
+        val training = Training()
+        training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training)
+        training.date = LocalDate.of(2016, 7, 15)
+        training.weather = EWeather.SUNNY
+        training.windSpeed = 1
+        training.windDirection = 0
+        training.standardRoundId = standardRound!!.id
+        training.bowId = bow.id
+        training.arrowId = null
+        training.arrowNumbering = false
+        val at = AugmentedTraining(training)
+        at.initRoundsFromTemplate(standardRound)
+        at.toTraining().save()
 
-        Round round1 = new Round(standardRound.loadRounds().get(0));
-        round1.setTrainingId(training.getId());
-        round1.save();
+        val round1 = at.rounds[0]
 
-        Round round2 = new Round(standardRound.loadRounds().get(1));
-        round2.setTrainingId(training.getId());
-        round2.save();
+        val round2 = at.rounds[1]
 
-        randomEnd(round1, 6, generator, 0).save();
-        randomEnd(round1, 6, generator, 1).save();
-        randomEnd(round1, 6, generator, 2).save();
-        randomEnd(round1, 6, generator, 3).save();
-        randomEnd(round1, 6, generator, 4).save();
-        randomEnd(round1, 6, generator, 5).save();
+        buildEnd(round1, 1, 1, 2, 3, 3, 4).toEnd().save()
+        buildEnd(round1, 0, 0, 1, 2, 2, 3).toEnd().save()
+        buildEnd(round1, 1, 1, 1, 3, 4, 4).toEnd().save()
+        buildEnd(round1, 0, 1, 1, 1, 2, 3).toEnd().save()
+        buildEnd(round1, 1, 2, 3, 3, 4, 5).toEnd().save()
+        buildEnd(round1, 1, 2, 2, 3, 3, 3).toEnd().save()
 
-        randomEnd(round2, 6, generator, 0).save();
-        randomEnd(round2, 6, generator, 1).save();
-        randomEnd(round2, 6, generator, 2).save();
-        randomEnd(round2, 6, generator, 3).save();
-        randomEnd(round2, 6, generator, 4).save();
-        randomEnd(round2, 6, generator, 5).save();
-    }
-
-    private void addFullTraining(@NonNull Bow bow) {
-        StandardRound standardRound = StandardRound.Companion.get(32L);
-
-        Training training = new Training();
-        training.setTitle(InstrumentationRegistry.getTargetContext().getString(R.string.training));
-        training.setDate(LocalDate.of(2016, 7, 15));
-        training.setWeather(EWeather.SUNNY);
-        training.setWindSpeed(1);
-        training.setWindDirection(0);
-        training.setStandardRoundId(standardRound.getId());
-        training.setBowId(bow.getId());
-        training.setArrowId(null);
-        training.setArrowNumbering(false);
-        training.save();
-
-        Round round1 = new Round(standardRound.loadRounds().get(0));
-        round1.setTrainingId(training.getId());
-        round1.save();
-
-        Round round2 = new Round(standardRound.loadRounds().get(1));
-        round2.setTrainingId(training.getId());
-        round2.save();
-
-        buildEnd(round1, 1, 1, 2, 3, 3, 4).save();
-        buildEnd(round1, 0, 0, 1, 2, 2, 3).save();
-        buildEnd(round1, 1, 1, 1, 3, 4, 4).save();
-        buildEnd(round1, 0, 1, 1, 1, 2, 3).save();
-        buildEnd(round1, 1, 2, 3, 3, 4, 5).save();
-        buildEnd(round1, 1, 2, 2, 3, 3, 3).save();
-
-        buildEnd(round2, 1, 2, 2, 3, 4, 5).save();
-        buildEnd(round2, 0, 0, 1, 2, 2, 3).save();
-        buildEnd(round2, 0, 1, 2, 2, 2, 3).save();
-        buildEnd(round2, 1, 1, 2, 3, 4, 4).save();
-        buildEnd(round2, 1, 2, 2, 3, 3, 3).save();
-        buildEnd(round2, 1, 2, 2, 3, 3, 4).save();
+        buildEnd(round2, 1, 2, 2, 3, 4, 5).toEnd().save()
+        buildEnd(round2, 0, 0, 1, 2, 2, 3).toEnd().save()
+        buildEnd(round2, 0, 1, 2, 2, 2, 3).toEnd().save()
+        buildEnd(round2, 1, 1, 2, 3, 4, 4).toEnd().save()
+        buildEnd(round2, 1, 2, 2, 3, 3, 3).toEnd().save()
+        buildEnd(round2, 1, 2, 2, 3, 3, 4).toEnd().save()
     }
 }
