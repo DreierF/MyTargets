@@ -13,231 +13,188 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training.overview;
+package de.dreier.mytargets.features.training.overview
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.databinding.DataBindingUtil;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.LocalBroadcastManager;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-
-import java.util.Collections;
-import java.util.List;
-
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.base.adapters.header.ExpandableListAdapter;
-import de.dreier.mytargets.base.fragments.ItemActionModeCallback;
-import de.dreier.mytargets.databinding.FragmentTrainingsBinding;
-import de.dreier.mytargets.databinding.ItemTrainingBinding;
-import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.features.statistics.StatisticsActivity;
-import de.dreier.mytargets.features.training.details.TrainingFragment;
-import de.dreier.mytargets.features.training.edit.EditTrainingFragment;
-import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-import de.dreier.mytargets.utils.DividerItemDecoration;
-import de.dreier.mytargets.utils.SlideInItemAnimator;
-import de.dreier.mytargets.utils.Utils;
-import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
-
-import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_FREE_TRAINING_ACTION;
-import static de.dreier.mytargets.features.training.edit.EditTrainingFragment.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION;
-import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_CREATE_TRAINING_FROM_REMOTE;
-import static de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE;
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.databinding.DataBindingUtil
+import android.os.Bundle
+import android.support.v4.content.LocalBroadcastManager
+import android.view.*
+import de.dreier.mytargets.R
+import de.dreier.mytargets.base.adapters.header.ExpandableListAdapter
+import de.dreier.mytargets.base.adapters.header.PartitionDelegate
+import de.dreier.mytargets.base.fragments.FragmentBase
+import de.dreier.mytargets.base.fragments.FragmentBase.LoaderUICallback
+import de.dreier.mytargets.base.fragments.ItemActionModeCallback
+import de.dreier.mytargets.databinding.FragmentTrainingsBinding
+import de.dreier.mytargets.databinding.ItemTrainingBinding
+import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.features.statistics.StatisticsActivity
+import de.dreier.mytargets.features.training.details.TrainingFragment
+import de.dreier.mytargets.features.training.edit.EditTrainingFragment
+import de.dreier.mytargets.features.training.edit.EditTrainingFragment.Companion.CREATE_FREE_TRAINING_ACTION
+import de.dreier.mytargets.features.training.edit.EditTrainingFragment.Companion.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION
+import de.dreier.mytargets.shared.models.db.Training
+import de.dreier.mytargets.utils.DividerItemDecoration
+import de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_CREATE_TRAINING_FROM_REMOTE
+import de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
+import de.dreier.mytargets.utils.SlideInItemAnimator
+import de.dreier.mytargets.utils.Utils
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
+import java.util.*
 
 /**
  * Shows an overview over all training days
  */
-public class TrainingsFragment extends ExpandableListFragment<Header, Training> {
+open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
 
-    protected FragmentTrainingsBinding binding;
+    private lateinit var binding: FragmentTrainingsBinding
 
-    public TrainingsFragment() {
-        itemTypeDelRes = R.plurals.training_deleted;
-        actionModeCallback = new ItemActionModeCallback(this, selector,
-                R.plurals.training_selected);
-        actionModeCallback.setEditCallback(this::onEdit);
-        actionModeCallback.setDeleteCallback(this::onDelete);
-        actionModeCallback.setStatisticsCallback(this::onStatistics);
-    }
+    private val updateReceiver = object : BroadcastReceiver() {
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        binding.fabSpeedDial.closeMenu();
-    }
-
-    @NonNull
-    private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            reloadData();
+        override fun onReceive(context: Context, intent: Intent) {
+            reloadData()
         }
-    };
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BROADCAST_UPDATE_TRAINING_FROM_REMOTE);
-        filter.addAction(BROADCAST_CREATE_TRAINING_FROM_REMOTE);
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver(updateReceiver, filter);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(updateReceiver);
+    init {
+        itemTypeDelRes = R.plurals.training_deleted
+        actionModeCallback = ItemActionModeCallback(this, selector,
+                R.plurals.training_selected)
+        actionModeCallback.setEditCallback(this::onEdit)
+        actionModeCallback.setDeleteCallback(this::onDelete)
+        actionModeCallback.setStatisticsCallback(this::onStatistics)
     }
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_trainings, container, false);
-        binding.recyclerView.setHasFixedSize(true);
-        adapter = new TrainingAdapter(getContext());
-        binding.recyclerView.setItemAnimator(new SlideInItemAnimator());
-        binding.recyclerView.setAdapter(adapter);
+    override fun onResume() {
+        super.onResume()
+        binding.fabSpeedDial.closeMenu()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val filter = IntentFilter()
+        filter.addAction(BROADCAST_UPDATE_TRAINING_FROM_REMOTE)
+        filter.addAction(BROADCAST_CREATE_TRAINING_FROM_REMOTE)
+        LocalBroadcastManager.getInstance(context!!).registerReceiver(updateReceiver, filter)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        LocalBroadcastManager.getInstance(context!!).unregisterReceiver(updateReceiver)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_trainings, container, false)
+        binding.recyclerView.setHasFixedSize(true)
+        adapter = TrainingAdapter(context!!)
+        binding.recyclerView.itemAnimator = SlideInItemAnimator()
+        binding.recyclerView.adapter = adapter
         binding.recyclerView.addItemDecoration(
-                new DividerItemDecoration(getContext(), R.drawable.full_divider));
-        binding.fabSpeedDial.setMenuListener(menuItem -> {
-            switch (menuItem.getItemId()) {
-                case R.id.fab1:
-                    EditTrainingFragment.Companion
-                            .createIntent(CREATE_FREE_TRAINING_ACTION)
-                            .withContext(TrainingsFragment.this)
-                            .fromFab(binding.fabSpeedDial
-                                            .getFabFromMenuId(R.id.fab1), R.color.fabFreeTraining,
-                                    R.drawable.fab_trending_up_white_24dp)
-                            .start();
-                    break;
-                case R.id.fab2:
-                    EditTrainingFragment.Companion
-                            .createIntent(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)
-                            .withContext(TrainingsFragment.this)
-                            .fromFab(binding.fabSpeedDial
-                                            .getFabFromMenuId(R.id.fab2), R.color.fabTrainingWithStandardRound,
-                                    R.drawable.fab_album_24dp)
-                            .start();
-                    break;
-                default:
-                    break;
+                DividerItemDecoration(context!!, R.drawable.full_divider))
+        binding.fabSpeedDial.setMenuListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.fab1 -> EditTrainingFragment
+                        .createIntent(CREATE_FREE_TRAINING_ACTION)
+                        .withContext(this@TrainingsFragment)
+                        .fromFab(binding.fabSpeedDial
+                                .getFabFromMenuId(R.id.fab1), R.color.fabFreeTraining,
+                                R.drawable.fab_trending_up_white_24dp)
+                        .start()
+                R.id.fab2 -> EditTrainingFragment
+                        .createIntent(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)
+                        .withContext(this@TrainingsFragment)
+                        .fromFab(binding.fabSpeedDial
+                                .getFabFromMenuId(R.id.fab2), R.color.fabTrainingWithStandardRound,
+                                R.drawable.fab_album_24dp)
+                        .start()
+                else -> {
+                }
             }
-            return false;
-        });
-        setHasOptionsMenu(true);
-        return binding.getRoot();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.statistics, menu);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        boolean showStatistics = adapter != null && adapter.getItemCount() > 0;
-        menu.findItem(R.id.action_statistics).setVisible(showStatistics);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_statistics:
-                StatisticsActivity.Companion
-                        .getIntent(Stream.of(Training.Companion.getAll())
-                                .flatMap((training) -> Stream.of(training.loadRounds()))
-                                .map(Round::getId)
-                                .toList()).withContext(this)
-                        .start();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            false
         }
+        setHasOptionsMenu(true)
+        return binding.root
     }
 
-    @Override
-    public void onSelected(Training item) {
-        TrainingFragment.Companion.getIntent(item)
-                .withContext(this)
-                .start();
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
+        inflater.inflate(R.menu.statistics, menu)
     }
 
-    public void onStatistics(@NonNull List<Long> ids) {
-        StatisticsActivity.Companion.getIntent(Stream.of(ids)
-                .map(Training.Companion::get)
-                .flatMap(t -> Stream.of(t.loadRounds()))
-                .map(Round::getId)
-                .toList())
-                .withContext(this)
-                .start();
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        val showStatistics = adapter != null && adapter!!.itemCount > 0
+        menu.findItem(R.id.action_statistics).isVisible = showStatistics
     }
 
-    protected void onEdit(Long itemId) {
-        EditTrainingFragment.Companion.editIntent(itemId)
-                .withContext(this)
-                .start();
-    }
-
-    @NonNull
-    @Override
-    protected LoaderUICallback onLoad(Bundle args) {
-        final List<Training> trainings = Training.Companion.getAll();
-        return () -> {
-            TrainingsFragment.this.setList(trainings, false);
-            FragmentActivity activity = getActivity();
-            if (activity != null) {
-                activity.invalidateOptionsMenu();
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_statistics -> {
+                StatisticsActivity
+                        .getIntent(Training.all
+                                .flatMap { training -> training.loadRounds()!! }
+                                .map { it.id!! }).withContext(this)
+                        .start()
+                true
             }
-            binding.emptyState.getRoot()
-                    .setVisibility(trainings.isEmpty() ? View.VISIBLE : View.GONE);
-        };
-    }
-
-    private class TrainingAdapter extends ExpandableListAdapter<Header, Training> {
-
-        TrainingAdapter(@NonNull Context context) {
-            super(child -> Utils.getMonthHeader(context, child.getDate()),
-                    Collections.reverseOrder(),
-                    Collections.reverseOrder());
-        }
-
-        @NonNull
-        @Override
-        protected ViewHolder getSecondLevelViewHolder(@NonNull ViewGroup parent) {
-            View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_training, parent, false);
-            return new ViewHolder(itemView);
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private class ViewHolder extends SelectableViewHolder<Training> {
-        ItemTrainingBinding binding;
+    public override fun onSelected(item: Training) {
+        TrainingFragment.getIntent(item)
+                .withContext(this)
+                .start()
+    }
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView, selector, TrainingsFragment.this, TrainingsFragment.this);
-            binding = DataBindingUtil.bind(itemView);
+    private fun onStatistics(ids: List<Long>) {
+        StatisticsActivity.getIntent(ids
+                .map { Training[it]!! }
+                .flatMap { t -> t.loadRounds()!! }
+                .map { it.id!! })
+                .withContext(this)
+                .start()
+    }
+
+    private fun onEdit(itemId: Long?) {
+        EditTrainingFragment.editIntent(itemId!!)
+                .withContext(this)
+                .start()
+    }
+
+    override fun onLoad(args: Bundle?): FragmentBase.LoaderUICallback {
+        val trainings = Training.all
+        return LoaderUICallback {
+            this@TrainingsFragment.setList(trainings, false)
+            val activity = activity
+            activity?.invalidateOptionsMenu()
+            binding.emptyState!!.root.visibility = if (trainings.isEmpty()) View.VISIBLE else View.GONE
         }
+    }
 
-        @Override
-        public void bindItem() {
-            binding.training.setText(item.getTitle());
-            binding.trainingDate.setText(item.getFormattedDate());
-            binding.gesTraining.setText(item.getReachedScore()
-                    .format(Utils.getCurrentLocale(getContext()), SettingsManager.INSTANCE
-                            .getScoreConfiguration()));
+    private inner class TrainingAdapter internal constructor(context: Context) : ExpandableListAdapter<Header, Training>(PartitionDelegate {
+        child -> Utils.getMonthHeader(context, child.date!!)
+    }, Collections.reverseOrder(), Collections.reverseOrder()) {
+
+        override fun getSecondLevelViewHolder(parent: ViewGroup): ViewHolder {
+            val itemView = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_training, parent, false)
+            return ViewHolder(itemView)
+        }
+    }
+
+    private inner class ViewHolder(itemView: View) : SelectableViewHolder<Training>(itemView, selector, this@TrainingsFragment, this@TrainingsFragment) {
+        internal var binding: ItemTrainingBinding = DataBindingUtil.bind(itemView)
+
+        override fun bindItem() {
+            binding.training.text = item.title
+            binding.trainingDate.text = item.formattedDate
+            binding.gesTraining.text = item.reachedScore
+                    .format(Utils.getCurrentLocale(context!!), SettingsManager
+                            .scoreConfiguration)
         }
     }
 }

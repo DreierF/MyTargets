@@ -12,44 +12,20 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.features.training.overview;
+package de.dreier.mytargets.features.training.overview
 
-import android.support.annotation.NonNull;
+import de.dreier.mytargets.shared.models.IIdProvider
 
-import de.dreier.mytargets.shared.models.IIdProvider;
+data class Header(
+        override val id: Long?,
+        val title: String
+) : IIdProvider, Comparable<Header> {
 
-public class Header implements IIdProvider, Comparable<Header> {
-
-    private final long id;
-    private final String title;
-
-    public Header(long id, String title) {
-        this.id = id;
-        this.title = title;
+    override fun toString(): String {
+        return title
     }
 
-    @Override
-    public String toString() {
-        return title;
-    }
-
-    @Override
-    public int compareTo(@NonNull Header another) {
-        return (int) (getId() - another.getId());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    @Override
-    public boolean equals(Object another) {
-        return another instanceof Header &&
-                getClass().equals(another.getClass()) &&
-                id == ((Header) another).id;
+    override fun compareTo(other: Header): Int {
+        return (id!! - other.id!!).toInt()
     }
 }

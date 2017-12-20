@@ -65,7 +65,7 @@ data class Target(
     }
 
     override fun getDetails(context: Context): String {
-        return model.getScoringStyles()[scoringStyleIndex]
+        return model.scoringStyles[scoringStyleIndex].toString()
     }
 
     fun getSelectableZoneList(arrow: Int): List<SelectableZone> {
