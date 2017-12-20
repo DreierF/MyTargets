@@ -71,17 +71,15 @@ abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
     }
 
     private fun changeStatus(status: ETimerState) {
-        var status = status
         countdown?.cancel()
         if (status === ETimerState.EXIT) {
             if (exitAfterStop) {
                 activity.finish()
-                return
             } else {
-                status = WAIT_FOR_START
+                changeStatus(WAIT_FOR_START)
             }
+            return
         }
-        val finalStatus = status
         currentStatus = status
         applyStatus(status)
         playSignal(status.signalCount)
@@ -92,7 +90,7 @@ abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
                 override fun onTick(millisUntilFinished: Long) {}
 
                 override fun onFinish() {
-                    changeStatus(finalStatus.next)
+                    changeStatus(status.next)
                 }
             }.start()
         } else {
@@ -107,7 +105,7 @@ abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
                     }
 
                     override fun onFinish() {
-                        changeStatus(finalStatus.next)
+                        changeStatus(status.next)
                     }
                 }.start()
             }
@@ -115,15 +113,15 @@ abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
     }
 
     protected fun getDuration(status: ETimerState): Int {
-        when (status) {
-            PREPARATION -> return settings.waitTime
-            SHOOTING -> return settings.shootTime - settings.warnTime
-            COUNTDOWN -> return settings.warnTime
+        return when (status) {
+            PREPARATION -> settings.waitTime
+            SHOOTING -> settings.shootTime - settings.warnTime
+            COUNTDOWN -> settings.warnTime
             else -> throw IllegalArgumentException()
         }
     }
 
-    protected fun getOffset(status: ETimerState): Int {
+    private fun getOffset(status: ETimerState): Int {
         return if (status === SHOOTING) {
             settings.warnTime
         } else {

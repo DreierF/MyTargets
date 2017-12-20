@@ -212,7 +212,7 @@ class Migration9 : BaseMigration() {
             values.put(SR_NAME, item.name)
             values.put(SR_INSTITUTION, item.club)
             values.put(SR_INDOOR, 0)
-            if (item.id == null) {
+            if (item.id == 0L) {
                 item.id = database
                         .insertWithOnConflict(SR_TABLE, null, values, SQLiteDatabase.CONFLICT_NONE)
                 for (r in item.loadRounds()) {
@@ -236,12 +236,12 @@ class Migration9 : BaseMigration() {
             values.put(RT_UNIT, Dimension.Unit.toStringHandleNull(item.distance.unit))
             values.put(RT_PASSES, item.endCount)
             values.put(RT_ARROWS_PER_PASSE, item.shotsPerEnd)
-            values.put(RT_TARGET, (item.targetTemplate.id as Long).toInt())
+            values.put(RT_TARGET, item.targetTemplate.id.toInt())
             values.put(RT_TARGET_SIZE, item.targetTemplate.diameter!!.value)
             values.put(RT_TARGET_SIZE_UNIT, Dimension.Unit
                     .toStringHandleNull(item.targetTemplate.diameter!!.unit))
             values.put(RT_SCORING_STYLE, item.targetTemplate.scoringStyleIndex)
-            if (item.id == null) {
+            if (item.id == 0L) {
                 item.id = database
                         .insertWithOnConflict(RT_TABLE, null, values, SQLiteDatabase.CONFLICT_NONE)
             } else {
