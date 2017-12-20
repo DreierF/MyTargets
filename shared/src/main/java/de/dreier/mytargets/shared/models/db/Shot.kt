@@ -29,7 +29,7 @@ import kotlinx.android.parcel.Parcelize
 data class Shot(
         @Column(name = "_id")
         @PrimaryKey(autoincrement = true)
-        override var id: Long? = null,
+        override var id: Long = 0,
 
         // The index of the shot in the containing end
         @Column

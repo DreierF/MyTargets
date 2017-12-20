@@ -26,9 +26,8 @@ import com.afollestad.materialdialogs.MaterialDialog
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
 import de.dreier.mytargets.base.fragments.EditableListFragment
-import de.dreier.mytargets.base.fragments.FragmentBase
-import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
+import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentListBinding
 import de.dreier.mytargets.databinding.ItemEndBinding
 import de.dreier.mytargets.features.scoreboard.ScoreboardActivity
@@ -53,7 +52,7 @@ class RoundFragment : EditableListFragment<End>() {
 
     private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
-        override fun onUpdate(trainingId: Long?, roundId: Long?, end: End) {
+        override fun onUpdate(trainingId: Long, roundId: Long, end: End) {
             if (this@RoundFragment.roundId == roundId) {
                 reloadData()
             }
@@ -112,10 +111,10 @@ class RoundFragment : EditableListFragment<End>() {
     override fun onLoad(args: Bundle?): LoaderUICallback {
         round = Round[roundId]
         val ends = round!!.loadEnds()
-        val showFab = round!!.maxEndCount == null || ends!!.size < round!!.maxEndCount!!
+        val showFab = round!!.maxEndCount == null || ends.size < round!!.maxEndCount!!
 
         return {
-            adapter!!.setList(ends!!)
+            adapter!!.setList(ends)
             binding.fab.visibility = if (showFab) View.VISIBLE else View.GONE
 
             ToolbarUtils.setTitle(this@RoundFragment,
@@ -133,7 +132,7 @@ class RoundFragment : EditableListFragment<End>() {
         when (item.itemId) {
             R.id.action_statistics -> {
                 StatisticsActivity
-                        .getIntent(listOf(round!!.id!!))
+                        .getIntent(listOf(round!!.id))
                         .withContext(this)
                         .start()
                 return true
@@ -152,7 +151,7 @@ class RoundFragment : EditableListFragment<End>() {
             }
             R.id.action_scoreboard -> {
                 ScoreboardActivity
-                        .getIntent(round!!.trainingId!!, round!!.id!!)
+                        .getIntent(round!!.trainingId, round!!.id)
                         .withContext(this)
                         .start()
                 return true
@@ -167,8 +166,8 @@ class RoundFragment : EditableListFragment<End>() {
                 .start()
     }
 
-    private fun onEdit(itemId: Long?) {
-        InputActivity.getIntent(round!!, adapter!!.getItemById(itemId!!)!!.index)
+    private fun onEdit(itemId: Long) {
+        InputActivity.getIntent(round!!, adapter!!.getItemById(itemId)!!.index)
                 .withContext(this)
                 .start()
     }
@@ -189,10 +188,10 @@ class RoundFragment : EditableListFragment<End>() {
         override fun bindItem(item: End) {
             val shots = item.loadShots()
             if (SettingsManager.shouldSortTarget(round!!.target)) {
-                Collections.sort(shots!!)
+                Collections.sort(shots)
             }
-            binding.shoots.setShots(round!!.target, shots!!)
-            binding.imageIndicator.visibility = if (item.loadImages()!!.isEmpty()) View.INVISIBLE else View.VISIBLE
+            binding.shoots.setShots(round!!.target, shots)
+            binding.imageIndicator.visibility = if (item.loadImages().isEmpty()) View.INVISIBLE else View.VISIBLE
             binding.end.text = getString(R.string.end_n, item.index + 1)
         }
     }
@@ -204,7 +203,7 @@ class RoundFragment : EditableListFragment<End>() {
 
         fun getIntent(round: Round): IntentWrapper {
             return IntentWrapper(RoundActivity::class.java)
-                    .with(ROUND_ID, round.id!!)
+                    .with(ROUND_ID, round.id)
                     .clearTopSingleTop()
         }
     }

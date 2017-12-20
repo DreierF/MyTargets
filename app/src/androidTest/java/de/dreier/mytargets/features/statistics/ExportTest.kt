@@ -39,8 +39,8 @@ class ExportTest : InstrumentedTestBase() {
     fun testDataExport() {
         val writer = StringWriter()
         val roundIds = Training.all
-                .flatMap { it.loadRounds()!! }
-                .map { it.id!! }
+                .flatMap { it.loadRounds() }
+                .map { it.id }
                 .sorted()
                 .toMutableList()
         roundIds.removeAt(0)

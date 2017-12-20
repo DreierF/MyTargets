@@ -40,7 +40,7 @@ import kotlinx.android.parcel.Parcelize
 data class StandardRound(
         @Column(name = "_id")
         @PrimaryKey(autoincrement = true)
-        override var id: Long? = null,
+        override var id: Long = 0,
 
         @Column
         var club: Int = 0,
@@ -53,19 +53,19 @@ data class StandardRound(
 
     val targetDrawable: Drawable
         get() {
-            val targets = loadRounds()!!.map { it.targetTemplate.drawable }
+            val targets = loadRounds().map { it.targetTemplate.drawable }
             return CombinedSpot(targets)
         }
 
     fun insert(template: RoundTemplate) {
-        template.index = loadRounds()!!.size
+        template.index = loadRounds().size
         template.standardRound = id
-        loadRounds()!!.add(template)
+        loadRounds().add(template)
     }
 
     fun getDescription(context: Context): String {
         var desc = ""
-        for (r in loadRounds()!!) {
+        for (r in loadRounds()) {
             if (!desc.isEmpty()) {
                 desc += "\n"
             }
@@ -76,15 +76,14 @@ data class StandardRound(
     }
 
     @OneToMany(methods = [], variableName = "rounds")
-    fun loadRounds(): MutableList<RoundTemplate>? {
+    fun loadRounds(): MutableList<RoundTemplate> {
         if (rounds == null) {
             rounds = SQLite.select()
                     .from(RoundTemplate::class.java)
-                    .where(RoundTemplate_Table.standardRound.eq(id!!))
+                    .where(RoundTemplate_Table.standardRound.eq(id))
                     .queryList()
-                    .toMutableList()
         }
-        return rounds
+        return rounds!!.toMutableList()
     }
 
     fun setRounds(rounds: MutableList<RoundTemplate>) {
@@ -109,7 +108,7 @@ data class StandardRound(
         super.save(databaseWrapper)
         if (rounds != null) {
             SQLite.delete(RoundTemplate::class.java)
-                    .where(RoundTemplate_Table.standardRound.eq(id!!))
+                    .where(RoundTemplate_Table.standardRound.eq(id))
                     .execute(databaseWrapper)
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
             for (s in rounds!!) {
@@ -124,7 +123,7 @@ data class StandardRound(
     }
 
     override fun delete(databaseWrapper: DatabaseWrapper) {
-        for (roundTemplate in loadRounds()!!) {
+        for (roundTemplate in loadRounds()) {
             roundTemplate.delete(databaseWrapper)
         }
         super.delete(databaseWrapper)
@@ -132,7 +131,7 @@ data class StandardRound(
 
     companion object {
 
-        operator fun get(id: Long?): StandardRound? {
+        operator fun get(id: Long): StandardRound? {
             return SQLite.select()
                     .from(StandardRound::class.java)
                     .where(StandardRound_Table._id.eq(id))

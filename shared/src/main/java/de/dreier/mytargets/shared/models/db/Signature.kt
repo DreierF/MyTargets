@@ -24,15 +24,15 @@ import com.raizlabs.android.dbflow.annotation.Table
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import com.raizlabs.android.dbflow.structure.BaseModel
 import de.dreier.mytargets.shared.AppDatabase
-import de.dreier.mytargets.shared.utils.typeconverters.BitmapConverter
 import de.dreier.mytargets.shared.utils.readBitmap
+import de.dreier.mytargets.shared.utils.typeconverters.BitmapConverter
 import de.dreier.mytargets.shared.utils.writeBitmap
 
 @Table(database = AppDatabase::class)
 data class Signature(
         @Column(name = "_id")
         @PrimaryKey(autoincrement = true)
-        var _id: Long? = 0,
+        var id: Long = 0,
 
         @Column
         var name: String = "",
@@ -53,7 +53,7 @@ data class Signature(
     override fun describeContents() = 1
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeLong(_id!!)
+        dest.writeLong(id)
         dest.writeString(name)
         dest.writeBitmap(bitmap)
     }

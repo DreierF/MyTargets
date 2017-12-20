@@ -71,7 +71,7 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
             if (bundle != null && bundle.containsKey(BOW_ID)) {
                 // Load data from database
                 bow = Bow[bundle.getLong(BOW_ID)]
-                sightMarks = bow!!.loadSightMarks()!!
+                sightMarks = bow!!.loadSightMarks()
             } else {
                 // Set to default values
                 bow = Bow()
@@ -80,7 +80,7 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
                 sightMarks = ArrayList()
                 sightMarks!!.add(SightMark())
             }
-            imageFiles = bow!!.loadImages()!!
+            imageFiles = bow!!.loadImages()
         }
         ToolbarUtils.setTitle(this, bow!!.name)
         contentBinding.bow = bow

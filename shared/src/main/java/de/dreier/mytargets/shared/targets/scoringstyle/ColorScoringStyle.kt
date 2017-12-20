@@ -22,7 +22,7 @@ import de.dreier.mytargets.shared.models.db.End
 class ColorScoringStyle(@StringRes title: Int, private val maxEndPoints: Int, vararg points: Int) : ScoringStyle(title, false, *points) {
 
     override fun getReachedScore(end: End): Score {
-        val reachedScore = end.loadShots()!!
+        val reachedScore = end.loadShots()
                 .map { s -> getScoreByScoringRing(s.scoringRing, s.index) }
                 .distinct()
                 .fold(0) { a, b -> a + b }

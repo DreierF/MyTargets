@@ -57,7 +57,7 @@ open class TrainingFragment : EditableListFragment<Round>() {
 
     private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
-        override fun onUpdate(trainingId: Long?, roundId: Long?, end: End) {
+        override fun onUpdate(trainingId: Long, roundId: Long, end: End) {
             if (this@TrainingFragment.trainingId == trainingId) {
                 reloadData()
             }
@@ -132,7 +132,7 @@ open class TrainingFragment : EditableListFragment<Round>() {
             // Set round info
             binding.weatherIcon.setImageResource(training!!.environment.colorDrawable)
             binding.detailRoundInfo.text = Utils
-                    .fromHtml(HtmlUtils.getTrainingInfoHTML(context!!, training!!, rounds!!, equals))
+                    .fromHtml(HtmlUtils.getTrainingInfoHTML(context!!, training!!, rounds, equals))
             adapter!!.setList(rounds.toMutableList())
 
             activity!!.invalidateOptionsMenu()
@@ -161,7 +161,7 @@ open class TrainingFragment : EditableListFragment<Round>() {
                 return true
             }
             R.id.action_statistics -> {
-                StatisticsActivity.getIntent(training!!.loadRounds()!!.map { it.id!! })
+                StatisticsActivity.getIntent(training!!.loadRounds().map { it.id })
                         .withContext(this)
                         .start()
                 return true
@@ -231,7 +231,7 @@ open class TrainingFragment : EditableListFragment<Round>() {
     companion object {
         fun getIntent(training: Training): IntentWrapper {
             return IntentWrapper(TrainingActivity::class.java)
-                    .with(EditableListFragmentBase.ITEM_ID, training.id!!)
+                    .with(EditableListFragmentBase.ITEM_ID, training.id)
         }
     }
 }

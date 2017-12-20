@@ -55,7 +55,7 @@ internal class BowAdapter(private val selector: MultiSelector, private val click
             if (!item.size!!.trim { it <= ' ' }.isEmpty()) {
                 info.addLine(R.string.size, item.size!!)
             }
-            for ((_, _, distance, value) in item.loadSightMarks()!!) {
+            for ((_, _, distance, value) in item.loadSightMarks()) {
                 info.addLine(distance.toString(), value!!)
             }
             binding.details.text = Utils.fromHtml(info.toString())

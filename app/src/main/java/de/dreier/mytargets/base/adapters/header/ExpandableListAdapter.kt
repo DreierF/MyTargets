@@ -36,7 +36,7 @@ abstract class ExpandableListAdapter<P : IIdProvider, C : IIdProvider>(
     var expandedIds: List<Long>
         get() = headersList
                 .filter { it.expanded }
-                .map { it.item.id!! }
+                .map { it.item.id }
         set(expanded) {
             headersList.indices
                     .map { headersList[it] }

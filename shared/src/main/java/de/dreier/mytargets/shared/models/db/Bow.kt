@@ -40,7 +40,7 @@ import kotlinx.android.parcel.Parcelize
 data class Bow(
         @Column(name = "_id")
         @PrimaryKey(autoincrement = true)
-        override var id: Long? = 0,
+        override var id: Long = 0,
 
         @Column
         override var name: String = "",
@@ -123,11 +123,11 @@ data class Bow(
         get() = thumbnail!!.roundDrawable
 
     @OneToMany(methods = [], variableName = "sightMarks")
-    fun loadSightMarks(): ArrayList<SightMark>? {
+    fun loadSightMarks(): ArrayList<SightMark> {
         if (sightMarks == null) {
-            sightMarks = if (id == null) mutableListOf() else SQLite.select()
+            sightMarks = if (id == 0L) mutableListOf() else SQLite.select()
                     .from(SightMark::class.java)
-                    .where(SightMark_Table.bow.eq(id!!))
+                    .where(SightMark_Table.bow.eq(id))
                     .queryList()
                     .sortedBy { sightMark -> sightMark.distance }
                     .toMutableList()
@@ -136,14 +136,14 @@ data class Bow(
     }
 
     @OneToMany(methods = [], variableName = "images")
-    fun loadImages(): List<BowImage>? {
+    fun loadImages(): List<BowImage> {
         if (images == null) {
-            images = if (id == null) mutableListOf() else SQLite.select()
+            images = if (id == 0L) mutableListOf() else SQLite.select()
                     .from(BowImage::class.java)
-                    .where(BowImage_Table.bow.eq(id!!))
+                    .where(BowImage_Table.bow.eq(id))
                     .queryList()
         }
-        return images
+        return images!!
     }
 
     override fun getDrawable(context: Context): Drawable {
@@ -151,7 +151,7 @@ data class Bow(
     }
 
     fun loadSightSetting(distance: Dimension): SightMark? {
-        return loadSightMarks()?.firstOrNull { s -> s.distance == distance }
+        return loadSightMarks().firstOrNull { s -> s.distance == distance }
     }
 
     override fun save() {
@@ -162,7 +162,7 @@ data class Bow(
         super.save(databaseWrapper)
         if (images != null) {
             SQLite.delete(BowImage::class.java)
-                    .where(BowImage_Table.bow.eq(id!!))
+                    .where(BowImage_Table.bow.eq(id))
                     .execute(databaseWrapper)
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
             for (image in images!!) {
@@ -172,7 +172,7 @@ data class Bow(
         }
         if (sightMarks != null) {
             SQLite.delete(SightMark::class.java)
-                    .where(SightMark_Table.bow.eq(id!!))
+                    .where(SightMark_Table.bow.eq(id))
                     .execute(databaseWrapper)
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
             for (sightMark in sightMarks!!) {
@@ -187,8 +187,8 @@ data class Bow(
     }
 
     override fun delete(databaseWrapper: DatabaseWrapper) {
-        loadSightMarks()?.forEach { it.delete(databaseWrapper) }
-        loadImages()?.forEach { it.delete(databaseWrapper) }
+        loadSightMarks().forEach { it.delete(databaseWrapper) }
+        loadImages().forEach { it.delete(databaseWrapper) }
         super.delete(databaseWrapper)
     }
 
@@ -229,7 +229,7 @@ data class Bow(
         val all: List<Bow>
             get() = SQLite.select().from(Bow::class.java).queryList()
 
-        operator fun get(id: Long?): Bow? {
+        operator fun get(id: Long): Bow? {
             return SQLite.select()
                     .from(Bow::class.java)
                     .where(Bow_Table._id.eq(id))

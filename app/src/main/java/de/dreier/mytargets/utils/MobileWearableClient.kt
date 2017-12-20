@@ -123,7 +123,7 @@ class MobileWearableClient(context: Context) : WearableClientBase(context) {
             onUpdate(trainingId, roundId, end)
         }
 
-        protected abstract fun onUpdate(trainingId: Long?, roundId: Long?, end: End)
+        protected abstract fun onUpdate(trainingId: Long, roundId: Long, end: End)
     }
 
     companion object {

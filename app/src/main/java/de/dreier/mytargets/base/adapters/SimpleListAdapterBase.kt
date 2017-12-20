@@ -32,7 +32,7 @@ abstract class SimpleListAdapterBase<T> : ListAdapterBase<SelectableViewHolder<T
     }
 
     override fun getItemId(position: Int): Long {
-        return list[position].id!!
+        return list[position].id
     }
 
     override fun getItemCount(): Int {

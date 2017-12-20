@@ -30,9 +30,9 @@ class StandardRoundSelector @JvmOverloads constructor(context: Context, attrs: A
     }
 
     fun setItemId(standardRoundId: Long?) {
-        var standardRound = StandardRound[standardRoundId]
+        var standardRound = StandardRound[standardRoundId!!]
         // If the round has been removed, choose default one
-        if (standardRound == null || standardRound.loadRounds()!!.isEmpty()) {
+        if (standardRound == null || standardRound.loadRounds().isEmpty()) {
             standardRound = StandardRound[32L]
         }
         setItem(standardRound)

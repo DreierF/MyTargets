@@ -38,7 +38,7 @@ data class Training(
 
         @Column(name = "_id")
         @PrimaryKey(autoincrement = true)
-        override var id: Long? = null,
+        override var id: Long = 0L,
 
         @Column
         var title: String? = "",
@@ -97,21 +97,21 @@ data class Training(
         }
 
     val standardRound: StandardRound?
-        get() = SQLite.select()
+        get() = if (standardRoundId == null) null else SQLite.select()
                 .from(StandardRound::class.java)
-                .where(StandardRound_Table._id.eq(standardRoundId))
+                .where(StandardRound_Table._id.eq(standardRoundId!!))
                 .querySingle()
 
     val bow: Bow?
-        get() = SQLite.select()
+        get() = if (bowId == null) null else SQLite.select()
                 .from(Bow::class.java)
-                .where(Bow_Table._id.eq(bowId))
+                .where(Bow_Table._id.eq(bowId!!))
                 .querySingle()
 
     val arrow: Arrow?
-        get() = SQLite.select()
+        get() = if (arrowId == null) null else SQLite.select()
                 .from(Arrow::class.java)
-                .where(Arrow_Table._id.eq(arrowId))
+                .where(Arrow_Table._id.eq(arrowId!!))
                 .querySingle()
 
     val orCreateArcherSignature: Signature
@@ -119,7 +119,7 @@ data class Training(
             if (archerSignatureId != null) {
                 val signature = SQLite.select()
                         .from(Signature::class.java)
-                        .where(Signature_Table._id.eq(archerSignatureId))
+                        .where(Signature_Table._id.eq(archerSignatureId!!))
                         .querySingle()
                 if (signature != null) {
                     return signature
@@ -127,7 +127,7 @@ data class Training(
             }
             val signature = Signature()
             signature.save()
-            archerSignatureId = signature._id
+            archerSignatureId = signature.id
             save()
             return signature
         }
@@ -137,7 +137,7 @@ data class Training(
             if (witnessSignatureId != null) {
                 val signature = SQLite.select()
                         .from(Signature::class.java)
-                        .where(Signature_Table._id.eq(witnessSignatureId))
+                        .where(Signature_Table._id.eq(witnessSignatureId!!))
                         .querySingle()
                 if (signature != null) {
                     return signature
@@ -145,7 +145,7 @@ data class Training(
             }
             val signature = Signature()
             signature.save()
-            witnessSignatureId = signature._id
+            witnessSignatureId = signature.id
             save()
             return signature
         }
@@ -154,25 +154,25 @@ data class Training(
         get() = date!!.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
 
     val reachedScore: Score
-        get() = loadRounds()!!
+        get() = loadRounds()
                 .map { it.reachedScore }
                 .sum()
 
     @OneToMany(methods = [], variableName = "rounds")
-    fun loadRounds(): List<Round>? {
+    fun loadRounds(): List<Round> {
         if (rounds == null) {
-            rounds = SQLite.select()
+            rounds = if (id == 0L) null else SQLite.select()
                     .from(Round::class.java)
-                    .where(Round_Table.training.eq(id!!))
+                    .where(Round_Table.training.eq(id))
                     .orderBy(Round_Table.index, true)
                     .queryList()
         }
-        return rounds
+        return rounds!!
     }
 
     override fun compareTo(other: Training): Int {
         return if (date == other.date) {
-            (id!! - other.id!!).toInt()
+            (id - other.id).toInt()
         } else date!!.compareTo(other.date!!)
     }
 
@@ -183,7 +183,7 @@ data class Training(
     override fun save(databaseWrapper: DatabaseWrapper) {
         super.save(databaseWrapper)
         // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-        loadRounds()?.forEach { s ->
+        loadRounds().forEach { s ->
             s.trainingId = id
             s.save(databaseWrapper)
         }
@@ -194,14 +194,14 @@ data class Training(
     }
 
     override fun delete(databaseWrapper: DatabaseWrapper) {
-        loadRounds()?.forEach { round -> round.delete(databaseWrapper) }
+        loadRounds().forEach { round -> round.delete(databaseWrapper) }
         super.delete(databaseWrapper)
     }
 
     @Deprecated(message = "Use AugmentedTraining instead")
     fun ensureLoaded(): Training {
-        loadRounds()?.forEach { round ->
-            round.loadEnds()?.forEach { end -> end.loadShots() }
+        loadRounds().forEach { round ->
+            round.loadEnds().forEach { end -> end.loadShots() }
         }
         return this
     }
@@ -212,7 +212,7 @@ data class Training(
 
     override fun saveRecursively(databaseWrapper: DatabaseWrapper) {
         super.save(databaseWrapper)
-        loadRounds()?.forEach { s ->
+        loadRounds().forEach { s ->
             s.trainingId = id
             s.saveRecursively(databaseWrapper)
         }
@@ -221,14 +221,13 @@ data class Training(
     fun loadRounds(databaseWrapper: DatabaseWrapper): List<Round> {
         return SQLite.select()
                 .from(Round::class.java)
-                .where(Round_Table.training.eq(id!!))
+                .where(Round_Table.training.eq(id))
                 .orderBy(Round_Table.index, true)
                 .queryList(databaseWrapper)
     }
 
     companion object {
-
-        operator fun get(id: Long?): Training? {
+        operator fun get(id: Long): Training? {
             return SQLite.select()
                     .from(Training::class.java)
                     .where(Training_Table._id.eq(id))

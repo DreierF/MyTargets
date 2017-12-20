@@ -33,7 +33,7 @@ import kotlinx.android.parcel.Parcelize
 data class RoundTemplate(
         @Column(name = "_id")
         @PrimaryKey(autoincrement = true)
-        override var id: Long? = null,
+        override var id: Long = 0,
 
         @ForeignKey(tableClass = StandardRound::class, references = [(ForeignKeyReference(columnName = "standardRound", columnType = Long::class, foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
         var standardRound: Long? = null,
@@ -63,7 +63,7 @@ data class RoundTemplate(
     var targetTemplate: Target
         get() = Target(targetId.toLong(), targetScoringStyle, targetDiameter)
         set(targetTemplate) {
-            targetId = targetTemplate.id!!.toInt()
+            targetId = targetTemplate.id.toInt()
             targetScoringStyle = targetTemplate.scoringStyleIndex
             targetDiameter = targetTemplate.diameter
         }

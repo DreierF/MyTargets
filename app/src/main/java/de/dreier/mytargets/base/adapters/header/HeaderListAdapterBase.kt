@@ -42,9 +42,9 @@ abstract class HeaderListAdapterBase<P : IIdProvider, C : IIdProvider, H : Heade
         val header = getHeaderForPosition(position)
         val pos = getHeaderRelativePosition(position)
         return if (pos == 0) {
-            header.item.id!!
+            header.item.id
         } else {
-            header.children[pos - 1].id!!
+            header.children[pos - 1].id
         }
     }
 

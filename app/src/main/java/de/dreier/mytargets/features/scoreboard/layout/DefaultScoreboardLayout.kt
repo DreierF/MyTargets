@@ -24,7 +24,10 @@ import de.dreier.mytargets.features.scoreboard.builder.model.Table
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.SelectableZone
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.models.db.*
+import de.dreier.mytargets.shared.models.db.End
+import de.dreier.mytargets.shared.models.db.Round
+import de.dreier.mytargets.shared.models.db.Shot
+import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle
 import de.dreier.mytargets.shared.utils.SharedUtils
 import java.util.*
@@ -91,19 +94,19 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
             }
         }
 
-        val bow = Bow[training.bowId]
+        val bow = training.bow
         if (bow != null) {
             info.addLine(R.string.bow, bow.name)
             info.addLine(R.string.bow_type, bow.type!!)
         }
 
-        val arrow = Arrow[training.arrowId]
+        val arrow = training.arrow
         if (arrow != null) {
             info.addLine(R.string.arrow, arrow.name)
         }
 
         if (training.standardRoundId != null) {
-            val standardRound = StandardRound[training.standardRoundId]
+            val standardRound = training.standardRound
             info.addLine(R.string.standard_round, standardRound!!.name)
         }
         if (!training.comment.isEmpty() && configuration.showComments) {
@@ -217,11 +220,11 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
         val table = Table(false)
         appendTableHeader(table, round.shotsPerEnd)
         var carry = 0
-        for (end in round.loadEnds()!!) {
+        for (end in round.loadEnds()) {
             val row = table.startRow()
             row.addCell(end.index + 1)
             var sum = 0
-            val shots = ArrayList(end.loadShots()!!)
+            val shots = ArrayList(end.loadShots())
             if (SettingsManager.shouldSortTarget(round.target)) {
                 Collections.sort(shots)
             }
@@ -277,7 +280,7 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
         var commentsCount = 0
         for (round in rounds) {
             val ends = round.loadEnds()
-            for ((_, index, _, _, _, comment) in ends!!) {
+            for ((_, index, _, _, _, comment) in ends) {
                 if (!TextUtils.isEmpty(comment)) {
                     comments.startRow()
                             .addCell(round.index + 1)

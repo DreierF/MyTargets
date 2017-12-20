@@ -81,7 +81,7 @@ class EditArrowListFragment : EditableListFragment<Arrow>() {
     }
 
     override fun onItemSelected(item: Arrow) {
-        EditArrowFragment.editIntent(item.id!!)
+        EditArrowFragment.editIntent(item.id)
                 .withContext(this)
                 .start()
     }

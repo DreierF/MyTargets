@@ -65,7 +65,7 @@ class LoaderResult @JvmOverloads constructor(
     fun setRoundId(roundId: Long) {
         val rounds = training.training.loadRounds()
         roundIndex = 0
-        for (i in rounds!!.indices) {
+        for (i in rounds.indices) {
             if (rounds[i].id == roundId) {
                 roundIndex = i
                 break

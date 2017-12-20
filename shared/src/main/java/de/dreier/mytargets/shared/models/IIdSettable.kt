@@ -16,5 +16,5 @@
 package de.dreier.mytargets.shared.models
 
 interface IIdSettable : IIdProvider {
-    override var id: Long?
+    override var id: Long
 }

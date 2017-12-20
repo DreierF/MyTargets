@@ -19,6 +19,8 @@ import android.annotation.SuppressLint
 import android.os.Parcelable
 import com.raizlabs.android.dbflow.annotation.*
 import com.raizlabs.android.dbflow.config.FlowManager
+import com.raizlabs.android.dbflow.sql.language.Condition
+import com.raizlabs.android.dbflow.sql.language.Condition.column
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import com.raizlabs.android.dbflow.structure.BaseModel
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
@@ -35,10 +37,10 @@ import java.util.*
 data class Round(
         @Column(name = "_id")
         @PrimaryKey(autoincrement = true)
-        override var id: Long? = null,
+        override var id: Long = 0,
 
         @ForeignKey(tableClass = Training::class, references = [(ForeignKeyReference(columnName = "training", columnType = Long::class, foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
-        var trainingId: Long? = null,
+        var trainingId: Long = 0,
 
         @Column
         var index: Int = 0,
@@ -96,7 +98,7 @@ data class Round(
     var target: Target
         get() = Target(targetId.toLong(), targetScoringStyle, targetDiameter)
         set(targetTemplate) {
-            targetId = targetTemplate.id!!.toInt()
+            targetId = targetTemplate.id.toInt()
             targetScoringStyle = targetTemplate.scoringStyleIndex
             targetDiameter = targetTemplate.diameter
         }
@@ -104,20 +106,20 @@ data class Round(
     val reachedScore: Score
         get() {
             val target = target
-            return loadEnds()!!.
+            return loadEnds().
                     map { end: End -> target.getReachedScore(end) }
                     .sum()
         }
 
-    val training: Training?
-        get() = Training[trainingId]
+    val training: Training
+        get() = Training[trainingId]!!
 
     override fun delete() {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.delete(it) })
     }
 
     override fun delete(databaseWrapper: DatabaseWrapper) {
-        loadEnds()?.forEach { it.delete(databaseWrapper) }
+        loadEnds().forEach { it.delete(databaseWrapper) }
         super.delete(databaseWrapper)
         updateRoundIndicesForTraining(databaseWrapper)
     }
@@ -125,28 +127,28 @@ data class Round(
     private fun updateRoundIndicesForTraining(databaseWrapper: DatabaseWrapper) {
         // TODO very inefficient
         val training = Training[trainingId] ?: return  //FIXME This should not happen, but does for some users
-        for ((i, r) in training.loadRounds()!!.withIndex()) {
+        for ((i, r) in training.loadRounds().withIndex()) {
             r.index = i
             r.save(databaseWrapper)
         }
     }
 
     @OneToMany(methods = [], variableName = "ends")
-    fun loadEnds(): MutableList<End>? {
+    fun loadEnds(): MutableList<End> {
         if (ends == null) {
-            ends = SQLite.select()
+            ends = if(id == 0L) listOf() else SQLite.select()
                     .from(End::class.java)
-                    .where(End_Table.round.eq(id!!))
+                    .where(End_Table.round.eq(id))
                     .orderBy(End_Table.index, true)
                     .queryList()
         }
-        return ends?.toMutableList()
+        return ends!!.toMutableList()
     }
 
     fun loadEnds(databaseWrapper: DatabaseWrapper): List<End> {
         return SQLite.select()
                 .from(End::class.java)
-                .where(End_Table.round.eq(id!!))
+                .where(End_Table.round.eq(id))
                 .orderBy(End_Table.index, true)
                 .queryList(databaseWrapper)
     }
@@ -187,7 +189,7 @@ data class Round(
 
     companion object {
 
-        operator fun get(id: Long?): Round? {
+        operator fun get(id: Long): Round? {
             return SQLite.select()
                     .from(Round::class.java)
                     .where(Round_Table._id.eq(id))
@@ -197,8 +199,14 @@ data class Round(
         fun getAll(roundIds: LongArray): List<Round> {
             return SQLite.select()
                     .from(Round::class.java)
-                    .where(Round_Table._id.`in`(roundIds.toList()))
+                    .where(inValues(roundIds))
                     .queryList()
+        }
+
+        private fun inValues(values: LongArray): Condition.In {
+            val col  = column(Round_Table._id.nameAlias).`in`(values[0])
+            values.drop(1).forEach { col.`and`(it) }
+            return col
         }
     }
 }

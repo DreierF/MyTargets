@@ -28,7 +28,7 @@ data class AugmentedTraining(
         val training: Training,
         var rounds: MutableList<AugmentedRound>
 ) : Parcelable {
-    constructor(training: Training) : this(training, training.loadRounds()!!
+    constructor(training: Training) : this(training, training.loadRounds()
             .map { AugmentedRound(it) }
             .toMutableList())
 
@@ -39,7 +39,7 @@ data class AugmentedTraining(
 
     fun initRoundsFromTemplate(standardRound: StandardRound) {
         rounds = mutableListOf()
-        for (template in standardRound.loadRounds()!!) {
+        for (template in standardRound.loadRounds()) {
             val round = AugmentedRound(Round(template))
             round.round.trainingId = training.id
             round.round.target = template.targetTemplate

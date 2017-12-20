@@ -44,7 +44,6 @@ import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
-import de.dreier.mytargets.shared.utils.LongUtils
 import de.dreier.mytargets.shared.utils.toUri
 import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.ToolbarUtils
@@ -93,13 +92,13 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
             override fun loadInBackground(): List<Pair<Training, Round>> {
                 val rounds = Round.getAll(roundIds)
                 val trainingsMap = LongSparseArray<Training>()
-                rounds.map { (_, trainingId) -> trainingId!! }
+                rounds.map { (_, trainingId) -> trainingId }
                         .distinct()
                         .map { id: Long -> Training[id]!! }
                         .forEach { training ->
-                            trainingsMap.append(training.id!!, training)
+                            trainingsMap.append(training.id, training)
                         }
-                return rounds.map { round -> Pair(trainingsMap.get(round.trainingId!!), round) }
+                return rounds.map { round -> Pair(trainingsMap.get(round.trainingId), round) }
             }
         }
     }
@@ -213,7 +212,7 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
                 .map { bid ->
                     if (bid != null) {
                         val bow = Bow[bid] ?: return@map Tag(bid, "Deleted " + bid)
-                        Tag(bow.id!!, bow.name, bow.thumbnail!!.blob.blob, true)
+                        Tag(bow.id, bow.name, bow.thumbnail!!.blob.blob, true)
                     } else {
                         Tag(null, getString(R.string.unknown))
                     }
@@ -271,7 +270,7 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
                 return try {
                     val f = File(cacheDir, exportFileName)
                     CsvExporter(applicationContext)
-                            .exportAll(f, filteredRounds!!.flatMap { it.second }.map { it.id!! })
+                            .exportAll(f, filteredRounds!!.flatMap { it.second }.map { it.id })
                     f.toUri(this@StatisticsActivity)
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -299,7 +298,7 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
 
         override fun getItem(position: Int): Fragment {
             val item = targets[position]
-            val roundIds = item.second.map { it.id!! }
+            val roundIds = item.second.map { it.id }
             return StatisticsFragment.newInstance(roundIds, item.first, animate)
         }
 
@@ -319,7 +318,7 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
 
         fun getIntent(roundIds: List<Long>): IntentWrapper {
             return IntentWrapper(StatisticsActivity::class.java)
-                    .with(ROUND_IDS, LongUtils.toArray(roundIds))
+                    .with(ROUND_IDS, roundIds.toLongArray())
         }
 
         private val exportFileName: String

@@ -730,7 +730,7 @@ object StandardRoundFactory {
     private fun build(institution: Int, name: Int, distanceUnit: Dimension.Unit, targetUnit: Dimension.Unit, target: Long, scoringStyle: Int, target2: Target, shotsPerEnd: Int, vararg roundDetails: Int): StandardRound {
         val standardRound = build(institution, name, distanceUnit,
                 targetUnit, target, scoringStyle, shotsPerEnd, *roundDetails)
-        val round2 = standardRound.loadRounds()!![1]
+        val round2 = standardRound.loadRounds()[1]
         target2.diameter = round2.targetTemplate.diameter
         round2.targetTemplate = target2
         return standardRound

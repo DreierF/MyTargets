@@ -29,7 +29,7 @@ data class AugmentedRound(
         val round: Round,
         var ends: MutableList<AugmentedEnd>
 ) : Parcelable {
-    constructor(round: Round) : this(round, round.loadEnds()!!
+    constructor(round: Round) : this(round, round.loadEnds()
             .map { AugmentedEnd(it) }
             .toMutableList())
 

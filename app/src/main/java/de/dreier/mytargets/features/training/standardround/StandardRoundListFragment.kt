@@ -187,11 +187,11 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
 
     private fun persistSelection(standardRound: StandardRound) {
         val map = SettingsManager.standardRoundsLastUsed
-        val counter = map.get(standardRound.id!!)
+        val counter = map.get(standardRound.id)
         if (counter == null) {
-            map.put(standardRound.id!!, 1)
+            map.put(standardRound.id, 1)
         } else {
-            map.put(standardRound.id!!, counter + 1)
+            map.put(standardRound.id, counter + 1)
         }
         SettingsManager.standardRoundsLastUsed = map
     }
@@ -200,12 +200,12 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
             context: Context,
             usedIds: LongSparseArray<Int>
     ) : HeaderListAdapter<StandardRound>({ id ->
-        if (usedIds.contains(id.id!!)) {
+        if (usedIds.contains(id.id)) {
             HeaderListAdapter.SimpleHeader(0L, context.getString(R.string.recently_used))
         } else {
             HeaderListAdapter.SimpleHeader(1L, "")
         }
-    }, compareBy { usedIds.get(it.id!!) ?: 0 }) {
+    }, compareBy { usedIds.get(it.id) ?: 0 }) {
 
         override fun getSecondLevelViewHolder(parent: ViewGroup): ViewHolder {
             return ViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context),

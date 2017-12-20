@@ -53,7 +53,7 @@ class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrow
                 arrow!!.name = getString(R.string.my_arrow)
             }
 
-            imageFiles = arrow!!.loadImages()!!
+            imageFiles = arrow!!.loadImages()
             contentBinding.diameterUnit.setSelection(
                     if (arrow!!.diameter.unit === MILLIMETER) 0 else 1)
         }

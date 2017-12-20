@@ -15,13 +15,11 @@
 package de.dreier.mytargets.features.training.overview
 
 import android.os.Bundle
-
 import de.dreier.mytargets.base.adapters.header.ExpandableListAdapter
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase
 import de.dreier.mytargets.shared.models.IIdProvider
 import de.dreier.mytargets.shared.models.IIdSettable
 import de.dreier.mytargets.shared.models.IRecursiveModel
-import de.dreier.mytargets.shared.utils.LongUtils
 
 /**
  * Shows all rounds of one training day
@@ -34,7 +32,7 @@ abstract class ExpandableListFragment<H : IIdProvider, C> : EditableListFragment
         if (adapter!!.itemCount == 0) {
             adapter!!.setList(children, opened)
             if (savedInstanceState != null && savedInstanceState!!.containsKey(KEY_EXPANDED)) {
-                adapter!!.expandedIds = LongUtils.toList(savedInstanceState!!.getLongArray(KEY_EXPANDED)!!)
+                adapter!!.expandedIds = savedInstanceState!!.getLongArray(KEY_EXPANDED)!!.toList()
             } else if (!opened && adapter!!.itemCount > 0) {
                 adapter!!.expandFirst()
             }
@@ -46,7 +44,7 @@ abstract class ExpandableListFragment<H : IIdProvider, C> : EditableListFragment
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (adapter != null) {
-            outState.putLongArray(KEY_EXPANDED, LongUtils.toArray(adapter!!.expandedIds))
+            outState.putLongArray(KEY_EXPANDED, adapter!!.expandedIds.toLongArray())
         }
     }
 

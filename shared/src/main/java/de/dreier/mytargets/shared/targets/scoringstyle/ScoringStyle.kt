@@ -111,7 +111,7 @@ open class ScoringStyle private constructor(title: String?, private val showAsX:
     }
 
     open fun getReachedScore(end: End): Score {
-        return end.loadShots()!!
+        return end.loadShots()
                 .map { shot: Shot -> this.getReachedScore(shot) }
                 .sum()
     }
