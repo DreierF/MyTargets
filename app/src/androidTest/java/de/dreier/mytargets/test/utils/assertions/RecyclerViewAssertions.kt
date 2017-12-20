@@ -13,61 +13,52 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.test.utils.assertions;
+package de.dreier.mytargets.test.utils.assertions
 
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
-import android.support.test.espresso.ViewAssertion;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.TextView;
+import android.support.annotation.StringRes
+import android.support.test.espresso.ViewAssertion
+import android.support.test.espresso.matcher.ViewMatchers.assertThat
+import android.support.v7.widget.RecyclerView
+import android.view.View
+import android.view.View.FIND_VIEWS_WITH_TEXT
+import android.widget.TextView
+import com.google.common.truth.Truth
+import junit.framework.Assert
+import org.hamcrest.Matcher
+import java.util.*
 
-import com.google.common.truth.Truth;
-
-import junit.framework.Assert;
-
-import org.hamcrest.Matcher;
-
-import java.util.ArrayList;
-
-import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
-import static android.view.View.FIND_VIEWS_WITH_TEXT;
-
-public class RecyclerViewAssertions {
-    public static ViewAssertion itemCount(@NonNull Matcher<Integer> matcher) {
-        return (view, noViewFoundException) -> {
+object RecyclerViewAssertions {
+    fun itemCount(matcher: Matcher<Int>): ViewAssertion {
+        return ViewAssertion { view, noViewFoundException ->
             if (noViewFoundException != null) {
-                throw noViewFoundException;
+                throw noViewFoundException
             }
 
-            RecyclerView recyclerView = (RecyclerView) view;
-            RecyclerView.Adapter adapter = recyclerView.getAdapter();
-            assertThat(adapter.getItemCount(), matcher);
-        };
+            val recyclerView = view as RecyclerView
+            val adapter = recyclerView.adapter
+            assertThat(adapter.itemCount, matcher)
+        }
     }
 
-    public static ViewAssertion itemHasSummary(@StringRes final int item, String summary) {
-        return (view, e) -> {
-            if (!(view instanceof RecyclerView)) {
-                throw e;
+    fun itemHasSummary(@StringRes item: Int, summary: String): ViewAssertion {
+        return ViewAssertion { view, e ->
+            if (view !is RecyclerView) {
+                throw e
             }
-            RecyclerView rv = (RecyclerView) view;
-            ArrayList<View> outviews = new ArrayList<>();
-            String title = view.getContext().getString(item);
-            for (int index = 0; index < rv.getAdapter().getItemCount(); index++) {
-                RecyclerView.ViewHolder viewHolder = rv.findViewHolderForAdapterPosition(index);
-                if (viewHolder == null) {
-                    continue;
-                }
-                View itemView = viewHolder.itemView;
-                itemView.findViewsWithText(outviews, title, FIND_VIEWS_WITH_TEXT);
-                if (outviews.size() > 0) {
-                    TextView summaryView = itemView.findViewById(android.R.id.summary);
-                    Truth.assertThat(summaryView.getText()).isEqualTo(summary);
-                    return;
+            val rv = view
+            val outviews = ArrayList<View>()
+            val title = view.getContext().getString(item)
+            for (index in 0 until rv.adapter.itemCount) {
+                val viewHolder = rv.findViewHolderForAdapterPosition(index) ?: continue
+                val itemView = viewHolder.itemView
+                itemView.findViewsWithText(outviews, title, FIND_VIEWS_WITH_TEXT)
+                if (outviews.size > 0) {
+                    val summaryView = itemView.findViewById<TextView>(android.R.id.summary)
+                    Truth.assertThat(summaryView.text).isEqualTo(summary)
+                    return@ViewAssertion
                 }
             }
-            Assert.fail("No view with text '" + title + "' found!");
-        };
+            Assert.fail("No view with text '$title' found!")
+        }
     }
 }

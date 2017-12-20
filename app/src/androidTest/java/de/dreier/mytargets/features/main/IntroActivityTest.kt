@@ -13,61 +13,57 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.main;
+package de.dreier.mytargets.features.main
 
-import android.support.annotation.NonNull;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.action.ViewActions.click
+import android.support.test.espresso.assertion.ViewAssertions.matches
+import android.support.test.espresso.matcher.ViewMatchers.*
+import android.support.test.rule.ActivityTestRule
+import android.support.test.runner.AndroidJUnit4
+import de.dreier.mytargets.R
+import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.test.base.UITestBase
+import de.dreier.mytargets.test.utils.matchers.ViewMatcher
+import de.dreier.mytargets.test.utils.rules.EmptyDbTestRule
+import org.hamcrest.Matchers.allOf
+import org.junit.BeforeClass
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.RuleChain
+import org.junit.runner.RunWith
 
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.RuleChain;
-import org.junit.runner.RunWith;
+@RunWith(AndroidJUnit4::class)
+class IntroActivityTest : UITestBase() {
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.test.base.UITestBase;
-import de.dreier.mytargets.test.utils.matchers.ViewMatcher;
-import de.dreier.mytargets.test.utils.rules.EmptyDbTestRule;
-
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.allOf;
-
-@RunWith(AndroidJUnit4.class)
-public class IntroActivityTest extends UITestBase {
-
-    @NonNull
-    private ActivityTestRule activityTestRule = new ActivityTestRule<>(MainActivity.class);
+    private val activityTestRule = ActivityTestRule(MainActivity::class.java)
 
     @Rule
-    public final RuleChain rule = RuleChain.outerRule(new EmptyDbTestRule())
-            .around(activityTestRule);
-
-    @BeforeClass
-    public static void setUp() {
-        SettingsManager.INSTANCE.setShouldShowIntroActivity(true);
-    }
+    val rule = RuleChain.outerRule(EmptyDbTestRule())
+            .around(activityTestRule)
 
     @Test
-    public void introActivityTest() {
+    fun introActivityTest() {
         onView(allOf(withId(R.id.txt_title_slide), isDisplayed()))
-                .check(matches(withText(R.string.intro_title_track_training_progress)));
-        onView(withId(R.id.button_next)).perform(click());
+                .check(matches(withText(R.string.intro_title_track_training_progress)))
+        onView(withId(R.id.button_next)).perform(click())
 
         onView(allOf(withId(R.id.txt_title_slide), isDisplayed()))
-                .check(matches(withText(R.string.intro_title_everything_in_one_place)));
-        onView(withId(R.id.button_next)).perform(click());
+                .check(matches(withText(R.string.intro_title_everything_in_one_place)))
+        onView(withId(R.id.button_next)).perform(click())
 
-        onView(withId(R.id.toolbar)).check(matches(hasDescendant(withText(R.string.my_targets))));
+        onView(withId(R.id.toolbar)).check(matches(hasDescendant(withText(R.string.my_targets))))
 
-        onView(ViewMatcher.supportFab()).perform(click());
+        onView(ViewMatcher.supportFab()).perform(click())
         //allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
+    }
+
+    companion object {
+
+        @BeforeClass
+        @JvmStatic
+        fun setUp() {
+            SettingsManager.shouldShowIntroActivity = true
+        }
     }
 }

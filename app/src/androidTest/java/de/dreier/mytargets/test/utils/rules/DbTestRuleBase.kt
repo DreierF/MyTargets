@@ -13,137 +13,118 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.test.utils.rules;
+package de.dreier.mytargets.test.utils.rules
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.test.InstrumentationRegistry;
+import android.content.Context
+import android.support.test.InstrumentationRegistry
+import com.raizlabs.android.dbflow.sql.language.SQLite
+import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
+import de.dreier.mytargets.shared.models.Dimension
+import de.dreier.mytargets.shared.models.EBowType
+import de.dreier.mytargets.shared.models.EWeather
+import de.dreier.mytargets.shared.models.Thumbnail
+import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
+import de.dreier.mytargets.shared.models.augmented.AugmentedRound
+import de.dreier.mytargets.shared.models.db.Arrow
+import de.dreier.mytargets.shared.models.db.Bow
+import de.dreier.mytargets.shared.models.db.Training
+import org.junit.rules.TestRule
+import org.junit.runner.Description
+import org.junit.runners.model.Statement
+import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalTime
+import java.util.*
 
-import com.raizlabs.android.dbflow.sql.language.SQLite;
+abstract class DbTestRuleBase : TestRule {
+    private val context: Context = InstrumentationRegistry.getTargetContext()
 
-import org.junit.rules.TestRule;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.LocalTime;
-
-import java.util.Collections;
-import java.util.Random;
-
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.app.ApplicationInstance;
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.EBowType;
-import de.dreier.mytargets.shared.models.EWeather;
-import de.dreier.mytargets.shared.models.Thumbnail;
-import de.dreier.mytargets.shared.models.db.Arrow;
-import de.dreier.mytargets.shared.models.db.Bow;
-import de.dreier.mytargets.shared.models.db.End;
-import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.Training;
-
-public abstract class DbTestRuleBase implements TestRule {
-    private final Context context;
-
-    public DbTestRuleBase() {
-        context = InstrumentationRegistry.getTargetContext();
-    }
-
-    @NonNull
-    @Override
-    public Statement apply(@NonNull Statement base, Description description) {
-        return new Statement() {
-            @Override
-            public void evaluate() throws Throwable {
-                ApplicationInstance.Companion.initFlowManager(context);
-                SQLite.delete(Arrow.class).execute();
-                SQLite.delete(Bow.class).execute();
-                SQLite.delete(Training.class).execute();
-                addDatabaseContent();
-                base.evaluate();
+    override fun apply(base: Statement, description: Description): Statement {
+        return object : Statement() {
+            @Throws(Throwable::class)
+            override fun evaluate() {
+                ApplicationInstance.initFlowManager(context)
+                SQLite.delete(Arrow::class.java).execute()
+                SQLite.delete(Bow::class.java).execute()
+                SQLite.delete(Training::class.java).execute()
+                addDatabaseContent()
+                base.evaluate()
             }
-        };
-    }
-
-    @NonNull
-    protected End buildEnd(@NonNull Round round, @NonNull int... shots) {
-        End end = round.addEnd();
-        end.setRoundId(round.getId());
-        for (int i = 0; i < shots.length; i++) {
-            end.loadShots().get(i).setIndex(i);
-            end.loadShots().get(i).setScoringRing(shots[i]);
         }
-        return end;
     }
 
-    @NonNull
-    protected End randomEnd(@NonNull Round round, int arrowsPerEnd, @NonNull Random gen, int index) {
-        End end = new End(arrowsPerEnd, index);
-        end.setRoundId(round.getId());
-        end.setExact(true);
-        for (int i = 0; i < arrowsPerEnd; i++) {
-            end.loadShots().get(i).setIndex(i);
-            end.loadShots().get(i).setX(gaussianRand(gen));
-            end.loadShots().get(i).setY(gaussianRand(gen));
-            end.loadShots().get(i).setScoringRing(round.getTarget().getModel()
-                    .getZoneFromPoint(end.loadShots().get(i).getX(),
-                            end.loadShots().get(i).getY(), 0.05f));
+    protected fun buildEnd(round: AugmentedRound, vararg shots: Int): AugmentedEnd {
+        val end = round.addEnd()
+        end.end.roundId = round.round.id
+        for (i in shots.indices) {
+            end.shots[i].index = i
+            end.shots[i].scoringRing = shots[i]
         }
-        end.setSaveTime(LocalTime.of(14, gen.nextInt(59), gen.nextInt(59), 0));
-        return end;
+        return end
     }
 
-    private float gaussianRand(@NonNull Random gen) {
-        final float rand1 = gen.nextFloat();
-        final float rand2 = gen.nextFloat();
-        return (float) (Math.sqrt(-2 * Math.log(rand1) / Math.log(Math.E)) *
-                Math.cos(2 * Math.PI * rand2)) * 0.4f;
+    protected fun randomEnd(round: AugmentedRound, arrowsPerEnd: Int, gen: Random): AugmentedEnd {
+        val end = round.addEnd()
+        end.end.exact = true
+        for (i in 0 until arrowsPerEnd) {
+            end.shots[i].index = i
+            end.shots[i].x = gaussianRand(gen)
+            end.shots[i].y = gaussianRand(gen)
+            end.shots[i].scoringRing = round.round.target.model
+                    .getZoneFromPoint(end.shots[i].x,
+                            end.shots[i].y, 0.05f)
+        }
+        end.end.saveTime = LocalTime.of(14, gen.nextInt(59), gen.nextInt(59), 0)
+        return end
     }
 
-    protected abstract void addDatabaseContent();
-
-    @NonNull
-    protected Bow addBow(String name) {
-        Bow bow = new Bow();
-        bow.setName(name);
-        bow.setBrand("PSE");
-        bow.setSize("64\"");
-        bow.setBraceHeight("6 3/8\"");
-        bow.setType(EBowType.COMPOUND_BOW);
-        bow.setImages(Collections.emptyList());
-        bow.thumbnail = Thumbnail.Companion.from(context, R.drawable.recurve_bow);
-        bow.save();
-        return bow;
+    private fun gaussianRand(gen: Random): Float {
+        val rand1 = gen.nextFloat()
+        val rand2 = gen.nextFloat()
+        return (Math.sqrt(-2 * Math.log(rand1.toDouble()) / Math.log(Math.E)) * Math.cos(2.0 * Math.PI * rand2.toDouble())).toFloat() * 0.4f
     }
 
-    @NonNull
-    protected Arrow addArrow(String name) {
-        Arrow arrow = new Arrow();
-        arrow.setName(name);
-        arrow.setLength("30inch");
-        arrow.setComment("some comment");
-        arrow.setDiameter(new Dimension(4, Dimension.Unit.MILLIMETER));
-        arrow.setNock("Awesome nock");
-        arrow.setImages(Collections.emptyList());
-        arrow.thumbnail = Thumbnail.Companion.from(context, R.drawable.arrows);
-        arrow.save();
-        return arrow;
+    protected abstract fun addDatabaseContent()
+
+    protected fun addBow(name: String): Bow {
+        val bow = Bow()
+        bow.name = name
+        bow.brand = "PSE"
+        bow.size = "64\""
+        bow.braceHeight = "6 3/8\""
+        bow.type = EBowType.COMPOUND_BOW
+        bow.images = emptyList()
+        bow.thumbnail = Thumbnail.from(context, R.drawable.recurve_bow)
+        bow.save()
+        return bow
     }
 
-    @NonNull
-    protected Training saveDefaultTraining(Long standardRoundId, @NonNull Random generator) {
-        Training training = new Training();
-        training.setTitle(InstrumentationRegistry.getTargetContext().getString(R.string.training));
-        training.setDate(LocalDate.of(2016, 4 + generator.nextInt(5), generator.nextInt(29)));
-        training.setLocation("");
-        training.setWeather(EWeather.SUNNY);
-        training.setWindSpeed(1);
-        training.setWindDirection(0);
-        training.setStandardRoundId(standardRoundId);
-        training.setBowId(null);
-        training.setArrowId(null);
-        training.setArrowNumbering(false);
-        training.save();
-        return training;
+    protected fun addArrow(name: String): Arrow {
+        val arrow = Arrow()
+        arrow.name = name
+        arrow.length = "30inch"
+        arrow.comment = "some comment"
+        arrow.diameter = Dimension(4f, Dimension.Unit.MILLIMETER)
+        arrow.nock = "Awesome nock"
+        arrow.images = emptyList()
+        arrow.thumbnail = Thumbnail.from(context, R.drawable.arrows)
+        arrow.save()
+        return arrow
+    }
+
+    protected fun saveDefaultTraining(standardRoundId: Long?, generator: Random): Training {
+        val training = Training()
+        training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training)
+        training.date = LocalDate.of(2016, 4 + generator.nextInt(5), generator.nextInt(29))
+        training.location = ""
+        training.weather = EWeather.SUNNY
+        training.windSpeed = 1
+        training.windDirection = 0
+        training.standardRoundId = standardRoundId
+        training.bowId = null
+        training.arrowId = null
+        training.arrowNumbering = false
+        training.save()
+        return training
     }
 }

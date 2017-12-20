@@ -12,133 +12,127 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.features.training.input;
+package de.dreier.mytargets.features.training.input
 
 
-import android.support.annotation.NonNull;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.support.test.uiautomator.UiObjectNotFoundException;
-
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.RuleChain;
-import org.junit.runner.RunWith;
-
-import java.util.Random;
-
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.StandardRound;
-import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.shared.views.TargetViewBase;
-import de.dreier.mytargets.test.base.UITestBase;
-import de.dreier.mytargets.test.utils.actions.TargetViewActions;
-import de.dreier.mytargets.test.utils.assertions.TargetViewAssertions;
-import de.dreier.mytargets.test.utils.rules.DbTestRuleBase;
-
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static de.dreier.mytargets.test.utils.matchers.ViewMatcher.clickOnPreference;
+import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.Espresso.pressBack
+import android.support.test.espresso.action.ViewActions.click
+import android.support.test.espresso.matcher.ViewMatchers.withId
+import android.support.test.rule.ActivityTestRule
+import android.support.test.runner.AndroidJUnit4
+import android.support.test.uiautomator.UiObjectNotFoundException
+import de.dreier.mytargets.R
+import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.shared.models.db.Round
+import de.dreier.mytargets.shared.models.db.StandardRound
+import de.dreier.mytargets.shared.views.TargetViewBase
+import de.dreier.mytargets.test.base.UITestBase
+import de.dreier.mytargets.test.utils.actions.TargetViewActions
+import de.dreier.mytargets.test.utils.assertions.TargetViewAssertions
+import de.dreier.mytargets.test.utils.matchers.ViewMatcher.clickOnPreference
+import de.dreier.mytargets.test.utils.rules.DbTestRuleBase
+import org.junit.Before
+import org.junit.Ignore
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.RuleChain
+import org.junit.runner.RunWith
+import java.util.*
 
 @Ignore
-@RunWith(AndroidJUnit4.class)
-public class InputActivityTest extends UITestBase {
+@RunWith(AndroidJUnit4::class)
+class InputActivityTest : UITestBase() {
 
-    @NonNull
-    private ActivityTestRule<InputActivity> activityTestRule = new ActivityTestRule<>(
-            InputActivity.class, true, false);
+    private val activityTestRule = ActivityTestRule(
+            InputActivity::class.java, true, false)
 
     @Rule
-    public final RuleChain rule = RuleChain.outerRule(new DbTestRuleBase() {
-        @Override
-        protected void addDatabaseContent() {
-            Random generator = new Random(3435);
-            StandardRound standardRound = StandardRound.Companion.get(32L);
+    val rule = RuleChain.outerRule(object : DbTestRuleBase() {
+        override fun addDatabaseContent() {
+            val generator = Random(3435)
+            val standardRound = StandardRound[32L]
 
-            Training training = saveDefaultTraining(standardRound.getId(), generator);
+            val (id) = saveDefaultTraining(standardRound!!.id, generator)
 
-            round1 = new Round(standardRound.loadRounds().get(0));
-            round1.setTrainingId(training.getId());
-            round1.setComment("");
-            round1.save();
+            round1 = Round(standardRound.loadRounds()!![0])
+            round1!!.trainingId = id
+            round1!!.comment = ""
+            round1!!.save()
 
-            Round round2 = new Round(standardRound.loadRounds().get(1));
-            round2.setTrainingId(training.getId());
-            round2.setComment("");
-            round2.save();
+            val round2 = Round(standardRound.loadRounds()!![1])
+            round2.trainingId = id
+            round2.comment = ""
+            round2.save()
         }
-    }).around(activityTestRule);
+    }).around(activityTestRule)
 
-    private Round round1;
+    private var round1: Round? = null
 
     @Before
-    public void setUp() {
-        SettingsManager.INSTANCE.setInputMethod(TargetViewBase.EInputMethod.KEYBOARD);
-        SettingsManager.INSTANCE.setTimerEnabled(false);
+    fun setUp() {
+        SettingsManager.inputMethod = TargetViewBase.EInputMethod.KEYBOARD
+        SettingsManager.timerEnabled = false
     }
 
     @Test
-    public void inputActivityTest() throws UiObjectNotFoundException {
-        activityTestRule.launchActivity(InputActivity.Companion.getIntent(round1, 0).build());
+    @Throws(UiObjectNotFoundException::class)
+    fun inputActivityTest() {
+        activityTestRule.launchActivity(InputActivity.getIntent(round1!!, 0).build())
 
         onView(withId(R.id.targetViewContainer))
-                .perform(TargetViewActions.clickVirtualButton("10"));
+                .perform(TargetViewActions.clickVirtualButton("10"))
         onView(withId(R.id.targetViewContainer))
-                .check(TargetViewAssertions.virtualButtonExists("Shot 1: 10"));
+                .check(TargetViewAssertions.virtualButtonExists("Shot 1: 10"))
 
-        clickActionBarItem(R.id.action_settings, R.string.preferences);
-        clickOnPreference(R.string.keyboard_enabled);
-        pressBack();
+        clickActionBarItem(R.id.action_settings, R.string.preferences)
+        clickOnPreference(R.string.keyboard_enabled)
+        pressBack()
 
         // Wait for keyboard animation to finish
         try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            Thread.sleep(1000)
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
         }
+
         //assertVirtualViewNotExists("10");
 
         onView(withId(R.id.targetViewContainer))
-                .perform(TargetViewActions.clickTarget(0, 0));
+                .perform(TargetViewActions.clickTarget(0f, 0f))
         onView(withId(R.id.targetViewContainer))
-                .check(TargetViewAssertions.virtualButtonExists("Shot 2: X"));
+                .check(TargetViewAssertions.virtualButtonExists("Shot 2: X"))
 
         onView(withId(R.id.targetViewContainer))
-                .perform(TargetViewActions.clickVirtualButton("Backspace"));
+                .perform(TargetViewActions.clickVirtualButton("Backspace"))
         onView(withId(R.id.targetViewContainer))
-                .check(TargetViewAssertions.virtualButtonNotExists("Shot 2: X"));
+                .check(TargetViewAssertions.virtualButtonNotExists("Shot 2: X"))
 
         onView(withId(R.id.targetViewContainer))
-                .perform(TargetViewActions.clickTarget(0.1f, 0.2f));
+                .perform(TargetViewActions.clickTarget(0.1f, 0.2f))
         onView(withId(R.id.targetViewContainer))
-                .check(TargetViewAssertions.virtualButtonExists("Shot 2: 8"));
+                .check(TargetViewAssertions.virtualButtonExists("Shot 2: 8"))
 
         onView(withId(R.id.targetViewContainer))
-                .perform(TargetViewActions.clickTarget(0, 0));
+                .perform(TargetViewActions.clickTarget(0f, 0f))
         onView(withId(R.id.targetViewContainer))
-                .check(TargetViewAssertions.virtualButtonExists("Shot 3: X"));
+                .check(TargetViewAssertions.virtualButtonExists("Shot 3: X"))
 
         onView(withId(R.id.targetViewContainer))
-                .perform(TargetViewActions.clickTarget(-0.9f, -0.9f));
+                .perform(TargetViewActions.clickTarget(-0.9f, -0.9f))
         onView(withId(R.id.targetViewContainer))
-                .check(TargetViewAssertions.virtualButtonExists("Shot 4: Miss"));
+                .check(TargetViewAssertions.virtualButtonExists("Shot 4: Miss"))
 
         onView(withId(R.id.targetViewContainer))
-                .perform(TargetViewActions.clickTarget(0, 0));
+                .perform(TargetViewActions.clickTarget(0f, 0f))
         onView(withId(R.id.targetViewContainer))
-                .check(TargetViewAssertions.virtualButtonExists("Shot 5: X"));
+                .check(TargetViewAssertions.virtualButtonExists("Shot 5: X"))
 
         onView(withId(R.id.targetViewContainer))
-                .perform(TargetViewActions.clickTarget(0, 0));
+                .perform(TargetViewActions.clickTarget(0f, 0f))
         onView(withId(R.id.targetViewContainer))
-                .check(TargetViewAssertions.virtualButtonExists("Shot 6: X"));
+                .check(TargetViewAssertions.virtualButtonExists("Shot 6: X"))
 
-        onView(withId(R.id.next)).perform(click());
+        onView(withId(R.id.next)).perform(click())
     }
 }

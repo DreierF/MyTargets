@@ -13,14 +13,13 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.test.utils.rules;
+package de.dreier.mytargets.test.utils.rules
 
 /**
  * Prepares the database to be empty at test start
  */
-public class EmptyDbTestRule extends DbTestRuleBase {
-    @Override
-    protected void addDatabaseContent() {
+class EmptyDbTestRule : DbTestRuleBase() {
+    override fun addDatabaseContent() {
 
     }
 }

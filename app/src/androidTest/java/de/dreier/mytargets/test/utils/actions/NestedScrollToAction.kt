@@ -13,67 +13,63 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.test.utils.actions;
+package de.dreier.mytargets.test.utils.actions
 
-import android.graphics.Rect;
-import android.support.annotation.NonNull;
-import android.support.test.espresso.PerformException;
-import android.support.test.espresso.UiController;
-import android.support.test.espresso.ViewAction;
-import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.espresso.util.HumanReadables;
-import android.support.v4.widget.NestedScrollView;
-import android.util.Log;
-import android.view.View;
-import android.widget.HorizontalScrollView;
-import android.widget.ScrollView;
-
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matcher;
-
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
+import android.graphics.Rect
+import android.support.test.espresso.PerformException
+import android.support.test.espresso.UiController
+import android.support.test.espresso.ViewAction
+import android.support.test.espresso.matcher.ViewMatchers
+import android.support.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
+import android.support.test.espresso.util.HumanReadables
+import android.support.v4.widget.NestedScrollView
+import android.util.Log
+import android.view.View
+import android.widget.HorizontalScrollView
+import android.widget.ScrollView
+import org.hamcrest.CoreMatchers
+import org.hamcrest.Matcher
 
 /**
  * Enables scrolling to the given view. View must be a descendant of a ScrollView.
  */
-public final class NestedScrollToAction implements ViewAction {
-    private static final String TAG = NestedScrollToAction.class.getSimpleName();
+class NestedScrollToAction : ViewAction {
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public Matcher<View> getConstraints() {
+    override fun getConstraints(): Matcher<View> {
         return CoreMatchers
                 .allOf(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                         ViewMatchers.isDescendantOfA(CoreMatchers.anyOf(
-                                ViewMatchers.isAssignableFrom(ScrollView.class),
-                                ViewMatchers.isAssignableFrom(HorizontalScrollView.class),
-                                ViewMatchers.isAssignableFrom(NestedScrollView.class))));
+                                ViewMatchers.isAssignableFrom(ScrollView::class.java),
+                                ViewMatchers.isAssignableFrom(HorizontalScrollView::class.java),
+                                ViewMatchers.isAssignableFrom(NestedScrollView::class.java))))
     }
 
-    @Override
-    public void perform(@NonNull UiController uiController, @NonNull View view) {
+    override fun perform(uiController: UiController, view: View) {
         if (isDisplayingAtLeast(90).matches(view)) {
-            Log.i(TAG, "View is already displayed. Returning.");
-            return;
+            Log.i(TAG, "View is already displayed. Returning.")
+            return
         }
-        Rect rect = new Rect();
-        view.getDrawingRect(rect);
-        if (!view.requestRectangleOnScreen(rect, true /* immediate */)) {
-            Log.w(TAG, "Scrolling to view was requested, but none of the parents scrolled.");
+        val rect = Rect()
+        view.getDrawingRect(rect)
+        if (!/* immediate */view.requestRectangleOnScreen(rect, true)) {
+            Log.w(TAG, "Scrolling to view was requested, but none of the parents scrolled.")
         }
-        uiController.loopMainThreadUntilIdle();
+        uiController.loopMainThreadUntilIdle()
         if (!isDisplayingAtLeast(90).matches(view)) {
-            throw new PerformException.Builder()
-                    .withActionDescription(this.getDescription())
+            throw PerformException.Builder()
+                    .withActionDescription(this.description)
                     .withViewDescription(HumanReadables.describe(view))
-                    .withCause(new RuntimeException(
+                    .withCause(RuntimeException(
                             "Scrolling to view was attempted, but the view is not displayed"))
-                    .build();
+                    .build()
         }
     }
 
-    @Override
-    public String getDescription() {
-        return "scroll to";
+    override fun getDescription(): String {
+        return "scroll to"
+    }
+
+    companion object {
+        private val TAG = NestedScrollToAction::class.java.simpleName
     }
 }

@@ -13,75 +13,69 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.test.utils.matchers;
+package de.dreier.mytargets.test.utils.matchers
 
-import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
+import android.support.annotation.IdRes
+import android.view.View
+import android.view.ViewGroup
+import de.dreier.mytargets.views.speeddial.FabSpeedDial
+import org.hamcrest.Description
+import org.hamcrest.Matcher
+import org.hamcrest.TypeSafeMatcher
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
+object ParentViewMatcher {
 
-import de.dreier.mytargets.views.speeddial.FabSpeedDial;
-
-public class ParentViewMatcher {
-    public static Matcher<View> isNestedChildOfView(@NonNull Matcher<View> parentViewMatcher) {
-        return new TypeSafeMatcher<View>() {
-            public void describeTo(@NonNull Description description) {
-                description.appendText("is nested child of view ");
-                parentViewMatcher.describeTo(description);
+    fun isOnForegroundFragment(): Matcher<View> {
+        return object : TypeSafeMatcher<View>() {
+            override fun describeTo(description: Description) {
+                description.appendText("is on foreground fragment")
             }
 
-            public boolean matchesSafely(View view) {
-                return MatcherUtils.getMatchingParent(view, parentViewMatcher) != null;
-            }
-        };
-    }
-
-    public static Matcher<View> isOnForegroundFragment() {
-        return new TypeSafeMatcher<View>() {
-            @Override
-            public void describeTo(@NonNull Description description) {
-                description.appendText("is on foreground fragment");
-            }
-
-            @Override
-            public boolean matchesSafely(@NonNull View view) {
-                View content = MatcherUtils.getParentViewById(view, android.R.id.content);
-                if (content != null && content instanceof ViewGroup) {
-                    final View currentFragment = ((ViewGroup) content)
-                            .getChildAt(((ViewGroup) content).getChildCount() - 1);
-                    return MatcherUtils.isInViewHierarchy(view, currentFragment);
+            public override fun matchesSafely(view: View): Boolean {
+                val content = MatcherUtils.getParentViewById(view, android.R.id.content)
+                if (content != null && content is ViewGroup) {
+                    val currentFragment = content
+                            .getChildAt(content.childCount - 1)
+                    return MatcherUtils.isInViewHierarchy(view, currentFragment)
                 }
-                return false;
+                return false
             }
-        };
+        }
     }
 
-    public static Matcher<View> withSpeedDialItem(@NonNull Matcher<View> speedDialViewMatcher, @IdRes int id) {
-        return new TypeSafeMatcher<View>() {
-            public void describeTo(@NonNull Description description) {
-                description.appendText("with id " + id + " on speed dial ");
-                speedDialViewMatcher.describeTo(description);
+    fun isNestedChildOfView(parentViewMatcher: Matcher<View>): Matcher<View> {
+        return object : TypeSafeMatcher<View>() {
+            override fun describeTo(description: Description) {
+                description.appendText("is nested child of view ")
+                parentViewMatcher.describeTo(description)
             }
 
-            public boolean matchesSafely(View view) {
-                View speedDialView = MatcherUtils.getMatchingParent(view, speedDialViewMatcher);
-                if (speedDialView != null && speedDialView instanceof FabSpeedDial) {
-                    FloatingActionButton fabFromMenuId = ((FabSpeedDial) speedDialView)
-                            .getFabFromMenuId(id);
-                    ViewParent parent = fabFromMenuId.getParent();
-                    if (parent != null && parent instanceof ViewGroup &&
-                            ((ViewGroup) parent).getChildAt(0) == view) {
-                        return true;
+            public override fun matchesSafely(view: View): Boolean {
+                return MatcherUtils.getMatchingParent(view, parentViewMatcher) != null
+            }
+        }
+    }
+
+    fun withSpeedDialItem(speedDialViewMatcher: Matcher<View>, @IdRes id: Int): Matcher<View> {
+        return object : TypeSafeMatcher<View>() {
+            override fun describeTo(description: Description) {
+                description.appendText("with id $id on speed dial ")
+                speedDialViewMatcher.describeTo(description)
+            }
+
+            public override fun matchesSafely(view: View): Boolean {
+                val speedDialView = MatcherUtils.getMatchingParent(view, speedDialViewMatcher)
+                if (speedDialView != null && speedDialView is FabSpeedDial) {
+                    val fabFromMenuId = speedDialView
+                            .getFabFromMenuId(id)
+                    val parent = fabFromMenuId.parent
+                    if (parent != null && parent is ViewGroup &&
+                            parent.getChildAt(0) === view) {
+                        return true
                     }
                 }
-                return false;
+                return false
             }
-        };
+        }
     }
 }

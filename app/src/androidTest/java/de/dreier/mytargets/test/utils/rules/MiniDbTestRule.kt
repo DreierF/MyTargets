@@ -13,53 +13,47 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.test.utils.rules;
+package de.dreier.mytargets.test.utils.rules
 
-import java.util.Random;
+import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.shared.models.Dimension
+import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
+import de.dreier.mytargets.shared.models.db.StandardRound
+import de.dreier.mytargets.shared.targets.models.WAFull
+import de.dreier.mytargets.shared.views.TargetViewBase
+import java.util.*
 
-import de.dreier.mytargets.features.settings.SettingsManager;
-import de.dreier.mytargets.shared.models.Dimension;
-import de.dreier.mytargets.shared.models.Target;
-import de.dreier.mytargets.shared.models.db.Round;
-import de.dreier.mytargets.shared.models.db.StandardRound;
-import de.dreier.mytargets.shared.models.db.Training;
-import de.dreier.mytargets.shared.targets.models.WAFull;
-import de.dreier.mytargets.shared.views.TargetViewBase;
+class MiniDbTestRule : DbTestRuleBase() {
 
-public class MiniDbTestRule extends DbTestRuleBase {
-
-    @Override
-    protected void addDatabaseContent() {
-        SettingsManager.INSTANCE.setTarget(
-                new Target(WAFull.Companion.getID(), 0, new Dimension(122, Dimension.Unit.CENTIMETER)));
-        SettingsManager.INSTANCE.setDistance(new Dimension(50, Dimension.Unit.METER));
-        SettingsManager.INSTANCE.setIndoor(false);
-        SettingsManager.INSTANCE.setInputMethod(TargetViewBase.EInputMethod.PLOTTING);
-        SettingsManager.INSTANCE.setTimerEnabled(true);
-        SettingsManager.INSTANCE.setShotsPerEnd(6);
-        addRandomTraining(578459341);
-        addRandomTraining(454459456);
+    override fun addDatabaseContent() {
+        SettingsManager.target = Target(WAFull.ID, 0, Dimension(122f, Dimension.Unit.CENTIMETER))
+        SettingsManager.distance = Dimension(50f, Dimension.Unit.METER)
+        SettingsManager.indoor = false
+        SettingsManager.inputMethod = TargetViewBase.EInputMethod.PLOTTING
+        SettingsManager.timerEnabled = true
+        SettingsManager.shotsPerEnd = 6
+        addRandomTraining(578459341)
+        addRandomTraining(454459456)
     }
 
-    private void addRandomTraining(int seed) {
-        Random generator = new Random(seed);
-        StandardRound standardRound = StandardRound.Companion.get(32L);
+    private fun addRandomTraining(seed: Int) {
+        val generator = Random(seed.toLong())
+        val standardRound = StandardRound[32L]
 
-        Training training = saveDefaultTraining(standardRound.getId(), generator);
+        val training = saveDefaultTraining(standardRound!!.id, generator)
+        val at = AugmentedTraining(training)
+        at.initRoundsFromTemplate(standardRound)
+        at.toTraining().save()
 
-        Round round1 = new Round(standardRound.loadRounds().get(0));
-        round1.setTrainingId(training.getId());
-        round1.save();
+        val round1 = at.rounds[0]
+        val round2 = at.rounds[1]
 
-        Round round2 = new Round(standardRound.loadRounds().get(1));
-        round2.setTrainingId(training.getId());
-        round2.save();
+        randomEnd(round1, 6, generator).toEnd().save()
+        randomEnd(round1, 6, generator).toEnd().save()
 
-        randomEnd(round1, 6, generator, 0).save();
-        randomEnd(round1, 6, generator, 1).save();
-
-        randomEnd(round2, 6, generator, 0).save();
-        randomEnd(round2, 6, generator, 1).save();
+        randomEnd(round2, 6, generator).toEnd().save()
+        randomEnd(round2, 6, generator).toEnd().save()
     }
 
 }

@@ -13,59 +13,54 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.test.utils;
+package de.dreier.mytargets.test.utils
 
-import android.app.Activity;
-import android.app.Instrumentation;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.test.runner.intent.IntentStubberRegistry;
+import android.app.Activity
+import android.app.Instrumentation
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.provider.MediaStore
+import android.support.test.runner.intent.IntentStubberRegistry
+import de.dreier.mytargets.shared.utils.FileUtils
+import java.io.IOException
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+object ImageCaptureStubbingUtils {
 
-import de.dreier.mytargets.shared.utils.FileUtils;
+    private var matched = false
 
-public class ImageCaptureStubbingUtils {
+    fun intendingImageCapture(context: Context, mockedImage: Int) {
+        matched = false
+        IntentStubberRegistry.load { intent ->
+            if (MediaStore.ACTION_IMAGE_CAPTURE == intent.action) {
+                val uriToSaveImage = intent.getParcelableExtra<Uri>(MediaStore.EXTRA_OUTPUT)
+                saveMockToUri(context, mockedImage, uriToSaveImage)
+                matched = true
 
-    private static boolean matched = false;
-
-    public static void intendingImageCapture(@NonNull final Context context, final int mockedImage) {
-        matched = false;
-        IntentStubberRegistry.load(intent -> {
-            if (MediaStore.ACTION_IMAGE_CAPTURE.equals(intent.getAction())) {
-                Uri uriToSaveImage = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
-                saveMockToUri(context, mockedImage, uriToSaveImage);
-                matched = true;
-
-                Intent resultIntent = new Intent();
-                return new Instrumentation.ActivityResult(Activity.RESULT_OK, resultIntent);
+                val resultIntent = Intent()
+                return@load Instrumentation.ActivityResult(Activity.RESULT_OK, resultIntent)
             }
-            return null;
-        });
+            null
+        }
     }
 
-    private static void saveMockToUri(@NonNull Context context, int mockedImage, @NonNull Uri uriToSaveImage) {
+    private fun saveMockToUri(context: Context, mockedImage: Int, uriToSaveImage: Uri) {
         try {
-            Resources testRes = context.getResources();
-            InputStream ts = testRes.openRawResource(mockedImage);
-            OutputStream stream = context.getContentResolver()
-                    .openOutputStream(uriToSaveImage);
-            FileUtils.INSTANCE.copy(ts, stream);
-        } catch (IOException e) {
-            e.printStackTrace();
+            val testRes = context.resources
+            val ts = testRes.openRawResource(mockedImage)
+            val stream = context.contentResolver
+                    .openOutputStream(uriToSaveImage)
+            FileUtils.copy(ts, stream!!)
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
+
     }
 
-    public static void intendedImageCapture() {
+    fun intendedImageCapture() {
         if (!matched) {
-            throw new RuntimeException("No intent captured with action ACTION_IMAGE_CAPTURE.");
+            throw RuntimeException("No intent captured with action ACTION_IMAGE_CAPTURE.")
         }
-        IntentStubberRegistry.reset();
+        IntentStubberRegistry.reset()
     }
 }

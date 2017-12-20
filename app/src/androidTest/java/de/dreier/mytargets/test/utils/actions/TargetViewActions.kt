@@ -13,48 +13,43 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.test.utils.actions;
+package de.dreier.mytargets.test.utils.actions
 
-import android.support.test.espresso.ViewAction;
-import android.support.test.espresso.action.GeneralClickAction;
-import android.support.test.espresso.action.Press;
-import android.support.test.espresso.action.Tap;
+import android.support.test.espresso.ViewAction
+import android.support.test.espresso.action.CoordinatesProvider
+import android.support.test.espresso.action.GeneralClickAction
+import android.support.test.espresso.action.Press
+import android.support.test.espresso.action.Tap
+import de.dreier.mytargets.features.training.input.TargetView
+import org.junit.Assert.assertNotNull
 
-import de.dreier.mytargets.features.training.input.TargetView;
-import de.dreier.mytargets.shared.streamwrapper.Stream;
-import de.dreier.mytargets.shared.views.TargetViewBase;
-
-import static org.junit.Assert.assertNotNull;
-
-public class TargetViewActions {
-    public static ViewAction clickTarget(final float x, final float y) {
-        return new GeneralClickAction(
+object TargetViewActions {
+    fun clickTarget(x: Float, y: Float): ViewAction {
+        return GeneralClickAction(
                 Tap.SINGLE,
-                view -> LowLevelActions.getTargetCoordinates(view, new float[]{x, y}),
-                Press.PINPOINT, 0, 0);
+                CoordinatesProvider { view -> LowLevelActions.getTargetCoordinates(view, floatArrayOf(x, y)) },
+                Press.PINPOINT, 0, 0)
     }
 
-    public static ViewAction holdTapTarget(final float x, final float y) {
-        return LowLevelActions.pressAndHold(new float[]{x, y});
+    fun holdTapTarget(x: Float, y: Float): ViewAction {
+        return LowLevelActions.pressAndHold(floatArrayOf(x, y))
     }
 
-    public static ViewAction releaseTapTarget(final float x, final float y) {
-        return LowLevelActions.release(new float[]{x, y});
+    fun releaseTapTarget(x: Float, y: Float): ViewAction {
+        return LowLevelActions.release(floatArrayOf(x, y))
     }
 
-    public static ViewAction clickVirtualButton(String description) {
-        return new GeneralClickAction(
+    fun clickVirtualButton(description: String): ViewAction {
+        return GeneralClickAction(
                 Tap.SINGLE,
-                view -> {
-                    TargetView targetView = (TargetView) view;
-                    TargetViewBase.VirtualView vv = Stream.of(targetView.getVirtualViews())
-                            .filter(virtualView -> virtualView.getDescription().equals(description))
-                            .findFirstOrNull();
-                    assertNotNull("Did not find virtual view with description '" + description + "'", vv);
-                    return LowLevelActions
-                            .getAbsoluteCoordinates(view, new float[]{vv.getRect().exactCenterX(), vv
-                                    .getRect().exactCenterY()});
+                CoordinatesProvider { view ->
+                    val targetView = view as TargetView
+                    val vv = targetView.virtualViews.firstOrNull { it.description == description }
+                    assertNotNull("Did not find virtual view with description '$description'", vv)
+                    LowLevelActions
+                            .getAbsoluteCoordinates(view, floatArrayOf(vv!!.rect!!.exactCenterX(), vv
+                                    .rect!!.exactCenterY()))
                 },
-                Press.PINPOINT, 0, 0);
+                Press.PINPOINT, 0, 0)
     }
 }

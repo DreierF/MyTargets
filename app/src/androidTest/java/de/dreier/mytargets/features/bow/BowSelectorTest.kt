@@ -13,81 +13,73 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.bow;
+package de.dreier.mytargets.features.bow
 
 
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.runner.AndroidJUnit4;
+import android.content.Intent
+import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.action.ViewActions.click
+import android.support.test.espresso.assertion.ViewAssertions.matches
+import android.support.test.espresso.intent.Intents.intended
+import android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import android.support.test.espresso.intent.rule.IntentsTestRule
+import android.support.test.espresso.matcher.ViewMatchers.*
+import android.support.test.runner.AndroidJUnit4
+import de.dreier.mytargets.R
+import de.dreier.mytargets.features.bows.BowListActivity
+import de.dreier.mytargets.features.bows.EditBowActivity
+import de.dreier.mytargets.features.training.edit.EditTrainingActivity
+import de.dreier.mytargets.features.training.edit.EditTrainingFragment
+import de.dreier.mytargets.test.base.UITestBase
+import de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isNestedChildOfView
+import de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher.Companion.withRecyclerView
+import de.dreier.mytargets.test.utils.rules.EmptyDbTestRule
+import org.hamcrest.Matchers.allOf
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.RuleChain
+import org.junit.runner.RunWith
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.RuleChain;
-import org.junit.runner.RunWith;
+@RunWith(AndroidJUnit4::class)
+class BowSelectorTest : UITestBase() {
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.features.bows.BowListActivity;
-import de.dreier.mytargets.features.bows.EditBowActivity;
-import de.dreier.mytargets.features.training.edit.EditTrainingActivity;
-import de.dreier.mytargets.features.training.edit.EditTrainingFragment;
-import de.dreier.mytargets.test.base.UITestBase;
-import de.dreier.mytargets.test.utils.rules.EmptyDbTestRule;
-
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isNestedChildOfView;
-import static de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher.withRecyclerView;
-import static org.hamcrest.Matchers.allOf;
-
-@RunWith(AndroidJUnit4.class)
-public class BowSelectorTest extends UITestBase {
-
-    @NonNull
-    private IntentsTestRule activityTestRule = new IntentsTestRule<>(
-            EditTrainingActivity.class, true, false);
+    private val activityTestRule = IntentsTestRule(
+            EditTrainingActivity::class.java, true, false)
 
     @Rule
-    public final RuleChain rule = RuleChain.outerRule(new EmptyDbTestRule())
-            .around(activityTestRule);
+    val rule = RuleChain.outerRule(EmptyDbTestRule())
+            .around(activityTestRule)
 
     @Test
-    public void freeTrainingBowSelectionTest() {
-        bowSelectionTest(EditTrainingFragment.Companion.getCREATE_FREE_TRAINING_ACTION());
+    fun freeTrainingBowSelectionTest() {
+        bowSelectionTest(EditTrainingFragment.CREATE_FREE_TRAINING_ACTION)
     }
 
     @Test
-    public void standardRoundBowSelectionTest() {
-        bowSelectionTest(EditTrainingFragment.Companion
-                .getCREATE_TRAINING_WITH_STANDARD_ROUND_ACTION());
+    fun standardRoundBowSelectionTest() {
+        bowSelectionTest(EditTrainingFragment
+                .CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)
     }
 
-    private void bowSelectionTest(String type) {
-        Intent intent = new Intent();
-        intent.setAction(type);
-        activityTestRule.launchActivity(intent);
+    private fun bowSelectionTest(type: String) {
+        val intent = Intent()
+        intent.action = type
+        activityTestRule.launchActivity(intent)
         //allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
 
-        onView(withText(R.string.add_bow)).perform(nestedScrollTo(), click());
-        intended(hasComponent(EditBowActivity.class.getName()));
-        save();
+        onView(withText(R.string.add_bow)).perform(nestedScrollTo(), click())
+        intended(hasComponent(EditBowActivity::class.java.name))
+        save()
 
         onView(allOf(withId(R.id.name), isNestedChildOfView(withId(R.id.bow)), isDisplayed()))
-                .check(matches(withText(R.string.my_bow)));
+                .check(matches(withText(R.string.my_bow)))
 
         // Check if bow selection opens
-        onView(withId(R.id.bow)).perform(nestedScrollTo(), click());
-        intended(hasComponent(BowListActivity.class.getName()));
+        onView(withId(R.id.bow)).perform(nestedScrollTo(), click())
+        intended(hasComponent(BowListActivity::class.java.name))
 
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
-                .check(matches(hasDescendant(withText(R.string.my_bow))));
-        navigateUp();
+                .check(matches(hasDescendant(withText(R.string.my_bow))))
+        navigateUp()
     }
 }
