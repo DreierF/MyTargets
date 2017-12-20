@@ -13,20 +13,17 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training;
+package de.dreier.mytargets.features.training
 
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment
 
-import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
-import de.dreier.mytargets.features.training.details.TrainingFragment;
+import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase
+import de.dreier.mytargets.features.training.details.TrainingFragment
 
-public class TrainingActivity extends SimpleFragmentActivityBase {
+class TrainingActivity : SimpleFragmentActivityBase() {
 
-    @NonNull
-    @Override
-    public Fragment instantiateFragment() {
-        return new TrainingFragment();
+    public override fun instantiateFragment(): Fragment {
+        return TrainingFragment()
     }
 
 }
