@@ -12,25 +12,26 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.base.activities;
+package de.dreier.mytargets.base.activities
 
-import android.content.Intent;
-import android.os.Parcelable;
+import android.app.Activity
+import android.content.Intent
+import android.os.Parcelable
 
-import de.dreier.mytargets.base.fragments.ListFragmentBase;
+import de.dreier.mytargets.base.fragments.ListFragmentBase
 
-public abstract class ItemSelectActivity extends SimpleFragmentActivityBase
-        implements ListFragmentBase.OnItemSelectedListener {
+abstract class ItemSelectActivity : SimpleFragmentActivityBase(), ListFragmentBase.OnItemSelectedListener {
 
-    public static final String ITEM = "item";
-    public static final String INTENT = "intent";
+    override fun onItemSelected(item: Parcelable) {
+        val data = Intent()
+        data.putExtra(ITEM, item)
+        data.putExtra(INTENT, if (intent != null) intent.extras else null)
+        setResult(Activity.RESULT_OK, data)
+    }
 
-    @Override
-    public void onItemSelected(Parcelable item) {
-        Intent data = new Intent();
-        data.putExtra(ITEM, item);
-        data.putExtra(INTENT, getIntent() != null ? getIntent().getExtras() : null);
-        setResult(RESULT_OK, data);
+    companion object {
+        val ITEM = "item"
+        val INTENT = "intent"
     }
 
 }

@@ -55,7 +55,7 @@ public abstract class DbTestRuleBase implements TestRule {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                ApplicationInstance.initFlowManager(context);
+                ApplicationInstance.Companion.initFlowManager(context);
                 SQLite.delete(Arrow.class).execute();
                 SQLite.delete(Bow.class).execute();
                 SQLite.delete(Training.class).execute();

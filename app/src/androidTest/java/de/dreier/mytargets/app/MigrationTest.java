@@ -79,7 +79,7 @@ public final class MigrationTest extends InstrumentedTestBase {
 
     @Before
     public void setUp() throws IOException {
-        ApplicationInstance.initFlowManager(getTargetContext());
+        ApplicationInstance.Companion.initFlowManager(getTargetContext());
 
         // Create artificial image file to ensure the according database entry is not deleted (Migration23)
         getTargetContext()

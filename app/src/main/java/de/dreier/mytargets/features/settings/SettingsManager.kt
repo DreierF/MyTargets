@@ -43,7 +43,7 @@ import org.threeten.bp.format.FormatStyle
 
 object SettingsManager {
     private val lastUsed = ApplicationInstance
-            .getLastSharedPreferences()
+            .lastSharedPreferences
     private val preferences = SharedApplicationInstance.sharedPreferences
 
     const val KEY_TIMER_WARN_TIME = "timer_warn_time"
