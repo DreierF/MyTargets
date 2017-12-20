@@ -93,7 +93,7 @@ class MigrationTest : InstrumentedTestBase() {
         assertTraining2(trainings[1])
 
         val bows = Bow.all
-        Truth.assertThat(bows[0].loadImages()!![0].fileName)
+        Truth.assertThat(bows[0].loadImages()[0].fileName)
                 .isEqualTo("img175420839671886584-0f61-43a6-bc1e-dbcd8526056c794370927.jpg")
     }
 

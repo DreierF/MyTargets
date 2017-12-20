@@ -128,8 +128,8 @@ class MainActivityTest : UITestBase() {
         intended(hasClass(StatisticsActivity::class.java))
 
         var expectedRoundIds = Training.all
-                .flatMap { t -> t.loadRounds()!! }
-                .map { it.id!! }
+                .flatMap { t -> t.loadRounds() }
+                .map { it.id }
                 .toSet()
         intended(allOf(hasClass(StatisticsActivity::class.java),
                 hasLongArrayExtra(ROUND_IDS, expectedRoundIds)))
@@ -158,8 +158,8 @@ class MainActivityTest : UITestBase() {
         val trainings = Training.all
                 .sortedWith(Collections.reverseOrder())
         expectedRoundIds = listOf(trainings[1], trainings[2])
-                .flatMap { t -> t.loadRounds()!! }
-                .map { it.id!! }
+                .flatMap { t -> t.loadRounds() }
+                .map { it.id }
                 .toSet()
 
         intended(allOf(hasClass(StatisticsActivity::class.java),

@@ -67,7 +67,7 @@ abstract class SelectItemFragmentBase<T, U : ListAdapterBase<out ItemBindingHold
      * @param item         Currently selected item
      */
     protected open fun selectItem(recyclerView: RecyclerView, item: T) {
-        selector.setSelected(item.id!!, true)
+        selector.setSelected(item.id, true)
         recyclerView.post {
             val manager = recyclerView.layoutManager as LinearLayoutManager
             val first = manager.findFirstCompletelyVisibleItemPosition()

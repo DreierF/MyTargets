@@ -25,7 +25,7 @@ object TargetFactory {
     private var idIndexLookup: Array<Int?>
 
     val comparator: Comparator<Target>
-        get() = compareBy { idIndexLookup[(it.id!!).toInt()]!! }
+        get() = compareBy { idIndexLookup[(it.id).toInt()]!! }
 
     init {
         list = ArrayList()
@@ -73,7 +73,7 @@ object TargetFactory {
 
     fun getList(target: Target): List<TargetModelBase> {
         val out = ArrayList<TargetModelBase>()
-        if (target.id!! < 7L) {
+        if (target.id < 7L) {
             val til = if (target.diameter!!.value <= 60) 7L else 4L
             for (i in 0 until til) {
                 out.add(list[i.toInt()])
@@ -82,7 +82,7 @@ object TargetFactory {
             out.add(NFAAIndoor())
             out.add(NFAAIndoor5Spot())
         } else {
-            out.add(list[idIndexLookup[(target.id!!).toInt()]!!])
+            out.add(list[idIndexLookup[(target.id).toInt()]!!])
         }
         return out
     }

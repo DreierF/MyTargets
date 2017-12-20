@@ -17,28 +17,12 @@ package de.dreier.mytargets.shared.models
 
 import de.dreier.mytargets.shared.targets.zone.ZoneBase
 
-class SelectableZone(
+data class SelectableZone(
         val index: Int,
         val zone: ZoneBase,
         val text: String,
         val points: Int
 ) : Comparable<SelectableZone> {
-
-    override fun equals(o: Any?): Boolean {
-        if (this === o) {
-            return true
-        }
-        if (o == null || javaClass != o.javaClass) {
-            return false
-        }
-
-        val that = o as SelectableZone?
-        return points == that!!.points && text == that.text
-    }
-
-    override fun hashCode(): Int {
-        return 31 * points + text.hashCode()
-    }
 
     override fun compareTo(other: SelectableZone): Int {
         return if (other.index == index) {

@@ -95,7 +95,7 @@ class EnvironmentFragment : FragmentBase() {
         switchView!!.isChecked = !environment!!.indoor
     }
 
-    protected fun setOutdoor(checked: Boolean) {
+    private fun setOutdoor(checked: Boolean) {
         switchView!!.setText(if (checked) R.string.outdoor else R.string.indoor)
         binding.indoorPlaceholder.visibility = if (checked) GONE else VISIBLE
         binding.weatherLayout.visibility = if (checked) VISIBLE else GONE
@@ -106,12 +106,10 @@ class EnvironmentFragment : FragmentBase() {
         super.onSaveInstanceState(outState)
     }
 
-    override fun onAttach(activity: Context?) {
-        var activity = activity
-        super.onAttach(activity)
-        activity = getActivity()
-        if (activity is ListFragmentBase.OnItemSelectedListener) {
-            listener = activity
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context is ListFragmentBase.OnItemSelectedListener) {
+            listener = context
         }
         Assert.assertNotNull(listener)
     }
@@ -127,8 +125,8 @@ class EnvironmentFragment : FragmentBase() {
         val e = Environment()
         e.indoor = !switchView!!.isChecked
         e.weather = environment!!.weather
-        e.windSpeed = (binding.windSpeed.selectedItem!!.id as Long).toInt()
-        e.windDirection = (binding.windDirection.selectedItem!!.id as Long).toInt()
+        e.windSpeed = binding.windSpeed.selectedItem!!.id.toInt()
+        e.windDirection = binding.windDirection.selectedItem!!.id.toInt()
         e.location = binding.location.text.toString()
         return e
     }

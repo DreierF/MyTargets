@@ -65,13 +65,12 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
 
     private val training: Training
         get() {
-            val training: Training?
-            if (trainingId == null) {
-                training = Training()
+            val training = if (trainingId == null) {
+                Training()
             } else {
-                training = Training[trainingId]
+                Training[trainingId!!]!!
             }
-            training!!.title = binding.training.text.toString()
+            training.title = binding.training.text.toString()
             training.date = date
             training.environment = binding.environment.selectedItem!!
             training.bowId = if (binding.bow.selectedItem == null)
@@ -141,7 +140,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
         binding.target.setOnActivityResultContext(this)
         binding.distance.setOnActivityResultContext(this)
         binding.standardRound.setOnActivityResultContext(this)
-        binding.standardRound.setOnUpdateListener { item -> roundTarget = item!!.loadRounds()!![0].targetTemplate }
+        binding.standardRound.setOnUpdateListener { item -> roundTarget = item!!.loadRounds()[0].targetTemplate }
         binding.changeTargetFace.setOnClickListener {
             TargetListFragment.getIntent(roundTarget!!)
                     .withContext(this)
@@ -176,8 +175,8 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
                 GONE
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_training)
-            val train = Training[trainingId]
-            binding.training.setText(train!!.title)
+            val train = Training[trainingId!!]!!
+            binding.training.setText(train.title)
             date = train.date
             binding.bow.setItemId(train.bowId)
             binding.arrow.setItemId(train.arrowId)
@@ -199,7 +198,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
 
     protected fun setScoringStyleForCompoundBow(bow: Bow?) {
         val target = binding.target.selectedItem
-        if (bow != null && target != null && target.id!! <= WA3Ring3Spot.ID) {
+        if (bow != null && target != null && target.id <= WA3Ring3Spot.ID) {
             if (bow.type === EBowType.COMPOUND_BOW && target.scoringStyleIndex == 0) {
                 target.scoringStyleIndex = 2
                 binding.target.setItem(target)
@@ -261,8 +260,8 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
                 training.rounds.add(AugmentedRound(round))
             } else {
                 val standardRound = binding.standardRound.selectedItem
-                SettingsManager.standardRound = standardRound!!.id!!
-                if (standardRound.id == null) {
+                SettingsManager.standardRound = standardRound!!.id
+                if (standardRound.id == 0L) {
                     standardRound.save()
                 }
                 training.training.standardRoundId = standardRound.id
@@ -304,7 +303,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
         if (resultCode == Activity.RESULT_OK && requestCode == SR_TARGET_REQUEST_CODE) {
             val target = data.getParcelableExtra<Target>(ItemSelectActivity.ITEM)
             val item = binding.standardRound.selectedItem
-            item!!.loadRounds()!!.forEach { it.targetTemplate = target }
+            item!!.loadRounds().forEach { it.targetTemplate = target }
             binding.standardRound.setItem(item)
         }
     }

@@ -26,7 +26,7 @@ import java.util.*
 @SuppressLint("ParcelCreator")
 @Parcelize
 data class WindSpeed(
-        override var id: Long?,
+        override var id: Long,
         override var name: String,
         var drawable: Int
 ) : IIdProvider, IImageProvider, Comparable<WindSpeed>, Parcelable {

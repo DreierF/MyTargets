@@ -40,13 +40,13 @@ data class End(
 
         @Column(name = "_id")
         @PrimaryKey(autoincrement = true)
-        override var id: Long? = 0,
+        override var id: Long = 0,
 
         @Column
         var index: Int = 0,
 
         @ForeignKey(tableClass = Round::class, references = [(ForeignKeyReference(columnName = "round", columnType = Long::class, foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
-        var roundId: Long? = null,
+        var roundId: Long = 0,
 
         @Column(getterName = "getExact", setterName = "setExact")
         var exact: Boolean = false,
@@ -65,7 +65,7 @@ data class End(
     internal var shots: MutableList<Shot>? = null
 
     val isEmpty: Boolean
-        get() = loadShots()!!.any { it.scoringRing == Shot.NOTHING_SELECTED } && loadImages()!!.isEmpty()
+        get() = loadShots().any { it.scoringRing == Shot.NOTHING_SELECTED } && loadImages().isEmpty()
 
     constructor(shotCount: Int, index: Int) : this(index = index) {
         shots = (0 until shotCount)
@@ -78,25 +78,25 @@ data class End(
     }
 
     @OneToMany(methods = [], variableName = "shots")
-    fun loadShots(): List<Shot>? {
+    fun loadShots(): List<Shot> {
         if (shots == null) {
-            shots = if (id == null) mutableListOf() else SQLite.select()
+            shots = if (id == 0L) mutableListOf() else SQLite.select()
                     .from(Shot::class.java)
-                    .where(Shot_Table.end.eq(id!!))
+                    .where(Shot_Table.end.eq(id))
                     .queryList()
         }
-        return shots
+        return shots!!
     }
 
     @OneToMany(methods = [], variableName = "images")
-    fun loadImages(): List<EndImage>? {
+    fun loadImages(): List<EndImage> {
         if (images == null) {
-            images = if (id == null) mutableListOf() else SQLite.select()
+            images = if (id == 0L) mutableListOf() else SQLite.select()
                     .from(EndImage::class.java)
-                    .where(EndImage_Table.end.eq(id!!))
+                    .where(EndImage_Table.end.eq(id))
                     .queryList()
         }
-        return images
+        return images!!
     }
 
     fun setShots(shots: MutableList<Shot>) {
@@ -114,7 +114,7 @@ data class End(
         super.save(databaseWrapper)
         if (shots != null) {
             SQLite.delete(Shot::class.java)
-                    .where(Shot_Table.end.eq(id!!))
+                    .where(Shot_Table.end.eq(id))
                     .execute(databaseWrapper)
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
             for (s in shots!!) {
@@ -124,10 +124,10 @@ data class End(
         }
         if (images != null) {
             SQLite.delete(EndImage::class.java)
-                    .where(EndImage_Table.end.eq(id!!))
+                    .where(EndImage_Table.end.eq(id))
                     .execute(databaseWrapper)
             // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-            loadImages()?.forEach { image ->
+            loadImages().forEach { image ->
                 image.endId = id
                 image.save(databaseWrapper)
             }
@@ -139,15 +139,15 @@ data class End(
     }
 
     override fun delete(databaseWrapper: DatabaseWrapper) {
-        loadShots()?.forEach { it.delete(databaseWrapper) }
-        loadImages()?.forEach { it.delete(databaseWrapper) }
+        loadShots().forEach { it.delete(databaseWrapper) }
+        loadImages().forEach { it.delete(databaseWrapper) }
         super.delete(databaseWrapper)
         updateEndIndicesForRound(databaseWrapper)
     }
 
     private fun updateEndIndicesForRound(databaseWrapper: DatabaseWrapper) {
         // FIXME very inefficient
-        val round = Round.get(roundId) ?: return
+        val round = Round[roundId] ?: return
 
         for ((i, end) in round.loadEnds(databaseWrapper).withIndex()) {
             end.index = i
@@ -183,9 +183,9 @@ data class End(
         private fun getRoundScores(rounds: List<Round>): Map<SelectableZone, Int> {
             val t = rounds[0].target
             val scoreCount = getAllPossibleZones(t)
-            rounds.flatMap { it.loadEnds()!! }
+            rounds.flatMap { it.loadEnds() }
                     .forEach {
-                        it.loadShots()!!.forEach { s ->
+                        it.loadShots().forEach { s ->
                             if (s.scoringRing != Shot.NOTHING_SELECTED) {
                                 val tuple = SelectableZone(s.scoringRing,
                                         t.model.getZone(s.scoringRing),

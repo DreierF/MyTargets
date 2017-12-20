@@ -17,7 +17,7 @@ package de.dreier.mytargets.features.training.overview
 import de.dreier.mytargets.shared.models.IIdProvider
 
 data class Header(
-        override val id: Long?,
+        override val id: Long,
         val title: String
 ) : IIdProvider, Comparable<Header> {
 
@@ -26,6 +26,6 @@ data class Header(
     }
 
     override fun compareTo(other: Header): Int {
-        return (id!! - other.id!!).toInt()
+        return (id - other.id).toInt()
     }
 }

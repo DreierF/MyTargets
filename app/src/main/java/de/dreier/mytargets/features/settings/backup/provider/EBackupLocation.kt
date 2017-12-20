@@ -22,9 +22,8 @@ import de.dreier.mytargets.shared.SharedApplicationInstance
 import de.dreier.mytargets.shared.models.IIdProvider
 import java.util.*
 
-//TODO : Parcelize?
 enum class EBackupLocation constructor(
-        override var id: Long? = null,
+        override var id: Long = 0,
         @StringRes
         private var nameRes: Int,
         @DrawableRes

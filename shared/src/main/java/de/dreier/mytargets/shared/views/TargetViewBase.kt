@@ -154,7 +154,7 @@ abstract class TargetViewBase : View, View.OnTouchListener {
     }
 
     open fun replaceWithEnd(end: End) {
-        shots = end.loadShots()!!
+        shots = end.loadShots()
         currentShotIndex = getNextShotIndex(-1)
         endRenderer.setShots(shots)
         endRenderer.setSelection(currentShotIndex, null, EndRenderer

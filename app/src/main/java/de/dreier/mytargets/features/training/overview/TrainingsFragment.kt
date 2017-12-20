@@ -133,8 +133,8 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
             R.id.action_statistics -> {
                 StatisticsActivity
                         .getIntent(Training.all
-                                .flatMap { training -> training.loadRounds()!! }
-                                .map { it.id!! }).withContext(this)
+                                .flatMap { training -> training.loadRounds() }
+                                .map { it.id }).withContext(this)
                         .start()
                 true
             }
@@ -151,14 +151,14 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
     private fun onStatistics(ids: List<Long>) {
         StatisticsActivity.getIntent(ids
                 .map { Training[it]!! }
-                .flatMap { t -> t.loadRounds()!! }
-                .map { it.id!! })
+                .flatMap { t -> t.loadRounds() }
+                .map { it.id })
                 .withContext(this)
                 .start()
     }
 
-    private fun onEdit(itemId: Long?) {
-        EditTrainingFragment.editIntent(itemId!!)
+    private fun onEdit(itemId: Long) {
+        EditTrainingFragment.editIntent(itemId)
                 .withContext(this)
                 .start()
     }

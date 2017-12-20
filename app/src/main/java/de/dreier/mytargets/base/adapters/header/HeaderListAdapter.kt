@@ -62,15 +62,11 @@ abstract class HeaderListAdapter<C : IIdProvider>(parentPartition: PartitionDele
         }
     }
 
-    class SimpleHeader(index: Long?, internal var title: String) : IIdProvider, Comparable<SimpleHeader> {
-        override var id: Long? = null
-
-        init {
-            this.id = index
-        }
+    class SimpleHeader(index: Long, internal var title: String) : IIdProvider, Comparable<SimpleHeader> {
+        override var id: Long = index
 
         override fun compareTo(other: SimpleHeader): Int {
-            return id!!.compareTo(other.id!!)
+            return id.compareTo(other.id)
         }
 
         override fun toString(): String {

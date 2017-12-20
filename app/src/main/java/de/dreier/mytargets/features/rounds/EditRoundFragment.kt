@@ -37,25 +37,24 @@ import de.dreier.mytargets.utils.transitions.FabTransform
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
 
 class EditRoundFragment : EditFragmentBase() {
-    private var trainingId: Long? = null
+    private var trainingId: Long = 0
     private var roundId: Long? = null
-    private var binding: FragmentEditRoundBinding? = null
+    private lateinit var binding: FragmentEditRoundBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_edit_round, container, false)
 
-        val arguments = arguments
         trainingId = arguments!!.getLong(ITEM_ID)
-        if (arguments.containsKey(ROUND_ID)) {
-            roundId = arguments.getLong(ROUND_ID)
+        if (arguments!!.containsKey(ROUND_ID)) {
+            roundId = arguments!!.getLong(ROUND_ID)
         }
 
-        ToolbarUtils.setSupportActionBar(this, binding!!.toolbar)
+        ToolbarUtils.setSupportActionBar(this, binding.toolbar)
         ToolbarUtils.showUpAsX(this)
         setHasOptionsMenu(true)
 
-        binding!!.arrows.setOnProgressChangeListener(object : DiscreteSeekBar.OnProgressChangeListener {
+        binding.arrows.setOnProgressChangeListener(object : DiscreteSeekBar.OnProgressChangeListener {
             override fun onProgressChanged(seekBar: DiscreteSeekBar, value: Int, fromUser: Boolean) {
                 updateArrowsLabel()
             }
@@ -66,29 +65,29 @@ class EditRoundFragment : EditFragmentBase() {
 
             override fun onStopTrackingTouch(seekBar: DiscreteSeekBar) {}
         })
-        binding!!.target.setOnActivityResultContext(this)
-        binding!!.distance.setOnActivityResultContext(this)
+        binding.target.setOnActivityResultContext(this)
+        binding.distance.setOnActivityResultContext(this)
 
         if (roundId == null) {
             ToolbarUtils.setTitle(this, R.string.new_round)
             loadRoundDefaultValues()
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_round)
-            val round = Round[roundId]
-            binding!!.distance.setItem(round!!.distance)
-            binding!!.target.setItem(round.target)
-            binding!!.target.setFixedType(TargetListFragment.EFixedType.TARGET)
-            binding!!.notEditable.visibility = View.GONE
-            if (round.training!!.standardRoundId != null) {
-                binding!!.distanceLayout.visibility = View.GONE
+            val round = Round[roundId!!]
+            binding.distance.setItem(round!!.distance)
+            binding.target.setItem(round.target)
+            binding.target.setFixedType(TargetListFragment.EFixedType.TARGET)
+            binding.notEditable.visibility = View.GONE
+            if (round.training.standardRoundId != null) {
+                binding.distanceLayout.visibility = View.GONE
             }
         }
-        return binding!!.root
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        FabTransform.setup(activity!!, binding!!.root)
+        FabTransform.setup(activity!!, binding.root)
     }
 
     override fun onSave() {
@@ -115,34 +114,34 @@ class EditRoundFragment : EditFragmentBase() {
         if (roundId == null) {
             round = Round()
             round.trainingId = trainingId
-            round.shotsPerEnd = binding!!.arrows.progress
+            round.shotsPerEnd = binding.arrows.progress
             round.maxEndCount = null
-            round.index = training!!.loadRounds()!!.size
+            round.index = training!!.loadRounds().size
         } else {
-            round = Round[roundId]
+            round = Round[roundId!!]
         }
-        round!!.distance = binding!!.distance.selectedItem!!
-        round.target = binding!!.target.selectedItem!!
+        round!!.distance = binding.distance.selectedItem!!
+        round.target = binding.target.selectedItem!!
         round.save()
         return round
     }
 
     private fun updateArrowsLabel() {
-        binding!!.arrowsLabel.text = resources
-                .getQuantityString(R.plurals.arrow, binding!!.arrows.progress,
-                        binding!!.arrows.progress)
+        binding.arrowsLabel.text = resources
+                .getQuantityString(R.plurals.arrow, binding.arrows.progress,
+                        binding.arrows.progress)
     }
 
     private fun loadRoundDefaultValues() {
-        binding!!.distance.setItem(SettingsManager.distance)
-        binding!!.arrows.progress = SettingsManager.shotsPerEnd
-        binding!!.target.setItem(SettingsManager.target)
+        binding.distance.setItem(SettingsManager.distance)
+        binding.arrows.progress = SettingsManager.shotsPerEnd
+        binding.target.setItem(SettingsManager.target)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
-        binding!!.target.onActivityResult(requestCode, resultCode, data)
-        binding!!.distance.onActivityResult(requestCode, resultCode, data)
+        binding.target.onActivityResult(requestCode, resultCode, data)
+        binding.distance.onActivityResult(requestCode, resultCode, data)
     }
 
     companion object {
@@ -150,12 +149,12 @@ class EditRoundFragment : EditFragmentBase() {
 
         fun createIntent(training: Training): IntentWrapper {
             return IntentWrapper(EditRoundActivity::class.java)
-                    .with(ITEM_ID, training.id!!)
+                    .with(ITEM_ID, training.id)
         }
 
         fun editIntent(training: Training, roundId: Long): IntentWrapper {
             return IntentWrapper(EditRoundActivity::class.java)
-                    .with(ITEM_ID, training.id!!)
+                    .with(ITEM_ID, training.id)
                     .with(ROUND_ID, roundId)
         }
     }

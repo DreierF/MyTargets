@@ -65,7 +65,7 @@ class ScoreboardFragment : FragmentBase() {
 
     private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
-        override fun onUpdate(trainingId: Long?, roundId: Long?, end: End) {
+        override fun onUpdate(trainingId: Long, roundId: Long, end: End) {
             if (this@ScoreboardFragment.roundId == roundId || trainingId == this@ScoreboardFragment.trainingId && this@ScoreboardFragment.roundId == -1L) {
                 reloadData()
             }

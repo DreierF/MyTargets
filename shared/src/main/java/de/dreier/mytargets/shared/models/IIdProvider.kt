@@ -15,5 +15,5 @@
 package de.dreier.mytargets.shared.models
 
 interface IIdProvider {
-    val id: Long?
+    val id: Long
 }

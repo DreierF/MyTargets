@@ -80,7 +80,7 @@ class CsvExporter(private val context: Context) {
         csv.add(if (t.bow == null) "" else t.bow!!.name)
         // Arrow
         csv.add(if (t.arrow == null) "" else t.arrow!!.name)
-        for (r in t.loadRounds()!!) {
+        for (r in t.loadRounds()) {
             if (!roundIds.contains(r.id)) {
                 continue
             }
@@ -100,13 +100,13 @@ class CsvExporter(private val context: Context) {
         val target = r.target
         csv.add(target.model.toString() + " (" + target.diameter!!
                 .toString() + ")")
-        for (e in r.loadEnds()!!) {
+        for (e in r.loadEnds()) {
             csv.enterScope()
             // End
             csv.add((e.index + 1).toString())
             // Timestamp
             csv.add(e.saveTime!!.format(DateTimeFormatter.ISO_LOCAL_TIME))
-            for ((_, index, _, x, y, scoringRing) in e.loadShots()!!) {
+            for ((_, index, _, x, y, scoringRing) in e.loadShots()) {
                 csv.enterScope()
                 // Score
                 csv.add(target.zoneToString(scoringRing, index))

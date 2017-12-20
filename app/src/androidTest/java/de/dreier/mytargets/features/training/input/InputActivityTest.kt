@@ -55,12 +55,12 @@ class InputActivityTest : UITestBase() {
 
             val (id) = saveDefaultTraining(standardRound!!.id, generator)
 
-            round1 = Round(standardRound.loadRounds()!![0])
+            round1 = Round(standardRound.loadRounds()[0])
             round1!!.trainingId = id
             round1!!.comment = ""
             round1!!.save()
 
-            val round2 = Round(standardRound.loadRounds()!![1])
+            val round2 = Round(standardRound.loadRounds()[1])
             round2.trainingId = id
             round2.comment = ""
             round2.save()

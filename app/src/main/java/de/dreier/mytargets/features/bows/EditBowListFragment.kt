@@ -91,7 +91,7 @@ class EditBowListFragment : EditableListFragment<Bow>() {
     }
 
     override fun onItemSelected(item: Bow) {
-        EditBowFragment.editIntent(item.id!!).withContext(this).start()
+        EditBowFragment.editIntent(item.id).withContext(this).start()
     }
 
     companion object {

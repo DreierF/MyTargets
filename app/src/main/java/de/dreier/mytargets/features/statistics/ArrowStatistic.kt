@@ -72,12 +72,12 @@ data class ArrowStatistic(
 
         fun getAll(target: Target, rounds: List<Round>): List<ArrowStatistic> {
             return rounds
-                    .groupBy { r -> r.training!!.arrowId ?: 0 }
+                    .groupBy { r -> r.training.arrowId ?: 0 }
                     .flatMap { t ->
                         val arrow = Arrow[t.key]
                         val name = arrow?.name ?: SharedApplicationInstance.getStr(R.string.unknown)
-                        t.value.flatMap { it.loadEnds()!! }
-                                .flatMap { it.loadShots()!! }
+                        t.value.flatMap { it.loadEnds() }
+                                .flatMap { it.loadShots() }
                                 .filter { it.arrowNumber != null }
                                 .groupBy {it.arrowNumber!! }
                                 .filter { it.value.size > 1 }

@@ -44,7 +44,7 @@ class ScoreboardActivityTest : UITestBase() {
         val trainings = Training.all
         Collections.sort(trainings, Collections.reverseOrder())
         val (id) = trainings[0]
-        activityTestRule.launchActivity(ScoreboardActivity.getIntent(id!!).build())
+        activityTestRule.launchActivity(ScoreboardActivity.getIntent(id).build())
 
 //        intending(anyOf(not(isInternal()), isInternal()))
 //                .respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, null))

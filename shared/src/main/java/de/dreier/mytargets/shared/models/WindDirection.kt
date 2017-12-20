@@ -26,7 +26,7 @@ import java.util.*
 @SuppressLint("ParcelCreator")
 @Parcelize
 data class WindDirection internal constructor(
-        override var id: Long?,
+        override var id: Long,
         override val name: String,
         var drawable: Int
 ) : IIdProvider, IImageProvider, Comparable<WindDirection>, Parcelable {

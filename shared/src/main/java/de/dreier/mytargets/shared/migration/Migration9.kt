@@ -174,13 +174,13 @@ class Migration9 : BaseMigration() {
                         (if (target == 4) 5 else target).toLong(), if (target == 5) 1 else 0)
                 template.distance = Dimension.from(res.getInt(2).toFloat(), res.getString(3))
                 template.endCount = res.getInt(4)
-                template.index = sr.loadRounds()!!.size
-                sr.loadRounds()!!.add(template)
+                template.index = sr.loadRounds().size
+                sr.loadRounds().add(template)
             } while (res.moveToNext())
         }
         res.close()
 
-        if (sr.loadRounds()!!.isEmpty()) {
+        if (sr.loadRounds().isEmpty()) {
             return 0L
         }
         insertStandardRound(db, sr)
@@ -215,14 +215,14 @@ class Migration9 : BaseMigration() {
             if (item.id == null) {
                 item.id = database
                         .insertWithOnConflict(SR_TABLE, null, values, SQLiteDatabase.CONFLICT_NONE)
-                for (r in item.loadRounds()!!) {
+                for (r in item.loadRounds()) {
                     r.standardRound = item.id
                 }
             } else {
                 values.put(SR_ID, item.id)
                 database.insertWithOnConflict(SR_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE)
             }
-            for (template in item.loadRounds()!!) {
+            for (template in item.loadRounds()) {
                 template.standardRound = item.id
                 insertRoundTemplate(database, template)
             }

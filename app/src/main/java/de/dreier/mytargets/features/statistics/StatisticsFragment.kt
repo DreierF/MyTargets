@@ -47,7 +47,6 @@ import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.utils.Color
-import de.dreier.mytargets.shared.utils.LongUtils
 import de.dreier.mytargets.shared.utils.SharedUtils
 import de.dreier.mytargets.utils.MobileWearableClient
 import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
@@ -72,8 +71,8 @@ class StatisticsFragment : FragmentBase() {
 
     private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
-        override fun onUpdate(trainingId: Long?, roundId: Long?, end: End) {
-            if (LongUtils.toList(roundIds!!)
+        override fun onUpdate(trainingId: Long, roundId: Long, end: End) {
+            if (roundIds!!
                     .any { r -> SharedUtils.equals(r, roundId) }) {
                 reloadData()
             }
@@ -83,8 +82,8 @@ class StatisticsFragment : FragmentBase() {
     private val hitMissText: String
         get() {
             val shots = rounds!!
-                    .flatMap { r -> r.loadEnds()!! }
-                    .flatMap { p -> p.loadShots()!! }
+                    .flatMap { r -> r.loadEnds() }
+                    .flatMap { p -> p.loadShots() }
                     .filter { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }
             val missCount = shots.filter { (_, _, _, _, _, scoringRing) -> scoringRing == Shot.MISS }.count().toLong()
             val hitCount = shots.size - missCount
@@ -107,7 +106,7 @@ class StatisticsFragment : FragmentBase() {
             val values = rounds!!
                     .map { r -> Pair(trainingsMap[r.trainingId]!!.date, r) }
                     .flatMap { roundIdPair ->
-                        roundIdPair.second.loadEnds()!!
+                        roundIdPair.second.loadEnds()
                                 .map { end -> Pair(roundIdPair.first, end) }
                     }
                     .map { endPair -> getPairEndSummary(target!!, endPair.second, endPair.first!!) }
@@ -184,9 +183,9 @@ class StatisticsFragment : FragmentBase() {
 
     private fun showDispersionView() {
         val exactShots = rounds!!
-                .flatMap { r -> r.loadEnds()!! }
+                .flatMap { r -> r.loadEnds() }
                 .filter { (_, _, _, exact) -> exact }
-                .flatMap { p -> p.loadShots()!! }
+                .flatMap { p -> p.loadShots() }
                 .filter { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }
                 .toList()
         if (exactShots.isEmpty()) {
@@ -525,7 +524,7 @@ class StatisticsFragment : FragmentBase() {
             val fragment = StatisticsFragment()
             val bundle = Bundle()
             bundle.putParcelable(StatisticsFragment.ARG_TARGET, item)
-            bundle.putLongArray(StatisticsFragment.ARG_ROUND_IDS, LongUtils.toArray(roundIds))
+            bundle.putLongArray(StatisticsFragment.ARG_ROUND_IDS, roundIds.toLongArray())
             bundle.putBoolean(StatisticsFragment.ARG_ANIMATE, animate)
             fragment.arguments = bundle
             return fragment

@@ -34,12 +34,12 @@ import kotlinx.android.parcel.Parcelize
 @SuppressLint("ParcelCreator")
 @Parcelize
 data class Target(
-        override var id: Long? = 0,
+        override var id: Long = 0,
         var scoringStyleIndex: Int = 0,
         var diameter: Dimension? = null
 ) : IIdProvider, IImageProvider, IDetailProvider, Comparable<Target>, Parcelable {
 
-    val model: TargetModelBase by lazy { TargetFactory.getTarget(id!!.toInt()) }
+    val model: TargetModelBase by lazy { TargetFactory.getTarget(id.toInt()) }
     val drawable: TargetDrawable by lazy { TargetDrawable(this) }
     val impactAggregationDrawable: TargetImpactAggregationDrawable by lazy {
         TargetImpactAggregationDrawable(this)

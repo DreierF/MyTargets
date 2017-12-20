@@ -18,7 +18,8 @@ package de.dreier.mytargets.features.training.details
 import android.content.Context
 import android.text.TextUtils
 import de.dreier.mytargets.R
-import de.dreier.mytargets.shared.models.db.*
+import de.dreier.mytargets.shared.models.db.Round
+import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.utils.SharedUtils
 
 object HtmlUtils {
@@ -42,19 +43,19 @@ object HtmlUtils {
             }
         }
 
-        val bow = Bow[training.bowId]
+        val bow = training.bow
         if (bow != null) {
             info.addLine(R.string.bow, bow.name)
         }
 
-        val arrow = Arrow[training.arrowId]
+        val arrow = training.arrow
         if (arrow != null) {
             info.addLine(R.string.arrow, arrow.name)
         }
 
-        if (training.standardRoundId != null) {
-            val standardRound = StandardRound[training.standardRoundId]
-            info.addLine(R.string.standard_round, standardRound!!.name)
+        val standardRound = training.standardRound
+        if (standardRound != null) {
+            info.addLine(R.string.standard_round, standardRound.name)
         }
     }
 

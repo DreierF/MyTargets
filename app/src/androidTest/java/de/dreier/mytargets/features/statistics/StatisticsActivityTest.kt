@@ -46,8 +46,8 @@ class StatisticsActivityTest : UITestBase() {
     fun navigationTest() {
         // Add round ids
         val roundIds = Training.all
-                .flatMap { t -> t.loadRounds()!! }
-                .map { it.id!! }
+                .flatMap { t -> t.loadRounds() }
+                .map { it.id }
                 .toList()
         activityTestRule.launchActivity(StatisticsActivity.getIntent(roundIds).build())
 

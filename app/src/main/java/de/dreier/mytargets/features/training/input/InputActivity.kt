@@ -83,10 +83,10 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
 
     private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
-        override fun onUpdate(trainingId: Long?, roundId: Long?, end: End) {
+        override fun onUpdate(trainingId: Long, roundId: Long, end: End) {
             val extras = intent.extras
-            extras!!.putLong(TRAINING_ID, trainingId!!)
-            extras.putLong(ROUND_ID, roundId!!)
+            extras.putLong(TRAINING_ID, trainingId)
+            extras.putLong(ROUND_ID, roundId)
             extras.putInt(END_INDEX, end.index)
             supportLoaderManager.restartLoader(0, extras, this@InputActivity).forceLoad()
         }
@@ -497,8 +497,8 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
 
         fun getIntent(round: Round, endIndex: Int): IntentWrapper {
             return IntentWrapper(InputActivity::class.java)
-                    .with(TRAINING_ID, round.trainingId!!)
-                    .with(ROUND_ID, round.id!!)
+                    .with(TRAINING_ID, round.trainingId)
+                    .with(ROUND_ID, round.id)
                     .with(END_INDEX, endIndex)
         }
 

@@ -29,7 +29,7 @@ data class AugmentedEnd(
         var shots: MutableList<Shot>,
         var images: MutableList<EndImage>
 ) : Parcelable {
-    constructor(end: End) : this(end, end.loadShots()!!.toMutableList(), end.loadImages()!!.toMutableList())
+    constructor(end: End) : this(end, end.loadShots().toMutableList(), end.loadImages().toMutableList())
 
     fun toEnd(): End {
         end.shots = shots
