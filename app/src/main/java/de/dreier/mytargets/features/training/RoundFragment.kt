@@ -27,7 +27,7 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
 import de.dreier.mytargets.base.fragments.EditableListFragment
 import de.dreier.mytargets.base.fragments.FragmentBase
-import de.dreier.mytargets.base.fragments.FragmentBase.LoaderUICallback
+import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
 import de.dreier.mytargets.databinding.FragmentListBinding
 import de.dreier.mytargets.databinding.ItemEndBinding
@@ -64,8 +64,8 @@ class RoundFragment : EditableListFragment<End>() {
         itemTypeDelRes = R.plurals.passe_deleted
         actionModeCallback = ItemActionModeCallback(this, selector,
                 R.plurals.passe_selected)
-        actionModeCallback.setEditCallback(this::onEdit)
-        actionModeCallback.setDeleteCallback(this::onDelete)
+        actionModeCallback?.setEditCallback(this::onEdit)
+        actionModeCallback?.setDeleteCallback(this::onDelete)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -109,12 +109,12 @@ class RoundFragment : EditableListFragment<End>() {
         ToolbarUtils.showHomeAsUp(this)
     }
 
-    override fun onLoad(args: Bundle?): FragmentBase.LoaderUICallback {
+    override fun onLoad(args: Bundle?): LoaderUICallback {
         round = Round[roundId]
         val ends = round!!.loadEnds()
         val showFab = round!!.maxEndCount == null || ends!!.size < round!!.maxEndCount!!
 
-        return LoaderUICallback {
+        return {
             adapter!!.setList(ends!!)
             binding.fab.visibility = if (showFab) View.VISIBLE else View.GONE
 

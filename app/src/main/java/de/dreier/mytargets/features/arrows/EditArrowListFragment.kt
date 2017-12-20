@@ -24,9 +24,8 @@ import android.view.ViewGroup
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
 import de.dreier.mytargets.base.fragments.EditableListFragment
-import de.dreier.mytargets.base.fragments.FragmentBase
-import de.dreier.mytargets.base.fragments.FragmentBase.LoaderUICallback
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
+import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentArrowsBinding
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding
 import de.dreier.mytargets.shared.models.db.Arrow
@@ -41,8 +40,8 @@ class EditArrowListFragment : EditableListFragment<Arrow>() {
     init {
         itemTypeDelRes = R.plurals.arrow_deleted
         actionModeCallback = ItemActionModeCallback(this, selector, R.plurals.arrow_selected)
-        actionModeCallback.setEditCallback({ this.onEdit(it) })
-        actionModeCallback.setDeleteCallback({ this.onDelete(it) })
+        actionModeCallback?.setEditCallback({ this.onEdit(it) })
+        actionModeCallback?.setDeleteCallback({ this.onDelete(it) })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,9 +66,9 @@ class EditArrowListFragment : EditableListFragment<Arrow>() {
         return binding.root
     }
 
-    override fun onLoad(args: Bundle?): FragmentBase.LoaderUICallback {
+    override fun onLoad(args: Bundle?): LoaderUICallback {
         val arrows = Arrow.all
-        return LoaderUICallback {
+        return {
             adapter!!.setList(arrows.toMutableList())
             binding.emptyState!!.root.visibility = if (arrows.isEmpty()) View.VISIBLE else View.GONE
         }

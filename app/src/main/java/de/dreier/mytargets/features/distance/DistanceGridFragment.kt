@@ -25,7 +25,7 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
 import de.dreier.mytargets.base.fragments.FragmentBase
-import de.dreier.mytargets.base.fragments.FragmentBase.LoaderUICallback
+import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.SelectItemFragmentBase
 import de.dreier.mytargets.databinding.FragmentListBinding
 import de.dreier.mytargets.databinding.ItemDistanceBinding
@@ -72,9 +72,9 @@ class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapter
         finish()
     }
 
-    override fun onLoad(args: Bundle?): FragmentBase.LoaderUICallback {
+    override fun onLoad(args: Bundle?): LoaderUICallback {
         val distances = Dimension.getAll(distance!!, unit!!)
-        return LoaderUICallback {
+        return {
             adapter!!.setList(distances.toMutableList())
             selectItem(binding.recyclerView, distance!!)
         }

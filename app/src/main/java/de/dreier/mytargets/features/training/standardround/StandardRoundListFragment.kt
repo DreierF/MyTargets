@@ -31,7 +31,7 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
 import de.dreier.mytargets.base.adapters.header.HeaderListAdapter
 import de.dreier.mytargets.base.fragments.FragmentBase
-import de.dreier.mytargets.base.fragments.FragmentBase.LoaderUICallback
+import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.SelectItemFragmentBase
 import de.dreier.mytargets.databinding.FragmentListBinding
 import de.dreier.mytargets.databinding.ItemStandardRoundBinding
@@ -82,7 +82,7 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
         return binding.root
     }
 
-    override fun onLoad(args: Bundle?): FragmentBase.LoaderUICallback {
+    override fun onLoad(args: Bundle?): LoaderUICallback {
         val data: List<StandardRound>
         data = if (args != null && args.containsKey(KEY_QUERY)) {
             val query = args.getString(KEY_QUERY)
@@ -90,7 +90,7 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
         } else {
             StandardRound.all
         }
-        return LoaderUICallback {
+        return {
             adapter!!.setList(data.toMutableList())
             selectItem(binding.recyclerView, currentSelection!!)
         }

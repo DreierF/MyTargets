@@ -17,16 +17,15 @@ package de.dreier.mytargets.features.arrows
 
 import android.os.Bundle
 import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
-import de.dreier.mytargets.base.fragments.FragmentBase
-import de.dreier.mytargets.base.fragments.FragmentBase.LoaderUICallback
+import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase
 import de.dreier.mytargets.shared.models.db.Arrow
 
 class ArrowListFragment : SelectPureListItemFragmentBase<Arrow>() {
 
-    override fun onLoad(args: Bundle?): FragmentBase.LoaderUICallback {
+    override fun onLoad(args: Bundle?): LoaderUICallback {
         val arrows = Arrow.all
-        return LoaderUICallback {
+        return {
             adapter!!.setList(arrows.toMutableList())
             val arrow = arguments!!.getParcelable<Arrow>(ITEM)
             selectItem(binding.recyclerView, arrow!!)

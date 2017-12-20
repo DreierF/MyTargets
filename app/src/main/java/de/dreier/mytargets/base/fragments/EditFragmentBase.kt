@@ -12,32 +12,29 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.base.fragments;
+package de.dreier.mytargets.base.fragments
 
-import android.app.Activity;
-import android.support.annotation.NonNull;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.app.Activity
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 
-import de.dreier.mytargets.R;
+import de.dreier.mytargets.R
 
-public abstract class EditFragmentBase extends FragmentBase {
+abstract class EditFragmentBase : FragmentBase() {
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.save, menu);
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
+        inflater.inflate(R.menu.save, menu)
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_save) {
-            getActivity().setResult(Activity.RESULT_OK);
-            onSave();
-            return true;
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_save) {
+            activity!!.setResult(Activity.RESULT_OK)
+            onSave()
+            return true
         }
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item)
     }
 
-    protected abstract void onSave();
+    protected abstract fun onSave()
 }

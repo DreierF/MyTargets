@@ -28,7 +28,7 @@ import android.widget.DatePicker
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.activities.ItemSelectActivity
 import de.dreier.mytargets.base.fragments.EditFragmentBase
-import de.dreier.mytargets.base.fragments.EditableListFragmentBase.ITEM_ID
+import de.dreier.mytargets.base.fragments.EditableListFragmentBase.Companion.ITEM_ID
 import de.dreier.mytargets.databinding.FragmentEditTrainingBinding
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.features.training.ETrainingType

@@ -18,15 +18,15 @@ package de.dreier.mytargets.features.bows
 import android.os.Bundle
 import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
 import de.dreier.mytargets.base.fragments.FragmentBase
-import de.dreier.mytargets.base.fragments.FragmentBase.LoaderUICallback
+import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase
 import de.dreier.mytargets.shared.models.db.Bow
 
 class BowListFragment : SelectPureListItemFragmentBase<Bow>() {
 
-    override fun onLoad(args: Bundle?): FragmentBase.LoaderUICallback {
+    override fun onLoad(args: Bundle?): LoaderUICallback {
         val bows = Bow.all
-        return LoaderUICallback {
+        return {
             adapter!!.setList(bows.toMutableList())
             val bow = arguments!!.getParcelable<Bow>(ITEM)
             selectItem(binding.recyclerView, bow!!)

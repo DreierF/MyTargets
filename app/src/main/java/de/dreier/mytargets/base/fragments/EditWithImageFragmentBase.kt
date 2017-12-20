@@ -13,241 +13,211 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.base.fragments;
+package de.dreier.mytargets.base.fragments
 
-import android.Manifest;
-import android.content.Intent;
-import android.databinding.DataBindingUtil;
-import android.os.Bundle;
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.widget.PopupMenu;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-
-import com.evernote.android.state.State;
-import com.squareup.picasso.Picasso;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.databinding.FragmentEditImageBinding;
-import de.dreier.mytargets.shared.models.Thumbnail;
-import de.dreier.mytargets.shared.models.db.Image;
-import de.dreier.mytargets.shared.utils.FileUtils;
-import de.dreier.mytargets.utils.ToolbarUtils;
-import de.dreier.mytargets.utils.transitions.FabTransform;
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.RuntimePermissions;
-import pl.aprilapps.easyphotopicker.DefaultCallback;
-import pl.aprilapps.easyphotopicker.EasyImage;
-
-import static de.dreier.mytargets.base.fragments.EditWithImageFragmentBasePermissionsDispatcher.onSelectImageWithPermissionCheck;
-import static de.dreier.mytargets.base.fragments.EditWithImageFragmentBasePermissionsDispatcher.onTakePictureWithPermissionCheck;
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.databinding.DataBindingUtil
+import android.os.Bundle
+import android.support.annotation.CallSuper
+import android.support.design.widget.AppBarLayout
+import android.support.design.widget.CoordinatorLayout
+import android.support.v7.widget.PopupMenu
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
+import com.evernote.android.state.State
+import com.squareup.picasso.Picasso
+import de.dreier.mytargets.R
+import de.dreier.mytargets.databinding.FragmentEditImageBinding
+import de.dreier.mytargets.shared.models.Thumbnail
+import de.dreier.mytargets.shared.models.db.Image
+import de.dreier.mytargets.shared.utils.FileUtils
+import de.dreier.mytargets.utils.ToolbarUtils
+import de.dreier.mytargets.utils.transitions.FabTransform
+import permissions.dispatcher.NeedsPermission
+import permissions.dispatcher.RuntimePermissions
+import pl.aprilapps.easyphotopicker.DefaultCallback
+import pl.aprilapps.easyphotopicker.EasyImage
+import java.io.File
+import java.io.IOException
 
 @RuntimePermissions
-public abstract class EditWithImageFragmentBase<T extends Image> extends EditFragmentBase implements View.OnFocusChangeListener {
+abstract class EditWithImageFragmentBase<T : Image> protected constructor(
+        private val defaultDrawable: Int,
+        private val clazz: Class<T>
+) : EditFragmentBase(), View.OnFocusChangeListener {
 
-    private final int defaultDrawable;
-    private final Class<T> clazz;
+    protected lateinit var binding: FragmentEditImageBinding
 
-    protected FragmentEditImageBinding binding;
-
-    @Nullable
     @State
-    protected File imageFile = null;
+    var imageFile: File? = null
 
-    @Nullable
     @State
-    File oldImageFile = null;
+    var oldImageFile: File? = null
 
-    protected EditWithImageFragmentBase(int defaultDrawable, Class<T> clazz) {
-        this.defaultDrawable = defaultDrawable;
-        this.clazz = clazz;
-    }
+    protected var imageFiles: List<T>
+        get() {
+            if (imageFile == null) {
+                return emptyList()
+            } else {
+                val image: T
+                try {
+                    image = clazz.newInstance()
+                } catch (e: java.lang.InstantiationException) {
+                    e.printStackTrace()
+                    return emptyList()
+                } catch (e: IllegalAccessException) {
+                    e.printStackTrace()
+                    return emptyList()
+                }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit_image, container, false);
-        ToolbarUtils.INSTANCE.setSupportActionBar(this, binding.toolbar);
-        ToolbarUtils.INSTANCE.showUpAsX(this);
-        setHasOptionsMenu(true);
-        binding.fab.setOnClickListener(this::onFabClicked);
-        return binding.getRoot();
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setFocusListenerForAllEditText(getView());
-        FabTransform.Companion.setup(getActivity(), binding.getRoot());
-    }
-
-    private void setFocusListenerForAllEditText(View view) {
-        if (view instanceof ViewGroup) {
-            ViewGroup viewGroup = (ViewGroup) view;
-            for (int i = 0; i < viewGroup.getChildCount(); i++) {
-                setFocusListenerForAllEditText(viewGroup.getChildAt(i));
+                image.fileName = imageFile!!.name
+                return listOf(image)
             }
-        } else if (view instanceof EditText) {
-            view.setOnFocusChangeListener(this);
+        }
+        set(images) {
+            if (images.isEmpty()) {
+                imageFile = null
+                binding.imageView.setImageResource(defaultDrawable)
+            } else {
+                imageFile = File(context!!.filesDir, images[0].fileName)
+                if (!imageFile!!.exists()) {
+                    imageFile = null
+                    binding.imageView.setImageResource(defaultDrawable)
+                }
+            }
+        }
+
+    protected val thumbnail: Thumbnail
+        get() = if (imageFile == null) {
+            Thumbnail.from(context!!, defaultDrawable)
+        } else Thumbnail.from(imageFile!!)
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit_image, container, false)
+        ToolbarUtils.setSupportActionBar(this, binding.toolbar)
+        ToolbarUtils.showUpAsX(this)
+        setHasOptionsMenu(true)
+        binding.fab.setOnClickListener { this.onFabClicked(it) }
+        return binding.root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        setFocusListenerForAllEditText(view)
+        FabTransform.setup(activity!!, binding.root)
+    }
+
+    private fun setFocusListenerForAllEditText(view: View?) {
+        if (view is ViewGroup) {
+            val viewGroup = view as ViewGroup?
+            for (i in 0 until viewGroup!!.childCount) {
+                setFocusListenerForAllEditText(viewGroup.getChildAt(i))
+            }
+        } else if (view is EditText) {
+            view.onFocusChangeListener = this
         }
     }
 
-    @Override
-    public void onFocusChange(@NonNull View v, boolean hasFocus) {
+    override fun onFocusChange(v: View, hasFocus: Boolean) {
         if (hasFocus) {
-            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) binding.appBarLayout
-                    .getLayoutParams();
-            AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
-            if (behavior != null) {
-                behavior.onNestedFling(binding.coordinatorLayout, binding.appBarLayout, null, 0,
-                        v.getBottom(), true);
-            }
+            val params = binding.appBarLayout
+                    .layoutParams as CoordinatorLayout.LayoutParams
+            val behavior = params.behavior as AppBarLayout.Behavior?
+            behavior?.onNestedFling(binding.coordinatorLayout, binding.appBarLayout, v, 0f,
+                    v.bottom.toFloat(), true)
         }
     }
 
-    private void onFabClicked(@NonNull View v) {
-        PopupMenu popup = new PopupMenu(v.getContext(), v);
-        popup.inflate(R.menu.context_menu_image);
-        popup.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.action_from_gallery:
-                    onSelectImageWithPermissionCheck(this);
-                    return true;
-                case R.id.action_take_picture:
-                    onTakePictureWithPermissionCheck(this);
-                    return true;
-                default:
-                    return false;
+    private fun onFabClicked(v: View) {
+        val popup = PopupMenu(v.context, v)
+        popup.inflate(R.menu.context_menu_image)
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_from_gallery -> {
+                    onSelectImageWithPermissionCheck()
+                    true
+                }
+                R.id.action_take_picture -> {
+                    onTakePictureWithPermissionCheck()
+                    true
+                }
+                else -> false
             }
-        });
-        popup.show();
+        }
+        popup.show()
     }
 
     @NeedsPermission(Manifest.permission.CAMERA)
-    void onTakePicture() {
-        EasyImage.openCamera(this, 0);
+    internal fun onTakePicture() {
+        EasyImage.openCamera(this, 0)
     }
 
     @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-    void onSelectImage() {
-        EasyImage.openGallery(this, 0);
+    internal fun onSelectImage() {
+        EasyImage.openGallery(this, 0)
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        EditWithImageFragmentBasePermissionsDispatcher
-                .onRequestPermissionsResult(this, requestCode, grantResults);
+    @SuppressLint("NeedOnRequestPermissionsResult")
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        onRequestPermissionsResult(requestCode, grantResults)
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        EasyImage.handleActivityResult(requestCode, resultCode, data, getActivity(),
-                new DefaultCallback() {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        EasyImage.handleActivityResult(requestCode, resultCode, data, activity,
+                object : DefaultCallback() {
 
-                    @Override
-                    public void onImagesPicked(@NonNull List<File> imageFiles, EasyImage.ImageSource source, int type) {
-                        EditWithImageFragmentBase.this.oldImageFile = EditWithImageFragmentBase.this.imageFile;
-                        loadImage(imageFiles.get(0));
+                    override fun onImagesPicked(imageFiles: List<File>, source: EasyImage.ImageSource, type: Int) {
+                        this@EditWithImageFragmentBase.oldImageFile = this@EditWithImageFragmentBase.imageFile
+                        loadImage(imageFiles[0])
                     }
 
-                    @Override
-                    public void onCanceled(EasyImage.ImageSource source, int type) {
+                    override fun onCanceled(source: EasyImage.ImageSource?, type: Int) {
                         //Cancel handling, you might wanna remove taken photo if it was canceled
                         if (source == EasyImage.ImageSource.CAMERA) {
-                            File photoFile = EasyImage.lastlyTakenButCanceledPhoto(getContext());
-                            if (photoFile != null) {
-                                photoFile.delete();
-                            }
+                            val photoFile = EasyImage.lastlyTakenButCanceledPhoto(context!!)
+                            photoFile?.delete()
                         }
                     }
-                });
+                })
     }
 
-    protected void loadImage(@Nullable final File imageFile) {
-        this.imageFile = imageFile;
+    protected fun loadImage(imageFile: File?) {
+        this.imageFile = imageFile
         if (imageFile == null) {
-            binding.imageView.setImageResource(defaultDrawable);
+            binding.imageView.setImageResource(defaultDrawable)
         } else {
-            Picasso.with(getContext())
+            Picasso.with(context)
                     .load(imageFile)
                     .fit()
                     .centerCrop()
-                    .into(binding.imageView);
+                    .into(binding.imageView)
         }
     }
 
     @CallSuper
-    @Override
-    protected void onSave() {
+    override fun onSave() {
         // Delete old file
         if (oldImageFile != null) {
-            File f = oldImageFile;
-            //noinspection ResultOfMethodCallIgnored
-            f.delete();
+            val f = oldImageFile
+
+            f!!.delete()
         }
         if (imageFile != null) {
             try {
-                oldImageFile = imageFile;
+                oldImageFile = imageFile
                 imageFile = File
-                        .createTempFile("img", oldImageFile.getName(), getContext().getFilesDir());
-                FileUtils.INSTANCE.copy(oldImageFile, imageFile);
-            } catch (IOException e) {
-                e.printStackTrace();
+                        .createTempFile("img", oldImageFile!!.name, context!!.filesDir)
+                FileUtils.copy(oldImageFile!!, imageFile!!)
+            } catch (e: IOException) {
+                e.printStackTrace()
             }
-        }
-    }
 
-    protected void setImageFiles(@NonNull List<T> images) {
-        if (images.isEmpty()) {
-            imageFile = null;
-            binding.imageView.setImageResource(defaultDrawable);
-        } else {
-            imageFile = new File(getContext().getFilesDir(), images.get(0).getFileName());
-            if (!imageFile.exists()) {
-                imageFile = null;
-                binding.imageView.setImageResource(defaultDrawable);
-            }
         }
-    }
-
-    @NonNull
-    protected List<T> getImageFiles() {
-        if (imageFile == null) {
-            return Collections.emptyList();
-        } else {
-            T image;
-            try {
-                image = clazz.newInstance();
-            } catch (java.lang.InstantiationException e) {
-                e.printStackTrace();
-                return Collections.emptyList();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-                return Collections.emptyList();
-            }
-            image.setFileName(imageFile.getName());
-            return Collections.singletonList(image);
-        }
-    }
-
-    @NonNull
-    protected Thumbnail getThumbnail() {
-        if (imageFile == null) {
-            return Thumbnail.Companion.from(getContext(), defaultDrawable);
-        }
-        return Thumbnail.Companion.from(imageFile);
     }
 }

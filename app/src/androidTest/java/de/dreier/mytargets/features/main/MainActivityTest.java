@@ -134,7 +134,7 @@ public class MainActivityTest extends UITestBase {
                 .findFirstOrNull();
 
         intended(allOf(hasClass(TrainingActivity.class),
-                hasExtra(ITEM_ID, firstTraining.getId())));
+                hasExtra(Companion.getITEM_ID(), firstTraining.getId())));
 
         // openStatistics_allTrainings
         clickActionBarItem(R.id.action_statistics, R.string.statistic);

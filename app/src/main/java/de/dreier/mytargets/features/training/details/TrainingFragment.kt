@@ -27,9 +27,8 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
 import de.dreier.mytargets.base.fragments.EditableListFragment
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase
-import de.dreier.mytargets.base.fragments.FragmentBase
-import de.dreier.mytargets.base.fragments.FragmentBase.LoaderUICallback
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
+import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentTrainingBinding
 import de.dreier.mytargets.databinding.ItemRoundBinding
 import de.dreier.mytargets.features.rounds.EditRoundFragment
@@ -69,8 +68,8 @@ open class TrainingFragment : EditableListFragment<Round>() {
         itemTypeDelRes = R.plurals.round_deleted
         actionModeCallback = ItemActionModeCallback(this, selector,
                 R.plurals.round_selected)
-        actionModeCallback.setEditCallback { this.onEdit(it) }
-        actionModeCallback.setStatisticsCallback { this.onStatistics(it) }
+        actionModeCallback?.setEditCallback { this.onEdit(it) }
+        actionModeCallback?.setStatisticsCallback { this.onStatistics(it) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -117,16 +116,16 @@ open class TrainingFragment : EditableListFragment<Round>() {
         setHasOptionsMenu(true)
     }
 
-    override fun onLoad(args: Bundle?): FragmentBase.LoaderUICallback {
+    override fun onLoad(args: Bundle?): LoaderUICallback {
         training = Training[trainingId]
         val rounds = training!!.loadRounds() //FIXME can be null!?
-        return LoaderUICallback {
+        return {
             // Hide fab for standard rounds
             val supportsDeletion = training!!.standardRoundId == null
             if (supportsDeletion) {
-                actionModeCallback.setDeleteCallback { this.onDelete(it) }
+                actionModeCallback?.setDeleteCallback { this.onDelete(it) }
             } else {
-                actionModeCallback.setDeleteCallback(null)
+                actionModeCallback?.setDeleteCallback(null)
             }
             binding.fab.visibility = if (supportsDeletion) View.VISIBLE else View.GONE
 

@@ -13,24 +13,23 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.base.fragments;
+package de.dreier.mytargets.base.fragments
 
-import android.os.Parcelable;
+import android.os.Parcelable
+import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
+import de.dreier.mytargets.shared.models.IIdSettable
+import de.dreier.mytargets.shared.models.IRecursiveModel
 
-import de.dreier.mytargets.base.adapters.SimpleListAdapterBase;
-import de.dreier.mytargets.shared.models.IIdSettable;
-import de.dreier.mytargets.shared.models.IRecursiveModel;
+abstract class EditableListFragment<T> : EditableListFragmentBase<T, SimpleListAdapterBase<T>>() where T : IIdSettable, T : IRecursiveModel, T : Parcelable, T : Comparable<T> {
 
-public abstract class EditableListFragment<T extends IIdSettable & IRecursiveModel & Comparable<T> & Parcelable> extends EditableListFragmentBase<T, SimpleListAdapterBase<T>> {
-
-    protected final void onSelected(T item) {
+    override fun onSelected(item: T) {
         if (listener == null) {
-            onItemSelected(item);
+            onItemSelected(item)
         } else {
-            listener.onItemSelected(item);
-            finish();
+            listener.onItemSelected(item)
+            finish()
         }
     }
 
-    protected abstract void onItemSelected(T item);
+    protected abstract fun onItemSelected(item: T)
 }

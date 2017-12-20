@@ -25,7 +25,7 @@ import android.view.ViewGroup
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.fragments.EditableListFragment
 import de.dreier.mytargets.base.fragments.FragmentBase
-import de.dreier.mytargets.base.fragments.FragmentBase.LoaderUICallback
+import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
 import de.dreier.mytargets.databinding.FragmentBowsBinding
 import de.dreier.mytargets.shared.models.EBowType
@@ -42,8 +42,8 @@ class EditBowListFragment : EditableListFragment<Bow>() {
         itemTypeDelRes = R.plurals.bow_deleted
         actionModeCallback = ItemActionModeCallback(this, selector,
                 R.plurals.bow_selected)
-        actionModeCallback.setEditCallback(this::onEdit)
-        actionModeCallback.setDeleteCallback(this::onDelete)
+        actionModeCallback?.setEditCallback(this::onEdit)
+        actionModeCallback?.setDeleteCallback(this::onDelete)
     }
 
     override fun onResume() {
@@ -76,9 +76,9 @@ class EditBowListFragment : EditableListFragment<Bow>() {
         return binding.root
     }
 
-    override fun onLoad(args: Bundle?): FragmentBase.LoaderUICallback {
+    override fun onLoad(args: Bundle?): LoaderUICallback {
         val bows = Bow.all
-        return LoaderUICallback {
+        return {
             adapter!!.setList(bows.toMutableList())
             binding.emptyState!!.root.visibility = if (bows.isEmpty()) View.VISIBLE else View.GONE
         }
