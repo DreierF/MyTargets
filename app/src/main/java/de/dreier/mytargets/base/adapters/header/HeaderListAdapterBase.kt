@@ -13,230 +13,179 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.base.adapters.header;
+package de.dreier.mytargets.base.adapters.header
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.ViewGroup;
+import android.view.ViewGroup
+import de.dreier.mytargets.base.adapters.ListAdapterBase
+import de.dreier.mytargets.shared.models.IIdProvider
+import de.dreier.mytargets.utils.multiselector.HeaderBindingHolder
+import de.dreier.mytargets.utils.multiselector.ItemBindingHolder
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
+import java.util.*
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+abstract class HeaderListAdapterBase<P : IIdProvider, C : IIdProvider, H : HeaderListAdapterBase.HeaderHolder<P, C>>(private val partitionDelegate: PartitionDelegate<P, C>, private val headerComparator: Comparator<P>, private val childComparator: Comparator<C>) : ListAdapterBase<ItemBindingHolder<IIdProvider>, C>() {
+    protected var headersList: MutableList<H> = ArrayList()
 
-import de.dreier.mytargets.base.adapters.ListAdapterBase;
-import de.dreier.mytargets.shared.models.IIdProvider;
-import de.dreier.mytargets.utils.multiselector.HeaderBindingHolder;
-import de.dreier.mytargets.utils.multiselector.ItemBindingHolder;
-import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
-
-public abstract class HeaderListAdapterBase<P extends IIdProvider, C extends IIdProvider,
-        H extends HeaderListAdapterBase.HeaderHolder<P, C>>
-        extends ListAdapterBase<ItemBindingHolder<IIdProvider>, C> {
-
-    private static final int ITEM_TYPE = 2;
-    private static final int HEADER_TYPE = 1;
-    @NonNull
-    protected List<H> headersList = new ArrayList<>();
-    private PartitionDelegate<P, C> partitionDelegate;
-    private Comparator<P> headerComparator;
-    private Comparator<C> childComparator;
-
-    public HeaderListAdapterBase(PartitionDelegate<P, C> partitionDelegate, Comparator<P> headerComparator, Comparator<C> childComparator) {
-        this.partitionDelegate = partitionDelegate;
-        this.headerComparator = headerComparator;
-        this.childComparator = childComparator;
-        setHasStableIds(true);
+    init {
+        setHasStableIds(true)
     }
 
-    @Nullable
-    @Override
-    public C getItem(int position) {
-        H header = getHeaderForPosition(position);
-        int pos = getHeaderRelativePosition(position);
-        if (pos != 0) {
-            return header.children.get(pos - 1);
+    override fun getItem(position: Int): C? {
+        val header = getHeaderForPosition(position)
+        val pos = getHeaderRelativePosition(position)
+        return if (pos != 0) {
+            header.children[pos - 1]
+        } else null
+    }
+
+    override fun getItemId(position: Int): Long {
+        val header = getHeaderForPosition(position)
+        val pos = getHeaderRelativePosition(position)
+        return if (pos == 0) {
+            header.item.id!!
+        } else {
+            header.children[pos - 1].id!!
         }
-        return null;
     }
 
-    @Override
-    public long getItemId(int position) {
-        H header = getHeaderForPosition(position);
-        int pos = getHeaderRelativePosition(position);
+    override fun getItemCount(): Int {
+        return headersList.sumBy { it.totalItemCount }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (getHeaderRelativePosition(position) == 0) HEADER_TYPE else ITEM_TYPE
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemBindingHolder<IIdProvider> {
+        return if (viewType == HEADER_TYPE) {
+            getTopLevelViewHolder(parent) as ItemBindingHolder<IIdProvider>
+        } else {
+            getSecondLevelViewHolder(parent) as ItemBindingHolder<IIdProvider>
+        }
+    }
+
+    protected abstract fun getTopLevelViewHolder(parent: ViewGroup): HeaderBindingHolder<P>
+
+    protected abstract fun getSecondLevelViewHolder(parent: ViewGroup): SelectableViewHolder<C>
+
+    override fun onBindViewHolder(viewHolder: ItemBindingHolder<IIdProvider>, position: Int) {
+        val header = getHeaderForPosition(position)
+        val pos = getHeaderRelativePosition(position)
         if (pos == 0) {
-            return header.item.getId();
+            viewHolder.internalBindItem(header.item)
         } else {
-            return header.children.get(pos - 1).getId();
+            viewHolder.internalBindItem(header.children[pos - 1])
         }
     }
 
-    @Override
-    public int getItemCount() {
-        int count = 0;
-        for (HeaderHolder header : headersList) {
-            count += header.getTotalItemCount();
-        }
-        return count;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return getHeaderRelativePosition(position) == 0 ? HEADER_TYPE : ITEM_TYPE;
-    }
-
-    @NonNull
-    @SuppressWarnings("unchecked")
-    @Override
-    public ItemBindingHolder<IIdProvider> onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == HEADER_TYPE) {
-            return (ItemBindingHolder<IIdProvider>) getTopLevelViewHolder(parent);
-        } else {
-            return (ItemBindingHolder<IIdProvider>) getSecondLevelViewHolder(parent);
-        }
-    }
-
-    @NonNull
-    protected abstract HeaderBindingHolder<P> getTopLevelViewHolder(ViewGroup parent);
-
-    protected abstract SelectableViewHolder<C> getSecondLevelViewHolder(ViewGroup parent);
-
-    @Override
-    public void onBindViewHolder(@NonNull ItemBindingHolder<IIdProvider> viewHolder, int position) {
-        H header = getHeaderForPosition(position);
-        int pos = getHeaderRelativePosition(position);
-        if (pos == 0) {
-            viewHolder.internalBindItem(header.item);
-        } else {
-            viewHolder.internalBindItem(header.children.get(pos - 1));
-        }
-    }
-
-    @NonNull
-    protected H getHeaderForPosition(int position) {
-        int items = 0;
-        for (H header : headersList) {
-            if (header.getTotalItemCount() > position - items) {
-                return header;
+    protected fun getHeaderForPosition(position: Int): H {
+        var items = 0
+        for (header in headersList) {
+            if (header.totalItemCount > position - items) {
+                return header
             }
-            items += header.getTotalItemCount();
+            items += header.totalItemCount
         }
-        throw new IllegalStateException("Position is not in list!");
+        throw IllegalStateException("Position is not in list!")
     }
 
-    private int getHeaderRelativePosition(int position) {
-        int items = 0;
-        for (HeaderHolder header : headersList) {
-            final int relativePos = position - items;
-            if (header.getTotalItemCount() > relativePos) {
-                return relativePos;
+    private fun getHeaderRelativePosition(position: Int): Int {
+        var items = 0
+        for (header in headersList) {
+            val relativePos = position - items
+            if (header.totalItemCount > relativePos) {
+                return relativePos
             }
-            items += header.getTotalItemCount();
+            items += header.totalItemCount
         }
-        throw new IllegalStateException("Position is not in list!");
+        throw IllegalStateException("Position is not in list!")
     }
 
-    @Override
-    public void addItem(C item) {
-        addChildToMap(item);
-        notifyDataSetChanged();
+    override fun addItem(item: C) {
+        addChildToMap(item)
+        notifyDataSetChanged()
     }
 
-    @Override
-    public void removeItem(C item) {
-        P parent = partitionDelegate.getParent(item);
-        int headerIndex = getHeaderIndex(getHeaderHolder(parent, childComparator));
+    override fun removeItem(item: C) {
+        val parent = partitionDelegate.invoke(item)
+        val headerIndex = getHeaderIndex(getHeaderHolder(parent, childComparator))
         if (headerIndex < 0) {
-            return;
+            return
         }
-        H header = headersList.get(headerIndex);
-        header.remove(item);
+        val header = headersList[headerIndex]
+        header.remove(item)
         if (header.children.isEmpty()) {
-            headersList.remove(header);
+            headersList.remove(header)
         }
     }
 
-    @Override
-    public void setList(@NonNull List<C> children) {
-        fillChildMap(children);
-        notifyDataSetChanged();
+    override fun setList(list: MutableList<C>) {
+        fillChildMap(list)
+        notifyDataSetChanged()
     }
 
-    protected void fillChildMap(@NonNull List<C> children) {
-        headersList.clear();
-        for (C child : children) {
-            addChildToMap(child);
+    protected fun fillChildMap(children: List<C>) {
+        headersList.clear()
+        for (child in children) {
+            addChildToMap(child)
         }
     }
 
-    private void addChildToMap(C child) {
-        H parentHolder = getHeaderHolderForChild(child);
-        int pos = getHeaderIndex(parentHolder);
+    private fun addChildToMap(child: C) {
+        val parentHolder = getHeaderHolderForChild(child)
+        val pos = getHeaderIndex(parentHolder)
         if (pos < 0) {
-            parentHolder.add(child);
-            headersList.add(-pos - 1, parentHolder);
+            parentHolder.add(child)
+            headersList.add(-pos - 1, parentHolder)
         } else {
-            headersList.get(pos).add(child);
+            headersList[pos].add(child)
         }
     }
 
-    @NonNull
-    protected H getHeaderHolderForChild(C child) {
-        P parent = partitionDelegate.getParent(child);
-        return getHeaderHolder(parent, childComparator);
+    protected fun getHeaderHolderForChild(child: C): H {
+        val parent = partitionDelegate.invoke(child)
+        return getHeaderHolder(parent, childComparator)
     }
 
-    @NonNull
-    protected abstract H getHeaderHolder(P parent, Comparator<C> childComparator);
+    protected abstract fun getHeaderHolder(parent: P, childComparator: Comparator<C>): H
 
-    @Nullable
-    @Override
-    public C getItemById(long id) {
-        for (H header : headersList) {
-            for (C child : header.children) {
-                if (child.getId() == id) {
-                    return child;
-                }
-            }
-        }
-        return null;
+    override fun getItemById(id: Long): C? {
+        return headersList
+                .flatMap { it.children }
+                .firstOrNull { it.id == id }
     }
 
-    int getHeaderIndex(H h) {
-        return Collections.binarySearch(headersList, h,
-                (holder1, holder2) -> headerComparator.compare(holder1.item, holder2.item));
+    internal fun getHeaderIndex(h: H): Int {
+        return Collections.binarySearch(headersList, h
+        ) { holder1, holder2 -> headerComparator.compare(holder1.item, holder2.item) }
     }
 
-    protected static class HeaderHolder<HEADER, CHILD> {
-        HEADER item;
-        List<CHILD> children;
-        private Comparator<? super CHILD> childComparator;
-
-        HeaderHolder(HEADER parent, Comparator<? super CHILD> childComparator) {
-            item = parent;
-            this.childComparator = childComparator;
-            children = new ArrayList<>();
-        }
-
-        public void add(CHILD item) {
-            int pos = Collections.binarySearch(children, item, childComparator);
-            if (pos < 0) {
-                children.add(-pos - 1, item);
-            } else {
-                throw new IllegalArgumentException("Item must not be inserted twice!");
-            }
-        }
-
-        public void remove(CHILD item) {
-            children.remove(item);
-        }
+    open class HeaderHolder<HEADER, CHILD> internal constructor(internal var item: HEADER, private val childComparator: Comparator<in CHILD>) {
+        internal var children: MutableList<CHILD> = mutableListOf()
 
         /**
          * Returns the number of items contained in this header including the header itself.
          * This number is always greater or equal 1.
          */
-        int getTotalItemCount() {
-            return 1 + children.size();
+        open val totalItemCount: Int
+            get() = 1 + children.size
+
+        fun add(item: CHILD) {
+            val pos = Collections.binarySearch(children, item, childComparator)
+            if (pos < 0) {
+                children.add(-pos - 1, item)
+            } else {
+                throw IllegalArgumentException("Item must not be inserted twice!")
+            }
         }
+
+        fun remove(item: CHILD) {
+            children.remove(item)
+        }
+    }
+
+    companion object {
+        private val ITEM_TYPE = 2
+        private val HEADER_TYPE = 1
     }
 }

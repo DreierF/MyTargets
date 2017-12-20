@@ -13,96 +13,68 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.base.adapters.header;
+package de.dreier.mytargets.base.adapters.header
 
-import android.databinding.DataBindingUtil;
-import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.databinding.DataBindingUtil
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import de.dreier.mytargets.R
+import de.dreier.mytargets.databinding.ItemHeaderBinding
+import de.dreier.mytargets.shared.models.IIdProvider
+import de.dreier.mytargets.utils.multiselector.HeaderBindingHolder
+import java.util.*
 
-import java.util.Comparator;
+abstract class HeaderListAdapter<C : IIdProvider>(parentPartition: PartitionDelegate<SimpleHeader, C>, childComparator: Comparator<C>) : HeaderListAdapterBase<HeaderListAdapter.SimpleHeader, C, HeaderListAdapterBase.HeaderHolder<HeaderListAdapter.SimpleHeader, C>>(parentPartition, Comparator { obj, other -> obj.compareTo(other) }, childComparator) {
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.databinding.ItemHeaderBinding;
-import de.dreier.mytargets.shared.models.IIdProvider;
-import de.dreier.mytargets.utils.multiselector.HeaderBindingHolder;
-
-public abstract class HeaderListAdapter<C extends IIdProvider>
-        extends HeaderListAdapterBase<HeaderListAdapter.SimpleHeader, C, HeaderListAdapterBase.HeaderHolder<HeaderListAdapter.SimpleHeader, C>> {
-
-    public HeaderListAdapter(PartitionDelegate<SimpleHeader, C> parentPartition, Comparator<C> childComparator) {
-        super(parentPartition, SimpleHeader::compareTo, childComparator);
+    override fun getHeaderHolder(parent: SimpleHeader, childComparator: Comparator<C>): HeaderListAdapterBase.HeaderHolder<SimpleHeader, C> {
+        return HeaderListAdapterBase.HeaderHolder(parent, childComparator)
     }
 
-    @NonNull
-    @Override
-    protected HeaderHolder<SimpleHeader, C> getHeaderHolder(SimpleHeader parent, Comparator<C> childComparator) {
-        return new HeaderHolder<>(parent, childComparator);
-    }
-
-    @Override
-    public int getItemPosition(C item) {
-        int pos = 0;
-        for (HeaderHolder<HeaderListAdapter.SimpleHeader, C> header : headersList) {
-            if (header.getTotalItemCount() < 1) {
-                continue;
+    override fun getItemPosition(item: C): Int {
+        var pos = 0
+        for (header in headersList) {
+            if (header.totalItemCount < 1) {
+                continue
             }
-            pos++;
-            for (C child : header.children) {
-                if (child.equals(item)) {
-                    return pos;
+            pos++
+            for (child in header.children) {
+                if (child == item) {
+                    return pos
                 }
-                pos++;
+                pos++
             }
         }
-        return -1;
+        return -1
     }
 
-    @NonNull
-    @Override
-    protected HeaderViewHolder getTopLevelViewHolder(@NonNull ViewGroup parent) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_header, parent, false);
-        return new HeaderViewHolder(itemView);
+    override fun getTopLevelViewHolder(parent: ViewGroup): HeaderViewHolder {
+        val itemView = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_header, parent, false)
+        return HeaderViewHolder(itemView)
     }
 
-    private class HeaderViewHolder extends HeaderBindingHolder<SimpleHeader> {
-        private final ItemHeaderBinding binding;
+    inner class HeaderViewHolder internal constructor(itemView: View) : HeaderBindingHolder<SimpleHeader>(itemView) {
+        private val binding: ItemHeaderBinding = DataBindingUtil.bind(itemView)
 
-        HeaderViewHolder(View itemView) {
-            super(itemView);
-            binding = DataBindingUtil.bind(itemView);
-        }
-
-        @Override
-        public void bindItem(SimpleHeader item) {
-            binding.header.setText(item.title);
+        override fun bindItem(item: SimpleHeader) {
+            binding.header.text = item.title
         }
     }
 
-    public static class SimpleHeader implements IIdProvider, Comparable<SimpleHeader> {
-        Long index;
-        String title;
+    class SimpleHeader(index: Long?, internal var title: String) : IIdProvider, Comparable<SimpleHeader> {
+        override var id: Long? = null
 
-        public SimpleHeader(Long index, String title) {
-            this.index = index;
-            this.title = title;
+        init {
+            this.id = index
         }
 
-        @Override
-        public Long getId() {
-            return index;
+        override fun compareTo(other: SimpleHeader): Int {
+            return id!!.compareTo(other.id!!)
         }
 
-        @Override
-        public int compareTo(@NonNull SimpleHeader other) {
-            return index.compareTo(other.index);
-        }
-
-        @Override
-        public String toString() {
-            return title;
+        override fun toString(): String {
+            return title
         }
     }
 }

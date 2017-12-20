@@ -30,7 +30,7 @@ import com.evernote.android.state.State
 import com.evernote.android.state.StateSaver
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.activities.ItemSelectActivity
-import de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM
+import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
 import de.dreier.mytargets.utils.IntentWrapper
 
 typealias OnUpdateListener<T> = (T?) -> Unit
@@ -53,7 +53,7 @@ abstract class SelectorBase<T : Parcelable>(
     open protected val defaultIntent: IntentWrapper
         get() {
             val i = IntentWrapper(defaultActivity!!)
-                    .with<T>(ITEM, selectedItem!!)
+                    .with(ITEM, selectedItem!!)
             if (index != -1) {
                 i.with(INDEX, index)
             }

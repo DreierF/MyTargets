@@ -13,26 +13,20 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.base.adapters;
+package de.dreier.mytargets.base.adapters
 
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView
 
-import java.util.List;
+abstract class ListAdapterBase<S : RecyclerView.ViewHolder, T> : RecyclerView.Adapter<S>() {
+    abstract fun removeItem(item: T)
 
-public abstract class ListAdapterBase<S extends RecyclerView.ViewHolder, T>
-        extends RecyclerView.Adapter<S> {
-    public abstract void removeItem(T item);
+    abstract fun addItem(item: T)
 
-    public abstract void addItem(T item);
+    abstract fun getItem(position: Int): T?
 
-    @Nullable
-    public abstract T getItem(int position);
+    abstract fun getItemById(id: Long): T?
 
-    @Nullable
-    public abstract T getItemById(long id);
+    abstract fun getItemPosition(item: T): Int
 
-    public abstract int getItemPosition(T item);
-
-    public abstract void setList(List<T> data);
+    abstract fun setList(list: MutableList<T>)
 }

@@ -25,7 +25,7 @@ import android.view.ViewGroup
 import com.evernote.android.state.State
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.activities.ItemSelectActivity
-import de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM
+import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
 import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemAdapter
 import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemHolder
 import de.dreier.mytargets.base.fragments.EditFragmentBase
@@ -171,8 +171,8 @@ class EditStandardRoundFragment : EditFragmentBase() {
 
         internal var binding: ItemRoundTemplateBinding = DataBindingUtil.bind(view)
 
-        override fun onBind(roundTemplate: RoundTemplate, position: Int, fragment: Fragment, removeListener: View.OnClickListener) {
-            item = roundTemplate
+        override fun onBind(item: RoundTemplate, position: Int, fragment: Fragment, removeListener: View.OnClickListener) {
+            this.item = item
 
             // Set title of round
             binding.roundNumber.text = fragment.resources
@@ -209,7 +209,7 @@ class EditStandardRoundFragment : EditFragmentBase() {
         }
     }
 
-    private inner class RoundTemplateAdapter internal constructor(fragment: Fragment, list: List<RoundTemplate>) : DynamicItemAdapter<RoundTemplate>(fragment, list, R.string.round_removed) {
+    private inner class RoundTemplateAdapter internal constructor(fragment: Fragment, list: List<RoundTemplate>) : DynamicItemAdapter<RoundTemplate>(fragment, list.toMutableList(), R.string.round_removed) {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DynamicItemHolder<RoundTemplate> {
             val v = inflater.inflate(R.layout.item_round_template, parent, false)
