@@ -28,7 +28,6 @@ import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
-import de.dreier.mytargets.shared.streamwrapper.Stream
 import de.dreier.mytargets.shared.utils.marshall
 import de.dreier.mytargets.shared.wearable.WearableClientBase
 import timber.log.Timber
@@ -93,7 +92,7 @@ class MobileWearableClient(context: Context) : WearableClientBase(context) {
                     if (!SettingsManager.shouldSortTarget(target)) {
                         end
                     } else {
-                        AugmentedEnd(end.end, Stream.of(end.shots).sorted().toList(), end.images)
+                        AugmentedEnd(end.end, end.shots.sorted().toMutableList(), end.images)
                     }
                 }
                 .toMutableList()

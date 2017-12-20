@@ -21,7 +21,6 @@ import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.db.ArrowImage
 import de.dreier.mytargets.shared.models.db.BowImage
 import de.dreier.mytargets.shared.models.db.EndImage
-import de.dreier.mytargets.shared.streamwrapper.Stream
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -43,21 +42,20 @@ object BackupUtils {
     val images: Array<String>
         get() {
             val list = ArrayList<String>()
-            list.addAll(Stream.of(SQLite.select()
+            list.addAll(SQLite.select()
                     .from(BowImage::class.java)
-                    .queryList())
-                    .flatMap { (_, fileName) -> Stream.of(fileName) }
-                    .toList())
-            list.addAll(Stream.of(SQLite.select()
+                    .queryList()
+                    .map { (_, fileName) -> fileName })
+            list.addAll(SQLite.select()
                     .from(EndImage::class.java)
-                    .queryList())
-                    .flatMap { (_, fileName) -> Stream.of(fileName) }
-                    .toList())
-            list.addAll(Stream.of(SQLite.select()
+                    .queryList()
+                    .map { (_, fileName) -> fileName }
+            )
+            list.addAll(SQLite.select()
                     .from(ArrowImage::class.java)
-                    .queryList())
-                    .flatMap { (_, fileName) -> Stream.of(fileName) }
-                    .toList())
+                    .queryList()
+                    .map { (_, fileName) -> fileName }
+            )
             return list.toTypedArray()
         }
 

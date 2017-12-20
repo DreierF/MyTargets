@@ -25,9 +25,8 @@ import android.support.v4.content.LocalBroadcastManager
 import android.view.*
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.header.ExpandableListAdapter
-import de.dreier.mytargets.base.fragments.FragmentBase
-import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
+import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentTrainingsBinding
 import de.dreier.mytargets.databinding.ItemTrainingBinding
 import de.dreier.mytargets.features.settings.SettingsManager

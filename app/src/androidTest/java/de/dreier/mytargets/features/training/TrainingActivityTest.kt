@@ -71,7 +71,7 @@ class TrainingActivityTest : UITestBase() {
         //
         //        clickActionBarItem(R.id.action_statistics, R.string.statistic);
         //        intended(allOf(hasClass(StatisticsActivity.class),
-        //                hasLongArrayExtra(StatisticsActivity.ROUND_IDS, Stream.of(training.loadRounds())
+        //                hasLongArrayExtra(StatisticsActivity.ROUND_IDS, training.loadRounds()
         //                        .map(Round::getId)
         //                        .toSet())));
 

@@ -47,6 +47,6 @@ public class ShotTest {
         Collections.sort(shots);
         return Stream.of(shots)
                 .map(s -> String.valueOf(s.getScoringRing()))
-                .joining(",");
+                .joinToString(",");
     }
 }

@@ -35,9 +35,7 @@ import de.dreier.mytargets.databinding.ItemImageSimpleBinding
 import de.dreier.mytargets.features.training.target.TargetListFragment.EFixedType.*
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.streamwrapper.Stream
 import de.dreier.mytargets.shared.targets.TargetFactory
-import de.dreier.mytargets.shared.targets.models.TargetModelBase
 import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.SlideInItemAnimator
 import de.dreier.mytargets.utils.ToolbarUtils
@@ -88,31 +86,22 @@ class TargetListFragment : SelectItemFragmentBase<Target, ExpandableListAdapter<
         val target = arguments!!.getParcelable<Target>(ITEM)
         val fixedType = EFixedType
                 .valueOf(arguments!!.getString(FIXED_TYPE, NONE.name))
-        val list: List<TargetModelBase>
-        if (fixedType == TARGET) {
-            list = listOf(target!!.model)
-        } else if (fixedType == GROUP) {
-            list = TargetFactory.getList(target!!)
-        } else {
-            list = TargetFactory.getList()
+        val list = when (fixedType) {
+            NONE -> TargetFactory.getList()
+            TARGET -> listOf(target!!.model)
+            GROUP -> TargetFactory.getList(target!!)
         }
-        val targets = Stream.of(list)
+        val targets = list
                 .map { value -> Target(value.id.toInt().toLong(), 0) }
-                .toList()
+                .toMutableList()
         adapter!!.setList(targets)
         selectItem(binding!!.recyclerView, target!!)
 
         updateSettings()
 
         // Set initial target size
-        var diameterIndex = -1
         val diameters = target.model.diameters
-        for (i in diameters.indices) {
-            if (diameters[i] == target.diameter) {
-                diameterIndex = i
-                break
-            }
-        }
+        val diameterIndex = diameters.indices.firstOrNull { diameters[it] == target.diameter } ?: -1
 
         setSelectionWithoutEvent(binding!!.scoringStyle, target.scoringStyleIndex)
         setSelectionWithoutEvent(binding!!.targetSize, diameterIndex)

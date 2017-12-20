@@ -46,7 +46,6 @@ import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.models.db.Training
-import de.dreier.mytargets.shared.streamwrapper.Stream
 import de.dreier.mytargets.shared.utils.Color
 import de.dreier.mytargets.shared.utils.LongUtils
 import de.dreier.mytargets.shared.utils.SharedUtils
@@ -74,8 +73,8 @@ class StatisticsFragment : FragmentBase() {
     private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
         override fun onUpdate(trainingId: Long?, roundId: Long?, end: End) {
-            if (Stream.of(LongUtils.toList(roundIds!!))
-                    .anyMatch { r -> SharedUtils.equals(r, roundId) }) {
+            if (LongUtils.toList(roundIds!!)
+                    .any { r -> SharedUtils.equals(r, roundId) }) {
                 reloadData()
             }
         }
@@ -83,12 +82,11 @@ class StatisticsFragment : FragmentBase() {
 
     private val hitMissText: String
         get() {
-            val shots = Stream.of(rounds!!)
-                    .flatMap { r -> Stream.of(r.loadEnds()!!) }
-                    .flatMap { p -> Stream.of(p.loadShots()!!) }
+            val shots = rounds!!
+                    .flatMap { r -> r.loadEnds()!! }
+                    .flatMap { p -> p.loadShots()!! }
                     .filter { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }
-                    .toList()
-            val missCount = Stream.of(shots).filter { (_, _, _, _, _, scoringRing) -> scoringRing == Shot.MISS }.count().toLong()
+            val missCount = shots.filter { (_, _, _, _, _, scoringRing) -> scoringRing == Shot.MISS }.count().toLong()
             val hitCount = shots.size - missCount
 
             return String.format(Locale.US, PIE_CHART_CENTER_TEXT_FORMAT,
@@ -168,7 +166,6 @@ class StatisticsFragment : FragmentBase() {
         rounds = roundIds!!
                 .map { Round[it] }
                 .filterNotNull()
-                .toList()
 
         val data = ArrowStatistic.getAll(target!!, rounds!!)
 
@@ -186,10 +183,10 @@ class StatisticsFragment : FragmentBase() {
     }
 
     private fun showDispersionView() {
-        val exactShots = Stream.of(rounds!!)
-                .flatMap { r -> Stream.of(r.loadEnds()!!) }
+        val exactShots = rounds!!
+                .flatMap { r -> r.loadEnds()!! }
                 .filter { (_, _, _, exact) -> exact }
-                .flatMap { p -> Stream.of(p.loadShots()!!) }
+                .flatMap { p -> p.loadShots()!! }
                 .filter { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }
                 .toList()
         if (exactShots.isEmpty()) {
