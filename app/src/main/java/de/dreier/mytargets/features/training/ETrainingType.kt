@@ -13,8 +13,8 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training;
+package de.dreier.mytargets.features.training
 
-public enum ETrainingType {
+enum class ETrainingType {
     FREE_TRAINING, TRAINING_WITH_STANDARD_ROUND, COMPETITION
 }

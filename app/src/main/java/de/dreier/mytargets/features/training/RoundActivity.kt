@@ -13,18 +13,15 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.training;
+package de.dreier.mytargets.features.training
 
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment
 
-import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase;
+import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase
 
-public class RoundActivity extends SimpleFragmentActivityBase {
+class RoundActivity : SimpleFragmentActivityBase() {
 
-    @NonNull
-    @Override
-    public Fragment instantiateFragment() {
-        return new RoundFragment();
+    public override fun instantiateFragment(): Fragment {
+        return RoundFragment()
     }
 }
