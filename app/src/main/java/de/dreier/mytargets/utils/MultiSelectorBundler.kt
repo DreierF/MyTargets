@@ -13,23 +13,22 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils;
+package de.dreier.mytargets.utils
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.os.Bundle
 
-import de.dreier.mytargets.utils.multiselector.MultiSelector;
-import com.evernote.android.state.Bundler;
+import com.evernote.android.state.Bundler
 
-public class MultiSelectorBundler implements Bundler<MultiSelector> {
-    public void put(String key, @NonNull MultiSelector value, @NonNull Bundle bundle) {
-        bundle.putBundle(key, value.saveSelectionStates());
+import de.dreier.mytargets.utils.multiselector.MultiSelector
+
+class MultiSelectorBundler : Bundler<MultiSelector> {
+    override fun put(key: String, value: MultiSelector, bundle: Bundle) {
+        bundle.putBundle(key, value.saveSelectionStates())
     }
 
-    @NonNull
-    public MultiSelector get(String key, @NonNull Bundle bundle) {
-        MultiSelector selector = new MultiSelector();
-        selector.restoreSelectionStates(bundle.getBundle(key));
-        return selector;
+    override fun get(key: String, bundle: Bundle): MultiSelector {
+        val selector = MultiSelector()
+        selector.restoreSelectionStates(bundle.getBundle(key)!!)
+        return selector
     }
 }

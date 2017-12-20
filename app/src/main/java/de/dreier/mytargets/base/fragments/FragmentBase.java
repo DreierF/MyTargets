@@ -57,7 +57,7 @@ public abstract class FragmentBase extends Fragment implements LoaderManager.Loa
     protected void finish() {
         FragmentActivity activity = getActivity();
         if (activity != null) {
-            if (Utils.isLollipop()) {
+            if (Utils.INSTANCE.isLollipop()) {
                 activity.finishAfterTransition();
             } else {
                 activity.finish();

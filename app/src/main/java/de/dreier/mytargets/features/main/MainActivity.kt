@@ -126,7 +126,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNavigationDrawer() {
-        if (Utils.isLollipop()) {
+        if (Utils.isLollipop) {
             window.statusBarColor = Color.TRANSPARENT
         }
 

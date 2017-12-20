@@ -13,189 +13,160 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils;
+package de.dreier.mytargets.utils
 
-import android.app.Activity;
-import android.app.ActivityOptions;
-import android.content.Context;
-import android.content.ContextWrapper;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.annotation.ColorRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.View;
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.ActivityOptions
+import android.content.ContextWrapper
+import android.content.Intent
+import android.os.Bundle
+import android.os.Parcelable
+import android.support.annotation.ColorRes
+import android.support.v4.app.Fragment
+import android.view.View
+import de.dreier.mytargets.R
+import de.dreier.mytargets.utils.transitions.FabTransform
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.utils.transitions.FabTransform;
+class IntentWrapper(private val intentTargetClass: Class<*>) {
 
-public class IntentWrapper {
+    private val intent = Intent()
+    private var options: Bundle? = null
+    private var requestCode: Int? = null
+    private var animate = true
+    private var fragment: Fragment? = null
+    private var activity: Activity? = null
 
-    @NonNull
-    private final Intent intent;
-    private final Class<?> intentTargetClass;
-    @Nullable
-    private Bundle options = null;
-    private Integer requestCode;
-    private boolean animate = true;
-    private Fragment fragment;
-    @Nullable
-    private Activity activity;
-
-    public IntentWrapper(Class<?> cls) {
-        intentTargetClass = cls;
-        intent = new Intent();
+    fun withContext(fragment: Fragment): IntentWrapper {
+        this.fragment = fragment
+        activity = fragment.activity
+        intent.setClass(fragment.context!!, intentTargetClass)
+        return this
     }
 
-    @NonNull
-    public IntentWrapper withContext(@NonNull Fragment fragment) {
-        this.fragment = fragment;
-        activity = fragment.getActivity();
-        intent.setClass(fragment.getContext(), intentTargetClass);
-        return this;
+    fun withContext(activity: Activity): IntentWrapper {
+        this.activity = activity
+        intent.setClass(activity, intentTargetClass)
+        return this
     }
 
-    @NonNull
-    public IntentWrapper withContext(@NonNull Activity activity) {
-        this.activity = activity;
-        intent.setClass(activity, intentTargetClass);
-        return this;
+    fun with(key: String, value: Long): IntentWrapper {
+        intent.putExtra(key, value)
+        return this
     }
 
-    @NonNull
-    public IntentWrapper with(String key, long value) {
-        intent.putExtra(key, value);
-        return this;
+    fun with(key: String, value: Int): IntentWrapper {
+        intent.putExtra(key, value)
+        return this
     }
 
-    @NonNull
-    public IntentWrapper with(String key, int value) {
-        intent.putExtra(key, value);
-        return this;
+    fun with(key: String, value: Boolean): IntentWrapper {
+        intent.putExtra(key, value)
+        return this
     }
 
-    @NonNull
-    public IntentWrapper with(String key, boolean value) {
-        intent.putExtra(key, value);
-        return this;
+    fun with(key: String, value: String): IntentWrapper {
+        intent.putExtra(key, value)
+        return this
     }
 
-    @NonNull
-    public IntentWrapper with(String key, String value) {
-        intent.putExtra(key, value);
-        return this;
+    fun <T : Parcelable> with(key: String, value: T): IntentWrapper {
+        intent.putExtra(key, value)
+        return this
     }
 
-    @NonNull
-    public <T extends Parcelable> IntentWrapper with(String key, T value) {
-        intent.putExtra(key, value);
-        return this;
+    fun with(key: String, values: LongArray): IntentWrapper {
+        intent.putExtra(key, values)
+        return this
     }
 
-    @NonNull
-    public IntentWrapper with(String key, long[] values) {
-        intent.putExtra(key, values);
-        return this;
+    fun action(action: String): IntentWrapper {
+        intent.action = action
+        return this
     }
 
-    @NonNull
-    public IntentWrapper action(String action) {
-        intent.setAction(action);
-        return this;
-    }
-
-    @NonNull
-    public IntentWrapper fromFab(@NonNull View fab) {
-        return fromFab(fab, R.color.colorAccent, R.drawable.ic_add_white_24dp);
-    }
-
-    @NonNull
-    public IntentWrapper fromFab(@NonNull View fab, @ColorRes int color, int icon) {
-        if (Utils.isLollipop()) {
-            fab.setTransitionName(fab.getContext().getString(R.string.transition_root_view));
-            FabTransform.addExtras(intent, color, icon);
-            ActivityOptions options = ActivityOptions
+    @SuppressLint("NewApi")
+    @JvmOverloads
+    fun fromFab(fab: View, @ColorRes color: Int = R.color.colorAccent, icon: Int = R.drawable.ic_add_white_24dp): IntentWrapper {
+        if (Utils.isLollipop) {
+            fab.transitionName = fab.context.getString(R.string.transition_root_view)
+            FabTransform.addExtras(intent, color, icon)
+            val options = ActivityOptions
                     .makeSceneTransitionAnimation(getActivity(fab), fab,
-                            fab.getContext().getString(R.string.transition_root_view));
-            this.options = options.toBundle();
+                            fab.context.getString(R.string.transition_root_view))
+            this.options = options.toBundle()
         }
-        return this;
+        return this
     }
 
-    private Activity getActivity(@NonNull View view) {
-        Context context = view.getContext();
-        while (context instanceof ContextWrapper) {
-            if (context instanceof Activity) {
-                return (Activity) context;
+    private fun getActivity(view: View): Activity? {
+        var context = view.context
+        while (context is ContextWrapper) {
+            if (context is Activity) {
+                return context
             }
-            context = ((ContextWrapper) context).getBaseContext();
+            context = context.baseContext
         }
-        return null;
+        return null
     }
 
-    @NonNull
-    public IntentWrapper forResult(int requestCode) {
-        this.requestCode = requestCode;
-        return this;
+    fun forResult(requestCode: Int): IntentWrapper {
+        this.requestCode = requestCode
+        return this
     }
 
-    @NonNull
-    public IntentWrapper noAnimation() {
-        intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        animate = false;
-        return this;
+    fun noAnimation(): IntentWrapper {
+        intent.flags = intent.flags or Intent.FLAG_ACTIVITY_NO_ANIMATION
+        animate = false
+        return this
     }
 
-    @NonNull
-    public IntentWrapper clearTopSingleTop() {
-        intent.addFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        return this;
+    fun clearTopSingleTop(): IntentWrapper {
+        intent.addFlags(intent.flags or Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        return this
     }
 
-    public void start() {
+    fun start() {
         if (fragment == null) {
-            start(activity);
+            start(activity!!)
         } else {
-            start(fragment);
+            start(fragment!!)
         }
-        animate(activity);
+        animate(activity!!)
     }
 
-    private void start(@NonNull Fragment fragment) {
+    private fun start(fragment: Fragment) {
         if (requestCode == null) {
-            fragment.startActivity(intent, options);
+            fragment.startActivity(intent, options)
         } else {
-            fragment.startActivityForResult(intent, requestCode, options);
+            fragment.startActivityForResult(intent, requestCode!!, options)
         }
     }
 
-    private void start(@NonNull Activity activity) {
-        if (Utils.isLollipop()) {
+    private fun start(activity: Activity) {
+        if (Utils.isLollipop) {
             if (requestCode == null) {
-                activity.startActivity(intent, options);
+                activity.startActivity(intent, options)
             } else {
-                activity.startActivityForResult(intent, requestCode, options);
+                activity.startActivityForResult(intent, requestCode!!, options)
             }
         } else {
             if (requestCode == null) {
-                activity.startActivity(intent);
+                activity.startActivity(intent)
             } else {
-                activity.startActivityForResult(intent, requestCode);
+                activity.startActivityForResult(intent, requestCode!!)
             }
         }
     }
 
-    private void animate(@NonNull Activity activity) {
-        if (!Utils.isLollipop() && animate) {
-            activity.overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    private fun animate(activity: Activity) {
+        if (!Utils.isLollipop && animate) {
+            activity.overridePendingTransition(R.anim.right_in, R.anim.left_out)
         }
     }
 
-    @NonNull
-    public Intent build() {
-        return intent;
+    fun build(): Intent {
+        return intent
     }
 }

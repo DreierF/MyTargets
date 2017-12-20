@@ -13,86 +13,80 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils;
+package de.dreier.mytargets.utils
 
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.TextView;
-
-import de.dreier.mytargets.R;
+import android.support.annotation.StringRes
+import android.support.v4.app.Fragment
+import android.support.v4.view.ViewCompat
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
+import android.widget.TextView
+import de.dreier.mytargets.R
 
 
-public class ToolbarUtils {
+object ToolbarUtils {
 
-    public static void showUpAsX(@NonNull Fragment fragment) {
-        showUpAsX((AppCompatActivity) fragment.getActivity());
+    fun showUpAsX(fragment: Fragment) {
+        showUpAsX((fragment.activity as AppCompatActivity?)!!)
     }
 
-    private static void showUpAsX(@NonNull AppCompatActivity activity) {
-        ActionBar supportActionBar = activity.getSupportActionBar();
-        assert supportActionBar != null;
-        supportActionBar.setDisplayHomeAsUpEnabled(true);
-        supportActionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+    private fun showUpAsX(activity: AppCompatActivity) {
+        val supportActionBar = activity.supportActionBar!!
+        supportActionBar.setDisplayHomeAsUpEnabled(true)
+        supportActionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
     }
 
-    public static void showHomeAsUp(@NonNull Fragment fragment) {
-        showHomeAsUp((AppCompatActivity) fragment.getActivity());
+    fun showHomeAsUp(fragment: Fragment) {
+        showHomeAsUp((fragment.activity as AppCompatActivity?)!!)
     }
 
-    public static void showHomeAsUp(@NonNull AppCompatActivity activity) {
-        ActionBar supportActionBar = activity.getSupportActionBar();
-        assert supportActionBar != null;
-        supportActionBar.setDisplayHomeAsUpEnabled(true);
+    fun showHomeAsUp(activity: AppCompatActivity) {
+        val supportActionBar = activity.supportActionBar!!
+        supportActionBar.setDisplayHomeAsUpEnabled(true)
     }
 
-    public static void setSupportActionBar(@NonNull Fragment fragment, Toolbar toolbar) {
-        AppCompatActivity activity = (AppCompatActivity) fragment.getActivity();
-        activity.setSupportActionBar(toolbar);
+    fun setSupportActionBar(fragment: Fragment, toolbar: Toolbar) {
+        val activity = fragment.activity as AppCompatActivity?
+        activity!!.setSupportActionBar(toolbar)
     }
 
-    public static void setToolbarTransitionName(@NonNull Toolbar toolbar) {
-        TextView textViewTitle = null;
-        for (int i = 0; i < toolbar.getChildCount(); i++) {
-            View view = toolbar.getChildAt(i);
-            if (view instanceof TextView) {
-                textViewTitle = (TextView) view;
-                break;
+    fun setToolbarTransitionName(toolbar: Toolbar) {
+        var textViewTitle: TextView? = null
+        for (i in 0 until toolbar.childCount) {
+            val view = toolbar.getChildAt(i)
+            if (view is TextView) {
+                textViewTitle = view
+                break
             }
         }
-        ViewCompat.setTransitionName(textViewTitle, "title");
+        ViewCompat.setTransitionName(textViewTitle, "title")
     }
 
-    public static void setTitle(@NonNull Fragment fragment, @StringRes int title) {
-        setTitle((AppCompatActivity) fragment.getActivity(), title);
+    fun setTitle(fragment: Fragment, @StringRes title: Int) {
+        setTitle((fragment.activity as AppCompatActivity?)!!, title)
     }
 
-    public static void setTitle(@NonNull Fragment fragment, String title) {
-        setTitle((AppCompatActivity) fragment.getActivity(), title);
+    fun setTitle(fragment: Fragment, title: String) {
+        setTitle((fragment.activity as AppCompatActivity?)!!, title)
     }
 
-    public static void setTitle(@NonNull AppCompatActivity activity, @StringRes int title) {
-        assert activity.getSupportActionBar() != null;
-        activity.getSupportActionBar().setTitle(title);
+    fun setTitle(activity: AppCompatActivity, @StringRes title: Int) {
+        assert(activity.supportActionBar != null)
+        activity.supportActionBar!!.setTitle(title)
     }
 
-    public static void setTitle(@NonNull AppCompatActivity activity, String title) {
-        assert activity.getSupportActionBar() != null;
-        activity.getSupportActionBar().setTitle(title);
+    fun setTitle(activity: AppCompatActivity, title: String) {
+        assert(activity.supportActionBar != null)
+        activity.supportActionBar!!.title = title
     }
 
-    public static void setSubtitle(@NonNull Fragment fragment, String subtitle) {
-        AppCompatActivity activity = (AppCompatActivity) fragment.getActivity();
-        setSubtitle(activity, subtitle);
+    fun setSubtitle(fragment: Fragment, subtitle: String) {
+        val activity = fragment.activity as AppCompatActivity?
+        setSubtitle(activity!!, subtitle)
     }
 
-    public static void setSubtitle(@NonNull AppCompatActivity activity, String subtitle) {
-        assert activity.getSupportActionBar() != null;
-        activity.getSupportActionBar().setSubtitle(subtitle);
+    fun setSubtitle(activity: AppCompatActivity, subtitle: String) {
+        assert(activity.supportActionBar != null)
+        activity.supportActionBar!!.subtitle = subtitle
     }
 }

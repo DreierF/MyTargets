@@ -49,10 +49,10 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderListAdapter<StandardRound>>(), SearchView.OnQueryTextListener {
 
     @State
-    internal var currentSelection: StandardRound? = null
+    var currentSelection: StandardRound? = null
     private var searchView: SearchView? = null
 
-    protected lateinit var binding: FragmentListBinding
+    private lateinit var binding: FragmentListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +72,7 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
         ToolbarUtils.showUpAsX(this)
         binding.recyclerView.setHasFixedSize(false)
         binding.fab.visibility = View.VISIBLE
-        binding.fab.setOnClickListener { view ->
+        binding.fab.setOnClickListener {
             EditStandardRoundFragment.createIntent()
                     .withContext(this@StandardRoundListFragment)
                     .fromFab(binding.fab).forResult(NEW_STANDARD_ROUND)
@@ -114,7 +114,7 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
     }
 
     fun onLongClick(holder: SelectableViewHolder<StandardRound>) {
-        val item = holder.item
+        val item = holder.item!!
         if (item.club == StandardRoundFactory.CUSTOM) {
             EditStandardRoundFragment.editIntent(item)
                     .withContext(this)
@@ -126,7 +126,7 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
                     .content(R.string.create_copy)
                     .positiveText(android.R.string.yes)
                     .negativeText(android.R.string.cancel)
-                    .onPositive { dialog1, which1 ->
+                    .onPositive { _, _ ->
                         EditStandardRoundFragment
                                 .editIntent(item)
                                 .withContext(this)
@@ -144,7 +144,7 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
         searchView!!.setOnQueryTextListener(this)
         val closeButton = searchView!!.findViewById<ImageView>(R.id.search_close_btn)
         // Set on click listener
-        closeButton.setOnClickListener { v ->
+        closeButton.setOnClickListener {
             val et = searchView!!.findViewById<EditText>(R.id.search_src_text)
             et.setText("")
             searchView!!.setQuery("", false)
@@ -215,9 +215,19 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
         }
     }
 
-    inner class ViewHolder(private val binding: ItemStandardRoundBinding) : SelectableViewHolder<StandardRound>(binding.root, selector, this@StandardRoundListFragment, OnItemLongClickListener<StandardRound> { this@StandardRoundListFragment.onLongClick(it) }) {
+    inner class ViewHolder(
+            private val binding: ItemStandardRoundBinding
+    ) : SelectableViewHolder<StandardRound>(binding.root,
+            selector,
+            this@StandardRoundListFragment,
+            object : OnItemLongClickListener<StandardRound> {
+                override fun onLongClick(holder: SelectableViewHolder<StandardRound>) {
+                    this@StandardRoundListFragment.onLongClick(holder)
+                }
 
-        override fun bindItem() {
+            }) {
+
+        override fun bindItem(item: StandardRound) {
             binding.name.text = item.name
 
             if (item == currentSelection) {

@@ -161,7 +161,7 @@ public abstract class ExpandableListAdapter<P extends IIdProvider, C extends IId
         }
 
         @Override
-        public void bindItem() {
+        public void bindItem(P item) {
             binding.header.setText(item.toString());
         }
     }

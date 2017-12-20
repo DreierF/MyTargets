@@ -37,7 +37,7 @@ import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.utils.StandardRoundFactory
 import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.ToolbarUtils
-import de.dreier.mytargets.utils.transitions.FabTransformUtil
+import de.dreier.mytargets.utils.transitions.FabTransform
 import de.dreier.mytargets.views.selector.DistanceSelector
 import de.dreier.mytargets.views.selector.SelectorBase
 import de.dreier.mytargets.views.selector.TargetSelector
@@ -45,7 +45,7 @@ import de.dreier.mytargets.views.selector.TargetSelector
 class EditStandardRoundFragment : EditFragmentBase() {
 
     @State
-    internal var standardRound: StandardRound? = null
+    var standardRound: StandardRound? = null
     private var adapter: RoundTemplateAdapter? = null
     private lateinit var binding: FragmentEditStandardRoundBinding
 
@@ -88,8 +88,8 @@ class EditStandardRoundFragment : EditFragmentBase() {
 
         adapter = RoundTemplateAdapter(this, standardRound!!.loadRounds()!!)
         binding.rounds.adapter = adapter
-        binding.addButton.setOnClickListener { view -> onAddRound() }
-        binding.deleteStandardRound.setOnClickListener { view -> onDeleteStandardRound() }
+        binding.addButton.setOnClickListener { onAddRound() }
+        binding.deleteStandardRound.setOnClickListener { onDeleteStandardRound() }
 
         return binding.root
     }
@@ -105,7 +105,7 @@ class EditStandardRoundFragment : EditFragmentBase() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        FabTransformUtil.setup(activity!!, binding.root)
+        FabTransform.setup(activity!!, binding.root)
     }
 
     private fun onAddRound() {

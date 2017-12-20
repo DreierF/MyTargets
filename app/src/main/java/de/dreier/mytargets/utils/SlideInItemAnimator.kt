@@ -13,140 +13,119 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils;
+package de.dreier.mytargets.utils
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v4.view.animation.LinearOutSlowInInterpolator;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
-import android.view.View;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.os.Handler
+import android.support.v4.view.animation.LinearOutSlowInInterpolator
+import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.RecyclerView
+import android.view.Gravity
+import android.view.View
+import java.util.*
 
 /**
- * A {@link RecyclerView.ItemAnimator} that fades & slides newly added items in from a given
+ * A [RecyclerView.ItemAnimator] that fades & slides newly added items in from a given
  * direction.
  */
-public class SlideInItemAnimator extends DefaultItemAnimator {
+class SlideInItemAnimator @JvmOverloads constructor(slideFromEdge: Int = Gravity.BOTTOM, layoutDirection: Int = -1) : DefaultItemAnimator() {
 
-    private final List<RecyclerView.ViewHolder> pendingAdds = new ArrayList<>();
-    private final int slideFromEdge;
-    private boolean useDefaultAnimator = false;
+    private val pendingAdds = ArrayList<RecyclerView.ViewHolder>()
+    private val slideFromEdge: Int = Gravity.getAbsoluteGravity(slideFromEdge, layoutDirection)
+    private var useDefaultAnimator = false
 
-    /**
-     * Default to sliding in upward.
-     */
-    public SlideInItemAnimator() {
-        this(Gravity.BOTTOM, -1); // undefined layout dir; bottom isn't relative
+    init {
+        addDuration = 160L
     }
 
-    public SlideInItemAnimator(int slideFromEdge, int layoutDirection) {
-        this.slideFromEdge = Gravity.getAbsoluteGravity(slideFromEdge, layoutDirection);
-        setAddDuration(160L);
-    }
-
-    @Override
-    public boolean animateAdd(RecyclerView.ViewHolder holder) {
+    override fun animateAdd(holder: RecyclerView.ViewHolder): Boolean {
         if (useDefaultAnimator) {
-            return super.animateAdd(holder);
+            return super.animateAdd(holder)
         }
-        holder.itemView.setAlpha(0f);
-        switch (slideFromEdge) {
-            case Gravity.START:
-                holder.itemView.setTranslationX(-holder.itemView.getWidth() / 3);
-                break;
-            case Gravity.TOP:
-                holder.itemView.setTranslationY(-holder.itemView.getHeight() / 3);
-                break;
-            case Gravity.END:
-                holder.itemView.setTranslationX(holder.itemView.getWidth() / 3);
-                break;
-            default: // Gravity.BOTTOM
-                holder.itemView.setTranslationY(holder.itemView.getHeight() / 3);
+        holder.itemView.alpha = 0f
+        when (slideFromEdge) {
+            Gravity.START -> holder.itemView.translationX = (-holder.itemView.width / 3).toFloat()
+            Gravity.TOP -> holder.itemView.translationY = (-holder.itemView.height / 3).toFloat()
+            Gravity.END -> holder.itemView.translationX = (holder.itemView.width / 3).toFloat()
+            else // Gravity.BOTTOM
+            -> holder.itemView.translationY = (holder.itemView.height / 3).toFloat()
         }
-        pendingAdds.add(holder);
-        return true;
+        pendingAdds.add(holder)
+        return true
     }
 
-    @Override
-    public void runPendingAnimations() {
-        super.runPendingAnimations();
+    override fun runPendingAnimations() {
+        super.runPendingAnimations()
         if (!pendingAdds.isEmpty()) {
-            for (int i = pendingAdds.size() - 1; i >= 0; i--) {
-                final RecyclerView.ViewHolder holder = pendingAdds.get(i);
-                new Handler().postDelayed(() -> holder.itemView.animate()
-                                .alpha(1f)
-                                .translationX(0f)
-                                .translationY(0f)
-                                .setDuration(getAddDuration())
-                                .setListener(new AnimatorListenerAdapter() {
-                                    @Override
-                                    public void onAnimationStart(Animator animation) {
-                                        dispatchAddStarting(holder);
-                                    }
+            for (i in pendingAdds.indices.reversed()) {
+                val holder = pendingAdds[i]
+                Handler().postDelayed({
+                    holder.itemView.animate()
+                            .alpha(1f)
+                            .translationX(0f)
+                            .translationY(0f)
+                            .setDuration(addDuration)
+                            .setListener(object : AnimatorListenerAdapter() {
+                                override fun onAnimationStart(animation: Animator) {
+                                    dispatchAddStarting(holder)
+                                }
 
-                                    @Override
-                                    public void onAnimationEnd(@NonNull Animator animation) {
-                                        animation.getListeners().remove(this);
-                                        dispatchAddFinished(holder);
-                                        dispatchFinishedWhenDone();
-                                    }
+                                override fun onAnimationEnd(animation: Animator) {
+                                    animation.listeners.remove(this)
+                                    dispatchAddFinished(holder)
+                                    dispatchFinishedWhenDone()
+                                }
 
-                                    @Override
-                                    public void onAnimationCancel(Animator animation) {
-                                        clearAnimatedValues(holder.itemView);
-                                    }
-                                })
-                                .setInterpolator(new LinearOutSlowInInterpolator()),
-                        holder.getAdapterPosition() * 30);
-                pendingAdds.remove(i);
+                                override fun onAnimationCancel(animation: Animator) {
+                                    clearAnimatedValues(holder.itemView)
+                                }
+                            }).interpolator = LinearOutSlowInInterpolator()
+                },
+                        (holder.adapterPosition * 30).toLong())
+                pendingAdds.removeAt(i)
             }
-            useDefaultAnimator = true;
+            useDefaultAnimator = true
         }
     }
 
-    @Override
-    public void endAnimation(RecyclerView.ViewHolder holder) {
-        holder.itemView.animate().cancel();
+    override fun endAnimation(holder: RecyclerView.ViewHolder) {
+        holder.itemView.animate().cancel()
         if (pendingAdds.remove(holder)) {
-            dispatchAddFinished(holder);
-            clearAnimatedValues(holder.itemView);
+            dispatchAddFinished(holder)
+            clearAnimatedValues(holder.itemView)
         }
-        super.endAnimation(holder);
+        super.endAnimation(holder)
     }
 
-    @Override
-    public void endAnimations() {
-        for (int i = pendingAdds.size() - 1; i >= 0; i--) {
-            final RecyclerView.ViewHolder holder = pendingAdds.get(i);
-            clearAnimatedValues(holder.itemView);
-            dispatchAddFinished(holder);
-            pendingAdds.remove(i);
+    override fun endAnimations() {
+        for (i in pendingAdds.indices.reversed()) {
+            val holder = pendingAdds[i]
+            clearAnimatedValues(holder.itemView)
+            dispatchAddFinished(holder)
+            pendingAdds.removeAt(i)
         }
-        super.endAnimations();
+        super.endAnimations()
     }
 
-    @Override
-    public boolean isRunning() {
-        return !pendingAdds.isEmpty() || super.isRunning();
+    override fun isRunning(): Boolean {
+        return !pendingAdds.isEmpty() || super.isRunning()
     }
 
-    private void dispatchFinishedWhenDone() {
-        if (!isRunning()) {
-            dispatchAnimationsFinished();
+    private fun dispatchFinishedWhenDone() {
+        if (!isRunning) {
+            dispatchAnimationsFinished()
         }
     }
 
-    private void clearAnimatedValues(@NonNull final View view) {
-        view.setAlpha(1f);
-        view.setTranslationX(0f);
-        view.setTranslationY(0f);
-        view.animate().setStartDelay(0);
+    private fun clearAnimatedValues(view: View) {
+        view.alpha = 1f
+        view.translationX = 0f
+        view.translationY = 0f
+        view.animate().startDelay = 0
     }
 
 }
+/**
+ * Default to sliding in upward.
+ */// undefined layout dir; bottom isn't relative

@@ -65,7 +65,7 @@ public abstract class ChildActivityBase extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (!getSupportFragmentManager().popBackStackImmediate()) {
-            if (Utils.isLollipop()) {
+            if (Utils.INSTANCE.isLollipop()) {
                 finishAfterTransition();
             } else {
                 finish();

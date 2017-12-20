@@ -50,7 +50,7 @@ import de.dreier.mytargets.shared.models.db.Signature
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.utils.toUri
 import de.dreier.mytargets.utils.MobileWearableClient
-import de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
+import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
 import de.dreier.mytargets.utils.Utils
 import java.io.File
 import java.io.IOException
@@ -65,8 +65,8 @@ class ScoreboardFragment : FragmentBase() {
 
     private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
-        override fun onUpdate(training: Long?, round: Long?, end: End) {
-            if (roundId == round || training == trainingId && roundId == -1L) {
+        override fun onUpdate(trainingId: Long?, roundId: Long?, end: End) {
+            if (this@ScoreboardFragment.roundId == roundId || trainingId == this@ScoreboardFragment.trainingId && this@ScoreboardFragment.roundId == -1L) {
                 reloadData()
             }
         }
@@ -151,7 +151,7 @@ class ScoreboardFragment : FragmentBase() {
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater!!.inflate(R.menu.menu_scoreboard, menu)
-        menu!!.findItem(R.id.action_print).isVisible = Utils.isKitKat()
+        menu!!.findItem(R.id.action_print).isVisible = Utils.isKitKat
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -161,7 +161,7 @@ class ScoreboardFragment : FragmentBase() {
                 return true
             }
             R.id.action_print -> {
-                if (Utils.isKitKat()) {
+                if (Utils.isKitKat) {
                     print()
                 }
                 return true
@@ -190,7 +190,7 @@ class ScoreboardFragment : FragmentBase() {
                             .getScoreboardView(context!!, Utils
                                     .getCurrentLocale(context!!), training!!, roundId, SettingsManager
                                     .scoreboardConfiguration)
-                    if (fileType === EFileType.PDF && Utils.isKitKat()) {
+                    if (fileType === EFileType.PDF && Utils.isKitKat) {
                         ScoreboardUtils.generatePdf(content, scoreboardFile)
                     } else {
                         ScoreboardUtils

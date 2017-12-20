@@ -13,24 +13,25 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils;
+package de.dreier.mytargets.utils
 
-import android.databinding.BindingAdapter;
-import android.support.annotation.NonNull;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.ImageView;
+import android.databinding.BindingAdapter
+import android.text.TextUtils
+import android.view.View
+import android.widget.ImageView
 
-public class DataBindingAdapters {
+object DataBindingAdapters {
 
+    @JvmStatic
     @BindingAdapter("android:src")
-    public static void setImageResource(@NonNull ImageView imageView, int resource) {
-        imageView.setImageResource(resource);
+    fun setImageResource(imageView: ImageView, resource: Int) {
+        imageView.setImageResource(resource)
     }
 
-    @BindingAdapter({"propertyShowAll", "propertyShouldShow", "propertyValue"})
-    public static void setPropertyVisibility(@NonNull View view, boolean showAll, boolean shouldShow, String value) {
-        boolean visible = shouldShow && (showAll || !TextUtils.isEmpty(value));
-        view.setVisibility(visible ? View.VISIBLE : View.GONE);
+    @JvmStatic
+    @BindingAdapter("propertyShowAll", "propertyShouldShow", "propertyValue")
+    fun setPropertyVisibility(view: View, showAll: Boolean, shouldShow: Boolean, value: String) {
+        val visible = shouldShow && (showAll || !TextUtils.isEmpty(value))
+        view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 }

@@ -13,96 +13,77 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils.transitions;
+package de.dreier.mytargets.utils.transitions
 
-import android.graphics.Path;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.transition.ArcMotion;
+import android.graphics.Path
+import android.os.Build
+import android.support.annotation.RequiresApi
+import android.transition.ArcMotion
 
 /**
- * A tweak to {@link ArcMotion} which slightly alters the path calculation. In the real world
+ * A tweak to [ArcMotion] which slightly alters the path calculation. In the real world
  * gravity slows upward motion and accelerates downward motion. This class emulates this behavior
  * to make motion paths appear more natural.
- * <p>
+ *
+ *
  * See https://www.google.com/design/spec/motion/movement.html#movement-movement-within-screen-bounds
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class GravityArcMotion extends ArcMotion {
+class GravityArcMotion : ArcMotion() {
 
-    private static final float DEFAULT_MAX_ANGLE_DEGREES = 70;
-    private static final float DEFAULT_MAX_TANGENT = (float)
-            Math.tan(Math.toRadians(DEFAULT_MAX_ANGLE_DEGREES / 2));
-
-    private float mMinimumHorizontalAngle = 0;
-    private float mMinimumVerticalAngle = 0;
-    private float mMaximumAngle = DEFAULT_MAX_ANGLE_DEGREES;
-    private float mMinimumHorizontalTangent = 0;
-    private float mMinimumVerticalTangent = 0;
-    private float mMaximumTangent = DEFAULT_MAX_TANGENT;
+    private var mMinimumHorizontalAngle = 0f
+    private var mMinimumVerticalAngle = 0f
+    private var mMaximumAngle = DEFAULT_MAX_ANGLE_DEGREES
+    private var mMinimumHorizontalTangent = 0f
+    private var mMinimumVerticalTangent = 0f
+    private var mMaximumTangent = DEFAULT_MAX_TANGENT
 
     /**
      * @inheritDoc
      */
-    @Override
-    public void setMinimumHorizontalAngle(float angleInDegrees) {
-        mMinimumHorizontalAngle = angleInDegrees;
-        mMinimumHorizontalTangent = toTangent(angleInDegrees);
+    override fun setMinimumHorizontalAngle(angleInDegrees: Float) {
+        mMinimumHorizontalAngle = angleInDegrees
+        mMinimumHorizontalTangent = toTangent(angleInDegrees)
     }
 
     /**
      * @inheritDoc
      */
-    @Override
-    public float getMinimumHorizontalAngle() {
-        return mMinimumHorizontalAngle;
+    override fun getMinimumHorizontalAngle(): Float {
+        return mMinimumHorizontalAngle
     }
 
     /**
      * @inheritDoc
      */
-    @Override
-    public void setMinimumVerticalAngle(float angleInDegrees) {
-        mMinimumVerticalAngle = angleInDegrees;
-        mMinimumVerticalTangent = toTangent(angleInDegrees);
+    override fun setMinimumVerticalAngle(angleInDegrees: Float) {
+        mMinimumVerticalAngle = angleInDegrees
+        mMinimumVerticalTangent = toTangent(angleInDegrees)
     }
 
     /**
      * @inheritDoc
      */
-    @Override
-    public float getMinimumVerticalAngle() {
-        return mMinimumVerticalAngle;
+    override fun getMinimumVerticalAngle(): Float {
+        return mMinimumVerticalAngle
     }
 
     /**
      * @inheritDoc
      */
-    @Override
-    public void setMaximumAngle(float angleInDegrees) {
-        mMaximumAngle = angleInDegrees;
-        mMaximumTangent = toTangent(angleInDegrees);
+    override fun setMaximumAngle(angleInDegrees: Float) {
+        mMaximumAngle = angleInDegrees
+        mMaximumTangent = toTangent(angleInDegrees)
     }
 
     /**
      * @inheritDoc
      */
-    @Override
-    public float getMaximumAngle() {
-        return mMaximumAngle;
+    override fun getMaximumAngle(): Float {
+        return mMaximumAngle
     }
 
-    private static float toTangent(float arcInDegrees) {
-        if (arcInDegrees < 0 || arcInDegrees > 90) {
-            throw new IllegalArgumentException("Arc must be between 0 and 90 degrees");
-        }
-        return (float) Math.tan(Math.toRadians(arcInDegrees / 2));
-    }
-
-    @NonNull
-    @Override
-    public Path getPath(float startX, float startY, float endX, float endY) {
+    override fun getPath(startX: Float, startY: Float, endX: Float, endY: Float): Path {
         // Here's a little ascii art to show how this is calculated:
         // c---------- b
         //  \        / |
@@ -119,44 +100,43 @@ public class GravityArcMotion extends ArcMotion {
         // Triangles bfa and bde form similar right triangles. The control points
         // for the cubic Bezier arc path are the midpoints between a and e and e and b.
 
-        Path path = new Path();
-        path.moveTo(startX, startY);
+        val path = Path()
+        path.moveTo(startX, startY)
 
-        float ex;
-        float ey;
+        var ex: Float
+        var ey: Float
         if (startY == endY) {
-            ex = (startX + endX) / 2;
-            ey = startY + mMinimumHorizontalTangent * Math.abs(endX - startX) / 2;
+            ex = (startX + endX) / 2
+            ey = startY + mMinimumHorizontalTangent * Math.abs(endX - startX) / 2
         } else if (startX == endX) {
-            ex = startX + mMinimumVerticalTangent * Math.abs(endY - startY) / 2;
-            ey = (startY + endY) / 2;
+            ex = startX + mMinimumVerticalTangent * Math.abs(endY - startY) / 2
+            ey = (startY + endY) / 2
         } else {
-            float deltaX = endX - startX;
+            val deltaX = endX - startX
 
             /**
              * This is the only change to ArcMotion
              */
-            float deltaY;
-            if (endY < startY) {
-                deltaY = startY - endY; // Y is inverted compared to diagram above.
+            val deltaY = if (endY < startY) {
+                startY - endY // Y is inverted compared to diagram above.
             } else {
-                deltaY = endY - startY;
+                endY - startY
             }
             /**
              * End changes
              */
 
             // hypotenuse squared.
-            float h2 = deltaX * deltaX + deltaY * deltaY;
+            val h2 = deltaX * deltaX + deltaY * deltaY
 
             // Midpoint between start and end
-            float dx = (startX + endX) / 2;
-            float dy = (startY + endY) / 2;
+            val dx = (startX + endX) / 2
+            val dy = (startY + endY) / 2
 
             // Distance squared between end point and mid point is (1/2 hypotenuse)^2
-            float midDist2 = h2 * 0.25f;
+            val midDist2 = h2 * 0.25f
 
-            float minimumArcDist2;
+            val minimumArcDist2: Float
 
             if (Math.abs(deltaX) < Math.abs(deltaY)) {
                 // Similar triangles bfa and bde mean that (ab/fb = eb/bd)
@@ -164,44 +144,57 @@ public class GravityArcMotion extends ArcMotion {
                 // ab = hypotenuse
                 // bd = hypotenuse/2
                 // fb = deltaY
-                float eDistY = h2 / (2 * deltaY);
-                ey = endY + eDistY;
-                ex = endX;
+                val eDistY = h2 / (2 * deltaY)
+                ey = endY + eDistY
+                ex = endX
 
-                minimumArcDist2 = midDist2 * mMinimumVerticalTangent * mMinimumVerticalTangent;
+                minimumArcDist2 = midDist2 * mMinimumVerticalTangent * mMinimumVerticalTangent
             } else {
                 // Same as above, but flip X & Y
-                float eDistX = h2 / (2 * deltaX);
-                ex = endX + eDistX;
-                ey = endY;
+                val eDistX = h2 / (2 * deltaX)
+                ex = endX + eDistX
+                ey = endY
 
-                minimumArcDist2 = midDist2 * mMinimumHorizontalTangent * mMinimumHorizontalTangent;
+                minimumArcDist2 = midDist2 * mMinimumHorizontalTangent * mMinimumHorizontalTangent
             }
-            float arcDistX = dx - ex;
-            float arcDistY = dy - ey;
-            float arcDist2 = arcDistX * arcDistX + arcDistY * arcDistY;
+            val arcDistX = dx - ex
+            val arcDistY = dy - ey
+            val arcDist2 = arcDistX * arcDistX + arcDistY * arcDistY
 
-            float maximumArcDist2 = midDist2 * mMaximumTangent * mMaximumTangent;
+            val maximumArcDist2 = midDist2 * mMaximumTangent * mMaximumTangent
 
-            float newArcDistance2 = 0;
+            var newArcDistance2 = 0f
             if (arcDist2 < minimumArcDist2) {
-                newArcDistance2 = minimumArcDist2;
+                newArcDistance2 = minimumArcDist2
             } else if (arcDist2 > maximumArcDist2) {
-                newArcDistance2 = maximumArcDist2;
+                newArcDistance2 = maximumArcDist2
             }
-            if (newArcDistance2 != 0) {
-                float ratio2 = newArcDistance2 / arcDist2;
-                float ratio = (float) Math.sqrt(ratio2);
-                ex = dx + (ratio * (ex - dx));
-                ey = dy + (ratio * (ey - dy));
+            if (newArcDistance2 != 0f) {
+                val ratio2 = newArcDistance2 / arcDist2
+                val ratio = Math.sqrt(ratio2.toDouble()).toFloat()
+                ex = dx + ratio * (ex - dx)
+                ey = dy + ratio * (ey - dy)
             }
         }
-        float controlX1 = (startX + ex) / 2;
-        float controlY1 = (startY + ey) / 2;
-        float controlX2 = (ex + endX) / 2;
-        float controlY2 = (ey + endY) / 2;
-        path.cubicTo(controlX1, controlY1, controlX2, controlY2, endX, endY);
-        return path;
+        val controlX1 = (startX + ex) / 2
+        val controlY1 = (startY + ey) / 2
+        val controlX2 = (ex + endX) / 2
+        val controlY2 = (ey + endY) / 2
+        path.cubicTo(controlX1, controlY1, controlX2, controlY2, endX, endY)
+        return path
+    }
+
+    companion object {
+
+        private val DEFAULT_MAX_ANGLE_DEGREES = 70f
+        private val DEFAULT_MAX_TANGENT = Math.tan(Math.toRadians((DEFAULT_MAX_ANGLE_DEGREES / 2).toDouble())).toFloat()
+
+        private fun toTangent(arcInDegrees: Float): Float {
+            if (arcInDegrees < 0 || arcInDegrees > 90) {
+                throw IllegalArgumentException("Arc must be between 0 and 90 degrees")
+            }
+            return Math.tan(Math.toRadians((arcInDegrees / 2).toDouble())).toFloat()
+        }
     }
 
 }

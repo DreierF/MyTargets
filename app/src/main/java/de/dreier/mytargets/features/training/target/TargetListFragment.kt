@@ -136,7 +136,7 @@ class TargetListFragment : SelectItemFragmentBase<Target, ExpandableListAdapter<
 
     private fun updateSettings() {
         // Init scoring styles
-        val target = adapter!!.getItemById(selector.selectedId!!)
+        val target = adapter!!.getItemById(selector.getSelectedId()!!)
         val styles = target!!.model.scoringStyles.map { it.toString() }
         updateAdapter(binding!!.scoringStyle, scoringStyleAdapter!!, styles)
 
@@ -219,7 +219,7 @@ class TargetListFragment : SelectItemFragmentBase<Target, ExpandableListAdapter<
     private inner class ViewHolder(itemView: View) : SelectableViewHolder<Target>(itemView, selector, this@TargetListFragment) {
         private val binding: ItemImageSimpleBinding = DataBindingUtil.bind(itemView)
 
-        override fun bindItem() {
+        override fun bindItem(item: Target) {
             binding.name.text = item.model.toString()
             binding.image.setImageDrawable(item.drawable)
         }

@@ -13,90 +13,63 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils;
+package de.dreier.mytargets.utils
 
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.text.TextPaint;
+import android.graphics.*
+import android.graphics.drawable.Drawable
+import android.text.TextPaint
+import de.dreier.mytargets.features.statistics.ArrowStatistic
+import java.util.*
 
-import java.util.Locale;
+class RoundedTextDrawable private constructor(private val text: String, bgColor: Int, textColor: Int) : Drawable() {
+    private val paint = Paint()
+    private val rectF = RectF()
+    private val textPaint = TextPaint()
+    private val textBounds = Rect()
 
-import de.dreier.mytargets.features.statistics.ArrowStatistic;
-
-public class RoundedTextDrawable extends Drawable {
-    @NonNull
-    private final Paint mPaint;
-    @NonNull
-    private final RectF mRectF;
-    private final String mText;
-    @NonNull
-    private final Paint mTextPaint;
-    @NonNull
-    private final Rect mTextBounds;
-
-    private RoundedTextDrawable(String text, int bgColor, int textColor) {
-        mRectF = new RectF();
-        mTextBounds = new Rect();
-        mPaint = new Paint();
-        mTextPaint = new TextPaint();
-        mTextPaint.setColor(textColor);
-        mTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
-        mPaint.setAntiAlias(true);
-        mPaint.setDither(true);
-        mPaint.setColor(bgColor);
-        mText = text;
+    init {
+        textPaint.color = textColor
+        textPaint.typeface = Typeface.DEFAULT_BOLD
+        paint.isAntiAlias = true
+        paint.isDither = true
+        paint.color = bgColor
     }
 
-    public RoundedTextDrawable(@NonNull ArrowStatistic item) {
-        this(String.format(Locale.US, "%.1f", item.getTotalScore().getShotAverage()),
-                item.getAppropriateBgColor(),
-                item.getAppropriateTextColor());
+    constructor(item: ArrowStatistic) : this(String.format(Locale.US, "%.1f", item.totalScore.shotAverage),
+            item.appropriateBgColor,
+            item.appropriateTextColor)
+
+    override fun draw(canvas: Canvas) {
+        canvas.drawOval(rectF, paint)
+        canvas.drawText(text, rectF.centerX() - textBounds.width() / 2,
+                rectF.centerY() + textBounds.height() / 2, textPaint)
     }
 
-    @Override
-    public void draw(@NonNull Canvas canvas) {
-        canvas.drawOval(mRectF, mPaint);
-        canvas.drawText(mText, mRectF.centerX() - mTextBounds.width() / 2,
-                mRectF.centerY() + mTextBounds.height() / 2, mTextPaint);
+    override fun onBoundsChange(bounds: Rect) {
+        super.onBoundsChange(bounds)
+
+        rectF.set(bounds)
+        textPaint.textSize = rectF.height() / 2.5f
+        textPaint.getTextBounds(text, 0, text.length, textBounds)
     }
 
-    @Override
-    protected void onBoundsChange(Rect bounds) {
-        super.onBoundsChange(bounds);
-
-        mRectF.set(bounds);
-        mTextPaint.setTextSize(mRectF.height() / 2.5f);
-        mTextPaint.getTextBounds(mText, 0, mText.length(), mTextBounds);
-    }
-
-    @Override
-    public void setAlpha(int alpha) {
-        if (mPaint.getAlpha() != alpha) {
-            mPaint.setAlpha(alpha);
-            invalidateSelf();
+    override fun setAlpha(alpha: Int) {
+        if (paint.alpha != alpha) {
+            paint.alpha = alpha
+            invalidateSelf()
         }
     }
 
-    @Override
-    public void setColorFilter(ColorFilter cf) {
-        mPaint.setColorFilter(cf);
+    override fun setColorFilter(cf: ColorFilter?) {
+        paint.colorFilter = cf
     }
 
-    @Override
-    public int getOpacity() {
-        return PixelFormat.TRANSLUCENT;
+    override fun getOpacity(): Int {
+        return PixelFormat.TRANSLUCENT
     }
 
-    @Override
-    public void setFilterBitmap(boolean filter) {
-        mPaint.setFilterBitmap(filter);
-        invalidateSelf();
+    override fun setFilterBitmap(filter: Boolean) {
+        paint.isFilterBitmap = filter
+        invalidateSelf()
     }
 }

@@ -13,31 +13,27 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils.transitions;
+package de.dreier.mytargets.utils.transitions
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.transition.Transition;
+import android.os.Build
+import android.support.annotation.RequiresApi
+import android.transition.Transition
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public abstract class TransitionAdapter implements Transition.TransitionListener {
-    @Override
-    public void onTransitionStart(Transition transition) {
+abstract class TransitionAdapter : Transition.TransitionListener {
+    override fun onTransitionStart(transition: Transition) {
 
     }
 
-    @Override
-    public void onTransitionCancel(Transition transition) {
+    override fun onTransitionCancel(transition: Transition) {
 
     }
 
-    @Override
-    public void onTransitionPause(Transition transition) {
+    override fun onTransitionPause(transition: Transition) {
 
     }
 
-    @Override
-    public void onTransitionResume(Transition transition) {
+    override fun onTransitionResume(transition: Transition) {
 
     }
 }

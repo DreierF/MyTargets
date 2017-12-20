@@ -58,7 +58,7 @@ class TimerFragment : TimerFragmentBase() {
 
     override fun applyStatus(status: ETimerState) {
         binding.root.setBackgroundResource(status.color)
-        if (Utils.isLollipop() && activity != null) {
+        if (Utils.isLollipop && activity != null) {
             val window = activity.window
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             window.statusBarColor = ContextCompat.getColor(activity, status.color)

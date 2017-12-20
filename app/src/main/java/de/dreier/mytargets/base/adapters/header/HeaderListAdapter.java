@@ -76,7 +76,7 @@ public abstract class HeaderListAdapter<C extends IIdProvider>
         }
 
         @Override
-        public void bindItem() {
+        public void bindItem(SimpleHeader item) {
             binding.header.setText(item.title);
         }
     }

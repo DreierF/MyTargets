@@ -95,9 +95,9 @@ public class GalleryActivity extends ChildActivityBase {
 
         setSupportActionBar(binding.toolbar);
 
-        ToolbarUtils.showHomeAsUp(this);
-        ToolbarUtils.setTitle(this, title);
-        Utils.showSystemUI(this);
+        ToolbarUtils.INSTANCE.showHomeAsUp(this);
+        ToolbarUtils.INSTANCE.setTitle(this, title);
+        Utils.INSTANCE.showSystemUI(this);
 
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         binding.imagesHorizontalList.setLayoutManager(layoutManager);

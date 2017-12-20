@@ -106,9 +106,9 @@ public abstract class HeaderListAdapterBase<P extends IIdProvider, C extends IId
         H header = getHeaderForPosition(position);
         int pos = getHeaderRelativePosition(position);
         if (pos == 0) {
-            viewHolder.bindItem(header.item);
+            viewHolder.internalBindItem(header.item);
         } else {
-            viewHolder.bindItem(header.children.get(pos - 1));
+            viewHolder.internalBindItem(header.children.get(pos - 1));
         }
     }
 

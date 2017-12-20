@@ -93,7 +93,7 @@ class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapter
 
         private val binding: ItemDistanceBinding = DataBindingUtil.bind(itemView)
 
-        override fun bindItem() {
+        override fun bindItem(item: Dimension) {
             binding.distance.text = item.toString()
         }
     }

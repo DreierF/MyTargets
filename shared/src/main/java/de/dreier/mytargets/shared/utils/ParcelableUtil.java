@@ -20,6 +20,7 @@ import android.os.Parcelable;
 
 import de.dreier.mytargets.shared.models.TimerSettings;
 import de.dreier.mytargets.shared.models.TrainingInfo;
+import de.dreier.mytargets.shared.models.augmented.AugmentedEnd;
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining;
 
 public class ParcelableUtil {
@@ -39,6 +40,10 @@ public class ParcelableUtil {
 
     public static AugmentedTraining unmarshallAugmentedTraining(byte[] bytes) {
         return unmarshall(bytes, (Parcelable.Creator<AugmentedTraining>) AugmentedTraining.CREATOR);
+    }
+
+    public static AugmentedEnd unmarshallAugmentedEnd(byte[] bytes) {
+        return unmarshall(bytes, (Parcelable.Creator<AugmentedEnd>) AugmentedEnd.CREATOR);
     }
 
     public static TimerSettings unmarshallTimerSettings(byte[] bytes) {

@@ -13,71 +13,54 @@
  * GNU General Public License for more details.
  */
 
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
+package de.dreier.mytargets.utils.multiselector
 
-package de.dreier.mytargets.utils.multiselector;
+import android.os.Bundle
+import java.util.*
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+class MultiSelector : SelectorBase() {
+    private val selections = HashSet<Long>()
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+    val selectedIds: ArrayList<Long>
+        get() = ArrayList(selections)
 
-import de.dreier.mytargets.shared.utils.LongUtils;
-
-public class MultiSelector extends SelectorBase {
-    private static final String SELECTION_IDS = "ids";
-    @NonNull
-    private Set<Long> selections = new HashSet<>();
-
-    @Override
-    public void setSelected(long id, boolean isSelected) {
+    override fun setSelected(id: Long, isSelected: Boolean) {
         if (isSelected) {
-            selections.add(id);
+            selections.add(id)
         } else {
-            selections.remove(id);
+            selections.remove(id)
         }
-        refreshHolder(tracker.getHolder(id));
+        refreshHolder(tracker.getHolder(id))
     }
 
-    @Override
-    protected boolean isSelected(long id) {
-        return selections.contains(id);
+    override fun isSelected(id: Long): Boolean {
+        return selections.contains(id)
     }
 
-    public void clearSelections() {
-        selections.clear();
-        refreshAllHolders();
+    fun clearSelections() {
+        selections.clear()
+        refreshAllHolders()
     }
 
-    @NonNull
-    public ArrayList<Long> getSelectedIds() {
-        return new ArrayList<>(selections);
+    override fun saveSelectionStates(bundle: Bundle) {
+        bundle.putLongArray(SELECTION_IDS, selectedIds.toLongArray())
     }
 
-    @Override
-    protected void saveSelectionStates(@NonNull Bundle bundle) {
-        bundle.putLongArray(SELECTION_IDS, LongUtils.toArray(getSelectedIds()));
+    override fun restoreSelectionStates(savedStates: Bundle) {
+        super.restoreSelectionStates(savedStates)
+        val selectedIds = savedStates.getLongArray(SELECTION_IDS)
+        restoreSelections(selectedIds!!.toList())
     }
 
-    @Override
-    public void restoreSelectionStates(@NonNull Bundle savedStates) {
-        super.restoreSelectionStates(savedStates);
-        long[] selectedIds = savedStates.getLongArray(SELECTION_IDS);
-        restoreSelections(LongUtils.toList(selectedIds));
-    }
-
-    private void restoreSelections(@Nullable List<Long> selected) {
+    private fun restoreSelections(selected: List<Long>?) {
         if (selected != null) {
-            selections.clear();
-            selections.addAll(selected);
-            refreshAllHolders();
+            selections.clear()
+            selections.addAll(selected)
+            refreshAllHolders()
         }
+    }
+
+    companion object {
+        private val SELECTION_IDS = "ids"
     }
 }

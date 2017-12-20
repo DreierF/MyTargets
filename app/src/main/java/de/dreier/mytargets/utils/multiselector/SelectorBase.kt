@@ -13,78 +13,76 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils.multiselector;
+package de.dreier.mytargets.utils.multiselector
 
-import android.os.Bundle;
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.os.Bundle
+import android.support.annotation.CallSuper
 
-public abstract class SelectorBase {
-    private static final String SELECTIONS_STATE = "state";
-    @NonNull
-    protected WeakHolderTracker tracker = new WeakHolderTracker();
-    private boolean isSelectable;
+abstract class SelectorBase {
+    protected var tracker = WeakHolderTracker()
+    private var isSelectable: Boolean = false
 
-    public void setSelectable(boolean isSelectable) {
-        this.isSelectable = isSelectable;
-        refreshAllHolders();
+    fun setSelectable(isSelectable: Boolean) {
+        this.isSelectable = isSelectable
+        refreshAllHolders()
     }
 
-    protected void refreshAllHolders() {
-        for (SelectableHolder holder : tracker.getTrackedHolders()) {
-            refreshHolder(holder);
+    protected fun refreshAllHolders() {
+        for (holder in tracker.trackedHolders) {
+            refreshHolder(holder)
         }
     }
 
-    protected void refreshHolder(@Nullable SelectableHolder holder) {
+    protected fun refreshHolder(holder: SelectableHolder?) {
         if (holder != null) {
-            if (holder instanceof ItemBindingHolder &&
-                    ((ItemBindingHolder) holder).getItem() != null) {
-                ((ItemBindingHolder) holder).bindItem();
+            if (holder is ItemBindingHolder<*> && holder.item != null) {
+                holder.bindItem()
             }
-            holder.setSelectable(isSelectable);
-            boolean isActivated = isSelected(holder.getItemId());
-            holder.setActivated(isActivated);
+            holder.isSelectable = isSelectable
+            val isActivated = isSelected(holder.itemIdentifier)
+            holder.isActivated = isActivated
         }
     }
 
-    public void setSelected(@NonNull SelectableHolder holder, boolean isSelected) {
-        setSelected(holder.getItemId(), isSelected);
+    fun setSelected(holder: SelectableHolder, isSelected: Boolean) {
+        setSelected(holder.itemIdentifier, isSelected)
     }
 
-    public abstract void setSelected(long id, boolean isSelected);
+    abstract fun setSelected(id: Long, isSelected: Boolean)
 
-    protected abstract boolean isSelected(long id);
+    protected abstract fun isSelected(id: Long): Boolean
 
-    public boolean tapSelection(@NonNull SelectableHolder holder) {
-        long itemId = holder.getItemId();
-        if (isSelectable) {
-            boolean isSelected = isSelected(itemId);
-            setSelected(itemId, !isSelected);
-            return true;
+    fun tapSelection(holder: SelectableHolder): Boolean {
+        val itemId = holder.itemIdentifier
+        return if (isSelectable) {
+            val isSelected = isSelected(itemId)
+            setSelected(itemId, !isSelected)
+            true
         } else {
-            return false;
+            false
         }
     }
 
-    @NonNull
-    public final Bundle saveSelectionStates() {
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(SELECTIONS_STATE, isSelectable);
-        saveSelectionStates(bundle);
-        return bundle;
+    fun saveSelectionStates(): Bundle {
+        val bundle = Bundle()
+        bundle.putBoolean(SELECTIONS_STATE, isSelectable)
+        saveSelectionStates(bundle)
+        return bundle
     }
 
-    public void bindHolder(SelectableHolder holder, long id) {
-        tracker.bindHolder(holder, id);
-        refreshHolder(holder);
+    fun bindHolder(holder: SelectableHolder, id: Long) {
+        tracker.bindHolder(holder, id)
+        refreshHolder(holder)
     }
 
-    protected abstract void saveSelectionStates(Bundle bundle);
+    protected abstract fun saveSelectionStates(bundle: Bundle)
 
     @CallSuper
-    public void restoreSelectionStates(@NonNull Bundle savedStates) {
-        isSelectable = savedStates.getBoolean(SELECTIONS_STATE);
+    open fun restoreSelectionStates(savedStates: Bundle) {
+        isSelectable = savedStates.getBoolean(SELECTIONS_STATE)
+    }
+
+    companion object {
+        private val SELECTIONS_STATE = "state"
     }
 }

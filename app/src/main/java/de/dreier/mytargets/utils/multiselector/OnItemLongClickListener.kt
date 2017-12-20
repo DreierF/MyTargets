@@ -13,8 +13,10 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils.multiselector;
+package de.dreier.mytargets.utils.multiselector
 
-public interface OnItemLongClickListener<T> {
-    void onLongClick(SelectableViewHolder<T> holder);
+interface OnItemLongClickListener<T> {
+    fun onLongClick(holder: SelectableViewHolder<T>)
 }
+
+//typealias OnItemLongClickListener<T> = (holder: SelectableViewHolder<T>) -> Unit

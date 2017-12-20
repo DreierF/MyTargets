@@ -13,57 +13,61 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils.multiselector;
+package de.dreier.mytargets.utils.multiselector
 
 /**
- * <p>Public interface used by selectable items connected to {@link MultiSelector}.</p>
+ *
+ * Public interface used by selectable items connected to [MultiSelector].
  */
-public interface SelectableHolder {
-    /**
-     * <p>Turn selection mode on for this holder.</p>
-     *
-     * @param selectable True if selection mode is on.
-     */
-    void setSelectable(boolean selectable);
+interface SelectableHolder {
 
     /**
-     * <p>Current selection mode state.</p>
+     *
+     * Current selection mode state.
      *
      * @return True if selection mode is on.
      */
-    boolean isSelectable();
-
     /**
-     * <p>Set this item to be selected (the activated state, for Views and Drawables)</p>
      *
-     * @param activated True if selected/activated.
+     * Turn selection mode on for this holder.
+     *
+     * @param selectable True if selection mode is on.
      */
-    void setActivated(boolean activated);
+    var isSelectable: Boolean
 
     /**
-     * <p>Return true if the item is selected/activated.</p>
+     *
+     * Return true if the item is selected/activated.
      *
      * @return True if selected/activated.
      */
-    boolean isActivated();
+    /**
+     *
+     * Set this item to be selected (the activated state, for Views and Drawables)
+     *
+     * @param activated True if selected/activated.
+     */
+    var isActivated: Boolean
 
     /**
-     * <p>Returns the adapter position this item is currently bound to.
-     * This can (and often will) change; if attached to a {@link MultiSelector},
-     * {@link MultiSelector#bindHolder(SelectableHolder, long)}
-     * should be called whenever this value changes.</p>
+     *
+     * Returns the adapter position this item is currently bound to.
+     * This can (and often will) change; if attached to a [MultiSelector],
+     * [MultiSelector.bindHolder]
+     * should be called whenever this value changes.
      *
      * @return Position this holder is currently bound to.
      */
-    int getAdapterPosition();
+    //val adapterPosition: Int //TODO
 
     /**
-     * <p>Return the item id this item is currently bound to.
-     * This can (and often will) change; if attached to a {@link MultiSelector},
-     * {@link MultiSelector#bindHolder(SelectableHolder, long)}
-     * should be called whenever this value changes.</p>
+     *
+     * Return the item id this item is currently bound to.
+     * This can (and often will) change; if attached to a [MultiSelector],
+     * [MultiSelector.bindHolder]
+     * should be called whenever this value changes.
      *
      * @return Item id this holder is currently bound to.
      */
-    long getItemId();
+    val itemIdentifier: Long
 }

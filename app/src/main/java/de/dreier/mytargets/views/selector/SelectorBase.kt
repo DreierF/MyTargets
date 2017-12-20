@@ -52,8 +52,8 @@ abstract class SelectorBase<T : Parcelable>(
 
     open protected val defaultIntent: IntentWrapper
         get() {
-            val i = IntentWrapper(defaultActivity)
-                    .with<T>(ITEM, selectedItem)
+            val i = IntentWrapper(defaultActivity!!)
+                    .with<T>(ITEM, selectedItem!!)
             if (index != -1) {
                 i.with(INDEX, index)
             }

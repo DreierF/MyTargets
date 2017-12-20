@@ -12,140 +12,133 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.utils;
+package de.dreier.mytargets.utils
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.os.Process;
-import android.support.annotation.NonNull;
-import android.text.Html;
-import android.text.Spanned;
-import android.view.View;
-import android.view.WindowManager;
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Color
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
+import android.os.Process
+import android.text.Html
+import android.text.Spanned
+import android.view.View
+import android.view.WindowManager
+import de.dreier.mytargets.features.main.MainActivity
+import de.dreier.mytargets.features.training.overview.Header
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
+import java.util.*
 
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.format.DateTimeFormatter;
+object Utils {
 
-import java.util.Locale;
+    val isKitKat: Boolean
+        get() = VERSION.SDK_INT >= VERSION_CODES.KITKAT
 
-import de.dreier.mytargets.features.main.MainActivity;
-import de.dreier.mytargets.features.training.overview.Header;
+    val isLollipop: Boolean
+        get() = VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP
 
-import static android.os.Build.VERSION;
-import static android.os.Build.VERSION_CODES;
-
-public class Utils {
-
-    public static Header getMonthHeader(@NonNull Context context, @NonNull LocalDate date) {
-        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMMM yyyy",
-                getCurrentLocale(context));
-        LocalDate month = getMonthStart(date);
-        return new Header(month.toEpochDay(), month.format(dateFormat));
+    fun getMonthHeader(context: Context, date: LocalDate): Header {
+        val dateFormat = DateTimeFormatter.ofPattern("MMMM yyyy",
+                getCurrentLocale(context))
+        val month = getMonthStart(date)
+        return Header(month.toEpochDay(), month.format(dateFormat))
     }
 
-    @NonNull
-    private static LocalDate getMonthStart(@NonNull LocalDate date) {
-        return LocalDate.from(date).withDayOfMonth(1);
+    private fun getMonthStart(date: LocalDate): LocalDate {
+        return LocalDate.from(date).withDayOfMonth(1)
     }
 
-    public static void doRestart(@NonNull Context context) {
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    fun doRestart(context: Context) {
+        val intent = Intent(context, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
         // Create a pending intent so the application is restarted after System.exit(0) was called.
         // We use an AlarmManager to call this intent in 100ms
-        int mPendingIntentId = 223344;
-        PendingIntent mPendingIntent = PendingIntent
+        val mPendingIntentId = 223344
+        val mPendingIntent = PendingIntent
                 .getActivity(context, mPendingIntentId, intent,
-                        PendingIntent.FLAG_CANCEL_CURRENT);
-        AlarmManager mgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+                        PendingIntent.FLAG_CANCEL_CURRENT)
+        val mgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent)
 
         // Kill the application
-        Process.killProcess(Process.myPid());
+        Process.killProcess(Process.myPid())
     }
 
-    public static boolean isKitKat() {
-        return VERSION.SDK_INT >= VERSION_CODES.KITKAT;
-    }
-
-    public static boolean isLollipop() {
-        return VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP;
-    }
-
-    public static String humanReadableByteCount(long bytes, boolean si) {
-        int unit = si ? 1000 : 1024;
+    fun humanReadableByteCount(bytes: Long, si: Boolean): String {
+        val unit = if (si) 1000 else 1024
         if (bytes < unit) {
-            return bytes + " B";
+            return bytes.toString() + " B"
         }
-        int exp = (int) (Math.log(bytes) / Math.log(unit));
-        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
-        return String.format(Locale.US, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
+        val exp = (Math.log(bytes.toDouble()) / Math.log(unit.toDouble())).toInt()
+        val pre = (if (si) "kMGTPE" else "KMGTPE")[exp - 1] + if (si) "" else "i"
+        return String.format(Locale.US, "%.1f %sB", bytes / Math.pow(unit.toDouble(), exp.toDouble()), pre)
     }
 
-    public static boolean hasCameraHardware(@NonNull Context context) {
-        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
+    fun hasCameraHardware(context: Context): Boolean {
+        return context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)
     }
 
     @SuppressLint("InlinedApi")
-    public static void hideSystemUI(@NonNull Activity activity) {
-        View decorView = activity.getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
+    fun hideSystemUI(activity: Activity) {
+        val decorView = activity.window.decorView
+        decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+
+                or View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+
+                or View.SYSTEM_UI_FLAG_IMMERSIVE)
     }
 
-    public static void showSystemUI(@NonNull Activity activity) {
-        View decorView = activity.getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+    fun showSystemUI(activity: Activity) {
+        val decorView = activity.window.decorView
+        decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
     }
 
-    @SuppressWarnings("deprecation")
-    public static void setShowWhenLocked(Activity activity, boolean showWhenLocked) {
+    @Suppress("DEPRECATION")
+    @SuppressLint("NewApi")
+    fun setShowWhenLocked(activity: Activity, showWhenLocked: Boolean) {
         if (VERSION.SDK_INT >= VERSION_CODES.O_MR1) {
-            activity.setShowWhenLocked(showWhenLocked);
+            activity.setShowWhenLocked(showWhenLocked)
         } else {
             if (showWhenLocked) {
-                activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+                activity.window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
             } else {
-                activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+                activity.window.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
             }
         }
     }
 
-    @SuppressWarnings("deprecation")
-    public static Spanned fromHtml(String html) {
-        if (VERSION.SDK_INT >= VERSION_CODES.N) {
-            return Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
+    @Suppress("DEPRECATION")
+    fun fromHtml(html: String): Spanned {
+        return if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY)
         } else {
-            return Html.fromHtml(html);
+            Html.fromHtml(html)
         }
     }
 
-    public static int argb(int alpha, int color) {
+    fun argb(alpha: Int, color: Int): Int {
         return Color.argb(alpha, Color.red(color), Color.green(color),
-                Color.blue(color));
+                Color.blue(color))
     }
 
-    public static Locale getCurrentLocale(@NonNull Context context) {
-        if (VERSION.SDK_INT >= VERSION_CODES.N) {
-            return context.getResources().getConfiguration().getLocales().get(0);
+    fun getCurrentLocale(context: Context): Locale {
+        return if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            context.resources.configuration.locales.get(0)
         } else {
-            //noinspection deprecation
-            return context.getResources().getConfiguration().locale;
+
+            context.resources.configuration.locale
         }
     }
 }

@@ -33,7 +33,7 @@ import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.ToolbarUtils
-import de.dreier.mytargets.utils.transitions.FabTransformUtil
+import de.dreier.mytargets.utils.transitions.FabTransform
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
 
 class EditRoundFragment : EditFragmentBase() {
@@ -88,7 +88,7 @@ class EditRoundFragment : EditFragmentBase() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        FabTransformUtil.setup(activity!!, binding!!.root)
+        FabTransform.setup(activity!!, binding!!.root)
     }
 
     override fun onSave() {

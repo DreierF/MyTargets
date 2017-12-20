@@ -63,7 +63,7 @@ public abstract class SimpleListAdapterBase<T extends IIdProvider & Comparable<T
 
     @Override
     public final void onBindViewHolder(@NonNull SelectableViewHolder<T> viewHolder, int position) {
-        viewHolder.bindItem(list.get(position));
+        viewHolder.internalBindItem(list.get(position));
     }
 
     public void setList(@NonNull List<T> list) {

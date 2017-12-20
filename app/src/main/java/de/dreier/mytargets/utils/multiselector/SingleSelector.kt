@@ -13,51 +13,49 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils.multiselector;
+package de.dreier.mytargets.utils.multiselector
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.os.Bundle
 
 /**
- * <p>A Selector that only allows for one position at a time to be selected. </p>
- * <p>Any time {@link SelectorBase#setSelected(long, boolean)} is called, all other selected positions are set to false.</p>
+ *
+ * A Selector that only allows for one position at a time to be selected.
+ *
+ * Any time [SelectorBase.setSelected] is called, all other selected positions are set to false.
  */
-public class SingleSelector extends SelectorBase {
+class SingleSelector : SelectorBase() {
+    private var selectedId = -1L
 
-    private static final String SELECTION_ID = "selection_id";
-    private long selectedId = -1L;
-
-    @Override
-    public void setSelected(long id, boolean isSelected) {
-        long oldId = selectedId;
-        if (isSelected) {
-            selectedId = id;
+    override fun setSelected(id: Long, isSelected: Boolean) {
+        val oldId = selectedId
+        selectedId = if (isSelected) {
+            id
         } else {
-            selectedId = -1;
+            -1
         }
-        refreshHolder(tracker.getHolder(oldId));
-        refreshHolder(tracker.getHolder(selectedId));
+        refreshHolder(tracker.getHolder(oldId))
+        refreshHolder(tracker.getHolder(selectedId))
     }
 
-    @Override
-    public boolean isSelected(long id) {
-        return id == selectedId && selectedId != -1;
+    public override fun isSelected(id: Long): Boolean {
+        return id == selectedId && selectedId != -1L
     }
 
-    @Override
-    protected void saveSelectionStates(@NonNull Bundle bundle) {
-        bundle.putLong(SELECTION_ID, selectedId);
+    override fun saveSelectionStates(bundle: Bundle) {
+        bundle.putLong(SELECTION_ID, selectedId)
     }
 
-    @Override
-    public void restoreSelectionStates(@NonNull Bundle savedStates) {
-        super.restoreSelectionStates(savedStates);
-        selectedId = savedStates.getLong(SELECTION_ID);
+    override fun restoreSelectionStates(savedStates: Bundle) {
+        super.restoreSelectionStates(savedStates)
+        selectedId = savedStates.getLong(SELECTION_ID)
     }
 
-    @Nullable
-    public Long getSelectedId() {
-        return selectedId == -1 ? null : selectedId;
+    fun getSelectedId(): Long? {
+        return if (selectedId == -1L) null else selectedId
+    }
+
+    companion object {
+
+        private val SELECTION_ID = "selection_id"
     }
 }
