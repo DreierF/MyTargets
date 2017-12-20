@@ -26,7 +26,7 @@ abstract class EditableListFragment<T> : EditableListFragmentBase<T, SimpleListA
         if (listener == null) {
             onItemSelected(item)
         } else {
-            listener.onItemSelected(item)
+            listener!!.onItemSelected(item)
             finish()
         }
     }

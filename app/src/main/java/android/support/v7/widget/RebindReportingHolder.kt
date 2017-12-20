@@ -13,47 +13,41 @@
  * GNU General Public License for more details.
  */
 
-package android.support.v7.widget;
+package android.support.v7.widget
 
-import android.support.annotation.NonNull;
-import android.view.View;
+import android.view.View
 
 /**
  * ViewHolder with a callback for when it is rebound.
- * <p>
- * This lives in {@link android.support.v7.widget} so that it can override
- * {@link #setFlags(int, int)}, {@link #offsetPosition(int, boolean)}, and
- * {@link #addFlags(int)}, all of which are package private. This is currently
+ *
+ *
+ * This lives in [android.support.v7.widget] so that it can override
+ * [.setFlags], [.offsetPosition], and
+ * [.addFlags], all of which are package private. This is currently
  * the only way to automatically detect when a ViewHolder has been rebound
  * to a new item.
  */
-public abstract class RebindReportingHolder extends RecyclerView.ViewHolder {
-
-    public RebindReportingHolder(@NonNull View itemView) {
-        super(itemView);
-    }
+abstract class RebindReportingHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     /**
      * Called when this instance is rebound to another item in the RecyclerView.
      */
-    protected abstract void onRebind();
+    protected abstract fun onRebind()
 
-    @Override
-    void setFlags(int flags, int mask) {
-        super.setFlags(flags, mask);
-        int setFlags = mask & flags;
-        checkFlags(setFlags);
+    internal override fun setFlags(flags: Int, mask: Int) {
+        super.setFlags(flags, mask)
+        val setFlags = mask and flags
+        checkFlags(setFlags)
     }
 
-    @Override
-    void addFlags(int flags) {
-        super.addFlags(flags);
-        checkFlags(flags);
+    internal override fun addFlags(flags: Int) {
+        super.addFlags(flags)
+        checkFlags(flags)
     }
 
-    private void checkFlags(int setFlags) {
+    private fun checkFlags(setFlags: Int) {
         if (isRelevantFlagSet(setFlags)) {
-            onRebind();
+            onRebind()
         }
     }
 
@@ -63,19 +57,16 @@ public abstract class RebindReportingHolder extends RecyclerView.ViewHolder {
      * @param flag
      * @return
      */
-    private static boolean isRelevantFlagSet(int flag) {
-        for (Integer value : new int[]{FLAG_BOUND, FLAG_INVALID, FLAG_UPDATE, FLAG_RETURNED_FROM_SCRAP}) {
-            if ((flag & value) == value) {
-                return true;
-            }
-        }
-
-        return false;
+    private fun isRelevantFlagSet(flag: Int): Boolean {
+        return intArrayOf(RecyclerView.ViewHolder.FLAG_BOUND,
+                RecyclerView.ViewHolder.FLAG_INVALID,
+                RecyclerView.ViewHolder.FLAG_UPDATE,
+                RecyclerView.ViewHolder.FLAG_RETURNED_FROM_SCRAP)
+                .any { (flag and it) == it }
     }
 
-    @Override
-    void offsetPosition(int offset, boolean applyToPreLayout) {
-        super.offsetPosition(offset, applyToPreLayout);
-        onRebind();
+    internal override fun offsetPosition(offset: Int, applyToPreLayout: Boolean) {
+        super.offsetPosition(offset, applyToPreLayout)
+        onRebind()
     }
 }

@@ -90,7 +90,7 @@ abstract class SelectItemFragmentBase<T, U : ListAdapterBase<out ItemBindingHold
     /**
      * {@inheritDoc}
      */
-    override fun onClick(holder: SelectableViewHolder<T>, item: T) {
+    override fun onClick(holder: SelectableViewHolder<T>, item: T?) {
         val alreadySelected = selector.isSelected(holder.itemIdentifier)
         selector.setSelected(holder, true)
         if (alreadySelected || !useDoubleClickSelection) {

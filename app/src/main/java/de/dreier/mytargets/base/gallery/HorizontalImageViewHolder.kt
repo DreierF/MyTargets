@@ -13,22 +13,16 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.base.gallery;
+package de.dreier.mytargets.base.gallery
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.ImageView;
+import android.support.v7.widget.RecyclerView
+import android.view.View
+import android.widget.ImageView
 
-import de.dreier.mytargets.R;
+import de.dreier.mytargets.R
 
-public class HorizontalImageViewHolder extends RecyclerView.ViewHolder {
-    public ImageView camera;
-    public ImageView image;
+class HorizontalImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    var camera: ImageView = itemView.findViewById(R.id.camera)
+    var image: ImageView = itemView.findViewById(R.id.iv)
 
-    public HorizontalImageViewHolder(@NonNull View itemView) {
-        super(itemView);
-        image = itemView.findViewById(R.id.iv);
-        camera = itemView.findViewById(R.id.camera);
-    }
 }

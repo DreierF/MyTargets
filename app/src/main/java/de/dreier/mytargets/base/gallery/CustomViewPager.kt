@@ -13,40 +13,35 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.base.gallery;
+package de.dreier.mytargets.base.gallery
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.view.ViewPager;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
+import android.content.Context
+import android.support.v4.view.ViewPager
+import android.util.AttributeSet
+import android.view.MotionEvent
 
-public class CustomViewPager extends ViewPager {
-    public CustomViewPager(@NonNull Context context) {
-        super(context);
-    }
+class CustomViewPager : ViewPager {
+    constructor(context: Context) : super(context)
 
-    public CustomViewPager(@NonNull Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
+    override fun onTouchEvent(ev: MotionEvent): Boolean {
         try {
-            return super.onTouchEvent(ev);
-        } catch (IllegalArgumentException ex) {
-            ex.printStackTrace();
+            return super.onTouchEvent(ev)
+        } catch (ex: IllegalArgumentException) {
+            ex.printStackTrace()
         }
-        return false;
+
+        return false
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
+    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
         try {
-            return super.onInterceptTouchEvent(ev);
-        } catch (IllegalArgumentException ex) {
-            ex.printStackTrace();
+            return super.onInterceptTouchEvent(ev)
+        } catch (ex: IllegalArgumentException) {
+            ex.printStackTrace()
         }
-        return false;
+
+        return false
     }
 }

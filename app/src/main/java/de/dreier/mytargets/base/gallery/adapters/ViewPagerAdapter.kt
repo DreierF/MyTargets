@@ -13,122 +13,93 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.base.gallery.adapters;
+package de.dreier.mytargets.base.gallery.adapters
 
-import android.app.Activity;
-import android.support.annotation.NonNull;
-import android.support.v4.view.PagerAdapter;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.RelativeLayout;
+import android.app.Activity
+import android.support.v4.view.PagerAdapter
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
+import android.widget.RelativeLayout
+import com.github.chrisbanes.photoview.PhotoView
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import de.dreier.mytargets.R
+import de.dreier.mytargets.shared.utils.ImageList
+import de.dreier.mytargets.utils.Utils
+import java.io.File
 
-import com.github.chrisbanes.photoview.PhotoView;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
+class ViewPagerAdapter(private val activity: Activity, private val images: ImageList, private val toolbar: Toolbar, private val imagesHorizontalList: RecyclerView) : PagerAdapter() {
+    private val layoutInflater = LayoutInflater.from(activity)
+    private var isShowing = true
 
-import java.io.File;
-
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.shared.models.db.Image;
-import de.dreier.mytargets.shared.utils.ImageList;
-import de.dreier.mytargets.shared.utils.SharedUtils;
-import de.dreier.mytargets.utils.Utils;
-
-public class ViewPagerAdapter extends PagerAdapter {
-
-    @NonNull
-    final private Activity activity;
-    @NonNull
-    final private LayoutInflater layoutInflater;
-    final private ImageList images;
-    final private Toolbar toolbar;
-    final private RecyclerView imagesHorizontalList;
-    private boolean isShowing = true;
-
-    public ViewPagerAdapter(@NonNull Activity activity, ImageList images, Toolbar toolbar, RecyclerView imagesHorizontalList) {
-        this.activity = activity;
-        this.layoutInflater = LayoutInflater.from(activity);
-        this.images = images;
-        this.toolbar = toolbar;
-        this.imagesHorizontalList = imagesHorizontalList;
+    override fun getCount(): Int {
+        return images.size()
     }
 
-    @Override
-    public int getCount() {
-        return images.size();
+    override fun isViewFromObject(view: View, `object`: Any): Boolean {
+        return view == `object`
     }
 
-    @Override
-    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return SharedUtils.INSTANCE.equals(view, object);
+    override fun getItemPosition(`object`: Any): Int {
+        return PagerAdapter.POSITION_NONE
     }
 
-    @Override
-    public int getItemPosition(@NonNull Object object) {
-        return POSITION_NONE;
-    }
+    override fun instantiateItem(container: ViewGroup, position: Int): Any {
+        val itemView = layoutInflater.inflate(R.layout.pager_item, container, false)
 
-    @NonNull
-    @Override
-    public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        View itemView = layoutInflater.inflate(R.layout.pager_item, container, false);
-
-        final PhotoView imageView = itemView.findViewById(R.id.iv);
-        Image image = images.get(position);
+        val imageView = itemView.findViewById<PhotoView>(R.id.iv)
+        val image = images[position]
         Picasso.with(activity)
-                .load(new File(activity.getFilesDir(), image.getFileName()))
+                .load(File(activity.filesDir, image.fileName))
                 .fit()
                 .centerInside()
-                .into(imageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        imageView.setOnPhotoTapListener((view, x, y) -> toggleToolbar());
+                .into(imageView, object : Callback {
+                    override fun onSuccess() {
+                        imageView.setOnPhotoTapListener { _, _, _ -> toggleToolbar() }
                     }
 
-                    @Override
-                    public void onError() {
+                    override fun onError() {
 
                     }
-                });
+                })
 
-        container.addView(itemView);
-        return itemView;
+        container.addView(itemView)
+        return itemView
     }
 
-    private void toggleToolbar() {
+    private fun toggleToolbar() {
         if (isShowing) {
-            isShowing = false;
+            isShowing = false
             toolbar.animate()
-                    .translationY(-toolbar.getBottom())
-                    .setInterpolator(new AccelerateInterpolator())
-                    .start();
+                    .translationY((-toolbar.bottom).toFloat())
+                    .setInterpolator(AccelerateInterpolator())
+                    .start()
             imagesHorizontalList.animate()
-                    .translationY(imagesHorizontalList.getBottom())
-                    .setInterpolator(new AccelerateInterpolator())
-                    .start();
-            Utils.INSTANCE.hideSystemUI(activity);
+                    .translationY(imagesHorizontalList.bottom.toFloat())
+                    .setInterpolator(AccelerateInterpolator())
+                    .start()
+            Utils.hideSystemUI(activity)
         } else {
-            isShowing = true;
+            isShowing = true
             toolbar.animate()
-                    .translationY(0)
-                    .setInterpolator(new DecelerateInterpolator())
-                    .start();
+                    .translationY(0f)
+                    .setInterpolator(DecelerateInterpolator())
+                    .start()
             imagesHorizontalList.animate()
-                    .translationY(0)
-                    .setInterpolator(new DecelerateInterpolator())
-                    .start();
-            Utils.INSTANCE.showSystemUI(activity);
+                    .translationY(0f)
+                    .setInterpolator(DecelerateInterpolator())
+                    .start()
+            Utils.showSystemUI(activity)
         }
     }
 
-    @Override
-    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        container.removeView((RelativeLayout) object);
+    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+        container.removeView(`object` as RelativeLayout)
     }
 
 }
