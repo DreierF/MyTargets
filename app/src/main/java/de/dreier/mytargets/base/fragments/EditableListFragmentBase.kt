@@ -84,9 +84,11 @@ abstract class EditableListFragmentBase<T, U : ListAdapterBase<*, T>> : ListFrag
         deleted.clear()
     }
 
-    override fun onClick(holder: SelectableViewHolder<T>, item: T) {
+    override fun onClick(holder: SelectableViewHolder<T>, item: T?) {
         if (!actionModeCallback!!.click(holder)) {
-            onSelected(item)
+            if (item != null) {
+                onSelected(item)
+            }
         }
     }
 

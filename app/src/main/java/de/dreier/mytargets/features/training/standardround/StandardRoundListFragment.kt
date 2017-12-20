@@ -30,7 +30,6 @@ import com.evernote.android.state.State
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
 import de.dreier.mytargets.base.adapters.header.HeaderListAdapter
-import de.dreier.mytargets.base.fragments.FragmentBase
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.SelectItemFragmentBase
 import de.dreier.mytargets.databinding.FragmentListBinding
@@ -107,7 +106,7 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
         }
     }
 
-    override fun onClick(holder: SelectableViewHolder<StandardRound>, item: StandardRound) {
+    override fun onClick(holder: SelectableViewHolder<StandardRound>, item: StandardRound?) {
         currentSelection = item
         super.onClick(holder, item)
     }

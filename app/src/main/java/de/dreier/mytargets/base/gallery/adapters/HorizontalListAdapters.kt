@@ -13,82 +13,68 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.base.gallery.adapters;
+package de.dreier.mytargets.base.gallery.adapters
 
-import android.app.Activity;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.app.Activity
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.squareup.picasso.Picasso
+import de.dreier.mytargets.R
+import de.dreier.mytargets.base.gallery.HorizontalImageViewHolder
+import de.dreier.mytargets.shared.utils.ImageList
+import java.io.File
 
-import com.squareup.picasso.Picasso;
+typealias OnItemClickListener  = (Int) -> Unit
 
-import java.io.File;
+class HorizontalListAdapters(
+        private val activity: Activity,
+        private val images: ImageList,
+        private val clickListener: OnItemClickListener
+) : RecyclerView.Adapter<HorizontalImageViewHolder>() {
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.base.gallery.HorizontalImageViewHolder;
-import de.dreier.mytargets.shared.utils.ImageList;
+    private var selectedItem = -1
 
-public class HorizontalListAdapters extends RecyclerView.Adapter<HorizontalImageViewHolder> {
-    private ImageList images;
-    private Activity activity;
-    private int selectedItem = -1;
-    private OnItemClickListener clickListener;
-
-    public HorizontalListAdapters(Activity activity, ImageList images, OnItemClickListener clickListener) {
-        this.activity = activity;
-        this.images = images;
-        this.clickListener = clickListener;
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HorizontalImageViewHolder {
+        return HorizontalImageViewHolder(LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_image_horizontal, parent, false))
     }
 
-    @NonNull
-    @Override
-    public HorizontalImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new HorizontalImageViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_image_horizontal, parent, false));
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull HorizontalImageViewHolder holder, final int position) {
+    override fun onBindViewHolder(holder: HorizontalImageViewHolder, position: Int) {
         if (position == images.size()) {
-            holder.image.setVisibility(View.GONE);
-            holder.camera.setVisibility(View.VISIBLE);
+            holder.image.visibility = View.GONE
+            holder.camera.visibility = View.VISIBLE
         } else {
-            holder.camera.setVisibility(View.GONE);
-            holder.image.setVisibility(View.VISIBLE);
+            holder.camera.visibility = View.GONE
+            holder.image.visibility = View.VISIBLE
             Picasso.with(activity)
-                    .load(new File(activity.getFilesDir(), images.get(position).getFileName()))
+                    .load(File(activity.filesDir, images[position].fileName))
                     .fit()
-                    .into(holder.image);
-            ColorMatrix matrix = new ColorMatrix();
+                    .into(holder.image)
+            val matrix = ColorMatrix()
             if (selectedItem != position) {
-                matrix.setSaturation(0);
-                holder.image.setAlpha(0.5f);
+                matrix.setSaturation(0f)
+                holder.image.alpha = 0.5f
             } else {
-                matrix.setSaturation(1);
-                holder.image.setAlpha(1f);
+                matrix.setSaturation(1f)
+                holder.image.alpha = 1f
             }
-            ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
-            holder.image.setColorFilter(filter);
+            val filter = ColorMatrixColorFilter(matrix)
+            holder.image.colorFilter = filter
         }
 
-        holder.itemView.setOnClickListener(view -> clickListener.onClick(position));
+        holder.itemView.setOnClickListener { clickListener.invoke(position) }
     }
 
-    @Override
-    public int getItemCount() {
-        return images.size() + 1;
+    override fun getItemCount(): Int {
+        return images.size() + 1
     }
 
-    public void setSelectedItem(int position) {
-        selectedItem = position;
-        notifyDataSetChanged();
-    }
-
-    public interface OnItemClickListener {
-        void onClick(int pos);
+    fun setSelectedItem(position: Int) {
+        selectedItem = position
+        notifyDataSetChanged()
     }
 }

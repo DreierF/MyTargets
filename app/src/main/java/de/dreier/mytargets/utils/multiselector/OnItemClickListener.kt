@@ -16,7 +16,7 @@
 package de.dreier.mytargets.utils.multiselector
 
 interface OnItemClickListener<T> {
-    fun onClick(holder: SelectableViewHolder<T>, item: T)
+    fun onClick(holder: SelectableViewHolder<T>, item: T?)
 }
 
-//typealias OnItemClickListener<T> = (SelectableViewHolder<T>, T) -> Unit
+//typealias OnItemClickListener<T> = (SelectableViewHolder<T>, T?) -> Unit

@@ -24,7 +24,6 @@ import android.view.ViewGroup
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
-import de.dreier.mytargets.base.fragments.FragmentBase
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.SelectItemFragmentBase
 import de.dreier.mytargets.databinding.FragmentListBinding
@@ -68,7 +67,7 @@ class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapter
             // leave distance as it is
         }
 
-        listener.onItemSelected(distance)
+        listener?.onItemSelected(distance!!)
         finish()
     }
 
