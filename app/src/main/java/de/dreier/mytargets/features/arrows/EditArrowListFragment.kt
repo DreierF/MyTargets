@@ -75,7 +75,7 @@ class EditArrowListFragment : EditableListFragment<Arrow>() {
         }
     }
 
-    protected fun onEdit(itemId: Long) {
+    private fun onEdit(itemId: Long) {
         EditArrowFragment.editIntent(itemId)
                 .withContext(this)
                 .start()
@@ -99,7 +99,7 @@ class EditArrowListFragment : EditableListFragment<Arrow>() {
     internal inner class ViewHolder(itemView: View) : SelectableViewHolder<Arrow>(itemView, selector, this@EditArrowListFragment, this@EditArrowListFragment) {
         private val binding: ItemImageDetailsBinding = DataBindingUtil.bind(itemView)
 
-        override fun bindItem() {
+        override fun bindItem(item: Arrow) {
             binding.name.text = item.name
             binding.image.setImageDrawable(item.drawable)
         }

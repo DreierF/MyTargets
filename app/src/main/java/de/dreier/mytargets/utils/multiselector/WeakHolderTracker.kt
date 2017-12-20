@@ -13,20 +13,18 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils.multiselector;
+package de.dreier.mytargets.utils.multiselector
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.LongSparseArray;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
+import android.util.LongSparseArray
+import java.lang.ref.WeakReference
 
 class WeakHolderTracker {
-    @NonNull
-    private LongSparseArray<WeakReference<SelectableHolder>> holdersById =
-            new LongSparseArray<>();
+    private val holdersById = LongSparseArray<WeakReference<SelectableHolder>>()
+
+    val trackedHolders: List<SelectableHolder>
+        get() = (0 until holdersById.size())
+                .map { holdersById.keyAt(it) }
+                .mapNotNull { getHolder(it) }
 
     /**
      * Returns the holder with a given id.
@@ -34,34 +32,12 @@ class WeakHolderTracker {
      * @param id
      * @return
      */
-    @Nullable
-    public SelectableHolder getHolder(long id) {
-        WeakReference<SelectableHolder> holderRef = holdersById.get(id);
-        if (holderRef == null) {
-            return null;
-        }
-        return holderRef.get();
+    fun getHolder(id: Long): SelectableHolder? {
+        val holderRef = holdersById.get(id) ?: return null
+        return holderRef.get()
     }
 
-    public void bindHolder(SelectableHolder holder, long id) {
-        holdersById.put(id, new WeakReference<>(holder));
+    fun bindHolder(holder: SelectableHolder, id: Long) {
+        holdersById.put(id, WeakReference(holder))
     }
-
-    @NonNull
-    public List<SelectableHolder> getTrackedHolders() {
-        List<SelectableHolder> holders = new ArrayList<>();
-
-        for (int i = 0; i < holdersById.size(); i++) {
-            long key = holdersById.keyAt(i);
-            SelectableHolder holder = getHolder(key);
-
-            if (holder != null) {
-                holders.add(holder);
-            }
-        }
-
-        return holders;
-    }
-
-
 }

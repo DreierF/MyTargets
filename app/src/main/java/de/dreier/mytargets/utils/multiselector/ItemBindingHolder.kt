@@ -13,35 +13,30 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils.multiselector;
+package de.dreier.mytargets.utils.multiselector
 
-import android.support.v7.widget.RebindReportingHolder;
-import android.view.View;
+import android.support.v7.widget.RebindReportingHolder
+import android.view.View
 
-public abstract class ItemBindingHolder<T> extends RebindReportingHolder implements SelectableHolder, View.OnClickListener, View.OnLongClickListener {
-    protected T item;
+abstract class ItemBindingHolder<T> internal constructor(itemView: View) : RebindReportingHolder(itemView), SelectableHolder, View.OnClickListener, View.OnLongClickListener {
+    var item: T? = null
+        protected set
 
-    ItemBindingHolder(View itemView) {
-        super(itemView);
+    override fun onLongClick(v: View): Boolean {
+        return true
     }
 
-    public T getItem() {
-        return item;
+    open fun internalBindItem(t: T) {
+        item = t
+        bindItem(t)
     }
 
-    void setItem(T mItem) {
-        this.item = mItem;
+    fun bindItem() {
+        bindItem(item!!)
     }
 
-    @Override
-    public boolean onLongClick(View v) {
-        return true;
-    }
+    abstract fun bindItem(item: T)
 
-    public void bindItem(T t) {
-        setItem(t);
-        bindItem();
-    }
-
-    public abstract void bindItem();
+    override val itemIdentifier: Long
+        get() = super.getItemId()
 }

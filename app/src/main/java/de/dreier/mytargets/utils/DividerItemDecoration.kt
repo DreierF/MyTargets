@@ -13,166 +13,157 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils;
+package de.dreier.mytargets.utils
 
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
-import android.view.View;
+import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Rect
+import android.graphics.drawable.Drawable
+import android.support.v4.content.ContextCompat
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.util.AttributeSet
+import android.view.View
 
-public class DividerItemDecoration extends RecyclerView.ItemDecoration {
+class DividerItemDecoration : RecyclerView.ItemDecoration {
 
-    @Nullable
-    private final Drawable mDivider;
-    private boolean mShowFirstDivider = false;
-    private boolean mShowLastDivider = true;
+    private val mDivider: Drawable?
+    private var mShowFirstDivider = false
+    private var mShowLastDivider = true
 
-    private int mOrientation = -1;
+    private var mOrientation = -1
 
-    private DividerItemDecoration(@NonNull Context context, AttributeSet attrs) {
-        final TypedArray a = context
-                .obtainStyledAttributes(attrs, new int[]{android.R.attr.listDivider});
-        mDivider = a.getDrawable(0);
-        a.recycle();
+    private constructor(context: Context, attrs: AttributeSet) {
+        val a = context
+                .obtainStyledAttributes(attrs, intArrayOf(android.R.attr.listDivider))
+        mDivider = a.getDrawable(0)
+        a.recycle()
     }
 
-    public DividerItemDecoration(@NonNull Context context, AttributeSet attrs, boolean showFirstDivider,
-                                 boolean showLastDivider) {
-        this(context, attrs);
-        mShowFirstDivider = showFirstDivider;
-        mShowLastDivider = showLastDivider;
+    constructor(context: Context, attrs: AttributeSet, showFirstDivider: Boolean,
+                showLastDivider: Boolean) : this(context, attrs) {
+        mShowFirstDivider = showFirstDivider
+        mShowLastDivider = showLastDivider
     }
 
-    public DividerItemDecoration(@NonNull Context context, int resId) {
-        mDivider = ContextCompat.getDrawable(context, resId);
+    constructor(context: Context, resId: Int) {
+        mDivider = ContextCompat.getDrawable(context, resId)
     }
 
-    public DividerItemDecoration(@NonNull Context context, int resId, boolean showFirstDivider,
-                                 boolean showLastDivider) {
-        this(context, resId);
-        mShowFirstDivider = showFirstDivider;
-        mShowLastDivider = showLastDivider;
+    constructor(context: Context, resId: Int, showFirstDivider: Boolean,
+                showLastDivider: Boolean) : this(context, resId) {
+        mShowFirstDivider = showFirstDivider
+        mShowLastDivider = showLastDivider
     }
 
-    private DividerItemDecoration(@Nullable Drawable divider) {
-        mDivider = divider;
+    private constructor(divider: Drawable?) {
+        mDivider = divider
     }
 
-    public DividerItemDecoration(Drawable divider, boolean showFirstDivider,
-                                 boolean showLastDivider) {
-        this(divider);
-        mShowFirstDivider = showFirstDivider;
-        mShowLastDivider = showLastDivider;
+    constructor(divider: Drawable, showFirstDivider: Boolean,
+                showLastDivider: Boolean) : this(divider) {
+        mShowFirstDivider = showFirstDivider
+        mShowLastDivider = showLastDivider
     }
 
-    @Override
-    public void getItemOffsets(@NonNull Rect outRect, View view, @NonNull RecyclerView parent,
-                               @NonNull RecyclerView.State state) {
-        super.getItemOffsets(outRect, view, parent, state);
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView,
+                                state: RecyclerView.State) {
+        super.getItemOffsets(outRect, view, parent, state)
         if (mDivider == null) {
-            return;
+            return
         }
 
-        int position = parent.getChildAdapterPosition(view);
-        if (position == RecyclerView.NO_POSITION || (position == 0 && !mShowFirstDivider)) {
-            return;
+        val position = parent.getChildAdapterPosition(view)
+        if (position == RecyclerView.NO_POSITION || position == 0 && !mShowFirstDivider) {
+            return
         }
 
         if (mOrientation == -1) {
-            getOrientation(parent);
+            getOrientation(parent)
         }
 
         if (mOrientation == LinearLayoutManager.VERTICAL) {
-            outRect.top = mDivider.getIntrinsicHeight();
-            if (mShowLastDivider && position == (state.getItemCount() - 1)) {
-                outRect.bottom = outRect.top;
+            outRect.top = mDivider.intrinsicHeight
+            if (mShowLastDivider && position == state.itemCount - 1) {
+                outRect.bottom = outRect.top
             }
         } else {
-            outRect.left = mDivider.getIntrinsicWidth();
-            if (mShowLastDivider && position == (state.getItemCount() - 1)) {
-                outRect.right = outRect.left;
+            outRect.left = mDivider.intrinsicWidth
+            if (mShowLastDivider && position == state.itemCount - 1) {
+                outRect.right = outRect.left
             }
         }
     }
 
-    @Override
-    public void onDrawOver(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+    override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         if (mDivider == null) {
-            super.onDrawOver(c, parent, state);
-            return;
+            super.onDrawOver(c, parent, state)
+            return
         }
 
         // Initialization needed to avoid compiler warning
-        int left = 0;
-        int right = 0;
-        int top = 0;
-        int bottom = 0;
-        int size;
-        int orientation = mOrientation != -1 ? mOrientation : getOrientation(parent);
-        int childCount = parent.getChildCount();
+        var left = 0
+        var right = 0
+        var top = 0
+        var bottom = 0
+        val size: Int
+        val orientation = if (mOrientation != -1) mOrientation else getOrientation(parent)
+        val childCount = parent.childCount
 
         if (orientation == LinearLayoutManager.VERTICAL) {
-            size = mDivider.getIntrinsicHeight();
-            left = parent.getPaddingLeft();
-            right = parent.getWidth() - parent.getPaddingRight();
+            size = mDivider.intrinsicHeight
+            left = parent.paddingLeft
+            right = parent.width - parent.paddingRight
         } else { //horizontal
-            size = mDivider.getIntrinsicWidth();
-            top = parent.getPaddingTop();
-            bottom = parent.getHeight() - parent.getPaddingBottom();
+            size = mDivider.intrinsicWidth
+            top = parent.paddingTop
+            bottom = parent.height - parent.paddingBottom
         }
 
-        for (int i = mShowFirstDivider ? 0 : 1; i < childCount; i++) {
-            View child = parent.getChildAt(i);
-            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
+        for (i in (if (mShowFirstDivider) 0 else 1) until childCount) {
+            val child = parent.getChildAt(i)
+            val params = child.layoutParams as RecyclerView.LayoutParams
 
             if (orientation == LinearLayoutManager.VERTICAL) {
-                top = child.getTop() - params.topMargin - size;
-                bottom = top + size;
+                top = child.top - params.topMargin - size
+                bottom = top + size
             } else { //horizontal
-                left = child.getLeft() - params.leftMargin;
-                right = left + size;
+                left = child.left - params.leftMargin
+                right = left + size
             }
-            mDivider.setBounds(left, top, right, bottom);
-            mDivider.draw(c);
+            mDivider.setBounds(left, top, right, bottom)
+            mDivider.draw(c)
         }
 
         // show last divider
         if (mShowLastDivider && childCount > 0) {
-            View child = parent.getChildAt(childCount - 1);
-            if (parent.getChildAdapterPosition(child) == (state.getItemCount() - 1)) {
-                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
-                        .getLayoutParams();
+            val child = parent.getChildAt(childCount - 1)
+            if (parent.getChildAdapterPosition(child) == state.itemCount - 1) {
+                val params = child
+                        .layoutParams as RecyclerView.LayoutParams
                 if (orientation == LinearLayoutManager.VERTICAL) {
-                    top = child.getBottom() + params.bottomMargin;
-                    bottom = top + size;
+                    top = child.bottom + params.bottomMargin
+                    bottom = top + size
                 } else { // horizontal
-                    left = child.getRight() + params.rightMargin;
-                    right = left + size;
+                    left = child.right + params.rightMargin
+                    right = left + size
                 }
-                mDivider.setBounds(left, top, right, bottom);
-                mDivider.draw(c);
+                mDivider.setBounds(left, top, right, bottom)
+                mDivider.draw(c)
             }
         }
     }
 
-    private int getOrientation(@NonNull RecyclerView parent) {
+    private fun getOrientation(parent: RecyclerView): Int {
         if (mOrientation == -1) {
-            if (parent.getLayoutManager() instanceof LinearLayoutManager) {
-                LinearLayoutManager layoutManager = (LinearLayoutManager) parent.getLayoutManager();
-                mOrientation = layoutManager.getOrientation();
+            if (parent.layoutManager is LinearLayoutManager) {
+                val layoutManager = parent.layoutManager as LinearLayoutManager
+                mOrientation = layoutManager.orientation
             } else {
-                throw new IllegalStateException(
-                        "DividerItemDecoration can only be used with a LinearLayoutManager.");
+                throw IllegalStateException(
+                        "DividerItemDecoration can only be used with a LinearLayoutManager.")
             }
         }
-        return mOrientation;
+        return mOrientation
     }
 }

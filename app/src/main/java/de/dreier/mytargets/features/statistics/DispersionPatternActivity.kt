@@ -53,7 +53,7 @@ class DispersionPatternActivity : ChildActivityBase() {
         if (statistic!!.arrowName != null) {
             ToolbarUtils.setTitle(this, getString(R.string.arrow_number_x, statistic!!
                     .arrowNumber))
-            ToolbarUtils.setSubtitle(this, statistic!!.arrowName)
+            ToolbarUtils.setSubtitle(this, statistic!!.arrowName!!)
         } else {
             ToolbarUtils.setTitle(this, R.string.dispersion_pattern)
         }
@@ -75,7 +75,7 @@ class DispersionPatternActivity : ChildActivityBase() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_scoreboard, menu)
-        menu.findItem(R.id.action_print).isVisible = Utils.isKitKat()
+        menu.findItem(R.id.action_print).isVisible = Utils.isKitKat
         return true
     }
 
@@ -107,7 +107,7 @@ class DispersionPatternActivity : ChildActivityBase() {
                 val fileType = SettingsManager.statisticsDispersionPatternFileType
                 val f = File.createTempFile("dispersion_pattern",
                         "." + fileType.name.toLowerCase(), dir)
-                if (fileType === EFileType.PDF && Utils.isKitKat()) {
+                if (fileType === EFileType.PDF && Utils.isKitKat) {
                     DispersionPatternUtils.generatePdf(f, statistic!!)
                 } else {
                     DispersionPatternUtils.createDispersionPatternImageFile(800, f, statistic!!)

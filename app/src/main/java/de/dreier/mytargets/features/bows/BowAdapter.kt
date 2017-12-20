@@ -42,7 +42,7 @@ internal class BowAdapter(private val selector: MultiSelector, private val click
 
         val binding: ItemImageDetailsBinding = DataBindingUtil.bind(itemView)
 
-        override fun bindItem() {
+        override fun bindItem(item: Bow) {
             binding.name.text = item.name
             binding.image.setImageDrawable(item.drawable)
             binding.details.visibility = View.VISIBLE

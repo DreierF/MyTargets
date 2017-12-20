@@ -13,16 +13,11 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils.backup;
+package de.dreier.mytargets.utils.backup
 
-import android.app.backup.FileBackupHelper;
-import android.content.Context;
-import android.support.annotation.NonNull;
+import android.app.backup.FileBackupHelper
+import android.content.Context
 
-import de.dreier.mytargets.shared.AppDatabase;
+import de.dreier.mytargets.shared.AppDatabase
 
-class DbBackupHelper extends FileBackupHelper {
-    public DbBackupHelper(@NonNull Context ctx) {
-        super(ctx, ctx.getDatabasePath(AppDatabase.DATABASE_FILE_NAME).getAbsolutePath());
-    }
-}
+internal class DbBackupHelper(ctx: Context) : FileBackupHelper(ctx, ctx.getDatabasePath(AppDatabase.DATABASE_FILE_NAME).absolutePath)

@@ -22,7 +22,7 @@ class StatisticsSettingsFragment : SettingsFragmentBase() {
     public override fun updateItemSummaries() {
         // Disable file type selection for pre-Kitkat, since they do not support PDF generation
         val shareCategory = preferenceManager.findPreference(KEY_STATISTICS)
-        shareCategory.isVisible = Utils.isKitKat()
+        shareCategory.isVisible = Utils.isKitKat
 
         setDefaultSummary(SettingsManager.KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE)
         setDefaultSummary(SettingsManager.KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY)

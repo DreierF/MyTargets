@@ -13,8 +13,10 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils.multiselector;
+package de.dreier.mytargets.utils.multiselector
 
-public interface OnItemClickListener<T> {
-    void onClick(SelectableViewHolder<T> holder, T item);
+interface OnItemClickListener<T> {
+    fun onClick(holder: SelectableViewHolder<T>, item: T)
 }
+
+//typealias OnItemClickListener<T> = (SelectableViewHolder<T>, T) -> Unit

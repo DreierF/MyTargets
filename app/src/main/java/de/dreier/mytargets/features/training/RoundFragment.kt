@@ -38,7 +38,7 @@ import de.dreier.mytargets.features.training.input.InputActivity
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.utils.*
-import de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
+import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 import java.util.*
 
@@ -53,8 +53,8 @@ class RoundFragment : EditableListFragment<End>() {
 
     private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
-        override fun onUpdate(trainingId: Long?, round: Long?, end: End) {
-            if (roundId == round) {
+        override fun onUpdate(trainingId: Long?, roundId: Long?, end: End) {
+            if (this@RoundFragment.roundId == roundId) {
                 reloadData()
             }
         }
@@ -186,7 +186,7 @@ class RoundFragment : EditableListFragment<End>() {
 
         private val binding: ItemEndBinding = DataBindingUtil.bind(itemView)
 
-        override fun bindItem() {
+        override fun bindItem(item: End) {
             val shots = item.loadShots()
             if (SettingsManager.shouldSortTarget(round!!.target)) {
                 Collections.sort(shots!!)

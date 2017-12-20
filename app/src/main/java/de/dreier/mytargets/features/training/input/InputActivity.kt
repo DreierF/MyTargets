@@ -63,12 +63,11 @@ import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod
 import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.BROADCAST_TIMER_SETTINGS_FROM_REMOTE
 import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.MobileWearableClient
-import de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
+import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.utils.Utils.getCurrentLocale
 import de.dreier.mytargets.utils.transitions.FabTransform
-import de.dreier.mytargets.utils.transitions.FabTransformUtil
 import de.dreier.mytargets.utils.transitions.TransitionAdapter
 import java.io.File
 
@@ -77,7 +76,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     @State
     var data: LoaderResult? = null
 
-    private var binding: ActivityInputBinding? = null
+    private lateinit var binding: ActivityInputBinding
     private var transitionFinished = true
     private var summaryShowScope = ETrainingScope.END
     private var targetView: TargetView? = null
@@ -95,7 +94,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
 
     private val timerReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            supportInvalidateOptionsMenu()
+            invalidateOptionsMenu()
         }
     }
 
@@ -103,11 +102,11 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_input)
 
-        setSupportActionBar(binding!!.toolbar)
+        setSupportActionBar(binding.toolbar)
         ToolbarUtils.showHomeAsUp(this)
-        FabTransformUtil.setup(this, binding!!.root)
+        FabTransform.setup(this, binding.root)
 
-        if (Utils.isLollipop()) {
+        if (Utils.isLollipop) {
             setupTransitionListener()
         }
 
@@ -142,7 +141,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
             }
             this.data!!.currentEnd.toEnd().save()
             updateEnd()
-            supportInvalidateOptionsMenu()
+            invalidateOptionsMenu()
         }
     }
 
@@ -154,10 +153,10 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
 
     private fun updateSummaryVisibility() {
         val (showEnd, showRound, showTraining, showAverage, averageScope) = SettingsManager.inputSummaryConfiguration
-        binding!!.endSummary.visibility = if (showEnd) VISIBLE else GONE
-        binding!!.roundSummary.visibility = if (showRound) VISIBLE else GONE
-        binding!!.trainingSummary.visibility = if (showTraining) VISIBLE else GONE
-        binding!!.averageSummary.visibility = if (showAverage) VISIBLE else GONE
+        binding.endSummary.visibility = if (showEnd) VISIBLE else GONE
+        binding.roundSummary.visibility = if (showRound) VISIBLE else GONE
+        binding.trainingSummary.visibility = if (showTraining) VISIBLE else GONE
+        binding.averageSummary.visibility = if (showAverage) VISIBLE else GONE
         summaryShowScope = averageScope
     }
 
@@ -220,7 +219,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
                 MaterialDialog.Builder(this)
                         .title(R.string.comment)
                         .inputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
-                        .input("", data!!.currentEnd.end.comment) { dialog, input ->
+                        .input("", data!!.currentEnd.end.comment) { _, input ->
                             data!!.currentEnd.end.comment = input.toString()
                             data!!.currentEnd.toEnd().save()
                         }
@@ -235,7 +234,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
                         .sendTimerSettingsFromLocal(SettingsManager.timerSettings)
                 openTimer()
                 item.isChecked = timerEnabled
-                supportInvalidateOptionsMenu()
+                invalidateOptionsMenu()
                 return true
             }
             R.id.action_settings -> {
@@ -269,10 +268,10 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
 
     private fun onDataLoadFinished() {
         title = data!!.training.training.title
-        if (!binding!!.targetViewStub.isInflated) {
-            binding!!.targetViewStub.viewStub.inflate()
+        if (!binding.targetViewStub.isInflated) {
+            binding.targetViewStub.viewStub.inflate()
         }
-        targetView = binding!!.targetViewStub.binding.root as TargetView
+        targetView = binding.targetViewStub.binding.root as TargetView
         targetView!!.initWithTarget(data!!.currentRound.round.target)
         targetView!!.setArrow(data!!.arrowDiameter!!, data!!.training.training.arrowNumbering, data!!
                 .maxArrowNumber)
@@ -300,10 +299,10 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
         // Open timer if end has not been saved yet
         openTimer()
         updateEnd()
-        supportInvalidateOptionsMenu()
+        invalidateOptionsMenu()
     }
 
-    fun updateOldShoots() {
+    private fun updateOldShoots() {
         val currentEnd = data!!.currentEnd
         val currentRoundId = data!!.currentRound.round.id
         val currentEndId = currentEnd.end.id
@@ -323,7 +322,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
                 TimerFragment.getIntent(true)
                         .withContext(this)
                         .start()
-            } else if (Utils.isLollipop()) {
+            } else if (Utils.isLollipop) {
                 startTimerDelayed()
             }
         }
@@ -347,8 +346,8 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
             data!!.ends.size
         else
             data!!.currentRound.round.maxEndCount
-        binding!!.endTitle.text = getString(R.string.end_x_of_y, data!!.endIndex + 1, totalEnds)
-        binding!!.roundTitle.text = getString(
+        binding.endTitle.text = getString(R.string.end_x_of_y, data!!.endIndex + 1, totalEnds)
+        binding.roundTitle.text = getString(
                 R.string.round_x_of_y,
                 data!!.currentRound.round.index + 1,
                 data!!.training.rounds.size)
@@ -373,16 +372,16 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
         val color: Int
         if (showPreviousRound) {
             val round = data!!.training.rounds[data!!.roundIndex - 1]
-            binding!!.prev.setOnClickListener { openRound(round.round, round.ends.size - 1) }
-            binding!!.prev.setText(R.string.previous_round)
+            binding.prev.setOnClickListener { openRound(round.round, round.ends.size - 1) }
+            binding.prev.setText(R.string.previous_round)
             color = ContextCompat.getColor(this, R.color.colorPrimary)
         } else {
-            binding!!.prev.setOnClickListener { showEnd(data!!.endIndex - 1) }
-            binding!!.prev.setText(R.string.prev)
+            binding.prev.setOnClickListener { showEnd(data!!.endIndex - 1) }
+            binding.prev.setText(R.string.prev)
             color = Color.BLACK
         }
-        binding!!.prev.setTextColor(Utils.argb(if (isEnabled) 0xFF else 0x42, color))
-        binding!!.prev.isEnabled = isEnabled
+        binding.prev.setTextColor(Utils.argb(if (isEnabled) 0xFF else 0x42, color))
+        binding.prev.isEnabled = isEnabled
     }
 
     private fun updateNextButton() {
@@ -396,16 +395,16 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
         val color: Int
         if (showNextRound) {
             val round = data!!.training.rounds[data!!.roundIndex + 1].round
-            binding!!.next.setOnClickListener { openRound(round, 0) }
-            binding!!.next.setText(R.string.next_round)
+            binding.next.setOnClickListener { openRound(round, 0) }
+            binding.next.setText(R.string.next_round)
             color = ContextCompat.getColor(this, R.color.colorPrimary)
         } else {
-            binding!!.next.setOnClickListener { view -> showEnd(data!!.endIndex + 1) }
-            binding!!.next.setText(R.string.next)
+            binding.next.setOnClickListener { showEnd(data!!.endIndex + 1) }
+            binding.next.setText(R.string.next)
             color = Color.BLACK
         }
-        binding!!.next.setTextColor(Utils.argb(if (isEnabled) 0xFF else 0x42, color))
-        binding!!.next.isEnabled = isEnabled
+        binding.next.setTextColor(Utils.argb(if (isEnabled) 0xFF else 0x42, color))
+        binding.next.isEnabled = isEnabled
     }
 
     private fun openRound(round: Round, endIndex: Int) {
@@ -426,24 +425,24 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
         // Set current end score
         val reachedEndScore = data!!.currentRound.round.target
                 .getReachedScore(data!!.currentEnd.toEnd())
-        binding!!.endScore.text = reachedEndScore.toString()
+        binding.endScore.text = reachedEndScore.toString()
 
         // Set current round score
         val reachedRoundScore = data!!.ends
                 .map { end -> data!!.currentRound.round.target.getReachedScore(end.toEnd()) }
                 .sum()
-        binding!!.roundScore.text = reachedRoundScore.toString()
+        binding.roundScore.text = reachedRoundScore.toString()
 
         // Set current training score
         val reachedTrainingScore = data!!.training.rounds
                 .flatMap { r -> r.ends.map { end -> r.round.target.getReachedScore(end.end) } }
                 .sum()
-        binding!!.trainingScore.text = reachedTrainingScore.toString()
+        binding.trainingScore.text = reachedTrainingScore.toString()
 
         when (summaryShowScope) {
-            ETrainingScope.END -> binding!!.averageScore.text = reachedEndScore.getShotAverageFormatted(getCurrentLocale(this))
-            ETrainingScope.ROUND -> binding!!.averageScore.text = reachedRoundScore.getShotAverageFormatted(getCurrentLocale(this))
-            ETrainingScope.TRAINING -> binding!!.averageScore.text = reachedTrainingScore
+            ETrainingScope.END -> binding.averageScore.text = reachedEndScore.getShotAverageFormatted(getCurrentLocale(this))
+            ETrainingScope.ROUND -> binding.averageScore.text = reachedRoundScore.getShotAverageFormatted(getCurrentLocale(this))
+            ETrainingScope.TRAINING -> binding.averageScore.text = reachedTrainingScore
                     .getShotAverageFormatted(getCurrentLocale(this))
         }
     }
@@ -455,7 +454,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
 
         updateWearNotification()
         updateNavigationButtons()
-        supportInvalidateOptionsMenu()
+        invalidateOptionsMenu()
     }
 
     public override fun onSaveInstanceState(outState: Bundle?) {

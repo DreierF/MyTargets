@@ -51,7 +51,7 @@ import de.dreier.mytargets.shared.utils.Color
 import de.dreier.mytargets.shared.utils.LongUtils
 import de.dreier.mytargets.shared.utils.SharedUtils
 import de.dreier.mytargets.utils.MobileWearableClient
-import de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
+import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
 import de.dreier.mytargets.utils.RoundedTextDrawable
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils

@@ -111,7 +111,7 @@ public class ViewPagerAdapter extends PagerAdapter {
                     .translationY(imagesHorizontalList.getBottom())
                     .setInterpolator(new AccelerateInterpolator())
                     .start();
-            Utils.hideSystemUI(activity);
+            Utils.INSTANCE.hideSystemUI(activity);
         } else {
             isShowing = true;
             toolbar.animate()
@@ -122,7 +122,7 @@ public class ViewPagerAdapter extends PagerAdapter {
                     .translationY(0)
                     .setInterpolator(new DecelerateInterpolator())
                     .start();
-            Utils.showSystemUI(activity);
+            Utils.INSTANCE.showSystemUI(activity);
         }
     }
 

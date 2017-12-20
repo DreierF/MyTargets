@@ -13,23 +13,22 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils;
+package de.dreier.mytargets.utils
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.os.Bundle
 
-import de.dreier.mytargets.utils.multiselector.SingleSelector;
-import com.evernote.android.state.Bundler;
+import com.evernote.android.state.Bundler
 
-public class SingleSelectorBundler implements Bundler<SingleSelector> {
-    public void put(String key, @NonNull SingleSelector value, @NonNull Bundle bundle) {
-        bundle.putBundle(key, value.saveSelectionStates());
+import de.dreier.mytargets.utils.multiselector.SingleSelector
+
+class SingleSelectorBundler : Bundler<SingleSelector> {
+    override fun put(key: String, value: SingleSelector, bundle: Bundle) {
+        bundle.putBundle(key, value.saveSelectionStates())
     }
 
-    @NonNull
-    public SingleSelector get(String key, @NonNull Bundle bundle) {
-        SingleSelector selector = new SingleSelector();
-        selector.restoreSelectionStates(bundle.getBundle(key));
-        return selector;
+    override fun get(key: String, bundle: Bundle): SingleSelector {
+        val selector = SingleSelector()
+        selector.restoreSelectionStates(bundle.getBundle(key)!!)
+        return selector
     }
 }

@@ -13,99 +13,79 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils.transitions;
+package de.dreier.mytargets.utils.transitions
 
-import android.animation.Animator;
-import android.animation.TimeInterpolator;
-import android.annotation.TargetApi;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v4.util.ArrayMap;
-
-import java.util.ArrayList;
+import android.animation.Animator
+import android.animation.TimeInterpolator
+import android.annotation.TargetApi
+import android.os.Build
+import android.support.v4.util.ArrayMap
+import java.util.*
 
 /**
  * https://halfthought.wordpress.com/2014/11/07/reveal-transition/
- * <p/>
+ *
+ *
  * Interrupting Activity transitions can yield an OperationNotSupportedException when the
  * transition tries to pause the animator. Yikes! We can fix this by wrapping the Animator:
  */
 @TargetApi(Build.VERSION_CODES.KITKAT)
-public class NoPauseAnimator extends Animator {
-    private final Animator mAnimator;
-    private final ArrayMap<AnimatorListener, AnimatorListener> mListeners =
-            new ArrayMap<>();
+class NoPauseAnimator(private val mAnimator: Animator) : Animator() {
+    private val mListeners = ArrayMap<Animator.AnimatorListener, Animator.AnimatorListener>()
 
-    public NoPauseAnimator(Animator animator) {
-        mAnimator = animator;
-    }
-
-    @Override
-    public void addListener(AnimatorListener listener) {
-        AnimatorListener wrapper = new AnimatorListenerWrapper(this, listener);
+    override fun addListener(listener: Animator.AnimatorListener) {
+        val wrapper = AnimatorListenerWrapper(this, listener)
         if (!mListeners.containsKey(listener)) {
-            mListeners.put(listener, wrapper);
-            mAnimator.addListener(wrapper);
+            mListeners.put(listener, wrapper)
+            mAnimator.addListener(wrapper)
         }
     }
 
-    @Override
-    public void cancel() {
-        mAnimator.cancel();
+    override fun cancel() {
+        mAnimator.cancel()
     }
 
-    @Override
-    public void end() {
-        mAnimator.end();
+    override fun end() {
+        mAnimator.end()
     }
 
-    @Override
-    public long getDuration() {
-        return mAnimator.getDuration();
+    override fun getDuration(): Long {
+        return mAnimator.duration
     }
 
-    @Override
-    public TimeInterpolator getInterpolator() {
-        return mAnimator.getInterpolator();
+    override fun getInterpolator(): TimeInterpolator {
+        return mAnimator.interpolator
     }
 
-    @Override
-    public void setInterpolator(TimeInterpolator timeInterpolator) {
-        mAnimator.setInterpolator(timeInterpolator);
+    override fun setInterpolator(timeInterpolator: TimeInterpolator) {
+        mAnimator.interpolator = timeInterpolator
     }
 
-    @NonNull
-    @Override
-    public ArrayList<AnimatorListener> getListeners() {
-        return new ArrayList<>(mListeners.keySet());
+    override fun getListeners(): ArrayList<Animator.AnimatorListener> {
+        return ArrayList(mListeners.keys)
     }
 
-    @Override
-    public long getStartDelay() {
-        return mAnimator.getStartDelay();
+    override fun getStartDelay(): Long {
+        return mAnimator.startDelay
     }
 
-    @Override
-    public void setStartDelay(long delayMS) {
-        mAnimator.setStartDelay(delayMS);
+    override fun setStartDelay(delayMS: Long) {
+        mAnimator.startDelay = delayMS
     }
 
-    @Override
-    public boolean isPaused() {
-        return mAnimator.isPaused();
+    override fun isPaused(): Boolean {
+        return mAnimator.isPaused
     }
 
-    @Override
-    public boolean isRunning() {
-        return mAnimator.isRunning();
+    override fun isRunning(): Boolean {
+        return mAnimator.isRunning
     }
 
-    @Override
-    public boolean isStarted() {
-        return mAnimator.isStarted();
+    override fun isStarted(): Boolean {
+        return mAnimator.isStarted
     }
 
-        /* We don't want to override pause or resume methods because we don't want them
+    /* We don't want to override pause or resume methods because we don't want them
          * to affect mAnimator.
         public void pause();
         public void resume();
@@ -113,75 +93,56 @@ public class NoPauseAnimator extends Animator {
         public void removePauseListener(AnimatorPauseListener listener);
         */
 
-    @Override
-    public void removeAllListeners() {
-        mListeners.clear();
-        mAnimator.removeAllListeners();
+    override fun removeAllListeners() {
+        mListeners.clear()
+        mAnimator.removeAllListeners()
     }
 
-    @Override
-    public void removeListener(AnimatorListener listener) {
-        AnimatorListener wrapper = mListeners.get(listener);
+    override fun removeListener(listener: Animator.AnimatorListener) {
+        val wrapper = mListeners[listener]
         if (wrapper != null) {
-            mListeners.remove(listener);
-            mAnimator.removeListener(wrapper);
+            mListeners.remove(listener)
+            mAnimator.removeListener(wrapper)
         }
     }
 
-    @NonNull
-    @Override
-    public Animator setDuration(long durationMS) {
-        mAnimator.setDuration(durationMS);
-        return this;
+    override fun setDuration(durationMS: Long): Animator {
+        mAnimator.duration = durationMS
+        return this
     }
 
-    @Override
-    public void setTarget(Object target) {
-        mAnimator.setTarget(target);
+    override fun setTarget(target: Any?) {
+        mAnimator.setTarget(target)
     }
 
-    @Override
-    public void setupEndValues() {
-        mAnimator.setupEndValues();
+    override fun setupEndValues() {
+        mAnimator.setupEndValues()
     }
 
-    @Override
-    public void setupStartValues() {
-        mAnimator.setupStartValues();
+    override fun setupStartValues() {
+        mAnimator.setupStartValues()
     }
 
-    @Override
-    public void start() {
-        mAnimator.start();
+    override fun start() {
+        mAnimator.start()
     }
 
-    private static class AnimatorListenerWrapper implements Animator.AnimatorListener {
-        private final Animator mAnimator;
-        private final Animator.AnimatorListener mListener;
+    private class AnimatorListenerWrapper(private val mAnimator: Animator, private val mListener: Animator.AnimatorListener) : Animator.AnimatorListener {
 
-        public AnimatorListenerWrapper(Animator animator, Animator.AnimatorListener listener) {
-            mAnimator = animator;
-            mListener = listener;
+        override fun onAnimationStart(animator: Animator) {
+            mListener.onAnimationStart(mAnimator)
         }
 
-        @Override
-        public void onAnimationStart(Animator animator) {
-            mListener.onAnimationStart(mAnimator);
+        override fun onAnimationEnd(animator: Animator) {
+            mListener.onAnimationEnd(mAnimator)
         }
 
-        @Override
-        public void onAnimationEnd(Animator animator) {
-            mListener.onAnimationEnd(mAnimator);
+        override fun onAnimationCancel(animator: Animator) {
+            mListener.onAnimationCancel(mAnimator)
         }
 
-        @Override
-        public void onAnimationCancel(Animator animator) {
-            mListener.onAnimationCancel(mAnimator);
-        }
-
-        @Override
-        public void onAnimationRepeat(Animator animator) {
-            mListener.onAnimationRepeat(mAnimator);
+        override fun onAnimationRepeat(animator: Animator) {
+            mListener.onAnimationRepeat(mAnimator)
         }
     }
 }

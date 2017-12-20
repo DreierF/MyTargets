@@ -48,7 +48,7 @@ import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.targets.models.WA3Ring3Spot
 import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.ToolbarUtils
-import de.dreier.mytargets.utils.transitions.FabTransformUtil
+import de.dreier.mytargets.utils.transitions.FabTransform
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -141,9 +141,9 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
         binding.target.setOnActivityResultContext(this)
         binding.distance.setOnActivityResultContext(this)
         binding.standardRound.setOnActivityResultContext(this)
-        binding.standardRound.setOnUpdateListener { item -> roundTarget = item!!.loadRounds()!!.get(0).targetTemplate }
+        binding.standardRound.setOnUpdateListener { item -> roundTarget = item!!.loadRounds()!![0].targetTemplate }
         binding.changeTargetFace.setOnClickListener {
-            TargetListFragment.getIntent(roundTarget)
+            TargetListFragment.getIntent(roundTarget!!)
                     .withContext(this)
                     .forResult(SR_TARGET_REQUEST_CODE)
                     .start()
@@ -212,7 +212,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        FabTransformUtil.setup(activity!!, binding.root)
+        FabTransform.setup(activity!!, binding.root)
     }
 
     private fun applyTrainingType() {

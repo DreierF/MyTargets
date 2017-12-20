@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.evernote.android.state.State;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -43,8 +44,7 @@ import de.dreier.mytargets.shared.models.Thumbnail;
 import de.dreier.mytargets.shared.models.db.Image;
 import de.dreier.mytargets.shared.utils.FileUtils;
 import de.dreier.mytargets.utils.ToolbarUtils;
-import de.dreier.mytargets.utils.transitions.FabTransformUtil;
-import com.evernote.android.state.State;
+import de.dreier.mytargets.utils.transitions.FabTransform;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
@@ -78,8 +78,8 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit_image, container, false);
-        ToolbarUtils.setSupportActionBar(this, binding.toolbar);
-        ToolbarUtils.showUpAsX(this);
+        ToolbarUtils.INSTANCE.setSupportActionBar(this, binding.toolbar);
+        ToolbarUtils.INSTANCE.showUpAsX(this);
         setHasOptionsMenu(true);
         binding.fab.setOnClickListener(this::onFabClicked);
         return binding.getRoot();
@@ -89,7 +89,7 @@ public abstract class EditWithImageFragmentBase<T extends Image> extends EditFra
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setFocusListenerForAllEditText(getView());
-        FabTransformUtil.setup(getActivity(), binding.getRoot());
+        FabTransform.Companion.setup(getActivity(), binding.getRoot());
     }
 
     private void setFocusListenerForAllEditText(View view) {

@@ -99,7 +99,7 @@ public abstract class SelectItemFragmentBase<T extends IIdProvider & Comparable<
      */
     @Override
     public void onClick(@NonNull SelectableViewHolder<T> holder, T item) {
-        boolean alreadySelected = selector.isSelected(holder.getItemId());
+        boolean alreadySelected = selector.isSelected(holder.getItemIdentifier());
         selector.setSelected(holder, true);
         if (alreadySelected || !useDoubleClickSelection) {
             saveItem();

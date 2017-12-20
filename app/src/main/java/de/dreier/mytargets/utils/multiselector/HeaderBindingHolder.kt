@@ -13,62 +13,29 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils.multiselector;
+package de.dreier.mytargets.utils.multiselector
 
-import android.view.View;
+import android.view.View
 
-public abstract class HeaderBindingHolder<T> extends ItemBindingHolder<T> {
+/**
+ * Constructor for header items
+ *
+ * @param itemView Header view
+ */
+abstract class HeaderBindingHolder<T>(itemView: View) : ItemBindingHolder<T>(itemView) {
 
-    /**
-     * Constructor for header items
-     *
-     * @param itemView Header view
-     */
-    public HeaderBindingHolder(View itemView) {
-        super(itemView);
-    }
+    override fun onClick(v: View) {}
 
-    @Override
-    public void onClick(View v) {
-    }
+    @Suppress("RedundantSetter")
+    override var isSelectable: Boolean
+        get() = false
+        set(value) {}
 
-    /**
-     * Returns whether {@link #itemView} is currently in a
-     * selectable mode.
-     *
-     * @return True if selectable.
-     */
-    public boolean isSelectable() {
-        return false;
-    }
+    override fun onRebind() {}
 
-    /**
-     * Does nothing.
-     *
-     * @param isSelectable True if selectable.
-     */
-    public void setSelectable(boolean isSelectable) {
-    }
-
-    @Override
-    protected void onRebind() {
-    }
-
-    /**
-     * Calls through to {@link #itemView#isActivated}.
-     *
-     * @return True if the view is activated.
-     */
-    public boolean isActivated() {
-        return itemView.isActivated();
-    }
-
-    /**
-     * Calls through to {@link #itemView#setActivated}.
-     *
-     * @param isActivated True to activate the view.
-     */
-    public void setActivated(boolean isActivated) {
-        itemView.setActivated(isActivated);
-    }
+    override var isActivated: Boolean
+        get() = itemView.isActivated
+        set(value) {
+            itemView.isActivated = value
+        }
 }

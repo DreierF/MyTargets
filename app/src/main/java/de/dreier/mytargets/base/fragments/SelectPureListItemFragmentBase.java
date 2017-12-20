@@ -51,7 +51,7 @@ public abstract class SelectPureListItemFragmentBase<T extends IIdProvider & IIm
         adapter = new ListAdapter();
         binding.recyclerView.setAdapter(adapter);
         binding.fab.setVisibility(View.GONE);
-        ToolbarUtils.showUpAsX(this);
+        ToolbarUtils.INSTANCE.showUpAsX(this);
         return binding.getRoot();
     }
 
@@ -79,7 +79,7 @@ public abstract class SelectPureListItemFragmentBase<T extends IIdProvider & IIm
         }
 
         @Override
-        public void bindItem() {
+        public void bindItem(T item) {
             binding.name.setText(item.getName());
             binding.image.setImageDrawable(item.getDrawable(getContext()));
         }

@@ -39,8 +39,8 @@ import de.dreier.mytargets.features.training.edit.EditTrainingFragment.Companion
 import de.dreier.mytargets.features.training.edit.EditTrainingFragment.Companion.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.utils.DividerItemDecoration
-import de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_CREATE_TRAINING_FROM_REMOTE
-import de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
+import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_CREATE_TRAINING_FROM_REMOTE
+import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
 import de.dreier.mytargets.utils.SlideInItemAnimator
 import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
@@ -189,7 +189,7 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
     private inner class ViewHolder(itemView: View) : SelectableViewHolder<Training>(itemView, selector, this@TrainingsFragment, this@TrainingsFragment) {
         internal var binding: ItemTrainingBinding = DataBindingUtil.bind(itemView)
 
-        override fun bindItem() {
+        override fun bindItem(item: Training) {
             binding.training.text = item.title
             binding.trainingDate.text = item.formattedDate
             binding.gesTraining.text = item.reachedScore

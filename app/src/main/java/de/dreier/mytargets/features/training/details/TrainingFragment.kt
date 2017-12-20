@@ -42,7 +42,7 @@ import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.utils.*
-import de.dreier.mytargets.utils.MobileWearableClient.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
+import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 import junit.framework.Assert
 
@@ -58,8 +58,8 @@ open class TrainingFragment : EditableListFragment<Round>() {
 
     private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
-        override fun onUpdate(training: Long?, roundId: Long?, end: End) {
-            if (trainingId == training) {
+        override fun onUpdate(trainingId: Long?, roundId: Long?, end: End) {
+            if (this@TrainingFragment.trainingId == trainingId) {
                 reloadData()
             }
         }
@@ -138,7 +138,7 @@ open class TrainingFragment : EditableListFragment<Round>() {
 
             activity!!.invalidateOptionsMenu()
 
-            ToolbarUtils.setTitle(this@TrainingFragment, training!!.title)
+            ToolbarUtils.setTitle(this@TrainingFragment, training!!.title!!)
             ToolbarUtils.setSubtitle(this@TrainingFragment, training!!.formattedDate)
         }
     }
@@ -214,7 +214,7 @@ open class TrainingFragment : EditableListFragment<Round>() {
     private inner class ViewHolder internal constructor(itemView: View) : SelectableViewHolder<Round>(itemView, selector, this@TrainingFragment, this@TrainingFragment) {
         private val binding: ItemRoundBinding = DataBindingUtil.bind(itemView)
 
-        override fun bindItem() {
+        override fun bindItem(item: Round) {
             binding.title.text = resources.getQuantityString(R.plurals.rounds, item
                     .index + 1, item.index + 1)
             binding.subtitle.text = Utils.fromHtml(HtmlUtils.getRoundInfo(item, equals))

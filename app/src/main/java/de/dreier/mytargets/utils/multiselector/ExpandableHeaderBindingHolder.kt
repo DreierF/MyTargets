@@ -13,88 +13,48 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils.multiselector;
+package de.dreier.mytargets.utils.multiselector
 
-import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.support.annotation.IdRes
+import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 
-public abstract class ExpandableHeaderBindingHolder<T> extends HeaderBindingHolder<T> {
+/**
+ * Constructor for header items
+ *
+ * @param itemView        Header view
+ * @param expand_collapse Expand/Collapse ImageView's resource id
+ */
+abstract class ExpandableHeaderBindingHolder<T>(
+        itemView: View,
+        @IdRes expand_collapse: Int
+) : HeaderBindingHolder<T>(itemView) {
 
-    @Nullable
-    private View expandCollapseView = null;
-    private View.OnClickListener expandListener;
-    private boolean expanded = false;
+    private var expandCollapseView: View
+    private var expandListener: View.OnClickListener? = null
+    private var expanded = false
 
-    /**
-     * Constructor for header items
-     *
-     * @param itemView        Header view
-     * @param expand_collapse Expand/Collapse ImageView's resource id
-     */
-    public ExpandableHeaderBindingHolder(@NonNull View itemView, @IdRes int expand_collapse) {
-        super(itemView);
-        itemView.setOnClickListener(this);
-        expandCollapseView = itemView.findViewById(expand_collapse);
+    init {
+        itemView.setOnClickListener(this)
+        expandCollapseView = itemView.findViewById(expand_collapse)!!
     }
 
-    @Override
-    public void onClick(View v) {
+    override fun onClick(v: View) {
         if (expandListener != null) {
-            expandListener.onClick(v);
+            expandListener!!.onClick(v)
             expandCollapseView.animate()
-                    .rotation(expanded ? 0 : 180)
-                    .setInterpolator(new AccelerateDecelerateInterpolator())
-                    .start();
-            expanded = !expanded;
+                    .rotation(if (expanded) 0f else 180f)
+                    .setInterpolator(AccelerateDecelerateInterpolator())
+                    .start()
+            expanded = !expanded
         }
     }
 
-    /**
-     * Returns whether {@link #itemView} is currently in a
-     * selectable mode.
-     *
-     * @return True if selectable.
-     */
-    public boolean isSelectable() {
-        return false;
-    }
+    override fun onRebind() {}
 
-    /**
-     * Does nothing.
-     *
-     * @param isSelectable True if selectable.
-     */
-    public void setSelectable(boolean isSelectable) {
-    }
-
-    @Override
-    protected void onRebind() {
-    }
-
-    public void setExpandOnClickListener(View.OnClickListener onClickListener, boolean expanded) {
-        expandListener = onClickListener;
-        this.expanded = expanded;
-        expandCollapseView.setRotation(expanded ? 180 : 0);
-    }
-
-    /**
-     * Calls through to {@link #itemView#isActivated}.
-     *
-     * @return True if the view is activated.
-     */
-    public boolean isActivated() {
-        return itemView.isActivated();
-    }
-
-    /**
-     * Calls through to {@link #itemView#setActivated}.
-     *
-     * @param isActivated True to activate the view.
-     */
-    public void setActivated(boolean isActivated) {
-        itemView.setActivated(isActivated);
+    fun setExpandOnClickListener(onClickListener: View.OnClickListener, expanded: Boolean) {
+        expandListener = onClickListener
+        this.expanded = expanded
+        expandCollapseView.rotation = if (expanded) 180f else 0f
     }
 }
