@@ -8,8 +8,6 @@ env:
   - ANDROID_BUILD_TOOLS_VERSION=27.0.2
   - EMULATOR_API_LEVEL=19
   - ANDROID_ABI=armeabi-v7a
-  - JAVA7_HOME=/usr/lib/jvm/java-7-oracle
-  - JAVA8_HOME=/usr/lib/jvm/java-8-oracle
   - JAVA_HOME=$JAVA8_HOME
   - PWD=`pwd`
 android:
