@@ -79,10 +79,6 @@ open class TargetModelBase protected constructor(
         return Dimension(realSizeFactor * diameter.value, diameter.unit)
     }
 
-    fun getScoringStyles(): List<String> {
-        return scoringStyles.map { it.toString() }
-    }
-
     fun getScoringStyle(scoringStyle: Int): ScoringStyle {
         return scoringStyles[scoringStyle]
     }
