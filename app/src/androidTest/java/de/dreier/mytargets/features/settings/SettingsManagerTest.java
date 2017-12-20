@@ -53,7 +53,7 @@ public class SettingsManagerTest extends InstrumentedTestBase {
     @Before
     public void setUp() {
         ApplicationInstance.Companion.getSharedPreferences().edit().clear().apply();
-        ApplicationInstance.getLastSharedPreferences().edit().clear().apply();
+        ApplicationInstance.Companion.getLastSharedPreferences().edit().clear().apply();
     }
 
     @Test

@@ -13,56 +13,52 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.base.activities;
+package de.dreier.mytargets.base.activities
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.content.Intent
+import android.os.Bundle
+import android.support.v4.app.Fragment
 
-public abstract class SimpleFragmentActivityBase extends ChildActivityBase {
+abstract class SimpleFragmentActivityBase : ChildActivityBase() {
 
-    protected static final String FRAGMENT_TAG = "fragment";
+    val childFragment: Fragment
+        get() = supportFragmentManager.findFragmentByTag(FRAGMENT_TAG)
 
-    protected abstract Fragment instantiateFragment();
+    protected abstract fun instantiateFragment(): Fragment
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         if (savedInstanceState == null) {
             // Create the fragment only when the activity is created for the first time.
             // ie. not after orientation changes
-            Fragment childFragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+            var childFragment: Fragment? = supportFragmentManager.findFragmentByTag(FRAGMENT_TAG)
             if (childFragment == null) {
-                childFragment = instantiateFragment();
-                Bundle bundle = getIntent() != null ? getIntent().getExtras() : null;
-                childFragment.setArguments(bundle);
+                childFragment = instantiateFragment()
+                childFragment.arguments = intent?.extras
             }
 
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(android.R.id.content, childFragment, FRAGMENT_TAG);
-            ft.commit();
+            supportFragmentManager.beginTransaction()
+                    .replace(android.R.id.content, childFragment, FRAGMENT_TAG)
+                    .commit()
         }
     }
 
-    public Fragment getChildFragment() {
-        return getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
-    }
-
-    @Override
-    protected void onNewIntent(@Nullable Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-        Fragment childFragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
-        if (childFragment == null && intent != null && intent.getExtras() != null) {
-            childFragment = instantiateFragment();
-            childFragment.setArguments(intent.getExtras());
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        var childFragment: Fragment? = supportFragmentManager.findFragmentByTag(FRAGMENT_TAG)
+        if (childFragment == null && intent?.extras != null) {
+            childFragment = instantiateFragment()
+            childFragment.arguments = intent.extras
         }
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(android.R.id.content, childFragment, FRAGMENT_TAG);
-        ft.commit();
+        supportFragmentManager.beginTransaction()
+                .replace(android.R.id.content, childFragment, FRAGMENT_TAG)
+                .commit()
+    }
+
+    companion object {
+        protected val FRAGMENT_TAG = "fragment"
     }
 }
