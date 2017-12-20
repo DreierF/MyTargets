@@ -49,7 +49,6 @@ import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.Training
-import de.dreier.mytargets.shared.streamwrapper.Stream
 import de.dreier.mytargets.shared.targets.models.WAFull
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod
 import de.dreier.mytargets.test.base.UITestBase
@@ -117,9 +116,9 @@ class MainActivityTest : UITestBase() {
         onView(withRecyclerView(R.id.recyclerView).atPosition(1))
                 .perform(click())
 
-        val firstTraining = Stream.of(Training.all)
-                .sorted(Collections.reverseOrder())
-                .findFirstOrNull()
+        val firstTraining = Training.all
+                .sortedWith(Collections.reverseOrder())
+                .firstOrNull()
 
         intended(allOf(hasClass(TrainingActivity::class.java),
                 hasExtra(ITEM_ID, firstTraining!!.id)))
@@ -175,7 +174,7 @@ class MainActivityTest : UITestBase() {
         // openBow
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
                 .perform(click())
-        val firstBow = Stream.of(Bow.all).sorted().findFirstOrNull()
+        val firstBow = Bow.all.sorted().firstOrNull()
         intended(allOf(hasClass(EditBowActivity::class.java),
                 hasExtra<Long>(EditBowFragment.BOW_ID, firstBow!!.id)))
 
@@ -187,7 +186,7 @@ class MainActivityTest : UITestBase() {
         // openArrow
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
                 .perform(click())
-        val firstArrow = Stream.of(Arrow.all).sorted().findFirstOrNull()
+        val firstArrow = Arrow.all.sorted().firstOrNull()
         intended(allOf(hasClass(EditArrowActivity::class.java),
                 hasExtra<Long>(EditArrowFragment.ARROW_ID, firstArrow!!.id)))
 

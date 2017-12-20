@@ -27,6 +27,7 @@ import de.dreier.mytargets.utils.multiselector.ExpandableHeaderBindingHolder
 import de.dreier.mytargets.utils.multiselector.ItemBindingHolder
 import java.util.*
 
+typealias PartitionDelegate<PARENT, CHILD> = (CHILD) -> PARENT
 abstract class ExpandableListAdapter<P : IIdProvider, C : IIdProvider>(
         partitionDelegate: PartitionDelegate<P, C>,
         headerComparator: Comparator<P>, childComparator: Comparator<C>
