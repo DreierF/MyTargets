@@ -13,156 +13,127 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.base.adapters.header;
-
-import android.databinding.DataBindingUtil;
-import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+package de.dreier.mytargets.base.adapters.header
 
 
-import de.dreier.mytargets.shared.streamwrapper.Stream;
+import android.databinding.DataBindingUtil
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import de.dreier.mytargets.R
+import de.dreier.mytargets.databinding.ItemHeaderExpandableBinding
+import de.dreier.mytargets.shared.models.IIdProvider
+import de.dreier.mytargets.utils.multiselector.ExpandableHeaderBindingHolder
+import de.dreier.mytargets.utils.multiselector.ItemBindingHolder
+import java.util.*
 
-import java.util.Comparator;
-import java.util.List;
+abstract class ExpandableListAdapter<P : IIdProvider, C : IIdProvider>(
+        partitionDelegate: PartitionDelegate<P, C>,
+        headerComparator: Comparator<P>, childComparator: Comparator<C>
+) : HeaderListAdapterBase<P, C, ExpandableHeaderHolder<P, C>>(partitionDelegate, headerComparator, childComparator) {
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.databinding.ItemHeaderExpandableBinding;
-import de.dreier.mytargets.shared.models.IIdProvider;
-import de.dreier.mytargets.utils.multiselector.ExpandableHeaderBindingHolder;
-import de.dreier.mytargets.utils.multiselector.ItemBindingHolder;
+    var expandedIds: List<Long>
+        get() = headersList
+                .filter { it.expanded }
+                .map { it.item.id!! }
+        set(expanded) {
+            headersList.indices
+                    .map { headersList[it] }
+                    .forEach { it.expanded = expanded.contains(it.item.id) }
+        }
 
-public abstract class ExpandableListAdapter<P extends IIdProvider, C extends IIdProvider>
-        extends HeaderListAdapterBase<P, C, ExpandableHeaderHolder<P, C>> {
-
-    public ExpandableListAdapter(PartitionDelegate<P, C> partitionDelegate, Comparator<P> headerComparator, Comparator<C> childComparator) {
-        super(partitionDelegate, headerComparator, childComparator);
-    }
-
-    @Override
-    public final void onBindViewHolder(@NonNull ItemBindingHolder<IIdProvider> viewHolder, int position) {
-        super.onBindViewHolder(viewHolder, position);
-        if (viewHolder instanceof ExpandableHeaderBindingHolder) {
-            ExpandableHeaderHolder<P, C> header = getHeaderForPosition(position);
-            ((ExpandableHeaderBindingHolder) viewHolder)
-                    .setExpandOnClickListener(v -> expandOrCollapse(header), header.expanded);
+    override fun onBindViewHolder(viewHolder: ItemBindingHolder<IIdProvider>, position: Int) {
+        super.onBindViewHolder(viewHolder, position)
+        if (viewHolder is ExpandableHeaderBindingHolder<*>) {
+            val header = getHeaderForPosition(position)
+            (viewHolder as ExpandableHeaderBindingHolder<*>)
+                    .setExpandOnClickListener(View.OnClickListener { expandOrCollapse(header) }, header.expanded)
         }
     }
 
-    @Override
-    public int getItemPosition(C item) {
-        int pos = 0;
-        for (HeaderHolder<P, C> header : headersList) {
-            if (header.getTotalItemCount() < 1) {
-                continue;
+    override fun getItemPosition(item: C): Int {
+        var pos = 0
+        for (header in headersList) {
+            if (header.totalItemCount < 1) {
+                continue
             }
-            pos++;
-            if (header.getTotalItemCount() == 1) {
-                continue;
+            pos++
+            if (header.totalItemCount == 1) {
+                continue
             }
-            for (C child : header.children) {
-                if (child.equals(item)) {
-                    return pos;
+            for (child in header.children) {
+                if (child == item) {
+                    return pos
                 }
-                pos++;
+                pos++
             }
         }
-        return -1;
+        return -1
     }
 
-    public void ensureItemIsExpanded(C item) {
-        ExpandableHeaderHolder<P, C> parentHolder = getHeaderHolderForChild(item);
-        int pos = getHeaderIndex(parentHolder);
-        if (pos >= 0 && !headersList.get(pos).expanded) {
-            expandOrCollapse(headersList.get(pos));
+    fun ensureItemIsExpanded(item: C) {
+        val parentHolder = getHeaderHolderForChild(item)
+        val pos = getHeaderIndex(parentHolder)
+        if (pos >= 0 && !headersList[pos].expanded) {
+            expandOrCollapse(headersList[pos])
         }
     }
 
-    private void expandOrCollapse(@NonNull ExpandableHeaderHolder<P, C> header) {
-        int childLength = header.children.size();
+    private fun expandOrCollapse(header: ExpandableHeaderHolder<P, C>) {
+        val childLength = header.children.size
         if (!header.expanded) {
-            notifyItemRangeInserted(getAbsolutePosition(header) + 1, childLength);
+            notifyItemRangeInserted(getAbsolutePosition(header) + 1, childLength)
         } else {
-            notifyItemRangeRemoved(getAbsolutePosition(header) + 1, childLength);
+            notifyItemRangeRemoved(getAbsolutePosition(header) + 1, childLength)
         }
-        header.expanded = !header.expanded;
+        header.expanded = !header.expanded
     }
 
-    @Override
-    public void setList(@NonNull List<C> children) {
-        List<Long> oldExpanded = getExpandedIds();
-        fillChildMap(children);
-        setExpandedIds(oldExpanded);
-        notifyDataSetChanged();
+    override fun setList(list: MutableList<C>) {
+        val oldExpanded = expandedIds
+        fillChildMap(list)
+        expandedIds = oldExpanded
+        notifyDataSetChanged()
     }
 
-    public void setList(List<C> children, boolean opened) {
-        fillChildMap(children);
-        expandAll(opened);
-        notifyDataSetChanged();
+    fun setList(children: List<C>, opened: Boolean) {
+        fillChildMap(children)
+        expandAll(opened)
+        notifyDataSetChanged()
     }
 
-    public List<Long> getExpandedIds() {
-        return Stream.of(headersList)
-                .filter(h -> h.expanded)
-                .map(h -> h.item.getId())
-                .toList();
-    }
-
-    public void setExpandedIds(@NonNull List<Long> expanded) {
-        for (int i = 0; i < headersList.size(); i++) {
-            final ExpandableHeaderHolder<P, C> header = headersList.get(i);
-            header.expanded = expanded.contains(header.item.getId());
+    private fun expandAll(expanded: Boolean) {
+        for (header in headersList) {
+            header.expanded = expanded
         }
     }
 
-    private void expandAll(boolean expanded) {
-        for (ExpandableHeaderHolder header : headersList) {
-            header.expanded = expanded;
+    fun expandFirst() {
+        if (!headersList[0].expanded) {
+            expandOrCollapse(headersList[0])
         }
     }
 
-    public void expandFirst() {
-        if (!headersList.get(0).expanded) {
-            expandOrCollapse(headersList.get(0));
-        }
+    private fun getAbsolutePosition(h: ExpandableHeaderHolder<P, C>): Int {
+        val headerIndex = getHeaderIndex(h)
+        return (0 until headerIndex).sumBy { headersList[it].totalItemCount }
     }
 
-    private int getAbsolutePosition(ExpandableHeaderHolder<P, C> h) {
-        int headerIndex = getHeaderIndex(h);
-        int pos = 0;
-        for (int i = 0; i < headerIndex; i++) {
-            pos += headersList.get(i).getTotalItemCount();
-        }
-        return pos;
+    override fun getHeaderHolder(parent: P, childComparator: Comparator<C>): ExpandableHeaderHolder<P, C> {
+        return ExpandableHeaderHolder(parent, childComparator)
     }
 
-    @NonNull
-    @Override
-    protected ExpandableHeaderHolder<P, C> getHeaderHolder(P parent, Comparator<C> childComparator) {
-        return new ExpandableHeaderHolder<>(parent, childComparator);
+    override fun getTopLevelViewHolder(parent: ViewGroup): HeaderViewHolder<P> {
+        val itemView = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_header_expandable, parent, false)
+        return HeaderViewHolder(itemView)
     }
 
-    @NonNull
-    @Override
-    protected HeaderViewHolder<P> getTopLevelViewHolder(@NonNull ViewGroup parent) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_header_expandable, parent, false);
-        return new HeaderViewHolder<>(itemView);
-    }
+    class HeaderViewHolder<P> internal constructor(itemView: View) : ExpandableHeaderBindingHolder<P>(itemView, R.id.expand_collapse) {
+        private val binding: ItemHeaderExpandableBinding = DataBindingUtil.bind(itemView)
 
-    private static class HeaderViewHolder<P> extends ExpandableHeaderBindingHolder<P> {
-        private final ItemHeaderExpandableBinding binding;
-
-        HeaderViewHolder(View itemView) {
-            super(itemView, R.id.expand_collapse);
-            binding = DataBindingUtil.bind(itemView);
-        }
-
-        @Override
-        public void bindItem(P item) {
-            binding.header.setText(item.toString());
+        override fun bindItem(item: P) {
+            binding.header.text = item.toString()
         }
     }
 

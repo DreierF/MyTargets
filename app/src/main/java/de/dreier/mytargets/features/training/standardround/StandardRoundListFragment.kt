@@ -28,9 +28,8 @@ import android.widget.ImageView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.evernote.android.state.State
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM
+import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
 import de.dreier.mytargets.base.adapters.header.HeaderListAdapter
-import de.dreier.mytargets.base.adapters.header.PartitionDelegate
 import de.dreier.mytargets.base.fragments.FragmentBase
 import de.dreier.mytargets.base.fragments.FragmentBase.LoaderUICallback
 import de.dreier.mytargets.base.fragments.SelectItemFragmentBase
@@ -92,7 +91,7 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
             StandardRound.all
         }
         return LoaderUICallback {
-            adapter!!.setList(data)
+            adapter!!.setList(data.toMutableList())
             selectItem(binding.recyclerView, currentSelection!!)
         }
     }
@@ -201,8 +200,8 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
     private inner class StandardRoundListAdapter internal constructor(
             context: Context,
             usedIds: LongSparseArray<Int>
-    ) : HeaderListAdapter<StandardRound>(PartitionDelegate { (id) ->
-        if (usedIds.contains(id!!)) {
+    ) : HeaderListAdapter<StandardRound>({ id ->
+        if (usedIds.contains(id.id!!)) {
             HeaderListAdapter.SimpleHeader(0L, context.getString(R.string.recently_used))
         } else {
             HeaderListAdapter.SimpleHeader(1L, "")

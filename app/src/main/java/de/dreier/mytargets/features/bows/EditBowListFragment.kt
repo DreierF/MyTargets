@@ -79,7 +79,7 @@ class EditBowListFragment : EditableListFragment<Bow>() {
     override fun onLoad(args: Bundle?): FragmentBase.LoaderUICallback {
         val bows = Bow.all
         return LoaderUICallback {
-            adapter!!.setList(bows)
+            adapter!!.setList(bows.toMutableList())
             binding.emptyState!!.root.visibility = if (bows.isEmpty()) View.VISIBLE else View.GONE
         }
     }

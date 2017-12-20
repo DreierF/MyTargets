@@ -104,7 +104,7 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
 
     private fun onAddSightSetting() {
         sightMarks!!.add(SightMark())
-        adapter!!.setList(sightMarks)
+        adapter!!.setList(sightMarks!!)
         adapter!!.notifyItemInserted(sightMarks!!.size - 1)
     }
 
@@ -156,17 +156,16 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
 
     private class SightSettingHolder internal constructor(view: View) : DynamicItemHolder<SightMark>(view) {
 
-        private val binding: ItemSightMarkBinding
+        private val binding: ItemSightMarkBinding = DataBindingUtil.bind(view)
 
         init {
-            binding = DataBindingUtil.bind(view)
             binding.sightSetting.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
 
                 }
 
                 override fun onTextChanged(s: CharSequence, i: Int, i1: Int, i2: Int) {
-                    item.value = s.toString()
+                    item!!.value = s.toString()
                 }
 
                 override fun afterTextChanged(editable: Editable) {
@@ -175,17 +174,17 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
             })
         }
 
-        override fun onBind(sightMark: SightMark, position: Int, fragment: Fragment, removeListener: View.OnClickListener) {
-            item = sightMark
+        override fun onBind(item: SightMark, position: Int, fragment: Fragment, removeListener: View.OnClickListener) {
+            this.item = item
             binding.distance.setOnActivityResultContext(fragment)
             binding.distance.setItemIndex(position)
-            binding.distance.setItem(sightMark.distance)
-            binding.sightSetting.setText(sightMark.value)
+            binding.distance.setItem(item.distance)
+            binding.sightSetting.setText(item.value)
             binding.removeSightSetting.setOnClickListener(removeListener)
         }
     }
 
-    private inner class SightMarksAdapter internal constructor(fragment: Fragment, list: List<SightMark>) : DynamicItemAdapter<SightMark>(fragment, list, R.string.sight_setting_removed) {
+    private inner class SightMarksAdapter internal constructor(fragment: Fragment, list: List<SightMark>) : DynamicItemAdapter<SightMark>(fragment, list.toMutableList(), R.string.sight_setting_removed) {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DynamicItemHolder<SightMark> {
             val v = inflater.inflate(R.layout.item_sight_mark, parent, false)

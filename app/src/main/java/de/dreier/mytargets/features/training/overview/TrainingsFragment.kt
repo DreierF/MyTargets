@@ -25,7 +25,6 @@ import android.support.v4.content.LocalBroadcastManager
 import android.view.*
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.header.ExpandableListAdapter
-import de.dreier.mytargets.base.adapters.header.PartitionDelegate
 import de.dreier.mytargets.base.fragments.FragmentBase
 import de.dreier.mytargets.base.fragments.FragmentBase.LoaderUICallback
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
@@ -175,8 +174,9 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
         }
     }
 
-    private inner class TrainingAdapter internal constructor(context: Context) : ExpandableListAdapter<Header, Training>(PartitionDelegate {
-        child -> Utils.getMonthHeader(context, child.date!!)
+    private inner class TrainingAdapter internal constructor(context: Context
+    ) : ExpandableListAdapter<Header, Training>({ child ->
+        Utils.getMonthHeader(context, child.date!!)
     }, Collections.reverseOrder(), Collections.reverseOrder()) {
 
         override fun getSecondLevelViewHolder(parent: ViewGroup): ViewHolder {

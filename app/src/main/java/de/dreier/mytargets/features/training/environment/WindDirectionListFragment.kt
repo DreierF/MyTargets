@@ -19,17 +19,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
 import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase
 import de.dreier.mytargets.shared.models.WindDirection
-
-import de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM
 
 class WindDirectionListFragment : SelectPureListItemFragmentBase<WindDirection>() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        adapter!!.setList(WindDirection.getList(context!!))
+        adapter!!.setList(WindDirection.getList(context!!).toMutableList())
         val windDirection = arguments!!.getParcelable<WindDirection>(ITEM)
         selectItem(binding.recyclerView, windDirection!!)
         return binding.root

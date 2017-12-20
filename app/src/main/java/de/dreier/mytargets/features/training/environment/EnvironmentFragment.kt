@@ -25,7 +25,7 @@ import android.view.View.VISIBLE
 import android.widget.ImageButton
 import com.evernote.android.state.State
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM
+import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
 import de.dreier.mytargets.base.fragments.FragmentBase
 import de.dreier.mytargets.base.fragments.ListFragmentBase
 import de.dreier.mytargets.databinding.FragmentEnvironmentBinding

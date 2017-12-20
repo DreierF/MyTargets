@@ -13,11 +13,6 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.base.adapters.header;
+package de.dreier.mytargets.base.adapters.header
 
-import android.support.annotation.NonNull;
-
-public interface PartitionDelegate<PARENT, CHILD> {
-    @NonNull
-    PARENT getParent(CHILD child);
-}
+typealias PartitionDelegate<PARENT, CHILD> = (CHILD) -> PARENT

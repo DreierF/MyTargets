@@ -26,10 +26,9 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.activities.ItemSelectActivity.ITEM
+import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
 import de.dreier.mytargets.base.adapters.header.ExpandableListAdapter
 import de.dreier.mytargets.base.adapters.header.HeaderListAdapter
-import de.dreier.mytargets.base.adapters.header.PartitionDelegate
 import de.dreier.mytargets.base.fragments.SelectItemFragmentBase
 import de.dreier.mytargets.databinding.FragmentTargetSelectBinding
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding
@@ -44,8 +43,7 @@ import de.dreier.mytargets.utils.SlideInItemAnimator
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 import junit.framework.Assert
-import java.util.ArrayList
-import kotlin.Comparator
+import java.util.*
 
 class TargetListFragment : SelectItemFragmentBase<Target, ExpandableListAdapter<HeaderListAdapter.SimpleHeader, Target>>(), AdapterView.OnItemSelectedListener {
     private var binding: FragmentTargetSelectBinding? = null
@@ -204,10 +202,10 @@ class TargetListFragment : SelectItemFragmentBase<Target, ExpandableListAdapter<
         TARGET
     }
 
-    private inner class TargetAdapter internal constructor() : ExpandableListAdapter<HeaderListAdapter.SimpleHeader, Target>(PartitionDelegate { child ->
+    private inner class TargetAdapter internal constructor() : ExpandableListAdapter<HeaderListAdapter.SimpleHeader, Target>({ child ->
         val type = child.model.type
         HeaderListAdapter.SimpleHeader(type.ordinal.toLong(), type.toString())
-    }, Comparator<HeaderListAdapter.SimpleHeader> { obj, other -> obj.compareTo(other) }, TargetFactory.comparator) {
+    }, compareBy { it }, TargetFactory.comparator) {
 
         override fun getSecondLevelViewHolder(parent: ViewGroup): ViewHolder {
             val itemView = LayoutInflater.from(parent.context)

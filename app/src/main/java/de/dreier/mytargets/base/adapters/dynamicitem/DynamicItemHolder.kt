@@ -13,19 +13,14 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.base.adapters.dynamicitem;
+package de.dreier.mytargets.base.adapters.dynamicitem
 
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
+import android.support.v4.app.Fragment
+import android.support.v7.widget.RecyclerView
+import android.view.View
 
-public abstract class DynamicItemHolder<T> extends RecyclerView.ViewHolder {
-    protected T item;
+abstract class DynamicItemHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    protected var item: T? = null
 
-    public DynamicItemHolder(@NonNull View itemView) {
-        super(itemView);
-    }
-
-    public abstract void onBind(T item, int position, Fragment fragment, View.OnClickListener removeListener);
+    abstract fun onBind(item: T, position: Int, fragment: Fragment, removeListener: View.OnClickListener)
 }

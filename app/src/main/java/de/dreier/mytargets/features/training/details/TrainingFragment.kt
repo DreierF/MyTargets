@@ -134,7 +134,7 @@ open class TrainingFragment : EditableListFragment<Round>() {
             binding.weatherIcon.setImageResource(training!!.environment.colorDrawable)
             binding.detailRoundInfo.text = Utils
                     .fromHtml(HtmlUtils.getTrainingInfoHTML(context!!, training!!, rounds!!, equals))
-            adapter!!.setList(rounds)
+            adapter!!.setList(rounds.toMutableList())
 
             activity!!.invalidateOptionsMenu()
 

@@ -34,14 +34,13 @@ abstract class ExpandableListFragment<H : IIdProvider, C> : EditableListFragment
         if (adapter!!.itemCount == 0) {
             adapter!!.setList(children, opened)
             if (savedInstanceState != null && savedInstanceState!!.containsKey(KEY_EXPANDED)) {
-                adapter!!.setExpandedIds(
-                        LongUtils.toList(savedInstanceState!!.getLongArray(KEY_EXPANDED)!!))
+                adapter!!.expandedIds = LongUtils.toList(savedInstanceState!!.getLongArray(KEY_EXPANDED)!!)
             } else if (!opened && adapter!!.itemCount > 0) {
                 adapter!!.expandFirst()
             }
             return
         }
-        adapter!!.setList(children)
+        adapter!!.setList(children.toMutableList())
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

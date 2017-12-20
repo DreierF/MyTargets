@@ -73,7 +73,7 @@ class SettingsActivity : SimpleFragmentActivityBase(), PreferenceFragmentCompat.
                 } else {
                     intent.putExtra(ARG_PREFERENCE_ROOT, MAIN.key)
                     val ft = supportFragmentManager.beginTransaction()
-                    ft.replace(android.R.id.content, instantiateFragment(), SimpleFragmentActivityBase.FRAGMENT_TAG)
+                    ft.replace(android.R.id.content, instantiateFragment(), SimpleFragmentActivityBase.Companion.FRAGMENT_TAG)
                     ft.commit()
                 }
                 true

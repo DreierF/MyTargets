@@ -133,6 +133,7 @@ object Utils {
                 Color.blue(color))
     }
 
+    @Suppress("DEPRECATION")
     fun getCurrentLocale(context: Context): Locale {
         return if (VERSION.SDK_INT >= VERSION_CODES.N) {
             context.resources.configuration.locales.get(0)

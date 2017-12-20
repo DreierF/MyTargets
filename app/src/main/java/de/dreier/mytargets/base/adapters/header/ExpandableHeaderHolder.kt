@@ -13,22 +13,18 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.base.adapters.header;
+package de.dreier.mytargets.base.adapters.header
 
-import java.util.Comparator;
+import java.util.*
 
-public class ExpandableHeaderHolder<P, C> extends HeaderListAdapterBase.HeaderHolder<P, C> {
-    boolean expanded = false;
+class ExpandableHeaderHolder<P, C> internal constructor(parent: P, childComparator: Comparator<in C>) : HeaderListAdapterBase.HeaderHolder<P, C>(parent, childComparator) {
+    internal var expanded = false
 
-    ExpandableHeaderHolder(P parent, Comparator<? super C> childComparator) {
-        super(parent, childComparator);
-    }
-
-    @Override
-    int getTotalItemCount() {
-        if (children.size() < 1) {
-            return 0;
+    override val totalItemCount: Int
+        get() {
+            if (children.size < 1) {
+                return 0
+            }
+            return if (expanded) 1 + children.size else 1
         }
-        return expanded ? 1 + children.size() : 1;
-    }
 }

@@ -59,6 +59,6 @@ abstract class SimpleFragmentActivityBase : ChildActivityBase() {
     }
 
     companion object {
-        protected val FRAGMENT_TAG = "fragment"
+        const val FRAGMENT_TAG = "fragment"
     }
 }

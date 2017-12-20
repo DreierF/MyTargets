@@ -13,110 +13,91 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.base.adapters;
+package de.dreier.mytargets.base.adapters
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.ViewGroup;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import de.dreier.mytargets.shared.models.IIdProvider;
-import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
+import android.view.ViewGroup
+import de.dreier.mytargets.shared.models.IIdProvider
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
+import java.util.*
 
 /**
  * The list is automatically sorted in natural order.
  */
-public abstract class SimpleListAdapterBase<T extends IIdProvider & Comparable<T>>
-        extends ListAdapterBase<SelectableViewHolder<T>, T> {
+abstract class SimpleListAdapterBase<T> : ListAdapterBase<SelectableViewHolder<T>, T>() where T : IIdProvider, T : Comparable<T> {
 
-    @NonNull
-    private List<T> list = new ArrayList<>();
+    private var list: MutableList<T> = ArrayList()
 
-    public SimpleListAdapterBase() {
-        setHasStableIds(true);
+    init {
+        setHasStableIds(true)
     }
 
-    @Override
-    public long getItemId(int position) {
-        return list.get(position).getId();
+    override fun getItemId(position: Int): Long {
+        return list[position].id!!
     }
 
-    @Override
-    public int getItemCount() {
-        return list.size();
+    override fun getItemCount(): Int {
+        return list.size
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return super.getItemViewType(position) + 1;
+    override fun getItemViewType(position: Int): Int {
+        return super.getItemViewType(position) + 1
     }
 
-    @Override
-    public final SelectableViewHolder<T> onCreateViewHolder(ViewGroup parent, int viewType) {
-        return onCreateViewHolder(parent);
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectableViewHolder<T> {
+        return onCreateViewHolder(parent)
     }
 
-    protected abstract SelectableViewHolder<T> onCreateViewHolder(ViewGroup parent);
+    protected abstract fun onCreateViewHolder(parent: ViewGroup): SelectableViewHolder<T>
 
-    @Override
-    public final void onBindViewHolder(@NonNull SelectableViewHolder<T> viewHolder, int position) {
-        viewHolder.internalBindItem(list.get(position));
+    override fun onBindViewHolder(viewHolder: SelectableViewHolder<T>, position: Int) {
+        viewHolder.internalBindItem(list[position])
     }
 
-    public void setList(@NonNull List<T> list) {
-        Collections.sort(list);
-        this.list = list;
-        notifyDataSetChanged();
+    override fun setList(list: MutableList<T>) {
+        Collections.sort(list)
+        this.list = list
+        notifyDataSetChanged()
     }
 
-    @Override
-    public T getItem(int pos) {
-        return list.get(pos);
+    override fun getItem(position: Int): T? {
+        return list[position]
     }
 
-    @Override
-    public void addItem(T item) {
-        int pos = Collections.binarySearch(list, item);
+    override fun addItem(item: T) {
+        val pos = Collections.binarySearch(list, item)
         if (pos < 0) {
-            list.add(-pos - 1, item);
-            notifyItemInserted(-pos - 1);
+            list.add(-pos - 1, item)
+            notifyItemInserted(-pos - 1)
         } else {
-            list.add(pos, item);
-            notifyItemInserted(pos);
+            list.add(pos, item)
+            notifyItemInserted(pos)
         }
     }
 
-    @Override
-    public int getItemPosition(T item) {
-        int pos = Collections.binarySearch(list, item);
-        if (pos >= 0) {
-            return pos;
+    override fun getItemPosition(item: T): Int {
+        val pos = Collections.binarySearch(list, item)
+        return if (pos >= 0) {
+            pos
         } else {
-            return -1;
+            -1
         }
     }
 
-    @Override
-    public void removeItem(T item) {
-        int pos = Collections.binarySearch(list, item);
+    override fun removeItem(item: T) {
+        val pos = Collections.binarySearch(list, item)
         if (pos < 0) {
-            throw new IllegalArgumentException("Item has already been removed!");
+            throw IllegalArgumentException("Item has already been removed!")
         }
-        list.remove(pos);
-        notifyItemRemoved(pos);
+        list.removeAt(pos)
+        notifyItemRemoved(pos)
     }
 
-    @Nullable
-    @Override
-    public T getItemById(long id) {
-        for (T item : list) {
-            if (item.getId() == id) {
-                return item;
+    override fun getItemById(id: Long): T? {
+        for (item in list) {
+            if (item.id == id) {
+                return item
             }
         }
-        return null;
+        return null
     }
 }
