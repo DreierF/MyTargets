@@ -26,16 +26,10 @@
 -dontnote android.support.v4.**
 -keepattributes Signature
 
-# Retrolambda excludes
--dontwarn java.lang.invoke.*
-
 # Workaround for Andorid bug #78377
 -keep interface android.support.v4.** { *; }
 -keep class !android.support.v7.view.menu.*MenuBuilder*, android.support.v7.** { *; }
 -keep interface android.support.v7.** { *; }
-
-# Parceler
--keep class **$$Parcelable { *; }
 
 #Retrofit
 -dontwarn retrofit2.**
