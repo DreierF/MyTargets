@@ -13,109 +13,106 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.base.fragments;
+package de.dreier.mytargets.base.fragments
 
-import android.os.Bundle;
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.UiThread;
-import android.support.annotation.WorkerThread;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
+import android.annotation.SuppressLint
+import android.os.Bundle
+import android.support.annotation.CallSuper
+import android.support.annotation.UiThread
+import android.support.annotation.WorkerThread
+import android.support.v4.app.Fragment
+import android.support.v4.app.LoaderManager
+import android.support.v4.content.AsyncTaskLoader
+import android.support.v4.content.Loader
+import com.evernote.android.state.StateSaver
+import de.dreier.mytargets.R
+import de.dreier.mytargets.utils.Utils
 
-import com.evernote.android.state.StateSaver;
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.utils.Utils;
+typealias LoaderUICallback = () -> Unit
 
 /**
  * Generic fragment class used as base for most fragments.
  * Has Icepick build in to save state on orientation change
  * and animates activity when #finish gets called.
  */
-public abstract class FragmentBase extends Fragment implements LoaderManager.LoaderCallbacks<FragmentBase.LoaderUICallback> {
-
-    private static final int LOADER_ID = 0;
+abstract class FragmentBase : Fragment(), LoaderManager.LoaderCallbacks<FragmentBase.LoaderUICallbackHelper> {
 
     @CallSuper
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        StateSaver.restoreInstanceState(this, savedInstanceState);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        StateSaver.restoreInstanceState(this, savedInstanceState)
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        StateSaver.saveInstanceState(this, outState);
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        StateSaver.saveInstanceState(this, outState)
     }
 
-    protected void finish() {
-        FragmentActivity activity = getActivity();
+    protected fun finish() {
+        val activity = activity
         if (activity != null) {
-            if (Utils.INSTANCE.isLollipop()) {
-                activity.finishAfterTransition();
+            if (Utils.isLollipop) {
+                activity.finishAfterTransition()
             } else {
-                activity.finish();
-                activity.overridePendingTransition(R.anim.left_in, R.anim.right_out);
+                activity.finish()
+                activity.overridePendingTransition(R.anim.left_in, R.anim.right_out)
             }
         }
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        reloadData();
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        reloadData()
     }
 
-    @Nullable
-    @Override
-    public Loader<LoaderUICallback> onCreateLoader(int id, Bundle args) {
-        return new AsyncTaskLoader<LoaderUICallback>(getContext()) {
-            @Override
-            public LoaderUICallback loadInBackground() {
-                return onLoad(args);
+    @SuppressLint("StaticFieldLeak")
+    override fun onCreateLoader(id: Int, args: Bundle): Loader<LoaderUICallbackHelper>? {
+        val callback = onLoad(args)
+        return  object : AsyncTaskLoader<LoaderUICallbackHelper>(context!!) {
+            override fun loadInBackground(): LoaderUICallbackHelper? {
+                return object : LoaderUICallbackHelper {
+                    override fun applyData() {
+                        callback.invoke()
+                    }
+                }
             }
-        };
+        }
     }
 
     @WorkerThread
-    @NonNull
-    protected LoaderUICallback onLoad(@Nullable Bundle args) {
-        return () -> {
-        };
+    protected open fun onLoad(args: Bundle?): LoaderUICallback {
+        return { }
     }
 
-    @Override
-    public void onLoadFinished(Loader<LoaderUICallback> loader, @NonNull LoaderUICallback callback) {
-        callback.applyData();
+    override fun onLoadFinished(loader: Loader<LoaderUICallbackHelper>, callback: LoaderUICallbackHelper) {
+        callback.applyData()
     }
 
-    @Override
-    public void onLoaderReset(Loader<LoaderUICallback> loader) {
+    override fun onLoaderReset(loader: Loader<LoaderUICallbackHelper>) {
 
     }
 
-    protected void reloadData() {
-        if (getLoaderManager().getLoader(LOADER_ID) != null) {
-            getLoaderManager().destroyLoader(LOADER_ID);
+    protected fun reloadData() {
+        if (loaderManager.getLoader<Any>(LOADER_ID) != null) {
+            loaderManager.destroyLoader(LOADER_ID)
         }
-        getLoaderManager().restartLoader(LOADER_ID, null, this).forceLoad();
+        loaderManager.restartLoader(LOADER_ID, null, this).forceLoad()
     }
 
-    protected void reloadData(Bundle args) {
-        if (getLoaderManager().getLoader(LOADER_ID) != null) {
-            getLoaderManager().destroyLoader(LOADER_ID);
+    protected fun reloadData(args: Bundle) {
+        if (loaderManager.getLoader<Any>(LOADER_ID) != null) {
+            loaderManager.destroyLoader(LOADER_ID)
         }
-        getLoaderManager().restartLoader(LOADER_ID, args, this).forceLoad();
+        loaderManager.restartLoader(LOADER_ID, args, this).forceLoad()
     }
 
-    public interface LoaderUICallback {
+    companion object {
+        private val LOADER_ID = 0
+    }
+
+    interface LoaderUICallbackHelper {
         @UiThread
-        void applyData();
+        fun applyData()
     }
 }

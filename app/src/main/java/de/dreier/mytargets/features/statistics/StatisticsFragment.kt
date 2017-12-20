@@ -35,7 +35,7 @@ import com.github.mikephil.charting.renderer.LineChartRenderer
 import com.github.mikephil.charting.utils.ColorTemplate
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.fragments.FragmentBase
-import de.dreier.mytargets.base.fragments.FragmentBase.LoaderUICallback
+import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentStatisticsBinding
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding
 import de.dreier.mytargets.features.settings.SettingsManager
@@ -164,7 +164,7 @@ class StatisticsFragment : FragmentBase() {
         return binding.root
     }
 
-    override fun onLoad(args: Bundle?): FragmentBase.LoaderUICallback {
+    override fun onLoad(args: Bundle?): LoaderUICallback {
         rounds = roundIds!!
                 .map { Round[it] }
                 .filterNotNull()
@@ -172,7 +172,7 @@ class StatisticsFragment : FragmentBase() {
 
         val data = ArrowStatistic.getAll(target!!, rounds!!)
 
-        return LoaderUICallback {
+        return {
             showLineChart()
             showPieChart()
             showDispersionView()

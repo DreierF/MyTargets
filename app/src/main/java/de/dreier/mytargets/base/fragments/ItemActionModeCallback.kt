@@ -13,156 +13,131 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.base.fragments;
+package de.dreier.mytargets.base.fragments
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.PluralsRes;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.support.annotation.PluralsRes
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.view.ActionMode
+import android.view.Menu
+import android.view.MenuItem
+import de.dreier.mytargets.R
+import de.dreier.mytargets.utils.multiselector.MultiSelector
+import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 
-import java.util.List;
 
-import de.dreier.mytargets.R;
-import de.dreier.mytargets.utils.multiselector.MultiSelector;
-import de.dreier.mytargets.utils.multiselector.SelectableViewHolder;
+typealias EditCallback = (Long) -> Unit
 
-public class ItemActionModeCallback implements ActionMode.Callback {
+typealias DeleteCallback = (List<Long>) -> Unit
 
-    @Nullable
-    private ActionMode actionMode = null;
-    private final MultiSelector selector;
-    private final ListFragmentBase fragment;
+typealias StatisticsCallback = (List<Long>) -> Unit
+
+class ItemActionModeCallback(private val fragment: ListFragmentBase<*, *>,
+                             private val selector: MultiSelector,
+                             /**
+                              * Resource used to set title when items are selected.
+                              */
+                             @PluralsRes
+                             private val itemTypeSelRes: Int) : ActionMode.Callback {
+
+    private var actionMode: ActionMode? = null
 
     /**
      * Callbacks for edit, delete and statistics
      * Null values indicate that the operation is not supported for the presented item type.
      */
-    private EditCallback editCallback;
-    private DeleteCallback deleteCallback;
-    @Nullable
-    private StatisticsCallback statisticsCallback;
+    private var editCallback: EditCallback? = null
+    private var deleteCallback: DeleteCallback? = null
+    private var statisticsCallback: StatisticsCallback? = null
 
-    /**
-     * Resource used to set title when items are selected.
-     */
-    @PluralsRes
-    private final int itemTypeSelRes;
-
-    public ItemActionModeCallback(ListFragmentBase fragment, MultiSelector selector, int itemTypeSelRes) {
-        this.fragment = fragment;
-        this.selector = selector;
-        this.itemTypeSelRes = itemTypeSelRes;
-        this.statisticsCallback = ((fragment instanceof StatisticsCallback) ?
-                (StatisticsCallback) fragment : null);
+    override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
+        val edit = menu.findItem(R.id.action_edit)
+        edit.isVisible = selector.selectedIds.size == 1
+        menu.findItem(R.id.action_statistics).isVisible = statisticsCallback != null
+        menu.findItem(R.id.action_delete).isVisible = deleteCallback != null
+        return false
     }
 
-    @Override
-    public boolean onPrepareActionMode(ActionMode mode, @NonNull Menu menu) {
-        MenuItem edit = menu.findItem(R.id.action_edit);
-        edit.setVisible(selector.getSelectedIds().size() == 1);
-        menu.findItem(R.id.action_statistics).setVisible(statisticsCallback != null);
-        menu.findItem(R.id.action_delete).setVisible(deleteCallback != null);
-        return false;
+    override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+        selector.setSelectable(true)
+        actionMode = mode
+        val inflater = mode.menuInflater
+        inflater.inflate(R.menu.context_menu_edit_delete, menu)
+        return true
     }
 
-    @Override
-    public boolean onCreateActionMode(@NonNull ActionMode mode, Menu menu) {
-        selector.setSelectable(true);
-        actionMode = mode;
-        MenuInflater inflater = mode.getMenuInflater();
-        inflater.inflate(R.menu.context_menu_edit_delete, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onActionItemClicked(@NonNull ActionMode mode, @NonNull MenuItem item) {
-        List<Long> ids = selector.getSelectedIds();
-        switch (item.getItemId()) {
-            case R.id.action_edit:
-                editCallback.onEdit(ids.get(0));
-                mode.finish();
-                return true;
-            case R.id.action_statistics:
-                statisticsCallback.onStatistics(ids);
-                mode.finish();
-                return true;
-            case R.id.action_delete:
-                deleteCallback.onDelete(ids);
-                mode.finish();
-                return true;
-            default:
-                return false;
+    override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+        val ids = selector.selectedIds
+        when (item.itemId) {
+            R.id.action_edit -> {
+                editCallback?.invoke(ids[0])
+                mode.finish()
+                return true
+            }
+            R.id.action_statistics -> {
+                statisticsCallback?.invoke(ids)
+                mode.finish()
+                return true
+            }
+            R.id.action_delete -> {
+                deleteCallback?.invoke(ids)
+                mode.finish()
+                return true
+            }
+            else -> return false
         }
     }
 
-    @Override
-    public void onDestroyActionMode(ActionMode mode) {
-        selector.setSelectable(false);
-        selector.clearSelections();
-        actionMode = null;
+    override fun onDestroyActionMode(mode: ActionMode) {
+        selector.setSelectable(false)
+        selector.clearSelections()
+        actionMode = null
     }
 
-    public void longClick(SelectableViewHolder holder) {
+    fun longClick(holder: SelectableViewHolder<*>) {
         if (actionMode == null) {
-            AppCompatActivity activity = (AppCompatActivity) fragment.getActivity();
-            activity.startSupportActionMode(this);
-            selector.setSelectable(true);
+            val activity = fragment.getActivity() as AppCompatActivity?
+            activity!!.startSupportActionMode(this)
+            selector.setSelectable(true)
         }
-        selector.setSelected(holder, true);
-        updateTitle();
+        selector.setSelected(holder, true)
+        updateTitle()
     }
 
     /**
      * Returns true if the click has been handled.
      */
-    public boolean click(SelectableViewHolder holder) {
+    fun click(holder: SelectableViewHolder<*>): Boolean {
         if (selector.tapSelection(holder)) {
-            updateTitle();
-            return true;
+            updateTitle()
+            return true
         }
-        return false;
+        return false
     }
 
-    private void updateTitle() {
+    private fun updateTitle() {
         if (actionMode == null) {
-            return;
+            return
         }
-        int count = selector.getSelectedIds().size();
+        val count = selector.selectedIds.size
         if (count == 0) {
-            actionMode.finish();
+            actionMode!!.finish()
         } else {
-            final String title = fragment.getResources()
-                    .getQuantityString(itemTypeSelRes, count, count);
-            actionMode.setTitle(title);
-            actionMode.invalidate();
+            val title = fragment.getResources()
+                    .getQuantityString(itemTypeSelRes, count, count)
+            actionMode!!.title = title
+            actionMode!!.invalidate()
         }
     }
 
-    public void setEditCallback(EditCallback editCallback) {
-        this.editCallback = editCallback;
+    fun setEditCallback(editCallback: EditCallback?) {
+        this.editCallback = editCallback
     }
 
-    public void setDeleteCallback(DeleteCallback deleteCallback) {
-        this.deleteCallback = deleteCallback;
+    fun setDeleteCallback(deleteCallback: DeleteCallback?) {
+        this.deleteCallback = deleteCallback
     }
 
-    public void setStatisticsCallback(@Nullable StatisticsCallback statisticsCallback) {
-        this.statisticsCallback = statisticsCallback;
-    }
-
-    public interface EditCallback {
-        void onEdit(Long id);
-    }
-
-    public interface DeleteCallback {
-        void onDelete(List<Long> ids);
-    }
-
-    public interface StatisticsCallback {
-        void onStatistics(List<Long> ids);
+    fun setStatisticsCallback(statisticsCallback: StatisticsCallback?) {
+        this.statisticsCallback = statisticsCallback
     }
 }

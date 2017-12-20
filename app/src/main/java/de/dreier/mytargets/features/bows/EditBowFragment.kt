@@ -108,10 +108,9 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
         adapter!!.notifyItemInserted(sightMarks!!.size - 1)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == Activity.RESULT_OK && requestCode == SimpleDistanceSelector.SIMPLE_DISTANCE_REQUEST_CODE) {
+        if (resultCode == Activity.RESULT_OK && requestCode == SimpleDistanceSelector.SIMPLE_DISTANCE_REQUEST_CODE && data != null) {
             val intentData = data.getBundleExtra(ItemSelectActivity.INTENT)
             val index = intentData.getInt(SelectorBase.INDEX)
             val parcelable = data.getParcelableExtra<Dimension>(ItemSelectActivity.ITEM)

@@ -26,7 +26,7 @@ import android.view.*
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.header.ExpandableListAdapter
 import de.dreier.mytargets.base.fragments.FragmentBase
-import de.dreier.mytargets.base.fragments.FragmentBase.LoaderUICallback
+import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
 import de.dreier.mytargets.databinding.FragmentTrainingsBinding
 import de.dreier.mytargets.databinding.ItemTrainingBinding
@@ -63,9 +63,9 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
         itemTypeDelRes = R.plurals.training_deleted
         actionModeCallback = ItemActionModeCallback(this, selector,
                 R.plurals.training_selected)
-        actionModeCallback.setEditCallback(this::onEdit)
-        actionModeCallback.setDeleteCallback(this::onDelete)
-        actionModeCallback.setStatisticsCallback(this::onStatistics)
+        actionModeCallback?.setEditCallback(this::onEdit)
+        actionModeCallback?.setDeleteCallback(this::onDelete)
+        actionModeCallback?.setStatisticsCallback(this::onStatistics)
     }
 
     override fun onResume() {
@@ -164,9 +164,9 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
                 .start()
     }
 
-    override fun onLoad(args: Bundle?): FragmentBase.LoaderUICallback {
+    override fun onLoad(args: Bundle?): LoaderUICallback {
         val trainings = Training.all
-        return LoaderUICallback {
+        return {
             this@TrainingsFragment.setList(trainings, false)
             val activity = activity
             activity?.invalidateOptionsMenu()

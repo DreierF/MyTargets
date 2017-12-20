@@ -38,7 +38,7 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.fragments.FragmentBase
-import de.dreier.mytargets.base.fragments.FragmentBase.LoaderUICallback
+import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentScoreboardBinding
 import de.dreier.mytargets.databinding.PartialScoreboardSignaturesBinding
 import de.dreier.mytargets.features.scoreboard.pdf.ViewPrintDocumentAdapter
@@ -96,7 +96,7 @@ class ScoreboardFragment : FragmentBase() {
         LocalBroadcastManager.getInstance(context!!).unregisterReceiver(updateReceiver)
     }
 
-    override fun onLoad(args: Bundle?): FragmentBase.LoaderUICallback {
+    override fun onLoad(args: Bundle?): LoaderUICallback {
         training = Training[trainingId]
         val archerSignature = training!!.orCreateArcherSignature
         val witnessSignature = training!!.orCreateWitnessSignature
@@ -104,7 +104,7 @@ class ScoreboardFragment : FragmentBase() {
         val scoreboard = ScoreboardUtils
                 .getScoreboardView(context!!, Utils.getCurrentLocale(context!!),
                         training!!, roundId, SettingsManager.scoreboardConfiguration)
-        return LoaderUICallback {
+        return {
             binding!!.progressBar.visibility = GONE
             scoreboard.layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
             binding!!.container.removeAllViews()

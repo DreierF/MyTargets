@@ -12,45 +12,42 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package de.dreier.mytargets.base.fragments;
+package de.dreier.mytargets.base.fragments
 
-import android.content.Context;
-import android.os.Parcelable;
-import android.support.annotation.Nullable;
+import android.content.Context
+import android.os.Parcelable
 
-import de.dreier.mytargets.base.adapters.ListAdapterBase;
-import de.dreier.mytargets.utils.multiselector.OnItemClickListener;
+import de.dreier.mytargets.base.adapters.ListAdapterBase
+import de.dreier.mytargets.utils.multiselector.OnItemClickListener
 
-public abstract class ListFragmentBase<T, U extends ListAdapterBase<?, T>> extends FragmentBase implements OnItemClickListener<T> {
+abstract class ListFragmentBase<T, U : ListAdapterBase<*, T>> : FragmentBase(), OnItemClickListener<T> {
 
     /**
      * Listener which gets called when item gets selected
      */
-    protected OnItemSelectedListener listener;
+    protected var listener: OnItemSelectedListener? = null
 
     /**
      * Adapter for the fragment's RecyclerView
      */
-    @Nullable
-    protected U adapter;
+    protected var adapter: U? = null
 
-    @Override
-    public void onAttach(Context activity) {
-        super.onAttach(activity);
-        if (activity instanceof OnItemSelectedListener) {
-            listener = (OnItemSelectedListener) activity;
+    override fun onAttach(activity: Context?) {
+        super.onAttach(activity)
+        if (activity is OnItemSelectedListener) {
+            listener = activity
         }
     }
 
     /**
      * Used for communicating item selection
      */
-    public interface OnItemSelectedListener {
+    interface OnItemSelectedListener {
         /**
          * Called when a item has been selected.
          *
          * @param item Item that has been selected
          */
-        void onItemSelected(Parcelable item);
+        fun onItemSelected(item: Parcelable)
     }
 }
