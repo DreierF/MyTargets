@@ -39,7 +39,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class StandardRoundActivityTest : UITestBase() {
 
-    @Rule
+    @get:Rule
     var activityTestRule = IntentsTestRule(
             StandardRoundActivity::class.java, true, false)
 

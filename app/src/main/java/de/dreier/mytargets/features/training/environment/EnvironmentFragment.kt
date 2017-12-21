@@ -131,7 +131,7 @@ class EnvironmentFragment : FragmentBase() {
         return e
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         binding.windSpeed.onActivityResult(requestCode, resultCode, data)
         binding.windDirection.onActivityResult(requestCode, resultCode, data)

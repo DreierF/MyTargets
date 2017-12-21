@@ -50,7 +50,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class EditStandardRoundActivityTest : UITestBase() {
 
-    @Rule
+    @get:Rule
     var activityTestRule = IntentsTestRule(
             EditTrainingActivity::class.java, true, false)
 

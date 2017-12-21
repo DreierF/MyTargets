@@ -181,12 +181,12 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
         super.onPause()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_CODE_RESOLUTION && resultCode != RESULT_OK) {
             leaveBackupSettings()
         }
-        if (requestCode == IMPORT_FROM_URI && resultCode == AppCompatActivity.RESULT_OK) {
-            importFromUri(data.data!!)
+        if (requestCode == IMPORT_FROM_URI && resultCode == AppCompatActivity.RESULT_OK && data != null) {
+            importFromUri(data.data)
         }
         super.onActivityResult(requestCode, resultCode, data)
     }

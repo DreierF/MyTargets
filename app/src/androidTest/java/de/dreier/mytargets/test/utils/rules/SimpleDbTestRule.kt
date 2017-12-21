@@ -138,6 +138,7 @@ class SimpleDbTestRule : DbTestRuleBase() {
         training.bowId = bow.id
         training.arrowId = null
         training.arrowNumbering = false
+        training.save()
         val at = AugmentedTraining(training)
         at.initRoundsFromTemplate(standardRound)
         at.toTraining().save()

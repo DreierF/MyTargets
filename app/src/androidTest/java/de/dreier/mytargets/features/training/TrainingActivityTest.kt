@@ -42,7 +42,7 @@ class TrainingActivityTest : UITestBase() {
 
     private val activityTestRule = IntentsTestRule(
             TrainingActivity::class.java, true, false)
-    @Rule
+    @get:Rule
     val rule = RuleChain.outerRule(SimpleDbTestRule())
             .around(activityTestRule)
 

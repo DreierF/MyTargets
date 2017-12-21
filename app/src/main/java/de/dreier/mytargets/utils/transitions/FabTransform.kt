@@ -51,8 +51,8 @@ import java.util.*
  * See: https://www.google.com/design/spec/motion/transforming-material.html#transforming-material-radial-transformation
  */
 @TargetApi(LOLLIPOP)
-class FabTransform private constructor(@param:ColorInt @field:ColorInt
-                                       private val color: Int, @param:DrawableRes private val icon: Int) : Transition() {
+class FabTransform private constructor(@ColorInt @field:ColorInt
+                                       private val color: Int, @DrawableRes private val icon: Int) : Transition() {
 
     init {
         pathMotion = GravityArcMotion()

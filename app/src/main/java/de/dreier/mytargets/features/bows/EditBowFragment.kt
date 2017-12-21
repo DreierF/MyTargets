@@ -43,18 +43,17 @@ import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.views.selector.SelectorBase
 import de.dreier.mytargets.views.selector.SimpleDistanceSelector
-import java.util.*
 
 class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_bow, BowImage::class.java) {
 
     @State
-    var bow: Bow? = null
+    lateinit var bow: Bow
 
     @State
-    var sightMarks: ArrayList<SightMark>? = null
+    var sightMarks: ArrayList<SightMark> = ArrayList()
 
     private lateinit var contentBinding: FragmentEditBowBinding
-    private var adapter: SightMarksAdapter? = null
+    private lateinit var adapter: SightMarksAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = super.onCreateView(inflater, container, savedInstanceState)
@@ -70,23 +69,22 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
             val bundle = arguments
             if (bundle != null && bundle.containsKey(BOW_ID)) {
                 // Load data from database
-                bow = Bow[bundle.getLong(BOW_ID)]
-                sightMarks = bow!!.loadSightMarks()
+                bow = Bow[bundle.getLong(BOW_ID)]!!
+                sightMarks = bow.loadSightMarks()
             } else {
                 // Set to default values
                 bow = Bow()
-                bow!!.name = getString(R.string.my_bow)
-                bow!!.type = bowType
-                sightMarks = ArrayList()
-                sightMarks!!.add(SightMark())
+                bow.name = getString(R.string.my_bow)
+                bow.type = bowType
+                sightMarks.add(SightMark())
             }
-            imageFiles = bow!!.loadImages()
+            imageFiles = bow.loadImages()
         }
-        ToolbarUtils.setTitle(this, bow!!.name)
+        ToolbarUtils.setTitle(this, bow.name)
         contentBinding.bow = bow
 
         loadImage(imageFile)
-        adapter = SightMarksAdapter(this, sightMarks!!)
+        adapter = SightMarksAdapter(this, sightMarks)
         contentBinding.sightMarks.adapter = adapter
         contentBinding.sightMarks.isNestedScrollingEnabled = false
         return rootView
@@ -103,9 +101,9 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
     }
 
     private fun onAddSightSetting() {
-        sightMarks!!.add(SightMark())
-        adapter!!.setList(sightMarks!!)
-        adapter!!.notifyItemInserted(sightMarks!!.size - 1)
+        sightMarks.add(SightMark())
+        adapter.setList(sightMarks)
+        adapter.notifyItemInserted(sightMarks.size - 1)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -114,42 +112,42 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
             val intentData = data.getBundleExtra(ItemSelectActivity.INTENT)
             val index = intentData.getInt(SelectorBase.INDEX)
             val parcelable = data.getParcelableExtra<Dimension>(ItemSelectActivity.ITEM)
-            sightMarks!![index].distance = parcelable
-            adapter!!.notifyItemChanged(index)
+            sightMarks[index].distance = parcelable
+            adapter.notifyItemChanged(index)
         }
     }
 
     public override fun onSave() {
         super.onSave()
-        buildBow()!!.save()
+        buildBow().save()
         finish()
     }
 
-    private fun buildBow(): Bow? {
-        bow!!.name = contentBinding.name.text.toString()
-        bow!!.brand = contentBinding.brand.text.toString()
-        bow!!.size = contentBinding.size.text.toString()
-        bow!!.braceHeight = contentBinding.braceHeight.text.toString()
-        bow!!.tiller = contentBinding.tiller.text.toString()
-        bow!!.limbs = contentBinding.limbs.text.toString()
-        bow!!.sight = contentBinding.sight.text.toString()
-        bow!!.drawWeight = contentBinding.drawWeight.text.toString()
-        bow!!.stabilizer = contentBinding.stabilizer.text.toString()
-        bow!!.clicker = contentBinding.clicker.text.toString()
-        bow!!.description = contentBinding.description.text.toString()
-        bow!!.button = contentBinding.button.text.toString()
-        bow!!.string = contentBinding.string.text.toString()
-        bow!!.nockingPoint = contentBinding.nockingPoint.text.toString()
-        bow!!.letoffWeight = contentBinding.letoffWeight.text.toString()
-        bow!!.arrowRest = contentBinding.rest.text.toString()
-        bow!!.restHorizontalPosition = contentBinding.restHorizontalPosition.text.toString()
-        bow!!.restVerticalPosition = contentBinding.restVerticalPosition.text.toString()
-        bow!!.restStiffness = contentBinding.restStiffness.text.toString()
-        bow!!.camSetting = contentBinding.cam.text.toString()
-        bow!!.scopeMagnification = contentBinding.scopeMagnification.text.toString()
-        bow!!.images = imageFiles
-        bow!!.thumbnail = thumbnail
-        bow!!.sightMarks = sightMarks
+    private fun buildBow(): Bow {
+        bow.name = contentBinding.name.text.toString()
+        bow.brand = contentBinding.brand.text.toString()
+        bow.size = contentBinding.size.text.toString()
+        bow.braceHeight = contentBinding.braceHeight.text.toString()
+        bow.tiller = contentBinding.tiller.text.toString()
+        bow.limbs = contentBinding.limbs.text.toString()
+        bow.sight = contentBinding.sight.text.toString()
+        bow.drawWeight = contentBinding.drawWeight.text.toString()
+        bow.stabilizer = contentBinding.stabilizer.text.toString()
+        bow.clicker = contentBinding.clicker.text.toString()
+        bow.description = contentBinding.description.text.toString()
+        bow.button = contentBinding.button.text.toString()
+        bow.string = contentBinding.string.text.toString()
+        bow.nockingPoint = contentBinding.nockingPoint.text.toString()
+        bow.letoffWeight = contentBinding.letoffWeight.text.toString()
+        bow.arrowRest = contentBinding.rest.text.toString()
+        bow.restHorizontalPosition = contentBinding.restHorizontalPosition.text.toString()
+        bow.restVerticalPosition = contentBinding.restVerticalPosition.text.toString()
+        bow.restStiffness = contentBinding.restStiffness.text.toString()
+        bow.camSetting = contentBinding.cam.text.toString()
+        bow.scopeMagnification = contentBinding.scopeMagnification.text.toString()
+        bow.images = imageFiles
+        bow.thumbnail = thumbnail
+        bow.sightMarks = sightMarks
         return bow
     }
 
@@ -183,7 +181,7 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
         }
     }
 
-    private inner class SightMarksAdapter internal constructor(fragment: Fragment, list: List<SightMark>) : DynamicItemAdapter<SightMark>(fragment, list.toMutableList(), R.string.sight_setting_removed) {
+    private inner class SightMarksAdapter internal constructor(fragment: Fragment, list: MutableList<SightMark>) : DynamicItemAdapter<SightMark>(fragment, list, R.string.sight_setting_removed) {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DynamicItemHolder<SightMark> {
             val v = inflater.inflate(R.layout.item_sight_mark, parent, false)

@@ -49,7 +49,7 @@ import java.io.IOException
 
 abstract class UITestBase : InstrumentedTestBase() {
 
-    @Rule
+    @get:Rule
     var watcher: TestRule = object : TestWatcher() {
         override fun failed(e: Throwable?, description: Description?) {
             // Save to external storage (usually /sdcard/screenshots)

@@ -48,7 +48,7 @@ class DeleteTest : UITestBase() {
 
     private val activityTestRule = ActivityTestRule(MainActivity::class.java)
 
-    @Rule
+    @get:Rule
     val rule = RuleChain.outerRule(SimpleDbTestRule())
             .around(activityTestRule)
 

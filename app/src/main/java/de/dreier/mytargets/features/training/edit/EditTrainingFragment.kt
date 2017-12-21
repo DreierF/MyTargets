@@ -196,7 +196,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
                 .getQuantityString(R.plurals.arrow, binding.arrows.progress, binding.arrows.progress)
     }
 
-    protected fun setScoringStyleForCompoundBow(bow: Bow?) {
+    private fun setScoringStyleForCompoundBow(bow: Bow?) {
         val target = binding.target.selectedItem
         if (bow != null && target != null && target.id <= WA3Ring3Spot.ID) {
             if (bow.type === EBowType.COMPOUND_BOW && target.scoringStyleIndex == 0) {
@@ -292,7 +292,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         binding.target.onActivityResult(requestCode, resultCode, data)
         binding.distance.onActivityResult(requestCode, resultCode, data)
@@ -300,7 +300,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
         binding.arrow.onActivityResult(requestCode, resultCode, data)
         binding.bow.onActivityResult(requestCode, resultCode, data)
         binding.environment.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == SR_TARGET_REQUEST_CODE) {
+        if (resultCode == Activity.RESULT_OK && requestCode == SR_TARGET_REQUEST_CODE && data != null) {
             val target = data.getParcelableExtra<Target>(ItemSelectActivity.ITEM)
             val item = binding.standardRound.selectedItem
             item!!.loadRounds().forEach { it.targetTemplate = target }

@@ -38,7 +38,7 @@ class BowSelector @JvmOverloads constructor(context: Context, attrs: AttributeSe
                 .forResult(BOW_ADD_REQUEST_CODE)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == BOW_ADD_REQUEST_CODE) {
             setItemId(null)
@@ -51,10 +51,7 @@ class BowSelector @JvmOverloads constructor(context: Context, attrs: AttributeSe
             item = Bow[bow]
         }
         if (item == null) {
-            val all = Bow.all
-            if (all.isNotEmpty()) {
-                item = all[0]
-            }
+            item = Bow.all.firstOrNull()
         }
         setItem(item)
     }

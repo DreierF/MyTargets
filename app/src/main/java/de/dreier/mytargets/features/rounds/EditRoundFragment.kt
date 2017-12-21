@@ -138,7 +138,7 @@ class EditRoundFragment : EditFragmentBase() {
         binding.target.setItem(SettingsManager.target)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         binding.target.onActivityResult(requestCode, resultCode, data)
         binding.distance.onActivityResult(requestCode, resultCode, data)

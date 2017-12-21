@@ -19,7 +19,7 @@ import android.support.annotation.StringRes
 import de.dreier.mytargets.R
 import de.dreier.mytargets.shared.SharedApplicationInstance
 
-enum class EBackupInterval constructor(val days: Int, @param:StringRes private val textResId: Int) {
+enum class EBackupInterval constructor(val days: Int, @StringRes private val textResId: Int) {
     DAILY(1, R.string.daily),
     WEEKLY(7, R.string.weekly),
     MONTHLY(30, R.string.monthly);

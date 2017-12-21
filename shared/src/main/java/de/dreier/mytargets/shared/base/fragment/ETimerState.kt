@@ -19,7 +19,7 @@ import android.support.annotation.ColorRes
 
 import de.dreier.mytargets.shared.R
 
-enum class ETimerState constructor(@param:ColorRes var color: Int, var signalCount: Int) {
+enum class ETimerState constructor(@ColorRes var color: Int, var signalCount: Int) {
     WAIT_FOR_START(R.color.timer_red, 0),
     PREPARATION(R.color.timer_red, 2),
     SHOOTING(R.color.timer_green, 1),

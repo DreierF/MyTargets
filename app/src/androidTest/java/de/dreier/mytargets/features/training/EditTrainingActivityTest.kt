@@ -54,7 +54,7 @@ import org.threeten.bp.format.FormatStyle
 @RunWith(AndroidJUnit4::class)
 class EditTrainingActivityTest : UITestBase() {
 
-    @Rule
+    @get:Rule
     var activityTestRule = IntentsTestRule(
             EditTrainingActivity::class.java, true, false)
 

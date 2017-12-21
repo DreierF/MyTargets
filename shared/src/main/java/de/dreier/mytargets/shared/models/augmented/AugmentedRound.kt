@@ -40,7 +40,7 @@ data class AugmentedRound(
         }
 
     fun toRound(): Round {
-        round.ends = ends.map { it.toEnd() }
+        round.ends = ends.map { it.toEnd() }.toMutableList()
         return round
     }
 

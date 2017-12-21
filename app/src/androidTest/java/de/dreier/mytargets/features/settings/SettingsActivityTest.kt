@@ -50,7 +50,7 @@ import org.threeten.bp.format.FormatStyle
 @RunWith(AndroidJUnit4::class)
 class SettingsActivityTest : UITestBase() {
 
-    @Rule
+    @get:Rule
     var activityTestRule = ActivityTestRule(
             SettingsActivity::class.java)
 

@@ -46,7 +46,7 @@ class ArrowSelectorTest : UITestBase() {
     private val activityTestRule = IntentsTestRule(
             EditTrainingActivity::class.java, true, false)
 
-    @Rule
+    @get:Rule
     val rule = RuleChain.outerRule(EmptyDbTestRule())
             .around(activityTestRule)
 

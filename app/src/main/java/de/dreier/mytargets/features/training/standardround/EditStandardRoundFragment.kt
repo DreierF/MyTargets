@@ -147,10 +147,10 @@ class EditStandardRoundFragment : EditFragmentBase() {
         finish()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK && data != null) {
             val intentData = data.getBundleExtra(ItemSelectActivity.INTENT)
             val index = intentData.getInt(SelectorBase.INDEX)
             when (requestCode) {

@@ -162,13 +162,13 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
         return false
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && requestCode == NEW_STANDARD_ROUND) {
+        if (resultCode == RESULT_OK && requestCode == NEW_STANDARD_ROUND && data != null) {
             persistSelection(data.getParcelableExtra(ITEM))
             activity!!.setResult(resultCode, data)
             finish()
-        } else if (requestCode == EDIT_STANDARD_ROUND) {
+        } else if (requestCode == EDIT_STANDARD_ROUND && data != null) {
             if (resultCode == RESULT_OK) {
                 currentSelection = data.getParcelableExtra(ITEM)
                 reloadData()

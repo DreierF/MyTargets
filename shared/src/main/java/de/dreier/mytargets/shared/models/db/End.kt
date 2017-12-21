@@ -59,7 +59,7 @@ data class End(
 ) : BaseModel(), IIdSettable, Comparable<End>, IRecursiveModel, Parcelable {
 
     @Transient
-    var images: List<EndImage>? = null
+    var images: MutableList<EndImage>? = null
 
     @Transient
     internal var shots: MutableList<Shot>? = null
@@ -78,29 +78,25 @@ data class End(
     }
 
     @OneToMany(methods = [], variableName = "shots")
-    fun loadShots(): List<Shot> {
+    fun loadShots(): MutableList<Shot> {
         if (shots == null) {
-            shots = if (id == 0L) mutableListOf() else SQLite.select()
+            shots = SQLite.select()
                     .from(Shot::class.java)
                     .where(Shot_Table.end.eq(id))
-                    .queryList()
+                    .queryList().toMutableList()
         }
         return shots!!
     }
 
     @OneToMany(methods = [], variableName = "images")
-    fun loadImages(): List<EndImage> {
+    fun loadImages(): MutableList<EndImage> {
         if (images == null) {
-            images = if (id == 0L) mutableListOf() else SQLite.select()
+            images = SQLite.select()
                     .from(EndImage::class.java)
                     .where(EndImage_Table.end.eq(id))
-                    .queryList()
+                    .queryList().toMutableList()
         }
         return images!!
-    }
-
-    fun setShots(shots: MutableList<Shot>) {
-        this.shots = shots
     }
 
     override fun save() {
