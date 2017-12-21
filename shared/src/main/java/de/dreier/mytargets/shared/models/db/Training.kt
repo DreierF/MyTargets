@@ -161,11 +161,11 @@ data class Training(
     @OneToMany(methods = [], variableName = "rounds")
     fun loadRounds(): List<Round> {
         if (rounds == null) {
-            rounds = if (id == 0L) null else SQLite.select()
+            rounds = SQLite.select()
                     .from(Round::class.java)
                     .where(Round_Table.training.eq(id))
                     .orderBy(Round_Table.index, true)
-                    .queryList()
+                    .queryList().toMutableList()
         }
         return rounds!!
     }

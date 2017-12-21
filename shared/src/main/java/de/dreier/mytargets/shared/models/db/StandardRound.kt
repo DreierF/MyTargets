@@ -81,9 +81,9 @@ data class StandardRound(
             rounds = SQLite.select()
                     .from(RoundTemplate::class.java)
                     .where(RoundTemplate_Table.standardRound.eq(id))
-                    .queryList()
+                    .queryList().toMutableList()
         }
-        return rounds!!.toMutableList()
+        return rounds!!
     }
 
     fun setRounds(rounds: MutableList<RoundTemplate>) {

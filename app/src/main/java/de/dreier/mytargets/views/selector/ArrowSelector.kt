@@ -36,7 +36,7 @@ class ArrowSelector @JvmOverloads constructor(context: Context, attrs: Attribute
         return EditArrowFragment.createIntent().forResult(ARROW_ADD_REQUEST_CODE)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == ARROW_ADD_REQUEST_CODE) {
             setItemId(null)

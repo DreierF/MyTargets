@@ -68,7 +68,7 @@ data class Round(
 ) : BaseModel(), IIdSettable, Comparable<Round>, IRecursiveModel, Parcelable {
 
     @Transient
-    var ends: List<End>? = null
+    var ends: MutableList<End>? = null
 
     constructor(info: RoundTemplate) : this(
             distance = info.distance,
@@ -136,13 +136,13 @@ data class Round(
     @OneToMany(methods = [], variableName = "ends")
     fun loadEnds(): MutableList<End> {
         if (ends == null) {
-            ends = if(id == 0L) listOf() else SQLite.select()
+            ends = SQLite.select()
                     .from(End::class.java)
                     .where(End_Table.round.eq(id))
                     .orderBy(End_Table.index, true)
-                    .queryList()
+                    .queryList().toMutableList()
         }
-        return ends!!.toMutableList()
+        return ends!!
     }
 
     fun loadEnds(databaseWrapper: DatabaseWrapper): List<End> {
@@ -167,8 +167,8 @@ data class Round(
      * or when deleting a training has been canceled.
      */
     override fun saveRecursively(databaseWrapper: DatabaseWrapper) {
-        val training = Training[trainingId]
-        val rounds = training!!.loadRounds(databaseWrapper).toMutableList()
+        val training = Training[trainingId]!!
+        val rounds = training.loadRounds(databaseWrapper).toMutableList()
 
         val pos = Collections.binarySearch(rounds, this)
         if (pos < 0) {

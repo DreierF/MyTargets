@@ -131,9 +131,9 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
         Utils.setShowWhenLocked(this, SettingsManager.inputKeepAboveLockscreen)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             val imageList = GalleryActivity.getResult(data)
             this.data!!.currentEnd.images = imageList.toEndImageList().toMutableList()
             for (image in imageList.removedImages) {

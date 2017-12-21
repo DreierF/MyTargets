@@ -31,7 +31,7 @@ import java.io.StringWriter
 @SmallTest
 @RunWith(AndroidJUnit4::class)
 class ExportTest : InstrumentedTestBase() {
-    @Rule
+    @get:Rule
     val dbTestRule = MiniDbTestRule()
 
     @Test

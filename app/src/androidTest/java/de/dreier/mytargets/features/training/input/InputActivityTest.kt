@@ -47,7 +47,7 @@ class InputActivityTest : UITestBase() {
     private val activityTestRule = ActivityTestRule(
             InputActivity::class.java, true, false)
 
-    @Rule
+    @get:Rule
     val rule = RuleChain.outerRule(object : DbTestRuleBase() {
         override fun addDatabaseContent() {
             val generator = Random(3435)

@@ -33,7 +33,7 @@ import java.util.*
 
 open class TargetModelBase protected constructor(
         override val id: Long,
-        @param:StringRes private val nameRes: Int,
+        @StringRes private val nameRes: Int,
         val diameters: Array<Dimension>,
         val type: ETargetType = ETargetType.TARGET,
         val zones: Array<ZoneBase>,

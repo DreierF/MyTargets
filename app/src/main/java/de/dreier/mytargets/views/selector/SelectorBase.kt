@@ -37,7 +37,7 @@ typealias OnUpdateListener<T> = (T?) -> Unit
 
 abstract class SelectorBase<T : Parcelable>(
         context: Context, attrs: AttributeSet?,
-        @param:LayoutRes private val layout: Int) : LinearLayout(context, attrs) {
+        @LayoutRes private val layout: Int) : LinearLayout(context, attrs) {
 
     protected lateinit var view: View
     protected var requestCode: Int = 0
@@ -112,8 +112,8 @@ abstract class SelectorBase<T : Parcelable>(
         }
     }
 
-    open fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        if (resultCode == Activity.RESULT_OK && requestCode == this.requestCode) {
+    open fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK && requestCode == this.requestCode && data != null) {
             val intentData = data.getBundleExtra(ItemSelectActivity.INTENT)
             if (index == -1 || intentData != null && intentData.getInt(INDEX) == index) {
                 setItem(data.getParcelableExtra(ITEM))

@@ -556,8 +556,8 @@ class FabSpeedDial : LinearLayout, View.OnClickListener {
         }
 
         companion object {
-            @JvmStatic
-            val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
+            @JvmField
+            val CREATOR = object : Parcelable.Creator<SavedState> {
                 override fun createFromParcel(parcel: Parcel): SavedState {
                     return SavedState(parcel)
                 }

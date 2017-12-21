@@ -26,22 +26,22 @@ import de.dreier.mytargets.R
 
 
 abstract class DynamicItemAdapter<T>(private val fragment: Fragment,
-                                     private var list: MutableList<T>?,
-                                     @param:StringRes private val undoString: Int
+                                     private var list: MutableList<T>,
+                                     @StringRes private val undoString: Int
 ) : RecyclerView.Adapter<DynamicItemHolder<T>>() {
 
     protected val inflater = LayoutInflater.from(fragment.context)!!
 
     override fun onBindViewHolder(holder: DynamicItemHolder<T>, position: Int) {
-        val item = list!![position]
+        val item = list[position]
         holder.onBind(item, position, fragment, View.OnClickListener {
-            list!!.removeAt(position)
+            list.removeAt(position)
 
             notifyItemRemoved(position)
 
             Snackbar.make(fragment.view!!, undoString, Snackbar.LENGTH_LONG)
                     .setAction(R.string.undo) {
-                        list!!.add(position, item)
+                        list.add(position, item)
                         notifyItemInserted(position)
                     }.show()
         })
@@ -52,6 +52,6 @@ abstract class DynamicItemAdapter<T>(private val fragment: Fragment,
     }
 
     override fun getItemCount(): Int {
-        return list!!.size
+        return list.size
     }
 }

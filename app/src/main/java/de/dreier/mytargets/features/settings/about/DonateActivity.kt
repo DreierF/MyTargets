@@ -44,7 +44,7 @@ class DonateActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
         super.onDestroy()
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (!bp.handleActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data)
         }

@@ -201,7 +201,7 @@ class GalleryActivity : ChildActivityBase() {
         onRequestPermissionsResult(requestCode, grantResults)
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         EasyImage.handleActivityResult(requestCode, resultCode, data, this,
                 object : DefaultCallback() {
