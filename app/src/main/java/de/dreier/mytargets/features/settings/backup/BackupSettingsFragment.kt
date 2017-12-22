@@ -62,7 +62,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
 
     private var backup: IAsyncBackupRestore? = null
     private var adapter: BackupAdapter? = null
-    private var binding: FragmentBackupBinding? = null
+    private lateinit var binding: FragmentBackupBinding
     private var updateLabelTimer: Timer? = null
     /**
      * Handle to a SyncObserver. The ProgressBar element is visible until the SyncObserver reports
@@ -84,16 +84,13 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
     private val syncStatusObserver = SyncStatusObserver {
         activity!!.runOnUiThread {
             val account = GenericAccountService.account
-
-            val syncActive = ContentResolver.isSyncActive(account, SyncUtils
-                    .CONTENT_AUTHORITY)
-            val syncPending = ContentResolver.isSyncPending(account, SyncUtils
-                    .CONTENT_AUTHORITY)
+            val syncActive = ContentResolver.isSyncActive(account, SyncUtils.CONTENT_AUTHORITY)
+            val syncPending = ContentResolver.isSyncPending(account, SyncUtils.CONTENT_AUTHORITY)
             val wasRefreshing = isRefreshing
             isRefreshing = syncActive || syncPending
-            binding!!.backupNowButton.isEnabled = !isRefreshing
-            binding!!.backupProgressBar.isIndeterminate = true
-            binding!!.backupProgressBar.visibility = if (isRefreshing) VISIBLE else GONE
+            binding.backupNowButton.isEnabled = !isRefreshing
+            binding.backupProgressBar.isIndeterminate = true
+            binding.backupProgressBar.visibility = if (isRefreshing) VISIBLE else GONE
             if (wasRefreshing && !isRefreshing && backup != null) {
                 backup!!.getBackups(this)
             }
@@ -124,24 +121,24 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_backup, container, false)
         ToolbarUtils.showHomeAsUp(this)
 
-        binding!!.backupNowButton.setOnClickListener { SyncUtils.triggerBackup() }
+        binding.backupNowButton.setOnClickListener { SyncUtils.triggerBackup() }
 
-        binding!!.automaticBackupSwitch.setOnClickListener { onAutomaticBackupChanged() }
+        binding.automaticBackupSwitch.setOnClickListener { onAutomaticBackupChanged() }
 
-        binding!!.backupIntervalPreference!!.root.setOnClickListener { onBackupIntervalClicked() }
-        binding!!.backupIntervalPreference!!.image
+        binding.backupIntervalPreference!!.root.setOnClickListener { onBackupIntervalClicked() }
+        binding.backupIntervalPreference!!.image
                 .setImageResource(R.drawable.ic_query_builder_grey600_24dp)
-        binding!!.backupIntervalPreference!!.name.setText(R.string.backup_interval)
+        binding.backupIntervalPreference!!.name.setText(R.string.backup_interval)
         updateInterval()
 
-        binding!!.backupLocation!!.root.setOnClickListener { onBackupLocationClicked() }
+        binding.backupLocation!!.root.setOnClickListener { onBackupLocationClicked() }
 
-        binding!!.recentBackupsList.isNestedScrollingEnabled = false
-        binding!!.recentBackupsList
+        binding.recentBackupsList.isNestedScrollingEnabled = false
+        binding.recentBackupsList
                 .addItemDecoration(DividerItemDecoration(context!!, VERTICAL))
 
         setHasOptionsMenu(true)
-        return binding!!.root
+        return binding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
@@ -159,7 +156,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
 
     override fun onResume() {
         super.onResume()
-        applyBackupLocationWithPermissionCheck(SettingsManager.backupLocation)
+        internalApplyBackupLocationWithPermissionCheck(SettingsManager.backupLocation)
         updateAutomaticBackupSwitch()
 
         syncStatusObserver.onStatusChanged(0)
@@ -192,14 +189,14 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
     }
 
     private fun onAutomaticBackupChanged() {
-        val autoBackupEnabled = binding!!.automaticBackupSwitch.isChecked
-        binding!!.backupIntervalLayout.visibility = if (autoBackupEnabled) VISIBLE else GONE
+        val autoBackupEnabled = binding.automaticBackupSwitch.isChecked
+        binding.backupIntervalLayout.visibility = if (autoBackupEnabled) VISIBLE else GONE
         SyncUtils.isSyncAutomaticallyEnabled = autoBackupEnabled
     }
 
     private fun updateAutomaticBackupSwitch() {
         val autoBackupEnabled = SyncUtils.isSyncAutomaticallyEnabled
-        binding!!.automaticBackupSwitch.isChecked = autoBackupEnabled
+        binding.automaticBackupSwitch.isChecked = autoBackupEnabled
     }
 
     private fun onBackupIntervalClicked() {
@@ -219,8 +216,8 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
 
     private fun updateInterval() {
         val autoBackupEnabled = SyncUtils.isSyncAutomaticallyEnabled
-        binding!!.backupIntervalLayout.visibility = if (autoBackupEnabled) VISIBLE else GONE
-        binding!!.backupIntervalPreference!!.summary.text = SettingsManager.backupInterval.toString()
+        binding.backupIntervalLayout.visibility = if (autoBackupEnabled) VISIBLE else GONE
+        binding.backupIntervalPreference!!.summary.text = SettingsManager.backupInterval.toString()
     }
 
     private fun onBackupLocationClicked() {
@@ -234,7 +231,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
                     if (backup != null) {
                         backup!!.stop()
                     }
-                    applyBackupLocationWithPermissionCheck(location)
+                    internalApplyBackupLocationWithPermissionCheck(location)
                     true
                 }
                 .show()
@@ -242,12 +239,12 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
 
     private fun updateBackupLocation() {
         val backupLocation = SettingsManager.backupLocation
-        binding!!.backupLocation!!.image.setImageResource(backupLocation.drawableRes)
-        binding!!.backupLocation!!.name.setText(R.string.backup_location)
-        binding!!.backupLocation!!.summary.text = backupLocation.toString()
+        binding.backupLocation!!.image.setImageResource(backupLocation.drawableRes)
+        binding.backupLocation!!.name.setText(R.string.backup_location)
+        binding.backupLocation!!.summary.text = backupLocation.toString()
     }
 
-    private fun applyBackupLocationWithPermissionCheck(item: EBackupLocation) {
+    private fun internalApplyBackupLocationWithPermissionCheck(item: EBackupLocation) {
         if (item.needsStoragePermissions()) {
             applyBackupLocationWithPermissionCheck(item)
         } else {
@@ -259,8 +256,8 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
     internal fun applyBackupLocation(item: EBackupLocation) {
         SettingsManager.backupLocation = item
         backup = item.createAsyncRestore()
-        binding!!.recentBackupsProgress.visibility = VISIBLE
-        binding!!.recentBackupsList.visibility = GONE
+        binding.recentBackupsProgress.visibility = VISIBLE
+        binding.recentBackupsList.visibility = GONE
         adapter = BackupAdapter(context!!, object : OnItemClickListener<BackupEntry> {
             override fun onItemClicked(item: BackupEntry) {
                 showBackupDetails(item)
@@ -270,7 +267,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
                 deleteBackup(item)
             }
         })
-        binding!!.recentBackupsList.adapter = adapter
+        binding.recentBackupsList.adapter = adapter
         backup!!.connect(activity!!, object : IAsyncBackupRestore.ConnectionListener {
             override fun onConnected() {
                 updateBackupLocation()
@@ -288,10 +285,10 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
     }
 
     private fun onBackupsLoaded(list: List<BackupEntry>) {
-        binding!!.recentBackupsProgress.visibility = GONE
-        binding!!.recentBackupsList.visibility = VISIBLE
+        binding.recentBackupsProgress.visibility = GONE
+        binding.recentBackupsList.visibility = VISIBLE
         adapter!!.setList(list.toMutableList())
-        binding!!.lastBackupLabel.visibility = if (list.isNotEmpty()) VISIBLE else GONE
+        binding.lastBackupLabel.visibility = if (list.isNotEmpty()) VISIBLE else GONE
         if (updateLabelTimer != null) {
             updateLabelTimer!!.cancel()
         }
@@ -301,7 +298,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
             val timerTask = object : TimerTask() {
                 override fun run() {
                     activity!!.runOnUiThread {
-                        binding!!.lastBackupLabel.text = getString(R.string.last_backup, DateUtils
+                        binding.lastBackupLabel.text = getString(R.string.last_backup, DateUtils
                                 .getRelativeTimeSpanString(time))
                     }
                 }

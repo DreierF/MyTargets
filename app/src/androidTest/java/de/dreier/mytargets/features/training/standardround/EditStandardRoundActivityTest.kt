@@ -97,7 +97,7 @@ class EditStandardRoundActivityTest : UITestBase() {
                 .perform(actionOnItem<RecyclerView.ViewHolder>(hasDescendant(withText("15m")), click()))
 
         onView(allOf(withId(R.id.number_increment), isNestedChildOfView(withId(R.id.shotCount)),
-                isNestedChildOfView(withRecyclerView(R.id.rounds).atPosition(1)!!)))
+                isNestedChildOfView(withRecyclerView(R.id.rounds).atPosition(1))))
                 .perform(nestedScrollTo(), click(), click(), click())
 
         onView(allOf(withId(R.id.number_decrement), isNestedChildOfView(withId(R.id.endCount)),

@@ -23,8 +23,8 @@ import android.view.View
 import android.view.View.FIND_VIEWS_WITH_TEXT
 import android.widget.TextView
 import com.google.common.truth.Truth
-import junit.framework.Assert
 import org.hamcrest.Matcher
+import org.junit.Assert
 import java.util.*
 
 object RecyclerViewAssertions {

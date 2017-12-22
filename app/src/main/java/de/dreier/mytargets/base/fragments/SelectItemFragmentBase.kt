@@ -18,7 +18,6 @@ package de.dreier.mytargets.base.fragments
 import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.evernote.android.state.State
 import de.dreier.mytargets.base.adapters.ListAdapterBase
@@ -82,8 +81,8 @@ abstract class SelectItemFragmentBase<T, U : ListAdapterBase<out ItemBindingHold
     /**
      * {@inheritDoc}
      */
-    override fun onAttach(activity: Context?) {
-        super.onAttach(activity)
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
         Assert.assertNotNull(listener)
     }
 

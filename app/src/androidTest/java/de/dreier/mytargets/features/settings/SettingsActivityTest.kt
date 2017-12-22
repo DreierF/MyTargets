@@ -36,9 +36,9 @@ import de.dreier.mytargets.test.utils.assertions.RecyclerViewAssertions.itemHasS
 import de.dreier.mytargets.test.utils.matchers.MatcherUtils.matchToolbarTitle
 import de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isOnForegroundFragment
 import de.dreier.mytargets.test.utils.matchers.ViewMatcher.clickOnPreference
-import junit.framework.Assert.assertEquals
 import org.hamcrest.Matchers.*
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

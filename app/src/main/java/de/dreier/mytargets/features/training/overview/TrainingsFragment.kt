@@ -167,7 +167,6 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
         val trainings = Training.all
         return {
             this@TrainingsFragment.setList(trainings, false)
-            val activity = activity
             activity?.invalidateOptionsMenu()
             binding.emptyState!!.root.visibility = if (trainings.isEmpty()) View.VISIBLE else View.GONE
         }

@@ -32,10 +32,12 @@ abstract class ListFragmentBase<T, U : ListAdapterBase<*, T>> : FragmentBase(), 
      */
     protected var adapter: U? = null
 
-    override fun onAttach(activity: Context?) {
-        super.onAttach(activity)
-        if (activity is OnItemSelectedListener) {
-            listener = activity
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        activity?.let {
+            if(it is OnItemSelectedListener) {
+                listener = it
+            }
         }
     }
 

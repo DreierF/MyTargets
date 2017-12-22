@@ -74,7 +74,7 @@ abstract class UITestBase : InstrumentedTestBase() {
     }
 
     protected fun clickActionBarItem(@IdRes menuItem: Int, @StringRes title: Int) {
-        onView(withId(menuItem)).withFailureHandler { error, viewMatcher ->
+        onView(withId(menuItem)).withFailureHandler { _, _ ->
             openActionBarOverflowOrOptionsMenu(getInstrumentation().targetContext)
             onView(withText(title)).perform(click())
         }.perform(click())

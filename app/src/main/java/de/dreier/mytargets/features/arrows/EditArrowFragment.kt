@@ -35,7 +35,7 @@ import java.lang.Integer.parseInt
 
 class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrows, ArrowImage::class.java) {
     @State
-    var arrow: Arrow? = null
+    lateinit var arrow: Arrow
     private lateinit var contentBinding: FragmentEditArrowBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -46,18 +46,18 @@ class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrow
         if (savedInstanceState == null) {
             val bundle = arguments
             if (bundle != null && bundle.containsKey(ARROW_ID)) {
-                arrow = Arrow[bundle.getLong(ARROW_ID)]
+                arrow = Arrow[bundle.getLong(ARROW_ID)]!!
             } else {
                 // Set to default values
                 arrow = Arrow()
-                arrow!!.name = getString(R.string.my_arrow)
+                arrow.name = getString(R.string.my_arrow)
             }
 
-            imageFiles = arrow!!.loadImages()
+            imageFiles = arrow.loadImages()
             contentBinding.diameterUnit.setSelection(
-                    if (arrow!!.diameter.unit === MILLIMETER) 0 else 1)
+                    if (arrow.diameter.unit === MILLIMETER) 0 else 1)
         }
-        ToolbarUtils.setTitle(this, arrow!!.name)
+        ToolbarUtils.setTitle(this, arrow.name)
         contentBinding.arrow = arrow
         loadImage(imageFile)
         return rootView
@@ -73,7 +73,7 @@ class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrow
         if (!validateInput()) {
             return
         }
-        buildArrow()!!.save()
+        buildArrow().save()
         finish()
     }
 
@@ -103,34 +103,27 @@ class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrow
         return true
     }
 
-    private fun buildArrow(): Arrow? {
-        arrow!!.name = contentBinding.name.text.toString()
-        arrow!!.maxArrowNumber = parseInt(contentBinding.maxArrowNumber.text.toString())
-        arrow!!.length = contentBinding.length.text.toString()
-        arrow!!.material = contentBinding.material.text.toString()
-        arrow!!.spine = contentBinding.spine.text.toString()
-        arrow!!.weight = contentBinding.weight.text.toString()
-        arrow!!.tipWeight = contentBinding.tipWeight.text.toString()
-        arrow!!.vanes = contentBinding.vanes.text.toString()
-        arrow!!.nock = contentBinding.nock.text.toString()
-        arrow!!.comment = contentBinding.comment.text.toString()
-        arrow!!.images = imageFiles
-        arrow!!.thumbnail = thumbnail
-        var diameterValue: Float
-        try {
-            diameterValue = java.lang.Float.parseFloat(contentBinding.diameter.text.toString())
-        } catch (ignored: NumberFormatException) {
-            diameterValue = 5f
-        }
-
+    private fun buildArrow(): Arrow {
+        arrow.name = contentBinding.name.text.toString()
+        arrow.maxArrowNumber = parseInt(contentBinding.maxArrowNumber.text.toString())
+        arrow.length = contentBinding.length.text.toString()
+        arrow.material = contentBinding.material.text.toString()
+        arrow.spine = contentBinding.spine.text.toString()
+        arrow.weight = contentBinding.weight.text.toString()
+        arrow.tipWeight = contentBinding.tipWeight.text.toString()
+        arrow.vanes = contentBinding.vanes.text.toString()
+        arrow.nock = contentBinding.nock.text.toString()
+        arrow.comment = contentBinding.comment.text.toString()
+        arrow.images = imageFiles
+        arrow.thumbnail = thumbnail
+        val diameterValue = contentBinding.diameter.text.toString().toFloatOrNull() ?: 5f
         val selectedUnit = contentBinding.diameterUnit.selectedItemPosition
         val diameterUnit = if (selectedUnit == 0) MILLIMETER else INCH
-        arrow!!.diameter = Dimension(diameterValue, diameterUnit)
+        arrow.diameter = Dimension(diameterValue, diameterUnit)
         return arrow
     }
 
     companion object {
-
         @VisibleForTesting
         val ARROW_ID = "arrow_id"
 
