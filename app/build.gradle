@@ -52,7 +52,7 @@ android {
     }
 
     androidExtensions {
-        experimental = true
+        experimental true
     }
 
     signingConfigs {
@@ -208,6 +208,8 @@ dependencies {
     androidTestScreengrabImplementation "tools.fastlane:screengrab:$libraryVersion.screengrab"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
+
+    testImplementation "junit:junit:$libraryVersion.jUnit"
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
 

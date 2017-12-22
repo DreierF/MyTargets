@@ -20,20 +20,26 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.ajoberstar:grgit:1.9.0'
+        classpath 'org.ajoberstar:grgit:2.1.0'
     }
 }
 
 ext {
-    git = Grgit.open()
-    gitVersionCode = git.tag.list().size()
-    gitVersionName = git.describe()
-            .replace("v", "")
-            .replace("_b", "-Beta")
-            .replace("_rc", "-RC")
-    if(System.getenv('TRAVIS') == 'true') {
-        gitBranchName = System.getenv('TRAVIS_BRANCH')
-    } else {
-        gitBranchName = git.branch.getCurrent().name
+    try {
+        git = Grgit.open()
+        gitVersionCode = git.tag.list().size()
+        gitVersionName = git.describe()
+                .replace("v", "")
+                .replace("_b", "-Beta")
+                .replace("_rc", "-RC")
+        if(System.getenv('TRAVIS') == 'true') {
+            gitBranchName = System.getenv('TRAVIS_BRANCH')
+        } else {
+            gitBranchName = git.branch.getCurrent().name
+        }
+    } catch(Exception e) {
+        gitVersionCode = 1
+        gitVersionName = "debug"
+        gitBranchName = "debug"
     }
 }
