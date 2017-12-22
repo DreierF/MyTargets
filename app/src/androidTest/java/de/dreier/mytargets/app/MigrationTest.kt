@@ -111,7 +111,7 @@ class MigrationTest : InstrumentedTestBase() {
         Truth.assertThat(training.location).isEqualTo("Neufahrn bei Freising")
         val rounds = training.loadRounds()
 
-        assertRound11(rounds!!)
+        assertRound11(rounds)
 
         Truth.assertThat(rounds[1].id).isEqualTo(2L)
         Truth.assertThat(rounds[1].trainingId).isEqualTo(1L)

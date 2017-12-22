@@ -44,7 +44,6 @@ data class AugmentedTraining(
             round.round.trainingId = training.id
             round.round.target = template.targetTemplate
             round.round.comment = ""
-            round.round.save()
             rounds.add(round)
         }
     }

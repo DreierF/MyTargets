@@ -44,7 +44,8 @@ import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.multiselector.OnItemLongClickListener
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 
-class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderListAdapter<StandardRound>>(), SearchView.OnQueryTextListener {
+class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderListAdapter<StandardRound>>(),
+        SearchView.OnQueryTextListener, OnItemLongClickListener<StandardRound> {
 
     @State
     var currentSelection: StandardRound? = null
@@ -68,7 +69,6 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
         binding.recyclerView.adapter = adapter
         binding.fab.visibility = View.GONE
         ToolbarUtils.showUpAsX(this)
-        binding.recyclerView.setHasFixedSize(false)
         binding.fab.visibility = View.VISIBLE
         binding.fab.setOnClickListener {
             EditStandardRoundFragment.createIntent()
@@ -111,7 +111,7 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
         super.onClick(holder, item)
     }
 
-    fun onLongClick(holder: SelectableViewHolder<StandardRound>) {
+    override fun onLongClick(holder: SelectableViewHolder<StandardRound>) {
         val item = holder.item!!
         if (item.club == StandardRoundFactory.CUSTOM) {
             EditStandardRoundFragment.editIntent(item)
@@ -205,25 +205,19 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
         } else {
             HeaderListAdapter.SimpleHeader(1L, "")
         }
-    }, compareBy { usedIds.get(it.id) ?: 0 }) {
+    }, compareBy({ usedIds.get(it.id) ?: 0 }, { it })) {
 
         override fun getSecondLevelViewHolder(parent: ViewGroup): ViewHolder {
-            return ViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context),
-                    R.layout.item_standard_round, parent, false))
+            val itemView = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_standard_round, parent, false)
+            return ViewHolder(itemView)
         }
     }
 
-    inner class ViewHolder(
-            private val binding: ItemStandardRoundBinding
-    ) : SelectableViewHolder<StandardRound>(binding.root,
-            selector,
-            this@StandardRoundListFragment,
-            object : OnItemLongClickListener<StandardRound> {
-                override fun onLongClick(holder: SelectableViewHolder<StandardRound>) {
-                    this@StandardRoundListFragment.onLongClick(holder)
-                }
+    private inner class ViewHolder(itemView: View) : SelectableViewHolder<StandardRound>(itemView,
+            selector, this@StandardRoundListFragment, this@StandardRoundListFragment) {
 
-            }) {
+        private val binding: ItemStandardRoundBinding = DataBindingUtil.bind(itemView)
 
         override fun bindItem(item: StandardRound) {
             binding.name.text = item.name
