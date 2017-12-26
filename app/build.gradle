@@ -118,102 +118,103 @@ apply from: '../tools/script-codacy.gradle'
 apply from: '../tools/script-play-store.gradle'
 
 dependencies {
-    kapt "com.android.databinding:compiler:$androidPluginVersion"
-    implementation "com.android.support:support-compat:$libraryVersion.support"
-    implementation "com.android.support:support-core-utils:$libraryVersion.support"
-    implementation "com.android.support:support-core-ui:$libraryVersion.support"
-    implementation "com.android.support:support-fragment:$libraryVersion.support"
-    implementation "com.android.support:support-v13:$libraryVersion.support"
-    implementation "com.android.support:appcompat-v7:$libraryVersion.support"
-    implementation "com.android.support:design:$libraryVersion.support"
-    implementation "com.android.support:support-annotations:$libraryVersion.support"
-    implementation "com.android.support:preference-v14:$libraryVersion.support"
-    implementation "com.android.support:recyclerview-v7:$libraryVersion.support"
-    implementation "com.android.support:cardview-v7:$libraryVersion.support"
-    implementation "com.android.support:preference-v14:$libraryVersion.support"
+    Map<String, String> dependencies = rootProject.ext.dependencies
 
-    implementation "com.google.android.gms:play-services-drive:$libraryVersion.playService"
-    implementation "com.google.firebase:firebase-core:$libraryVersion.playService"
-    implementation "com.google.firebase:firebase-crash:$libraryVersion.playService"
+    kapt dependencies.databindingCompiler
 
-    implementation "com.google.code.gson:gson:$libraryVersion.gson"
+    implementation dependencies.kotlinStdlibJre7
 
-    implementation "com.squareup.okhttp3:okhttp:$libraryVersion.okhttp"
-    implementation "com.squareup.okhttp3:okhttp-urlconnection:$libraryVersion.okhttp"
+    implementation dependencies.supportCompat
+    implementation dependencies.supportCoreUtils
+    implementation dependencies.supportCoreUi
+    implementation dependencies.supportFragment
+    implementation dependencies.supportV13
+    implementation dependencies.appCompat
+    implementation dependencies.supportDesign
+    implementation dependencies.supportAnnotations
+    implementation dependencies.supportPreference
+    implementation dependencies.recyclerView
+    implementation dependencies.cardView
 
-    implementation "com.squareup.retrofit2:retrofit:$libraryVersion.retrofit"
-    implementation "com.squareup.retrofit2:converter-gson:$libraryVersion.retrofit"
+    implementation dependencies.playServicesDrive
+    implementation dependencies.firebaseCore
+    implementation dependencies.firebaseCrash
 
-    implementation "com.squareup.picasso:picasso:$libraryVersion.picasso"
+    implementation dependencies.gson
 
-    implementation "com.evernote:android-state:$libraryVersion.androidState"
-    kapt "com.evernote:android-state-processor:$libraryVersion.androidState"
+    implementation dependencies.okHttp
+    implementation dependencies.okHttpUrlConnection
 
-    implementation "com.github.hotchemi:permissionsdispatcher:$libraryVersion.permissionsdispatcher"
-    kapt "com.github.hotchemi:permissionsdispatcher-processor:$libraryVersion.permissionsdispatcher"
+    implementation dependencies.retrofit
+    implementation dependencies.retrofitConverterGson
 
-    implementation "com.anjlab.android.iab.v3:library:$libraryVersion.iab"
+    implementation dependencies.picasso
 
-    implementation "com.github.PhilJay:MPAndroidChart:$libraryVersion.mpAndroidChart"
+    implementation dependencies.androidState
+    kapt dependencies.androidStateProcessor
 
-    implementation "org.adw.library:discrete-seekbar:$libraryVersion.discreteSeekbar"
+    implementation dependencies.permissionsDispatcher
+    kapt dependencies.permissionsDispatcherProcessor
 
-    implementation "com.github.jkwiecien:EasyImage:$libraryVersion.easyImage"
+    implementation dependencies.iab
 
-    implementation "com.afollestad.material-dialogs:core:$libraryVersion.materialDialogs"
+    implementation dependencies.mpAndroidChart
 
-    implementation "com.github.medyo:android-about-page:$libraryVersion.aboutPage"
+    implementation dependencies.discreteSeekbar
 
-    implementation "com.github.oriley-me.homage:homage-core:$libraryVersion.homage"
-    implementation "com.github.oriley-me.homage:homage-recyclerview:$libraryVersion.homage"
+    implementation dependencies.easyImage
 
-    implementation "com.makeramen:roundedimageview:$libraryVersion.roundedImageView"
+    implementation dependencies.materialDialogs
 
-    implementation "agency.tango.android:material-intro-screen:$libraryVersion.materialIntroScreen"
+    implementation dependencies.androidAboutPage
 
-    kapt "com.github.Raizlabs.DBFlow:dbflow-processor:$libraryVersion.dbFlow"
-    implementation "com.github.Raizlabs.DBFlow:dbflow-core:$libraryVersion.dbFlow"
-    implementation "com.github.Raizlabs.DBFlow:dbflow:$libraryVersion.dbFlow"
+    implementation dependencies.homageCore
+    implementation dependencies.homageRecyclerView
 
-    implementation "com.github.chrisbanes:PhotoView:$libraryVersion.photoView"
+    implementation dependencies.roundedImageView
 
-    implementation "com.github.delight-im:Android-Languages:$libraryVersion.androidLanguages"
+    implementation dependencies.materialIntroScreen
 
-    implementation "uk.co.hassie:version-info-material-dialog:$libraryVersion.versionInfoDialog"
+    kapt dependencies.dbFlowProcessor
+    implementation dependencies.dbFlowCore
+    implementation dependencies.dbFlow
 
-    implementation "com.github.gcacace:signature-pad:$libraryVersion.signaturePad"
+    implementation dependencies.photoView
+
+    implementation dependencies.androidLanguages
+
+    implementation dependencies.versionInfoMaterialDialog
+
+    implementation dependencies.signaturePad
 
     implementation project(':shared')
     wearApp project(':wearable')
 
-    androidTestImplementation "com.google.truth:truth:$libraryVersion.truth"
-    androidTestImplementation "com.google.code.findbugs:jsr305:$libraryVersion.findbugs"
-    androidTestImplementation "com.android.support:support-annotations:$libraryVersion.support"
-    androidTestImplementation "com.android.support.test:runner:$libraryVersion.testSupport"
-    androidTestImplementation "com.android.support.test:rules:$libraryVersion.testSupport"
-    androidTestImplementation "com.android.support.test.uiautomator:uiautomator-v18:$libraryVersion.uiAutomator"
-    androidTestImplementation("com.android.support.test.espresso:espresso-core:$libraryVersion.espresso", {
+    testImplementation dependencies.jUnit
+    testImplementation dependencies.kotlinTest
+    testImplementation dependencies.kotlinTestJunit
+
+    androidTestImplementation dependencies.truth
+    androidTestImplementation dependencies.jsr305
+    androidTestImplementation dependencies.runner
+    androidTestImplementation dependencies.rules
+    androidTestImplementation dependencies.uiAutomator
+    androidTestImplementation(dependencies.espressoCore, {
         exclude group: 'com.android.support'
     })
-    androidTestImplementation("com.android.support.test.espresso:espresso-contrib:$libraryVersion.espresso", {
+    androidTestImplementation(dependencies.espressoContrib, {
         exclude group: 'com.android.support'
     })
-    androidTestImplementation("com.android.support.test.espresso:espresso-intents:$libraryVersion.espresso", {
+    androidTestImplementation(dependencies.espressoIntents, {
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
     })
 
-    implementation "com.android.support.test.espresso:espresso-idling-resource:$libraryVersion.espresso"
-    androidTestScreengrabImplementation "tools.fastlane:screengrab:$libraryVersion.screengrab"
+    implementation dependencies.espressoIdlingResource
+    androidTestScreengrabImplementation dependencies.screengrab
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
-
-    testImplementation "junit:junit:$libraryVersion.jUnit"
-    testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
-    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
-
-    implementation "com.android.support:multidex:$libraryVersion.multidex"
+    implementation dependencies.multiDex
 }
 
 // Must be at the bottom
