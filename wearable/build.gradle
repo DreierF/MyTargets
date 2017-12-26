@@ -70,19 +70,22 @@ android {
 }
 
 dependencies {
-    implementation "com.google.android.support:wearable:$libraryVersion.supportWearable"
-    compileOnly "com.google.android.wearable:wearable:$libraryVersion.supportWearable"
-    implementation "com.android.support:support-compat:$libraryVersion.support"
-    implementation "com.android.support:wear:$libraryVersion.support"
+    Map<String, String> dependencies = rootProject.ext.dependencies
 
-    kapt "com.github.Raizlabs.DBFlow:dbflow-processor:$libraryVersion.dbFlow"
-    implementation "com.github.Raizlabs.DBFlow:dbflow-core:$libraryVersion.dbFlow"
-    implementation "com.github.Raizlabs.DBFlow:dbflow:$libraryVersion.dbFlow"
+    kapt dependencies.databindingCompiler
 
-    implementation "com.evernote:android-state:$libraryVersion.androidState"
-    kapt "com.evernote:android-state-processor:$libraryVersion.androidState"
+    implementation dependencies.supportWearable
+    compileOnly dependencies.wearable
+    implementation dependencies.supportCompat
+    implementation dependencies.supportWear
+
+    kapt dependencies.dbFlowProcessor
+    implementation dependencies.dbFlowCore
+    implementation dependencies.dbFlow
+
+    implementation dependencies.androidState
+    kapt dependencies.androidStateProcessor
 
     implementation project(':shared')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
-    kapt "com.android.databinding:compiler:$androidPluginVersion"
+    implementation dependencies.kotlinStdlibJre7
 }

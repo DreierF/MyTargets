@@ -45,26 +45,28 @@ android {
 }
 
 dependencies {
-    api "com.android.support:support-v4:$libraryVersion.support"
-    api "com.android.support:support-fragment:$libraryVersion.support"
-    api "com.android.support:support-core-ui:$libraryVersion.support"
-    api "com.android.support:support-core-utils:$libraryVersion.support"
-    api "com.android.support:support-media-compat:$libraryVersion.support"
-    api "com.android.support:support-annotations:$libraryVersion.support"
-    api "com.jakewharton.threetenabp:threetenabp:$libraryVersion.threeTenABP"
+    Map<String, String> dependencies = rootProject.ext.dependencies
 
-    kapt "com.github.Raizlabs.DBFlow:dbflow-processor:$libraryVersion.dbFlow"
-    implementation "com.github.Raizlabs.DBFlow:dbflow-core:$libraryVersion.dbFlow"
-    implementation "com.github.Raizlabs.DBFlow:dbflow:$libraryVersion.dbFlow"
+    api dependencies.supportV4
+    api dependencies.supportFragment
+    api dependencies.supportCoreUi
+    api dependencies.supportCoreUtils
+    api dependencies.supportMediaCompat
+    api dependencies.supportAnnotations
+    api dependencies.threeTenABP
 
-    implementation "com.evernote:android-state:$libraryVersion.androidState"
-    kapt "com.evernote:android-state-processor:$libraryVersion.androidState"
+    kapt dependencies.dbFlowProcessor
+    implementation dependencies.dbFlowCore
+    implementation dependencies.dbFlow
 
-    api "com.google.android.gms:play-services-wearable:$libraryVersion.playService"
-    api "com.jakewharton.timber:timber:$libraryVersion.timber"
+    implementation dependencies.androidState
+    kapt dependencies.androidStateProcessor
 
-    testImplementation "junit:junit:$libraryVersion.jUnit"
-    testImplementation "org.mockito:mockito-core:$libraryVersion.mockito"
-    androidTestImplementation "com.android.support.test:runner:$libraryVersion.testSupport"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
+    api dependencies.playServicesWearable
+    api dependencies.timber
+
+    testImplementation dependencies.jUnit
+    testImplementation dependencies.mockito
+    androidTestImplementation dependencies.runner
+    implementation dependencies.kotlinStdlibJre7
 }
