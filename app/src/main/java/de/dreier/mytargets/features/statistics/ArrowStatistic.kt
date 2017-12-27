@@ -23,7 +23,7 @@ import de.dreier.mytargets.shared.analysis.aggregation.average.Average
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Score
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.models.db.Arrow
+import de.dreier.mytargets.shared.models.dao.ArrowDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.models.sum
@@ -73,7 +73,7 @@ data class ArrowStatistic(
             return rounds
                     .groupBy { r -> r.training.arrowId ?: 0 }
                     .flatMap { t ->
-                        val arrow = Arrow[t.key]
+                        val arrow = ArrowDAO.loadArrowOrNull(t.key)
                         val name = arrow?.name ?: SharedApplicationInstance.getStr(R.string.unknown)
                         t.value.flatMap { it.loadEnds() }
                                 .flatMap { it.loadShots() }

@@ -188,6 +188,9 @@ dependencies {
 
     implementation dependencies.signaturePad
 
+    implementation dependencies.archLifecycleExtensions
+    kapt dependencies.archLifecycleCompiler
+
     implementation project(':shared')
     wearApp project(':wearable')
 

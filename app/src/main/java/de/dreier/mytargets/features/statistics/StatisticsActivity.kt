@@ -38,7 +38,7 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.base.activities.ChildActivityBase
 import de.dreier.mytargets.databinding.ActivityStatisticsBinding
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.models.db.Arrow
+import de.dreier.mytargets.shared.models.dao.ArrowDAO
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
@@ -220,7 +220,7 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
                 .distinct()
                 .map { aid ->
                     if (aid != null) {
-                        val arrow = Arrow[aid] ?: return@map Tag(aid, "Deleted " + aid)
+                        val arrow = ArrowDAO.loadArrowOrNull(aid) ?: return@map Tag(aid, "Deleted " + aid)
                         Tag(arrow.id, arrow.name, arrow.thumbnail, true)
                     } else {
                         Tag(null, getString(R.string.unknown))
@@ -244,9 +244,9 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
                 .map { Tag(it.id, it.toString()) }
     }
 
-    public override fun onSaveInstanceState(outState: Bundle?) {
+    public override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        StateSaver.saveInstanceState(this, outState!!)
+        StateSaver.saveInstanceState(this, outState)
     }
 
     override fun onLoaderReset(loader: Loader<List<Pair<Training, Round>>>) {

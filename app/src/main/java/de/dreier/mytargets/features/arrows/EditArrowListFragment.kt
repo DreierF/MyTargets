@@ -28,6 +28,7 @@ import de.dreier.mytargets.base.fragments.ItemActionModeCallback
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentArrowsBinding
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding
+import de.dreier.mytargets.shared.models.dao.ArrowDAO
 import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.utils.DividerItemDecoration
 import de.dreier.mytargets.utils.SlideInItemAnimator
@@ -66,7 +67,7 @@ class EditArrowListFragment : EditableListFragment<Arrow>() {
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        val arrows = Arrow.all
+        val arrows = ArrowDAO.loadArrows()
         return {
             adapter!!.setList(arrows.toMutableList())
             binding.emptyState!!.root.visibility = if (arrows.isEmpty()) View.VISIBLE else View.GONE

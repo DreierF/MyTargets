@@ -19,6 +19,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.AttributeSet
+
+import de.dreier.mytargets.features.arrows.ArrowListActivity
+import de.dreier.mytargets.features.arrows.EditArrowFragment
+import de.dreier.mytargets.shared.models.dao.ArrowDAO
 import de.dreier.mytargets.shared.models.db.Arrow
 
 class ArrowSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ImageSelectorBase<Arrow>(context, attrs, ARROW_REQUEST_CODE) {
@@ -33,10 +37,10 @@ class ArrowSelector @JvmOverloads constructor(context: Context, attrs: Attribute
     fun setItemId(arrowId: Long?) {
         var item: Arrow? = null
         if (arrowId != null) {
-            item = Arrow[arrowId]
+            item = ArrowDAO.loadArrowOrNull(arrowId)
         }
         if (item == null) {
-            val all = Arrow.all
+            val all = ArrowDAO.loadArrows()
             if (all.isNotEmpty()) {
                 item = all[0]
             }

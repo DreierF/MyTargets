@@ -19,12 +19,13 @@ import android.os.Bundle
 import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase
+import de.dreier.mytargets.shared.models.dao.ArrowDAO
 import de.dreier.mytargets.shared.models.db.Arrow
 
 class ArrowListFragment : SelectPureListItemFragmentBase<Arrow>() {
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        val arrows = Arrow.all
+        val arrows = ArrowDAO.loadArrows()
         return {
             adapter!!.setList(arrows.toMutableList())
             val arrow = arguments!!.getParcelable<Arrow>(ITEM)

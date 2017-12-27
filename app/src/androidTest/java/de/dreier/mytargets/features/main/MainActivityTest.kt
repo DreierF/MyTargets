@@ -46,7 +46,7 @@ import de.dreier.mytargets.features.training.edit.EditTrainingFragment
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.models.db.Arrow
+import de.dreier.mytargets.shared.models.dao.ArrowDAO
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.targets.models.WAFull
@@ -193,7 +193,7 @@ class MainActivityTest : UITestBase() {
         // openArrow
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
                 .perform(click())
-        val firstArrow = Arrow.all.sorted().firstOrNull()
+        val firstArrow = ArrowDAO.loadArrows().sorted().firstOrNull()
         intended(allOf(hasClass(EditArrowActivity::class.java),
                 hasExtra<Long>(EditArrowFragment.ARROW_ID, firstArrow!!.id)))
 

@@ -19,7 +19,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
-import android.text.TextUtils
 import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.OneToMany
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
@@ -38,42 +37,43 @@ import kotlinx.android.parcel.Parcelize
 @SuppressLint("ParcelCreator")
 @Parcelize
 @Table(database = AppDatabase::class)
-data class Arrow(@Column(name = "_id")
-                 @PrimaryKey(autoincrement = true)
-                 override var id: Long = 0,
+data class Arrow(
+        @Column(name = "_id")
+        @PrimaryKey(autoincrement = true)
+        override var id: Long = 0,
 
-                 @Column
-                 override var name: String = "",
+        @Column
+        override var name: String = "",
 
-                 @Column
-                 var maxArrowNumber: Int = 12,
+        @Column
+        var maxArrowNumber: Int = 12,
 
-                 @Column
-                 var length: String? = "",
+        @Column
+        var length: String? = "",
 
-                 @Column
-                 var material: String? = "",
+        @Column
+        var material: String? = "",
 
-                 @Column
-                 var spine: String? = "",
+        @Column
+        var spine: String? = "",
 
-                 @Column
-                 var weight: String? = "",
+        @Column
+        var weight: String? = "",
 
-                 @Column
-                 var tipWeight: String? = "",
+        @Column
+        var tipWeight: String? = "",
 
-                 @Column
-                 var vanes: String? = "",
+        @Column
+        var vanes: String? = "",
 
-                 @Column
-                 var nock: String? = "",
+        @Column
+        var nock: String? = "",
 
-                 @Column
-                 var comment: String? = "",
+        @Column
+        var comment: String? = "",
 
-                 @Column(typeConverter = DimensionConverter::class)
-                 var diameter: Dimension = Dimension(5f, Dimension.Unit.MILLIMETER),
+        @Column(typeConverter = DimensionConverter::class)
+        var diameter: Dimension = Dimension(5f, Dimension.Unit.MILLIMETER),
 
                  @Column(typeConverter = ThumbnailConverter::class)
                  var thumbnail: Thumbnail? = null) : BaseModel(), IImageProvider, IIdSettable, Comparable<Arrow>, IRecursiveModel, Parcelable {
@@ -134,34 +134,11 @@ data class Arrow(@Column(name = "_id")
 
     override fun compareTo(other: Arrow) = compareBy(Arrow::name, Arrow::id).compare(this, other)
 
-    fun areAllPropertiesSet(): Boolean {
-        return !TextUtils.isEmpty(length) &&
-                !TextUtils.isEmpty(material) &&
-                !TextUtils.isEmpty(spine) &&
-                !TextUtils.isEmpty(weight) &&
-                !TextUtils.isEmpty(tipWeight) &&
-                !TextUtils.isEmpty(vanes) &&
-                !TextUtils.isEmpty(nock) &&
-                !TextUtils.isEmpty(comment)
-    }
-
     override fun saveRecursively() {
         save()
     }
 
     override fun saveRecursively(databaseWrapper: DatabaseWrapper) {
         save(databaseWrapper)
-    }
-
-    companion object {
-        val all: List<Arrow>
-            get() = SQLite.select().from(Arrow::class.java).queryList()
-
-        operator fun get(id: Long?): Arrow? {
-            return if (id == null) null else SQLite.select()
-                    .from(Arrow::class.java)
-                    .where(Arrow_Table._id.eq(id))
-                    .querySingle()
-        }
     }
 }

@@ -16,8 +16,11 @@
 package de.dreier.mytargets.utils
 
 import android.databinding.BindingAdapter
+import android.support.design.widget.TextInputLayout
 import android.view.View
 import android.widget.ImageView
+
+
 
 object DataBindingAdapters {
 
@@ -32,5 +35,10 @@ object DataBindingAdapters {
     fun setPropertyVisibility(view: View, showAll: Boolean, shouldShow: Boolean, value: String) {
         val visible = shouldShow && (showAll || !value.isEmpty())
         view.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
+    @BindingAdapter("app:errorText")
+    fun setErrorMessage(view: TextInputLayout, errorMessage: String) {
+        view.error = errorMessage
     }
 }
