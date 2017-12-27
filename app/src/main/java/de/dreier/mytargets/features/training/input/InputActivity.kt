@@ -43,7 +43,6 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.activities.ChildActivityBase
 import de.dreier.mytargets.base.gallery.GalleryActivity
-import de.dreier.mytargets.base.navigation.IntentWrapper
 import de.dreier.mytargets.base.navigation.NavigationController
 import de.dreier.mytargets.databinding.ActivityInputBinding
 import de.dreier.mytargets.features.settings.ESettingsScreens

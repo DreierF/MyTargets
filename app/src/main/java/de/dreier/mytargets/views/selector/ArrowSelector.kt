@@ -19,22 +19,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.AttributeSet
-
-import de.dreier.mytargets.features.arrows.ArrowListActivity
-import de.dreier.mytargets.features.arrows.EditArrowFragment
 import de.dreier.mytargets.shared.models.db.Arrow
-import de.dreier.mytargets.utils.IntentWrapper
 
-class ArrowSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ImageSelectorBase<Arrow>(context, attrs) {
-
-    init {
-        defaultActivity = ArrowListActivity::class.java
-        requestCode = ARROW_REQUEST_CODE
-    }
-
-    override fun getAddIntent(): IntentWrapper {
-        return EditArrowFragment.createIntent().forResult(ARROW_ADD_REQUEST_CODE)
-    }
+class ArrowSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ImageSelectorBase<Arrow>(context, attrs, ARROW_REQUEST_CODE) {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -58,7 +45,7 @@ class ArrowSelector @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     companion object {
-        private const val ARROW_REQUEST_CODE = 5
+        const val ARROW_REQUEST_CODE = 5
         const val ARROW_ADD_REQUEST_CODE = 6
     }
 }

@@ -38,7 +38,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null
-) : ImageSelectorBase<Environment>(context, attrs, R.string.environment) {
+) : ImageSelectorBase<Environment>(context, attrs, ENVIRONMENT_REQUEST_CODE, R.string.environment) {
 
     override var selectedItem: Environment?
         get() = if (super.selectedItem == null) {
@@ -47,11 +47,6 @@ class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: Att
         set(value) {
             super.selectedItem = value
         }
-
-    init {
-        defaultActivity = EnvironmentActivity::class.java
-        requestCode = ENVIRONMENT_REQUEST_CODE
-    }
 
     fun queryWeather(fragment: Fragment, request_code: Int) {
         if (isTestMode) {

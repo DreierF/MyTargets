@@ -94,7 +94,6 @@ class EditRoundFragment : EditFragmentBase() {
             val round = Round[roundId!!]
             binding.distance.setItem(round!!.distance)
             binding.target.setItem(round.target)
-            binding.target.setFixedType(TargetListFragment.EFixedType.TARGET)
             binding.notEditable.visibility = View.GONE
             if (round.training.standardRoundId != null) {
                 binding.distanceLayout.visibility = View.GONE

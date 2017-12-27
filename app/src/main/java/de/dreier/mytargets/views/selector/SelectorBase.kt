@@ -30,38 +30,23 @@ import com.evernote.android.state.StateSaver
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.activities.ItemSelectActivity
 import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
-import de.dreier.mytargets.utils.IntentWrapper
 
 typealias OnUpdateListener<T> = (T?) -> Unit
 
 abstract class SelectorBase<T : Parcelable>(
         context: Context, attrs: AttributeSet?,
-        @LayoutRes private val layout: Int
+        @LayoutRes private val layout: Int,
+        protected var requestCode: Int
 ) : LinearLayout(context, attrs) {
 
     protected lateinit var view: View
-    protected var requestCode: Int = 0
-    protected var defaultActivity: Class<*>? = null
+
     @State
     open var selectedItem: T? = null
     private var addButton: Button? = null
     private var progress: View? = null
     private var updateListener: OnUpdateListener<T>? = null
     private var index = -1
-
-    private var addClickListener: OnClickListener? = null
-
-    private var clickListener: OnClickListener? = null
-
-    open protected val defaultIntent: IntentWrapper
-        get() {
-            val i = IntentWrapper(defaultActivity!!)
-                    .with(ITEM, selectedItem!!)
-            if (index != -1) {
-                i.with(INDEX, index)
-            }
-            return i
-        }
 
     override fun onFinishInflate() {
         super.onFinishInflate()
@@ -98,17 +83,13 @@ abstract class SelectorBase<T : Parcelable>(
         this.updateListener = updateListener
     }
 
-//    fun setOnActivityResultContext(fragment: Fragment) {
-//        if (addButton != null) {
-//            addIntent = getAddIntent()!!.withContext(fragment)
-//        }
-//        setOnClickListener {
-//            defaultIntent
-//                    .withContext(fragment)
-//                    .forResult(requestCode)
-//                    .start()
-//        }
-//    }
+    fun setOnAddClickListener(addClickListener: () -> Unit) {
+        addButton!!.setOnClickListener { addClickListener.invoke() }
+    }
+
+    fun setOnClickListener(clickListener: (T?, Int) -> Unit) {
+        view.setOnClickListener { clickListener.invoke(selectedItem, index) }
+    }
 
     open fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == this.requestCode && data != null) {
@@ -129,13 +110,5 @@ abstract class SelectorBase<T : Parcelable>(
 
     companion object {
         const val INDEX = "index"
-    }
-
-    fun setOnAddClickListener(addClickListener: () -> Unit) {
-        addButton!!.setOnClickListener { addClickListener.invoke() }
-    }
-
-    fun setOnClickListener(clickListener: (T?, Int) -> Unit) {
-        view.setOnClickListener { clickListener.invoke(selectedItem, index) }
     }
 }

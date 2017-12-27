@@ -30,7 +30,6 @@ import android.view.View
 import android.widget.TextView
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase
-import de.dreier.mytargets.base.navigation.IntentWrapper
 import de.dreier.mytargets.base.navigation.NavigationController
 import de.dreier.mytargets.databinding.ActivityMainBinding
 import de.dreier.mytargets.features.arrows.EditArrowListFragment
