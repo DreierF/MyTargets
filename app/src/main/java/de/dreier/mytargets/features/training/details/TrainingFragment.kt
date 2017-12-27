@@ -101,10 +101,7 @@ open class TrainingFragment : EditableListFragment<Round>() {
         binding.fab.visibility = View.GONE
         binding.fab.setOnClickListener {
             // New round to free training
-            EditRoundFragment.createIntent(training!!)
-                    .withContext(this)
-                    .fromFab(binding.fab)
-                    .start()
+            navigationController.navigateToCreateRound(training!!, binding.fab)
         }
         return binding.root
     }

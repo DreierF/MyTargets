@@ -22,6 +22,7 @@ import android.support.annotation.CallSuper
 import android.support.v4.app.Fragment
 import android.view.*
 import de.dreier.mytargets.R
+import de.dreier.mytargets.base.navigation.NavigationController
 import de.dreier.mytargets.databinding.FragmentWebBinding
 import de.dreier.mytargets.features.help.licences.LicencesActivity
 import de.dreier.mytargets.features.settings.about.AboutFragment
@@ -35,6 +36,7 @@ import java.io.IOException
  */
 class HelpFragment : Fragment() {
 
+    private lateinit var navigationController: NavigationController
     private lateinit var binding: FragmentWebBinding
 
     private val helpHtmlPage: String
@@ -65,6 +67,7 @@ class HelpFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        navigationController = NavigationController(this)
         ToolbarUtils.showHomeAsUp(this)
         setHasOptionsMenu(true)
     }
@@ -87,15 +90,10 @@ class HelpFragment : Fragment() {
                 return true
             }
             R.id.action_about -> {
-                AboutFragment.intent.withContext(this).start()
+                navigationController.navigateToAbout()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
         }
-    }
-
-    companion object {
-        val intent: IntentWrapper
-            get() = IntentWrapper(HelpActivity::class.java)
     }
 }

@@ -26,6 +26,7 @@ import android.support.v4.content.AsyncTaskLoader
 import android.support.v4.content.Loader
 import com.evernote.android.state.StateSaver
 import de.dreier.mytargets.R
+import de.dreier.mytargets.base.navigation.NavigationController
 import de.dreier.mytargets.utils.Utils
 
 
@@ -37,6 +38,8 @@ typealias LoaderUICallback = () -> Unit
  * and animates activity when #finish gets called.
  */
 abstract class FragmentBase : Fragment(), LoaderManager.LoaderCallbacks<FragmentBase.LoaderUICallbackHelper> {
+
+    protected lateinit var navigationController: NavigationController
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,6 +66,7 @@ abstract class FragmentBase : Fragment(), LoaderManager.LoaderCallbacks<Fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        navigationController = NavigationController(this)
         reloadData()
     }
 

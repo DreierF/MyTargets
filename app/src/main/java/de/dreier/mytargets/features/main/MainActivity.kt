@@ -30,10 +30,11 @@ import android.view.View
 import android.widget.TextView
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase
+import de.dreier.mytargets.base.navigation.IntentWrapper
+import de.dreier.mytargets.base.navigation.NavigationController
 import de.dreier.mytargets.databinding.ActivityMainBinding
 import de.dreier.mytargets.features.arrows.EditArrowListFragment
 import de.dreier.mytargets.features.bows.EditBowListFragment
-import de.dreier.mytargets.features.help.HelpFragment
 import de.dreier.mytargets.features.settings.ESettingsScreens.MAIN
 import de.dreier.mytargets.features.settings.ESettingsScreens.PROFILE
 import de.dreier.mytargets.features.settings.SettingsActivity
@@ -51,6 +52,7 @@ import im.delight.android.languages.Language
  */
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var navigationController: NavigationController
     internal lateinit var binding: ActivityMainBinding
     private var drawerToggle: ActionBarDrawerToggle? = null
     private var onDrawerClosePendingIntent: IntentWrapper? = null
@@ -65,6 +67,7 @@ class MainActivity : AppCompatActivity() {
         Language.setFromPreference(this, SettingsManager.KEY_LANGUAGE)
         countryCode = getCountryCode()
         super.onCreate(savedInstanceState)
+        navigationController = NavigationController(this)
         if (SettingsManager.shouldShowIntroActivity) {
             SettingsManager.shouldShowIntroActivity = false
             val intent = Intent(this, IntroActivity::class.java)
@@ -134,7 +137,7 @@ class MainActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.nav_timer -> closeDrawerAndStart(TimerFragment.getIntent(false))
                 R.id.nav_settings -> closeDrawerAndStart(SettingsActivity.getIntent(MAIN))
-                R.id.nav_help_and_feedback -> closeDrawerAndStart(HelpFragment.intent)
+                R.id.nav_help_and_feedback -> closeDrawerAndStart(navigationController.navigateToHelp())
                 else -> {
                 }
             }
