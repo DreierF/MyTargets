@@ -30,6 +30,8 @@ import de.dreier.mytargets.base.activities.ItemSelectActivity
 import de.dreier.mytargets.base.fragments.EditFragmentBase
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase.Companion.ITEM_ID
 import de.dreier.mytargets.databinding.FragmentEditTrainingBinding
+import de.dreier.mytargets.features.arrows.ArrowListActivity
+import de.dreier.mytargets.features.bows.BowListActivity
 import de.dreier.mytargets.features.bows.EditBowFragment
 import de.dreier.mytargets.features.distance.DistanceActivity
 import de.dreier.mytargets.features.settings.SettingsManager
@@ -177,18 +179,38 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
         }
         binding.arrow.setOnAddClickListener {
             navigationController.navigateToCreateArrow()
+                    .withContext(this)
                     .forResult(ArrowSelector.ARROW_ADD_REQUEST_CODE)
+                    .start()
+        }
+        binding.arrow.setOnClickListener { selectedItem, index ->
+            IntentWrapper(ArrowListActivity::class.java)
+                    .with(ItemSelectActivity.ITEM, selectedItem!!)
+                    .with(SelectorBase.INDEX, index)
+                    .withContext(this)
+                    .forResult(ArrowSelector.ARROW_REQUEST_CODE)
                     .start()
         }
         binding.bow.setOnAddClickListener {
             EditBowFragment.createIntent(EBowType.RECURVE_BOW)
+                    .withContext(this)
+                    .forResult(BowSelector.BOW_REQUEST_CODE)
+                    .start()
+        }
+        binding.bow.setOnClickListener { selectedItem, index ->
+            IntentWrapper(BowListActivity::class.java)
+                    .with(ItemSelectActivity.ITEM, selectedItem!!)
+                    .with(SelectorBase.INDEX, index)
+                    .withContext(this)
                     .forResult(BowSelector.BOW_ADD_REQUEST_CODE)
+                    .start()
         }
         binding.bow.setOnUpdateListener { this.setScoringStyleForCompoundBow(it) }
         binding.environment.setOnClickListener { selectedItem, index ->
             IntentWrapper(EnvironmentActivity::class.java)
                     .with(ItemSelectActivity.ITEM, selectedItem!!)
                     .with(SelectorBase.INDEX, index)
+                    .withContext(this)
                     .forResult(EnvironmentSelector.ENVIRONMENT_REQUEST_CODE)
                     .start()
         }

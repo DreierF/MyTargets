@@ -17,17 +17,10 @@ package de.dreier.mytargets.views.selector
 
 import android.content.Context
 import android.util.AttributeSet
-
-import de.dreier.mytargets.features.training.standardround.StandardRoundActivity
 import de.dreier.mytargets.shared.models.db.StandardRound
 
 class StandardRoundSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null)
-    : ImageSelectorBase<StandardRound>(context, attrs) {
-
-    init {
-        defaultActivity = StandardRoundActivity::class.java
-        requestCode = STANDARD_ROUND_REQUEST_CODE
-    }
+    : ImageSelectorBase<StandardRound>(context, attrs, STANDARD_ROUND_REQUEST_CODE) {
 
     fun setItemId(standardRoundId: Long?) {
         var standardRound = StandardRound[standardRoundId!!]

@@ -17,24 +17,17 @@ package de.dreier.mytargets.views.selector
 
 import android.content.Context
 import android.util.AttributeSet
-
 import de.dreier.mytargets.R
-import de.dreier.mytargets.features.training.environment.WindSpeedActivity
 import de.dreier.mytargets.shared.models.WindSpeed
 
 class WindSpeedSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null
-) : ImageSelectorBase<WindSpeed>(context, attrs, R.string.wind_speed) {
-
-    init {
-        defaultActivity = WindSpeedActivity::class.java
-        requestCode = WIND_SPEED_REQUEST_CODE
-    }
+) : ImageSelectorBase<WindSpeed>(context, attrs, WIND_SPEED_REQUEST_CODE, R.string.wind_speed) {
 
     fun setItemId(speed: Long) {
         setItem(WindSpeed.getList(context)[speed.toInt()])
     }
 
     companion object {
-        private val WIND_SPEED_REQUEST_CODE = 4
+        const val WIND_SPEED_REQUEST_CODE = 4
     }
 }

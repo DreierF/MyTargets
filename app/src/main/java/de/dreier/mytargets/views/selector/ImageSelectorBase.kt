@@ -27,9 +27,10 @@ import de.dreier.mytargets.shared.models.IImageProvider
 
 abstract class ImageSelectorBase<T> @JvmOverloads constructor(
         context: Context,
-        attrs: AttributeSet? = null,
+        attrs: AttributeSet?,
+        requestCode: Int,
         val title: Int? = null
-) : SelectorBase<T>(context, attrs, R.layout.selector_item_image_details) where T : IImageProvider, T : Parcelable {
+) : SelectorBase<T>(context, attrs, R.layout.selector_item_image_details, requestCode) where T : IImageProvider, T : Parcelable {
 
     protected lateinit var binding: SelectorItemImageDetailsBinding
 

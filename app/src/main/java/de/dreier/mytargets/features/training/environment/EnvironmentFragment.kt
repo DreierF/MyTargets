@@ -25,6 +25,7 @@ import android.view.View.VISIBLE
 import android.widget.ImageButton
 import com.evernote.android.state.State
 import de.dreier.mytargets.R
+import de.dreier.mytargets.base.activities.ItemSelectActivity
 import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
 import de.dreier.mytargets.base.fragments.FragmentBase
 import de.dreier.mytargets.base.fragments.ListFragmentBase
@@ -32,7 +33,11 @@ import de.dreier.mytargets.databinding.FragmentEnvironmentBinding
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.EWeather
 import de.dreier.mytargets.shared.models.Environment
+import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.ToolbarUtils
+import de.dreier.mytargets.views.selector.SelectorBase
+import de.dreier.mytargets.views.selector.WindDirectionSelector
+import de.dreier.mytargets.views.selector.WindSpeedSelector
 import junit.framework.Assert
 
 class EnvironmentFragment : FragmentBase() {
@@ -67,8 +72,22 @@ class EnvironmentFragment : FragmentBase() {
         binding.windDirection.setItemId(environment!!.windDirection.toLong())
         binding.location.setText(environment!!.location)
 
-        binding.windDirection.setOnActivityResultContext(this)
-        binding.windSpeed.setOnActivityResultContext(this)
+        binding.windDirection.setOnClickListener { selectedItem, index ->
+            IntentWrapper(WindDirectionActivity::class.java)
+                    .with(ItemSelectActivity.ITEM, selectedItem!!)
+                    .with(SelectorBase.INDEX, index)
+                    .withContext(this)
+                    .forResult(WindDirectionSelector.WIND_DIRECTION_REQUEST_CODE)
+                    .start()
+        }
+        binding.windSpeed.setOnClickListener { selectedItem, index ->
+            IntentWrapper(WindSpeedActivity::class.java)
+                    .with(ItemSelectActivity.ITEM, selectedItem!!)
+                    .with(SelectorBase.INDEX, index)
+                    .withContext(this)
+                    .forResult(WindSpeedSelector.WIND_SPEED_REQUEST_CODE)
+                    .start()
+        }
 
         return binding.root
     }

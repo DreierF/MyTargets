@@ -31,7 +31,10 @@ import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemHolder
 import de.dreier.mytargets.base.fragments.EditFragmentBase
 import de.dreier.mytargets.databinding.FragmentEditStandardRoundBinding
 import de.dreier.mytargets.databinding.ItemRoundTemplateBinding
+import de.dreier.mytargets.features.distance.DistanceActivity
 import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.features.training.target.TargetActivity
+import de.dreier.mytargets.features.training.target.TargetListFragment
 import de.dreier.mytargets.shared.models.db.RoundTemplate
 import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.utils.StandardRoundFactory
@@ -167,7 +170,7 @@ class EditStandardRoundFragment : EditFragmentBase() {
         }
     }
 
-    private class RoundTemplateHolder internal constructor(view: View) : DynamicItemHolder<RoundTemplate>(view) {
+    private inner class RoundTemplateHolder internal constructor(view: View) : DynamicItemHolder<RoundTemplate>(view) {
 
         internal var binding: ItemRoundTemplateBinding = DataBindingUtil.bind(view)
 
@@ -179,12 +182,27 @@ class EditStandardRoundFragment : EditFragmentBase() {
                     .getQuantityString(R.plurals.rounds, position + 1, position + 1)
             item.index = position
 
-            binding.distance.setOnActivityResultContext(fragment)
+            binding.distance.setOnClickListener { selectedItem, index ->
+                IntentWrapper(DistanceActivity::class.java)
+                        .with(ItemSelectActivity.ITEM, selectedItem!!)
+                        .with(SelectorBase.INDEX, index)
+                        .withContext(this@EditStandardRoundFragment)
+                        .forResult(DistanceSelector.DISTANCE_REQUEST_CODE)
+                        .start()
+            }
             binding.distance.setItemIndex(position)
             binding.distance.setItem(item.distance)
 
             // Target round
-            binding.target.setOnActivityResultContext(fragment)
+            binding.target.setOnClickListener { selectedItem, index ->
+                IntentWrapper(TargetActivity::class.java)
+                        .with(ItemSelectActivity.ITEM, selectedItem!!)
+                        .with(SelectorBase.INDEX, index)
+                        .with(TargetListFragment.FIXED_TYPE, TargetListFragment.EFixedType.NONE.name)
+                        .withContext(this@EditStandardRoundFragment)
+                        .forResult(TargetSelector.TARGET_REQUEST_CODE)
+                        .start()
+            }
             binding.target.setItemIndex(position)
             binding.target.setItem(item.targetTemplate)
 

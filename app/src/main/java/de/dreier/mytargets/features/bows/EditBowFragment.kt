@@ -153,7 +153,7 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
         return bow
     }
 
-    private class SightSettingHolder internal constructor(view: View) : DynamicItemHolder<SightMark>(view) {
+    private inner class SightSettingHolder internal constructor(view: View) : DynamicItemHolder<SightMark>(view) {
 
         private val binding: ItemSightMarkBinding = DataBindingUtil.bind(view)
 
@@ -179,7 +179,7 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
                 IntentWrapper(DistanceActivity::class.java)
                         .with(ItemSelectActivity.ITEM, selectedItem!!)
                         .with(SelectorBase.INDEX, index)
-                        .withContext(activity!!)
+                        .withContext(this@EditBowFragment)
                         .forResult(DistanceSelector.DISTANCE_REQUEST_CODE)
                         .start()
             }

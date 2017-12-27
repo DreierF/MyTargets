@@ -19,15 +19,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.AttributeSet
-import de.dreier.mytargets.features.bows.BowListActivity
 import de.dreier.mytargets.shared.models.db.Bow
 
-class BowSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ImageSelectorBase<Bow>(context, attrs) {
-
-    init {
-        defaultActivity = BowListActivity::class.java
-        requestCode = BOW_REQUEST_CODE
-    }
+class BowSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ImageSelectorBase<Bow>(context, attrs, BOW_REQUEST_CODE) {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -48,7 +42,7 @@ class BowSelector @JvmOverloads constructor(context: Context, attrs: AttributeSe
     }
 
     companion object {
-        private const val BOW_REQUEST_CODE = 7
+        const val BOW_REQUEST_CODE = 7
         const val BOW_ADD_REQUEST_CODE = 8
     }
 }

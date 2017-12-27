@@ -17,32 +17,11 @@ package de.dreier.mytargets.views.selector
 
 import android.content.Context
 import android.util.AttributeSet
-
 import de.dreier.mytargets.R
-import de.dreier.mytargets.features.training.target.TargetActivity
-import de.dreier.mytargets.features.training.target.TargetListFragment
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.utils.IntentWrapper
 
 class TargetSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null)
-    : ImageSelectorBase<Target>(context, attrs, R.string.target_face) {
-    private var fixedType: TargetListFragment.EFixedType = TargetListFragment.EFixedType.NONE
-
-    override val defaultIntent: IntentWrapper
-        get() {
-            val i = super.defaultIntent
-            i.with(TargetListFragment.FIXED_TYPE, fixedType.name)
-            return i
-        }
-
-    init {
-        defaultActivity = TargetActivity::class.java
-        requestCode = TARGET_REQUEST_CODE
-    }
-
-    fun setFixedType(fixedType: TargetListFragment.EFixedType) {
-        this.fixedType = fixedType
-    }
+    : ImageSelectorBase<Target>(context, attrs, TARGET_REQUEST_CODE, R.string.target_face) {
 
     companion object {
         const val TARGET_REQUEST_CODE = 12
