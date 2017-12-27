@@ -33,7 +33,7 @@ import de.dreier.mytargets.shared.targets.models.NFAAAnimal
 import de.dreier.mytargets.shared.targets.models.WAFull
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod.KEYBOARD
 import de.dreier.mytargets.test.base.InstrumentedTestBase
-import junit.framework.Assert
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

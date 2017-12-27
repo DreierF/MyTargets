@@ -48,7 +48,7 @@ class TimerActivity : WearableActivity(), MenuItem.OnMenuItemClickListener {
         fragmentManager.beginTransaction().replace(R.id.content_frame, timerFragment).commit()
 
         binding.primaryActionPeek
-                .setOnClickListener { v -> binding.bottomActionDrawer.controller.openDrawer() }
+                .setOnClickListener { binding.bottomActionDrawer.controller.openDrawer() }
         binding.bottomActionDrawer.setOnMenuItemClickListener(this)
         binding.bottomActionDrawer.menu.findItem(R.id.menu_vibrate)
                 .setIcon(if (settings.vibrate)
