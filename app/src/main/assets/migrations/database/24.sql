@@ -41,6 +41,8 @@ INSERT INTO `Training`
     `weather`, `windDirection`, `windSpeed`, `location`, '', NULL, NULL
     FROM TRAINING_OLD;
 
+UPDATE Round SET comment = "" WHERE comment = NULL;
+
 -- End migration
 CREATE TABLE IF NOT EXISTS `End`(
     `_id` INTEGER PRIMARY KEY AUTOINCREMENT,

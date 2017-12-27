@@ -86,7 +86,7 @@ class RoundActivity : WearableActivity() {
         // Replaces the on click behaviour that open the (empty) drawer
         val peekView = binding.primaryActionTimer.parent as LinearLayout
         val peekContainer = peekView.parent as ViewGroup
-        peekContainer.setOnClickListener { view -> toggleTimer() }
+        peekContainer.setOnClickListener { toggleTimer() }
         applyTimerState()
 
         val filter = IntentFilter()
@@ -166,12 +166,12 @@ class RoundActivity : WearableActivity() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             val inflater = LayoutInflater.from(parent.context)
-            if (viewType == 0) {
+            return if (viewType == 0) {
                 val view = inflater.inflate(R.layout.item_end, parent, false)
-                return ViewHolder(view)
+                ViewHolder(view)
             } else {
                 val view = inflater.inflate(R.layout.item_inline_button, parent, false)
-                return InlineButtonViewHolder(view)
+                InlineButtonViewHolder(view)
             }
         }
 
@@ -213,7 +213,7 @@ class RoundActivity : WearableActivity() {
 
     private inner class InlineButtonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         init {
-            itemView.setOnClickListener { v -> addEnd() }
+            itemView.setOnClickListener { addEnd() }
         }
     }
 

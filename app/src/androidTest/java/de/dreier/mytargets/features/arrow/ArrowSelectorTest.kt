@@ -47,7 +47,7 @@ class ArrowSelectorTest : UITestBase() {
             EditTrainingActivity::class.java, true, false)
 
     @get:Rule
-    val rule = RuleChain.outerRule(EmptyDbTestRule())
+    val rule: RuleChain = RuleChain.outerRule(EmptyDbTestRule())
             .around(activityTestRule)
 
     @Test
@@ -65,7 +65,7 @@ class ArrowSelectorTest : UITestBase() {
         val intent = Intent()
         intent.action = type
         activityTestRule.launchActivity(intent)
-        //allowPermissionsIfNeeded(activityTestRule.getActivity(), ACCESS_FINE_LOCATION);
+        //allowPermissionsIfNeeded(activityTestRule.activity, ACCESS_FINE_LOCATION)
 
         onView(withText(R.string.add_arrow)).perform(nestedScrollTo(), click())
         intended(hasComponent(EditArrowActivity::class.java.name))

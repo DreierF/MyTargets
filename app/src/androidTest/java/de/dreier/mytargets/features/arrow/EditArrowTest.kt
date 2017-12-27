@@ -65,7 +65,7 @@ class EditArrowTest : UITestBase() {
         // Attempt to save and check if error is shown
         save()
         onView(withId(R.id.diameterTextInputLayout))
-                .check(matches(hasDescendant(withText(R.string.not_within_expected_range_mm))))
+                .check(matches(hasDescendant(withText(getString(R.string.not_within_expected_range_mm)))))
 
         // Fix input
         onView(withId(R.id.diameter))
