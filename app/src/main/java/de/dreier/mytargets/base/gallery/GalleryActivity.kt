@@ -262,15 +262,9 @@ class GalleryActivity : ChildActivityBase() {
     }
 
     companion object {
-        private val RESULT_IMAGES = "images"
-        private val EXTRA_IMAGES = "images"
-        private val EXTRA_TITLE = "title"
-
-        fun getIntent(images: ImageList, title: String): IntentWrapper {
-            return IntentWrapper(GalleryActivity::class.java)
-                    .with(EXTRA_TITLE, title)
-                    .with(EXTRA_IMAGES, images)
-        }
+        const val RESULT_IMAGES = "images"
+        const val EXTRA_IMAGES = "images"
+        const val EXTRA_TITLE = "title"
 
         fun getResult(data: Intent): ImageList {
             return data.getParcelableExtra(RESULT_IMAGES)

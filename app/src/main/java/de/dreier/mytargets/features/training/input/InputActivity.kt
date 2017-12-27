@@ -43,10 +43,10 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.activities.ChildActivityBase
 import de.dreier.mytargets.base.gallery.GalleryActivity
+import de.dreier.mytargets.base.navigation.IntentWrapper
+import de.dreier.mytargets.base.navigation.NavigationController
 import de.dreier.mytargets.databinding.ActivityInputBinding
-import de.dreier.mytargets.features.rounds.EditRoundFragment
 import de.dreier.mytargets.features.settings.ESettingsScreens
-import de.dreier.mytargets.features.settings.SettingsActivity
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.features.timer.TimerFragment
 import de.dreier.mytargets.features.training.RoundFragment
@@ -76,6 +76,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     @State
     var data: LoaderResult? = null
 
+    private lateinit var navigationController: NavigationController
     private lateinit var binding: ActivityInputBinding
     private var transitionFinished = true
     private var summaryShowScope = ETrainingScope.END
@@ -101,7 +102,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_input)
-
+        navigationController = NavigationController(this)
         setSupportActionBar(binding.toolbar)
         ToolbarUtils.showHomeAsUp(this)
         FabTransform.setup(this, binding.root)
@@ -209,10 +210,9 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_photo -> {
-                GalleryActivity.getIntent(ImageList(data!!.currentEnd.images), getString(R.string.end_n, data!!.endIndex + 1))
-                        .withContext(this)
-                        .forResult(GALLERY_REQUEST_CODE)
-                        .start()
+                val imageList = ImageList(data!!.currentEnd.images)
+                val title = getString(R.string.end_n, data!!.endIndex + 1)
+                navigationController.navigateToGallery(imageList, title, GALLERY_REQUEST_CODE)
                 return true
             }
             R.id.action_comment -> {
@@ -238,15 +238,11 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
                 return true
             }
             R.id.action_settings -> {
-                SettingsActivity.getIntent(ESettingsScreens.INPUT)
-                        .withContext(this)
-                        .start()
+                navigationController.navigateToSettings(ESettingsScreens.INPUT)
                 return true
             }
             R.id.action_new_round -> {
-                EditRoundFragment.createIntent(data!!.training.training)
-                        .withContext(this)
-                        .start()
+                navigationController.navigateToCreateRound(data!!.training.training)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -486,10 +482,10 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
 
     companion object {
 
-        internal val TRAINING_ID = "training_id"
-        internal val ROUND_ID = "round_id"
-        internal val END_INDEX = "end_ind"
-        private val GALLERY_REQUEST_CODE = 1
+        internal const val TRAINING_ID = "training_id"
+        internal const val ROUND_ID = "round_id"
+        internal const val END_INDEX = "end_ind"
+        internal const val GALLERY_REQUEST_CODE = 1
 
         fun createIntent(round: Round): IntentWrapper {
             return getIntent(round, 0)

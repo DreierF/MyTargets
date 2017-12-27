@@ -47,7 +47,7 @@ class EditArrowListFragment : EditableListFragment<Arrow>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.fab.setOnClickListener {
-            EditArrowFragment.createIntent()
+            navigationController.navigateToCreateArrow()
                     .withContext(this)
                     .fromFab(binding.fab)
                     .start()

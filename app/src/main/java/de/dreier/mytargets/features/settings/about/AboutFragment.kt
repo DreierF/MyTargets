@@ -23,7 +23,6 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import de.dreier.mytargets.BuildConfig
 import de.dreier.mytargets.R
 import de.dreier.mytargets.utils.IntentWrapper
@@ -112,8 +111,5 @@ class AboutFragment : Fragment() {
         private const val URL_PAYPAL = "https://www.paypal.me/floriandreier"
         private const val URL_CROWDIN = "https://crowdin.com/project/mytargets"
         private const val URL_LINKEDIN = "https://de.linkedin.com/in/florian-dreier-b056a1113"
-
-        val intent: IntentWrapper
-            get() = IntentWrapper(AboutActivity::class.java)
     }
 }
