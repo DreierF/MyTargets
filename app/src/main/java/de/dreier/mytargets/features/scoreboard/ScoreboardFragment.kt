@@ -43,7 +43,6 @@ import de.dreier.mytargets.databinding.FragmentScoreboardBinding
 import de.dreier.mytargets.databinding.PartialScoreboardSignaturesBinding
 import de.dreier.mytargets.features.scoreboard.pdf.ViewPrintDocumentAdapter
 import de.dreier.mytargets.features.settings.ESettingsScreens
-import de.dreier.mytargets.features.settings.SettingsActivity
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Signature
@@ -167,9 +166,7 @@ class ScoreboardFragment : FragmentBase() {
                 return true
             }
             R.id.action_settings -> {
-                SettingsActivity.getIntent(ESettingsScreens.SCOREBOARD)
-                        .withContext(this)
-                        .start()
+                navigationController.navigateToSettings(ESettingsScreens.SCOREBOARD)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -193,8 +190,7 @@ class ScoreboardFragment : FragmentBase() {
                     if (fileType === EFileType.PDF && Utils.isKitKat) {
                         ScoreboardUtils.generatePdf(content, scoreboardFile)
                     } else {
-                        ScoreboardUtils
-                                .generateBitmap(context!!, content, scoreboardFile)
+                        ScoreboardUtils.generateBitmap(context!!, content, scoreboardFile)
                     }
 
                     return scoreboardFile.toUri(context!!)

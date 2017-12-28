@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.training
 
 
+import android.content.Intent
 import android.support.test.espresso.intent.rule.IntentsTestRule
 import android.support.test.runner.AndroidJUnit4
 import de.dreier.mytargets.features.scoreboard.ScoreboardActivity
@@ -44,7 +45,10 @@ class ScoreboardActivityTest : UITestBase() {
         val trainings = Training.all
         Collections.sort(trainings, Collections.reverseOrder())
         val (id) = trainings[0]
-        activityTestRule.launchActivity(ScoreboardActivity.getIntent(id).build())
+        val i = Intent()
+        i.putExtra(ScoreboardActivity.TRAINING_ID, id)
+        i.putExtra(ScoreboardActivity.ROUND_ID, -1L)
+        activityTestRule.launchActivity(i)
 
 //        intending(anyOf(not(isInternal()), isInternal()))
 //                .respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, null))

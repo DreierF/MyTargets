@@ -25,11 +25,9 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import de.dreier.mytargets.R
 import de.dreier.mytargets.databinding.FragmentTimerBinding
-import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.base.fragment.ETimerState
 import de.dreier.mytargets.shared.base.fragment.ETimerState.*
 import de.dreier.mytargets.shared.base.fragment.TimerFragmentBase
-import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils
 
@@ -77,14 +75,6 @@ class TimerFragment : TimerFragmentBase() {
             SHOOTING, COUNTDOWN -> R.string.shooting
             FINISHED, EXIT -> R.string.stop
             else -> R.string.stop
-        }
-    }
-
-    companion object {
-        fun getIntent(exitAfterStop: Boolean): IntentWrapper {
-            return IntentWrapper(TimerActivity::class.java)
-                    .with(TimerFragmentBase.ARG_EXIT_AFTER_STOP, exitAfterStop)
-                    .with(TimerFragmentBase.ARG_TIMER_SETTINGS, SettingsManager.timerSettings)
         }
     }
 }

@@ -25,7 +25,6 @@ import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.BuildConfig
 import de.dreier.mytargets.R
-import de.dreier.mytargets.utils.IntentWrapper
 import mehdi.sakout.aboutpage.AboutPage
 import mehdi.sakout.aboutpage.Element
 

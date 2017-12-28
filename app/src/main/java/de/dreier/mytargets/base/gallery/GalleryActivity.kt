@@ -37,7 +37,6 @@ import de.dreier.mytargets.databinding.ActivityGalleryBinding
 import de.dreier.mytargets.shared.utils.FileUtils
 import de.dreier.mytargets.shared.utils.ImageList
 import de.dreier.mytargets.shared.utils.toUri
-import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils
 import permissions.dispatcher.NeedsPermission

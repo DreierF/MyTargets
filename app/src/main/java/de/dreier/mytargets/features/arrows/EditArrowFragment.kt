@@ -16,7 +16,6 @@
 package de.dreier.mytargets.features.arrows
 
 import android.os.Bundle
-import android.support.annotation.VisibleForTesting
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +28,6 @@ import de.dreier.mytargets.shared.models.Dimension.Unit.INCH
 import de.dreier.mytargets.shared.models.Dimension.Unit.MILLIMETER
 import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.ArrowImage
-import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.ToolbarUtils
 import java.lang.Integer.parseInt
 
@@ -124,16 +122,6 @@ class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrow
     }
 
     companion object {
-        @VisibleForTesting
         val ARROW_ID = "arrow_id"
-
-        fun createIntent(): IntentWrapper {
-            return IntentWrapper(EditArrowActivity::class.java)
-        }
-
-        fun editIntent(arrowId: Long): IntentWrapper {
-            return IntentWrapper(EditArrowActivity::class.java)
-                    .with(ARROW_ID, arrowId)
-        }
     }
 }

@@ -25,8 +25,6 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.base.navigation.NavigationController
 import de.dreier.mytargets.databinding.FragmentWebBinding
 import de.dreier.mytargets.features.help.licences.LicencesActivity
-import de.dreier.mytargets.features.settings.about.AboutFragment
-import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.ToolbarUtils
 import uk.co.hassie.library.versioninfomdialog.VersionInfoMDialog
 import java.io.IOException

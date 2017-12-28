@@ -19,7 +19,6 @@ import android.app.Activity
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.annotation.VisibleForTesting
 import android.support.v4.app.Fragment
 import android.text.Editable
 import android.text.TextWatcher
@@ -34,13 +33,11 @@ import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemHolder
 import de.dreier.mytargets.base.fragments.EditWithImageFragmentBase
 import de.dreier.mytargets.databinding.FragmentEditBowBinding
 import de.dreier.mytargets.databinding.ItemSightMarkBinding
-import de.dreier.mytargets.features.distance.DistanceActivity
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.BowImage
 import de.dreier.mytargets.shared.models.db.SightMark
-import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.views.selector.DistanceSelector
 import de.dreier.mytargets.views.selector.SelectorBase
@@ -176,12 +173,7 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
         override fun onBind(item: SightMark, position: Int, fragment: Fragment, removeListener: View.OnClickListener) {
             this.item = item
             binding.distance.setOnClickListener { selectedItem, index ->
-                IntentWrapper(DistanceActivity::class.java)
-                        .with(ItemSelectActivity.ITEM, selectedItem!!)
-                        .with(SelectorBase.INDEX, index)
-                        .withContext(this@EditBowFragment)
-                        .forResult(DistanceSelector.DISTANCE_REQUEST_CODE)
-                        .start()
+                navigationController.navigateToDistance(selectedItem!!, index, DistanceSelector.DISTANCE_REQUEST_CODE)
             }
             binding.distance.setItemIndex(position)
             binding.distance.setItem(item.distance)
@@ -199,19 +191,7 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
     }
 
     companion object {
-
         const val BOW_TYPE = "bow_type"
-        @VisibleForTesting
         const val BOW_ID = "bow_id"
-
-        fun createIntent(bowType: EBowType): IntentWrapper {
-            return IntentWrapper(EditBowActivity::class.java)
-                    .with(EditBowFragment.BOW_TYPE, bowType.name)
-        }
-
-        fun editIntent(bowId: Long): IntentWrapper {
-            return IntentWrapper(EditBowActivity::class.java)
-                    .with(BOW_ID, bowId)
-        }
     }
 }

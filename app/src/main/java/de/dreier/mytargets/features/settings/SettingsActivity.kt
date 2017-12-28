@@ -23,7 +23,6 @@ import android.support.v7.preference.PreferenceScreen
 import android.view.MenuItem
 import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase
 import de.dreier.mytargets.features.settings.ESettingsScreens.MAIN
-import de.dreier.mytargets.utils.IntentWrapper
 
 class SettingsActivity : SimpleFragmentActivityBase(), PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 
@@ -79,13 +78,6 @@ class SettingsActivity : SimpleFragmentActivityBase(), PreferenceFragmentCompat.
                 true
             }
             else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    companion object {
-        fun getIntent(subScreen: ESettingsScreens): IntentWrapper {
-            return IntentWrapper(SettingsActivity::class.java)
-                    .with(ARG_PREFERENCE_ROOT, subScreen.key)
         }
     }
 }

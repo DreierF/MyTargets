@@ -28,27 +28,16 @@ import android.view.View
 import de.dreier.mytargets.R
 import de.dreier.mytargets.utils.transitions.FabTransform
 
-class IntentWrapper(private val intentTargetClass: Class<*>) {
+class IntentWrapper(
+        private var activity: Activity,
+        var fragment: Fragment? = null,
+        intentTargetClass: Class<*>
+) {
 
-    private val intent = Intent()
+    private val intent = Intent(activity, intentTargetClass)
     private var options: Bundle? = null
     private var requestCode: Int? = null
     private var animate = true
-    private var fragment: Fragment? = null
-    private var activity: Activity? = null
-
-    fun withContext(fragment: Fragment): IntentWrapper {
-        this.fragment = fragment
-        activity = fragment.activity
-        intent.setClass(fragment.context!!, intentTargetClass)
-        return this
-    }
-
-    fun withContext(activity: Activity): IntentWrapper {
-        this.activity = activity
-        intent.setClass(activity, intentTargetClass)
-        return this
-    }
 
     fun with(key: String, value: Long): IntentWrapper {
         intent.putExtra(key, value)
@@ -129,11 +118,11 @@ class IntentWrapper(private val intentTargetClass: Class<*>) {
 
     fun start() {
         if (fragment == null) {
-            start(activity!!)
+            start(activity)
         } else {
             start(fragment!!)
         }
-        animate(activity!!)
+        animate(activity)
     }
 
     private fun start(fragment: Fragment) {

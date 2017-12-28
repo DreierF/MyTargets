@@ -204,9 +204,7 @@ class StatisticsFragment : FragmentBase() {
 
         binding.dispersionViewOverlay.setOnClickListener {
             val statistics = ArrowStatistic(target!!, exactShots)
-            DispersionPatternActivity.getIntent(statistics)
-                    .withContext(this)
-                    .start()
+            navigationController.navigateToDispersionPattern(statistics)
         }
     }
 
@@ -491,9 +489,7 @@ class StatisticsFragment : FragmentBase() {
         }
 
         private fun onItemClicked() {
-            DispersionPatternActivity.getIntent(mItem!!)
-                    .withContext(this@StatisticsFragment)
-                    .start()
+            navigationController.navigateToDispersionPattern(mItem!!)
         }
 
         fun bindItem(item: ArrowStatistic) {

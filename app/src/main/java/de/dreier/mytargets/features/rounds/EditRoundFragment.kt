@@ -21,23 +21,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.activities.ItemSelectActivity
 import de.dreier.mytargets.base.fragments.EditFragmentBase
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase.Companion.ITEM_ID
 import de.dreier.mytargets.databinding.FragmentEditRoundBinding
-import de.dreier.mytargets.features.distance.DistanceActivity
 import de.dreier.mytargets.features.settings.SettingsManager
-import de.dreier.mytargets.features.training.EditRoundActivity
-import de.dreier.mytargets.features.training.RoundFragment
-import de.dreier.mytargets.features.training.input.InputActivity
-import de.dreier.mytargets.features.training.target.TargetActivity
 import de.dreier.mytargets.features.training.target.TargetListFragment
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
-import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.transitions.FabTransform
-import de.dreier.mytargets.views.selector.SelectorBase
+import de.dreier.mytargets.views.selector.DistanceSelector
+import de.dreier.mytargets.views.selector.TargetSelector
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
 
 class EditRoundFragment : EditFragmentBase() {
@@ -71,19 +65,10 @@ class EditRoundFragment : EditFragmentBase() {
         })
         binding.target.setOnClickListener { selectedItem, index ->
             val fixedType = if (roundId == null) TargetListFragment.EFixedType.NONE else TargetListFragment.EFixedType.TARGET
-            IntentWrapper(TargetActivity::class.java)
-                    .with(ItemSelectActivity.ITEM, selectedItem!!)
-                    .with(SelectorBase.INDEX, index)
-                    .with(TargetListFragment.FIXED_TYPE, fixedType.name)
-                    .withContext(this)
-                    .start()
+            navigationController.navigateToTarget(selectedItem!!, index, TargetSelector.TARGET_REQUEST_CODE, fixedType)
         }
         binding.distance.setOnClickListener { selectedItem, index ->
-            IntentWrapper(DistanceActivity::class.java)
-                    .with(ItemSelectActivity.ITEM, selectedItem!!)
-                    .with(SelectorBase.INDEX, index)
-                    .withContext(this)
-                    .start()
+            navigationController.navigateToDistance(selectedItem!!, index, DistanceSelector.DISTANCE_REQUEST_CODE)
         }
 
         if (roundId == null) {
@@ -111,13 +96,10 @@ class EditRoundFragment : EditFragmentBase() {
         finish()
         if (roundId == null) {
             val round = onSaveRound()
-            RoundFragment.getIntent(round!!)
-                    .withContext(this)
+            navigationController.navigateToRound(round!!)
                     .noAnimation()
                     .start()
-            InputActivity.createIntent(round)
-                    .withContext(this)
-                    .start()
+            navigationController.navigateToCreateEnd(round)
         } else {
             onSaveRound()
             activity!!.overridePendingTransition(R.anim.left_in, R.anim.right_out)
@@ -162,17 +144,6 @@ class EditRoundFragment : EditFragmentBase() {
     }
 
     companion object {
-        private const val ROUND_ID = "round_id"
-
-        fun createIntent(training: Training): IntentWrapper {
-            return IntentWrapper(EditRoundActivity::class.java)
-                    .with(ITEM_ID, training.id)
-        }
-
-        fun editIntent(training: Training, roundId: Long): IntentWrapper {
-            return IntentWrapper(EditRoundActivity::class.java)
-                    .with(ITEM_ID, training.id)
-                    .with(ROUND_ID, roundId)
-        }
+        const val ROUND_ID = "round_id"
     }
 }

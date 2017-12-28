@@ -43,12 +43,9 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.activities.ChildActivityBase
 import de.dreier.mytargets.base.gallery.GalleryActivity
-import de.dreier.mytargets.base.navigation.NavigationController
 import de.dreier.mytargets.databinding.ActivityInputBinding
 import de.dreier.mytargets.features.settings.ESettingsScreens
 import de.dreier.mytargets.features.settings.SettingsManager
-import de.dreier.mytargets.features.timer.TimerFragment
-import de.dreier.mytargets.features.training.RoundFragment
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
@@ -60,7 +57,6 @@ import de.dreier.mytargets.shared.utils.SharedUtils
 import de.dreier.mytargets.shared.views.TargetViewBase
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod
 import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.BROADCAST_TIMER_SETTINGS_FROM_REMOTE
-import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.MobileWearableClient
 import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
 import de.dreier.mytargets.utils.ToolbarUtils
@@ -75,7 +71,6 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     @State
     var data: LoaderResult? = null
 
-    private lateinit var navigationController: NavigationController
     private lateinit var binding: ActivityInputBinding
     private var transitionFinished = true
     private var summaryShowScope = ETrainingScope.END
@@ -101,7 +96,6 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_input)
-        navigationController = NavigationController(this)
         setSupportActionBar(binding.toolbar)
         ToolbarUtils.showHomeAsUp(this)
         FabTransform.setup(this, binding.root)
@@ -212,7 +206,6 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
                 val imageList = ImageList(data!!.currentEnd.images)
                 val title = getString(R.string.end_n, data!!.endIndex + 1)
                 navigationController.navigateToGallery(imageList, title, GALLERY_REQUEST_CODE)
-                return true
             }
             R.id.action_comment -> {
                 MaterialDialog.Builder(this)
@@ -224,7 +217,6 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
                         }
                         .negativeText(android.R.string.cancel)
                         .show()
-                return true
             }
             R.id.action_timer -> {
                 val timerEnabled = !SettingsManager.timerEnabled
@@ -234,18 +226,16 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
                 openTimer()
                 item.isChecked = timerEnabled
                 invalidateOptionsMenu()
-                return true
             }
             R.id.action_settings -> {
                 navigationController.navigateToSettings(ESettingsScreens.INPUT)
-                return true
             }
             R.id.action_new_round -> {
                 navigationController.navigateToCreateRound(data!!.training.training)
-                return true
             }
             else -> return super.onOptionsItemSelected(item)
         }
+        return true
     }
 
     override fun onCreateLoader(id: Int, args: Bundle): Loader<LoaderResult> {
@@ -314,9 +304,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     private fun openTimer() {
         if (data!!.currentEnd.isEmpty && SettingsManager.timerEnabled) {
             if (transitionFinished) {
-                TimerFragment.getIntent(true)
-                        .withContext(this)
-                        .start()
+                navigationController.navigateToTimer(true)
             } else if (Utils.isLollipop) {
                 startTimerDelayed()
             }
@@ -327,9 +315,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     private fun startTimerDelayed() {
         window.sharedElementEnterTransition.addListener(object : TransitionAdapter() {
             override fun onTransitionEnd(transition: Transition) {
-                TimerFragment.getIntent(true)
-                        .withContext(this@InputActivity)
-                        .start()
+                navigationController.navigateToTimer(true)
                 window.sharedElementEnterTransition.removeListener(this)
             }
         })
@@ -404,12 +390,10 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
 
     private fun openRound(round: Round, endIndex: Int) {
         finish()
-        RoundFragment.getIntent(round)
+        navigationController.navigateToRound(round)
                 .noAnimation()
-                .withContext(this)
                 .start()
-        InputActivity.getIntent(round, endIndex)
-                .withContext(this)
+        navigationController.navigateToEditEnd(round, endIndex)
                 .start()
     }
 
@@ -480,22 +464,10 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     }
 
     companion object {
-
         internal const val TRAINING_ID = "training_id"
         internal const val ROUND_ID = "round_id"
         internal const val END_INDEX = "end_ind"
         internal const val GALLERY_REQUEST_CODE = 1
-
-        fun createIntent(round: Round): IntentWrapper {
-            return getIntent(round, 0)
-        }
-
-        fun getIntent(round: Round, endIndex: Int): IntentWrapper {
-            return IntentWrapper(InputActivity::class.java)
-                    .with(TRAINING_ID, round.trainingId)
-                    .with(ROUND_ID, round.id)
-                    .with(END_INDEX, endIndex)
-        }
 
         private fun shouldShowRound(r: Round, shotShowScope: ETrainingScope, roundId: Long?): Boolean {
             return shotShowScope !== ETrainingScope.END && (shotShowScope === ETrainingScope.TRAINING || r.id == roundId)

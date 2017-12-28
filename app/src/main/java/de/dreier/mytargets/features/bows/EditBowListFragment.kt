@@ -24,9 +24,8 @@ import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.fragments.EditableListFragment
-import de.dreier.mytargets.base.fragments.FragmentBase
-import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
+import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentBowsBinding
 import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.EBowType.*
@@ -65,9 +64,7 @@ class EditBowListFragment : EditableListFragment<Bow>() {
             val itemId = menuItem.itemId
             val bowType = bowTypeMap.get(itemId)
             val fab = binding.fabSpeedDial.getFabFromMenuId(itemId)
-            EditBowFragment
-                    .createIntent(bowType)
-                    .withContext(this@EditBowListFragment)
+            navigationController.navigateToCreateBow(bowType)
                     .fromFab(fab, R.color.fabBow, bowType.drawable)
                     .start()
             false
@@ -85,13 +82,11 @@ class EditBowListFragment : EditableListFragment<Bow>() {
     }
 
     private fun onEdit(itemId: Long) {
-        EditBowFragment.editIntent(itemId)
-                .withContext(this)
-                .start()
+        navigationController.navigateToEditBow(itemId)
     }
 
     override fun onItemSelected(item: Bow) {
-        EditBowFragment.editIntent(item.id).withContext(this).start()
+        navigationController.navigateToEditBow(item.id)
     }
 
     companion object {

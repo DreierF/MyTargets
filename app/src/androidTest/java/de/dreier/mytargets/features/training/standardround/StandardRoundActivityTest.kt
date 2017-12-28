@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.features.training.standardround
 
+import android.content.Intent
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.*
 import android.support.test.espresso.assertion.ViewAssertions.matches
@@ -25,6 +26,7 @@ import android.support.test.runner.AndroidJUnit4
 import android.support.v4.util.LongSparseArray
 import android.support.v7.widget.RecyclerView
 import de.dreier.mytargets.R
+import de.dreier.mytargets.base.activities.ItemSelectActivity
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.test.base.UITestBase
@@ -53,8 +55,9 @@ class StandardRoundActivityTest : UITestBase() {
 
     @Test
     fun searchTest() {
-        activityTestRule.launchActivity(
-                StandardRoundListFragment.getIntent(StandardRound[32L]!!).build())
+        val i = Intent()
+        i.putExtra(ItemSelectActivity.ITEM, StandardRound[32L]!!)
+        activityTestRule.launchActivity(i)
 
         clickActionBarItem(R.id.action_search, R.string.search)
 
@@ -72,8 +75,9 @@ class StandardRoundActivityTest : UITestBase() {
 
     @Test
     fun recentlyUsedTest() {
-        activityTestRule.launchActivity(
-                StandardRoundListFragment.getIntent(StandardRound[32L]!!).build())
+        val i = Intent()
+        i.putExtra(ItemSelectActivity.ITEM, StandardRound[32L]!!)
+        activityTestRule.launchActivity(i)
 
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
                 .check(matches(hasDescendant(withText(R.string.recently_used))))

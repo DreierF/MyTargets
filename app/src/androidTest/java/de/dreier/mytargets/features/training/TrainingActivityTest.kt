@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.training
 
 
+import android.content.Intent
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.intent.rule.IntentsTestRule
@@ -23,7 +24,7 @@ import android.support.test.espresso.matcher.ViewMatchers.hasDescendant
 import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.runner.AndroidJUnit4
 import de.dreier.mytargets.R
-import de.dreier.mytargets.features.training.details.TrainingFragment
+import de.dreier.mytargets.base.fragments.EditableListFragmentBase
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.test.base.UITestBase
 import de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher.Companion.withRecyclerView
@@ -51,7 +52,9 @@ class TrainingActivityTest : UITestBase() {
         val trainings = Training.all
         Collections.sort(trainings, Collections.reverseOrder())
         val training = trainings[0]
-        activityTestRule.launchActivity(TrainingFragment.getIntent(training).build())
+        val i = Intent()
+        i.putExtra(EditableListFragmentBase.ITEM_ID, training.id)
+        activityTestRule.launchActivity(i)
 
         //        intending(isInternal())
         //                .respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));

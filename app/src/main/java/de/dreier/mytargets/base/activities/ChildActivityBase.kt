@@ -23,13 +23,17 @@ import android.view.MenuItem
 import com.google.firebase.analytics.FirebaseAnalytics
 
 import de.dreier.mytargets.R
+import de.dreier.mytargets.base.navigation.NavigationController
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.utils.Utils
 import im.delight.android.languages.Language
 
 abstract class ChildActivityBase : AppCompatActivity() {
 
+    protected lateinit var navigationController: NavigationController
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        navigationController = NavigationController(this)
         Language.setFromPreference(this, SettingsManager.KEY_LANGUAGE)
         super.onCreate(savedInstanceState)
     }

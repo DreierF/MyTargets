@@ -18,7 +18,6 @@ package de.dreier.mytargets.features.training
 import android.content.IntentFilter
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.annotation.VisibleForTesting
 import android.support.v4.content.LocalBroadcastManager
 import android.text.InputType
 import android.view.*
@@ -30,14 +29,14 @@ import de.dreier.mytargets.base.fragments.ItemActionModeCallback
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentListBinding
 import de.dreier.mytargets.databinding.ItemEndBinding
-import de.dreier.mytargets.features.scoreboard.ScoreboardActivity
 import de.dreier.mytargets.features.settings.SettingsManager
-import de.dreier.mytargets.features.statistics.StatisticsActivity
-import de.dreier.mytargets.features.training.input.InputActivity
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
-import de.dreier.mytargets.utils.*
+import de.dreier.mytargets.utils.DividerItemDecoration
+import de.dreier.mytargets.utils.MobileWearableClient
 import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
+import de.dreier.mytargets.utils.SlideInItemAnimator
+import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 import java.util.*
 
@@ -88,9 +87,8 @@ class RoundFragment : EditableListFragment<End>() {
         binding.recyclerView.adapter = adapter
         binding.fab.visibility = View.GONE
         binding.fab.setOnClickListener {
-            InputActivity
-                    .getIntent(round!!, binding.recyclerView.adapter.itemCount)
-                    .withContext(this)
+            navigationController
+                    .navigateToEditEnd(round!!, binding.recyclerView.adapter.itemCount)
                     .fromFab(binding.fab)
                     .start()
         }
@@ -131,10 +129,7 @@ class RoundFragment : EditableListFragment<End>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_statistics -> {
-                StatisticsActivity
-                        .getIntent(listOf(round!!.id))
-                        .withContext(this)
-                        .start()
+                navigationController.navigateToStatistics(listOf(round!!.id))
                 return true
             }
             R.id.action_comment -> {
@@ -150,10 +145,7 @@ class RoundFragment : EditableListFragment<End>() {
                 return true
             }
             R.id.action_scoreboard -> {
-                ScoreboardActivity
-                        .getIntent(round!!.trainingId, round!!.id)
-                        .withContext(this)
-                        .start()
+                navigationController.navigateToScoreboard(round!!.trainingId, round!!.id)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -161,14 +153,12 @@ class RoundFragment : EditableListFragment<End>() {
     }
 
     override fun onItemSelected(item: End) {
-        InputActivity.getIntent(round!!, item.index)
-                .withContext(this)
+        navigationController.navigateToEditEnd(round!!, item.index)
                 .start()
     }
 
     private fun onEdit(itemId: Long) {
-        InputActivity.getIntent(round!!, adapter!!.getItemById(itemId)!!.index)
-                .withContext(this)
+        navigationController.navigateToEditEnd(round!!, adapter!!.getItemById(itemId)!!.index)
                 .start()
     }
 
@@ -197,14 +187,6 @@ class RoundFragment : EditableListFragment<End>() {
     }
 
     companion object {
-
-        @VisibleForTesting
         val ROUND_ID = "round_id"
-
-        fun getIntent(round: Round): IntentWrapper {
-            return IntentWrapper(RoundActivity::class.java)
-                    .with(ROUND_ID, round.id)
-                    .clearTopSingleTop()
-        }
     }
 }

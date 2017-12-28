@@ -15,6 +15,7 @@
 package de.dreier.mytargets.features.training.input
 
 
+import android.content.Intent
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.Espresso.pressBack
 import android.support.test.espresso.action.ViewActions.click
@@ -55,10 +56,10 @@ class InputActivityTest : UITestBase() {
 
             val (id) = saveDefaultTraining(standardRound!!.id, generator)
 
-            round1 = Round(standardRound.loadRounds()[0])
-            round1!!.trainingId = id
-            round1!!.comment = ""
-            round1!!.save()
+            round = Round(standardRound.loadRounds()[0])
+            round.trainingId = id
+            round.comment = ""
+            round.save()
 
             val round2 = Round(standardRound.loadRounds()[1])
             round2.trainingId = id
@@ -67,7 +68,7 @@ class InputActivityTest : UITestBase() {
         }
     }).around(activityTestRule)
 
-    private var round1: Round? = null
+    private lateinit var round: Round
 
     @Before
     fun setUp() {
@@ -78,7 +79,11 @@ class InputActivityTest : UITestBase() {
     @Test
     @Throws(UiObjectNotFoundException::class)
     fun inputActivityTest() {
-        activityTestRule.launchActivity(InputActivity.getIntent(round1!!, 0).build())
+        val i = Intent()
+        i.putExtra(InputActivity.TRAINING_ID, round.trainingId)
+        i.putExtra(InputActivity.ROUND_ID, round.id)
+        i.putExtra(InputActivity.END_INDEX, 0)
+        activityTestRule.launchActivity(i)
 
         onView(withId(R.id.targetViewContainer))
                 .perform(TargetViewActions.clickVirtualButton("10"))

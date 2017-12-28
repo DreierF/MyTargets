@@ -30,9 +30,6 @@ import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentTrainingsBinding
 import de.dreier.mytargets.databinding.ItemTrainingBinding
 import de.dreier.mytargets.features.settings.SettingsManager
-import de.dreier.mytargets.features.statistics.StatisticsActivity
-import de.dreier.mytargets.features.training.details.TrainingFragment
-import de.dreier.mytargets.features.training.edit.EditTrainingFragment
 import de.dreier.mytargets.features.training.edit.EditTrainingFragment.Companion.CREATE_FREE_TRAINING_ACTION
 import de.dreier.mytargets.features.training.edit.EditTrainingFragment.Companion.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION
 import de.dreier.mytargets.shared.models.db.Training
@@ -95,16 +92,14 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
                 DividerItemDecoration(context!!, R.drawable.full_divider))
         binding.fabSpeedDial.setMenuListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.fab1 -> EditTrainingFragment
-                        .createIntent(CREATE_FREE_TRAINING_ACTION)
-                        .withContext(this@TrainingsFragment)
+                R.id.fab1 -> navigationController
+                        .navigateToCreateTraining(CREATE_FREE_TRAINING_ACTION)
                         .fromFab(binding.fabSpeedDial
                                 .getFabFromMenuId(R.id.fab1), R.color.fabFreeTraining,
                                 R.drawable.fab_trending_up_white_24dp)
                         .start()
-                R.id.fab2 -> EditTrainingFragment
-                        .createIntent(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)
-                        .withContext(this@TrainingsFragment)
+                R.id.fab2 -> navigationController
+                        .navigateToCreateTraining(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)
                         .fromFab(binding.fabSpeedDial
                                 .getFabFromMenuId(R.id.fab2), R.color.fabTrainingWithStandardRound,
                                 R.drawable.fab_album_24dp)
@@ -131,11 +126,9 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_statistics -> {
-                StatisticsActivity
-                        .getIntent(Training.all
+                navigationController.navigateToStatistics(Training.all
                                 .flatMap { training -> training.loadRounds() }
-                                .map { it.id }).withContext(this)
-                        .start()
+                                .map { it.id })
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -143,24 +136,19 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
     }
 
     public override fun onSelected(item: Training) {
-        TrainingFragment.getIntent(item)
-                .withContext(this)
+        navigationController.navigateToTraining(item)
                 .start()
     }
 
     private fun onStatistics(ids: List<Long>) {
-        StatisticsActivity.getIntent(ids
+        navigationController.navigateToStatistics(ids
                 .map { Training[it]!! }
                 .flatMap { t -> t.loadRounds() }
                 .map { it.id })
-                .withContext(this)
-                .start()
     }
 
     private fun onEdit(itemId: Long) {
-        EditTrainingFragment.editIntent(itemId)
-                .withContext(this)
-                .start()
+        navigationController.navigateToEditTraining(itemId)
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
