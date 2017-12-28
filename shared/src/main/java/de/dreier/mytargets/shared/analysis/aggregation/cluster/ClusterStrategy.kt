@@ -138,8 +138,7 @@ class ClusterStrategy : AggregationStrategyBase() {
     }
 
     companion object {
-
-        private val EPS = 0.4
-        private val MINIMUM_POINTS_FOR_CLUSTER = 2
+        private const val EPS = 0.4
+        private const val MINIMUM_POINTS_FOR_CLUSTER = 2
     }
 }

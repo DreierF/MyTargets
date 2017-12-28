@@ -199,7 +199,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        val KEY_LANGUAGE = "language"
+        const val KEY_LANGUAGE = "language"
         init {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         }

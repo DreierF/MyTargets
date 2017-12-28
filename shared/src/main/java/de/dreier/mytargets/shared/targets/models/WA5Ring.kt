@@ -69,6 +69,6 @@ open class WA5Ring internal constructor(id: Long, nameRes: Int, diameters: Array
     }
 
     companion object {
-        val ID = 2L
+        const val ID = 2L
     }
 }

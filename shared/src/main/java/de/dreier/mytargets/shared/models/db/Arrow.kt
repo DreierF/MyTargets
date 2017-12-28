@@ -150,7 +150,6 @@ data class Arrow(@Column(name = "_id")
     }
 
     companion object {
-
         val all: List<Arrow>
             get() = SQLite.select().from(Arrow::class.java).queryList()
 

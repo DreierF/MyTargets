@@ -52,7 +52,7 @@ class TimerActivity : ChildActivityBase() {
     }
 
     companion object {
-        private val FRAGMENT_TAG = "fragment"
+        private const val FRAGMENT_TAG = "fragment"
     }
 
 }

@@ -54,11 +54,11 @@ class WeatherService {
     }
 
     fun fetchCurrentWeather(longitude: Double, latitude: Double): Call<CurrentWeather> {
-        return mWebService.fetchCurrentWeather(longitude, latitude, APPID)
+        return mWebService.fetchCurrentWeather(longitude, latitude, APP_ID)
     }
 
     companion object {
-        private val BASE_URL = "http://api.openweathermap.org/data/2.5/"
-        private val APPID = "180ecfe968fb986c95cf0f8da8620530"
+        private const val BASE_URL = "http://api.openweathermap.org/data/2.5/"
+        private const val APP_ID = "180ecfe968fb986c95cf0f8da8620530"
     }
 }

@@ -162,7 +162,7 @@ class EditRoundFragment : EditFragmentBase() {
     }
 
     companion object {
-        private val ROUND_ID = "round_id"
+        private const val ROUND_ID = "round_id"
 
         fun createIntent(training: Training): IntentWrapper {
             return IntentWrapper(EditRoundActivity::class.java)

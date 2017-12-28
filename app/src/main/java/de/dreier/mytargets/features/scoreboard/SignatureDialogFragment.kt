@@ -82,8 +82,8 @@ class SignatureDialogFragment : DialogFragment() {
     }
 
     companion object {
-        private val ARG_SIGNATURE = "signature_id"
-        private val ARG_DEFAULT_NAME = "default_name"
+        private const val ARG_SIGNATURE = "signature_id"
+        private const val ARG_DEFAULT_NAME = "default_name"
 
         fun newInstance(signature: Signature, defaultName: String): SignatureDialogFragment {
             val fragment = SignatureDialogFragment()

@@ -46,7 +46,7 @@ class EllipseZone(
     }
 
     companion object {
-        private val REGION_SCALE_FACTOR = 1000f
+        private const val REGION_SCALE_FACTOR = 1000f
         private val ELLIPSE_REGION: Region
         private val ellipse = Path()
 

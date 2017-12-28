@@ -225,7 +225,6 @@ data class Bow(
     }
 
     companion object {
-
         val all: List<Bow>
             get() = SQLite.select().from(Bow::class.java).queryList()
 

@@ -66,7 +66,6 @@ data class ArrowStatistic(
     override fun compareTo(other: ArrowStatistic) = compareByDescending<ArrowStatistic>({ totalScore.shotAverage }).compare(this, other)
 
     companion object {
-
         private val BG_COLORS = intArrayOf(-0xbbcca, -0xa8de, -0x6800, -0x3ef9, -0x14c5, -0x3223c7, -0x743cb6, -0xb350b0)
         private val TEXT_COLORS = intArrayOf(-0x1, -0x1, -0xfffffe, -0xfffffe, -0xfffffe, -0xfffffe, -0xfffffe, -0xfffffe)
 

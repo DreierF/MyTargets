@@ -83,6 +83,6 @@ abstract class SelectorBase {
     }
 
     companion object {
-        private val SELECTIONS_STATE = "state"
+        private const val SELECTIONS_STATE = "state"
     }
 }

@@ -55,7 +55,6 @@ class SingleSelector : SelectorBase() {
     }
 
     companion object {
-
-        private val SELECTION_ID = "selection_id"
+        private const val SELECTION_ID = "selection_id"
     }
 }

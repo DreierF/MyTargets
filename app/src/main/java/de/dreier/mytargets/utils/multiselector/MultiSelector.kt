@@ -61,6 +61,6 @@ class MultiSelector : SelectorBase() {
     }
 
     companion object {
-        private val SELECTION_IDS = "ids"
+        private const val SELECTION_IDS = "ids"
     }
 }

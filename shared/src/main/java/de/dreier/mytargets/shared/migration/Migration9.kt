@@ -75,23 +75,23 @@ class Migration9 : BaseMigration() {
                 "WHERE r.target<11 AND s.points=0);")
         database.execSQL("ALTER TABLE ROUND RENAME TO ROUND_OLD")
 
-        database.execSQL("CREATE TABLE IF NOT EXISTS " + SR_TABLE + " (" +
-                SR_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                SR_NAME + " TEXT," +
-                SR_INSTITUTION + " INTEGER," +
-                SR_INDOOR + " INTEGER);")
-        database.execSQL("CREATE TABLE IF NOT EXISTS " + RT_TABLE + " (" +
-                RT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                RT_STANDARD_ID + " INTEGER," +
-                RT_INDEX + " INTEGER," +
-                RT_DISTANCE + " INTEGER," +
-                RT_UNIT + " TEXT," +
-                RT_PASSES + " INTEGER," +
-                RT_ARROWS_PER_PASSE + " INTEGER," +
-                RT_TARGET + " INTEGER," +
-                RT_TARGET_SIZE + " INTEGER," +
-                RT_TARGET_SIZE_UNIT + " INTEGER," +
-                RT_SCORING_STYLE + " INTEGER," +
+        database.execSQL("CREATE TABLE IF NOT EXISTS STANDARD_ROUND_TEMPLATE (" +
+                "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "name TEXT," +
+                "club INTEGER," +
+                "indoor INTEGER);")
+        database.execSQL("CREATE TABLE IF NOT EXISTS ROUND_TEMPLATE (" +
+                "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "sid INTEGER," +
+                "r_index INTEGER," +
+                "distance INTEGER," +
+                "unit TEXT," +
+                "passes INTEGER," +
+                "arrows INTEGER," +
+                "target INTEGER," +
+                "size INTEGER," +
+                "target_unit INTEGER," +
+                "scoring_style INTEGER," +
                 "UNIQUE(sid, r_index) ON CONFLICT REPLACE);")
         val rounds = StandardRoundFactory.initTable()
         for (round in rounds) {
@@ -188,39 +188,21 @@ class Migration9 : BaseMigration() {
     }
 
     companion object {
-        private val SR_ID = "_id"
-        private val SR_TABLE = "STANDARD_ROUND_TEMPLATE"
-        private val SR_NAME = "name"
-        private val SR_INSTITUTION = "club"
-        private val SR_INDOOR = "indoor"
-
-        private val RT_ID = "_id"
-        private val RT_TARGET = "target"
-        private val RT_SCORING_STYLE = "scoring_style"
-        private val RT_TABLE = "ROUND_TEMPLATE"
-        private val RT_STANDARD_ID = "sid"
-        private val RT_INDEX = "r_index"
-        private val RT_DISTANCE = "distance"
-        private val RT_UNIT = "unit"
-        private val RT_PASSES = "passes"
-        private val RT_ARROWS_PER_PASSE = "arrows"
-        private val RT_TARGET_SIZE = "size"
-        private val RT_TARGET_SIZE_UNIT = "target_unit"
 
         private fun insertStandardRound(database: DatabaseWrapper, item: StandardRound) {
             val values = ContentValues()
-            values.put(SR_NAME, item.name)
-            values.put(SR_INSTITUTION, item.club)
-            values.put(SR_INDOOR, 0)
+            values.put("name", item.name)
+            values.put("club", item.club)
+            values.put("indoor", 0)
             if (item.id == 0L) {
                 item.id = database
-                        .insertWithOnConflict(SR_TABLE, null, values, SQLiteDatabase.CONFLICT_NONE)
+                        .insertWithOnConflict("STANDARD_ROUND_TEMPLATE", null, values, SQLiteDatabase.CONFLICT_NONE)
                 for (r in item.loadRounds()) {
                     r.standardRound = item.id
                 }
             } else {
-                values.put(SR_ID, item.id)
-                database.insertWithOnConflict(SR_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE)
+                values.put("_id", item.id)
+                database.insertWithOnConflict("STANDARD_ROUND_TEMPLATE", null, values, SQLiteDatabase.CONFLICT_REPLACE)
             }
             for (template in item.loadRounds()) {
                 template.standardRound = item.id
@@ -230,23 +212,23 @@ class Migration9 : BaseMigration() {
 
         private fun insertRoundTemplate(database: DatabaseWrapper, item: RoundTemplate) {
             val values = ContentValues()
-            values.put(RT_STANDARD_ID, item.standardRound)
-            values.put(RT_INDEX, item.index)
-            values.put(RT_DISTANCE, item.distance.value)
-            values.put(RT_UNIT, Dimension.Unit.toStringHandleNull(item.distance.unit))
-            values.put(RT_PASSES, item.endCount)
-            values.put(RT_ARROWS_PER_PASSE, item.shotsPerEnd)
-            values.put(RT_TARGET, item.targetTemplate.id.toInt())
-            values.put(RT_TARGET_SIZE, item.targetTemplate.diameter!!.value)
-            values.put(RT_TARGET_SIZE_UNIT, Dimension.Unit
+            values.put("sid", item.standardRound)
+            values.put("r_index", item.index)
+            values.put("distance", item.distance.value)
+            values.put("unit", Dimension.Unit.toStringHandleNull(item.distance.unit))
+            values.put("passes", item.endCount)
+            values.put("arrows", item.shotsPerEnd)
+            values.put("target", item.targetTemplate.id.toInt())
+            values.put("size", item.targetTemplate.diameter!!.value)
+            values.put("target_unit", Dimension.Unit
                     .toStringHandleNull(item.targetTemplate.diameter!!.unit))
-            values.put(RT_SCORING_STYLE, item.targetTemplate.scoringStyleIndex)
+            values.put("scoring_style", item.targetTemplate.scoringStyleIndex)
             if (item.id == 0L) {
                 item.id = database
-                        .insertWithOnConflict(RT_TABLE, null, values, SQLiteDatabase.CONFLICT_NONE)
+                        .insertWithOnConflict("ROUND_TEMPLATE", null, values, SQLiteDatabase.CONFLICT_NONE)
             } else {
-                values.put(RT_ID, item.id)
-                database.insertWithOnConflict(RT_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE)
+                values.put("_id", item.id)
+                database.insertWithOnConflict("ROUND_TEMPLATE", null, values, SQLiteDatabase.CONFLICT_REPLACE)
             }
         }
 

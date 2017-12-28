@@ -43,6 +43,6 @@ class Worcester : TargetModelBase(
     }
 
     companion object {
-        val ID = 12L
+        const val ID = 12L
     }
 }

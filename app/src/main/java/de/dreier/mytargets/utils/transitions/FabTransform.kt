@@ -238,11 +238,10 @@ class FabTransform private constructor(@ColorInt @field:ColorInt
     }
 
     companion object {
-
-        private val EXTRA_FAB_COLOR_RES = "EXTRA_FAB_COLOR"
-        private val EXTRA_FAB_ICON_RES_ID = "EXTRA_FAB_ICON_RES_ID"
-        private val DEFAULT_DURATION = 240L
-        private val PROP_BOUNDS = "plaid:fabTransform:bounds"
+        private const val EXTRA_FAB_COLOR_RES = "EXTRA_FAB_COLOR"
+        private const val EXTRA_FAB_ICON_RES_ID = "EXTRA_FAB_ICON_RES_ID"
+        private const val DEFAULT_DURATION = 240L
+        private const val PROP_BOUNDS = "plaid:fabTransform:bounds"
         private val TRANSITION_PROPERTIES = arrayOf(PROP_BOUNDS)
 
         /**

@@ -243,8 +243,8 @@ class EndRenderer(
     }
 
     companion object {
-        val NO_SELECTION = -1
-        val MAX_CIRCLE_SIZE = 17
-        private val MIN_PADDING = 2
+        const val NO_SELECTION = -1
+        const val MAX_CIRCLE_SIZE = 17
+        private const val MIN_PADDING = 2
     }
 }

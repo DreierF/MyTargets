@@ -38,7 +38,7 @@ class DatePickerFragment : DialogFragment() {
     }
 
     companion object {
-        private val ARG_CURRENT_DATE = "current_date"
+        private const val ARG_CURRENT_DATE = "current_date"
 
         fun newInstance(date: LocalDate): DatePickerFragment {
             val datePickerDialog = DatePickerFragment()

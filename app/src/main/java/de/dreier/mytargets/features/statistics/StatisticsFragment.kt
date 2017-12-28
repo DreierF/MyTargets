@@ -505,11 +505,10 @@ class StatisticsFragment : FragmentBase() {
     }
 
     companion object {
-
-        private val ARG_TARGET = "target"
-        private val ARG_ROUND_IDS = "round_ids"
-        private val ARG_ANIMATE = "animate"
-        private val PIE_CHART_CENTER_TEXT_FORMAT = "<font color='gray'>%s</font><br>" +
+        private const val ARG_TARGET = "target"
+        private const val ARG_ROUND_IDS = "round_ids"
+        private const val ARG_ANIMATE = "animate"
+        private const val PIE_CHART_CENTER_TEXT_FORMAT = "<font color='gray'>%s</font><br>" +
                 "<big>%s</big><br>" +
                 "<small>&nbsp;</small><br>" +
                 "<font color='gray'>%s</font><br>" +

@@ -117,7 +117,7 @@ open class ScoringStyle private constructor(title: String?, private val showAsX:
     }
 
     companion object {
-        val MISS_SYMBOL = "M"
-        private val X_SYMBOL = "X"
+        const val MISS_SYMBOL = "M"
+        private const val X_SYMBOL = "X"
     }
 }

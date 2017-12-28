@@ -42,6 +42,6 @@ class WAVegas3Spot : WA5Ring(
         get() = WA5Ring.ID
 
     companion object {
-        private val ID = 4L
+        private const val ID = 4L
     }
 }

@@ -47,7 +47,7 @@ class NFAAIndoor : TargetModelBase(
     }
 
     companion object {
-        val ID = 10L
+        const val ID = 10L
     }
 
 }

@@ -138,9 +138,8 @@ class Locator(private val context: Context) : LocationListener {
     }
 
     companion object {
-
-        private val TIME_INTERVAL = 100 // minimum time between updates in milliseconds
-        private val DISTANCE_INTERVAL = 1 // minimum distance between updates in meters
+        private const val TIME_INTERVAL = 100 // minimum time between updates in milliseconds
+        private const val DISTANCE_INTERVAL = 1 // minimum distance between updates in meters
     }
 
 }

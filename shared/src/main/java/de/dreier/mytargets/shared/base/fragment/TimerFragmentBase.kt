@@ -161,8 +161,8 @@ abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
     protected abstract fun applyStatus(status: ETimerState)
 
     companion object {
-        val ARG_TIMER_SETTINGS = "timer_settings"
-        val ARG_EXIT_AFTER_STOP = "exit_after_stop"
+        const val ARG_TIMER_SETTINGS = "timer_settings"
+        const val ARG_EXIT_AFTER_STOP = "exit_after_stop"
     }
 
 }

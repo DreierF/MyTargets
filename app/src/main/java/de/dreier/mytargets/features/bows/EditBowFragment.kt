@@ -200,9 +200,9 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
 
     companion object {
 
-        val BOW_TYPE = "bow_type"
+        const val BOW_TYPE = "bow_type"
         @VisibleForTesting
-        val BOW_ID = "bow_id"
+        const val BOW_ID = "bow_id"
 
         fun createIntent(bowType: EBowType): IntentWrapper {
             return IntentWrapper(EditBowActivity::class.java)

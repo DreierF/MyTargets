@@ -36,6 +36,6 @@ class DBSCBlowpipe : TargetModelBase(
         scoringStyles = arrayOf(ScoringStyle(false, 7, 5, 3))
 ) {
     companion object {
-        val ID = 28L
+        const val ID = 28L
     }
 }

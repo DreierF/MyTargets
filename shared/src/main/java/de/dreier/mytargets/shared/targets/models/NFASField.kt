@@ -40,6 +40,6 @@ class NFASField : TargetOvalBase(
         type = ETargetType.FIELD
 ) {
     companion object {
-        val ID = 22L
+        const val ID = 22L
     }
 }

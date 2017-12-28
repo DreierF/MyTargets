@@ -138,6 +138,6 @@ class TimerActivity : WearableActivity(), MenuItem.OnMenuItemClickListener {
     }
 
     companion object {
-        val EXTRA_TIMER_SETTINGS = "timer_settings"
+        const val EXTRA_TIMER_SETTINGS = "timer_settings"
     }
 }

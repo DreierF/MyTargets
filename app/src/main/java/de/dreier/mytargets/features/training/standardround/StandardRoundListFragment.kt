@@ -235,9 +235,9 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
     }
 
     companion object {
-        private val NEW_STANDARD_ROUND = 1
-        private val EDIT_STANDARD_ROUND = 2
-        private val KEY_QUERY = "query"
+        private const val NEW_STANDARD_ROUND = 1
+        private const val EDIT_STANDARD_ROUND = 2
+        private const val KEY_QUERY = "query"
 
         fun getIntent(standardRound: StandardRound): IntentWrapper {
             return IntentWrapper(StandardRoundActivity::class.java)
