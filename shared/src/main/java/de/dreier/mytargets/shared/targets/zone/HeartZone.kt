@@ -45,7 +45,7 @@ class HeartZone(
     }
 
     companion object {
-        private val REGION_SCALE_FACTOR = 1000f
+        private const val REGION_SCALE_FACTOR = 1000f
         private val HEART_REGION: Region
         private val heart = Path()
 

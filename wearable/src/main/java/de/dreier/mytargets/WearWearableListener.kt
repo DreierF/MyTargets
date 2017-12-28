@@ -84,6 +84,6 @@ class WearWearableListener : WearableListenerService() {
     }
 
     companion object {
-        private val NOTIFICATION_ID = 1
+        private const val NOTIFICATION_ID = 1
     }
 }

@@ -32,6 +32,6 @@ class WAField3Spot : WAField(ID, R.string.wa_field_3_spot) {
         get() = WAField.ID
 
     companion object {
-        val ID = 25L
+        const val ID = 25L
     }
 }

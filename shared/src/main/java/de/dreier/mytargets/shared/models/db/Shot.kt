@@ -65,7 +65,7 @@ data class Shot(
     }
 
     companion object {
-        val NOTHING_SELECTED = -2
-        val MISS = -1
+        const val NOTHING_SELECTED = -2
+        const val MISS = -1
     }
 }

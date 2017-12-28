@@ -64,6 +64,6 @@ class Tag @JvmOverloads constructor(
     }
 
     companion object {
-        private val CHIP_HEIGHT = 32 // dp
+        private const val CHIP_HEIGHT = 32 // dp
     }
 }

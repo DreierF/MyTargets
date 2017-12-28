@@ -42,6 +42,6 @@ class WAVertical3Spot : WA5Ring(
         get() = WA5Ring.ID
 
     companion object {
-        val ID = 5L
+        const val ID = 5L
     }
 }

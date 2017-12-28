@@ -41,6 +41,6 @@ class SCAPeriod : TargetModelBase(
     }
 
     companion object {
-        private val ID = 24L
+        private const val ID = 24L
     }
 }

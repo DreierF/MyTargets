@@ -50,6 +50,6 @@ class NFAAHunter : TargetModelBase(
     }
 
     companion object {
-        val ID = 9L
+        const val ID = 9L
     }
 }

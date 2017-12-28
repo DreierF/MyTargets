@@ -152,6 +152,6 @@ class NumberPicker(context: Context, attributeSet: AttributeSet) : LinearLayout(
     }
 
     companion object {
-        private val REPEAT_DELAY: Long = 50
+        private const val REPEAT_DELAY: Long = 50
     }
 }

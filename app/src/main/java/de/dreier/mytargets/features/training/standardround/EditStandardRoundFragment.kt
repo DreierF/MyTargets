@@ -236,8 +236,7 @@ class EditStandardRoundFragment : EditFragmentBase() {
     }
 
     companion object {
-
-        val RESULT_STANDARD_ROUND_DELETED = Activity.RESULT_FIRST_USER
+        const val RESULT_STANDARD_ROUND_DELETED = Activity.RESULT_FIRST_USER
 
         fun createIntent(): IntentWrapper {
             return IntentWrapper(EditStandardRoundActivity::class.java)

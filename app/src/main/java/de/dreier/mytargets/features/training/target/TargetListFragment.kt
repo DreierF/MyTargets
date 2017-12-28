@@ -213,7 +213,7 @@ class TargetListFragment : SelectItemFragmentBase<Target, ExpandableListAdapter<
     }
 
     companion object {
-        val FIXED_TYPE = "fixed_type"
+        const val FIXED_TYPE = "fixed_type"
 
         fun getIntent(target: Target): IntentWrapper {
             return IntentWrapper(TargetActivity::class.java)

@@ -185,7 +185,7 @@ abstract class HeaderListAdapterBase<P : IIdProvider, C : IIdProvider, H : Heade
     }
 
     companion object {
-        private val ITEM_TYPE = 2
-        private val HEADER_TYPE = 1
+        private const val ITEM_TYPE = 2
+        private const val HEADER_TYPE = 1
     }
 }

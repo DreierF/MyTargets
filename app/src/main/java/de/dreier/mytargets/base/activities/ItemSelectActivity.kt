@@ -30,8 +30,8 @@ abstract class ItemSelectActivity : SimpleFragmentActivityBase(), ListFragmentBa
     }
 
     companion object {
-        val ITEM = "item"
-        val INTENT = "intent"
+        const val ITEM = "item"
+        const val INTENT = "intent"
     }
 
 }

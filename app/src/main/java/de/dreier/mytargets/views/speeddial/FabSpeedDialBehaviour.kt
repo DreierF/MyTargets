@@ -97,7 +97,6 @@ class FabSpeedDialBehaviour : CoordinatorLayout.Behavior<FabSpeedDial> {
     }
 
     companion object {
-
         private val FAST_OUT_SLOW_IN_INTERPOLATOR = FastOutSlowInInterpolator()
     }
 }

@@ -39,6 +39,6 @@ class IFAAAnimal : TargetOvalBase(
         type = ETargetType.THREE_D
 ) {
     companion object {
-        val ID = 20L
+        const val ID = 20L
     }
 }

@@ -64,6 +64,6 @@ class WA6Ring : TargetModelBase(
     }
 
     companion object {
-        val ID = 1L
+        const val ID = 1L
     }
 }

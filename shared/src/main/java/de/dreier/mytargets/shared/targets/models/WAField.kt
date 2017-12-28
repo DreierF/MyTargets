@@ -56,6 +56,6 @@ open class WAField internal constructor(id: Long, nameRes: Int) : TargetModelBas
     }
 
     companion object {
-        val ID = 13L
+        const val ID = 13L
     }
 }

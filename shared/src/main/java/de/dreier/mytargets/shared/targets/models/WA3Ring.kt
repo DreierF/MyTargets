@@ -67,6 +67,6 @@ open class WA3Ring internal constructor(id: Long, nameRes: Int, diameters: Array
     }
 
     companion object {
-        val ID = 3L
+        const val ID = 3L
     }
 }

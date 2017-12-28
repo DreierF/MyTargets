@@ -71,6 +71,6 @@ class WAFull : TargetModelBase(
     }
 
     companion object {
-        val ID = 0L
+        const val ID = 0L
     }
 }

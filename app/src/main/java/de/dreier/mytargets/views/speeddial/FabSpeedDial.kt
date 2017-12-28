@@ -576,7 +576,6 @@ class FabSpeedDial : LinearLayout, View.OnClickListener {
     }
 
     companion object {
-
-        private val VSYNC_RHYTHM = 16
+        private const val VSYNC_RHYTHM = 16
     }
 }

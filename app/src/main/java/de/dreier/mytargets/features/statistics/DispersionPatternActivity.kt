@@ -138,7 +138,7 @@ class DispersionPatternActivity : ChildActivityBase() {
     }
 
     companion object {
-        private val ITEM = "item"
+        private const val ITEM = "item"
 
         fun getIntent(statistics: ArrowStatistic): IntentWrapper {
             return IntentWrapper(DispersionPatternActivity::class.java)

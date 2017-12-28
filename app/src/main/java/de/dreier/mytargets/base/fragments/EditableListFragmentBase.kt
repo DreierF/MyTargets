@@ -99,8 +99,7 @@ abstract class EditableListFragmentBase<T, U : ListAdapterBase<*, T>> : ListFrag
     protected abstract fun onSelected(item: T)
 
     companion object {
-
-        val ITEM_ID = "id"
+        const val ITEM_ID = "id"
     }
 
 }

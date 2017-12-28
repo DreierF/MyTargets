@@ -433,7 +433,6 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
     }
 
     companion object {
-
-        private val IMPORT_FROM_URI = 1234
+        private const val IMPORT_FROM_URI = 1234
     }
 }

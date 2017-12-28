@@ -112,7 +112,7 @@ abstract class FragmentBase : Fragment(), LoaderManager.LoaderCallbacks<Fragment
     }
 
     companion object {
-        private val LOADER_ID = 0
+        private const val LOADER_ID = 0
     }
 
     interface LoaderUICallbackHelper {

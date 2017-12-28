@@ -33,6 +33,6 @@ class SimpleDistanceSelector @JvmOverloads constructor(
     }
 
     companion object {
-        val SIMPLE_DISTANCE_REQUEST_CODE = 2
+        const val SIMPLE_DISTANCE_REQUEST_CODE = 2
     }
 }

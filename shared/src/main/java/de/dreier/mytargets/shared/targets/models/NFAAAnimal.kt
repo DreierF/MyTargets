@@ -42,6 +42,6 @@ class NFAAAnimal : TargetOvalBase(
         type = ETargetType.THREE_D
 ) {
     companion object {
-        val ID = 21L
+        const val ID = 21L
     }
 }

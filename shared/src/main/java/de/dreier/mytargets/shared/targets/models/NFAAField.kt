@@ -52,6 +52,6 @@ class NFAAField : TargetModelBase(
     }
 
     companion object {
-        val ID = 7L
+        const val ID = 7L
     }
 }

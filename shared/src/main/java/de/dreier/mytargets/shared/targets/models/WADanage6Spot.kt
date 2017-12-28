@@ -45,6 +45,6 @@ class WADanage6Spot : WA3Ring(
         get() = WA3Ring.ID
 
     companion object {
-        val ID = 27L
+        const val ID = 27L
     }
 }

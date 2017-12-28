@@ -49,6 +49,6 @@ class NFAAExpertField : TargetModelBase(
     }
 
     companion object {
-        val ID = 8L
+        const val ID = 8L
     }
 }

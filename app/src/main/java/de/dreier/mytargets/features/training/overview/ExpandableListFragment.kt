@@ -54,7 +54,7 @@ abstract class ExpandableListFragment<H : IIdProvider, C> : EditableListFragment
     }
 
     companion object {
-        private val KEY_EXPANDED = "expanded"
+        private const val KEY_EXPANDED = "expanded"
     }
 
 }
