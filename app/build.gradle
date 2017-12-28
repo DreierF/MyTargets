@@ -47,6 +47,14 @@ android {
         playAccountConfig = playAccountConfigs.defaultAccountConfig
     }
 
+    lintOptions {
+        check 'NewApi', 'InlinedApi', 'StringFormatCount'
+    }
+
+    dexOptions {
+        javaMaxHeapSize "3g"
+    }
+
     dataBinding {
         enabled true
     }

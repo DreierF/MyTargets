@@ -34,6 +34,10 @@ android {
         versionName gitVersionName
     }
 
+    lintOptions {
+        check 'NewApi', 'InlinedApi', 'StringFormatCount'
+    }
+
     dataBinding {
         enabled = true
     }

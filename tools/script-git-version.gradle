@@ -34,6 +34,8 @@ ext {
                 .replace("_rc", "-RC")
         if(System.getenv('TRAVIS') == 'true') {
             gitBranchName = System.getenv('TRAVIS_BRANCH')
+        } else if(System.env('CIRCLECI')) {
+            gitBranchName = System.getenv('CIRCLE_BRANCH')
         } else {
             gitBranchName = git.branch.getCurrent().name
         }

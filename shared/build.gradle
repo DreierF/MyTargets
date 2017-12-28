@@ -34,6 +34,10 @@ android {
         vectorDrawables.useSupportLibrary true
     }
 
+    lintOptions {
+        check 'NewApi', 'InlinedApi', 'StringFormatCount'
+    }
+
     androidExtensions {
         experimental = true
     }
