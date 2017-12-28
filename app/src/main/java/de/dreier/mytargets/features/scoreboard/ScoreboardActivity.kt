@@ -16,11 +16,8 @@
 package de.dreier.mytargets.features.scoreboard
 
 import android.os.Bundle
-import android.support.annotation.VisibleForTesting
 import android.support.v4.app.Fragment
-
 import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase
-import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.ToolbarUtils
 
 class ScoreboardActivity : SimpleFragmentActivityBase() {
@@ -35,17 +32,7 @@ class ScoreboardActivity : SimpleFragmentActivityBase() {
     }
 
     companion object {
-
-        @VisibleForTesting
-        val TRAINING_ID = "training_id"
-        @VisibleForTesting
-        val ROUND_ID = "round_id"
-
-        @JvmOverloads
-        fun getIntent(trainingId: Long, roundId: Long = -1): IntentWrapper {
-            return IntentWrapper(ScoreboardActivity::class.java)
-                    .with(TRAINING_ID, trainingId)
-                    .with(ROUND_ID, roundId)
-        }
+        const val TRAINING_ID = "training_id"
+        const val ROUND_ID = "round_id"
     }
 }

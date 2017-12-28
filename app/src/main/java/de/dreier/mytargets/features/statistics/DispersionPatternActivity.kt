@@ -29,10 +29,8 @@ import de.dreier.mytargets.base.activities.ChildActivityBase
 import de.dreier.mytargets.databinding.ActivityArrowRankingDetailsBinding
 import de.dreier.mytargets.features.scoreboard.EFileType
 import de.dreier.mytargets.features.settings.ESettingsScreens
-import de.dreier.mytargets.features.settings.SettingsActivity
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.utils.toUri
-import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils
 import java.io.File
@@ -81,22 +79,12 @@ class DispersionPatternActivity : ChildActivityBase() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_share -> {
-                shareImage()
-                return true
-            }
-            R.id.action_print -> {
-                print()
-                return true
-            }
-            R.id.action_settings -> {
-                SettingsActivity.getIntent(ESettingsScreens.STATISTICS)
-                        .withContext(this)
-                        .start()
-                return true
-            }
+            R.id.action_share -> shareImage()
+            R.id.action_print -> print()
+            R.id.action_settings -> navigationController.navigateToSettings(ESettingsScreens.STATISTICS)
             else -> return super.onOptionsItemSelected(item)
         }
+        return true
     }
 
     /* Called after the user selected with items he wants to share */
@@ -138,11 +126,6 @@ class DispersionPatternActivity : ChildActivityBase() {
     }
 
     companion object {
-        private const val ITEM = "item"
-
-        fun getIntent(statistics: ArrowStatistic): IntentWrapper {
-            return IntentWrapper(DispersionPatternActivity::class.java)
-                    .with(ITEM, statistics)
-        }
+        const val ITEM = "item"
     }
 }

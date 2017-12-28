@@ -48,7 +48,6 @@ class EditArrowListFragment : EditableListFragment<Arrow>() {
         super.onViewCreated(view, savedInstanceState)
         binding.fab.setOnClickListener {
             navigationController.navigateToCreateArrow()
-                    .withContext(this)
                     .fromFab(binding.fab)
                     .start()
         }
@@ -75,14 +74,12 @@ class EditArrowListFragment : EditableListFragment<Arrow>() {
     }
 
     private fun onEdit(itemId: Long) {
-        EditArrowFragment.editIntent(itemId)
-                .withContext(this)
+        navigationController.navigateToEditArrow(itemId)
                 .start()
     }
 
     override fun onItemSelected(item: Arrow) {
-        EditArrowFragment.editIntent(item.id)
-                .withContext(this)
+        navigationController.navigateToEditArrow(item.id)
                 .start()
     }
 

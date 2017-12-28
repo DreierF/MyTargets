@@ -30,20 +30,10 @@ import de.dreier.mytargets.base.activities.ItemSelectActivity
 import de.dreier.mytargets.base.fragments.EditFragmentBase
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase.Companion.ITEM_ID
 import de.dreier.mytargets.databinding.FragmentEditTrainingBinding
-import de.dreier.mytargets.features.arrows.ArrowListActivity
-import de.dreier.mytargets.features.bows.BowListActivity
-import de.dreier.mytargets.features.bows.EditBowFragment
-import de.dreier.mytargets.features.distance.DistanceActivity
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.features.training.ETrainingType
 import de.dreier.mytargets.features.training.ETrainingType.FREE_TRAINING
 import de.dreier.mytargets.features.training.ETrainingType.TRAINING_WITH_STANDARD_ROUND
-import de.dreier.mytargets.features.training.RoundFragment
-import de.dreier.mytargets.features.training.details.TrainingFragment
-import de.dreier.mytargets.features.training.environment.EnvironmentActivity
-import de.dreier.mytargets.features.training.input.InputActivity
-import de.dreier.mytargets.features.training.standardround.StandardRoundActivity
-import de.dreier.mytargets.features.training.target.TargetActivity
 import de.dreier.mytargets.features.training.target.TargetListFragment
 import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.Target
@@ -53,10 +43,10 @@ import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.targets.models.WA3Ring3Spot
-import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.transitions.FabTransform
-import de.dreier.mytargets.views.selector.*
+import de.dreier.mytargets.views.selector.ArrowSelector
+import de.dreier.mytargets.views.selector.BowSelector
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -145,74 +135,39 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
             override fun onStopTrackingTouch(seekBar: DiscreteSeekBar) {}
         })
         binding.target.setOnClickListener { selectedItem, index ->
-            IntentWrapper(TargetActivity::class.java)
-                    .with(ItemSelectActivity.ITEM, selectedItem!!)
-                    .with(SelectorBase.INDEX, index)
-                    .with(TargetListFragment.FIXED_TYPE, TargetListFragment.EFixedType.NONE.name)
-                    .withContext(this)
-                    .forResult(TargetSelector.TARGET_REQUEST_CODE)
-                    .start()
+            navigationController.navigateToTarget(selectedItem!!, index)
         }
         binding.distance.setOnClickListener { selectedItem, index ->
-            IntentWrapper(DistanceActivity::class.java)
-                    .with(ItemSelectActivity.ITEM, selectedItem!!)
-                    .with(SelectorBase.INDEX, index)
-                    .withContext(this)
-                    .forResult(DistanceSelector.DISTANCE_REQUEST_CODE)
-                    .start()
+            navigationController.navigateToDistance(selectedItem!!, index)
         }
-
-        binding.standardRound.setOnClickListener { selectedItem, index ->
-            IntentWrapper(StandardRoundActivity::class.java)
-                    .with(ItemSelectActivity.ITEM, selectedItem!!)
-                    .with(SelectorBase.INDEX, index)
-                    .withContext(this)
-                    .forResult(StandardRoundSelector.STANDARD_ROUND_REQUEST_CODE)
-                    .start()
+        binding.standardRound.setOnClickListener { selectedItem, _ ->
+            navigationController.navigateToStandardRoundList(selectedItem!!)
         }
         binding.standardRound.setOnUpdateListener { item -> roundTarget = item!!.loadRounds()[0].targetTemplate }
         binding.changeTargetFace.setOnClickListener {
-            TargetListFragment.getIntent(roundTarget!!)
-                    .withContext(this)
-                    .forResult(SR_TARGET_REQUEST_CODE)
-                    .start()
+            navigationController.navigateToTarget(roundTarget!!,
+                    requestCode = SR_TARGET_REQUEST_CODE,
+                    fixedType = TargetListFragment.EFixedType.GROUP)
         }
         binding.arrow.setOnAddClickListener {
             navigationController.navigateToCreateArrow()
-                    .withContext(this)
                     .forResult(ArrowSelector.ARROW_ADD_REQUEST_CODE)
                     .start()
         }
-        binding.arrow.setOnClickListener { selectedItem, index ->
-            IntentWrapper(ArrowListActivity::class.java)
-                    .with(ItemSelectActivity.ITEM, selectedItem!!)
-                    .with(SelectorBase.INDEX, index)
-                    .withContext(this)
-                    .forResult(ArrowSelector.ARROW_REQUEST_CODE)
-                    .start()
+        binding.arrow.setOnClickListener { selectedItem, _ ->
+            navigationController.navigateToArrowList(selectedItem!!)
         }
         binding.bow.setOnAddClickListener {
-            EditBowFragment.createIntent(EBowType.RECURVE_BOW)
-                    .withContext(this)
-                    .forResult(BowSelector.BOW_REQUEST_CODE)
-                    .start()
-        }
-        binding.bow.setOnClickListener { selectedItem, index ->
-            IntentWrapper(BowListActivity::class.java)
-                    .with(ItemSelectActivity.ITEM, selectedItem!!)
-                    .with(SelectorBase.INDEX, index)
-                    .withContext(this)
+            navigationController.navigateToCreateBow(EBowType.RECURVE_BOW)
                     .forResult(BowSelector.BOW_ADD_REQUEST_CODE)
                     .start()
         }
+        binding.bow.setOnClickListener { selectedItem, _ ->
+            navigationController.navigateToBowList(selectedItem!!)
+        }
         binding.bow.setOnUpdateListener { this.setScoringStyleForCompoundBow(it) }
-        binding.environment.setOnClickListener { selectedItem, index ->
-            IntentWrapper(EnvironmentActivity::class.java)
-                    .with(ItemSelectActivity.ITEM, selectedItem!!)
-                    .with(SelectorBase.INDEX, index)
-                    .withContext(this)
-                    .forResult(EnvironmentSelector.ENVIRONMENT_REQUEST_CODE)
-                    .start()
+        binding.environment.setOnClickListener { selectedItem, _ ->
+            navigationController.navigateToEnvironment(selectedItem!!)
         }
         binding.trainingDate.setOnClickListener { onDateClick() }
 
@@ -337,17 +292,13 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
 
             val round = training.rounds[0]
 
-            TrainingFragment.getIntent(training.training)
-                    .withContext(this)
+            navigationController.navigateToTraining(training.training)
                     .noAnimation()
                     .start()
-            RoundFragment.getIntent(round.round)
-                    .withContext(this)
+            navigationController.navigateToRound(round.round)
                     .noAnimation()
                     .start()
-            InputActivity.createIntent(round.round)
-                    .withContext(this)
-                    .start()
+            navigationController.navigateToCreateEnd(round.round)
         } else {
             // Edit training
             training.toTraining().update()
@@ -384,15 +335,5 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
         private const val REQUEST_LOCATION_PERMISSION = 1
         private const val REQ_SELECTED_DATE = 2
         private const val SR_TARGET_REQUEST_CODE = 11
-
-        fun createIntent(trainingTypeAction: String): IntentWrapper {
-            return IntentWrapper(EditTrainingActivity::class.java)
-                    .action(trainingTypeAction)
-        }
-
-        fun editIntent(trainingId: Long): IntentWrapper {
-            return IntentWrapper(EditTrainingActivity::class.java)
-                    .with(ITEM_ID, trainingId)
-        }
     }
 }

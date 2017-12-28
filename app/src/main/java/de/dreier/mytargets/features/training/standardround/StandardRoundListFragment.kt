@@ -38,7 +38,6 @@ import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.utils.StandardRoundFactory
 import de.dreier.mytargets.shared.utils.contains
-import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.SlideInItemAnimator
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.multiselector.OnItemLongClickListener
@@ -71,8 +70,7 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
         ToolbarUtils.showUpAsX(this)
         binding.fab.visibility = View.VISIBLE
         binding.fab.setOnClickListener {
-            EditStandardRoundFragment.createIntent()
-                    .withContext(this@StandardRoundListFragment)
+            navigationController.navigateToCreateStandardRound()
                     .fromFab(binding.fab).forResult(NEW_STANDARD_ROUND)
                     .start()
         }
@@ -114,8 +112,7 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
     override fun onLongClick(holder: SelectableViewHolder<StandardRound>) {
         val item = holder.item!!
         if (item.club == StandardRoundFactory.CUSTOM) {
-            EditStandardRoundFragment.editIntent(item)
-                    .withContext(this)
+            navigationController.navigateToEditStandardRound(item)
                     .forResult(EDIT_STANDARD_ROUND)
                     .start()
         } else {
@@ -125,9 +122,8 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
                     .positiveText(android.R.string.yes)
                     .negativeText(android.R.string.cancel)
                     .onPositive { _, _ ->
-                        EditStandardRoundFragment
-                                .editIntent(item)
-                                .withContext(this)
+                        navigationController
+                                .navigateToEditStandardRound(item)
                                 .forResult(NEW_STANDARD_ROUND)
                                 .start()
                     }
@@ -238,10 +234,5 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
         private const val NEW_STANDARD_ROUND = 1
         private const val EDIT_STANDARD_ROUND = 2
         private const val KEY_QUERY = "query"
-
-        fun getIntent(standardRound: StandardRound): IntentWrapper {
-            return IntentWrapper(StandardRoundActivity::class.java)
-                    .with(ITEM, standardRound)
-        }
     }
 }

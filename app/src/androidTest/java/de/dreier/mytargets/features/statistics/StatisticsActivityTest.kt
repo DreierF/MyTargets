@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.features.statistics
 
+import android.content.Intent
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.Espresso.pressBack
 import android.support.test.espresso.action.ViewActions.click
@@ -49,7 +50,9 @@ class StatisticsActivityTest : UITestBase() {
                 .flatMap { t -> t.loadRounds() }
                 .map { it.id }
                 .toList()
-        activityTestRule.launchActivity(StatisticsActivity.getIntent(roundIds).build())
+        val i = Intent()
+        i.putExtra(StatisticsActivity.ROUND_IDS, roundIds.toLongArray())
+        activityTestRule.launchActivity(i)
 
         onView(allOf(withId(R.id.dispersionViewOverlay),
                 withParent(withId(R.id.dispersionPatternLayout))))

@@ -31,12 +31,7 @@ import de.dreier.mytargets.base.fragments.ItemActionModeCallback
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentTrainingBinding
 import de.dreier.mytargets.databinding.ItemRoundBinding
-import de.dreier.mytargets.features.rounds.EditRoundFragment
-import de.dreier.mytargets.features.scoreboard.ScoreboardActivity
 import de.dreier.mytargets.features.settings.SettingsManager
-import de.dreier.mytargets.features.statistics.StatisticsActivity
-import de.dreier.mytargets.features.training.RoundFragment
-import de.dreier.mytargets.features.training.TrainingActivity
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
@@ -152,15 +147,11 @@ open class TrainingFragment : EditableListFragment<Round>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_scoreboard -> {
-                ScoreboardActivity.getIntent(trainingId)
-                        .withContext(this)
-                        .start()
+                navigationController.navigateToScoreboard(trainingId)
                 return true
             }
             R.id.action_statistics -> {
-                StatisticsActivity.getIntent(training!!.loadRounds().map { it.id })
-                        .withContext(this)
-                        .start()
+                navigationController.navigateToStatistics(training!!.loadRounds().map { it.id })
                 return true
             }
             R.id.action_comment -> {
@@ -180,22 +171,16 @@ open class TrainingFragment : EditableListFragment<Round>() {
     }
 
     override fun onItemSelected(item: Round) {
-        RoundFragment.getIntent(item)
-                .withContext(this)
+        navigationController.navigateToRound(item)
                 .start()
     }
 
     private fun onEdit(itemId: Long) {
-        EditRoundFragment.editIntent(training!!, itemId)
-                .withContext(this)
-                .start()
+        navigationController.navigateToEditRound(training!!, itemId)
     }
 
     private fun onStatistics(ids: List<Long>) {
-        StatisticsActivity
-                .getIntent(ids)
-                .withContext(this)
-                .start()
+        navigationController.navigateToStatistics(ids)
     }
 
     private inner class RoundAdapter : SimpleListAdapterBase<Round>() {
@@ -222,13 +207,6 @@ open class TrainingFragment : EditableListFragment<Round>() {
             binding.points.text = item.reachedScore
                     .format(Utils.getCurrentLocale(context!!), SettingsManager
                             .scoreConfiguration)
-        }
-    }
-
-    companion object {
-        fun getIntent(training: Training): IntentWrapper {
-            return IntentWrapper(TrainingActivity::class.java)
-                    .with(EditableListFragmentBase.ITEM_ID, training.id)
         }
     }
 }

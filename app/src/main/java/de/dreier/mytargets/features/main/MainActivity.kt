@@ -34,13 +34,10 @@ import de.dreier.mytargets.base.navigation.NavigationController
 import de.dreier.mytargets.databinding.ActivityMainBinding
 import de.dreier.mytargets.features.arrows.EditArrowListFragment
 import de.dreier.mytargets.features.bows.EditBowListFragment
+import de.dreier.mytargets.features.settings.ESettingsScreens
 import de.dreier.mytargets.features.settings.ESettingsScreens.MAIN
-import de.dreier.mytargets.features.settings.ESettingsScreens.PROFILE
-import de.dreier.mytargets.features.settings.SettingsActivity
 import de.dreier.mytargets.features.settings.SettingsManager
-import de.dreier.mytargets.features.timer.TimerFragment
 import de.dreier.mytargets.features.training.overview.TrainingsFragment
-import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.utils.Utils.getCurrentLocale
 import im.delight.android.languages.Language
@@ -54,7 +51,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navigationController: NavigationController
     internal lateinit var binding: ActivityMainBinding
     private var drawerToggle: ActionBarDrawerToggle? = null
-    private var onDrawerClosePendingIntent: IntentWrapper? = null
+    private var onDrawerClosePendingAction: Int? = null
     /**
      * Ensures that espresso is waiting until the launched intent is sent from the navigation drawer.
      */
@@ -134,9 +131,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.nav_timer -> closeDrawerAndStart(TimerFragment.getIntent(false))
-                R.id.nav_settings -> closeDrawerAndStart(SettingsActivity.getIntent(MAIN))
-                R.id.nav_help_and_feedback -> closeDrawerAndStart(navigationController.navigateToHelp())
+                R.id.nav_timer -> closeDrawerAndStart(menuItem.itemId)
+                R.id.nav_settings -> closeDrawerAndStart(menuItem.itemId)
+                R.id.nav_help_and_feedback -> closeDrawerAndStart(menuItem.itemId)
                 else -> {
                 }
             }
@@ -146,9 +143,14 @@ class MainActivity : AppCompatActivity() {
         drawerToggle = object : ActionBarDrawerToggle(this, binding.drawerLayout, binding.toolbar, R.string.drawer_open, R.string.drawer_close) {
             override fun onDrawerClosed(drawerView: View) {
                 super.onDrawerClosed(drawerView)
-                if (onDrawerClosePendingIntent != null) {
-                    onDrawerClosePendingIntent!!.withContext(this@MainActivity).start()
-                    onDrawerClosePendingIntent = null
+                if (onDrawerClosePendingAction != null) {
+                    when(onDrawerClosePendingAction) {
+                        R.id.nav_timer -> navigationController.navigateToTimer(false)
+                        R.id.nav_settings -> navigationController.navigateToSettings(MAIN)
+                        R.id.nav_help_and_feedback -> navigationController.navigateToHelp()
+                        R.id.profile -> navigationController.navigateToSettings(ESettingsScreens.PROFILE)
+                    }
+                    onDrawerClosePendingAction = null
                     espressoIdlingResourceForMainActivity.decrement()
                 }
             }
@@ -167,11 +169,11 @@ class MainActivity : AppCompatActivity() {
             userName.text = profileFullName
         }
         userDetails.text = SettingsManager.profileClub
-        headerLayout.setOnClickListener { closeDrawerAndStart(SettingsActivity.getIntent(PROFILE)) }
+        headerLayout.setOnClickListener { closeDrawerAndStart(R.id.profile) }
     }
 
-    private fun closeDrawerAndStart(intent: IntentWrapper) {
-        onDrawerClosePendingIntent = intent
+    private fun closeDrawerAndStart(actionId: Int) {
+        onDrawerClosePendingAction = actionId
         espressoIdlingResourceForMainActivity.increment()
         binding.drawerLayout.closeDrawers()
     }

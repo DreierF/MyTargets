@@ -24,7 +24,6 @@ import android.databinding.DataBindingUtil
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
-import android.support.annotation.VisibleForTesting
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -45,7 +44,6 @@ import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.utils.toUri
-import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.ToolbarUtils
 import java.io.File
 import java.io.IOException
@@ -294,6 +292,12 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
         }.execute()
     }
 
+    private val exportFileName: String
+        get() {
+            val format = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
+            return "MyTargets_exported_data_" + format.format(Date()) + ".csv"
+        }
+
     inner class StatisticsPagerAdapter internal constructor(fm: FragmentManager, private val targets: List<Pair<Target, List<Round>>>, private val animate: Boolean) : FragmentStatePagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment {
@@ -312,19 +316,6 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
     }
 
     companion object {
-
-        @VisibleForTesting
         val ROUND_IDS = "round_ids"
-
-        fun getIntent(roundIds: List<Long>): IntentWrapper {
-            return IntentWrapper(StatisticsActivity::class.java)
-                    .with(ROUND_IDS, roundIds.toLongArray())
-        }
-
-        private val exportFileName: String
-            get() {
-                val format = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
-                return "MyTargets_exported_data_" + format.format(Date()) + ".csv"
-            }
     }
 }

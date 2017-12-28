@@ -36,7 +36,6 @@ import de.dreier.mytargets.features.training.target.TargetListFragment.EFixedTyp
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.targets.TargetFactory
-import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.SlideInItemAnimator
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
@@ -214,11 +213,5 @@ class TargetListFragment : SelectItemFragmentBase<Target, ExpandableListAdapter<
 
     companion object {
         const val FIXED_TYPE = "fixed_type"
-
-        fun getIntent(target: Target): IntentWrapper {
-            return IntentWrapper(TargetActivity::class.java)
-                    .with(ITEM, target)
-                    .with(FIXED_TYPE, GROUP.name)
-        }
     }
 }
