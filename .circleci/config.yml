@@ -1,0 +1,341 @@
+version: 2
+jobs:
+  prepare_build:
+    docker:
+      - image: circleci/android:api-27-alpha
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "dependencies.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "wearable/build.gradle" }}-{{ checksum  "shared/build.gradle" }}
+      - run:
+          name: Accept licenses
+          command: yes | sdkmanager --licenses || true
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "dependencies.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "wearable/build.gradle" }}-{{ checksum  "shared/build.gradle" }}
+
+  build_release:
+    docker:
+      - image: circleci/android:api-27-alpha
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "dependencies.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "wearable/build.gradle" }}-{{ checksum  "shared/build.gradle" }}
+      - run:
+          name: Build release apk
+          command: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "dependencies.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "wearable/build.gradle" }}-{{ checksum  "shared/build.gradle" }}
+
+  unittests:
+    docker:
+      - image: circleci/android:api-27-alpha
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "dependencies.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "wearable/build.gradle" }}-{{ checksum  "shared/build.gradle" }}
+      - run:
+          name: Run lint checks
+          command: ./gradlew lint
+      - run:
+          name: Run unit tests checks
+          command: ./gradlew test
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "dependencies.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "wearable/build.gradle" }}-{{ checksum  "shared/build.gradle" }}
+
+  test_api_v25:
+    docker:
+        - image: circleci/android:api-27-alpha
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout
+      - run:
+          name: Accept licenses
+          command: yes | sdkmanager --licenses || true
+      - run:
+          name: Setup emulator
+          command: sdkmanager "system-images;android-25;google_apis;armeabi-v7a" && echo "no" | avdmanager create avd -n test -k "system-images;android-25;google_apis;armeabi-v7a"
+      - run:
+          name: Launch emulator
+          command: export LD_LIBRARY_PATH=${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib && emulator64-arm -avd test -noaudio -no-boot-anim -no-window -accel on
+          background: true
+      - run:
+          name: Wait emulator
+          command: |
+            # wait for it to have booted
+            circle-android wait-for-boot
+            # unlock the emulator screen
+            sleep 30
+            adb shell input keyevent 82
+      - run:
+          name: Run UI Tests
+          command: ./gradlew createDevDebugCoverageReport -PdisablePreDex
+      - store_artifacts:
+          path: app/build/reports
+          destination: reports
+      - store_test_results:
+          path: app/build/test-results
+  # test_api_v16:
+  #     docker:
+  #         - image: circleci/android:api-27-alpha
+  #     environment:
+  #       JVM_OPTS: -Xmx3200m
+  #     steps:
+  #       - checkout
+  #       - run:
+  #           name: Accept licenses
+  #           command: yes | sdkmanager --licenses || true
+  #       - run:
+  #           name: Setup emulator
+  #           command: sdkmanager "system-images;android-16;default;armeabi-v7a" && echo "no" | avdmanager create avd -n test -k "system-images;android-16;default;armeabi-v7a"
+  #       - run:
+  #           name: Launch emulator
+  #           command: export LD_LIBRARY_PATH=${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib && emulator64-arm -avd test -noaudio -no-boot-anim -no-window -accel on
+  #           background: true
+  #       - run:
+  #           name: Wait emulator
+  #           command: |
+  #             # wait for it to have booted
+  #             circle-android wait-for-boot
+  #             # unlock the emulator screen
+  #             sleep 30
+  #             adb shell input keyevent 82
+  #       - run:
+  #           name: Run Tests
+  #           command: ./gradlew connectedAndroidTest
+  #       - store_artifacts:
+  #           path: app/build/reports
+  #           destination: reports
+  #       - store_test_results:
+  #           path: app/build/test-results
+  # screenshot_api_25:
+  #       docker:
+  #           - image: circleci/android:api-27-alpha
+  #       environment:
+  #         JVM_OPTS: -Xmx3200m
+  #       steps:
+  #         - checkout
+  #         - restore_cache:
+  #             key: jars-{{ checksum "build.gradle" }}-{{ checksum  "dependencies.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "wearable/build.gradle" }}-{{ checksum  "shared/build.gradle" }}
+  #         - run:
+  #             name: Setup environment
+  #             command: source ci/scripts/ci_setup.sh
+  #         - run:
+  #             name: Update version and code
+  #             command: source ci/scripts/ci_updateversion.sh
+  #         - run:
+  #             name: Update about information
+  #             command: source ci/scripts/ci_about.sh
+  #         - run:
+  #             name: Setup emulator
+  #             command: sdkmanager "system-images;android-25;default;armeabi-v7a" && echo "no" | avdmanager create avd -n test -k "system-images;android-25;default;armeabi-v7a"
+  #         - run:
+  #             name: Launch emulator
+  #             command: export LD_LIBRARY_PATH=${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib && emulator64-arm -avd test -noaudio -no-boot-anim -no-window -accel on
+  #             background: true
+  #         - run:
+  #             name: Wait emulator
+  #             command: |
+  #               # wait for it to have booted
+  #               circle-android wait-for-boot
+  #               # unlock the emulator screen
+  #               sleep 30
+  #               adb shell input keyevent 82
+  #         - run:
+  #             name: Assemble Android Tests
+  #             command: ./gradlew assembleDebug assembleAndroidTest
+  #         - run:
+  #             name: Run Fastlane Screengrab
+  #             command: fastlane screengrab
+  #         - run:
+  #             name: send screenshot to gh-pages
+  #             command: source ci/scripts/ci_push_screenshot.sh
+  #         - store_artifacts:
+  #             path: fastlane/metadata
+  #             destination: screenshot
+  #         - save_cache:
+  #             paths:
+  #               - ~/.gradle
+  #             key: jars-{{ checksum "build.gradle" }}-{{ checksum  "dependencies.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "wearable/build.gradle" }}-{{ checksum  "shared/build.gradle" }}
+
+  # deploy_beta:
+  #   docker:
+  #     # Android the primary container
+  #     - image: circleci/android:api-27-alpha
+  #   environment:
+  #     JVM_OPTS: -Xmx3200m
+  #   steps:
+  #     - checkout
+  #     - restore_cache:
+  #         key: jars-{{ checksum "build.gradle" }}-{{ checksum  "dependencies.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "wearable/build.gradle" }}-{{ checksum  "shared/build.gradle" }}
+  #     - run:
+  #         name: Validate workflow
+  #         command: source ci/scripts/ci_validate_workflow.sh
+  #     - run:
+  #         name: Setup environment
+  #         command: source ci/scripts/ci_setup.sh
+  #     - run:
+  #         name: Update version and code
+  #         command: source ci/scripts/ci_updateversion.sh
+  #     - run:
+  #         name: Update about information
+  #         command: source ci/scripts/ci_about.sh
+  #     - run:
+  #         name: Transifex
+  #         command: source ci/scripts/ci_transifex.sh
+  #     - run:
+  #         name: Create apk
+  #         command: ./gradlew assembleRelease
+  #     - run:
+  #         name: Deploy to Google Play
+  #         command: source ci/scripts/ci_fastlane.sh "beta"
+  #     - save_cache:
+  #         paths:
+  #           - ~/.gradle
+  #         key: jars-{{ checksum "build.gradle" }}-{{ checksum  "dependencies.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "wearable/build.gradle" }}-{{ checksum  "shared/build.gradle" }}
+  # deploy_production:
+  #     docker:
+  #       # Android the primary container
+  #       - image: circleci/android:api-27-alpha
+  #     environment:
+  #       JVM_OPTS: -Xmx3200m
+  #     steps:
+  #       - checkout
+  #       - restore_cache:
+  #           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "dependencies.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "wearable/build.gradle" }}-{{ checksum  "shared/build.gradle" }}
+  #       - run:
+  #           name: Validate workflow
+  #           command: source ci/scripts/ci_validate_workflow.sh
+  #       - run:
+  #           name: Setup environment
+  #           command: source ci/scripts/ci_setup.sh
+  #       - run:
+  #           name: Update version and code
+  #           command: source ci/scripts/ci_updateversion.sh
+  #       - run:
+  #           name: Update about information
+  #           command: source ci/scripts/ci_about.sh
+  #       - run:
+  #           name: Create apk
+  #           command: ./gradlew assembleRelease
+  #       - run:
+  #           name: Deploy to Google Play
+  #           command: source ci/scripts/ci_fastlane.sh "playstore"
+  #       - run:
+  #           name: Push changes to github
+  #           command: source ci/scripts/ci_push_changes.sh
+  #       - run:
+  #           name: Create a github release
+  #           command: source ci/scripts/ci_github_release.sh
+  #       - save_cache:
+  #           paths:
+  #             - ~/.gradle
+  #           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "dependencies.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "wearable/build.gradle" }}-{{ checksum  "shared/build.gradle" }}
+  # documentation:
+  #     docker:
+  #       # Android the primary container
+  #       - image: circleci/android:api-27-alpha
+  #     environment:
+  #       JVM_OPTS: -Xmx3200m
+  #     steps:
+  #       - checkout
+  #       - restore_cache:
+  #           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "dependencies.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "wearable/build.gradle" }}-{{ checksum  "shared/build.gradle" }}
+  #       - run:
+  #           name: Setup environment
+  #           command: source ci/scripts/ci_setup.sh
+  #       - run:
+  #           name: Update version and code
+  #           command: source ci/scripts/ci_updateversion.sh
+  #       - run:
+  #           name: Setup emulator
+  #           command: sdkmanager "system-images;android-16;default;armeabi-v7a" && echo "no" | avdmanager create avd -n test -k "system-images;android-16;default;armeabi-v7a"
+  #       - run:
+  #           name: Launch emulator
+  #           command: export LD_LIBRARY_PATH=${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib && emulator64-arm -avd test -noaudio -no-boot-anim -no-window -accel on
+  #           background: true
+  #       - run:
+  #           name: Wait emulator
+  #           command: |
+  #             # wait for it to have booted
+  #             circle-android wait-for-boot
+  #             # unlock the emulator screen
+  #             sleep 30
+  #             adb shell input keyevent 82
+  #       - run:
+  #           name: Coverage
+  #           command: source ci/scripts/ci_coverage.sh
+  #       - run:
+  #           name: Commit changelog to gh-page
+  #           command: source ci/scripts/ci_changelog.sh
+  #       - run:
+  #           name: Javadoc
+  #           command: source ci/scripts/ci_javadoc.sh
+  #       - run:
+  #           name: Push to gh-pages
+  #           command: source ci/scripts/ci_git_push.sh
+  #       - save_cache:
+  #           paths:
+  #             - ~/.gradle
+  #           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "dependencies.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "wearable/build.gradle" }}-{{ checksum  "shared/build.gradle" }}
+
+workflows:
+  version: 2
+  build_test_and_deploy:
+    jobs:
+      - prepare_build
+      - build_release
+          requires:
+            - prepare_build
+      # - test_api_v16:
+      #     requires:
+      #       - build
+      - unittests
+      - test_api_v25:
+          requires:
+            - prepare_build
+      # - deploy_beta:
+      #     requires:
+      #       # - test_api_v16
+      #       - test_api_v25
+      #     filters:
+      #       tags:
+      #         only: /^v.*_b\d+/
+      #       branches:
+      #         ignore: /.*/
+      # - documentation:
+      #     requires:
+      #       - test_api_v16
+      #       - test_api_v25
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      # - screenshot_api_25:
+      #     requires:
+      #       - test_api_v16
+      #       - test_api_v25
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      # - deploy_production:
+      #     filters:
+      #       branches:
+      #         only:
+      #           - master
