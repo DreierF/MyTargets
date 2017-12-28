@@ -25,8 +25,7 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_143bf53fc355_key -iv $encrypted_143bf53fc355_iv -in services.tar.enc -out services.tar -d
 - tar xvf services.tar
 - wget https://raw.githubusercontent.com/JakeWharton/pidcat/master/pidcat.py
-# - target="system-images;android-${EMULATOR_API_LEVEL};default;armeabi-v7a"
-# - touch ~/.android/repositories.cfg
+- touch ~/.android/repositories.cfg
 - yes | sdkmanager "platforms;android-27"
 - mkdir -p "$ANDROID_HOME/licenses"
 - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
@@ -36,9 +35,6 @@ install:
 # Converts the shallow clone to a full clone
 # This is necessary in order to determine the current app version code
 - git fetch --unshallow --tags
-# - sudo apt-get install -y libqt5widgets5 || true
-# - exportQT_QPA_PLATFORM=offscreen
-# - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${ANDROID_HOME}/tools/lib64:${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib
 before_script:
 - echo no | android create avd -f -n test -t "android-"$EMULATOR_API_LEVEL --abi $ANDROID_ABI -s WVGA800 -c 128M
 - emulator -avd test -no-audio -no-window &
@@ -53,6 +49,7 @@ script:
 # - echo -en 'travis_fold:end:script.unittest\\r'
 
 - echo -e '\033[0;33mUI tests...\033[0m' && echo -en 'travis_fold:start:script.uitest\\r'
+- ./gradlew :app:assembleDevDebug :app:assembleDevDebugAndroidTest -PdisablePreDex
 - android-wait-for-emulator
 - adb shell settings put global window_animation_scale 0
 - adb shell settings put global transition_animation_scale 0
@@ -73,12 +70,12 @@ after_success:
 - bash <(curl -s https://codecov.io/bash)
 - ./gradlew sendCoverageToCodacy -PdisablePreDex
 after_failure:
+- adb logcat -d 2>&1 | python pidcat.py de.dreier.mytargets.debug &> logcat.log
+- ./dropbox_uploader.sh upload logcat.log /Reports/$TRAVIS_JOB_NUMBER.logcat
 - >
-  adb logcat -d 2>&1 | python pidcat.py de.dreier.mytargets.debug &> logcat.log &&
   cd app/build/reports/androidTests/connected/flavors/DEV/ &&
   ( adb pull /sdcard/screenshots/ || true ) &&
   mv ../../../../../../../logcat.log logcat.log &&
-  mv ../../../../../../../log.txt log.txt &&
   zip -r reports.zip . &&
   cd ../../../../../../.. &&
   ./dropbox_uploader.sh upload app/build/reports/androidTests/connected/flavors/DEV/reports.zip /Reports/$TRAVIS_JOB_NUMBER.zip
