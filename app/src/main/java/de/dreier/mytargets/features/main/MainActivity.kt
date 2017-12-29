@@ -28,8 +28,8 @@ import android.support.v7.app.AppCompatDelegate
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import com.google.firebase.crash.FirebaseCrash
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.fragments.EditableListFragmentBase
 import de.dreier.mytargets.base.navigation.NavigationController
 import de.dreier.mytargets.databinding.ActivityMainBinding
 import de.dreier.mytargets.features.arrows.EditArrowListFragment
@@ -108,13 +108,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupBottomNavigation() {
         binding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
-            var fragment: EditableListFragmentBase<*, *>? = null
-            when (item.itemId) {
-                R.id.action_arrows -> fragment = EditArrowListFragment()
-                R.id.action_bows -> fragment = EditBowListFragment()
-                R.id.action_trainings -> fragment = TrainingsFragment()
-                else -> {
-                }
+            val fragment = when (item.itemId) {
+                R.id.action_arrows -> EditArrowListFragment()
+                R.id.action_bows -> EditBowListFragment()
+                R.id.action_trainings -> TrainingsFragment()
+                else -> throw IllegalStateException("Illegal action id")
             }
             supportFragmentManager
                     .beginTransaction()
@@ -143,6 +141,7 @@ class MainActivity : AppCompatActivity() {
         drawerToggle = object : ActionBarDrawerToggle(this, binding.drawerLayout, binding.toolbar, R.string.drawer_open, R.string.drawer_close) {
             override fun onDrawerClosed(drawerView: View) {
                 super.onDrawerClosed(drawerView)
+                FirebaseCrash.report(Exception("My first Android non-fatal error"))
                 if (onDrawerClosePendingAction != null) {
                     when(onDrawerClosePendingAction) {
                         R.id.nav_timer -> navigationController.navigateToTimer(false)
@@ -191,12 +190,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             android.R.id.home -> {
                 binding.drawerLayout.openDrawer(GravityCompat.START)
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
