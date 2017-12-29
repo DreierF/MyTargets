@@ -21,12 +21,13 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.Environment
+import de.dreier.mytargets.shared.models.TimerSettings
 import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
 import de.dreier.mytargets.shared.models.augmented.AugmentedRound
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
-import de.dreier.mytargets.shared.utils.ParcelableUtil
+import de.dreier.mytargets.shared.utils.unmarshall
 import de.dreier.mytargets.shared.wearable.WearableClientBase
 import org.threeten.bp.LocalDate
 import java.util.*
@@ -52,7 +53,7 @@ class MobileWearableListener : WearableListenerService() {
 
     private fun timerSettings(messageEvent: MessageEvent) {
         val data = messageEvent.data
-        val settings = ParcelableUtil.unmarshallTimerSettings(data)
+        val settings = data.unmarshall(TimerSettings.CREATOR)
         SettingsManager.timerSettings = settings
         ApplicationInstance.wearableClient.sendTimerSettingsFromRemote()
     }
@@ -89,7 +90,7 @@ class MobileWearableListener : WearableListenerService() {
 
     private fun createTraining(messageEvent: MessageEvent) {
         val data = messageEvent.data
-        val augmentedTraining = ParcelableUtil.unmarshallAugmentedTraining(data)
+        val augmentedTraining = data.unmarshall(AugmentedTraining.CREATOR)
         val training = augmentedTraining.toTraining()
         training.save()
         ApplicationInstance.wearableClient.updateTraining(AugmentedTraining(training))
@@ -98,7 +99,7 @@ class MobileWearableListener : WearableListenerService() {
 
     private fun endUpdated(messageEvent: MessageEvent) {
         val data = messageEvent.data
-        val (end, shots) = ParcelableUtil.unmarshallAugmentedEnd(data)
+        val (end, shots) = data.unmarshall(AugmentedEnd.CREATOR)
         val round = AugmentedRound(Round[end.roundId]!!)
         val newEnd = getLastEmptyOrCreateNewEnd(round)
         newEnd.end.exact = false

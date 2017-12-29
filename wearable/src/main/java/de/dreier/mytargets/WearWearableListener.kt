@@ -23,8 +23,10 @@ import android.graphics.BitmapFactory
 import android.support.v4.app.NotificationCompat
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.WearableListenerService
+import de.dreier.mytargets.shared.models.TimerSettings
 import de.dreier.mytargets.shared.models.TrainingInfo
-import de.dreier.mytargets.shared.utils.ParcelableUtil
+import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
+import de.dreier.mytargets.shared.utils.unmarshall
 import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.REQUEST_TRAINING_TEMPLATE
 import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.TIMER_SETTINGS
 import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.TRAINING_UPDATE
@@ -37,16 +39,16 @@ class WearWearableListener : WearableListenerService() {
         val data = messageEvent.data
         when (messageEvent.path) {
             TRAINING_UPDATE -> {
-                val info = ParcelableUtil.unmarshallTrainingInfo(data)
+                val info = data.unmarshall(TrainingInfo.CREATOR)
                 showNotification(info)
                 ApplicationInstance.wearableClient.sendTrainingUpdate(info)
             }
             REQUEST_TRAINING_TEMPLATE -> {
-                val training = ParcelableUtil.unmarshallAugmentedTraining(data)
+                val training = data.unmarshall(AugmentedTraining.CREATOR)
                 ApplicationInstance.wearableClient.sendTrainingTemplate(training)
             }
             TIMER_SETTINGS -> {
-                val settings = ParcelableUtil.unmarshallTimerSettings(data)
+                val settings = data.unmarshall(TimerSettings.CREATOR)
                 WearSettingsManager.timerSettings = settings
                 ApplicationInstance.wearableClient.sendTimerSettingsFromRemote()
             }
