@@ -20,7 +20,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.support.v4.content.LocalBroadcastManager
-import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.wearable.Node
 import com.google.android.gms.wearable.Wearable
 import de.dreier.mytargets.shared.models.TimerSettings
@@ -29,9 +28,8 @@ import timber.log.Timber
 
 open class WearableClientBase(protected val context: Context) {
 
-    private val googleApiClient: GoogleApiClient = GoogleApiClient.Builder(context)
-            .addApi(Wearable.API)
-            .build()
+    private val nodeClient = Wearable.getNodeClient(context)
+    private val msgClient = Wearable.getMessageClient(context)
 
     private val timerReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -41,38 +39,33 @@ open class WearableClientBase(protected val context: Context) {
     }
 
     init {
-        googleApiClient.connect()
         val filter = IntentFilter(BROADCAST_TIMER_SETTINGS_FROM_LOCAL)
         LocalBroadcastManager.getInstance(context).registerReceiver(timerReceiver, filter)
     }
 
     open fun disconnect() {
         LocalBroadcastManager.getInstance(context).unregisterReceiver(timerReceiver)
-        googleApiClient.disconnect()
     }
 
     protected fun sendMessage(path: String, data: ByteArray) {
-        Wearable.NodeApi.getConnectedNodes(googleApiClient)
-                .setResultCallback { nodes ->
-                    for (node in nodes.nodes) {
+        nodeClient.connectedNodes
+                .addOnSuccessListener { nodes ->
+                    Timber.w("nodes: $nodes")
+                    for (node in nodes) {
                         sendToNode(node, path, data)
                     }
                 }
     }
 
     private fun sendToNode(node: Node, path: String, data: ByteArray) {
-        Wearable.MessageApi.sendMessage(googleApiClient, node.id, path, data)
-                .setResultCallback { sendMessageResult ->
-                    if (!sendMessageResult.status.isSuccess) {
-                        Timber.e("Failed to send message with status code: %d",
-                                sendMessageResult.status.statusCode)
-                    }
+        msgClient.sendMessage(node.id, path, data)
+                .addOnFailureListener { e ->
+                    Timber.e(e, "Failed to send message")
                 }
     }
 
     protected fun sendTimerSettings(settings: TimerSettings) {
-        val data = settings.marshall()
-        sendMessage(TIMER_SETTINGS, data)
+        sendMessage(TIMER_SETTINGS, settings.marshall())
     }
 
     open fun sendTimerSettingsFromLocal(settings: TimerSettings) {
