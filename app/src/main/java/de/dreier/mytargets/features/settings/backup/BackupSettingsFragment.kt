@@ -44,7 +44,7 @@ import de.dreier.mytargets.features.settings.SettingsFragmentBase
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.features.settings.backup.provider.BackupUtils
 import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation
-import de.dreier.mytargets.features.settings.backup.provider.GoogleDriveBackup.AsyncRestore.REQUEST_CODE_RESOLUTION
+import de.dreier.mytargets.features.settings.backup.provider.GoogleDriveBackup.AsyncRestore.Companion.REQUEST_CODE_RESOLUTION
 import de.dreier.mytargets.features.settings.backup.provider.IAsyncBackupRestore
 import de.dreier.mytargets.features.settings.backup.synchronization.GenericAccountService
 import de.dreier.mytargets.features.settings.backup.synchronization.SyncUtils
