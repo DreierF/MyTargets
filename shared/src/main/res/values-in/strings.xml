@@ -26,7 +26,7 @@
   <string name="cloudy">Berawan</string>
   <string name="light_rain">Hujan ringan</string>
   <string name="rain">Hujan</string>
-  <string name="round_desc">% 1 $ s: % 2 $ d &amp; # 215; % 3 $ d panah ( % 4 $ s wajah)</string>
+  <string name="round_desc">%1$s: %2$d &#215; %3$d panah (%4$s wajah)</string>
   <string name="mini">Mini</string>
   <string name="small">Kecil</string>
   <string name="medium">Sedang</string>
