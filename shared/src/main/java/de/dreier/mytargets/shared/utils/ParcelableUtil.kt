@@ -30,5 +30,7 @@ fun <T : Parcelable> ByteArray.unmarshall(creator: Parcelable.Creator<T>): T {
     val parcel = Parcel.obtain()
     parcel.unmarshall(this, 0, size)
     parcel.setDataPosition(0)
-    return creator.createFromParcel(parcel)
+    val result = creator.createFromParcel(parcel)
+    parcel.recycle()
+    return result
 }
