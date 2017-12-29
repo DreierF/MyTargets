@@ -15,15 +15,12 @@
 
 package de.dreier.mytargets.shared.models.augmented
 
-import android.annotation.SuppressLint
+import android.os.Parcel
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.EndImage
 import de.dreier.mytargets.shared.models.db.Shot
-import kotlinx.android.parcel.Parcelize
 
-@SuppressLint("ParcelCreator")
-@Parcelize
 data class AugmentedEnd(
         val end: End,
         var shots: MutableList<Shot>,
@@ -39,4 +36,26 @@ data class AugmentedEnd(
 
     val isEmpty: Boolean
         get() = shots.any { it.scoringRing == Shot.NOTHING_SELECTED } && images.isEmpty()
+
+    constructor(source: Parcel) : this(
+            source.readParcelable<End>(End::class.java.classLoader),
+            source.createTypedArrayList(Shot.CREATOR),
+            source.createTypedArrayList(EndImage.CREATOR)
+    )
+
+    override fun describeContents() = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+        writeParcelable(end, 0)
+        writeTypedList(shots)
+        writeTypedList(images)
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<AugmentedEnd> = object : Parcelable.Creator<AugmentedEnd> {
+            override fun createFromParcel(source: Parcel): AugmentedEnd = AugmentedEnd(source)
+            override fun newArray(size: Int): Array<AugmentedEnd?> = arrayOfNulls(size)
+        }
+    }
 }

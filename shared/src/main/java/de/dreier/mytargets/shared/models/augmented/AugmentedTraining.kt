@@ -15,15 +15,12 @@
 
 package de.dreier.mytargets.shared.models.augmented
 
-import android.annotation.SuppressLint
+import android.os.Parcel
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.models.db.Training
-import kotlinx.android.parcel.Parcelize
 
-@SuppressLint("ParcelCreator")
-@Parcelize
 data class AugmentedTraining(
         val training: Training,
         var rounds: MutableList<AugmentedRound>
@@ -33,7 +30,7 @@ data class AugmentedTraining(
             .toMutableList())
 
     fun toTraining(): Training {
-        training.rounds = rounds.map {it.toRound()}.toMutableList()
+        training.rounds = rounds.map { it.toRound() }.toMutableList()
         return training
     }
 
@@ -45,6 +42,26 @@ data class AugmentedTraining(
             round.round.target = template.targetTemplate
             round.round.comment = ""
             rounds.add(round)
+        }
+    }
+
+    constructor(source: Parcel) : this(
+            source.readParcelable<Training>(Training::class.java.classLoader),
+            source.createTypedArrayList(AugmentedRound.CREATOR)
+    )
+
+    override fun describeContents() = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+        writeParcelable(training, 0)
+        writeTypedList(rounds)
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<AugmentedTraining> = object : Parcelable.Creator<AugmentedTraining> {
+            override fun createFromParcel(source: Parcel): AugmentedTraining = AugmentedTraining(source)
+            override fun newArray(size: Int): Array<AugmentedTraining?> = arrayOfNulls(size)
         }
     }
 }

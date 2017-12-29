@@ -15,16 +15,13 @@
 
 package de.dreier.mytargets.shared.models.augmented
 
-import android.annotation.SuppressLint
+import android.os.Parcel
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.Score
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.sum
-import kotlinx.android.parcel.Parcelize
 
-@SuppressLint("ParcelCreator")
-@Parcelize
 data class AugmentedRound(
         val round: Round,
         var ends: MutableList<AugmentedEnd>
@@ -55,5 +52,25 @@ data class AugmentedRound(
         end.end.save()
         ends.add(end)
         return end
+    }
+
+    constructor(source: Parcel) : this(
+            source.readParcelable<Round>(Round::class.java.classLoader),
+            source.createTypedArrayList(AugmentedEnd.CREATOR)
+    )
+
+    override fun describeContents() = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+        writeParcelable(round, 0)
+        writeTypedList(ends)
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<AugmentedRound> = object : Parcelable.Creator<AugmentedRound> {
+            override fun createFromParcel(source: Parcel): AugmentedRound = AugmentedRound(source)
+            override fun newArray(size: Int): Array<AugmentedRound?> = arrayOfNulls(size)
+        }
     }
 }
