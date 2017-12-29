@@ -59,6 +59,7 @@ import de.dreier.mytargets.test.utils.matchers.ViewMatcher.clickFabSpeedDialItem
 import de.dreier.mytargets.test.utils.matchers.ViewMatcher.supportFab
 import de.dreier.mytargets.test.utils.rules.SimpleDbTestRule
 import org.hamcrest.CoreMatchers.allOf
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -87,15 +88,21 @@ class MainActivityTest : UITestBase() {
 
         intending(isInternal())
                 .respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, null))
-    }
 
-    @Test
-    fun navigation() {
         val mainActivityIdlingResource = activityTestRule.activity
                 .espressoIdlingResourceForMainActivity
 
         IdlingRegistry.getInstance().register(mainActivityIdlingResource)
+    }
 
+    @After
+    fun unregisterIdlingRes() {
+        IdlingRegistry.getInstance().unregister(activityTestRule.activity
+                        .espressoIdlingResourceForMainActivity)
+    }
+
+    @Test
+    fun navigation() {
         // newTraining_freeTraining
         onView(withId(R.id.action_trainings)).perform(click())
 
