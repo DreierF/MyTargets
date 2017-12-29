@@ -28,7 +28,6 @@ import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.util.LongSparseArray
 import android.support.v4.view.GravityCompat.END
 import android.view.Menu
 import android.view.MenuItem
@@ -43,6 +42,7 @@ import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
+import de.dreier.mytargets.shared.utils.toSparseArray
 import de.dreier.mytargets.shared.utils.toUri
 import de.dreier.mytargets.utils.ToolbarUtils
 import java.io.File
@@ -89,13 +89,10 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
         return object : AsyncTaskLoader<List<Pair<Training, Round>>>(this) {
             override fun loadInBackground(): List<Pair<Training, Round>> {
                 val rounds = Round.getAll(roundIds)
-                val trainingsMap = LongSparseArray<Training>()
-                rounds.map { (_, trainingId) -> trainingId }
+                val trainingsMap = rounds.map { (_, trainingId) -> trainingId }
                         .distinct()
-                        .map { id: Long -> Training[id]!! }
-                        .forEach { training ->
-                            trainingsMap.append(training.id, training)
-                        }
+                        .map { id -> Pair(id, Training[id]!!) }
+                        .toSparseArray()
                 return rounds.map { round -> Pair(trainingsMap.get(round.trainingId), round) }
             }
         }
