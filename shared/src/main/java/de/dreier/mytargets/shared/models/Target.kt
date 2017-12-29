@@ -19,7 +19,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
-import de.dreier.mytargets.shared.models.db.End
+import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.targets.TargetFactory
 import de.dreier.mytargets.shared.targets.drawable.TargetDrawable
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable
@@ -76,8 +76,8 @@ data class Target(
         return model.getScoringStyle(scoringStyleIndex)
     }
 
-    fun getReachedScore(end: End): Score {
-        return getScoringStyle().getReachedScore(end)
+    fun getReachedScore(shots: MutableList<Shot>): Score {
+        return getScoringStyle().getReachedScore(shots)
     }
 
     override fun toString(): String {

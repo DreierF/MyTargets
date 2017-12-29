@@ -28,7 +28,6 @@ import android.support.v7.app.AppCompatDelegate
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
-import com.google.firebase.crash.FirebaseCrash
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.navigation.NavigationController
 import de.dreier.mytargets.databinding.ActivityMainBinding
@@ -141,7 +140,6 @@ class MainActivity : AppCompatActivity() {
         drawerToggle = object : ActionBarDrawerToggle(this, binding.drawerLayout, binding.toolbar, R.string.drawer_open, R.string.drawer_close) {
             override fun onDrawerClosed(drawerView: View) {
                 super.onDrawerClosed(drawerView)
-                FirebaseCrash.report(Exception("My first Android non-fatal error"))
                 if (onDrawerClosePendingAction != null) {
                     when(onDrawerClosePendingAction) {
                         R.id.nav_timer -> navigationController.navigateToTimer(false)

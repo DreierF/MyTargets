@@ -368,7 +368,7 @@ class StatisticsFragment : FragmentBase() {
     }
 
     private fun getPairEndSummary(target: Target, end: End, trainingDate: LocalDate): Pair<Float, LocalDateTime> {
-        val reachedScore = target.getReachedScore(end)
+        val reachedScore = target.getReachedScore(end.loadShots())
         return Pair(reachedScore.shotAverage,
                 LocalDateTime.of(trainingDate, end.saveTime!!))
     }
