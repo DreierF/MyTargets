@@ -14,16 +14,13 @@
  */
 package de.dreier.mytargets.shared.models
 
-import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Parcel
 import android.os.Parcelable
 import de.dreier.mytargets.shared.R
 import de.dreier.mytargets.shared.models.augmented.AugmentedRound
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
-import kotlinx.android.parcel.Parcelize
 
-@SuppressLint("ParcelCreator")
-@Parcelize
 data class TrainingInfo(
         var title: String? = null,
         var roundCount: Int = 0,
@@ -33,6 +30,12 @@ data class TrainingInfo(
             title = training.training.title,
             roundCount = training.rounds.size,
             round = round
+    )
+
+    constructor(source: Parcel) : this(
+            source.readString(),
+            source.readInt(),
+            source.readParcelable<AugmentedRound>(AugmentedRound::class.java.classLoader)
     )
 
     fun getRoundDetails(context: Context): String {
@@ -59,6 +62,22 @@ data class TrainingInfo(
             context.resources
                     .getQuantityString(R.plurals.ends_arrow, shotsPerEnd, ends
                             .size, shotsPerEnd)
+        }
+    }
+
+    override fun describeContents() = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+        writeString(title)
+        writeInt(roundCount)
+        writeParcelable(round, 0)
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<TrainingInfo> = object : Parcelable.Creator<TrainingInfo> {
+            override fun createFromParcel(source: Parcel): TrainingInfo = TrainingInfo(source)
+            override fun newArray(size: Int): Array<TrainingInfo?> = arrayOfNulls(size)
         }
     }
 }

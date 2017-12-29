@@ -15,16 +15,13 @@
 
 package de.dreier.mytargets.shared.models.db
 
-import android.annotation.SuppressLint
+import android.os.Parcel
 import android.os.Parcelable
 import com.raizlabs.android.dbflow.annotation.*
 import com.raizlabs.android.dbflow.structure.BaseModel
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.IIdSettable
-import kotlinx.android.parcel.Parcelize
 
-@SuppressLint("ParcelCreator")
-@Parcelize
 @Table(database = AppDatabase::class)
 data class Shot(
         @Column(name = "_id")
@@ -51,7 +48,6 @@ data class Shot(
         @Column
         var arrowNumber: String? = null
 ) : BaseModel(), IIdSettable, Comparable<Shot>, Parcelable {
-
     constructor(i: Int) : this(index = i)
 
     override fun compareTo(other: Shot): Int {
@@ -64,8 +60,37 @@ data class Shot(
         }
     }
 
+    constructor(source: Parcel) : this(
+            source.readLong(),
+            source.readInt(),
+            source.readValue(Long::class.java.classLoader) as Long?,
+            source.readFloat(),
+            source.readFloat(),
+            source.readInt(),
+            source.readString()
+    )
+
+    override fun describeContents() = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+        writeLong(id)
+        writeInt(index)
+        writeValue(endId)
+        writeFloat(x)
+        writeFloat(y)
+        writeInt(scoringRing)
+        writeString(arrowNumber)
+    }
+
     companion object {
         const val NOTHING_SELECTED = -2
+
         const val MISS = -1
+
+        @JvmField
+        val CREATOR: Parcelable.Creator<Shot> = object : Parcelable.Creator<Shot> {
+            override fun createFromParcel(source: Parcel): Shot = Shot(source)
+            override fun newArray(size: Int): Array<Shot?> = arrayOfNulls(size)
+        }
     }
 }
