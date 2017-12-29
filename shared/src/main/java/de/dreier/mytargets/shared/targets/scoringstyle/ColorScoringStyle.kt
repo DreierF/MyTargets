@@ -17,12 +17,12 @@ package de.dreier.mytargets.shared.targets.scoringstyle
 
 import android.support.annotation.StringRes
 import de.dreier.mytargets.shared.models.Score
-import de.dreier.mytargets.shared.models.db.End
+import de.dreier.mytargets.shared.models.db.Shot
 
 class ColorScoringStyle(@StringRes title: Int, private val maxEndPoints: Int, vararg points: Int) : ScoringStyle(title, false, *points) {
 
-    override fun getReachedScore(end: End): Score {
-        val reachedScore = end.loadShots()
+    override fun getReachedScore(shots: MutableList<Shot>): Score {
+        val reachedScore = shots
                 .map { s -> getScoreByScoringRing(s.scoringRing, s.index) }
                 .distinct()
                 .fold(0) { a, b -> a + b }

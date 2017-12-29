@@ -403,18 +403,18 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
 
         // Set current end score
         val reachedEndScore = data!!.currentRound.round.target
-                .getReachedScore(data!!.currentEnd.toEnd())
+                .getReachedScore(data!!.currentEnd.shots)
         binding.endScore.text = reachedEndScore.toString()
 
         // Set current round score
         val reachedRoundScore = data!!.ends
-                .map { end -> data!!.currentRound.round.target.getReachedScore(end.toEnd()) }
+                .map { end -> data!!.currentRound.round.target.getReachedScore(end.shots) }
                 .sum()
         binding.roundScore.text = reachedRoundScore.toString()
 
         // Set current training score
         val reachedTrainingScore = data!!.training.rounds
-                .flatMap { r -> r.ends.map { end -> r.round.target.getReachedScore(end.end) } }
+                .flatMap { r -> r.ends.map { end -> r.round.target.getReachedScore(end.shots) } }
                 .sum()
         binding.trainingScore.text = reachedTrainingScore.toString()
 

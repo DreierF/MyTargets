@@ -36,7 +36,7 @@ data class AugmentedRound(
     val reachedScore: Score
         get() {
             val target = round.target
-            return ends.map { target.getReachedScore(it.end) }.sum()
+            return ends.map { target.getReachedScore(it.shots) }.sum()
         }
 
     fun toRound(): Round {

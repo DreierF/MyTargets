@@ -107,7 +107,7 @@ data class Round(
         get() {
             val target = target
             return loadEnds().
-                    map { end: End -> target.getReachedScore(end) }
+                    map { end: End -> target.getReachedScore(end.loadShots()) }
                     .sum()
         }
 

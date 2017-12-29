@@ -18,7 +18,6 @@ package de.dreier.mytargets.shared.targets.scoringstyle
 import android.support.annotation.StringRes
 import de.dreier.mytargets.shared.SharedApplicationInstance
 import de.dreier.mytargets.shared.models.Score
-import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.models.sum
 
@@ -110,10 +109,8 @@ open class ScoringStyle private constructor(title: String?, private val showAsX:
         return Score(reachedScore, maxScorePerShot)
     }
 
-    open fun getReachedScore(end: End): Score {
-        return end.loadShots()
-                .map { shot: Shot -> this.getReachedScore(shot) }
-                .sum()
+    open fun getReachedScore(shots: MutableList<Shot>): Score {
+        return shots.map { getReachedScore(it) }.sum()
     }
 
     companion object {
