@@ -29,8 +29,8 @@
   <string name="points">Points</string>
   <string name="passe">End</string>
   <!-- Overview -->
-  <string name="new_training">New training</string>
-  <string name="new_bow">New bow</string>
+  <string name="new_training">تمرين جديد</string>
+  <string name="new_bow">قوس جديد</string>
   <string name="new_arrow">New arrow</string>
   <string name="new_round">New round</string>
   <plurals name="training_selected">
