@@ -30,7 +30,7 @@ import de.dreier.mytargets.shared.utils.StandardRoundFactory
 import java.io.File
 import java.io.IOException
 
-@Database(name = AppDatabase.NAME, version = AppDatabase.VERSION, foreignKeysSupported = true)
+@Database(name = AppDatabase.NAME, version = AppDatabase.VERSION, foreignKeyConstraintsEnforced = true)
 object AppDatabase {
 
     const val NAME = "database"

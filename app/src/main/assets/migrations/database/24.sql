@@ -42,6 +42,8 @@ INSERT INTO `Training`
     FROM TRAINING_OLD;
 
 UPDATE Round SET comment = "" WHERE comment = NULL;
+UPDATE Round SET targetDiameter = "-1 m" WHERE targetDiameter = NULL;
+UPDATE RoundTemplate SET targetDiameter = "-1 m" WHERE targetDiameter = NULL;
 
 -- End migration
 CREATE TABLE IF NOT EXISTS `End`(

@@ -36,7 +36,7 @@ import kotlinx.android.parcel.Parcelize
 data class Target(
         override var id: Long = 0,
         var scoringStyleIndex: Int = 0,
-        var diameter: Dimension? = null
+        var diameter: Dimension = Dimension.UNKNOWN
 ) : IIdProvider, IImageProvider, IDetailProvider, Comparable<Target>, Parcelable {
 
     val model: TargetModelBase by lazy { TargetFactory.getTarget(id.toInt()) }
@@ -45,12 +45,12 @@ data class Target(
         TargetImpactAggregationDrawable(this)
     }
 
-    constructor(target: Long, scoringStyle: Int) : this(target, scoringStyle, null) {
+    constructor(target: Long, scoringStyle: Int) : this(target, scoringStyle, Dimension.UNKNOWN) {
         this.diameter = model.diameters[0]
     }
 
     override val name: String
-        get() = String.format("%s (%s)", toString(), diameter!!.toString())
+        get() = String.format("%s (%s)", toString(), diameter.toString())
 
     fun zoneToString(zone: Int, arrow: Int): String {
         return getScoringStyle().zoneToString(zone, arrow)

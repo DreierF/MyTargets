@@ -125,24 +125,24 @@ data class Dimension(val value: Float, val unit: Unit?) : IIdProvider, Comparabl
                     .select(SightMark_Table.distance)
                     .from(SightMark::class.java)
                     .queryList()
-                    .map { sightSetting -> sightSetting.distance }
-                    .filter { d -> d.unit == unit }
+                    .map { it.distance }
+                    .filter { it.unit == unit }
                     .toSet())
 
             distances.addAll(SQLite
                     .select(RoundTemplate_Table.distance)
                     .from(RoundTemplate::class.java)
                     .queryList()
-                    .map { round -> round.distance }
-                    .filter { d -> d.unit == unit }
+                    .map { it.distance }
+                    .filter { it.unit == unit }
                     .toSet())
 
             distances.addAll(SQLite
                     .select(Round_Table.distance)
                     .from(Round::class.java)
                     .queryList()
-                    .map { round -> round.distance }
-                    .filter { d -> d.unit == unit }
+                    .map { it.distance }
+                    .filter { it.unit == unit }
                     .toSet())
 
             return ArrayList(distances)

@@ -30,7 +30,7 @@ data class EndImage(
         @Column
         override var fileName: String = "",
 
-        @ForeignKey(tableClass = End::class, references = [(ForeignKeyReference(columnName = "end", columnType = Long::class, foreignKeyColumnName = "_id", referencedGetterName = "getId", referencedSetterName = "setId"))], onDelete = ForeignKeyAction.CASCADE)
+        @ForeignKey(tableClass = End::class, references = [(ForeignKeyReference(columnName = "end", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
         var endId: Long? = null
 ) : BaseModel(), Image, Parcelable {
     constructor(imageFile: String) : this(fileName = imageFile)

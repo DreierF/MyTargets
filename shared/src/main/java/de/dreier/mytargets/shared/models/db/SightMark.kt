@@ -33,7 +33,7 @@ data class SightMark(
         @PrimaryKey(autoincrement = true)
         override var id: Long = 0,
 
-        @ForeignKey(tableClass = Bow::class, references = [(ForeignKeyReference(columnName = "bow", columnType = Long::class, foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
+        @ForeignKey(tableClass = Bow::class, references = [(ForeignKeyReference(columnName = "bow", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
         var bowId: Long? = null,
 
         @Column(typeConverter = DimensionConverter::class)

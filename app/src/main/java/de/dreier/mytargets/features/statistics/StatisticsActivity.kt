@@ -89,11 +89,11 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
         return object : AsyncTaskLoader<List<Pair<Training, Round>>>(this) {
             override fun loadInBackground(): List<Pair<Training, Round>> {
                 val rounds = Round.getAll(roundIds)
-                val trainingsMap = rounds.map { (_, trainingId) -> trainingId }
+                val trainingsMap = rounds.map { (_, trainingId) -> trainingId!! }
                         .distinct()
                         .map { id -> Pair(id, Training[id]!!) }
                         .toSparseArray()
-                return rounds.map { round -> Pair(trainingsMap.get(round.trainingId), round) }
+                return rounds.map { round -> Pair(trainingsMap.get(round.trainingId!!), round) }
             }
         }
     }

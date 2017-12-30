@@ -45,8 +45,8 @@ data class End(
         @Column
         var index: Int = 0,
 
-        @ForeignKey(tableClass = Round::class, references = [(ForeignKeyReference(columnName = "round", columnType = Long::class, foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
-        var roundId: Long = 0,
+        @ForeignKey(tableClass = Round::class, references = [(ForeignKeyReference(columnName = "round", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
+        var roundId: Long? = null,
 
         @Column(getterName = "getExact", setterName = "setExact")
         var exact: Boolean = false,
@@ -99,11 +99,12 @@ data class End(
         return images!!
     }
 
-    override fun save() {
+    override fun save(): Boolean {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.save(it) })
+        return true
     }
 
-    override fun save(databaseWrapper: DatabaseWrapper) {
+    override fun save(databaseWrapper: DatabaseWrapper): Boolean {
         if (saveTime == null) {
             saveTime = LocalTime.now()
         }
@@ -128,22 +129,25 @@ data class End(
                 image.save(databaseWrapper)
             }
         }
+        return true
     }
 
-    override fun delete() {
+    override fun delete(): Boolean {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.delete(it) })
+        return true
     }
 
-    override fun delete(databaseWrapper: DatabaseWrapper) {
+    override fun delete(databaseWrapper: DatabaseWrapper): Boolean {
         loadShots().forEach { it.delete(databaseWrapper) }
         loadImages().forEach { it.delete(databaseWrapper) }
         super.delete(databaseWrapper)
         updateEndIndicesForRound(databaseWrapper)
+        return true
     }
 
     private fun updateEndIndicesForRound(databaseWrapper: DatabaseWrapper) {
         // FIXME very inefficient
-        val round = Round[roundId] ?: return
+        val round = Round[roundId!!] ?: return
 
         for ((i, end) in round.loadEnds(databaseWrapper).withIndex()) {
             end.index = i
@@ -158,7 +162,7 @@ data class End(
     }
 
     override fun saveRecursively(databaseWrapper: DatabaseWrapper) {
-        val round = Round.get(roundId)
+        val round = Round[roundId!!]
         val ends = round!!.loadEnds(databaseWrapper).toMutableList()
 
         val pos = Collections.binarySearch(ends, this)

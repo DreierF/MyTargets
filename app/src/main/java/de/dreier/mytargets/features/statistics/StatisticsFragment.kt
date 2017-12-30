@@ -97,7 +97,7 @@ class StatisticsFragment : FragmentBase() {
     val lineChartDataSet: LineData?
         get() {
             val trainingsMap = rounds!!
-                    .map { it.trainingId }
+                    .map { it.trainingId!! }
                     .distinct()
                     .map { Training[it]!! }
                     .map { Pair(it.id, it) }

@@ -97,10 +97,6 @@ android {
     }
 }
 
-jacoco {
-    setToolVersion(libraryVersion.jacoco)
-}
-
 project.afterEvaluate {
     android.applicationVariants.all { variant ->
         def realVariantName = variant.name

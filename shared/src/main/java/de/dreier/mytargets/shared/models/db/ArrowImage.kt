@@ -33,7 +33,7 @@ data class ArrowImage(
         @Column
         override var fileName: String = "",
 
-        @ForeignKey(tableClass = Arrow::class, references = [(ForeignKeyReference(columnName = "arrow", columnType = Long::class, foreignKeyColumnName = "_id", referencedGetterName = "getId", referencedSetterName = "setId"))], onDelete = ForeignKeyAction.CASCADE)
+        @ForeignKey(tableClass = Arrow::class, references = [(ForeignKeyReference(columnName = "arrow", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
         var arrowId: Long? = null
 ) : BaseModel(), Image, Parcelable {
     constructor(imageFilePath: String) : this(fileName = imageFilePath)

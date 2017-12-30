@@ -145,7 +145,7 @@ class RoundFragment : EditableListFragment<End>() {
                 return true
             }
             R.id.action_scoreboard -> {
-                navigationController.navigateToScoreboard(round!!.trainingId, round!!.id)
+                navigationController.navigateToScoreboard(round!!.trainingId!!, round!!.id)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

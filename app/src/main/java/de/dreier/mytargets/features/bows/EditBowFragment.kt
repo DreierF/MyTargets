@@ -39,7 +39,6 @@ import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.BowImage
 import de.dreier.mytargets.shared.models.db.SightMark
 import de.dreier.mytargets.utils.ToolbarUtils
-import de.dreier.mytargets.views.selector.DistanceSelector
 import de.dreier.mytargets.views.selector.SelectorBase
 import de.dreier.mytargets.views.selector.SimpleDistanceSelector
 
@@ -173,7 +172,7 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
         override fun onBind(item: SightMark, position: Int, fragment: Fragment, removeListener: View.OnClickListener) {
             this.item = item
             binding.distance.setOnClickListener { selectedItem, index ->
-                navigationController.navigateToDistance(selectedItem!!, index, DistanceSelector.DISTANCE_REQUEST_CODE)
+                navigationController.navigateToDistance(selectedItem!!, index, SimpleDistanceSelector.SIMPLE_DISTANCE_REQUEST_CODE)
             }
             binding.distance.setItemIndex(position)
             binding.distance.setItem(item.distance)
