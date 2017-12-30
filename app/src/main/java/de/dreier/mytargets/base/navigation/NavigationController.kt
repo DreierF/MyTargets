@@ -185,7 +185,7 @@ class NavigationController(
 
     fun navigateToEditEnd(round: Round, endIndex: Int): IntentWrapper {
         return IntentWrapper(activity, fragment, InputActivity::class.java)
-                .with(InputActivity.TRAINING_ID, round.trainingId)
+                .with(InputActivity.TRAINING_ID, round.trainingId!!)
                 .with(InputActivity.ROUND_ID, round.id)
                 .with(InputActivity.END_INDEX, endIndex)
     }

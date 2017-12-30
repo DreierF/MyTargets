@@ -636,7 +636,7 @@ object StandardRoundFactory {
                 NFAAHunter.ID, 0, 4, -1, -1, 14, -1, -1, 14))
         rounds.add(build(NFAA, R.string.nfaa_field_hunter_560,
                 METER, CENTIMETER,
-                NFAAField.ID, 0, Target(NFAAHunter.ID, 0, null), 4, -1, -1,
+                NFAAField.ID, 0, Target(NFAAHunter.ID, 0, Dimension.UNKNOWN), 4, -1, -1,
                 14, -1, -1, 14))
         rounds.add(build(WA, R.string.wa_field_unmarked_marked_red,
                 METER, CENTIMETER,

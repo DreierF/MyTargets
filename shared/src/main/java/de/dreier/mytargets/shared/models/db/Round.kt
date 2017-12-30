@@ -19,8 +19,6 @@ import android.annotation.SuppressLint
 import android.os.Parcelable
 import com.raizlabs.android.dbflow.annotation.*
 import com.raizlabs.android.dbflow.config.FlowManager
-import com.raizlabs.android.dbflow.sql.language.Condition
-import com.raizlabs.android.dbflow.sql.language.Condition.column
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import com.raizlabs.android.dbflow.structure.BaseModel
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
@@ -39,8 +37,8 @@ data class Round(
         @PrimaryKey(autoincrement = true)
         override var id: Long = 0,
 
-        @ForeignKey(tableClass = Training::class, references = [(ForeignKeyReference(columnName = "training", columnType = Long::class, foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
-        var trainingId: Long = 0,
+        @ForeignKey(tableClass = Training::class, references = [(ForeignKeyReference(columnName = "training", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
+        var trainingId: Long? = null,
 
         @Column
         var index: Int = 0,
@@ -64,7 +62,7 @@ data class Round(
         var targetScoringStyle: Int = 0,
 
         @Column(typeConverter = DimensionConverter::class)
-        var targetDiameter: Dimension? = null
+        var targetDiameter: Dimension = Dimension.UNKNOWN
 ) : BaseModel(), IIdSettable, Comparable<Round>, IRecursiveModel, Parcelable {
 
     @Transient
@@ -112,21 +110,23 @@ data class Round(
         }
 
     val training: Training
-        get() = Training[trainingId]!!
+        get() = Training[trainingId!!]!!
 
-    override fun delete() {
+    override fun delete(): Boolean {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.delete(it) })
+        return true
     }
 
-    override fun delete(databaseWrapper: DatabaseWrapper) {
+    override fun delete(databaseWrapper: DatabaseWrapper): Boolean {
         loadEnds().forEach { it.delete(databaseWrapper) }
         super.delete(databaseWrapper)
         updateRoundIndicesForTraining(databaseWrapper)
+        return true
     }
 
     private fun updateRoundIndicesForTraining(databaseWrapper: DatabaseWrapper) {
         // TODO very inefficient
-        val training = Training[trainingId] ?: return  //FIXME This should not happen, but does for some users
+        val training = Training[trainingId!!] ?: return  //FIXME This should not happen, but does for some users
         for ((i, r) in training.loadRounds().withIndex()) {
             r.index = i
             r.save(databaseWrapper)
@@ -167,7 +167,7 @@ data class Round(
      * or when deleting a training has been canceled.
      */
     override fun saveRecursively(databaseWrapper: DatabaseWrapper) {
-        val training = Training[trainingId]!!
+        val training = Training[trainingId!!]!!
         val rounds = training.loadRounds(databaseWrapper).toMutableList()
 
         val pos = Collections.binarySearch(rounds, this)
@@ -199,14 +199,8 @@ data class Round(
         fun getAll(roundIds: LongArray): List<Round> {
             return SQLite.select()
                     .from(Round::class.java)
-                    .where(inValues(roundIds))
+                    .where(Round_Table._id.`in`(roundIds.toList()))
                     .queryList()
-        }
-
-        private fun inValues(values: LongArray): Condition.In {
-            val col  = column(Round_Table._id.nameAlias).`in`(values[0])
-            values.drop(1).forEach { col.`and`(it) }
-            return col
         }
     }
 }

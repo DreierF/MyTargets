@@ -100,7 +100,7 @@ class MobileWearableListener : WearableListenerService() {
     private fun endUpdated(messageEvent: MessageEvent) {
         val data = messageEvent.data
         val (end, shots) = data.unmarshall(AugmentedEnd.CREATOR)
-        val round = AugmentedRound(Round[end.roundId]!!)
+        val round = AugmentedRound(Round[end.roundId!!]!!)
         val newEnd = getLastEmptyOrCreateNewEnd(round)
         newEnd.end.exact = false
         newEnd.shots = shots
@@ -108,7 +108,7 @@ class MobileWearableListener : WearableListenerService() {
 
         ApplicationInstance.wearableClient.sendUpdateTrainingFromRemoteBroadcast(round.round, newEnd.end)
         ApplicationInstance.wearableClient
-                .sendUpdateTrainingFromLocalBroadcast(AugmentedTraining(Training[round.round.trainingId]!!))
+                .sendUpdateTrainingFromLocalBroadcast(AugmentedTraining(Training[round.round.trainingId!!]!!))
     }
 
     private fun getLastEmptyOrCreateNewEnd(round: AugmentedRound): AugmentedEnd {

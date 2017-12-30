@@ -21,8 +21,8 @@ import de.dreier.mytargets.shared.models.Dimension
 
 class DimensionConverter : TypeConverter<String, Dimension>() {
 
-    override fun getDBValue(model: Dimension?): String? {
-        return if (model != null) "${model.value} ${model.unit}" else null
+    override fun getDBValue(model: Dimension): String {
+        return "${model.value} ${model.unit}"
     }
 
     override fun getModelValue(data: String): Dimension {

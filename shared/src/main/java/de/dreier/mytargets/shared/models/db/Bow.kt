@@ -109,7 +109,6 @@ data class Bow(
         var description: String? = "",
 
         @Column(typeConverter = ThumbnailConverter::class)
-        @JvmField //DBFlow bug
         var thumbnail: Thumbnail? = null
 ) : BaseModel(), IImageProvider, IIdSettable, Comparable<Bow>, IRecursiveModel, Parcelable {
 
@@ -154,11 +153,12 @@ data class Bow(
         return loadSightMarks().firstOrNull { s -> s.distance == distance }
     }
 
-    override fun save() {
+    override fun save(): Boolean {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.save(it) })
+        return true
     }
 
-    override fun save(databaseWrapper: DatabaseWrapper) {
+    override fun save(databaseWrapper: DatabaseWrapper): Boolean {
         super.save(databaseWrapper)
         if (images != null) {
             SQLite.delete(BowImage::class.java)
@@ -180,16 +180,19 @@ data class Bow(
                 sightMark.save(databaseWrapper)
             }
         }
+        return true
     }
 
-    override fun delete() {
+    override fun delete(): Boolean {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.delete(it) })
+        return true
     }
 
-    override fun delete(databaseWrapper: DatabaseWrapper) {
+    override fun delete(databaseWrapper: DatabaseWrapper): Boolean {
         loadSightMarks().forEach { it.delete(databaseWrapper) }
         loadImages().forEach { it.delete(databaseWrapper) }
         super.delete(databaseWrapper)
+        return true
     }
 
     override fun compareTo(other: Bow) = compareBy(Bow::name, Bow::id).compare(this, other)

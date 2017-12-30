@@ -35,7 +35,7 @@ data class RoundTemplate(
         @PrimaryKey(autoincrement = true)
         override var id: Long = 0,
 
-        @ForeignKey(tableClass = StandardRound::class, references = [(ForeignKeyReference(columnName = "standardRound", columnType = Long::class, foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
+        @ForeignKey(tableClass = StandardRound::class, references = [(ForeignKeyReference(columnName = "standardRound", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
         var standardRound: Long? = null,
 
         @Column
@@ -57,7 +57,7 @@ data class RoundTemplate(
         var targetScoringStyle: Int = 0,
 
         @Column(typeConverter = DimensionConverter::class)
-        var targetDiameter: Dimension? = null
+        var targetDiameter: Dimension = Dimension.UNKNOWN
 ) : BaseModel(), IIdSettable, Parcelable {
 
     var targetTemplate: Target

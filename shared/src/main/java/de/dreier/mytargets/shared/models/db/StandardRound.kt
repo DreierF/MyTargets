@@ -100,11 +100,12 @@ data class StandardRound(
 
     override fun compareTo(other: StandardRound) = compareBy(StandardRound::name, StandardRound::id).compare(this, other)
 
-    override fun save() {
+    override fun save(): Boolean {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.save(it) })
+        return true
     }
 
-    override fun save(databaseWrapper: DatabaseWrapper) {
+    override fun save(databaseWrapper: DatabaseWrapper): Boolean {
         super.save(databaseWrapper)
         if (rounds != null) {
             SQLite.delete(RoundTemplate::class.java)
@@ -116,17 +117,20 @@ data class StandardRound(
                 s.save(databaseWrapper)
             }
         }
+        return true
     }
 
-    override fun delete() {
+    override fun delete(): Boolean {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.delete(it) })
+        return true
     }
 
-    override fun delete(databaseWrapper: DatabaseWrapper) {
+    override fun delete(databaseWrapper: DatabaseWrapper): Boolean {
         for (roundTemplate in loadRounds()) {
             roundTemplate.delete(databaseWrapper)
         }
         super.delete(databaseWrapper)
+        return true
     }
 
     companion object {

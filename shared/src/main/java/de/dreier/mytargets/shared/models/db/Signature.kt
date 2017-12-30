@@ -39,7 +39,6 @@ data class Signature(
 
         /** A bitmap of the signature or null if no signature has been set. */
         @Column(typeConverter = BitmapConverter::class)
-        @JvmField //Bug dbFlow
         var bitmap: Bitmap? = null
 ) : BaseModel(), Parcelable {
 

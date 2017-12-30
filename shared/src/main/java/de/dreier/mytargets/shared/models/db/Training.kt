@@ -46,13 +46,13 @@ data class Training(
         @Column(typeConverter = LocalDateConverter::class)
         var date: LocalDate? = null,
 
-        @ForeignKey(tableClass = StandardRound::class, references = [(ForeignKeyReference(columnName = "standardRound", columnType = Long::class, foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
+        @ForeignKey(tableClass = StandardRound::class, references = [(ForeignKeyReference(columnName = "standardRound", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
         var standardRoundId: Long? = null,
 
-        @ForeignKey(tableClass = Bow::class, references = [(ForeignKeyReference(columnName = "bow", columnType = Long::class, foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
+        @ForeignKey(tableClass = Bow::class, references = [(ForeignKeyReference(columnName = "bow", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
         var bowId: Long? = null,
 
-        @ForeignKey(tableClass = Arrow::class, references = [(ForeignKeyReference(columnName = "arrow", columnType = Long::class, foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
+        @ForeignKey(tableClass = Arrow::class, references = [(ForeignKeyReference(columnName = "arrow", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
         var arrowId: Long? = null,
 
         @Column(getterName = "getArrowNumbering", setterName = "setArrowNumbering")
@@ -76,10 +76,10 @@ data class Training(
         @Column
         var comment: String = "",
 
-        @ForeignKey(tableClass = Signature::class, references = [(ForeignKeyReference(columnName = "archerSignature", columnType = Long::class, foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
+        @ForeignKey(tableClass = Signature::class, references = [(ForeignKeyReference(columnName = "archerSignature", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
         var archerSignatureId: Long? = null,
 
-        @ForeignKey(tableClass = Signature::class, references = [(ForeignKeyReference(columnName = "witnessSignature", columnType = Long::class, foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
+        @ForeignKey(tableClass = Signature::class, references = [(ForeignKeyReference(columnName = "witnessSignature", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
         var witnessSignatureId: Long? = null
 ) : BaseModel(), IIdSettable, Comparable<Training>, IRecursiveModel, Parcelable {
 
@@ -176,26 +176,30 @@ data class Training(
         } else date!!.compareTo(other.date!!)
     }
 
-    override fun save() {
+    override fun save(): Boolean {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.save(it) })
+        return true
     }
 
-    override fun save(databaseWrapper: DatabaseWrapper) {
+    override fun save(databaseWrapper: DatabaseWrapper): Boolean {
         super.save(databaseWrapper)
         // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
         loadRounds().forEach { s ->
             s.trainingId = id
             s.save(databaseWrapper)
         }
+        return true
     }
 
-    override fun delete() {
+    override fun delete(): Boolean {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.delete(it) })
+        return true
     }
 
-    override fun delete(databaseWrapper: DatabaseWrapper) {
+    override fun delete(databaseWrapper: DatabaseWrapper): Boolean{
         loadRounds().forEach { round -> round.delete(databaseWrapper) }
         super.delete(databaseWrapper)
+        return true
     }
 
     @Deprecated(message = "Use AugmentedTraining instead")
