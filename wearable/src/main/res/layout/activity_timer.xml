@@ -32,12 +32,13 @@
             android:layout_height="match_parent"/>
 
         <android.support.wear.widget.drawer.WearableDrawerView
+            android:id="@+id/wearableDrawerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="bottom"
             android:background="@color/md_wear_green_lighter_ui_element"
-            app:drawer_content="@+id/drawer_content"
-            app:peek_view="@+id/peek_view">
+            app:drawerContent="@+id/drawer_content"
+            app:peekView="@+id/peek_view">
 
             <FrameLayout
                 android:id="@id/drawer_content"
@@ -52,24 +53,24 @@
                     app:actionMenu="@menu/timer_action_drawer_menu"
                     app:showOverflowInPeek="true"/>
 
-                <LinearLayout
-                    android:id="@id/peek_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:orientation="horizontal"
-                    android:paddingBottom="8dp"
-                    android:paddingTop="8dp">
-
-                    <ImageView
-                        android:id="@+id/primaryActionPeek"
-                        android:layout_width="@dimen/peek_drawer_icon_size"
-                        android:layout_height="@dimen/peek_drawer_icon_size"
-                        android:src="@drawable/ic_more_vert_white_24dp"/>
-
-                </LinearLayout>
-
             </FrameLayout>
+
+            <LinearLayout
+                android:id="@id/peek_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp">
+
+                <ImageView
+                    android:id="@+id/primaryActionPeek"
+                    android:layout_width="@dimen/peek_drawer_icon_size"
+                    android:layout_height="@dimen/peek_drawer_icon_size"
+                    android:src="@drawable/ic_more_vert_white_24dp"/>
+
+            </LinearLayout>
 
         </android.support.wear.widget.drawer.WearableDrawerView>
 
