@@ -52,7 +52,7 @@ open class TargetImpactDrawable(target: Target) : TargetDrawable(target) {
     }
 
     fun setArrowDiameter(arrowDiameter: Dimension, scale: Float) {
-        val (value) = model.getRealSize(target.diameter!!).convertTo(arrowDiameter.unit!!)
+        val (value) = model.getRealSize(target.diameter).convertTo(arrowDiameter.unit!!)
         arrowRadius = arrowDiameter.value * scale / value
     }
 

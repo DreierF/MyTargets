@@ -219,9 +219,9 @@ class Migration9 : BaseMigration() {
             values.put("passes", item.endCount)
             values.put("arrows", item.shotsPerEnd)
             values.put("target", item.targetTemplate.id.toInt())
-            values.put("size", item.targetTemplate.diameter!!.value)
+            values.put("size", item.targetTemplate.diameter.value)
             values.put("target_unit", Dimension.Unit
-                    .toStringHandleNull(item.targetTemplate.diameter!!.unit))
+                    .toStringHandleNull(item.targetTemplate.diameter.unit))
             values.put("scoring_style", item.targetTemplate.scoringStyleIndex)
             if (item.id == 0L) {
                 item.id = database
