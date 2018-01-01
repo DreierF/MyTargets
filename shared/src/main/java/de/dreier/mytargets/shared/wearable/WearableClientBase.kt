@@ -50,7 +50,6 @@ open class WearableClientBase(protected val context: Context) {
     protected fun sendMessage(path: String, data: ByteArray) {
         nodeClient.connectedNodes
                 .addOnSuccessListener { nodes ->
-                    Timber.w("nodes: $nodes")
                     for (node in nodes) {
                         sendToNode(node, path, data)
                     }
