@@ -80,12 +80,9 @@ class CsvExporter(private val context: Context) {
         csv.add(if (t.bow == null) "" else t.bow!!.name)
         // Arrow
         csv.add(if (t.arrow == null) "" else t.arrow!!.name)
-        for (r in t.loadRounds()) {
-            if (!roundIds.contains(r.id)) {
-                continue
-            }
-            addRound(csv, r)
-        }
+        t.loadRounds()
+                .filter { roundIds.contains(it.id) }
+                .forEach { addRound(csv, it) }
         csv.exitScope()
     }
 
@@ -98,8 +95,7 @@ class CsvExporter(private val context: Context) {
         csv.add(r.distance.toString())
         // Target
         val target = r.target
-        csv.add(target.model.toString() + " (" + target.diameter!!
-                .toString() + ")")
+        csv.add("${target.model} (${target.diameter})")
         for (e in r.loadEnds()) {
             csv.enterScope()
             // End

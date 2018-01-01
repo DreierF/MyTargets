@@ -74,7 +74,7 @@ object TargetFactory {
     fun getList(target: Target): List<TargetModelBase> {
         val out = ArrayList<TargetModelBase>()
         if (target.id < 7L) {
-            val til = if (target.diameter!!.value <= 60) 7L else 4L
+            val til = if (target.diameter.value <= 60) 7L else 4L
             for (i in 0 until til) {
                 out.add(list[i.toInt()])
             }

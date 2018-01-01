@@ -139,8 +139,8 @@ object SettingsManager {
         set(value) = lastUsed.edit()
                 .putInt(KEY_TARGET, value.id.toInt())
                 .putInt(KEY_SCORING_STYLE, value.scoringStyleIndex)
-                .putInt(KEY_TARGET_DIAMETER_VALUE, value.diameter!!.value.toInt())
-                .putString(KEY_TARGET_DIAMETER_UNIT, value.diameter!!.unit?.toString())
+                .putInt(KEY_TARGET_DIAMETER_VALUE, value.diameter.value.toInt())
+                .putString(KEY_TARGET_DIAMETER_UNIT, value.diameter.unit?.toString())
                 .apply()
 
     var timerEnabled: Boolean

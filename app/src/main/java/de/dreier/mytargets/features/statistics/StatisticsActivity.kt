@@ -186,7 +186,7 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
         filteredRounds = rounds!!
                 .filter { (training, round) ->
                     distanceTags!!.contains(round.distance.toString())
-                            && diameterTags!!.contains(round.target.diameter!!.toString())
+                            && diameterTags!!.contains(round.target.diameter.toString())
                             && arrowTags!!.contains(training.arrowId)
                             && bowTags!!.contains(training.bowId)
                 }
@@ -238,7 +238,7 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
 
     private fun getDiameterTags(): List<Tag> {
         return rounds!!
-                .map { it.second.target.diameter!! }
+                .map { it.second.target.diameter }
                 .distinct()
                 .sorted()
                 .map { Tag(it.id, it.toString()) }
@@ -313,6 +313,6 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
     }
 
     companion object {
-        val ROUND_IDS = "round_ids"
+        const val ROUND_IDS = "round_ids"
     }
 }
