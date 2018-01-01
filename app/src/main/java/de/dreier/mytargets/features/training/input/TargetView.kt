@@ -43,7 +43,6 @@ import de.dreier.mytargets.shared.utils.MatrixEvaluator
 import de.dreier.mytargets.shared.views.TargetViewBase
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod.KEYBOARD
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod.PLOTTING
-import java.util.*
 
 class TargetView : TargetViewBase {
     private var spotMatrices: Array<Matrix>? = null
@@ -114,13 +113,11 @@ class TargetView : TargetViewBase {
 
     private val spotEndMatrix: Matrix
         get() {
-            val endMatrix: Matrix
-            if (currentShotIndex == EndRenderer.NO_SELECTION || inputMethod === KEYBOARD) {
-                endMatrix = Matrix()
+            return if (currentShotIndex == EndRenderer.NO_SELECTION || inputMethod === KEYBOARD) {
+                Matrix()
             } else {
-                endMatrix = spotMatrices!![currentShotIndex % target.model.faceCount]
+                spotMatrices!![currentShotIndex % target.model.faceCount]
             }
-            return endMatrix
         }
 
     val inputMode: TargetViewBase.EInputMethod
@@ -157,10 +154,10 @@ class TargetView : TargetViewBase {
     }
 
     override fun replaceWithEnd(end: End) {
-        if (!end.isEmpty) {
-            inputMethod = if (end.exact) PLOTTING else KEYBOARD
+        inputMethod = if (!end.isEmpty) {
+            if (end.exact) PLOTTING else KEYBOARD
         } else {
-            inputMethod = SettingsManager.inputMethod
+            SettingsManager.inputMethod
         }
         super.replaceWithEnd(end)
     }
@@ -224,17 +221,10 @@ class TargetView : TargetViewBase {
     }
 
     override fun notifyTargetShotsChanged() {
-        val displayedShots = ArrayList<Shot>()
-        for (shot in shots) {
-            if (shot.scoringRing != Shot.NOTHING_SELECTED && shot.index != currentShotIndex) {
-                displayedShots.add(shot)
-            }
-        }
+        val displayedShots = shots.filter { it.scoringRing != Shot.NOTHING_SELECTED && it.index != currentShotIndex }
         targetDrawable!!.replaceShotsWith(displayedShots)
         super.notifyTargetShotsChanged()
-        if (updateListener != null) {
-            updateListener!!.onEndUpdated(shots)
-        }
+        updateListener?.onEndUpdated(shots)
     }
 
     override fun getShotCoordinates(shot: Shot): PointF {
@@ -534,12 +524,12 @@ class TargetView : TargetViewBase {
             }
         }
 
-        private val TARGET_PADDING_DP = 10
-        private val KEYBOARD_OUTER_PADDING_DP = 20
-        private val KEYBOARD_WIDTH_DP = 40
-        private val KEYBOARD_TOTAL_WIDTH_DP = KEYBOARD_WIDTH_DP + KEYBOARD_OUTER_PADDING_DP
-        private val POINTER_OFFSET_Y_DP = -60
-        private val MIN_END_RECT_HEIGHT_DP = 80
-        private val KEYBOARD_INNER_PADDING_DP = 40
+        private const val TARGET_PADDING_DP = 10
+        private const val KEYBOARD_OUTER_PADDING_DP = 20
+        private const val KEYBOARD_WIDTH_DP = 40
+        private const val KEYBOARD_TOTAL_WIDTH_DP = KEYBOARD_WIDTH_DP + KEYBOARD_OUTER_PADDING_DP
+        private const val POINTER_OFFSET_Y_DP = -60
+        private const val MIN_END_RECT_HEIGHT_DP = 80
+        private const val KEYBOARD_INNER_PADDING_DP = 40
     }
 }

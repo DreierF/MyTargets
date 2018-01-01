@@ -33,7 +33,7 @@ import kotlinx.android.parcel.Parcelize
 class LoaderResult @JvmOverloads constructor(
         val training: AugmentedTraining,
         var standardRound: StandardRound? = null,
-        var arrowDiameter: Dimension? = Dimension(5f, Dimension.Unit.MILLIMETER),
+        var arrowDiameter: Dimension = Dimension(5f, Dimension.Unit.MILLIMETER),
         var sightMark: SightMark? = null,
         var roundIndex: Int = 0,
         var endIndex: Int = 0,
@@ -63,10 +63,10 @@ class LoaderResult @JvmOverloads constructor(
     }
 
     fun setRoundId(roundId: Long) {
-        val rounds = training.training.loadRounds()
+        val rounds = training.rounds
         roundIndex = 0
         for (i in rounds.indices) {
-            if (rounds[i].id == roundId) {
+            if (rounds[i].round.id == roundId) {
                 roundIndex = i
                 break
             }

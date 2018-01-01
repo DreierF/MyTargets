@@ -54,7 +54,7 @@ class ImageList(
         this.images.addAll(images)
     }
 
-    fun toEndImageList(): List<EndImage> {
-        return images.map { EndImage(it) }
+    fun toEndImageList(): MutableList<EndImage> {
+        return images.map { EndImage(it) }.toMutableList()
     }
 }
