@@ -48,7 +48,7 @@ class TimerActivity : WearableActivity(), MenuItem.OnMenuItemClickListener {
         fragmentManager.beginTransaction().replace(R.id.content_frame, timerFragment).commit()
 
         binding.primaryActionPeek
-                .setOnClickListener { binding.bottomActionDrawer.controller.openDrawer() }
+                .setOnClickListener { binding.wearableDrawerView.controller.openDrawer() }
         binding.bottomActionDrawer.setOnMenuItemClickListener(this)
         binding.bottomActionDrawer.menu.findItem(R.id.menu_vibrate)
                 .setIcon(if (settings.vibrate)
@@ -60,7 +60,7 @@ class TimerActivity : WearableActivity(), MenuItem.OnMenuItemClickListener {
                     R.drawable.ic_volume_up_white_24dp
                 else
                     R.drawable.ic_volume_off_white_24dp)
-        binding.bottomActionDrawer.controller.peekDrawer()
+        binding.wearableDrawerView.controller.peekDrawer()
     }
 
     override fun onMenuItemClick(menuItem: MenuItem): Boolean {
@@ -109,7 +109,7 @@ class TimerActivity : WearableActivity(), MenuItem.OnMenuItemClickListener {
 
         private lateinit var binding: FragmentTimerBinding
 
-        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle): View? {
+        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
             binding = DataBindingUtil.inflate(inflater, R.layout.fragment_timer, container, false)
             binding.startTimer.setOnClickListener(this)
             return binding.root
