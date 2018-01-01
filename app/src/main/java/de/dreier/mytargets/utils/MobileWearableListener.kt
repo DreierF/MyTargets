@@ -30,6 +30,7 @@ import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.utils.unmarshall
 import de.dreier.mytargets.shared.wearable.WearableClientBase
 import org.threeten.bp.LocalDate
+import timber.log.Timber
 import java.util.*
 
 /**
@@ -41,6 +42,7 @@ class MobileWearableListener : WearableListenerService() {
 
     override fun onMessageReceived(messageEvent: MessageEvent) {
         super.onMessageReceived(messageEvent)
+        Timber.d("onMessageReceived: ${messageEvent.path}")
         when (messageEvent.path) {
             WearableClientBase.TRAINING_CREATE -> createTraining(messageEvent)
             WearableClientBase.END_UPDATE -> endUpdated(messageEvent)

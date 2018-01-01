@@ -23,7 +23,6 @@ import android.support.v4.content.LocalBroadcastManager
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.TrainingInfo
 import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
-import de.dreier.mytargets.shared.models.augmented.AugmentedRound
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
@@ -76,15 +75,12 @@ class MobileWearableClient(context: Context) : WearableClientBase(context) {
         if (roundCount < 1) {
             return
         }
-        var round = AugmentedRound(rounds[roundCount - 1].toRound())
-        for (r in rounds) {
-            if (r.round.maxEndCount != null && r.ends.size < r.round.maxEndCount!!) {
-                round = r
-                break
-            }
-        }
+        val round = rounds
+                .firstOrNull { it.round.maxEndCount != null && it.ends.size < it.round.maxEndCount!! }
+                ?: rounds.last()
+
         val target = round.round.target
-        round.ends = round.ends
+        val roundCopy = round.copy(ends = round.ends.toMutableList()
                 .filter { (_, shots) ->
                     shots.all { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }
                 }
@@ -92,11 +88,11 @@ class MobileWearableClient(context: Context) : WearableClientBase(context) {
                     if (!SettingsManager.shouldSortTarget(target)) {
                         end
                     } else {
-                        AugmentedEnd(end.end, end.shots.sorted().toMutableList(), end.images)
+                        AugmentedEnd(end.end, end.shots.toMutableList().sorted().toMutableList(), end.images)
                     }
                 }
-                .toMutableList()
-        val trainingInfo = TrainingInfo(training, round)
+                .toMutableList())
+        val trainingInfo = TrainingInfo(training, roundCopy)
         sendTrainingInfo(trainingInfo)
         sendTimerSettings(SettingsManager.timerSettings)
     }

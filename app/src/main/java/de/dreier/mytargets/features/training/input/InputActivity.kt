@@ -129,7 +129,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             val imageList = GalleryActivity.getResult(data)
-            this.data!!.currentEnd.images = imageList.toEndImageList().toMutableList()
+            this.data!!.currentEnd.images = imageList.toEndImageList()
             for (image in imageList.removedImages) {
                 File(filesDir, image).delete()
             }
@@ -227,12 +227,8 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
                 item.isChecked = timerEnabled
                 invalidateOptionsMenu()
             }
-            R.id.action_settings -> {
-                navigationController.navigateToSettings(ESettingsScreens.INPUT)
-            }
-            R.id.action_new_round -> {
-                navigationController.navigateToCreateRound(data!!.training.training)
-            }
+            R.id.action_settings -> navigationController.navigateToSettings(ESettingsScreens.INPUT)
+            R.id.action_new_round -> navigationController.navigateToCreateRound(data!!.training.training)
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -258,7 +254,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
         }
         targetView = binding.targetViewStub.binding.root as TargetView
         targetView!!.initWithTarget(data!!.currentRound.round.target)
-        targetView!!.setArrow(data!!.arrowDiameter!!, data!!.training.training.arrowNumbering, data!!
+        targetView!!.setArrow(data!!.arrowDiameter, data!!.training.training.arrowNumbering, data!!
                 .maxArrowNumber)
         targetView!!.setOnTargetSetListener(this@InputActivity)
         targetView!!.setUpdateListener(this@InputActivity)

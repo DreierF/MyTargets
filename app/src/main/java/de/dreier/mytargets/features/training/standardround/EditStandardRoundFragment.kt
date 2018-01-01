@@ -212,7 +212,7 @@ class EditStandardRoundFragment : EditFragmentBase() {
         }
     }
 
-    private inner class RoundTemplateAdapter internal constructor(fragment: Fragment, list: List<RoundTemplate>) : DynamicItemAdapter<RoundTemplate>(fragment, list.toMutableList(), R.string.round_removed) {
+    private inner class RoundTemplateAdapter internal constructor(fragment: Fragment, list: MutableList<RoundTemplate>) : DynamicItemAdapter<RoundTemplate>(fragment, list, R.string.round_removed) {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DynamicItemHolder<RoundTemplate> {
             val v = inflater.inflate(R.layout.item_round_template, parent, false)
