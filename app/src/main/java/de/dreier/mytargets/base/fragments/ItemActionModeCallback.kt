@@ -140,4 +140,8 @@ class ItemActionModeCallback(private val fragment: ListFragmentBase<*, *>,
     fun setStatisticsCallback(statisticsCallback: StatisticsCallback?) {
         this.statisticsCallback = statisticsCallback
     }
+
+    fun finish() {
+        actionMode?.finish()
+    }
 }
