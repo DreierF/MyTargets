@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.shared.base.fragment
 
+import android.app.Activity
 import android.app.Fragment
 import android.content.Context
 import android.media.MediaPlayer
@@ -39,6 +40,12 @@ abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         horn = MediaPlayer.create(context, R.raw.horn)
+    }
+
+    @Suppress("OverridingDeprecatedMember", "DEPRECATION")
+    override fun onAttach(activity: Activity?) {
+        super.onAttach(activity)
+        horn = MediaPlayer.create(activity, R.raw.horn)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
