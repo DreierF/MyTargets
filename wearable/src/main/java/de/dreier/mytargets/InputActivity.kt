@@ -28,6 +28,7 @@ import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
 import de.dreier.mytargets.shared.models.augmented.AugmentedRound
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Shot
+import de.dreier.mytargets.shared.utils.VibratorCompat
 import de.dreier.mytargets.shared.views.TargetViewBase
 import java.text.DateFormat
 import java.util.*
@@ -97,7 +98,7 @@ class InputActivity : WearableActivity(), TargetViewBase.OnEndFinishedListener {
             this@InputActivity.startActivity(intent)
             val v = this@InputActivity
                     .getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            v.vibrate(200)
+            VibratorCompat.vibrate(v, 200)
             this@InputActivity.finish()
             val end = End(round.round.shotsPerEnd, 0)
             end.roundId = round.round.id

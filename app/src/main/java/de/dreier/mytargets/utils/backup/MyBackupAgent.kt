@@ -33,11 +33,11 @@ class MyBackupAgent : BackupAgentHelper() {
 
     companion object {
         // The name of the SharedPreferences file
-        val PREFS = "user_preferences"
+        const val PREFS = "user_preferences"
 
         // A key to uniquely identify the set of backup data
-        private val PREFS_BACKUP_KEY = "prefs"
-        private val SQLITE_BACKUP_KEY = "sqlite"
-        private val IMAGES_BACKUP_KEY = "images"
+        private const val PREFS_BACKUP_KEY = "prefs"
+        private const val SQLITE_BACKUP_KEY = "sqlite"
+        private const val IMAGES_BACKUP_KEY = "images"
     }
 }

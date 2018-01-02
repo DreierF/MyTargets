@@ -28,7 +28,7 @@ import kotlinx.android.parcel.Parcelize
 data class BowImage(
         @Column(name = "_id")
         @PrimaryKey(autoincrement = true)
-        var id: Long? = 0,
+        var id: Long = 0,
 
         @Column
         override var fileName: String = "",

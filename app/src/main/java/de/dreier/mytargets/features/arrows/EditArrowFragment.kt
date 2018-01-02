@@ -122,6 +122,6 @@ class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrow
     }
 
     companion object {
-        val ARROW_ID = "arrow_id"
+        const val ARROW_ID = "arrow_id"
     }
 }

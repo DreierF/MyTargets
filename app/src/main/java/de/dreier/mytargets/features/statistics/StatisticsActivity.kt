@@ -102,13 +102,13 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
         rounds = data
         binding.progressBar.hide()
         binding.distanceTags.tags = getDistanceTags()
-        binding.distanceTags.setOnTagClickListener({ applyFilter() })
+        binding.distanceTags.setOnTagClickListener { applyFilter() }
         binding.diameterTags.tags = getDiameterTags()
-        binding.diameterTags.setOnTagClickListener({ applyFilter() })
+        binding.diameterTags.setOnTagClickListener { applyFilter() }
         binding.arrowTags.tags = getArrowTags()
-        binding.arrowTags.setOnTagClickListener({ applyFilter() })
+        binding.arrowTags.setOnTagClickListener { applyFilter() }
         binding.bowTags.tags = getBowTags()
-        binding.bowTags.setOnTagClickListener({ applyFilter() })
+        binding.bowTags.setOnTagClickListener { applyFilter() }
 
         if (distanceTags != null && diameterTags != null && arrowTags != null && bowTags != null) {
             restoreCheckedStates()
@@ -123,10 +123,10 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
         binding.diameterTags.tags.forEach { it.isChecked = diameterTags!!.contains(it.text) }
         binding.arrowTags.tags.forEach { it.isChecked = arrowTags!!.contains(it.id) }
         binding.bowTags.tags.forEach { it.isChecked = bowTags!!.contains(it.id) }
-        binding.distanceTags.tags = binding.distanceTags.tags
-        binding.diameterTags.tags = binding.diameterTags.tags
-        binding.arrowTags.tags = binding.arrowTags.tags
-        binding.bowTags.tags = binding.bowTags.tags
+        binding.distanceTags.notifyTagsListChanged()
+        binding.diameterTags.notifyTagsListChanged()
+        binding.arrowTags.notifyTagsListChanged()
+        binding.bowTags.notifyTagsListChanged()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -179,10 +179,10 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
     }
 
     private fun applyFilter() {
-        distanceTags = binding.distanceTags.checkedTags.map { t -> t.text }.toHashSet()
-        diameterTags = binding.diameterTags.checkedTags.map { t -> t.text }.toHashSet()
-        arrowTags = binding.arrowTags.checkedTags.map { t -> t.id }.toHashSet()
-        bowTags = binding.bowTags.checkedTags.map { t -> t.id }.toHashSet()
+        distanceTags = binding.distanceTags.checkedTags.map { it.text }.toHashSet()
+        diameterTags = binding.diameterTags.checkedTags.map { it.text }.toHashSet()
+        arrowTags = binding.arrowTags.checkedTags.map { it.id }.toHashSet()
+        bowTags = binding.bowTags.checkedTags.map { it.id }.toHashSet()
         filteredRounds = rounds!!
                 .filter { (training, round) ->
                     distanceTags!!.contains(round.distance.toString())
@@ -190,7 +190,7 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
                             && arrowTags!!.contains(training.arrowId)
                             && bowTags!!.contains(training.bowId)
                 }
-                .map { p -> p.second }
+                .map { it.second }
                 .groupBy { value -> Pair(value.target.id, value.target.getScoringStyle()) }
                 .map { value1 -> Pair(value1.value[0].target, value1.value) }
                 .sortedByDescending { it.second.size }
