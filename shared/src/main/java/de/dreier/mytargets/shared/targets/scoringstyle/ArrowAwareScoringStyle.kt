@@ -15,6 +15,13 @@
 
 package de.dreier.mytargets.shared.targets.scoringstyle
 
+/**
+ * Scoring style used for 3D targets, where the score is dependant on the arrow's index.
+ * @param points Describes the scoring schema.
+ * E.g. arrayOf(intArrayOf(20, 18), intArrayOf(16, 14), intArrayOf(12, 10))
+ * The first arrow scores 20 points in the inner zone and 18 in the outer zone.
+ * The second arrow 16 and 14 respectively.
+ */
 class ArrowAwareScoringStyle(showAsX: Boolean, points: Array<IntArray>) : ScoringStyle(showAsX, points) {
 
     override fun getPoints(zone: Int, arrow: Int): Int {

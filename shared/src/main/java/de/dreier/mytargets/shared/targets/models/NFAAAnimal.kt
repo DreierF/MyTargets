@@ -37,7 +37,8 @@ class NFAAAnimal : TargetOvalBase(
         ),
         scoringStyles = arrayOf(
                 ArrowAwareScoringStyle(false, arrayOf(intArrayOf(21, 20, 18), intArrayOf(17, 16, 14), intArrayOf(13, 12, 10))),
-                ScoringStyle(false, 20, 16, 10)
+                ScoringStyle(false, 20, 16, 10),
+                ArrowAwareScoringStyle(false, arrayOf(intArrayOf(15, 10, 5), intArrayOf(12, 7, 2)))
         ),
         type = ETargetType.THREE_D
 ) {
