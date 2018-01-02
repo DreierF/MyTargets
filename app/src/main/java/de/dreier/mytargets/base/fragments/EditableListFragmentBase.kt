@@ -93,7 +93,12 @@ abstract class EditableListFragmentBase<T, U : ListAdapterBase<*, T>> : ListFrag
     }
 
     override fun onLongClick(holder: SelectableViewHolder<T>) {
-        actionModeCallback!!.longClick(holder)
+        actionModeCallback?.longClick(holder)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        actionModeCallback?.finish()
     }
 
     protected abstract fun onSelected(item: T)

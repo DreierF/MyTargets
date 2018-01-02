@@ -21,6 +21,7 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.features.scoreboard.ScoreboardBuilder
 import de.dreier.mytargets.features.scoreboard.ScoreboardConfiguration
 import de.dreier.mytargets.features.scoreboard.builder.model.Table
+import de.dreier.mytargets.features.scoreboard.builder.model.TextCell
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.SelectableZone
 import de.dreier.mytargets.shared.models.Target
@@ -110,7 +111,7 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
             info.addLine(R.string.standard_round, standardRound!!.name)
         }
         if (!training.comment.isEmpty() && configuration.showComments) {
-            info.addLine(R.string.comment, training.comment)
+            info.addWrappedLine(R.string.comment, training.comment)
         }
     }
 
@@ -165,7 +166,7 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
             info.addLine(R.string.target_face, round.target.name)
         }
         if (!round.comment.isEmpty() && configuration.showComments) {
-            info.addLine(R.string.comment, round.comment)
+            info.addWrappedLine(R.string.comment, round.comment)
         }
         return info.info
     }
@@ -285,7 +286,7 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
                     comments.startRow()
                             .addCell(round.index + 1)
                             .addCell(index + 1)
-                            .addCell(comment!!)
+                            .addCell(TextCell(comment!!, wrapText = true))
                     commentsCount++
                 }
             }
