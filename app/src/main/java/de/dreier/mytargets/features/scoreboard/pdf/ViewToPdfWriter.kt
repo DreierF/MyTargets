@@ -141,11 +141,11 @@ class ViewToPdfWriter(private val content: LinearLayout) {
         /**
          * Left and Right page margin in inches
          */
-        private val MARGIN_HORIZONTAL = 0.78f
+        private const val MARGIN_HORIZONTAL = 0.78f
 
         /**
          * Top and Bottom page margin in inches
          */
-        private val MARGIN_VERTICAL = 0.78f
+        private const val MARGIN_VERTICAL = 0.78f
     }
 }

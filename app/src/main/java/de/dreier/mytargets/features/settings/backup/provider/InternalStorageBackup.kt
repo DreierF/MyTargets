@@ -29,7 +29,7 @@ import java.io.IOException
 import java.util.*
 
 object InternalStorageBackup {
-    private val FOLDER_NAME = "MyTargets"
+    private const val FOLDER_NAME = "MyTargets"
 
     @Throws(IOException::class)
     private fun createDirectory(directory: File) {

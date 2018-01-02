@@ -51,7 +51,7 @@ class Thumbnail(internal var data: ByteArray) : Parcelable {
         /**
          * Constant used to indicate the dimension of micro thumbnail.
          */
-        private val TARGET_SIZE_MICRO_THUMBNAIL = 96
+        private const val TARGET_SIZE_MICRO_THUMBNAIL = 96
 
         fun from(bitmap: Bitmap): Thumbnail {
             val thumbnail = ThumbnailUtils.extractThumbnail(bitmap,

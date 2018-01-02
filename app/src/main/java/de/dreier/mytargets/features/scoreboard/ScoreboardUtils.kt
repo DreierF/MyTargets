@@ -38,8 +38,8 @@ import java.util.*
 
 object ScoreboardUtils {
 
-    private val PAGE_WIDTH = 600
-    private val MARGIN = 50
+    private const val PAGE_WIDTH = 600
+    private const val MARGIN = 50
 
     fun getScoreboardView(context: Context, locale: Locale, training: Training, roundId: Long, configuration: ScoreboardConfiguration): LinearLayout {
         val rounds: List<Round>? = if (roundId == -1L) {

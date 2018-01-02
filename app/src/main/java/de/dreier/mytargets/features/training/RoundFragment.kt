@@ -178,7 +178,7 @@ class RoundFragment : EditableListFragment<End>() {
         override fun bindItem(item: End) {
             val shots = item.loadShots()
             if (SettingsManager.shouldSortTarget(round!!.target)) {
-                Collections.sort(shots)
+                shots.sort()
             }
             binding.shoots.setShots(round!!.target, shots)
             binding.imageIndicator.visibility = if (item.loadImages().isEmpty()) View.INVISIBLE else View.VISIBLE
@@ -187,6 +187,6 @@ class RoundFragment : EditableListFragment<End>() {
     }
 
     companion object {
-        val ROUND_ID = "round_id"
+        const val ROUND_ID = "round_id"
     }
 }

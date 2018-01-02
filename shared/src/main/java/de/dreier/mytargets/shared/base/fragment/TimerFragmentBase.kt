@@ -26,6 +26,7 @@ import android.view.WindowManager
 import de.dreier.mytargets.shared.R
 import de.dreier.mytargets.shared.base.fragment.ETimerState.*
 import de.dreier.mytargets.shared.models.TimerSettings
+import de.dreier.mytargets.shared.utils.VibratorCompat
 
 abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
 
@@ -142,7 +143,7 @@ abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
                     pattern[i * 2 + 1] = 400
                     pattern[i * 2 + 2] = 750
                 }
-                v.vibrate(pattern, -1)
+                VibratorCompat.vibrate(v, pattern, -1)
             }
         }
     }

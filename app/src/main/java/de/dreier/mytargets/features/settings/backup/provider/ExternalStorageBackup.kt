@@ -29,7 +29,7 @@ import java.io.IOException
 import java.util.*
 
 object ExternalStorageBackup {
-    private val FOLDER_NAME = "MyTargets"
+    private const  val FOLDER_NAME = "MyTargets"
 
     //If may get a full path that is not the right one, even if we don't have the SD Card there.
     //We just need the "/mnt/extSdCard/" i.e and check if it's writable

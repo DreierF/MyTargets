@@ -26,9 +26,9 @@ import de.dreier.mytargets.features.settings.SettingsManager
  * Static helper methods for working with the sync framework.
  */
 object SyncUtils {
-    private val ONE_DAY: Long = 86400  // 1 day (in seconds)
+    private const val ONE_DAY: Long = 86400  // 1 day (in seconds)
 
-    val CONTENT_AUTHORITY = BuildConfig.APPLICATION_ID + ".provider"
+    const val CONTENT_AUTHORITY = BuildConfig.APPLICATION_ID + ".provider"
 
     var isSyncAutomaticallyEnabled: Boolean
         get() {

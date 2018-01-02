@@ -26,15 +26,15 @@ import de.dreier.mytargets.shared.targets.models.*
 import java.util.*
 
 object StandardRoundFactory {
-    val IFAA = 8
-    val CUSTOM = 256
-    private val ASA = 1
-    private val AUSTRALIAN = 2
-    private val ARCHERY_GB = 4
-    private val NASP = 16
-    private val NFAA = 32
-    private val NFAS = 64
-    private val WA = 128
+    const val IFAA = 8
+    const val CUSTOM = 256
+    private const val ASA = 1
+    private const val AUSTRALIAN = 2
+    private const val ARCHERY_GB = 4
+    private const val NASP = 16
+    private const val NFAA = 32
+    private const val NFAS = 64
+    private const val WA = 128
     private var idCounter: Long = 0
     private var roundCounter: Long = 0
 

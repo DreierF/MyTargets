@@ -48,13 +48,9 @@ class ChipGroup @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     var tags: List<Tag>
         get() = ArrayList(tagList)
         set(tags) {
-            removeAllViews()
             tagList.clear()
             tagList.addAll(tags)
-            for (tag in tagList) {
-                appendTag(tag)
-            }
-            visibility = if (tags.size < 2) View.GONE else View.VISIBLE
+            notifyTagsListChanged()
         }
 
     /**
@@ -145,6 +141,13 @@ class ChipGroup @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
                 childLeft += width + horizontalSpacing
             }
+        }
+    }
+
+    fun notifyTagsListChanged() {
+        removeAllViews()
+        for (tag in tagList) {
+            appendTag(tag)
         }
     }
 

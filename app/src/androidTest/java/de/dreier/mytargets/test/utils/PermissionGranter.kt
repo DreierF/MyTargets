@@ -26,8 +26,8 @@ import android.support.v4.content.ContextCompat
 
 object PermissionGranter {
 
-    private val PERMISSIONS_DIALOG_DELAY = 1000
-    private val GRANT_BUTTON_INDEX = 1
+    private const val PERMISSIONS_DIALOG_DELAY = 1000
+    private const val GRANT_BUTTON_INDEX = 1
 
     fun allowPermissionsIfNeeded(activity: Activity, permissionNeeded: String) {
         try {
