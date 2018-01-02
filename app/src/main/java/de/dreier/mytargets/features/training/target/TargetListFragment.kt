@@ -91,7 +91,7 @@ class TargetListFragment : SelectItemFragmentBase<Target, ExpandableListAdapter<
             GROUP -> TargetFactory.getList(target!!)
         }
         val targets = list
-                .map { value -> Target(value.id.toInt().toLong(), 0) }
+                .map { value -> Target(value.id, 0) }
                 .toMutableList()
         adapter!!.setList(targets)
         selectItem(binding!!.recyclerView, target!!)
