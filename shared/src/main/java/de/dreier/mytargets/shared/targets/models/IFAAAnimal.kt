@@ -34,7 +34,8 @@ class IFAAAnimal : TargetOvalBase(
         ),
         scoringStyles = arrayOf(
                 ArrowAwareScoringStyle(false, arrayOf(intArrayOf(20, 18), intArrayOf(16, 14), intArrayOf(12, 10))),
-                ArrowAwareScoringStyle(false, arrayOf(intArrayOf(20, 15), intArrayOf(15, 10)))
+                ArrowAwareScoringStyle(false, arrayOf(intArrayOf(20, 15), intArrayOf(15, 10))),
+                ArrowAwareScoringStyle(false, arrayOf(intArrayOf(15, 12), intArrayOf(10, 7), intArrayOf(5, 2)))
         ),
         type = ETargetType.THREE_D
 ) {
