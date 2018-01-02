@@ -19,6 +19,7 @@ import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
+import android.databinding.ObservableBoolean
 import android.databinding.ObservableField
 import android.databinding.ObservableFloat
 import android.databinding.ObservableInt
@@ -52,6 +53,7 @@ class EditArrowViewModel(app: ApplicationInstance) : AndroidViewModel(app) {
     var diameterValue = ObservableFloat(5f)
     var diameterUnit = ObservableField<Dimension.Unit>(MILLIMETER)
 
+    var showAll = ObservableBoolean(false)
     var diameterErrorText = ObservableField<String>("")
 
     private val arrowDAO = ArrowDAO
@@ -95,7 +97,7 @@ class EditArrowViewModel(app: ApplicationInstance) : AndroidViewModel(app) {
             return false
         }
         val arrow = Arrow()
-        arrow.id = arrowId.value
+        arrow.id = arrowId.value ?: 0
         arrow.maxArrowNumber = maxArrowNumber.get()
         arrow.length = length.get()
         arrow.material = material.get()

@@ -25,8 +25,8 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.base.fragments.EditWithImageFragmentBase
 import de.dreier.mytargets.databinding.FragmentEditArrowBinding
 import de.dreier.mytargets.shared.models.db.ArrowImage
-import de.dreier.mytargets.utils.BundleUtils
 import de.dreier.mytargets.utils.ToolbarUtils
+import de.dreier.mytargets.utils.getLongOrNull
 
 class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrows) {
 
@@ -36,15 +36,17 @@ class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrow
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = super.onCreateView(inflater, container, savedInstanceState)
         contentBinding = FragmentEditArrowBinding.inflate(inflater, binding.content, true)
-        contentBinding.moreFields.setOnClickListener { contentBinding.showAll = true }
         return rootView
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(EditArrowViewModel::class.java)
-        viewModel.setArrowId(BundleUtils.getLongOrNull(arguments, ARROW_ID))
+        viewModel.setArrowId(arguments.getLongOrNull(ARROW_ID))
         contentBinding.arrow = viewModel
+        contentBinding.moreFields.setOnClickListener {
+            viewModel.showAll.set(true)
+        }
         viewModel.arrow.observe(this, Observer { arrow ->
             if (arrow == null) {
                 return@Observer

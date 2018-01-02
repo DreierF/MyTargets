@@ -24,10 +24,6 @@
             name="arrow"
             type="de.dreier.mytargets.features.arrows.EditArrowViewModel"/>
 
-        <variable
-            name="showAll"
-            type="boolean"/>
-
     </data>
 
     <LinearLayout
@@ -84,7 +80,7 @@
         <FrameLayout
             style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
-            app:propertyShowAll="@{showAll}"
+            app:propertyShowAll="@{arrow.showAll}"
             app:propertyValue="@{arrow.length}">
 
             <ImageView
@@ -109,7 +105,7 @@
         <FrameLayout
             style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
-            app:propertyShowAll="@{showAll}"
+            app:propertyShowAll="@{arrow.showAll}"
             app:propertyValue="@{arrow.material}">
 
             <ImageView
@@ -134,7 +130,7 @@
         <FrameLayout
             style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
-            app:propertyShowAll="@{showAll}"
+            app:propertyShowAll="@{arrow.showAll}"
             app:propertyValue="@{arrow.spine}">
 
             <ImageView
@@ -182,7 +178,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/diameter"
                         android:inputType="numberDecimal"
-                        android:text="@={``+arrow.diameter.value}"/>
+                        android:text="@={``+arrow.diameterValue}"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -204,7 +200,7 @@
         <FrameLayout
             style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
-            app:propertyShowAll="@{showAll}"
+            app:propertyShowAll="@{arrow.showAll}"
             app:propertyValue="@{arrow.weight}">
 
             <ImageView
@@ -229,7 +225,7 @@
         <FrameLayout
             style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
-            app:propertyShowAll="@{showAll}"
+            app:propertyShowAll="@{arrow.showAll}"
             app:propertyValue="@{arrow.tipWeight}">
 
             <ImageView
@@ -254,7 +250,7 @@
         <FrameLayout
             style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
-            app:propertyShowAll="@{showAll}"
+            app:propertyShowAll="@{arrow.showAll}"
             app:propertyValue="@{arrow.vanes}">
 
             <ImageView
@@ -279,7 +275,7 @@
         <FrameLayout
             style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
-            app:propertyShowAll="@{showAll}"
+            app:propertyShowAll="@{arrow.showAll}"
             app:propertyValue="@{arrow.nock}">
 
             <ImageView
@@ -304,7 +300,7 @@
         <FrameLayout
             style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
-            app:propertyShowAll="@{showAll}"
+            app:propertyShowAll="@{arrow.showAll}"
             app:propertyValue="@{arrow.comment}">
 
             <ImageView
@@ -330,7 +326,7 @@
             android:id="@+id/moreFields"
             style="@style/propertyAddButton"
             android:text="@string/more_fields"
-            android:visibility="@{showAll || arrow.areAllPropertiesSet ? View.GONE : View.VISIBLE}"/>
+            android:visibility="@{arrow.showAll || arrow.areAllPropertiesSet ? View.GONE : View.VISIBLE}"/>
 
     </LinearLayout>
 

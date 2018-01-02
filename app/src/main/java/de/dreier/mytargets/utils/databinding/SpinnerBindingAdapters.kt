@@ -30,6 +30,7 @@ import de.dreier.mytargets.shared.models.Dimension.Unit.MILLIMETER
 @Suppress("unused")
 object SpinnerBindingAdapters {
 
+    @JvmStatic
     @BindingAdapter(value = ["selectedUnit", "selectedValueAttrChanged"], requireAll = false)
     fun bindSpinnerData(pAppCompatSpinner: AppCompatSpinner, newSelectedValue: Dimension.Unit?, newTextAttrChanged: InverseBindingListener) {
         pAppCompatSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -45,6 +46,7 @@ object SpinnerBindingAdapters {
         }
     }
 
+    @JvmStatic
     @InverseBindingAdapter(attribute = "selectedUnit", event = "selectedValueAttrChanged")
     fun captureSelectedValue(pAppCompatSpinner: AppCompatSpinner): Dimension.Unit {
         return if (pAppCompatSpinner.selectedItemPosition == 0) MILLIMETER else INCH

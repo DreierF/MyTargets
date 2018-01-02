@@ -37,7 +37,8 @@ object DataBindingAdapters {
         view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    @BindingAdapter("app:errorText")
+    @JvmStatic
+    @BindingAdapter("errorText")
     fun setErrorMessage(view: TextInputLayout, errorMessage: String) {
         view.error = errorMessage
     }

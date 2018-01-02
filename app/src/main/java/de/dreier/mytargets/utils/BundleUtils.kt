@@ -13,18 +13,14 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils;
+package de.dreier.mytargets.utils
 
-import android.os.Bundle;
+import android.os.Bundle
 
-import org.jetbrains.annotations.Nullable;
-
-public class BundleUtils {
-    public static Long getLongOrNull(@Nullable Bundle bundle, String key) {
-        if (bundle != null && bundle.containsKey(key)) {
-            return bundle.getLong(key);
-        } else {
-            return null;
-        }
+fun Bundle?.getLongOrNull(key: String): Long? {
+    return if (this != null && containsKey(key)) {
+        getLong(key)
+    } else {
+        null
     }
 }
