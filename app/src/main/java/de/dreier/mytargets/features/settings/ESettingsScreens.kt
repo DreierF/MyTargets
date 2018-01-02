@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.settings
 
 import de.dreier.mytargets.features.settings.backup.BackupSettingsFragment
+import java.util.*
 
 /**
  * All available settings screens. The identifiers implicitly match the keys used in the xml
@@ -53,7 +54,7 @@ enum class ESettingsScreens constructor(private val settingsFragment: Class<out 
 
     companion object {
         fun from(key: String): ESettingsScreens {
-            return valueOf(key.toUpperCase())
+            return valueOf(key.toUpperCase(Locale.US))
         }
     }
 }
