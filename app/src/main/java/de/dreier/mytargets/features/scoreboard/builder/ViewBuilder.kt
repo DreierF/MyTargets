@@ -118,6 +118,10 @@ class ViewBuilder(private val context: Context) : ScoreboardBuilder {
                 params.weight = 1f
                 params.span = cell.columnSpan
             }
+            if(cell is TextCell && cell.wrapText) {
+                params.width = WRAP_CONTENT
+                params.weight = 1f
+            }
             cellView.layoutParams = params
             tableRow.addView(cellView)
         }
@@ -131,8 +135,7 @@ class ViewBuilder(private val context: Context) : ScoreboardBuilder {
         imageView.minimumHeight = dp(20)
         imageView.setPadding(dp(4), dp(4), dp(4), dp(4))
         imageView.scaleType = ImageView.ScaleType.FIT_CENTER
-        imageView
-                .setImageDrawable(CircleDrawable(density, endCell.score, endCell
+        imageView.setImageDrawable(CircleDrawable(density, endCell.score, endCell
                         .arrowNumber, endCell.fillColor, endCell.textColor))
         return imageView
     }
@@ -146,6 +149,9 @@ class ViewBuilder(private val context: Context) : ScoreboardBuilder {
         textView.setTextColor(-0x1000000)
         textView.setPadding(dp(4), dp(4), dp(4), dp(4))
         textView.text = textCell.content
+        if(textCell.wrapText) {
+            textView.maxLines = 8
+        }
 
         if (textCell.bold) {
             textView.setTypeface(null, Typeface.BOLD)

@@ -30,12 +30,16 @@ class InfoTableBuilder {
         getKeyValueLine(info.startRow(), key, value)
     }
 
-    private fun getKeyValueLine(row: Table.Row, key: String, value: Any) {
-        row.addCell(key).addBoldCell(value.toString())
+    fun addWrappedLine(key: Int, value: Any) {
+        getKeyValueLine(info.startRow(), key, value, true)
     }
 
-    private fun getKeyValueLine(row: Table.Row, @StringRes key: Int, value: Any) {
-        getKeyValueLine(row, SharedApplicationInstance.getStr(key), value)
+    private fun getKeyValueLine(row: Table.Row, key: String, value: Any, wrap: Boolean = false) {
+        row.addCell(key).addBoldCell(value.toString(), wrap)
+    }
+
+    private fun getKeyValueLine(row: Table.Row, @StringRes key: Int, value: Any, wrap: Boolean = false) {
+        getKeyValueLine(row, SharedApplicationInstance.getStr(key), value, wrap)
     }
 
     override fun toString(): String {
