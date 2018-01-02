@@ -14,7 +14,9 @@
  */
 
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'jacoco-android'
 
 android {
@@ -26,33 +28,45 @@ android {
     compileSdkVersion compileSdkVersionCode
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 26
+        minSdkVersion 16
+        targetSdkVersion 27
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+        vectorDrawables.useSupportLibrary true
+    }
+
+    androidExtensions {
+        experimental = true
+    }
+
+    buildTypes {
+        debug {}
+        release {}
     }
 }
 
 dependencies {
-    api "com.android.support:support-v4:$libraryVersion.support"
-    api "com.android.support:support-core-ui:$libraryVersion.support"
-    api "com.android.support:support-core-utils:$libraryVersion.support"
-    api "com.android.support:support-annotations:$libraryVersion.support"
-    api "com.annimon:stream:$libraryVersion.annimonStream"
-    api "joda-time:joda-time:$libraryVersion.jodaTime"
+    Map<String, String> dependencies = rootProject.ext.dependencies
 
-    implementation "org.parceler:parceler-api:$libraryVersion.parceler"
+    api dependencies.supportV4
+    api dependencies.supportFragment
+    api dependencies.supportCoreUi
+    api dependencies.supportCoreUtils
+    api dependencies.supportMediaCompat
+    api dependencies.supportAnnotations
+    api dependencies.threeTenABP
 
-    annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$libraryVersion.dbFlow"
-    implementation "com.github.Raizlabs.DBFlow:dbflow-core:$libraryVersion.dbFlow"
-    implementation "com.github.Raizlabs.DBFlow:dbflow:$libraryVersion.dbFlow"
+    kapt dependencies.dbFlowProcessor
+    implementation dependencies.dbFlowCore
+    implementation dependencies.dbFlow
 
-    implementation "frankiesardo:icepick:$libraryVersion.icepick"
-    annotationProcessor "frankiesardo:icepick-processor:$libraryVersion.icepick"
+    implementation dependencies.androidState
+    kapt dependencies.androidStateProcessor
 
-    api "com.google.android.gms:play-services-wearable:$libraryVersion.playService"
-    api "com.jakewharton.timber:timber:$libraryVersion.timber"
+    api dependencies.playServicesWearable
+    api dependencies.timber
 
-    testImplementation "junit:junit:$libraryVersion.jUnit"
-    testImplementation "org.mockito:mockito-core:$libraryVersion.mockito"
-    androidTestImplementation "com.android.support.test:runner:$libraryVersion.testSupport"
+    testImplementation dependencies.jUnit
+    testImplementation dependencies.mockito
+    androidTestImplementation dependencies.runner
+    implementation dependencies.kotlinStdlibJre7
 }

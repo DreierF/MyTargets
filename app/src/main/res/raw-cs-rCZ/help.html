@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <link rel="stylesheet" type="text/css" href="style.css" />
+    </head>
+    <body>
+        <main>
+            <h1>Začínáme s MyTargets</h1>
+            <p>MyTargets vám pomůže zaznamenat všechny výsledky tréninku lukostřelby, bez pera a papíru. MyTargets je rozdělen do tří hlavních kategorií: Tréninky, luky a šípy. Tréninky obsahují všechny informace, které jste shromáždili během tréninku. Na záložce luky můžete zadat vlastnosti a nastavení zařízení, např. vaše zaměřovací body. Záložka Šípy obsahuje informace o různých typech šípů.</p>
+           
+            <section> 
+                <h2>Organizace tréninků</h2>
+                <p>Trénink je rozdělen na jedno nebo více kol. Každé kolo může obsahovat libovolný počet sad, přičemž jedna sada obsahuje předem definovaný počet šípů.</p>
+                <details>
+                    <summary>Vytvořte trénink</summary>
+                    <p>Chcete-li vytvořit nový trénink, klepněte na oranžové kolečko v dolní části stránky tréninku. Nyní můžete vybírat z následujících možností:</p>
+                    <ul>
+                        <li><strong>Volný trénink</strong>: Lze libovolně nastavit vzdálenost, typ a průměr terče, stejně jako počet šípů vystřelených na sadu.</li>
+                        <li><strong>Trénink - standardní kolo</strong>: Umožňuje vybrat z obrovského počtu standardních kol. Můžete také vytvořit své vlastní, pokud žádné z předdefinovaných nevyhovuje vašim potřebám.</li>
+                    </ul>
+                </details>
+                <details>
+                    <summary>Vyberte terč</summary>
+                    <p>Můžete si vybrat z různých terčů (3). Některé terče mají odlišné <strong>bodování</strong> (1). Spůsob bodování popisuje skóre spojené s určitou oblastí terče. Navíc může být specifikován průměr terče (2). </p>
+                    <img src="images/target_face_selection.png" />
+                    <p><strong>Poznámka: </strong>Průměr plochy bodu je relativní k cílové ploše celého terče. Například WA 5 kruhů s průměrem 80 cm v aplikaci představuje plochu, která ve skutečnosti má pouhých 40 cm, protože celá plocha WA terče by měla 80 cm.</p>
+                </details>
+                <details>
+                    <summary>WA spůsob bodování</summary>
+                    <p>V následujících bodech jsou podrobněji popsány všechny styly bodování WA:</p>
+                    <ul>
+                        <li><strong>Reflexní styl (X-1)</strong>: Nejvnitřnější žlutý kruh odpovídá 10 bodům, ale je označen jako X. Vnější žluté kruhy odpovídají 10 a 9 bodům. Skóre se s každým kroužkem snižuje o 1.</li>
+                        <li><strong>Reflexní styl (10-1)</strong>: Stejné jako předchozí, ale vnitřní dva žluté kroužky jsou zobrazeny jako jeden kruh za 10 bodů (bez X).</li>
+                        <li><strong>Kladkový styl</strong>: Pouze nejvnitřnější žlutý kruh je za 10 bodů. Okolní dva žluté kroužky jsou zobrazeny jako jeden za 9 bodů.</li>
+                        <li><strong>11, 10, 9, ..., 1</strong>: Vnitřní kroužek za 11 bodů. Skóre se s každým kroužkem snižuje o 1.</li>
+                        <li><strong>X, 5, 4, 3, 2, 1</strong>: Žluté skóre 5, červené 4, modré 3, černé 2 a bílé 1 bod. Nejvnitřnější žlutý kruh je zapsán jako X.</li>
+                        <li><strong>9, 7, 5, 3, 1</strong>: Žluté skóre 9, červené 7, modré 5, černé 3 a bílé 1 bod.</li>
+                        <li><strong>FCFS Barvy (obráceně 10-1)</strong>: Hraje se bodový styl, kde bílé jsou 10 bodů, černé 8, modré 6, červené 4, vnější žlutá 2 a vnitřní dvě žluté 1. Obvykle se střílí se 6 šípů na sadu. Pouze jeden šíp se počítá na jednu barvu. Maximální dosažitelné skóre je 31 bodů na sadu, když každý šíp zasádne jinou barvu.</li>
+                    </ul>
+                </details>
+                <details>
+                    <summary>Číslování šípů</summary>
+                    <p>Kromě dokumentace šípů použitých při konkrétním tréninku, můžete také s jednotlivými výstřevy zapsat poznámku s číslem šípu. Toto můžete povolit při tréninku. Při vytváření tréninku, to musíte odpovídajícím způsobem nastavit:</p>
+                    <img src="images/arrow_numbers.png" />
+                </details>
+                <details>
+                    <summary>Co je standardní kolo?</summary>
+                    <p>Standardní kolo je přednastavená šablona výcviku, která specifikuje daný počet kol, sad a šípů vystřelených na sadu. Krom toho jsou vzdálenosti a terče fixní.</p>
+                    <p>Aplikace vám nabízí řadu standardních kol, které jsou běžně používané.</p>
+                </details>
+                <details>
+                    <summary>Jak změnit typ terče pro standardní kolo?</summary>
+                    <p>Standardní kolo definuje pouze to, jaká sestava má být použita, ale nikoliv typ terče. Takže můžete nastavit typ terče na ten, který skutečně používáte. Stačí klepnout na "Změnit typ terče" pod standardním kolem.</p>
+                    <img src="images/change_target_face.png" />
+                </details>
+            </section>
+            <section> 
+                <h2>Vstup</h2>
+                <p>MyTargets podporuje přesné zakreslení šípu a klávesnice, na základě vstupního režimu. Přepínání mezi nimi je možné přes nastavení.</p>
+                <details>
+                    <summary>Přesné zakreslení šípu</summary>
+                    <p>Přesné zakreslení šípu je výchozí metoda zadávání. Chcete-li zadat zásah, klepněte na něj a podržte ho na cílové ploše, nastavte jeho polohu, dokud nebudete spokojeni s polohou šipky a potom uvolněte prst.</p>
+                    <img src="images/input_plotting.png"/>
+                    <p><strong>Poznámka: </strong>Detekce skluzu prstu rozpozná neúmyslné pohyby při uvolnění prstu a ignoruje je.</p>
+                </details>
+                <details>
+                    <summary>Režim klávesnice</summary>
+                    <p>Režim klávesnice, jako alternativa k výchozímu přesnému zadávání pozice. V režimu klávesnice zadáte pouze prstence zasažené šípem ale ne jejich přesnou pozici.</p>
+                    <img src="images/input_keyboard.png"/>
+                    <p>Nastavení levou rukou přenese klávesnici na levou stranu, aby bylo možné zadávat jednou rukou.</p>
+                </details>
+                <details>
+                    <summary>Úpravy a mazání zásahů</summary>
+                    <p>Chcete-li upravit již zadaný zásah, klepněte na kolečko nahoře, který zobrazuje příslušný zásah, a poté ho změňte, jak se vám líbí. Chcete-li vymazat poslední zásah, který jste zadali, stiskněte tlačítko zpět v horní části vstupní obrazovky.</p>
+                </details>
+            </section>
+            <section> 
+                <h2>Statistiky</h2>
+                <p>Statistiky vám dovolí získat souhrnný přehled o vašich tréninkových datech.</p>
+                <details>
+                    <summary>Statistické prvky</summary>
+                    <p>Níže jsou popsány hlavní komponenty uživatelského rozhraní:</p>
+                    <ul>
+                        <li><strong>Linkový graf</strong>: Zobrazuje průměrné skóre šípů na sadu. Oranžové regresní čáry ukazují celkový trend. Graf lze zvětšit vodorovně dvěma prsty.</li>
+                        <li><strong>Distribuční graf</strong>: Ukazuje rozložení šípů mezi dostupné kruhy. Není-li vybrán žádný segment, zobrazí se celkový počet zásahů a chyb. Klepnutím na segment se zobrazí přesný počet zásahů v této skupině.</li>
+                        <li><strong>Rozptylový vzor</strong>: Zobrazuje všechny zásahy na jednom terči, dané spůsobem bodování (lze změnit v nastavení aplikace). Pokud klepnete na rozptylový vzor, získáte zvětšení rozptylového vzoru. Z obrazovky podrobnosti můžete také sdílet obrázek rozptylového vzoru, nebo ho vytisknout.</li>
+                        <li><strong>Hodnocení šípu</strong>: Pokud jste použili funkci číslování šípů v jednom z vybraných tréninků, je tato tabulka zobrazena níže. Šípy s nejlepším seskupením jsou umístěny v horní části seznamu. Klepnutím na číslo šípu se dostanete k rozptylovému vzoru, který zobrazuje pouze zásahy vybraného šípu.</li>
+                    </ul>
+                </details>
+                <details>
+                    <summary>Rozsah analýzy</summary>
+                    <p>Rozsah, který se analyzuje ve statistice, závisí na obrazovce, ze které ji otevřete. Na hlavní obrazovce jsou zobrazeny všechny dostupné tréninkové údaje. Při tréninku v detailech daného kola, je celý trénink, nebo kolo považováno za poslední.</p>
+                    <img src="images/statistics_icon.png" style="width:10%;"/>
+                    <p>Můžete také použít vícenásobný-výběr např. vyberte dva nebo více téninků.</p>
+                    <img src="images/statistics_multiselect.png"/>
+                </details>
+                <details>
+                    <summary>Používání filtrů</summary>
+                    <p>Můžete také použít filtry na vybrané údaje o tréninku. Filtrování je možné pomocí luků, šípů, vzdáleností a průměru terče.</p>
+                    <img src="images/statistics_filter.png" style="width:10%;"/>
+                </details>
+                <details>
+                    <summary>Export dat</summary>
+                    <p>Vybraná data můžete exportovat do souboru *.csv, který lze otevřít v aplikaci tabulkového procesoru, jako je aplikace Excel. Sloupce x a y popisují souřadnice zásahu, přičemž počátek 0, 0 je střed cíle a vnější okraj terče je 1 -jednotka délky.</p>
+                    <img src="images/statistics_export.png" style="width:10%;"/>
+                    <p><strong>Poznámka</strong>: <strong>Nemůžete</strong> importovat data o tréninku do aplikace. Chcete-li vytvořit zálohu dat, musíte v nastavení použít funkci zálohování a obnovení.</p>
+                </details>
+            </section>
+            <section> 
+                <h2>Různé</h2>
+                <p></p>
+                <details>
+                    <summary>Proč jsou mé šípy tak malé?</summary>
+                    <p>Velikost šípů je určena průměrem specifikovaným ve vlastnostech šípu a průměru zvoleného terče. Velikost šípu je zakreslena ve "skutečné" velikosti. Pokud nechcete, aby šípy byly zakresleny v reálné velikosti, můžete změnit poměr velikosti šípů. Přejděte do nabídky Nastavení> Vstup> Zvětšení průměru šípu a upravte měřítko. V případě, že chcete mít šíp větší, a zatímco umísťujete šíp na cíl, můžete nastavit úroveň zvětšení terče.</p>
+                </details>
+                <details>
+                    <summary>Kde jsou uloženy mé zálohy na Google drive?</summary>
+                    <p>Zálohy vytvořené na Google drive jsou uloženy ve složce Data aplikace. Uložené soubory jsou přístupné pouze aplikaci, která je vytvořila. Takže můžete vidět pouze zálohy z aplikace MyTargets. Webový nástroj Google Drive dále umožňuje odstranit všechna data zálohování (Nastavení> Správa aplikací). Po instalaci aplikace na jiném telefonu a přihlášení k účtu Google získáte přístup znovu ke všem zálohám.</p>
+                </details>
+            </section>
+        </main>
+    </body>
+</html>

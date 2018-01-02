@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <link rel="stylesheet" type="text/css" href="style.css" />
+    </head>
+    <body>
+        <main>
+            <h1>Get started with MyTargets</h1>
+            <p>MyTargets allows you to record all results of you archery training rendering pen and paper obsolete. MyTargets é dividido em três categorias principais: treinamentos, arcos e flechas. Treinamentos contém todas as informações que você coletou durante suas sessões de treinamento. The bows section is the place to document your equipment properties and settings e.g. your sight marks. And the arrows section contains information about different arrow types.</p>
+           
+            <section> 
+                <h2>Organize trainings</h2>
+                <p>A training is organized into one or multiple rounds. Each round may contain an arbitrary number of ends, whereby an end contains up to predefined number of shot arrows.</p>
+                <details>
+                    <summary>Create a training</summary>
+                    <p>To create a new training tap the orange circle at the bottom of the trainings page. Now you can select out of:</p>
+                    <ul>
+                        <li><strong>Free Training</strong>: Allows you to freely set distance, target face type and diameter as well as the number of arrows you want to shot per end.</li>
+                        <li><strong>Training with Standard Round</strong>: Allows you to select from a huge number of common standard rounds. You can also define your own if none of the predefined ones fits your needs.</li>
+                    </ul>
+                </details>
+                <details>
+                    <summary>Select a target face</summary>
+                    <p>You can select from a variety of target faces (3). Some target faces do have different <strong>scoring styles</strong> (1). The scoring style describes the score associated with a particular area of the target face. Additionally the diameter of the target face can be specified (2). </p>
+                    <img src="images/target_face_selection.png" />
+                    <p><strong>Note: </strong>The diameter of a spot target face is relative to the target face of the full target. For example a WA 5 Ring Spot with 80cm diameter in the app represents a spot in that has actually only 40cm in real-life, because the full WA target face would have 80cm.</p>
+                </details>
+                <details>
+                    <summary>WA scoring styles</summary>
+                    <p>In the following all WA scoring styles are described in more detail:</p>
+                    <ul>
+                        <li><strong>Recurve style (X-1)</strong>: The innermost golden ring scores 10 points, but is marked as X. The outer golden rings score 10 and 9 accordingly. The score decreases with every ring by 1.</li>
+                        <li><strong>Recurve style (10-1)</strong>: Same as previous, but the inner two golden rings are shown as one ring, rewarded with 10 points (no X).</li>
+                        <li><strong>Compound style</strong>: Only the innermost golden ring scores 10 points. The outermost two golden rings are shown as one and score 9 points.</li>
+                        <li><strong>11, 10, 9, ..., 1</strong>: The innermost ring scores 11. The score decreases with every ring by 1.</li>
+                        <li><strong>X, 5, 4, 3, 2, 1</strong>: Gold scores 5, red 4, blue 3, black 2 and white 1 points. The innermost golden ring is recorded as X.</li>
+                        <li><strong>9, 7, 5, 3, 1</strong>: Gold scores 9, red 7, blue 5, black 3 and white 1 points.</li>
+                        <li><strong>FCFS Color (Reversed 10-1)</strong>: Play scoring style where white scores 10, black 8, blue 6, red 4, outer gold 2 and the inner two gold 1. Typically shot with 6 arrows per end. Only one arrow is counted per color. The maximum achievable score is 31 points per end, when every arrow is shot into a distinct color.</li>
+                    </ul>
+                </details>
+                <details>
+                    <summary>Arrow numbering</summary>
+                    <p>Besides documenting the arrows used in a particular training, you may also annotate individual shots with the number of the arrow. You can enable the behaviour on a per-training basis. When you create the training you have to set the option accordingly:</p>
+                    <img src="images/arrow_numbers.png" />
+                </details>
+                <details>
+                    <summary>What is a Standard Round?</summary>
+                    <p>A standard round is a predefined training template, which specified the exact number of rounds, ends and arrows shot per end. Additionally the distances and target faces are fixed.</p>
+                    <p>The app provides you with a variety of standard rounds that are commonly used.</p>
+                </details>
+                <details>
+                    <summary>How to change the target face for a standard round?</summary>
+                    <p>A standard round defines only which type of target should be used, but not which exact target face. So you can adjust the target face to that one you actually use. Just tap on "Change target face" below the standard round.</p>
+                    <img src="images/change_target_face.png" />
+                </details>
+            </section>
+            <section> 
+                <h2>Input</h2>
+                <p>MyTargets supports an exact arrow plotting and a keyboard based input mode. Switching between them is possible via the settings.</p>
+                <details>
+                    <summary>Exact arrow plotting</summary>
+                    <p>The exact arrow plotting is the default input method. To enter a shot tap and hold on the target face adjust the position until you are satisfied with the arrow position and then release the finger.</p>
+                    <img src="images/input_plotting.png"/>
+                    <p><strong>Note: </strong>The finger slip detection will recognize unintended moves while releasing the finger and ignore them.</p>
+                </details>
+                <details>
+                    <summary>Keyboard mode</summary>
+                    <p>The keyboard mode as an alternative to the default detailed shot entry. In the keyboard mode you only enter the ring hit by the arrow and not its exact location.</p>
+                    <img src="images/input_keyboard.png"/>
+                    <p>The left-handed setting brings the keyboard to the left side to make selection with a single hand possible.</p>
+                </details>
+                <details>
+                    <summary>Editing and deleting shots</summary>
+                    <p>To edit an already entered shot just tap on the circle on the top that shows the respective shot, then change the shot as you like. To delete the last shot you have entered press the backspace key at the top of the input screen.</p>
+                </details>
+            </section>
+            <section> 
+                <h2>Statistics</h2>
+                <p>The statistics allow you to get an aggregated view on your training data.</p>
+                <details>
+                    <summary>Statistics elements</summary>
+                    <p>In the following the main UI components are described:</p>
+                    <ul>
+                        <li><strong>Line chart</strong>: Shows the average score per arrow per end. The orange linear regression line shows the overall trend. The chart can be zoomed by pinching two fingers horizontally.</li>
+                        <li><strong>Distribution chart</strong>: Shows the distribution of arrows amongst the available rings. If no segment is selected, the overall count of hits and misses is shown. By tapping on a segment the exact number of shots in this category is shown.</li>
+                        <li><strong>Dispersion pattern</strong>: Shows all shots on a single target face including the selected grouping method (can be changed in the app's settings). If you tap on the dispersion pattern you get a bigger version of the dispersion pattern. From the details screen you can also share the dispersion pattern image or print it.</li>
+                        <li><strong>Arrow ranking</strong>: If you have used the arrow numbering feature in one of the selected trainings, the arrow rankings are shown below. The arrows with the best grouping are placed at the top of the list. Tapping on an arrow number takes you to a dispersion pattern, which only shows the shots of the selected arrow.</li>
+                    </ul>
+                </details>
+                <details>
+                    <summary>Analysis scope</summary>
+                    <p>The scope being analyzed in the statistics depends on the screen from which you open it. Invoked from the main screen all available training data is considered. In the training and round detail views the whole training or round is considered accoridingly.</p>
+                    <img src="images/statistics_icon.png" style="width:10%;"/>
+                    <p>You can also use multi-selection to e.g. select two or more trainings.</p>
+                    <img src="images/statistics_multiselect.png"/>
+                </details>
+                <details>
+                    <summary>Applying filters</summary>
+                    <p>You can also apply filters to your selected training data. Filtering is possible by bow, arrow, distance and target diameter.</p>
+                    <img src="images/statistics_filter.png" style="width:10%;"/>
+                </details>
+                <details>
+                    <summary>Exporting data</summary>
+                    <p>You can export the selected data to a *.csv file, which can be opened in a spreadsheet application like Excel. The x and y columns describe the coordinates of the shots whereby the origin 0, 0 is the center of the target and the outer border of the target is 1 unit away.</p>
+                    <img src="images/statistics_export.png" style="width:10%;"/>
+                    <p><strong>Note</strong>: You can <strong>not</strong> import training data into the app. To create a backup of your data you have to use the backup and restore functionality in the settings.</p>
+                </details>
+            </section>
+            <section> 
+                <h2>Miscellaneous</h2>
+                <p></p>
+                <details>
+                    <summary>Why are my arrows drawn so small?</summary>
+                    <p>The size of the arrows is determined by the diameter specified in the arrow properties and the diameter of the selected target face. The arrow size is drawn in "real" size. If you do not want the arrows to be drawn in realistic sizes, you can scale the arrows artificially. Go to Settings > Input > Arrow diameter scale and adjust the scaling. In case you just want to have the arrow bigger, while placing the arrow on the target you can adjust the Target zoom level.</p>
+                </details>
+                <details>
+                    <summary>Where are my backups saved in Google drive?</summary>
+                    <p>Backups made on Google drive are stored in the Application data folder. Files stored there can only be accessed by the app, which created them. So you can only see the backups from inside the MyTargets app. The webapp of Google drive furthermore allows you to delete all your backup data (Settings > Manage Apps). When you install the app on another phone and log in with the your Google account you get access to all your backups again.</p>
+                </details>
+            </section>
+        </main>
+    </body>
+</html>

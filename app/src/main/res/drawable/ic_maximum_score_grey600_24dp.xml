@@ -1,0 +1,24 @@
+<!--
+  ~ Copyright (C) 2017 Florian Dreier
+  ~
+  ~ This file is part of MyTargets.
+  ~
+  ~ MyTargets is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License version 2
+  ~ as published by the Free Software Foundation.
+  ~
+  ~ MyTargets is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="24dp"
+        android:height="24dp"
+        android:viewportHeight="24.0"
+        android:viewportWidth="24.0">
+    <path
+        android:fillColor="@color/md_grey_600"
+        android:pathData="M2,2L2,22L22,22L22,20L4,20L4,4L6,4L6,2L2,2zM8,2L8,4L10,4L10,2L8,2zM12,2L12,4L14,4L14,2L12,2zM16,2L16,4L18,4L18,2L16,2zM20,2L20,4L22,4L22,2L20,2zM13,5C10.155,5.007 6.267,10.525 6,19L20,19C19.707,10.504 15.848,4.993 13,5z"/>
+</vector>

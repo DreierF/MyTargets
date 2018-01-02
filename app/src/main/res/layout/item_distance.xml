@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:minHeight="48dp"
-            android:padding="16dp" />
+            android:padding="16dp"/>
 
     </FrameLayout>
 

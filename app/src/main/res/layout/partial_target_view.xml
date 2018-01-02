@@ -14,13 +14,13 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:tools="http://schemas.android.com/tools">
 
     <de.dreier.mytargets.features.training.input.TargetView
         android:id="@+id/targetView"
         android:background="#FAFAFA"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:showIn="@layout/activity_input" />
+        tools:showIn="@layout/activity_input"/>
 
 </layout>

@@ -14,102 +14,166 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?attr/colorPrimary"
         android:orientation="vertical">
 
-        <LinearLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            android:orientation="vertical">
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/filter_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
-                android:theme="@style/ThemeOverlay.AppCompat.Light"
-                android:visibility="gone">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:animateLayoutChanges="true"
-                    android:background="?attr/colorPrimary"
-                    android:orientation="vertical">
-
-                    <de.dreier.mytargets.features.statistics.ChipGroup
-                        android:id="@+id/distanceTags"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp" />
-
-                    <de.dreier.mytargets.features.statistics.ChipGroup
-                        android:id="@+id/diameterTags"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp" />
-
-                    <de.dreier.mytargets.features.statistics.ChipGroup
-                        android:id="@+id/bowTags"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp" />
-
-                    <de.dreier.mytargets.features.statistics.ChipGroup
-                        android:id="@+id/arrowTags"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp" />
-
-                </LinearLayout>
-
-            </android.support.v7.widget.Toolbar>
-
-        </LinearLayout>
-
-        <FrameLayout
+        <android.support.v4.widget.DrawerLayout
+            android:id="@+id/drawer_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            tools:openDrawer="end">
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewPager"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#fafafa">
+                android:layout_height="match_parent">
 
-                <android.support.v4.view.PagerTitleStrip
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#fafafa">
+
+                    <android.support.v4.view.PagerTitleStrip
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:background="@color/colorAccent"
+                        android:paddingBottom="4dp"
+                        android:paddingTop="4dp"
+                        android:textColor="#fff"/>
+
+                </android.support.v4.view.ViewPager>
+
+                <android.support.v4.widget.ContentLoadingProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="visible"/>
+
+            </FrameLayout>
+
+            <RelativeLayout
+                android:id="@+id/filter_view"
+                android:layout_width="240dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:background="@color/md_white_1000">
+
+                <Button
+                    android:id="@+id/reset"
+                    style="@style/primaryText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="top"
-                    android:background="@color/colorAccent"
-                    android:paddingBottom="4dp"
-                    android:paddingTop="4dp"
-                    android:textColor="#fff" />
+                    android:layout_alignParentBottom="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:minHeight="48dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:text="@string/reset"
+                    android:textSize="14sp"
+                    android:textStyle="normal"/>
 
-            </android.support.v4.view.ViewPager>
+                <View
+                    android:id="@+id/separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_above="@id/reset"
+                    android:background="@color/md_grey_200"/>
 
-            <android.support.v4.widget.ContentLoadingProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="visible" />
+                <android.support.v4.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/separator"
+                    android:layout_alignParentTop="true">
 
-        </FrameLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:paddingTop="8dp">
+
+                        <TextView
+                            android:id="@+id/distanceTagsLabel"
+                            style="@style/Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/distances"/>
+
+                        <de.dreier.mytargets.features.statistics.ChipGroup
+                            android:id="@+id/distanceTags"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="8dp"
+                            android:paddingTop="8dp"/>
+
+                        <TextView
+                            android:id="@+id/diameterTagsLabel"
+                            style="@style/Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/diameters"/>
+
+                        <de.dreier.mytargets.features.statistics.ChipGroup
+                            android:id="@+id/diameterTags"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="8dp"
+                            android:paddingTop="8dp"/>
+
+                        <TextView
+                            android:id="@+id/bowTagsLabel"
+                            style="@style/Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/bows"/>
+
+                        <de.dreier.mytargets.features.statistics.ChipGroup
+                            android:id="@+id/bowTags"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="8dp"
+                            android:paddingTop="8dp"/>
+
+                        <TextView
+                            android:id="@+id/arrowTagsLabel"
+                            style="@style/Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/arrows"/>
+
+                        <de.dreier.mytargets.features.statistics.ChipGroup
+                            android:id="@+id/arrowTags"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="8dp"
+                            android:paddingTop="8dp"/>
+
+                    </LinearLayout>
+
+                </android.support.v4.widget.NestedScrollView>
+
+            </RelativeLayout>
+
+        </android.support.v4.widget.DrawerLayout>
 
     </LinearLayout>
 

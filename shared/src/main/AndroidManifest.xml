@@ -14,9 +14,8 @@
   -->
 
 <manifest package="de.dreier.mytargets.shared"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <application/><!--
-        android:name=".SharedApplicationInstance"-->
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
 </manifest>

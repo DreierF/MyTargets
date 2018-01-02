@@ -26,25 +26,10 @@
 -dontnote android.support.v4.**
 -keepattributes Signature
 
-# Retrolambda excludes
--dontwarn java.lang.invoke.*
-
 # Workaround for Andorid bug #78377
 -keep interface android.support.v4.** { *; }
 -keep class !android.support.v7.view.menu.*MenuBuilder*, android.support.v7.** { *; }
 -keep interface android.support.v7.** { *; }
-
-# Icepick excludes
--dontwarn icepick.**
--keep class icepick.** { *; }
--keep class **$$Icepick { *; }
--keepclasseswithmembernames class * {
-    @icepick.* <fields>;
-}
--keepnames class * { @icepick.State *;}
-
-# Parceler
--keep class **$$Parcelable { *; }
 
 #Retrofit
 -dontwarn retrofit2.**
@@ -70,24 +55,6 @@
 -keep interface okhttp3.** { *; }
 -dontwarn okhttp3.**
 
-# Butterknife
--dontwarn butterknife.internal.**
--keep class butterknife.** { *; }
--keep class **$$ViewBinder { *; }
-
--keepclasseswithmembernames class * {
-    @butterknife.* <fields>;
-}
--keepclasseswithmembernames class * {
-    @butterknife.* <methods>;
-}
-
-## Joda Time 2.3
--dontwarn org.joda.convert.**
--dontwarn org.joda.time.**
--keep class org.joda.time.** { *; }
--keep interface org.joda.time.** { *; }
-
 -keep class com.google.android.gms.** { *; }
 -dontwarn com.google.android.gms.**
 
@@ -102,3 +69,7 @@
 
 #DBFlow
 -keep class * extends com.raizlabs.android.dbflow.config.DatabaseHolder { *; }
+
+#Parcelize (Kotlin)
+-keep class kotlin.internal.annotations.AvoidUninitializedObjectCopyingCheck { *; }
+-dontwarn kotlin.internal.annotations.AvoidUninitializedObjectCopyingCheck

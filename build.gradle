@@ -14,6 +14,8 @@
  */
 
 buildscript {
+    ext.androidPluginVersion = '3.0.1'
+    ext.kotlinVersion = '1.2.10'
     repositories {
         jcenter()
         google()
@@ -21,61 +23,22 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
-        classpath 'me.tatarka:gradle-retrolambda:3.6.1'
+        classpath "com.android.tools.build:gradle:$androidPluginVersion"
         classpath 'com.github.triplet.gradle:play-publisher:1.2.0'
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.2'
-        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.4'
-        classpath 'com.google.gms:google-services:3.1.1'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.2'
+        classpath 'com.google.gms:google-services:3.1.2'
         classpath 'com.google.firebase:firebase-plugins:1.1.5'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
     }
 }
 
 plugins {
     id 'com.mendhak.gradlecrowdin' version '0.1.0'
-    id 'com.github.ben-manes.versions' version '0.14.0'
+    id 'com.github.ben-manes.versions' version '0.17.0'
 }
 
-ext {
-    compileSdkVersionCode = 26
-
-    libraryVersion = [
-            aboutPage            : '1.2',
-            annimonStream        : '1.1.7',
-            clansFab             : '1.6.4',
-            dbFlow               : '3.1.1',
-            dexmaker             : '2.2.0',
-            discreteSeekbar      : '1.0.1',
-            easyImage            : '2.0.4',
-            espresso             : '3.0.1',
-            findbugs             : '3.0.2',
-            gson                 : '2.8.0',
-            homage               : '0.2.0',
-            iab                  : '1.0.39',
-            icepick              : '3.2.0',
-            jodaTime             : '2.9.9',
-            jUnit                : '4.12',
-            materialDialogs      : '0.9.4.4',
-            materialIntroScreen  : '0.0.5',
-            mpAndroidChart       : 'v3.0.2',
-            mockito              : '2.8.9',
-            okhttp               : '3.7.0',
-            parceler             : '1.1.7',
-            permissionsdispatcher: '2.4.0',
-            photoView            : '2.0.0',
-            picasso              : '2.5.2',
-            playService          : '11.2.2',
-            screengrab           : '1.0.2',
-            retrofit             : '2.2.0',
-            roundedImageView     : '2.2.1',
-            support              : '26.0.2',
-            supportWearable      : '2.0.5',
-            testSupport          : '1.0.1',
-            timber               : '4.5.1',
-            truth                : '0.32',
-            uiAutomator          : '2.1.2'
-    ]
-}
+apply from: "dependencies.gradle"
 
 allprojects {
     repositories {

@@ -17,6 +17,7 @@
 <resources>
   <!-- General -->
   <string name="preferences">Beállítások</string>
+  <string name="settings">Beállitások</string>
   <string name="prev">Előző</string>
   <string name="next">Következõ</string>
   <string name="save">Mentés</string>
@@ -27,7 +28,6 @@
   <string name="round">Forduló</string>
   <string name="points">Pontok</string>
   <string name="passe">Sorozat</string>
-  <string name="passe_n">%d sorozat</string>
   <!-- Overview -->
   <string name="new_training">Új lövészet</string>
   <string name="new_bow">Új íj</string>
@@ -242,7 +242,6 @@
   <string name="last_name">Családnév</string>
   <string name="age">Életkor</string>
   <string name="show_signature">Aláírás</string>
-  <string name="witness">Tanú</string>
   <string name="archer">Íjász</string>
   <string name="hits">Találatok</string>
   <string name="misses">Mellé</string>
@@ -252,6 +251,7 @@
   <string name="diameter">Átmérő</string>
   <string name="input">Találatok rögzítése/megjelenítése</string>
   <string name="target_zoom">Lőlap nagyítása</string>
+  <string name="action_pdf">Exportálás PDF-be</string>
   <string name="arrow_diameter_scale">A találat átmérője</string>
   <string name="timestamp">Időbélyeg</string>
   <string name="change_target_face">Lőlap váltása</string>
@@ -325,5 +325,42 @@
   <string name="show_arrow_average">Mutasd a vesszők pontátlagát</string>
   <string name="image_deleted">A kép törölve</string>
   <string name="delete_image">Törlöd a képet?</string>
+  <string name="keyboard_type">Billentyűzet típusa</string>
+  <string name="keyboard_enabled">Engedélyezett billentyűzet</string>
+  <string name="sort_shots">Lövések sorbarendezése</string>
+  <string name="sort_shots_for_spots">Lövések rendezése a szemafor-lőlap szerint</string>
+  <string name="target_captain">Lőlap kapitány</string>
+  <string name="language">Nyelv</string>
   <string name="warning_backup_experimental">Figyelmeztetés: Ez a szolgáltatás még kísérleti fázisban! Kérjük, ellenőrizze a rendszeres időközönként ha igazán sikeres volt, a biztonsági másolat!</string>
+  <string name="drawer_open">Rögzítő megnyitása</string>
+  <string name="drawer_close">Rögzítő bezárása</string>
+  <string name="help">Súgó</string>
+  <string name="home">Nyitólap</string>
+  <string name="click_to_enter_profile">Ide kattintva adja meg a profiladatokat</string>
+  <string name="no_trainings">Ön még nem rögzített lövéseket!</string>
+  <string name="no_bows">Hiányzik az íj</string>
+  <string name="no_arrows">Nincsenek vesszők</string>
+  <string name="version_info">Verzió információ</string>
+  <string name="version_prefix">Verzió</string>
+  <string name="max_arrow_number">Vesszők maximális száma</string>
+  <string name="distances">Távolságok</string>
+  <string name="diameters">Átmérők</string>
+  <string name="bows">Íjak</string>
+  <string name="reset">Visszaállitás</string>
+  <string name="end_x_of_y">Sorozat %1$d/%2$d</string>
+  <string name="round_x_of_y">Forduló %1$d/%2$d</string>
+  <string name="settings_summary_timer">Az időzítő viselkedésének beállítása</string>
+  <string name="settings_summary_scoreboard">Az eredménytábla megjelentítése</string>
+  <string name="settings_summary_input">Bemeneti képernyő testreszabása</string>
+  <string name="settings_summary_overview">Edzések, körök, és sorozatok megjelenítésének beállításai</string>
+  <string name="settings_summary_profile">Személyes adatok kezelése</string>
+  <string name="licence_number">Engedély száma</string>
+  <string name="file_type">Fájl típusa</string>
+  <string name="clear">Kiürít</string>
+  <string name="tap_to_sign">Megnyitásához érintse meg</string>
+  <string name="pdf_file">PDF-fájl</string>
+  <string name="image_file">Képfájl</string>
+  <string name="settings_summary_statistics">Állítsa be a statisztika képernyőt</string>
+  <string name="settings_statistics_spots_to_single_target">Összesített pontok egyetlen lőlapon</string>
+  <string name="keep_above_lockscreen">Tartsa a zárolt képernyőn</string>
 </resources>

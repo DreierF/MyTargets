@@ -23,4 +23,5 @@
   <string name="vibration">Trillen</string>
   <string name="sound">Geluid</string>
   <string name="today">vandaag</string>
+  <string name="notification_channel_default">Default</string>
 </resources>

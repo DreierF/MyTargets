@@ -17,6 +17,7 @@
 <resources>
   <!-- General -->
   <string name="preferences">Možnosti</string>
+  <string name="settings">Nastavenia</string>
   <string name="prev">Predchádzajúca</string>
   <string name="next">Nasledujúca</string>
   <string name="save">Uložiť</string>
@@ -27,7 +28,6 @@
   <string name="round">Kolo</string>
   <string name="points">Body</string>
   <string name="passe">Sada</string>
-  <string name="passe_n">Sada %d</string>
   <!-- Overview -->
   <string name="new_training">Nový tréning</string>
   <string name="new_bow">Nový luk</string>
@@ -256,7 +256,6 @@
   <string name="last_name">Priezvisko</string>
   <string name="age">Vek</string>
   <string name="show_signature">Podpis</string>
-  <string name="witness">Svedok</string>
   <string name="archer">Lukostrelec</string>
   <string name="hits">Zásahov</string>
   <string name="misses">Minutí</string>
@@ -266,6 +265,7 @@
   <string name="diameter">Priemer</string>
   <string name="input">Vstup</string>
   <string name="target_zoom">Cieľová úroveň priblíženia</string>
+  <string name="action_pdf">Exportovať ako PDF</string>
   <string name="arrow_diameter_scale">Stupnica priemerov šípov</string>
   <string name="timestamp">Časová značka</string>
   <string name="change_target_face">Zmeniť vzhľad terča</string>
@@ -339,5 +339,42 @@
   <string name="show_arrow_average">Zobraziť priemer na šíp</string>
   <string name="image_deleted">Obrázok vymazaný</string>
   <string name="delete_image">Odstrániť obrázok?</string>
+  <string name="keyboard_type">Typ klávesnice</string>
+  <string name="keyboard_enabled">Klávesnica zapnutá</string>
+  <string name="sort_shots">Zotriediť strely</string>
+  <string name="sort_shots_for_spots">Zotriediť strely pre bodové terče</string>
+  <string name="target_captain">Terčový kapitán</string>
+  <string name="language">Jazyk</string>
   <string name="warning_backup_experimental">Upozornenie: Táto funkcia je stále experimentálna! Prosím, kontrolujte v pravidelných intervaloch či bola záloha skutočne úspešná!</string>
+  <string name="drawer_open">Open drawer</string>
+  <string name="drawer_close">Close drawer</string>
+  <string name="help">Pomoc</string>
+  <string name="home">Domov</string>
+  <string name="click_to_enter_profile">Click to enter profile information</string>
+  <string name="no_trainings">Ešte nie si vyškolení!</string>
+  <string name="no_bows">No bows</string>
+  <string name="no_arrows">No arrows</string>
+  <string name="version_info">Version info</string>
+  <string name="version_prefix">Version</string>
+  <string name="max_arrow_number">Maximum arrow number</string>
+  <string name="distances">Distances</string>
+  <string name="diameters">Diameters</string>
+  <string name="bows">Bows</string>
+  <string name="reset">Reset</string>
+  <string name="end_x_of_y">Sada %1$d/%2$d</string>
+  <string name="round_x_of_y">Kolo %1$d/%2$d</string>
+  <string name="settings_summary_timer">Adjust archery timer\' behaviour</string>
+  <string name="settings_summary_scoreboard">Change scoreboard appearance</string>
+  <string name="settings_summary_input">Customize input screen</string>
+  <string name="settings_summary_overview">Personalize information shown for trainings, rounds and ends</string>
+  <string name="settings_summary_profile">Enter personal information</string>
+  <string name="licence_number">Licence number</string>
+  <string name="file_type">File type</string>
+  <string name="clear">Clear</string>
+  <string name="tap_to_sign">Tap to sign</string>
+  <string name="pdf_file">PDF file</string>
+  <string name="image_file">Image file</string>
+  <string name="settings_summary_statistics">Adjust statistics screen</string>
+  <string name="settings_statistics_spots_to_single_target">Aggregate spots to single target</string>
+  <string name="keep_above_lockscreen">Keep above lockscreen</string>
 </resources>

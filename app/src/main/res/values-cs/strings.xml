@@ -17,6 +17,7 @@
 <resources>
   <!-- General -->
   <string name="preferences">Možnosti</string>
+  <string name="settings">Nastavení</string>
   <string name="prev">Předchozí</string>
   <string name="next">Další</string>
   <string name="save">Uložit</string>
@@ -27,7 +28,6 @@
   <string name="round">Kolo</string>
   <string name="points">Bodů</string>
   <string name="passe">Sada</string>
-  <string name="passe_n">Sada %d</string>
   <!-- Overview -->
   <string name="new_training">Nový trénink</string>
   <string name="new_bow">Nový luk</string>
@@ -256,7 +256,6 @@
   <string name="last_name">Příjmení</string>
   <string name="age">Věk</string>
   <string name="show_signature">Podpis</string>
-  <string name="witness">Svědek</string>
   <string name="archer">Střelec</string>
   <string name="hits">Zásahy</string>
   <string name="misses">Minuto</string>
@@ -266,6 +265,7 @@
   <string name="diameter">Průměr</string>
   <string name="input">Vstup</string>
   <string name="target_zoom">Násobek zvětšení terče</string>
+  <string name="action_pdf">Exportovat do PDF</string>
   <string name="arrow_diameter_scale">Zvětšení průměru šípu</string>
   <string name="timestamp">Časové razítko</string>
   <string name="change_target_face">Změnit typ terče</string>
@@ -339,5 +339,42 @@
   <string name="show_arrow_average">Zobrazit průměr na šíp</string>
   <string name="image_deleted">Obrázek smazán</string>
   <string name="delete_image">Smazat obrázek?</string>
+  <string name="keyboard_type">Typ klávesnice</string>
+  <string name="keyboard_enabled">Zapnout klávesnici</string>
+  <string name="sort_shots">Třídění výstřelů</string>
+  <string name="sort_shots_for_spots">Řazení snímků pro účely zón</string>
+  <string name="target_captain">Terčový rozhodčí</string>
+  <string name="language">Jazyk</string>
   <string name="warning_backup_experimental">Upozornění: Tato funkce je stále experimentální! Prosím, zkontrolujte pravidelně, jestli byla záloha skutečně úspěšná!</string>
+  <string name="drawer_open">Otevřít navigační panel</string>
+  <string name="drawer_close">Zavřít navigační panel</string>
+  <string name="help">Nápověda</string>
+  <string name="home">Domů</string>
+  <string name="click_to_enter_profile">Kliknutím upravíte profil</string>
+  <string name="no_trainings">Zatím nemáte žádný trénink!</string>
+  <string name="no_bows">Žádné luky</string>
+  <string name="no_arrows">Žádné šípy</string>
+  <string name="version_info">Informace o verzi</string>
+  <string name="version_prefix">Verze</string>
+  <string name="max_arrow_number">Nejvyšší číslo šípu</string>
+  <string name="distances">Vzdálenost</string>
+  <string name="diameters">Průměry</string>
+  <string name="bows">Luky</string>
+  <string name="reset">Výchozí</string>
+  <string name="end_x_of_y">Sada %1$d/%2$d</string>
+  <string name="round_x_of_y">Kolo %1$d/%2$d</string>
+  <string name="settings_summary_timer">Nastavte chování lukostřeleckého časovače</string>
+  <string name="settings_summary_scoreboard">Změňit vzhled výsledkové tabulky</string>
+  <string name="settings_summary_input">Přizpůsobit vstupní obrazovku</string>
+  <string name="settings_summary_overview">Přizpůsobit zobrazené informace pro tréninky, kola a sady</string>
+  <string name="settings_summary_profile">Zadejte osobní údaje</string>
+  <string name="licence_number">Číslo licence</string>
+  <string name="file_type">Typ souboru</string>
+  <string name="clear">Vymazat</string>
+  <string name="tap_to_sign">Klepnutím podepíšete</string>
+  <string name="pdf_file">PDF soubor</string>
+  <string name="image_file">Soubor s obrázkem</string>
+  <string name="settings_summary_statistics">Nastavte obrazovku statistik</string>
+  <string name="settings_statistics_spots_to_single_target">Agregované body k jednomu terči</string>
+  <string name="keep_above_lockscreen">Nad zamykací obrazovkou</string>
 </resources>

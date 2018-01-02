@@ -15,9 +15,9 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
 
     <android.support.v7.widget.SwitchCompat
         android:id="@+id/action_switch_control"
@@ -26,6 +26,6 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:textOff="@string/indoor"
-        android:textOn="@string/outdoor" />
+        android:textOn="@string/outdoor"/>
 
 </LinearLayout>

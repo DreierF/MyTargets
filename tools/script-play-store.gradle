@@ -15,7 +15,7 @@
 
 ext {
     HAS_PLAY_STORE_SECRET = new File('googlePlayAndroidDeveloper.json').exists()
-    HAS_GMS_SECRET = new File('google-services.json').exists()
+    HAS_GMS_SECRET = file('src/release/google-services.json').exists()
 }
 
 if (hasProperty('CROWDIN_API_KEY')) {

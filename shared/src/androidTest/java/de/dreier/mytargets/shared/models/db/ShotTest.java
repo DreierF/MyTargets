@@ -15,8 +15,7 @@
 
 package de.dreier.mytargets.shared.models.db;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
+import android.support.annotation.NonNull;
 
 import junit.framework.Assert;
 
@@ -26,25 +25,28 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.dreier.mytargets.shared.streamwrapper.Stream;
+
 public class ShotTest {
 
     @Test
     public void testCompareTo() throws Exception {
         Assert.assertEquals("0,1,-1,-2",
-                toSortedShotList(Shot.NOTHING_SELECTED, Shot.MISS, 0, 1));
+                toSortedShotList(Shot.Companion.getNOTHING_SELECTED(), Shot.Companion.getMISS(), 0, 1));
         Assert.assertEquals("0,2,-1,-2",
-                toSortedShotList(0, 2, Shot.MISS, Shot.NOTHING_SELECTED));
+                toSortedShotList(0, 2, Shot.Companion.getMISS(), Shot.Companion
+                        .getNOTHING_SELECTED()));
     }
 
-    private String toSortedShotList(int... zones) {
+    private String toSortedShotList(@NonNull int... zones) {
         List<Shot> shots = new ArrayList<>(zones.length);
         for (int i = 0; i < zones.length; i++) {
             shots.add(new Shot(i));
-            shots.get(i).scoringRing = zones[i];
+            shots.get(i).setScoringRing(zones[i]);
         }
         Collections.sort(shots);
         return Stream.of(shots)
-                .map(s -> String.valueOf(s.scoringRing))
-                .collect(Collectors.joining(","));
+                .map(s -> String.valueOf(s.getScoringRing()))
+                .joinToString(",");
     }
 }

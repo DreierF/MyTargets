@@ -14,66 +14,32 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             style="@style/card_list"
-            app:layoutManager="LinearLayoutManager" />
+            app:layoutManager="LinearLayoutManager"/>
 
-        <com.github.clans.fab.FloatingActionMenu
-            android:id="@+id/fab"
-            style="@style/fabMenu"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom|end"
-            android:padding="16dp"
-            app:layout_behavior="de.dreier.mytargets.utils.FloatingActionMenuBehavior"
-            app:menu_labels_style="@style/fabMenuLabelsStyle">
+        <include
+            android:id="@+id/emptyState"
+            layout="@layout/partial_empty_state"
+            android:visibility="gone"
+            app:image="@{de.dreier.mytargets.R.drawable.ic_bow_24dp}"
+            app:text="@{de.dreier.mytargets.R.string.no_bows}"/>
 
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/fabBowYumi"
-                style="@style/fabBow"
-                android:src="@drawable/ic_compat_bow_yumi_white_24dp"
-                app:fab_label="@string/yumi" />
-
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/fabBowHorse"
-                style="@style/fabBow"
-                android:src="@drawable/ic_compat_bow_horse_white_24dp"
-                app:fab_label="@string/horse_bow" />
-
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/fabBowLong"
-                style="@style/fabBow"
-                android:src="@drawable/ic_compat_bow_long_white_24dp"
-                app:fab_label="@string/long_bow" />
-
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/fabBowBare"
-                style="@style/fabBow"
-                android:src="@drawable/ic_compat_bow_bare_white_24dp"
-                app:fab_label="@string/bare_bow" />
-
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/fabBowCompound"
-                style="@style/fabBow"
-                android:src="@drawable/ic_compat_bow_compound_white_24dp"
-                app:fab_label="@string/compound_bow" />
-
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/fabBowRecurve"
-                style="@style/fabBow"
-                android:src="@drawable/ic_compat_bow_recurve_white_24dp"
-                app:fab_label="@string/recurve_bow" />
-
-        </com.github.clans.fab.FloatingActionMenu>
+        <de.dreier.mytargets.views.speeddial.FabSpeedDial
+            android:id="@+id/fabSpeedDial"
+            style="@style/fabSpeedDial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fabMenu="@menu/fab_bows"
+            app:miniFabBackgroundTint="@color/colorPrimary"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

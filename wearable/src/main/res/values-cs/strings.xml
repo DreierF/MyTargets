@@ -23,4 +23,5 @@
   <string name="vibration">Vibrace</string>
   <string name="sound">Zvuk</string>
   <string name="today">dnes</string>
+  <string name="notification_channel_default">Výchozí</string>
 </resources>

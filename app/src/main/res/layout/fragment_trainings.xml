@@ -14,7 +14,7 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordinatorLayout"
@@ -24,41 +24,22 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             style="@style/card_list"
-            app:layoutManager="LinearLayoutManager" />
+            app:layoutManager="LinearLayoutManager"/>
 
-        <com.github.clans.fab.FloatingActionMenu
-            android:id="@+id/fab"
-            style="@style/fabMenu"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom|end"
-            android:padding="16dp"
-            app:layout_behavior="de.dreier.mytargets.utils.FloatingActionMenuBehavior"
-            app:menu_labels_style="@style/fabMenuLabelsStyle">
+        <include
+            android:id="@+id/emptyState"
+            layout="@layout/partial_empty_state"
+            android:visibility="gone"
+            app:image="@{de.dreier.mytargets.R.drawable.ic_archery_24dp}"
+            app:text="@{de.dreier.mytargets.R.string.no_trainings}"/>
 
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/fab2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/fab_album_24dp"
-                app:fab_colorNormal="@color/fabTrainingWithStandardRound"
-                app:fab_colorPressed="#1d7dcc"
-                app:fab_colorRipple="#1d7dcc"
-                app:fab_label="@string/training_with_standard_round"
-                app:fab_size="mini" />
-
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/fab1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/fab_trending_up_white_24dp"
-                app:fab_colorNormal="@color/fabFreeTraining"
-                app:fab_colorPressed="#429945"
-                app:fab_colorRipple="#429945"
-                app:fab_label="@string/free_training"
-                app:fab_size="mini" />
-
-        </com.github.clans.fab.FloatingActionMenu>
+        <de.dreier.mytargets.views.speeddial.FabSpeedDial
+            android:id="@+id/fabSpeedDial"
+            style="@style/fabSpeedDial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fabMenu="@menu/fab_trainings"
+            app:miniFabBackgroundTintList="@array/fab_menu_trainings_colors"/>
 
     </android.support.design.widget.CoordinatorLayout>
 
