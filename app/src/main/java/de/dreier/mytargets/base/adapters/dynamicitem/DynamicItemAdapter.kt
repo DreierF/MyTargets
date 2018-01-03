@@ -24,7 +24,6 @@ import android.view.View
 import de.dreier.mytargets.R
 
 
-
 abstract class DynamicItemAdapter<T>(private val fragment: Fragment,
                                      private var list: MutableList<T>,
                                      @StringRes private val undoString: Int
@@ -35,13 +34,16 @@ abstract class DynamicItemAdapter<T>(private val fragment: Fragment,
     override fun onBindViewHolder(holder: DynamicItemHolder<T>, position: Int) {
         val item = list[position]
         holder.onBind(item, position, fragment, View.OnClickListener {
-            list.removeAt(position)
-
-            notifyItemRemoved(position)
+            // Get the current position of our item
+            // It may have changed due to a simultaneous remove operation on a previous list item,
+            // which did not yet cause an item rebind
+            val currentPosition = list.indexOf(item)
+            list.remove(item)
+            notifyItemRemoved(currentPosition)
 
             Snackbar.make(fragment.view!!, undoString, Snackbar.LENGTH_LONG)
                     .setAction(R.string.undo) {
-                        list.add(position, item)
+                        list.add(currentPosition, item)
                         notifyItemInserted(position)
                     }.show()
         })

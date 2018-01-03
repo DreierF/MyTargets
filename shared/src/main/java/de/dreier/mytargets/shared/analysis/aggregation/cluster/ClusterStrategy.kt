@@ -47,7 +47,7 @@ class ClusterStrategy : AggregationStrategyBase() {
                 val cluster = Cluster(shots.size)
                 clusters.add(expandCluster(cluster, point, neighbors, shots, visited))
             } else {
-                visited.put(point, PointStatus.NOISE)
+                visited[point] = PointStatus.NOISE
             }
         }
         val clusterResultRenderer = ClusterResultRenderer(clusters)
@@ -71,7 +71,7 @@ class ClusterStrategy : AggregationStrategyBase() {
                               points: Collection<Shot>,
                               visited: MutableMap<Shot, PointStatus>): Cluster {
         cluster.add(point)
-        visited.put(point, PointStatus.PART_OF_CLUSTER)
+        visited[point] = PointStatus.PART_OF_CLUSTER
 
         var seeds: MutableList<Shot> = ArrayList(neighbors)
         var index = 0
@@ -87,7 +87,7 @@ class ClusterStrategy : AggregationStrategyBase() {
             }
 
             if (pStatus != PointStatus.PART_OF_CLUSTER) {
-                visited.put(current, PointStatus.PART_OF_CLUSTER)
+                visited[current] = PointStatus.PART_OF_CLUSTER
                 cluster.add(current)
             }
 

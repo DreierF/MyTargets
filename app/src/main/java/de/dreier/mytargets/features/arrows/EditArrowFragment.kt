@@ -31,7 +31,7 @@ import de.dreier.mytargets.shared.models.db.ArrowImage
 import de.dreier.mytargets.utils.ToolbarUtils
 import java.lang.Integer.parseInt
 
-class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrows, ArrowImage::class.java) {
+class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrows) {
     @State
     lateinit var arrow: Arrow
     private lateinit var contentBinding: FragmentEditArrowBinding
@@ -59,6 +59,10 @@ class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrow
         contentBinding.arrow = arrow
         loadImage(imageFile)
         return rootView
+    }
+
+    override fun wrapImage(imageFile: String): List<ArrowImage> {
+        return listOf(ArrowImage(fileName = imageFile))
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

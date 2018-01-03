@@ -166,12 +166,12 @@ object GoogleDriveBackup {
                     .build()
             val connectionResult = googleApiClient.blockingConnect()
             if (!connectionResult.isSuccess) {
-                throw BackupException(connectionResult.errorMessage!!)
+                throw BackupException(connectionResult.errorMessage)
             }
 
             val result = Drive.DriveApi.newDriveContents(googleApiClient).await()
             if (!result.status.isSuccess) {
-                throw BackupException(result.status.statusMessage!!)
+                throw BackupException(result.status.statusMessage)
             }
 
             val driveContents = result.driveContents
@@ -193,7 +193,7 @@ object GoogleDriveBackup {
             val result1 = Drive.DriveApi.getAppFolder(googleApiClient)
                     .createFile(googleApiClient, changeSet, driveContents).await()
             if (!result1.status.isSuccess) {
-                throw BackupException(result1.status.statusMessage!!)
+                throw BackupException(result1.status.statusMessage)
             }
         }
     }

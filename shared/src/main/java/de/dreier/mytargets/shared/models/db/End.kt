@@ -194,7 +194,7 @@ data class End(
                                 val integer = scoreCount[tuple]
                                 if (integer != null) {
                                     val count = integer + 1
-                                    scoreCount.put(tuple, count)
+                                    scoreCount[tuple] = count
                                 }
                             }
                         }
@@ -207,7 +207,7 @@ data class End(
             for (arrow in 0..2) {
                 val zoneList = t.getSelectableZoneList(arrow)
                 for (selectableZone in zoneList) {
-                    scoreCount.put(selectableZone, 0)
+                    scoreCount[selectableZone] = 0
                 }
                 if (!t.model.dependsOnArrowIndex()) {
                     break

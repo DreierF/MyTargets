@@ -46,8 +46,7 @@ import java.io.IOException
 
 @RuntimePermissions
 abstract class EditWithImageFragmentBase<T : Image> protected constructor(
-        private val defaultDrawable: Int,
-        private val clazz: Class<T>
+        private val defaultDrawable: Int
 ) : EditFragmentBase(), View.OnFocusChangeListener {
 
     protected lateinit var binding: FragmentEditImageBinding
@@ -60,22 +59,10 @@ abstract class EditWithImageFragmentBase<T : Image> protected constructor(
 
     protected var imageFiles: List<T>
         get() {
-            if (imageFile == null) {
-                return emptyList()
+            return if (imageFile == null) {
+                emptyList()
             } else {
-                val image: T
-                try {
-                    image = clazz.newInstance()
-                } catch (e: java.lang.InstantiationException) {
-                    e.printStackTrace()
-                    return emptyList()
-                } catch (e: IllegalAccessException) {
-                    e.printStackTrace()
-                    return emptyList()
-                }
-
-                image.fileName = imageFile!!.name
-                return listOf(image)
+                wrapImage(imageFile!!.name)
             }
         }
         set(images) {
@@ -90,6 +77,8 @@ abstract class EditWithImageFragmentBase<T : Image> protected constructor(
                 }
             }
         }
+
+    protected abstract fun wrapImage(imageFile: String): List<T>
 
     protected val thumbnail: Thumbnail
         get() = if (imageFile == null) {
@@ -203,11 +192,7 @@ abstract class EditWithImageFragmentBase<T : Image> protected constructor(
     @CallSuper
     override fun onSave() {
         // Delete old file
-        if (oldImageFile != null) {
-            val f = oldImageFile
-
-            f!!.delete()
-        }
+        oldImageFile?.delete()
         if (imageFile != null) {
             try {
                 oldImageFile = imageFile
