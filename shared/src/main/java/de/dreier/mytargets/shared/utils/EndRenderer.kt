@@ -25,6 +25,7 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.db.Shot
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 
 @SuppressLint("ParcelCreator")
@@ -40,19 +41,19 @@ class EndRenderer(
         private var ambientMode: Boolean = false
 ) : Parcelable {
 
-    @Transient private var circle: Circle? = null
-    @Transient private var parent: View? = null
-    @Transient private var rect: RectF? = null
-    @Transient private var radius: Int = 0
-    @Transient private var grayBackground = Paint()
-    @Transient private var density: Float = 0.toFloat()
-    @Transient private var shotsPerRow: Int = 0
-    @Transient private var rowHeight: Float = 0.toFloat()
-    @Transient private var columnWidth: Float = 0.toFloat()
-    @Transient private var oldRadius: Int = 0
-    @Transient private var oldSelected: Int = 0
-    @Transient private var oldSelectedRadius: Int = 0
-    @Transient private lateinit var target: Target
+    @IgnoredOnParcel private var circle: Circle? = null
+    @IgnoredOnParcel private var parent: View? = null
+    @IgnoredOnParcel private var rect: RectF? = null
+    @IgnoredOnParcel private var radius: Int = 0
+    @IgnoredOnParcel private var grayBackground = Paint()
+    @IgnoredOnParcel private var density: Float = 0.toFloat()
+    @IgnoredOnParcel private var shotsPerRow: Int = 0
+    @IgnoredOnParcel private var rowHeight: Float = 0.toFloat()
+    @IgnoredOnParcel private var columnWidth: Float = 0.toFloat()
+    @IgnoredOnParcel private var oldRadius: Int = 0
+    @IgnoredOnParcel private var oldSelected: Int = 0
+    @IgnoredOnParcel private var oldSelectedRadius: Int = 0
+    @IgnoredOnParcel private lateinit var target: Target
 
     private val animator: ValueAnimator
         get() {

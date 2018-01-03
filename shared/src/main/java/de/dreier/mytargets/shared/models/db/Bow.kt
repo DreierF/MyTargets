@@ -32,6 +32,7 @@ import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.*
 import de.dreier.mytargets.shared.utils.typeconverters.EBowTypeConverter
 import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 
 @SuppressLint("ParcelCreator")
@@ -112,10 +113,10 @@ data class Bow(
         var thumbnail: Thumbnail? = null
 ) : BaseModel(), IImageProvider, IIdSettable, Comparable<Bow>, IRecursiveModel, Parcelable {
 
-    @Transient
+    @IgnoredOnParcel
     var images: List<BowImage>? = null
 
-    @Transient
+    @IgnoredOnParcel
     var sightMarks: MutableList<SightMark>? = null
 
     val drawable: Drawable

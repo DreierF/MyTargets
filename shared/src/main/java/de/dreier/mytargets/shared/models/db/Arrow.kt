@@ -32,6 +32,7 @@ import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.*
 import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter
 import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 
 @SuppressLint("ParcelCreator")
@@ -77,7 +78,7 @@ data class Arrow(@Column(name = "_id")
                  @Column(typeConverter = ThumbnailConverter::class)
                  var thumbnail: Thumbnail? = null) : BaseModel(), IImageProvider, IIdSettable, Comparable<Arrow>, IRecursiveModel, Parcelable {
 
-    @Transient
+    @IgnoredOnParcel
     var images: List<ArrowImage>? = null
 
     val drawable: Drawable

@@ -32,6 +32,7 @@ import de.dreier.mytargets.shared.models.IDetailProvider
 import de.dreier.mytargets.shared.models.IIdSettable
 import de.dreier.mytargets.shared.models.IImageProvider
 import de.dreier.mytargets.shared.targets.drawable.CombinedSpot
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 
 @SuppressLint("ParcelCreator")
@@ -49,7 +50,8 @@ data class StandardRound(
         override var name: String = ""
 ) : BaseModel(), IIdSettable, IImageProvider, IDetailProvider, Comparable<StandardRound>, Parcelable {
 
-    @Transient internal var rounds: MutableList<RoundTemplate>? = null
+    @IgnoredOnParcel
+    internal var rounds: MutableList<RoundTemplate>? = null
 
     val targetDrawable: Drawable
         get() {
