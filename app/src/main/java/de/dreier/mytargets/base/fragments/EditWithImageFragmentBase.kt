@@ -203,11 +203,7 @@ abstract class EditWithImageFragmentBase<T : Image> protected constructor(
     @CallSuper
     override fun onSave() {
         // Delete old file
-        if (oldImageFile != null) {
-            val f = oldImageFile
-
-            f!!.delete()
-        }
+        oldImageFile?.delete()
         if (imageFile != null) {
             try {
                 oldImageFile = imageFile
