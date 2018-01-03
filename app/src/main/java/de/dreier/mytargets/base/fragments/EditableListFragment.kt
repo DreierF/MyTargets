@@ -18,9 +18,8 @@ package de.dreier.mytargets.base.fragments
 import android.os.Parcelable
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
 import de.dreier.mytargets.shared.models.IIdSettable
-import de.dreier.mytargets.shared.models.IRecursiveModel
 
-abstract class EditableListFragment<T> : EditableListFragmentBase<T, SimpleListAdapterBase<T>>() where T : IIdSettable, T : IRecursiveModel, T : Parcelable, T : Comparable<T> {
+abstract class EditableListFragment<T> : EditableListFragmentBase<T, SimpleListAdapterBase<T>>() where T : IIdSettable, T : Parcelable, T : Comparable<T> {
 
     override fun onSelected(item: T) {
         if (listener == null) {

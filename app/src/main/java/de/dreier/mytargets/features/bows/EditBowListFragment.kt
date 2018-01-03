@@ -89,6 +89,14 @@ class EditBowListFragment : EditableListFragment<Bow>() {
         navigationController.navigateToEditBow(item.id)
     }
 
+    override fun deleteItem(item: Bow): () -> Bow {
+        item.delete()
+        return {
+            item.saveRecursively()
+            item
+        }
+    }
+
     companion object {
         internal var bowTypeMap = SparseArray<EBowType>()
 

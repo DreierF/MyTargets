@@ -111,7 +111,7 @@ data class Bow(
 
         @Column(typeConverter = ThumbnailConverter::class)
         var thumbnail: Thumbnail? = null
-) : BaseModel(), IImageProvider, IIdSettable, Comparable<Bow>, IRecursiveModel, Parcelable {
+) : BaseModel(), IImageProvider, IIdSettable, Comparable<Bow>, Parcelable {
 
     @IgnoredOnParcel
     var images: List<BowImage>? = null
@@ -220,11 +220,11 @@ data class Bow(
                 !TextUtils.isEmpty(description)
     }
 
-    override fun saveRecursively() {
+    fun saveRecursively() {
         save()
     }
 
-    override fun saveRecursively(databaseWrapper: DatabaseWrapper) {
+    fun saveRecursively(databaseWrapper: DatabaseWrapper) {
         save(databaseWrapper)
     }
 

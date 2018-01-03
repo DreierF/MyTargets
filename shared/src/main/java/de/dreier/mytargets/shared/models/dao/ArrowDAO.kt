@@ -42,7 +42,7 @@ object ArrowDAO {
             .queryList()
 
     fun saveArrow(arrow: Arrow, images: List<ArrowImage>) {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ db ->
+        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
             arrow.save(db)
             SQLite.delete(ArrowImage::class.java)
                     .where(ArrowImage_Table.arrow.eq(arrow.id))
@@ -51,6 +51,6 @@ object ArrowDAO {
                 image.arrowId = arrow.id
                 image.save(db)
             }
-        })
+        }
     }
 }

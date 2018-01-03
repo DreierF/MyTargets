@@ -82,7 +82,7 @@ data class Training(
 
         @ForeignKey(tableClass = Signature::class, references = [(ForeignKeyReference(columnName = "witnessSignature", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
         var witnessSignatureId: Long? = null
-) : BaseModel(), IIdSettable, Comparable<Training>, IRecursiveModel, Parcelable {
+) : BaseModel(), IIdSettable, Comparable<Training>, Parcelable {
 
     @IgnoredOnParcel
     var rounds: MutableList<Round>? = null
@@ -203,11 +203,11 @@ data class Training(
         return true
     }
 
-    override fun saveRecursively() {
+    fun saveRecursively() {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.saveRecursively(it) })
     }
 
-    override fun saveRecursively(databaseWrapper: DatabaseWrapper) {
+    fun saveRecursively(databaseWrapper: DatabaseWrapper) {
         super.save(databaseWrapper)
         loadRounds().forEach { s ->
             s.trainingId = id

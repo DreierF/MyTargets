@@ -150,6 +150,14 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
         navigationController.navigateToEditTraining(itemId)
     }
 
+    override fun deleteItem(item: Training): () -> Training {
+        item.delete()
+        return {
+            item.saveRecursively()
+            item
+        }
+    }
+
     override fun onLoad(args: Bundle?): LoaderUICallback {
         val trainings = Training.all
         return {

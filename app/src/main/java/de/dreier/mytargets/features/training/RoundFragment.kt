@@ -161,6 +161,14 @@ class RoundFragment : EditableListFragment<End>() {
                 .start()
     }
 
+    override fun deleteItem(item: End): () -> End {
+        item.delete()
+        return {
+            item.saveRecursively()
+            item
+        }
+    }
+
     private inner class EndAdapter : SimpleListAdapterBase<End>() {
 
         override fun onCreateViewHolder(parent: ViewGroup): SelectableViewHolder<End> {

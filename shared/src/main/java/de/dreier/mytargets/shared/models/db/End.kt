@@ -25,7 +25,6 @@ import com.raizlabs.android.dbflow.structure.BaseModel
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.IIdSettable
-import de.dreier.mytargets.shared.models.IRecursiveModel
 import de.dreier.mytargets.shared.models.SelectableZone
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.utils.typeconverters.LocalTimeConverter
@@ -57,7 +56,7 @@ data class End(
 
         @Column
         var comment: String? = ""
-) : BaseModel(), IIdSettable, Comparable<End>, IRecursiveModel, Parcelable {
+) : BaseModel(), IIdSettable, Comparable<End>, Parcelable {
 
     @IgnoredOnParcel
     var images: MutableList<EndImage>? = null
@@ -158,11 +157,11 @@ data class End(
 
     override fun compareTo(other: End) = compareBy(End::index).compare(this, other)
 
-    override fun saveRecursively() {
+    fun saveRecursively() {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.saveRecursively(it) })
     }
 
-    override fun saveRecursively(databaseWrapper: DatabaseWrapper) {
+    fun saveRecursively(databaseWrapper: DatabaseWrapper) {
         val round = Round[roundId!!]
         val ends = round!!.loadEnds(databaseWrapper).toMutableList()
 

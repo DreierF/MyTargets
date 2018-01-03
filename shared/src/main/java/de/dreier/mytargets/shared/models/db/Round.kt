@@ -64,7 +64,7 @@ data class Round(
 
         @Column(typeConverter = DimensionConverter::class)
         var targetDiameter: Dimension = Dimension.UNKNOWN
-) : BaseModel(), IIdSettable, Comparable<Round>, IRecursiveModel, Parcelable {
+) : BaseModel(), IIdSettable, Comparable<Round>, Parcelable {
 
     @IgnoredOnParcel
     var ends: MutableList<End>? = null
@@ -158,7 +158,7 @@ data class Round(
         return index - other.index
     }
 
-    override fun saveRecursively() {
+    fun saveRecursively() {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.saveRecursively(it) })
     }
 
@@ -167,7 +167,7 @@ data class Round(
      * Gets called when deletion of a round has been canceled by the user via undo
      * or when deleting a training has been canceled.
      */
-    override fun saveRecursively(databaseWrapper: DatabaseWrapper) {
+    fun saveRecursively(databaseWrapper: DatabaseWrapper) {
         val training = Training[trainingId!!]!!
         val rounds = training.loadRounds(databaseWrapper).toMutableList()
 

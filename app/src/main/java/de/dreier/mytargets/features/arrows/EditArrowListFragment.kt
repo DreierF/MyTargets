@@ -84,6 +84,14 @@ class EditArrowListFragment : EditableListFragment<Arrow>() {
                 .start()
     }
 
+    override fun deleteItem(item: Arrow): () -> Arrow {
+        item.delete()
+        return {
+            item.saveRecursively()
+            item
+        }
+    }
+
     private inner class ArrowAdapter : SimpleListAdapterBase<Arrow>() {
 
         public override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {

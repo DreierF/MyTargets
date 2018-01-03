@@ -183,6 +183,14 @@ open class TrainingFragment : EditableListFragment<Round>() {
         navigationController.navigateToStatistics(ids)
     }
 
+    override fun deleteItem(item: Round): () -> Round {
+        item.delete()
+        return {
+            item.saveRecursively()
+            item
+        }
+    }
+
     private inner class RoundAdapter : SimpleListAdapterBase<Round>() {
 
         override fun onCreateViewHolder(parent: ViewGroup): SelectableViewHolder<Round> {

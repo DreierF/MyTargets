@@ -28,7 +28,10 @@ import com.raizlabs.android.dbflow.sql.language.SQLite
 import com.raizlabs.android.dbflow.structure.BaseModel
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
 import de.dreier.mytargets.shared.AppDatabase
-import de.dreier.mytargets.shared.models.*
+import de.dreier.mytargets.shared.models.Dimension
+import de.dreier.mytargets.shared.models.IIdSettable
+import de.dreier.mytargets.shared.models.IImageProvider
+import de.dreier.mytargets.shared.models.Thumbnail
 import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter
 import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter
 import kotlinx.android.parcel.IgnoredOnParcel
@@ -75,8 +78,8 @@ data class Arrow(
         @Column(typeConverter = DimensionConverter::class)
         var diameter: Dimension = Dimension(5f, Dimension.Unit.MILLIMETER),
 
-                 @Column(typeConverter = ThumbnailConverter::class)
-                 var thumbnail: Thumbnail? = null) : BaseModel(), IImageProvider, IIdSettable, Comparable<Arrow>, IRecursiveModel, Parcelable {
+        @Column(typeConverter = ThumbnailConverter::class)
+        var thumbnail: Thumbnail? = null) : BaseModel(), IImageProvider, IIdSettable, Comparable<Arrow>, Parcelable {
 
     @IgnoredOnParcel
     var images: List<ArrowImage>? = null
@@ -134,11 +137,11 @@ data class Arrow(
 
     override fun compareTo(other: Arrow) = compareBy(Arrow::name, Arrow::id).compare(this, other)
 
-    override fun saveRecursively() {
+    fun saveRecursively() {
         save()
     }
 
-    override fun saveRecursively(databaseWrapper: DatabaseWrapper) {
+    fun saveRecursively(databaseWrapper: DatabaseWrapper) {
         save(databaseWrapper)
     }
 }
