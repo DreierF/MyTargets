@@ -17,7 +17,7 @@ package de.dreier.mytargets.shared.models
 
 import de.dreier.mytargets.shared.targets.zone.ZoneBase
 
-data class SelectableZone(
+class SelectableZone(
         val index: Int,
         val zone: ZoneBase,
         val text: String,
@@ -32,5 +32,24 @@ data class SelectableZone(
         } else {
             other.index - index
         }
+    }
+
+    /**
+     * Used in de.dreier.mytargets.shared.models.db.End.Companion#getRoundScores
+     */
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as SelectableZone
+
+        if (text != other.text) return false
+        if (points != other.points) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return 31 * text.hashCode() + points
     }
 }
