@@ -109,22 +109,24 @@ class ScoreboardFragment : FragmentBase() {
             binding!!.container.removeAllViews()
             binding!!.container.addView(scoreboard)
 
-            val signatures = PartialScoreboardSignaturesBinding
-                    .bind(scoreboard.findViewById(R.id.signatures_layout))
+            val signaturesView = scoreboard.findViewById<View>(R.id.signatures_layout)
+            if(signaturesView != null) {
+                val signatures = PartialScoreboardSignaturesBinding.bind(signaturesView)
 
-            var archer = SettingsManager.profileFullName
-            if (archer.trim { it <= ' ' }.isEmpty()) {
-                archer = getString(R.string.archer)
+                var archer = SettingsManager.profileFullName
+                if (archer.trim { it <= ' ' }.isEmpty()) {
+                    archer = getString(R.string.archer)
+                }
+                val finalArcher = archer
+
+                signatures.editSignatureArcher
+                        .setOnClickListener { onSignatureClicked(archerSignature, finalArcher) }
+                signatures.editSignatureWitness
+                        .setOnClickListener { onSignatureClicked(witnessSignature, getString(R.string.target_captain)) }
+
+                signatures.archerSignaturePlaceholder.visibility = if (archerSignature.isSigned) GONE else VISIBLE
+                signatures.witnessSignaturePlaceholder.visibility = if (witnessSignature.isSigned) GONE else VISIBLE
             }
-            val finalArcher = archer
-
-            signatures.editSignatureArcher
-                    .setOnClickListener { onSignatureClicked(archerSignature, finalArcher) }
-            signatures.editSignatureWitness
-                    .setOnClickListener { onSignatureClicked(witnessSignature, getString(R.string.target_captain)) }
-
-            signatures.archerSignaturePlaceholder.visibility = if (archerSignature.isSigned) GONE else VISIBLE
-            signatures.witnessSignaturePlaceholder.visibility = if (witnessSignature.isSigned) GONE else VISIBLE
         }
     }
 
