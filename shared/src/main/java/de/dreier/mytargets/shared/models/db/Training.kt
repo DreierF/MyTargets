@@ -202,14 +202,6 @@ data class Training(
         return true
     }
 
-    @Deprecated(message = "Use AugmentedTraining instead")
-    fun ensureLoaded(): Training {
-        loadRounds().forEach { round ->
-            round.loadEnds().forEach { end -> end.loadShots() }
-        }
-        return this
-    }
-
     override fun saveRecursively() {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.saveRecursively(it) })
     }
