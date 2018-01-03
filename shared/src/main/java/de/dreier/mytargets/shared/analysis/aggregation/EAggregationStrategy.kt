@@ -18,21 +18,16 @@ package de.dreier.mytargets.shared.analysis.aggregation
 import de.dreier.mytargets.shared.analysis.aggregation.average.AverageStrategy
 import de.dreier.mytargets.shared.analysis.aggregation.cluster.ClusterStrategy
 
-enum class EAggregationStrategy(private val strategyClass: Class<out IAggregationStrategy>) {
-    NONE(NoneStrategy::class.java),
-    AVERAGE(AverageStrategy::class.java),
-    CLUSTER(ClusterStrategy::class.java);
+enum class EAggregationStrategy {
+    NONE,
+    AVERAGE,
+    CLUSTER;
 
-    fun newInstance(): IAggregationStrategy {
-        try {
-            return strategyClass.newInstance()
-        } catch (e: InstantiationException) {
-            throw IllegalArgumentException(
-                    "Strategy must have zero argument constructor!")
-        } catch (e: IllegalAccessException) {
-            throw IllegalArgumentException(
-                    "Strategy must have a public zero argument constructor!")
+    fun create(): IAggregationStrategy {
+        return when(this) {
+            NONE -> NoneStrategy()
+            AVERAGE -> AverageStrategy()
+            CLUSTER -> ClusterStrategy()
         }
-
     }
 }

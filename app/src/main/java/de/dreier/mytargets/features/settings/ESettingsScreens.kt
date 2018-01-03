@@ -22,34 +22,30 @@ import java.util.*
  * All available settings screens. The identifiers implicitly match the keys used in the xml
  * definition.
  */
-enum class ESettingsScreens constructor(private val settingsFragment: Class<out SettingsFragmentBase>) {
-    MAIN(MainSettingsFragment::class.java),
-    PROFILE(ProfileSettingsFragment::class.java),
-    OVERVIEW(OverviewSettingsFragment::class.java),
-    INPUT(InputSettingsFragment::class.java),
-    TIMER(TimerSettingsFragment::class.java),
-    STATISTICS(StatisticsSettingsFragment::class.java),
-    SCOREBOARD(ScoreboardSettingsFragment::class.java),
-    BACKUP(BackupSettingsFragment::class.java);
+enum class ESettingsScreens {
+    MAIN,
+    PROFILE,
+    OVERVIEW,
+    INPUT,
+    TIMER,
+    STATISTICS,
+    SCOREBOARD,
+    BACKUP;
 
     val key: String
         get() = name.toLowerCase(Locale.US)
 
     fun create(): SettingsFragmentBase {
-        try {
-            return settingsFragment.newInstance()
-        } catch (e: InstantiationException) {
-            e.printStackTrace()
-            // Should never happen, because Fragments should
-            // always have a zero argument constructor.
-        } catch (e: IllegalAccessException) {
-            e.printStackTrace()
-            // Should never happen, because Fragments should
-            // always have a public constructor.
+        return when(this) {
+            MAIN -> MainSettingsFragment()
+            PROFILE -> ProfileSettingsFragment()
+            OVERVIEW -> OverviewSettingsFragment()
+            INPUT -> InputSettingsFragment()
+            TIMER -> TimerSettingsFragment()
+            STATISTICS -> StatisticsSettingsFragment()
+            SCOREBOARD -> ScoreboardSettingsFragment()
+            BACKUP -> BackupSettingsFragment()
         }
-
-        // Otherwise just show main fragment
-        return MainSettingsFragment()
     }
 
     companion object {

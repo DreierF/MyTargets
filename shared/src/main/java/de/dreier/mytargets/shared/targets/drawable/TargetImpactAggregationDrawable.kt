@@ -35,7 +35,7 @@ class TargetImpactAggregationDrawable(target: Target) : TargetImpactDrawable(tar
     fun setAggregationStrategy(aggregation: EAggregationStrategy) {
         faceAggregations.clear()
         for (i in 0 until model.faceCount) {
-            val strategy = aggregation.newInstance()
+            val strategy = aggregation.create()
             strategy.setOnAggregationResultListener(this)
             faceAggregations.add(strategy)
         }
@@ -43,7 +43,7 @@ class TargetImpactAggregationDrawable(target: Target) : TargetImpactDrawable(tar
         recalculateAggregation()
     }
 
-    fun setColor(@ColorInt color: Int) {
+    private fun setColor(@ColorInt color: Int) {
         for (faceAggregation in faceAggregations) {
             faceAggregation.color = color
         }
