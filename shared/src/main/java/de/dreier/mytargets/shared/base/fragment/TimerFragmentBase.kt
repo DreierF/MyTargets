@@ -66,12 +66,12 @@ abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
     }
 
     override fun onDetach() {
-        super.onDetach()
+        countdown?.cancel()
         if (horn.isPlaying) {
             horn.stop()
         }
         horn.release()
-        countdown?.cancel()
+        super.onDetach()
     }
 
     override fun onClick(v: View) {
