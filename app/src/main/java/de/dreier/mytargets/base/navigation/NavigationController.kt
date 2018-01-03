@@ -56,6 +56,7 @@ import de.dreier.mytargets.features.training.target.TargetListFragment
 import de.dreier.mytargets.shared.base.fragment.TimerFragmentBase
 import de.dreier.mytargets.shared.models.*
 import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
 import de.dreier.mytargets.shared.models.db.*
 import de.dreier.mytargets.shared.utils.ImageList
 import de.dreier.mytargets.utils.IntentWrapper
@@ -194,7 +195,7 @@ class NavigationController(
         return IntentWrapper(activity, fragment, EditStandardRoundActivity::class.java)
     }
 
-    fun navigateToEditStandardRound(item: StandardRound): IntentWrapper {
+    fun navigateToEditStandardRound(item: AugmentedStandardRound): IntentWrapper {
         return IntentWrapper(activity, fragment, EditStandardRoundActivity::class.java)
                 .with(ItemSelectActivity.ITEM, item)
     }

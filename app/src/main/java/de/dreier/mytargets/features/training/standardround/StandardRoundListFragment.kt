@@ -35,6 +35,7 @@ import de.dreier.mytargets.base.fragments.SelectItemFragmentBase
 import de.dreier.mytargets.databinding.FragmentListBinding
 import de.dreier.mytargets.databinding.ItemStandardRoundBinding
 import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
 import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.utils.StandardRoundFactory
 import de.dreier.mytargets.shared.utils.contains
@@ -112,7 +113,7 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
     override fun onLongClick(holder: SelectableViewHolder<StandardRound>) {
         val item = holder.item!!
         if (item.club == StandardRoundFactory.CUSTOM) {
-            navigationController.navigateToEditStandardRound(item)
+            navigationController.navigateToEditStandardRound(AugmentedStandardRound(item))
                     .forResult(EDIT_STANDARD_ROUND)
                     .start()
         } else {
@@ -123,7 +124,7 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
                     .negativeText(android.R.string.cancel)
                     .onPositive { _, _ ->
                         navigationController
-                                .navigateToEditStandardRound(item)
+                                .navigateToEditStandardRound(AugmentedStandardRound(item))
                                 .forResult(NEW_STANDARD_ROUND)
                                 .start()
                     }
