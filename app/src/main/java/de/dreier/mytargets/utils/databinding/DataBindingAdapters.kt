@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -13,14 +13,12 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.utils
+package de.dreier.mytargets.utils.databinding
 
 import android.databinding.BindingAdapter
 import android.support.design.widget.TextInputLayout
 import android.view.View
 import android.widget.ImageView
-
-
 
 object DataBindingAdapters {
 
