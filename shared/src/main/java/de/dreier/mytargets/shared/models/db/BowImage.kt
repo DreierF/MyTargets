@@ -35,6 +35,4 @@ data class BowImage(
 
         @ForeignKey(tableClass = Bow::class, references = [(ForeignKeyReference(columnName = "bow", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
         var bowId: Long? = null
-) : BaseModel(), Image, Parcelable {
-    constructor(imageFilePath: String) : this(fileName = imageFilePath)
-}
+) : BaseModel(), Image, Parcelable

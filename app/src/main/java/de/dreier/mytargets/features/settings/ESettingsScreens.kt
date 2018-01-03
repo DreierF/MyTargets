@@ -33,7 +33,7 @@ enum class ESettingsScreens constructor(private val settingsFragment: Class<out 
     BACKUP(BackupSettingsFragment::class.java);
 
     val key: String
-        get() = name.toLowerCase()
+        get() = name.toLowerCase(Locale.US)
 
     fun create(): SettingsFragmentBase {
         try {

@@ -35,6 +35,4 @@ data class ArrowImage(
 
         @ForeignKey(tableClass = Arrow::class, references = [(ForeignKeyReference(columnName = "arrow", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
         var arrowId: Long? = null
-) : BaseModel(), Image, Parcelable {
-    constructor(imageFilePath: String) : this(fileName = imageFilePath)
-}
+) : BaseModel(), Image, Parcelable

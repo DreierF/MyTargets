@@ -154,7 +154,7 @@ data class Bow(
     }
 
     override fun save(): Boolean {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.save(it) })
+        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { this.save(it) }
         return true
     }
 

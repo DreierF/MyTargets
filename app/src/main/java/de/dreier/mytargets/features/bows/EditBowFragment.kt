@@ -42,7 +42,7 @@ import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.views.selector.SelectorBase
 import de.dreier.mytargets.views.selector.SimpleDistanceSelector
 
-class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_bow, BowImage::class.java) {
+class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_bow) {
 
     @State
     lateinit var bow: Bow
@@ -86,6 +86,10 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
         contentBinding.sightMarks.adapter = adapter
         contentBinding.sightMarks.isNestedScrollingEnabled = false
         return rootView
+    }
+
+    override fun wrapImage(imageFile: String): List<BowImage> {
+        return listOf(BowImage(fileName = imageFile))
     }
 
     override fun onResume() {
