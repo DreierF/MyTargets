@@ -29,6 +29,7 @@ import android.widget.RelativeLayout
 import de.dreier.mytargets.R
 import de.dreier.mytargets.databinding.ViewChipsBinding
 import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 
 @SuppressLint("ParcelCreator")
@@ -39,7 +40,8 @@ class Tag @JvmOverloads constructor(
         var image: ByteArray? = null,
         var isChecked: Boolean = true) : Parcelable {
 
-    @Transient private var thumbnail: Bitmap? = null
+    @IgnoredOnParcel
+    private var thumbnail: Bitmap? = null
 
     val drawable: Drawable?
         get() {

@@ -26,6 +26,7 @@ import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.*
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
@@ -65,7 +66,7 @@ data class Round(
         var targetDiameter: Dimension = Dimension.UNKNOWN
 ) : BaseModel(), IIdSettable, Comparable<Round>, IRecursiveModel, Parcelable {
 
-    @Transient
+    @IgnoredOnParcel
     var ends: MutableList<End>? = null
 
     constructor(info: RoundTemplate) : this(

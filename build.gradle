@@ -15,11 +15,12 @@
 
 buildscript {
     ext.androidPluginVersion = '3.0.1'
-    ext.kotlinVersion = '1.2.10'
+    ext.kotlinVersion = '1.2.20-eap-33'
     repositories {
         jcenter()
         google()
         maven { url "https://jitpack.io" }
+        maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
     }
 
     dependencies {
@@ -46,6 +47,7 @@ allprojects {
         google()
         maven { url 'https://jitpack.io' }
         maven { url 'https://clojars.org/repo/' }
+        maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
     }
 }
 

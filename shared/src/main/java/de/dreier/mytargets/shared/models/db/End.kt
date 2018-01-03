@@ -29,6 +29,7 @@ import de.dreier.mytargets.shared.models.IRecursiveModel
 import de.dreier.mytargets.shared.models.SelectableZone
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.utils.typeconverters.LocalTimeConverter
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.LocalTime
 import java.util.*
@@ -58,10 +59,10 @@ data class End(
         var comment: String? = ""
 ) : BaseModel(), IIdSettable, Comparable<End>, IRecursiveModel, Parcelable {
 
-    @Transient
+    @IgnoredOnParcel
     var images: MutableList<EndImage>? = null
 
-    @Transient
+    @IgnoredOnParcel
     internal var shots: MutableList<Shot>? = null
 
     val isEmpty: Boolean

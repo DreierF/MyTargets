@@ -26,6 +26,7 @@ import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.*
 import de.dreier.mytargets.shared.utils.typeconverters.EWeatherConverter
 import de.dreier.mytargets.shared.utils.typeconverters.LocalDateConverter
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -83,7 +84,7 @@ data class Training(
         var witnessSignatureId: Long? = null
 ) : BaseModel(), IIdSettable, Comparable<Training>, IRecursiveModel, Parcelable {
 
-    @Transient
+    @IgnoredOnParcel
     var rounds: MutableList<Round>? = null
 
     var environment: Environment
@@ -200,14 +201,6 @@ data class Training(
         loadRounds().forEach { round -> round.delete(databaseWrapper) }
         super.delete(databaseWrapper)
         return true
-    }
-
-    @Deprecated(message = "Use AugmentedTraining instead")
-    fun ensureLoaded(): Training {
-        loadRounds().forEach { round ->
-            round.loadEnds().forEach { end -> end.loadShots() }
-        }
-        return this
     }
 
     override fun saveRecursively() {
