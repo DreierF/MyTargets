@@ -127,7 +127,7 @@ class EditStandardRoundFragment : EditFragmentBase() {
     private fun onDeleteStandardRound() {
         standardRound!!.standardRound.delete()
         navigationController.setResult(RESULT_STANDARD_ROUND_DELETED)
-        finish()
+        navigationController.finish()
     }
 
     override fun onSave() {
@@ -142,7 +142,7 @@ class EditStandardRoundFragment : EditFragmentBase() {
         SettingsManager.distance = round.distance
 
         navigationController.setResultSuccess(standardRound!!.standardRound)
-        finish()
+        navigationController.finish()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

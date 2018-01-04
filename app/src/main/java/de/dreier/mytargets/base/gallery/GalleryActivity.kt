@@ -133,7 +133,7 @@ class GalleryActivity : ChildActivityBase() {
                 return true
             }
             android.R.id.home -> {
-                onBackPressed()
+                navigationController.finish()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

@@ -262,7 +262,7 @@ class StatisticsFragment : FragmentBase() {
                             highlight.drawY,
                             circleRadius,
                             mRenderPaint)
-                    colorIndex = colorIndex + 1 % dataSet.circleColorCount
+                    colorIndex = (colorIndex + 1) % dataSet.circleColorCount
                 }
 
                 // draws highlight lines (if enabled)
@@ -388,10 +388,7 @@ class StatisticsFragment : FragmentBase() {
     }
 
     private fun convertToLineData(values: List<Pair<Float, LocalDateTime>>, evaluator: Evaluator): LineDataSet {
-        val seriesEntries = ArrayList<Entry>()
-        for (i in values.indices) {
-            seriesEntries.add(Entry(evaluator.getXValue(values, i).toFloat(), values[i].first))
-        }
+        val seriesEntries = values.indices.map { Entry(evaluator.getXValue(values, it).toFloat(), values[it].first) }
 
         val series = LineDataSet(seriesEntries, "")
         val color = ContextCompat.getColor(context!!, R.color.colorPrimary)
@@ -417,8 +414,8 @@ class StatisticsFragment : FragmentBase() {
         var n = 0
         var sumX = 0.0
         var sumY = 0.0
-        var minX = java.lang.Long.MAX_VALUE
-        var maxX = java.lang.Long.MIN_VALUE
+        var minX = Long.MAX_VALUE
+        var maxX = Long.MIN_VALUE
         for (i in 0 until dataSetSize) {
             x[n] = eval.getXValue(values, i).toDouble()
             y[n] = values[i].first.toDouble()

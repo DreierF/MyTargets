@@ -164,7 +164,7 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
         if (resultCode == RESULT_OK && requestCode == NEW_STANDARD_ROUND && data != null) {
             persistSelection(data.getParcelableExtra(ITEM))
             navigationController.setResultSuccess(data)
-            finish()
+            navigationController.finish()
         } else if (requestCode == EDIT_STANDARD_ROUND && data != null) {
             if (resultCode == RESULT_OK) {
                 currentSelection = data.getParcelableExtra(ITEM)

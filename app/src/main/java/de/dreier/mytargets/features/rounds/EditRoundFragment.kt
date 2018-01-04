@@ -93,7 +93,7 @@ class EditRoundFragment : EditFragmentBase() {
     }
 
     override fun onSave() {
-        finish()
+        navigationController.finish()
         if (roundId == null) {
             val round = onSaveRound()
             navigationController.navigateToRound(round!!)

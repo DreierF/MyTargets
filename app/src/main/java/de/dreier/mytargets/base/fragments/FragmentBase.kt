@@ -25,9 +25,7 @@ import android.support.v4.app.LoaderManager
 import android.support.v4.content.AsyncTaskLoader
 import android.support.v4.content.Loader
 import com.evernote.android.state.StateSaver
-import de.dreier.mytargets.R
 import de.dreier.mytargets.base.navigation.NavigationController
-import de.dreier.mytargets.utils.Utils
 
 
 typealias LoaderUICallback = () -> Unit
@@ -50,18 +48,6 @@ abstract class FragmentBase : Fragment(), LoaderManager.LoaderCallbacks<Fragment
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         StateSaver.saveInstanceState(this, outState)
-    }
-
-    protected fun finish() {
-        val activity = activity
-        if (activity != null) {
-            if (Utils.isLollipop) {
-                activity.finishAfterTransition()
-            } else {
-                activity.finish()
-                activity.overridePendingTransition(R.anim.left_in, R.anim.right_out)
-            }
-        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

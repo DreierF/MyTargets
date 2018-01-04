@@ -124,7 +124,7 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
     public override fun onSave() {
         super.onSave()
         buildBow().save()
-        finish()
+        navigationController.finish()
     }
 
     private fun buildBow(): Bow {

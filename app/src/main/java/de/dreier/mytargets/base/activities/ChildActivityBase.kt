@@ -19,13 +19,9 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
 import android.view.MenuItem
-
 import com.google.firebase.analytics.FirebaseAnalytics
-
-import de.dreier.mytargets.R
 import de.dreier.mytargets.base.navigation.NavigationController
 import de.dreier.mytargets.features.settings.SettingsManager
-import de.dreier.mytargets.utils.Utils
 import im.delight.android.languages.Language
 
 abstract class ChildActivityBase : AppCompatActivity() {
@@ -50,7 +46,7 @@ abstract class ChildActivityBase : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                onBackPressed()
+                navigationController.finish()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -58,14 +54,7 @@ abstract class ChildActivityBase : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (!supportFragmentManager.popBackStackImmediate()) {
-            if (Utils.isLollipop) {
-                finishAfterTransition()
-            } else {
-                finish()
-                overridePendingTransition(R.anim.left_in, R.anim.right_out)
-            }
-        }
+        navigationController.finish()
     }
 
     companion object {

@@ -68,7 +68,7 @@ class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrow
     public override fun onSave() {
         super.onSave()
         if (viewModel.save(thumbnail)) {
-            finish()
+            navigationController.finish()
         }
     }
 

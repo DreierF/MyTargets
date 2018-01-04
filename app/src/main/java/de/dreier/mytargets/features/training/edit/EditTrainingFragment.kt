@@ -271,7 +271,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
 
     override fun onSave() {
         val training = AugmentedTraining(training)
-        finish()
+        navigationController.finish()
 
         if (trainingId == null) {
             if (trainingType == FREE_TRAINING) {

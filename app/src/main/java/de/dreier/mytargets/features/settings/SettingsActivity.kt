@@ -60,15 +60,14 @@ class SettingsActivity : SimpleFragmentActivityBase(), PreferenceFragmentCompat.
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        overridePendingTransition(0, 0)
+        navigationController.finish(animate = false)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
                 if (childFragment is MainSettingsFragment) {
-                    onBackPressed()
+                    navigationController.finish(animate = false)
                 } else {
                     intent.putExtra(ARG_PREFERENCE_ROOT, MAIN.key)
                     val ft = supportFragmentManager.beginTransaction()

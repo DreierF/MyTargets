@@ -19,9 +19,6 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-
-import junit.framework.Assert
-
 import org.threeten.bp.LocalDate
 
 class DatePickerFragment : DialogFragment() {
@@ -29,7 +26,6 @@ class DatePickerFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         // Use the current date as the default date in the picker
         val date = arguments!!.getSerializable(ARG_CURRENT_DATE) as LocalDate
-        Assert.assertNotNull(date)
 
         // Create a new instance of DatePickerDialog and return it
         val listener = targetFragment as DatePickerDialog.OnDateSetListener?

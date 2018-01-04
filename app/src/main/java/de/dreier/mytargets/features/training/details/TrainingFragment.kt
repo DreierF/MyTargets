@@ -37,7 +37,6 @@ import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.utils.*
 import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
-import junit.framework.Assert
 
 /**
  * Shows all rounds of one training.
@@ -89,7 +88,6 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
         binding.recyclerView.adapter = adapter
 
         // Get training
-        Assert.assertNotNull(arguments)
         trainingId = arguments!!.getLong(EditableListFragmentBase.ITEM_ID)
 
         binding.fab.visibility = View.GONE

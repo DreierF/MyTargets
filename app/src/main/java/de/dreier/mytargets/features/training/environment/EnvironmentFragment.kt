@@ -104,7 +104,7 @@ class EnvironmentFragment : FragmentBase() {
         val e = saveItem()
         SettingsManager.indoor = e.indoor
         navigationController.setResultSuccess(e)
-        finish()
+        navigationController.finish()
     }
 
     private fun saveItem(): Environment {

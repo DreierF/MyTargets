@@ -20,7 +20,9 @@ import android.content.Intent
 import android.os.Parcelable
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.PreferenceFragmentCompat
+import de.dreier.mytargets.R
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase
 import de.dreier.mytargets.base.gallery.GalleryActivity
 import de.dreier.mytargets.features.arrows.ArrowListActivity
@@ -61,16 +63,17 @@ import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
 import de.dreier.mytargets.shared.models.db.*
 import de.dreier.mytargets.shared.utils.ImageList
 import de.dreier.mytargets.utils.IntentWrapper
+import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.views.selector.*
 
 class NavigationController(
-        private val activity: Activity,
+        private val activity: AppCompatActivity,
         private val fragment: Fragment? = null//,
 //        private val fragmentManager: FragmentManager,
 //        private val containerId: Int = R.id.container
 ) {
 
-    constructor(fragment: Fragment) : this(fragment.activity!!, fragment)
+    constructor(fragment: Fragment) : this(fragment.activity as AppCompatActivity, fragment)
 
     fun navigateToHelp() {
         return IntentWrapper(activity, fragment, HelpActivity::class.java)
@@ -277,6 +280,23 @@ class NavigationController(
 
     fun setResult(resultCode: Int) {
         activity.setResult(resultCode)
+    }
+
+    fun finish(animate: Boolean = true) {
+        if (fragment != null || !activity.supportFragmentManager.popBackStackImmediate()) {
+            if (Utils.isLollipop) {
+                if (animate) {
+                    activity.finishAfterTransition()
+                } else {
+                    activity.finish()
+                }
+            } else {
+                activity.finish()
+                if(animate) {
+                    activity.overridePendingTransition(R.anim.left_in, R.anim.right_out)
+                }
+            }
+        }
     }
 
 //    fun navigateToSearch() {

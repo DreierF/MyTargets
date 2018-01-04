@@ -88,7 +88,7 @@ abstract class SelectItemFragmentBase<T, U : ListAdapterBase<out ItemBindingHold
         selector.setSelected(holder, true)
         if (alreadySelected || !useDoubleClickSelection) {
             saveItem()
-            finish()
+            navigationController.finish()
         }
     }
 

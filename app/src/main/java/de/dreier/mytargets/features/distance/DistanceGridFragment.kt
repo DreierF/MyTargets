@@ -61,13 +61,13 @@ class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapter
     override fun onOkClickListener(input: String) {
         var distance = this.distance
         try {
-            val distanceVal = Integer.parseInt(input.replace("[^0-9]".toRegex(), ""))
-            distance = Dimension(distanceVal.toFloat(), unit) //TODO
+            val distanceVal = input.replace("[^0-9]".toRegex(), "").toInt()
+            distance = Dimension(distanceVal.toFloat(), unit)
         } catch (e: NumberFormatException) {
             // leave distance as it is
         }
         navigationController.setResultSuccess(distance!!)
-        finish()
+        navigationController.finish()
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
