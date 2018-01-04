@@ -30,6 +30,7 @@ import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentBowsBinding
 import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.EBowType.*
+import de.dreier.mytargets.shared.models.dao.BowDAO
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.utils.DividerItemDecoration
 import de.dreier.mytargets.utils.SlideInItemAnimator
@@ -75,7 +76,7 @@ class EditBowListFragment : EditableListFragmentBase<Bow, SimpleListAdapterBase<
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        val bows = Bow.all
+        val bows = BowDAO.loadBows()
         return {
             adapter!!.setList(bows.toMutableList())
             binding.emptyState!!.root.visibility = if (bows.isEmpty()) View.VISIBLE else View.GONE
@@ -91,9 +92,11 @@ class EditBowListFragment : EditableListFragmentBase<Bow, SimpleListAdapterBase<
     }
 
     override fun deleteItem(item: Bow): () -> Bow {
-        item.delete()
+        val images = BowDAO.loadBowImages(item.id)
+        val sightMarks = BowDAO.loadSightMarks(item.id)
+        BowDAO.deleteBow(item)
         return {
-            item.saveRecursively()
+            BowDAO.saveBow(item, images, sightMarks)
             item
         }
     }

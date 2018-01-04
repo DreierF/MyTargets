@@ -47,6 +47,7 @@ import de.dreier.mytargets.databinding.ActivityInputBinding
 import de.dreier.mytargets.features.settings.ESettingsScreens
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
+import de.dreier.mytargets.shared.models.dao.BowDAO
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
@@ -437,7 +438,12 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
         StateSaver.saveInstanceState(this, outState!!)
     }
 
-    private class UITaskAsyncTaskLoader(context: Context, private val trainingId: Long, private val roundId: Long, private val endIndex: Int) : AsyncTaskLoader<LoaderResult>(context) {
+    private class UITaskAsyncTaskLoader(
+            context: Context,
+            private val trainingId: Long,
+            private val roundId: Long,
+            private val endIndex: Int
+    ) : AsyncTaskLoader<LoaderResult>(context) {
 
         override fun loadInBackground(): LoaderResult? {
             val training = Training[trainingId]
@@ -453,7 +459,8 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
             }
             val bow = training.bow
             if (bow != null) {
-                result.sightMark = bow.loadSightSetting(result.distance!!)
+                result.sightMark = BowDAO.loadSightMarks(bow.id)
+                        .firstOrNull { it.distance == result.distance!! }
             }
             return result
         }

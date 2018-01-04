@@ -32,7 +32,7 @@ import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER
 import de.dreier.mytargets.shared.models.Dimension.Unit.METER
 import de.dreier.mytargets.shared.models.EWeather
-import de.dreier.mytargets.shared.models.db.Bow
+import de.dreier.mytargets.shared.models.dao.BowDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.test.base.InstrumentedTestBase
@@ -92,8 +92,8 @@ class MigrationTest : InstrumentedTestBase() {
         assertTraining1(trainings[0])
         assertTraining2(trainings[1])
 
-        val bows = Bow.all
-        Truth.assertThat(bows[0].loadImages()[0].fileName)
+        val bows = BowDAO.loadBows()
+        Truth.assertThat(BowDAO.loadBowImages(bows[0].id)[0].fileName)
                 .isEqualTo("img175420839671886584-0f61-43a6-bc1e-dbcd8526056c794370927.jpg")
     }
 
@@ -190,7 +190,7 @@ class MigrationTest : InstrumentedTestBase() {
         val newSchema = extractSchema(newDb)
 
         Truth.assertThat(upgradedSchema).isEqualTo(newSchema)
-        Truth.assertThat(upgradedSchema.size > 0)
+        Truth.assertThat(upgradedSchema.isNotEmpty())
     }
 
     private fun extractSchema(db: DatabaseWrapper): Set<String> {

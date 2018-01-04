@@ -36,6 +36,7 @@ import de.dreier.mytargets.databinding.FragmentEditBowBinding
 import de.dreier.mytargets.databinding.ItemSightMarkBinding
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.EBowType
+import de.dreier.mytargets.shared.models.dao.BowDAO
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.BowImage
 import de.dreier.mytargets.shared.models.db.SightMark
@@ -54,6 +55,8 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
     private lateinit var contentBinding: FragmentEditBowBinding
     private lateinit var adapter: SightMarksAdapter
 
+    private val bowDAO = BowDAO
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = super.onCreateView(inflater, container, savedInstanceState)
 
@@ -68,16 +71,17 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
             val bundle = arguments
             if (bundle != null && bundle.containsKey(BOW_ID)) {
                 // Load data from database
-                bow = Bow[bundle.getLong(BOW_ID)]!!
-                sightMarks = bow.loadSightMarks()
+                bow = bowDAO.loadBow(bundle.getLong(BOW_ID))
+                sightMarks = bowDAO.loadSightMarks(bow.id)
+                imageFiles = bowDAO.loadBowImages(bow.id)
             } else {
                 // Set to default values
                 bow = Bow()
                 bow.name = getString(R.string.my_bow)
                 bow.type = bowType
                 sightMarks.add(SightMark())
+                imageFiles = emptyList()
             }
-            imageFiles = bow.loadImages()
         }
         ToolbarUtils.setTitle(this, bow.name)
         contentBinding.bow = bow
@@ -123,7 +127,8 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
 
     public override fun onSave() {
         super.onSave()
-        buildBow().save()
+        buildBow()
+        bowDAO.saveBow(bow, imageFiles, sightMarks)
         navigationController.finish()
     }
 
@@ -149,9 +154,7 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
         bow.restStiffness = contentBinding.restStiffness.text.toString()
         bow.camSetting = contentBinding.cam.text.toString()
         bow.scopeMagnification = contentBinding.scopeMagnification.text.toString()
-        bow.images = imageFiles
         bow.thumbnail = thumbnail
-        bow.sightMarks = sightMarks
         return bow
     }
 

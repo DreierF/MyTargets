@@ -16,25 +16,17 @@
 package de.dreier.mytargets.shared.models.db
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
 import android.os.Parcelable
-import android.text.TextUtils
 import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.OneToMany
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
 import com.raizlabs.android.dbflow.annotation.Table
-import com.raizlabs.android.dbflow.config.FlowManager
-import com.raizlabs.android.dbflow.sql.language.SQLite
 import com.raizlabs.android.dbflow.structure.BaseModel
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
 import de.dreier.mytargets.shared.AppDatabase
-import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.IIdSettable
 import de.dreier.mytargets.shared.models.Thumbnail
 import de.dreier.mytargets.shared.utils.typeconverters.EBowTypeConverter
 import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter
-import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 
 @SuppressLint("ParcelCreator")
@@ -115,119 +107,25 @@ data class Bow(
         var thumbnail: Thumbnail? = null
 ) : BaseModel(), IIdSettable, Parcelable {
 
-    @IgnoredOnParcel
-    var images: List<BowImage>? = null
-
-    @IgnoredOnParcel
-    var sightMarks: MutableList<SightMark>? = null
-
-    val drawable: Drawable
-        get() = thumbnail!!.roundDrawable
-
-    @OneToMany(methods = [], variableName = "sightMarks")
-    fun loadSightMarks(): ArrayList<SightMark> {
-        if (sightMarks == null) {
-            sightMarks = if (id == 0L) mutableListOf() else SQLite.select()
-                    .from(SightMark::class.java)
-                    .where(SightMark_Table.bow.eq(id))
-                    .queryList()
-                    .sortedBy { sightMark -> sightMark.distance }
-                    .toMutableList()
-        }
-        return ArrayList(sightMarks) //TODO remove
-    }
-
-    fun loadImages(): List<BowImage> {
-        if (images == null) {
-            images = if (id == 0L) mutableListOf() else SQLite.select()
-                    .from(BowImage::class.java)
-                    .where(BowImage_Table.bow.eq(id))
-                    .queryList()
-        }
-        return images!!
-    }
-
-    fun loadSightSetting(distance: Dimension): SightMark? {
-        return loadSightMarks().firstOrNull { s -> s.distance == distance }
-    }
-
-    override fun save(): Boolean {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { this.save(it) }
-        return true
-    }
-
-    override fun save(databaseWrapper: DatabaseWrapper): Boolean {
-        super.save(databaseWrapper)
-        if (images != null) {
-            SQLite.delete(BowImage::class.java)
-                    .where(BowImage_Table.bow.eq(id))
-                    .execute(databaseWrapper)
-            // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-            for (image in images!!) {
-                image.bowId = id
-                image.save(databaseWrapper)
-            }
-        }
-        if (sightMarks != null) {
-            SQLite.delete(SightMark::class.java)
-                    .where(SightMark_Table.bow.eq(id))
-                    .execute(databaseWrapper)
-            // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-            for (sightMark in sightMarks!!) {
-                sightMark.bowId = id
-                sightMark.save(databaseWrapper)
-            }
-        }
-        return true
-    }
-
-    override fun delete(): Boolean {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.delete(it) })
-        return true
-    }
-
-    override fun delete(databaseWrapper: DatabaseWrapper): Boolean {
-        loadSightMarks().forEach { it.delete(databaseWrapper) }
-        loadImages().forEach { it.delete(databaseWrapper) }
-        super.delete(databaseWrapper)
-        return true
-    }
-
     fun areAllPropertiesSet(): Boolean {
-        return !TextUtils.isEmpty(size) &&
-                !TextUtils.isEmpty(drawWeight) &&
-                (!type!!.showLetoffWeight() || !TextUtils.isEmpty(letoffWeight)) &&
-                (!type!!.showArrowRest() || !TextUtils.isEmpty(arrowRest)) &&
-                (!type!!.showArrowRest() || !TextUtils.isEmpty(restVerticalPosition)) &&
-                (!type!!.showArrowRest() || !TextUtils.isEmpty(restHorizontalPosition)) &&
-                (!type!!.showArrowRest() || !TextUtils.isEmpty(restStiffness)) &&
-                (!type!!.showCamSetting() || !TextUtils.isEmpty(camSetting)) &&
-                (!type!!.showTiller() || !TextUtils.isEmpty(tiller)) &&
-                (!type!!.showBraceHeight() || !TextUtils.isEmpty(braceHeight)) &&
-                (!type!!.showLimbs() || !TextUtils.isEmpty(limbs)) &&
-                (!type!!.showSight() || !TextUtils.isEmpty(sight)) &&
-                (!type!!.showScopeMagnification() || !TextUtils.isEmpty(scopeMagnification)) &&
-                (!type!!.showStabilizer() || !TextUtils.isEmpty(stabilizer)) &&
-                (!type!!.showClicker() || !TextUtils.isEmpty(clicker)) &&
-                (!type!!.showNockingPoint() || !TextUtils.isEmpty(nockingPoint)) &&
-                !TextUtils.isEmpty(string) &&
-                (!type!!.showButton() || !TextUtils.isEmpty(button)) &&
-                !TextUtils.isEmpty(description)
-    }
-
-    fun saveRecursively() {
-        save()
-    }
-
-    companion object {
-        val all: List<Bow>
-            get() = SQLite.select().from(Bow::class.java).queryList()
-
-        operator fun get(id: Long): Bow? {
-            return SQLite.select()
-                    .from(Bow::class.java)
-                    .where(Bow_Table._id.eq(id))
-                    .querySingle()
-        }
+        return !size.isNullOrEmpty() &&
+                !drawWeight.isNullOrEmpty() &&
+                (!type!!.showLetoffWeight() || !letoffWeight.isNullOrEmpty()) &&
+                (!type!!.showArrowRest() || !arrowRest.isNullOrEmpty()) &&
+                (!type!!.showArrowRest() || !restVerticalPosition.isNullOrEmpty()) &&
+                (!type!!.showArrowRest() || !restHorizontalPosition.isNullOrEmpty()) &&
+                (!type!!.showArrowRest() || !restStiffness.isNullOrEmpty()) &&
+                (!type!!.showCamSetting() || !camSetting.isNullOrEmpty()) &&
+                (!type!!.showTiller() || !tiller.isNullOrEmpty()) &&
+                (!type!!.showBraceHeight() || !braceHeight.isNullOrEmpty()) &&
+                (!type!!.showLimbs() || !limbs.isNullOrEmpty()) &&
+                (!type!!.showSight() || !sight.isNullOrEmpty()) &&
+                (!type!!.showScopeMagnification() || !scopeMagnification.isNullOrEmpty()) &&
+                (!type!!.showStabilizer() || !stabilizer.isNullOrEmpty()) &&
+                (!type!!.showClicker() || !clicker.isNullOrEmpty()) &&
+                (!type!!.showNockingPoint() || !nockingPoint.isNullOrEmpty()) &&
+                !string.isNullOrEmpty() &&
+                (!type!!.showButton() || !button.isNullOrEmpty()) &&
+                !description.isNullOrEmpty()
     }
 }

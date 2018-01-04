@@ -23,6 +23,7 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding
 import de.dreier.mytargets.features.training.details.HtmlInfoBuilder
+import de.dreier.mytargets.shared.models.dao.BowDAO
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.utils.multiselector.MultiSelector
@@ -48,7 +49,7 @@ internal class BowAdapter(
 
         override fun bindItem(item: Bow) {
             binding.name.text = item.name
-            binding.image.setImageDrawable(item.drawable)
+            binding.image.setImageDrawable(item.thumbnail!!.roundDrawable)
             binding.details.visibility = View.VISIBLE
 
             val info = HtmlInfoBuilder()
@@ -59,7 +60,7 @@ internal class BowAdapter(
             if (!item.size!!.trim { it <= ' ' }.isEmpty()) {
                 info.addLine(R.string.size, item.size!!)
             }
-            for ((_, _, distance, value) in item.loadSightMarks()) {
+            for ((_, _, distance, value) in BowDAO.loadSightMarks(item.id)) {
                 info.addLine(distance.toString(), value!!)
             }
             binding.details.text = Utils.fromHtml(info.toString())

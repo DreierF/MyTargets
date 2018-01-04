@@ -18,10 +18,7 @@ package de.dreier.mytargets.shared.models.db
 interface Image {
 
     /**
-     * @return The name of the image file, which is placed inside the files directory of the app
-     */
-    /**
-     * @param fileName The name of the image file, which is placed inside the files directory of the app
+     * The name of the image file, which is placed inside the files directory of the app
      */
     var fileName: String
 }

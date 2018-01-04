@@ -26,6 +26,8 @@ import de.dreier.mytargets.shared.models.EWeather
 import de.dreier.mytargets.shared.models.Thumbnail
 import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
 import de.dreier.mytargets.shared.models.augmented.AugmentedRound
+import de.dreier.mytargets.shared.models.dao.ArrowDAO
+import de.dreier.mytargets.shared.models.dao.BowDAO
 import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.Training
@@ -93,9 +95,8 @@ abstract class DbTestRuleBase : TestRule {
         bow.size = "64\""
         bow.braceHeight = "6 3/8\""
         bow.type = EBowType.COMPOUND_BOW
-        bow.images = emptyList()
         bow.thumbnail = Thumbnail.from(context, R.drawable.recurve_bow)
-        bow.save()
+        BowDAO.saveBow(bow, emptyList(), emptyList())
         return bow
     }
 
@@ -106,9 +107,8 @@ abstract class DbTestRuleBase : TestRule {
         arrow.comment = "some comment"
         arrow.diameter = Dimension(4f, Dimension.Unit.MILLIMETER)
         arrow.nock = "Awesome nock"
-        arrow.images = emptyList()
         arrow.thumbnail = Thumbnail.from(context, R.drawable.arrows)
-        arrow.save()
+        ArrowDAO.saveArrow(arrow, emptyList())
         return arrow
     }
 

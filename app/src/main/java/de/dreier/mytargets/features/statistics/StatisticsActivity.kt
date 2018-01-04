@@ -39,7 +39,7 @@ import de.dreier.mytargets.base.activities.ChildActivityBase
 import de.dreier.mytargets.databinding.ActivityStatisticsBinding
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.dao.ArrowDAO
-import de.dreier.mytargets.shared.models.db.Bow
+import de.dreier.mytargets.shared.models.dao.BowDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.utils.toSparseArray
@@ -206,7 +206,7 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
                 .distinct()
                 .map { bid ->
                     if (bid != null) {
-                        val bow = Bow[bid] ?: return@map Tag(bid, "Deleted " + bid)
+                        val bow = BowDAO.loadBowOrNull(bid) ?: return@map Tag(bid, "Deleted " + bid)
                         Tag(bow.id, bow.name, bow.thumbnail, true)
                     } else {
                         Tag(null, getString(R.string.unknown))
