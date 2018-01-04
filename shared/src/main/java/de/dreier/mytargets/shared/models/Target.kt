@@ -16,8 +16,6 @@
 package de.dreier.mytargets.shared.models
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.drawable.Drawable
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.targets.TargetFactory
@@ -38,7 +36,7 @@ data class Target(
         override var id: Long = 0,
         var scoringStyleIndex: Int = 0,
         var diameter: Dimension = Dimension.UNKNOWN
-) : IIdProvider, IImageProvider, IDetailProvider, Comparable<Target>, Parcelable {
+) : IIdProvider, Comparable<Target>, Parcelable {
 
     @IgnoredOnParcel
     val model: TargetModelBase by lazy { TargetFactory.getTarget(id.toInt()) }
@@ -53,7 +51,7 @@ data class Target(
         this.diameter = model.diameters[0]
     }
 
-    override val name: String
+    val name: String
         get() = String.format("%s (%s)", toString(), diameter.toString())
 
     fun zoneToString(zone: Int, arrow: Int): String {
@@ -64,11 +62,7 @@ data class Target(
         return getScoringStyle().getPointsByScoringRing(zone, arrow)
     }
 
-    override fun getDrawable(context: Context): Drawable {
-        return drawable
-    }
-
-    override fun getDetails(context: Context): String {
+    fun getDetails(): String {
         return model.scoringStyles[scoringStyleIndex].toString()
     }
 

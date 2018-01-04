@@ -16,11 +16,25 @@
 package de.dreier.mytargets.views.selector
 
 import android.content.Context
+import android.databinding.DataBindingUtil
 import android.util.AttributeSet
+import android.view.View
+import de.dreier.mytargets.R
+import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding
 import de.dreier.mytargets.shared.models.db.StandardRound
 
 class StandardRoundSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null)
-    : ImageSelectorBase<StandardRound>(context, attrs, STANDARD_ROUND_REQUEST_CODE) {
+    : SelectorBase<StandardRound>(context, attrs, R.layout.selector_item_image_details, STANDARD_ROUND_REQUEST_CODE) {
+
+    private lateinit var binding: SelectorItemImageDetailsBinding
+
+    override fun bindView(item: StandardRound) {
+        binding = DataBindingUtil.bind(view)
+        binding.name.text = item.name
+        binding.details.visibility = View.VISIBLE
+        binding.details.text = item.getDescription(context)
+        binding.image.setImageDrawable(item.targetDrawable)
+    }
 
     fun setItemId(standardRoundId: Long?) {
         var standardRound = StandardRound[standardRoundId!!]

@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.training.environment
 
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,4 +34,8 @@ class WindSpeedListFragment : SelectPureListItemFragmentBase<WindSpeed>(compareB
         selectItem(binding.recyclerView, windSpeed!!)
         return binding.root
     }
+
+    override fun getName(item: WindSpeed) = item.name
+
+    override fun getDrawable(item: WindSpeed) = ContextCompat.getDrawable(context!!, item.drawable)!!
 }

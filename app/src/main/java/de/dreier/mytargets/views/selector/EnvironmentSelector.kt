@@ -21,13 +21,16 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.databinding.DataBindingUtil
 import android.location.Geocoder
 import android.location.Location
 import android.support.annotation.RequiresPermission
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
+import android.view.View
 import de.dreier.mytargets.R
+import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.features.training.environment.CurrentWeather
 import de.dreier.mytargets.features.training.environment.Locator
@@ -40,7 +43,9 @@ import retrofit2.Response
 import java.io.IOException
 
 class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null
-) : ImageSelectorBase<Environment>(context, attrs, ENVIRONMENT_REQUEST_CODE, R.string.environment) {
+) : SelectorBase<Environment>(context, attrs, R.layout.selector_item_image_details, ENVIRONMENT_REQUEST_CODE) {
+
+    private lateinit var binding: SelectorItemImageDetailsBinding
 
     override var selectedItem: Environment?
         get() = if (super.selectedItem == null) {
@@ -49,6 +54,38 @@ class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: Att
         set(value) {
             super.selectedItem = value
         }
+
+    override fun bindView(item: Environment) {
+        binding = DataBindingUtil.bind(view)
+
+        if (item.indoor) {
+            binding.name.setText(de.dreier.mytargets.shared.R.string.indoor)
+            binding.image.setImageResource(de.dreier.mytargets.shared.R.drawable.ic_house_24dp)
+        } else {
+            binding.name.text = item.weather.getName()
+            binding.image.setImageResource(item.weather.drawable)
+        }
+        binding.details.visibility = View.VISIBLE
+        binding.details.text = getDetails(context, item)
+        binding.title.visibility = View.VISIBLE
+        binding.title.setText(R.string.environment)
+    }
+
+    private fun getDetails(context: Context, item: Environment): String {
+        var description: String
+        if (item.indoor) {
+            description = ""
+            if (!item.location.isEmpty()) {
+                description += "${context.getString(de.dreier.mytargets.shared.R.string.location)}: ${item.location}"
+            }
+        } else {
+            description = "${context.getString(de.dreier.mytargets.shared.R.string.wind)}: ${item.getWindSpeed(context)}"
+            if (!item.location.isEmpty()) {
+                description += "\n${context.getString(de.dreier.mytargets.shared.R.string.location)}: ${item.location}"
+            }
+        }
+        return description
+    }
 
     fun queryWeather(fragment: Fragment, request_code: Int) {
         if (isTestMode) {
@@ -88,7 +125,8 @@ class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: Att
                     override fun onResponse(call: Call<CurrentWeather>, response: Response<CurrentWeather>) {
                         if (response.isSuccessful && response.body()!!.httpCode == 200) {
                             val toEnvironment = response.body()!!.toEnvironment()
-                            setItem(toEnvironment.copy(location = locationStr ?: toEnvironment.location))
+                            setItem(toEnvironment.copy(location = locationStr
+                                    ?: toEnvironment.location))
                         } else {
                             setDefaultWeather()
                         }

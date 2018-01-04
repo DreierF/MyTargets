@@ -16,12 +16,25 @@
 package de.dreier.mytargets.views.selector
 
 import android.content.Context
+import android.databinding.DataBindingUtil
 import android.util.AttributeSet
+import android.view.View
 import de.dreier.mytargets.R
+import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding
 import de.dreier.mytargets.shared.models.WindSpeed
 
 class WindSpeedSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null
-) : ImageSelectorBase<WindSpeed>(context, attrs, WIND_SPEED_REQUEST_CODE, R.string.wind_speed) {
+) : SelectorBase<WindSpeed>(context, attrs, R.layout.selector_item_image_details, WIND_SPEED_REQUEST_CODE) {
+
+    private lateinit var binding: SelectorItemImageDetailsBinding
+
+    override fun bindView(item: WindSpeed) {
+        binding = DataBindingUtil.bind(view)
+        binding.name.text = item.name
+        binding.image.setImageResource(item.drawable)
+        binding.title.visibility = View.VISIBLE
+        binding.title.setText(R.string.wind_speed)
+    }
 
     fun setItemId(speed: Long) {
         setItem(WindSpeed.getList(context)[speed.toInt()])

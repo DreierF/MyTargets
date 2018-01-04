@@ -16,8 +16,6 @@
 package de.dreier.mytargets.shared.models.db
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.drawable.Drawable
 import android.os.Parcelable
 import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
@@ -25,7 +23,6 @@ import com.raizlabs.android.dbflow.annotation.Table
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.IIdSettable
-import de.dreier.mytargets.shared.models.IImageProvider
 import de.dreier.mytargets.shared.models.Thumbnail
 import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter
 import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter
@@ -40,7 +37,7 @@ data class Arrow(
         override var id: Long = 0,
 
         @Column
-        override var name: String = "",
+        var name: String = "",
 
         @Column
         var maxArrowNumber: Int = 12,
@@ -73,12 +70,4 @@ data class Arrow(
         var diameter: Dimension = Dimension(5f, Dimension.Unit.MILLIMETER),
 
         @Column(typeConverter = ThumbnailConverter::class)
-        var thumbnail: Thumbnail? = null) : IImageProvider, IIdSettable, Parcelable {
-
-    val drawable: Drawable
-        get() = thumbnail!!.roundDrawable
-
-    override fun getDrawable(context: Context): Drawable {
-        return drawable
-    }
-}
+        var thumbnail: Thumbnail? = null) : IIdSettable, Parcelable

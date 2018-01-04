@@ -107,7 +107,7 @@ class EditArrowListFragment : EditableListFragmentBase<Arrow, SimpleListAdapterB
 
         override fun bindItem(item: Arrow) {
             binding.name.text = item.name
-            binding.image.setImageDrawable(item.drawable)
+            binding.image.setImageDrawable(item.thumbnail!!.roundDrawable)
         }
     }
 }

@@ -16,6 +16,7 @@
 package de.dreier.mytargets.base.fragments
 
 import android.databinding.DataBindingUtil
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -26,7 +27,6 @@ import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
 import de.dreier.mytargets.databinding.FragmentListBinding
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding
 import de.dreier.mytargets.shared.models.IIdProvider
-import de.dreier.mytargets.shared.models.IImageProvider
 import de.dreier.mytargets.utils.SlideInItemAnimator
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
@@ -36,7 +36,7 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
  */
 abstract class SelectPureListItemFragmentBase<T>(
         private val comparator: Comparator<T>
-) : SelectItemFragmentBase<T, SimpleListAdapterBase<T>>() where T : IIdProvider, T : IImageProvider, T : Parcelable {
+) : SelectItemFragmentBase<T, SimpleListAdapterBase<T>>() where T : IIdProvider, T : Parcelable {
 
     protected lateinit var binding: FragmentListBinding
 
@@ -50,6 +50,10 @@ abstract class SelectPureListItemFragmentBase<T>(
         ToolbarUtils.showUpAsX(this)
         return binding.root
     }
+
+    abstract fun getName(item: T): String
+
+    abstract fun getDrawable(item: T): Drawable
 
     private inner class ListAdapter : SimpleListAdapterBase<T>(comparator) {
 
@@ -67,8 +71,8 @@ abstract class SelectPureListItemFragmentBase<T>(
         internal var binding: ItemImageSimpleBinding = DataBindingUtil.bind(itemView)
 
         override fun bindItem(item: T) {
-            binding.name.text = item.name
-            binding.image.setImageDrawable(item.getDrawable(context!!))
+            binding.name.text = getName(item)
+            binding.image.setImageDrawable(getDrawable(item))
         }
     }
 }

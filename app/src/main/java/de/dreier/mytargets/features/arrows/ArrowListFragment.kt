@@ -32,4 +32,8 @@ class ArrowListFragment : SelectPureListItemFragmentBase<Arrow>(compareBy(Arrow:
             selectItem(binding.recyclerView, arrow!!)
         }
     }
+
+    override fun getName(item: Arrow) = item.name
+
+    override fun getDrawable(item: Arrow) = item.thumbnail!!.roundDrawable
 }

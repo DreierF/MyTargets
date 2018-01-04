@@ -34,10 +34,7 @@ data class Environment(
         var windSpeed: Int = 0,
         var windDirection: Int = 0,
         var location: String = ""
-) : IImageProvider, IDetailProvider, Parcelable {
-
-    override val name: String
-        get() = if (indoor) SharedApplicationInstance.getStr(R.string.indoor) else weather.getName()
+) : Parcelable {
 
     val colorDrawable: Int
         @DrawableRes
@@ -47,32 +44,8 @@ data class Environment(
             weather.colorDrawable
         }
 
-    override fun getDetails(context: Context): String {
-        var description: String
-        if (indoor) {
-            description = ""
-            if (!TextUtils.isEmpty(location)) {
-                description += context.getString(R.string.location) + ": " + location
-            }
-        } else {
-            description = context.getString(R.string.wind) + ": " + getWindSpeed(context)
-            if (!TextUtils.isEmpty(location)) {
-                description += "\n" + context.getString(R.string.location) + ": " + location
-            }
-        }
-        return description
-    }
-
     fun getWindSpeed(context: Context): String {
         return windSpeed.toString() + " Bft " + WindDirection.getList(context)[windDirection].name
-    }
-
-    override fun getDrawable(context: Context): Drawable {
-        return if (indoor) {
-            ContextCompat.getDrawable(context, R.drawable.ic_house_24dp)!!
-        } else {
-            ContextCompat.getDrawable(context, weather.drawable)!!
-        }
     }
 
     companion object {

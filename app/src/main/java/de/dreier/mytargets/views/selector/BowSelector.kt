@@ -18,10 +18,24 @@ package de.dreier.mytargets.views.selector
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.util.AttributeSet
+import de.dreier.mytargets.R
+import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding
 import de.dreier.mytargets.shared.models.db.Bow
 
-class BowSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ImageSelectorBase<Bow>(context, attrs, BOW_REQUEST_CODE) {
+class BowSelector @JvmOverloads constructor(
+        context: Context,
+        attrs: AttributeSet? = null
+) : SelectorBase<Bow>(context, attrs, R.layout.selector_item_image_details, BOW_REQUEST_CODE) {
+
+    private lateinit var binding: SelectorItemImageDetailsBinding
+
+    override fun bindView(item: Bow) {
+        binding = DataBindingUtil.bind(view)
+        binding.name.text = item.name
+        binding.image.setImageDrawable(item.getDrawable(context))
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

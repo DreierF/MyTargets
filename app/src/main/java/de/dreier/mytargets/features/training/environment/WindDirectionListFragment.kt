@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.training.environment
 
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,4 +33,8 @@ class WindDirectionListFragment : SelectPureListItemFragmentBase<WindDirection>(
         selectItem(binding.recyclerView, windDirection!!)
         return binding.root
     }
+
+    override fun getName(item: WindDirection) = item.name
+
+    override fun getDrawable(item: WindDirection) = ContextCompat.getDrawable(context!!, item.drawable)!!
 }

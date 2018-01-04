@@ -16,9 +16,7 @@ package de.dreier.mytargets.shared.models
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.os.Parcelable
-import android.support.v4.content.ContextCompat
 import de.dreier.mytargets.shared.R
 import kotlinx.android.parcel.Parcelize
 import java.util.*
@@ -27,13 +25,9 @@ import java.util.*
 @Parcelize
 data class WindSpeed(
         override var id: Long,
-        override var name: String,
+        var name: String,
         var drawable: Int
-) : IIdProvider, IImageProvider, Comparable<WindSpeed>, Parcelable {
-
-    override fun getDrawable(context: Context): Drawable {
-        return ContextCompat.getDrawable(context, drawable)!!
-    }
+) : IIdProvider, Comparable<WindSpeed>, Parcelable {
 
     override fun compareTo(other: WindSpeed) = compareBy(WindSpeed::id).compare(this, other)
 

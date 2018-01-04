@@ -16,7 +16,6 @@
 package de.dreier.mytargets.shared.models.db
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
 import android.text.TextUtils
@@ -29,7 +28,10 @@ import com.raizlabs.android.dbflow.sql.language.SQLite
 import com.raizlabs.android.dbflow.structure.BaseModel
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
 import de.dreier.mytargets.shared.AppDatabase
-import de.dreier.mytargets.shared.models.*
+import de.dreier.mytargets.shared.models.Dimension
+import de.dreier.mytargets.shared.models.EBowType
+import de.dreier.mytargets.shared.models.IIdSettable
+import de.dreier.mytargets.shared.models.Thumbnail
 import de.dreier.mytargets.shared.utils.typeconverters.EBowTypeConverter
 import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter
 import kotlinx.android.parcel.IgnoredOnParcel
@@ -44,7 +46,7 @@ data class Bow(
         override var id: Long = 0,
 
         @Column
-        override var name: String = "",
+        var name: String = "",
 
         @Column(typeConverter = EBowTypeConverter::class)
         var type: EBowType? = EBowType.RECURVE_BOW,
@@ -111,7 +113,7 @@ data class Bow(
 
         @Column(typeConverter = ThumbnailConverter::class)
         var thumbnail: Thumbnail? = null
-) : BaseModel(), IImageProvider, IIdSettable, Parcelable {
+) : BaseModel(), IIdSettable, Parcelable {
 
     @IgnoredOnParcel
     var images: List<BowImage>? = null
@@ -143,10 +145,6 @@ data class Bow(
                     .queryList()
         }
         return images!!
-    }
-
-    override fun getDrawable(context: Context): Drawable {
-        return drawable
     }
 
     fun loadSightSetting(distance: Dimension): SightMark? {

@@ -32,4 +32,8 @@ class BowListFragment : SelectPureListItemFragmentBase<Bow>(compareBy(Bow::name,
         }
     }
 
+    override fun getName(item: Bow) = item.name
+
+    override fun getDrawable(item: Bow) = item.thumbnail!!.roundDrawable
+
 }

@@ -28,9 +28,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.R
-import de.dreier.mytargets.shared.models.IDetailProvider
 import de.dreier.mytargets.shared.models.IIdSettable
-import de.dreier.mytargets.shared.models.IImageProvider
 import de.dreier.mytargets.shared.targets.drawable.CombinedSpot
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
@@ -47,8 +45,8 @@ data class StandardRound(
         var club: Int = 0,
 
         @Column
-        override var name: String = ""
-) : BaseModel(), IIdSettable, IImageProvider, IDetailProvider, Comparable<StandardRound>, Parcelable {
+        var name: String = ""
+) : BaseModel(), IIdSettable, Parcelable {
 
     @IgnoredOnParcel
     internal var rounds: MutableList<RoundTemplate>? = null
@@ -92,15 +90,7 @@ data class StandardRound(
         this.rounds = rounds
     }
 
-    override fun getDrawable(context: Context): Drawable {
-        return targetDrawable
-    }
-
-    override fun getDetails(context: Context): String {
-        return getDescription(context)
-    }
-
-    override fun compareTo(other: StandardRound) = compareBy(StandardRound::name, StandardRound::id).compare(this, other)
+//    override fun compareTo(other: StandardRound) = compareBy(StandardRound::name, StandardRound::id).compare(this, other)
 
     override fun save(): Boolean {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.save(it) })

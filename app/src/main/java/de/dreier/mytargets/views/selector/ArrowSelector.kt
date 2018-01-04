@@ -18,14 +18,25 @@ package de.dreier.mytargets.views.selector
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.util.AttributeSet
-
-import de.dreier.mytargets.features.arrows.ArrowListActivity
-import de.dreier.mytargets.features.arrows.EditArrowFragment
+import de.dreier.mytargets.R
+import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding
 import de.dreier.mytargets.shared.models.dao.ArrowDAO
 import de.dreier.mytargets.shared.models.db.Arrow
 
-class ArrowSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ImageSelectorBase<Arrow>(context, attrs, ARROW_REQUEST_CODE) {
+class ArrowSelector @JvmOverloads constructor(
+        context: Context,
+        attrs: AttributeSet? = null
+) : SelectorBase<Arrow>(context, attrs, R.layout.selector_item_image_details, ARROW_REQUEST_CODE) {
+
+    private lateinit var binding: SelectorItemImageDetailsBinding
+
+    override fun bindView(item: Arrow) {
+        binding = DataBindingUtil.bind(view)
+        binding.name.text = item.name
+        binding.image.setImageDrawable(item.thumbnail!!.roundDrawable)
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

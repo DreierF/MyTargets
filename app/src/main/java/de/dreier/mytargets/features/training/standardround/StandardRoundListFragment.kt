@@ -202,7 +202,7 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
         } else {
             HeaderListAdapter.SimpleHeader(1L, "")
         }
-    }, compareBy({ usedIds.get(it.id) ?: 0 }, { it })) {
+    }, compareBy({ usedIds.get(it.id) ?: 0 }, StandardRound::name, StandardRound::id)) {
 
         override fun getSecondLevelViewHolder(parent: ViewGroup): ViewHolder {
             val itemView = LayoutInflater.from(parent.context)
