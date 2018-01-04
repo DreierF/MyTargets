@@ -16,6 +16,8 @@
 package de.dreier.mytargets.shared.models.dao
 
 import com.raizlabs.android.dbflow.config.FlowManager
+import com.raizlabs.android.dbflow.kotlinextensions.delete
+import com.raizlabs.android.dbflow.kotlinextensions.save
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.db.*

@@ -20,7 +20,6 @@ import android.os.Parcelable
 import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
 import com.raizlabs.android.dbflow.annotation.Table
-import com.raizlabs.android.dbflow.structure.BaseModel
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.IIdSettable
@@ -105,7 +104,7 @@ data class Bow(
 
         @Column(typeConverter = ThumbnailConverter::class)
         var thumbnail: Thumbnail? = null
-) : BaseModel(), IIdSettable, Parcelable {
+) : IIdSettable, Parcelable {
 
     fun areAllPropertiesSet(): Boolean {
         return !size.isNullOrEmpty() &&
