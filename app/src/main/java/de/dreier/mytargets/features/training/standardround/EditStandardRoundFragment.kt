@@ -32,6 +32,7 @@ import de.dreier.mytargets.base.fragments.EditFragmentBase
 import de.dreier.mytargets.databinding.FragmentEditStandardRoundBinding
 import de.dreier.mytargets.databinding.ItemRoundTemplateBinding
 import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
 import de.dreier.mytargets.shared.models.db.RoundTemplate
 import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.utils.StandardRoundFactory
@@ -40,11 +41,12 @@ import de.dreier.mytargets.utils.transitions.FabTransform
 import de.dreier.mytargets.views.selector.DistanceSelector
 import de.dreier.mytargets.views.selector.SelectorBase
 import de.dreier.mytargets.views.selector.TargetSelector
+import timber.log.Timber
 
 class EditStandardRoundFragment : EditFragmentBase() {
 
     @State
-    var standardRound: StandardRound? = null
+    var standardRound: AugmentedStandardRound? = null
     private var adapter: RoundTemplateAdapter? = null
     private lateinit var binding: FragmentEditStandardRoundBinding
 
@@ -61,31 +63,29 @@ class EditStandardRoundFragment : EditFragmentBase() {
                 standardRound = arguments!!.getParcelable(ITEM)
             }
             if (standardRound == null) {
-                standardRound = StandardRound()
                 ToolbarUtils.setTitle(this, R.string.new_round_template)
                 binding.name.setText(R.string.custom_round)
-                // Initialize with default values
-                addDefaultRound()
+                standardRound = AugmentedStandardRound(StandardRound(), mutableListOf(getDefaultRoundTemplate()))
             } else {
                 ToolbarUtils.setTitle(this, R.string.edit_standard_round)
                 // Load saved values
-                if (standardRound!!.club == StandardRoundFactory.CUSTOM) {
-                    binding.name.setText(standardRound!!.name)
+                if (standardRound!!.standardRound.club == StandardRoundFactory.CUSTOM) {
+                    binding.name.setText(standardRound!!.standardRound.name)
                 } else {
-                    standardRound!!.id = 0L
+                    standardRound!!.standardRound.id = 0L
                     binding.name.setText(
-                            String.format("%s %s", getString(R.string.custom), standardRound!!
+                            String.format("%s %s", getString(R.string.custom), standardRound!!.standardRound
                                     .name))
                     // When copying an existing standard round make sure
                     // we don't overwrite the other rounds templates
-                    for (round in standardRound!!.loadRounds()) {
+                    for (round in standardRound!!.roundTemplates) {
                         round.id = 0L
                     }
                 }
             }
         }
 
-        adapter = RoundTemplateAdapter(this, standardRound!!.loadRounds())
+        adapter = RoundTemplateAdapter(this, standardRound!!.roundTemplates)
         binding.rounds.adapter = adapter
         binding.addButton.setOnClickListener { onAddRound() }
         binding.deleteStandardRound.setOnClickListener { onDeleteStandardRound() }
@@ -93,13 +93,13 @@ class EditStandardRoundFragment : EditFragmentBase() {
         return binding.root
     }
 
-    private fun addDefaultRound() {
+    private fun getDefaultRoundTemplate(): RoundTemplate {
         val round = RoundTemplate()
         round.shotsPerEnd = SettingsManager.shotsPerEnd
         round.endCount = SettingsManager.endCount
         round.targetTemplate = SettingsManager.target
         round.distance = SettingsManager.distance
-        standardRound!!.loadRounds().add(round)
+        return round
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -108,40 +108,41 @@ class EditStandardRoundFragment : EditFragmentBase() {
     }
 
     private fun onAddRound() {
-        val newItemIndex = standardRound!!.loadRounds().size
+        val newItemIndex = standardRound!!.roundTemplates.size
         if (newItemIndex > 0) {
-            val r = standardRound!!.loadRounds()[newItemIndex - 1]
+            val r = standardRound!!.roundTemplates[newItemIndex - 1]
             val roundTemplate = RoundTemplate()
             roundTemplate.endCount = r.endCount
             roundTemplate.shotsPerEnd = r.shotsPerEnd
             roundTemplate.distance = r.distance
             roundTemplate.targetTemplate = r.targetTemplate
-            standardRound!!.loadRounds().add(roundTemplate)
+            standardRound!!.roundTemplates.add(roundTemplate)
         } else {
-            addDefaultRound()
+            Timber.w("This should never get executed") //TODO remove else part if no reports occur
+            standardRound!!.roundTemplates.add(getDefaultRoundTemplate())
         }
         adapter!!.notifyItemInserted(newItemIndex)
     }
 
     private fun onDeleteStandardRound() {
-        standardRound!!.delete()
+        standardRound!!.standardRound.delete()
         activity!!.setResult(RESULT_STANDARD_ROUND_DELETED, null)
         finish()
     }
 
     override fun onSave() {
-        standardRound!!.club = StandardRoundFactory.CUSTOM
-        standardRound!!.name = binding.name.text.toString()
-        standardRound!!.save()
+        standardRound!!.standardRound.club = StandardRoundFactory.CUSTOM
+        standardRound!!.standardRound.name = binding.name.text.toString()
+        standardRound!!.toStandardRound().save()
 
-        val round = standardRound!!.loadRounds()[0] //FIXME how is this possible?
+        val round = standardRound!!.roundTemplates[0]
         SettingsManager.shotsPerEnd = round.shotsPerEnd
         SettingsManager.endCount = round.endCount
         SettingsManager.target = round.targetTemplate
         SettingsManager.distance = round.distance
 
         val data = Intent()
-        data.putExtra(ITEM, standardRound)
+        data.putExtra(ITEM, standardRound!!.standardRound)
         activity!!.setResult(Activity.RESULT_OK, data)
         finish()
     }
@@ -154,11 +155,11 @@ class EditStandardRoundFragment : EditFragmentBase() {
             val index = intentData.getInt(SelectorBase.INDEX)
             when (requestCode) {
                 DistanceSelector.DISTANCE_REQUEST_CODE -> {
-                    standardRound!!.loadRounds()[index].distance = data.getParcelableExtra(ITEM)
+                    standardRound!!.roundTemplates[index].distance = data.getParcelableExtra(ITEM)
                     adapter!!.notifyItemChanged(index)
                 }
                 TargetSelector.TARGET_REQUEST_CODE -> {
-                    standardRound!!.loadRounds()[index]
+                    standardRound!!.roundTemplates[index]
                             .targetTemplate = data.getParcelableExtra(ITEM)
                     adapter!!.notifyItemChanged(index)
                 }
