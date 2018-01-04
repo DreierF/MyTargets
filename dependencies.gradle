@@ -120,6 +120,7 @@ ext {
             materialIntroScreen           : "agency.tango.android:material-intro-screen:$libraryVersion.materialIntroScreen",
 
             dbFlowProcessor               : "com.github.Raizlabs.DBFlow:dbflow-processor:$libraryVersion.dbFlow",
+            dbFlowKotlinExtensions        : "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:$libraryVersion.dbFlow",
             dbFlowCore                    : "com.github.Raizlabs.DBFlow:dbflow-core:$libraryVersion.dbFlow",
             dbFlow                        : "com.github.Raizlabs.DBFlow:dbflow:$libraryVersion.dbFlow",
 

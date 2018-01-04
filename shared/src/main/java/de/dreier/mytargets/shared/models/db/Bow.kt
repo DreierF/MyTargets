@@ -135,7 +135,6 @@ data class Bow(
         return ArrayList(sightMarks) //TODO remove
     }
 
-    @OneToMany(methods = [], variableName = "images")
     fun loadImages(): List<BowImage> {
         if (images == null) {
             images = if (id == 0L) mutableListOf() else SQLite.select()

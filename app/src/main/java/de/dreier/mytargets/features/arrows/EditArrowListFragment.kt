@@ -85,9 +85,10 @@ class EditArrowListFragment : EditableListFragmentBase<Arrow, SimpleListAdapterB
     }
 
     override fun deleteItem(item: Arrow): () -> Arrow {
-        item.delete()
+        val images = ArrowDAO.loadArrowImages(item.id)
+        ArrowDAO.deleteArrow(item)
         return {
-            item.saveRecursively()
+            ArrowDAO.saveArrow(item, images)
             item
         }
     }
