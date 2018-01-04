@@ -25,8 +25,8 @@ import de.dreier.mytargets.shared.models.db.ArrowImage
 import de.dreier.mytargets.shared.models.db.BowImage
 import de.dreier.mytargets.shared.models.db.EndImage
 import de.dreier.mytargets.shared.models.db.Image
-import de.dreier.mytargets.shared.utils.FileUtils
 import de.dreier.mytargets.shared.utils.StandardRoundFactory
+import de.dreier.mytargets.shared.utils.moveTo
 import java.io.File
 import java.io.IOException
 
@@ -85,7 +85,7 @@ object AppDatabase {
                     try {
                         imageFile = File
                                 .createTempFile("img", imageFromSomewhere.name, filesDir)
-                        FileUtils.move(imageFromSomewhere, imageFile)
+                        imageFromSomewhere.moveTo(imageFile)
                         image.fileName = imageFile.name
                         image.save(database)
                     } catch (e: IOException) {
@@ -158,7 +158,7 @@ object AppDatabase {
                 val fileName = cur.getString(0)
                 try {
                     val file = File.createTempFile("img_", ".png", filesDir)
-                    FileUtils.copy(File(fileName), file)
+                    File(fileName).copyTo(file)
                     database.execSQL(
                             "UPDATE BOW SET image=\"" + file.name + "\" WHERE image=\"" +
                                     fileName + "\"")
@@ -175,7 +175,7 @@ object AppDatabase {
                 val fileName = cur.getString(0)
                 try {
                     val file = File.createTempFile("img_", ".png", filesDir)
-                    FileUtils.copy(File(fileName), file)
+                    File(fileName).copyTo(file)
                     database.execSQL(
                             "UPDATE ARROW SET image=\"" + file.name + "\" WHERE image=\"" +
                                     fileName + "\"")

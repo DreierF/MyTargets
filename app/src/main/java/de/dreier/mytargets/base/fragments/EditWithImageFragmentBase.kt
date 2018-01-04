@@ -34,7 +34,7 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.databinding.FragmentEditImageBinding
 import de.dreier.mytargets.shared.models.Thumbnail
 import de.dreier.mytargets.shared.models.db.Image
-import de.dreier.mytargets.shared.utils.FileUtils
+import de.dreier.mytargets.shared.utils.moveTo
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils
 import permissions.dispatcher.NeedsPermission
@@ -198,11 +198,10 @@ abstract class EditWithImageFragmentBase<T : Image> protected constructor(
                 oldImageFile = imageFile
                 imageFile = File
                         .createTempFile("img", oldImageFile!!.name, context!!.filesDir)
-                FileUtils.copy(oldImageFile!!, imageFile!!)
+                oldImageFile!!.moveTo(imageFile!!)
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-
         }
     }
 }

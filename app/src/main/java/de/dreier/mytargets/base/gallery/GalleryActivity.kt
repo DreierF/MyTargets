@@ -34,8 +34,8 @@ import de.dreier.mytargets.base.activities.ChildActivityBase
 import de.dreier.mytargets.base.gallery.adapters.HorizontalListAdapters
 import de.dreier.mytargets.base.gallery.adapters.ViewPagerAdapter
 import de.dreier.mytargets.databinding.ActivityGalleryBinding
-import de.dreier.mytargets.shared.utils.FileUtils
 import de.dreier.mytargets.shared.utils.ImageList
+import de.dreier.mytargets.shared.utils.moveTo
 import de.dreier.mytargets.shared.utils.toUri
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils
@@ -229,7 +229,7 @@ class GalleryActivity : ChildActivityBase() {
                     try {
                         val internal = File.createTempFile("img", file.name, filesDir)
                         internalFiles.add(internal.name)
-                        FileUtils.move(file, internal)
+                        file.moveTo(internal)
                     } catch (e: IOException) {
                         e.printStackTrace()
                     }

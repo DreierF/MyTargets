@@ -18,46 +18,19 @@ package de.dreier.mytargets.shared.utils
 import android.content.Context
 import android.net.Uri
 import android.support.v4.content.FileProvider
-import java.io.*
+import java.io.File
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 
-object FileUtils {
-    @Throws(IOException::class)
-    fun copy(src: File, dst: File) {
-        val inStream = FileInputStream(src)
-        val outStream = FileOutputStream(dst)
-        val inChannel = inStream.channel
-        val outChannel = outStream.channel
-        inChannel.transferTo(0, inChannel.size(), outChannel)
-        inStream.close()
-        outStream.close()
+@Throws(IOException::class)
+fun File.moveTo(to: File) {
+    val directory = to.parentFile
+    if (!directory.exists()) {
+        directory.mkdir()
     }
-
-    @Throws(IOException::class)
-    fun copy(inputStream: InputStream, dst: File) {
-        copy(inputStream, FileOutputStream(dst))
-    }
-
-    @Throws(IOException::class)
-    fun copy(inputStream: InputStream, out: OutputStream) {
-        val buf = ByteArray(1024)
-        var len: Int = inputStream.read(buf)
-        while (len > 0) {
-            out.write(buf, 0, len)
-            len = inputStream.read(buf)
-        }
-        inputStream.close()
-        out.close()
-    }
-
-    @Throws(IOException::class)
-    fun move(from: File, to: File) {
-        val directory = to.parentFile
-        if (!directory.exists()) {
-            directory.mkdir()
-        }
-        copy(from, to)
-        from.delete()
-    }
+    copyTo(to)
+    delete()
 }
 
 fun File.toUri(context: Context): Uri {
