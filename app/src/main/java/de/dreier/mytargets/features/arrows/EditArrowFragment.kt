@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.fragments.EditWithImageFragmentBase
+import de.dreier.mytargets.base.viewmodel.ViewModelFactory
 import de.dreier.mytargets.databinding.FragmentEditArrowBinding
 import de.dreier.mytargets.shared.models.db.ArrowImage
 import de.dreier.mytargets.utils.ToolbarUtils
@@ -32,6 +33,7 @@ class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrow
 
     private lateinit var contentBinding: FragmentEditArrowBinding
     private lateinit var viewModel: EditArrowViewModel
+    private val factory = ViewModelFactory()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = super.onCreateView(inflater, container, savedInstanceState)
@@ -41,7 +43,7 @@ class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrow
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(EditArrowViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, factory).get(EditArrowViewModel::class.java)
         viewModel.setArrowId(arguments.getLongOrNull(ARROW_ID))
         contentBinding.arrow = viewModel
         contentBinding.moreFields.setOnClickListener {
@@ -67,7 +69,7 @@ class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrow
 
     public override fun onSave() {
         super.onSave()
-        if (viewModel.save(thumbnail)) {
+        if (viewModel.save(thumbnail, imageFiles)) {
             navigationController.finish()
         }
     }

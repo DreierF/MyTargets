@@ -91,13 +91,13 @@ class EditArrowViewModel(app: ApplicationInstance) : AndroidViewModel(app) {
         diameterUnit.set(arrow.diameter.unit)
     }
 
-    fun save(thumb: Thumbnail): Boolean {
-        val images = images.value
-        if (!validateInput() || images == null) {
+    fun save(thumb: Thumbnail, imageFiles: List<ArrowImage>): Boolean {
+        if (!validateInput()) {
             return false
         }
         val arrow = Arrow()
         arrow.id = arrowId.value ?: 0
+        arrow.name = name.get()
         arrow.maxArrowNumber = maxArrowNumber.get()
         arrow.length = length.get()
         arrow.material = material.get()
@@ -109,7 +109,7 @@ class EditArrowViewModel(app: ApplicationInstance) : AndroidViewModel(app) {
         arrow.comment = comment.get()
         arrow.thumbnail = thumb
         arrow.diameter = Dimension(diameterValue.get(), diameterUnit.get())
-        arrowDAO.saveArrow(arrow, images)
+        arrowDAO.saveArrow(arrow, imageFiles)
         return true
     }
 

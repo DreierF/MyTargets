@@ -47,7 +47,7 @@ import java.io.IOException
 @RuntimePermissions
 abstract class EditWithImageFragmentBase<T : Image> protected constructor(
         private val defaultDrawable: Int
-) : EditFragmentBase(), View.OnFocusChangeListener {
+) : EditFragmentBase() {
 
     protected lateinit var binding: FragmentEditImageBinding
 
@@ -107,17 +107,14 @@ abstract class EditWithImageFragmentBase<T : Image> protected constructor(
                 setFocusListenerForAllEditText(viewGroup.getChildAt(i))
             }
         } else if (view is EditText) {
-            view.onFocusChangeListener = this
-        }
-    }
-
-    override fun onFocusChange(v: View, hasFocus: Boolean) {
-        if (hasFocus) {
-            val params = binding.appBarLayout
-                    .layoutParams as CoordinatorLayout.LayoutParams
-            val behavior = params.behavior as AppBarLayout.Behavior?
-            behavior?.onNestedFling(binding.coordinatorLayout, binding.appBarLayout, v, 0f,
-                    v.bottom.toFloat(), true)
+            view.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
+                if (hasFocus) {
+                    val params = binding.appBarLayout.layoutParams as CoordinatorLayout.LayoutParams
+                    val behavior = params.behavior as AppBarLayout.Behavior?
+                    behavior?.onNestedFling(binding.coordinatorLayout, binding.appBarLayout, v, 0f,
+                            v.bottom.toFloat(), true)
+                }
+            }
         }
     }
 

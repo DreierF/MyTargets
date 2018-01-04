@@ -32,8 +32,7 @@ typealias LoaderUICallback = () -> Unit
 
 /**
  * Generic fragment class used as base for most fragments.
- * Has Icepick build in to save state on orientation change
- * and animates activity when #finish gets called.
+ * Has Icepick build in to save state on orientation change.
  */
 abstract class FragmentBase : Fragment(), LoaderManager.LoaderCallbacks<FragmentBase.LoaderUICallbackHelper> {
 
