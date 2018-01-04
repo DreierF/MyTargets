@@ -37,6 +37,7 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 class EditArrowListFragment : EditableListFragmentBase<Arrow, SimpleListAdapterBase<Arrow>>() {
 
     private lateinit var binding: FragmentArrowsBinding
+    private val arrowDAO = ArrowDAO
 
     init {
         itemTypeDelRes = R.plurals.arrow_deleted
@@ -67,7 +68,7 @@ class EditArrowListFragment : EditableListFragmentBase<Arrow, SimpleListAdapterB
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        val arrows = ArrowDAO.loadArrows()
+        val arrows = arrowDAO.loadArrows()
         return {
             adapter!!.setList(arrows.toMutableList())
             binding.emptyState!!.root.visibility = if (arrows.isEmpty()) View.VISIBLE else View.GONE
@@ -85,16 +86,15 @@ class EditArrowListFragment : EditableListFragmentBase<Arrow, SimpleListAdapterB
     }
 
     override fun deleteItem(item: Arrow): () -> Arrow {
-        val images = ArrowDAO.loadArrowImages(item.id)
-        ArrowDAO.deleteArrow(item)
+        val images = arrowDAO.loadArrowImages(item.id)
+        arrowDAO.deleteArrow(item)
         return {
-            ArrowDAO.saveArrow(item, images)
+            arrowDAO.saveArrow(item, images)
             item
         }
     }
 
-    private inner class ArrowAdapter : SimpleListAdapterBase<Arrow>() {
-
+    private inner class ArrowAdapter : SimpleListAdapterBase<Arrow>(compareBy(Arrow::name, Arrow::id)) {
         public override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
             val itemView = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_image_details, parent, false)

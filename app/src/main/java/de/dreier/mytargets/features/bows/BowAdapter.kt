@@ -30,7 +30,11 @@ import de.dreier.mytargets.utils.multiselector.OnItemClickListener
 import de.dreier.mytargets.utils.multiselector.OnItemLongClickListener
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 
-internal class BowAdapter(private val selector: MultiSelector, private val clickListener: OnItemClickListener<Bow>, private val longClickListener: OnItemLongClickListener<Bow>) : SimpleListAdapterBase<Bow>() {
+internal class BowAdapter(
+        private val selector: MultiSelector,
+        private val clickListener: OnItemClickListener<Bow>,
+        private val longClickListener: OnItemLongClickListener<Bow>
+) : SimpleListAdapterBase<Bow>(compareBy(Bow::name, Bow::id)) {
 
     public override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val itemView = LayoutInflater.from(parent.context)

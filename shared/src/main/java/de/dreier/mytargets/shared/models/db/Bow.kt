@@ -111,7 +111,7 @@ data class Bow(
 
         @Column(typeConverter = ThumbnailConverter::class)
         var thumbnail: Thumbnail? = null
-) : BaseModel(), IImageProvider, IIdSettable, Comparable<Bow>, Parcelable {
+) : BaseModel(), IImageProvider, IIdSettable, Parcelable {
 
     @IgnoredOnParcel
     var images: List<BowImage>? = null
@@ -195,8 +195,6 @@ data class Bow(
         return true
     }
 
-    override fun compareTo(other: Bow) = compareBy(Bow::name, Bow::id).compare(this, other)
-
     fun areAllPropertiesSet(): Boolean {
         return !TextUtils.isEmpty(size) &&
                 !TextUtils.isEmpty(drawWeight) &&
@@ -221,10 +219,6 @@ data class Bow(
 
     fun saveRecursively() {
         save()
-    }
-
-    fun saveRecursively(databaseWrapper: DatabaseWrapper) {
-        save(databaseWrapper)
     }
 
     companion object {

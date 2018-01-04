@@ -22,7 +22,7 @@ import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
 import de.dreier.mytargets.shared.models.dao.ArrowDAO
 import de.dreier.mytargets.shared.models.db.Arrow
 
-class ArrowListFragment : SelectPureListItemFragmentBase<Arrow>() {
+class ArrowListFragment : SelectPureListItemFragmentBase<Arrow>(compareBy(Arrow::name, Arrow::id)) {
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
         val arrows = ArrowDAO.loadArrows()

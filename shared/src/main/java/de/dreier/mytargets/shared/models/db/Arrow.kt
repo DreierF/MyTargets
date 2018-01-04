@@ -73,7 +73,7 @@ data class Arrow(
         var diameter: Dimension = Dimension(5f, Dimension.Unit.MILLIMETER),
 
         @Column(typeConverter = ThumbnailConverter::class)
-        var thumbnail: Thumbnail? = null) : IImageProvider, IIdSettable, Comparable<Arrow>, Parcelable {
+        var thumbnail: Thumbnail? = null) : IImageProvider, IIdSettable, Parcelable {
 
     val drawable: Drawable
         get() = thumbnail!!.roundDrawable
@@ -81,6 +81,4 @@ data class Arrow(
     override fun getDrawable(context: Context): Drawable {
         return drawable
     }
-
-    override fun compareTo(other: Arrow) = compareBy(Arrow::name, Arrow::id).compare(this, other)
 }

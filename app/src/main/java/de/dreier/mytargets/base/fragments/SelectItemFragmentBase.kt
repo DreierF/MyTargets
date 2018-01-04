@@ -33,7 +33,7 @@ import de.dreier.mytargets.utils.multiselector.SingleSelector
  *
  * @param <T> Model of the item which is managed within the fragment.
 </T> */
-abstract class SelectItemFragmentBase<T, U : ListAdapterBase<out ItemBindingHolder<*>, T>> : FragmentBase(), OnItemClickListener<T> where T : IIdProvider, T : Comparable<T>, T : Parcelable {
+abstract class SelectItemFragmentBase<T, U : ListAdapterBase<out ItemBindingHolder<*>, T>> : FragmentBase(), OnItemClickListener<T> where T : IIdProvider, T : Parcelable {
 
     /**
      * Adapter for the fragment's RecyclerView

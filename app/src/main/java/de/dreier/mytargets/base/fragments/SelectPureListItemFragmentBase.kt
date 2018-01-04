@@ -34,7 +34,9 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 /**
  *
  */
-abstract class SelectPureListItemFragmentBase<T> : SelectItemFragmentBase<T, SimpleListAdapterBase<T>>() where T : IIdProvider, T: Comparable<T>, T : IImageProvider, T: Parcelable {
+abstract class SelectPureListItemFragmentBase<T>(
+        private val comparator: Comparator<T>
+) : SelectItemFragmentBase<T, SimpleListAdapterBase<T>>() where T : IIdProvider, T : IImageProvider, T : Parcelable {
 
     protected lateinit var binding: FragmentListBinding
 
@@ -49,7 +51,7 @@ abstract class SelectPureListItemFragmentBase<T> : SelectItemFragmentBase<T, Sim
         return binding.root
     }
 
-    private inner class ListAdapter : SimpleListAdapterBase<T>() {
+    private inner class ListAdapter : SimpleListAdapterBase<T>(comparator) {
 
         public override fun onCreateViewHolder(parent: ViewGroup): SelectableViewHolder<T> {
             val inflater = LayoutInflater.from(parent.context)

@@ -78,7 +78,7 @@ class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapter
         }
     }
 
-    private inner class DistanceAdapter : SimpleListAdapterBase<Dimension>() {
+    private inner class DistanceAdapter : SimpleListAdapterBase<Dimension>(compareBy(Dimension::value)) {
         public override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
             val itemView = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_distance, parent, false)

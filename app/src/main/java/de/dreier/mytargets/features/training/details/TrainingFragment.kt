@@ -188,7 +188,7 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
         }
     }
 
-    private inner class RoundAdapter : SimpleListAdapterBase<Round>() {
+    private inner class RoundAdapter : SimpleListAdapterBase<Round>(compareBy(Round::index)) {
 
         override fun onCreateViewHolder(parent: ViewGroup): SelectableViewHolder<Round> {
             val itemView = LayoutInflater.from(parent.context)

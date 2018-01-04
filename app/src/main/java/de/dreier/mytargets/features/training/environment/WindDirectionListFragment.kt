@@ -23,7 +23,7 @@ import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
 import de.dreier.mytargets.shared.models.WindDirection
 
-class WindDirectionListFragment : SelectPureListItemFragmentBase<WindDirection>() {
+class WindDirectionListFragment : SelectPureListItemFragmentBase<WindDirection>(compareBy(WindDirection::id)) {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
