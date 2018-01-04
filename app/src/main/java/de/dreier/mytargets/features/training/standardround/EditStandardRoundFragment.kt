@@ -24,11 +24,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.evernote.android.state.State
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.activities.ItemSelectActivity
-import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
 import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemAdapter
 import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemHolder
 import de.dreier.mytargets.base.fragments.EditFragmentBase
+import de.dreier.mytargets.base.navigation.NavigationController.Companion.INTENT
+import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
 import de.dreier.mytargets.databinding.FragmentEditStandardRoundBinding
 import de.dreier.mytargets.databinding.ItemRoundTemplateBinding
 import de.dreier.mytargets.features.settings.SettingsManager
@@ -126,7 +126,7 @@ class EditStandardRoundFragment : EditFragmentBase() {
 
     private fun onDeleteStandardRound() {
         standardRound!!.standardRound.delete()
-        activity!!.setResult(RESULT_STANDARD_ROUND_DELETED, null)
+        navigationController.setResult(RESULT_STANDARD_ROUND_DELETED)
         finish()
     }
 
@@ -141,9 +141,7 @@ class EditStandardRoundFragment : EditFragmentBase() {
         SettingsManager.target = round.targetTemplate
         SettingsManager.distance = round.distance
 
-        val data = Intent()
-        data.putExtra(ITEM, standardRound!!.standardRound)
-        activity!!.setResult(Activity.RESULT_OK, data)
+        navigationController.setResultSuccess(standardRound!!.standardRound)
         finish()
     }
 
@@ -151,7 +149,7 @@ class EditStandardRoundFragment : EditFragmentBase() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK && data != null) {
-            val intentData = data.getBundleExtra(ItemSelectActivity.INTENT)
+            val intentData = data.getBundleExtra(INTENT)
             val index = intentData.getInt(SelectorBase.INDEX)
             when (requestCode) {
                 DistanceSelector.DISTANCE_REQUEST_CODE -> {
@@ -182,14 +180,14 @@ class EditStandardRoundFragment : EditFragmentBase() {
             binding.distance.setOnClickListener { selectedItem, index ->
                 navigationController.navigateToDistance(selectedItem!!, index, DistanceSelector.DISTANCE_REQUEST_CODE)
             }
-            binding.distance.setItemIndex(position)
+            binding.distance.itemIndex = position
             binding.distance.setItem(item.distance)
 
             // Target round
             binding.target.setOnClickListener { selectedItem, index ->
                 navigationController.navigateToTarget(selectedItem!!, index)
             }
-            binding.target.setItemIndex(position)
+            binding.target.itemIndex = position
             binding.target.setItem(item.targetTemplate)
 
             // Ends

@@ -16,10 +16,9 @@
 package de.dreier.mytargets.features.training.environment
 
 import android.support.v4.app.Fragment
+import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase
 
-import de.dreier.mytargets.base.activities.ItemSelectActivity
-
-class EnvironmentActivity : ItemSelectActivity() {
+class EnvironmentActivity : SimpleFragmentActivityBase() {
     override fun instantiateFragment(): Fragment {
         return EnvironmentFragment()
     }

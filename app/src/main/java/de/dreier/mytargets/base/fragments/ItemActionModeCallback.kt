@@ -32,7 +32,7 @@ typealias DeleteCallback = (List<Long>) -> Unit
 typealias StatisticsCallback = (List<Long>) -> Unit
 
 class ItemActionModeCallback(
-        private val fragment: ListFragmentBase<*, *>,
+        private val fragment: FragmentBase,
         private val selector: MultiSelector,
         @PluralsRes private val itemTitleRes: Int
 ) : ActionMode.Callback {
@@ -92,7 +92,7 @@ class ItemActionModeCallback(
 
     fun longClick(holder: SelectableViewHolder<*>) {
         if (actionMode == null) {
-            val activity = fragment.getActivity() as AppCompatActivity?
+            val activity = fragment.activity as AppCompatActivity?
             activity!!.startSupportActionMode(this)
         }
         selector.setSelected(holder, true)

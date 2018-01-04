@@ -28,8 +28,8 @@ import android.widget.LinearLayout
 import com.evernote.android.state.State
 import com.evernote.android.state.StateSaver
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.activities.ItemSelectActivity
-import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
+import de.dreier.mytargets.base.navigation.NavigationController.Companion.INTENT
+import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
 
 typealias OnUpdateListener<T> = (T?) -> Unit
 
@@ -46,7 +46,7 @@ abstract class SelectorBase<T : Parcelable>(
     private var addButton: Button? = null
     private var progress: View? = null
     private var updateListener: OnUpdateListener<T>? = null
-    private var index = -1
+    var itemIndex = -1
 
     override fun onFinishInflate() {
         super.onFinishInflate()
@@ -67,10 +67,6 @@ abstract class SelectorBase<T : Parcelable>(
         selectedItem?.let { bindView(it) }
     }
 
-    fun setItemIndex(index: Int) {
-        this.index = index
-    }
-
     protected abstract fun bindView(item: T)
 
     fun setItem(item: T?) {
@@ -88,13 +84,13 @@ abstract class SelectorBase<T : Parcelable>(
     }
 
     fun setOnClickListener(clickListener: (T?, Int) -> Unit) {
-        view.setOnClickListener { clickListener.invoke(selectedItem, index) }
+        view.setOnClickListener { clickListener.invoke(selectedItem, itemIndex) }
     }
 
     open fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == this.requestCode && data != null) {
-            val intentData = data.getBundleExtra(ItemSelectActivity.INTENT)
-            if (index == -1 || intentData != null && intentData.getInt(INDEX) == index) {
+            val intentData = data.getBundleExtra(INTENT)
+            if (itemIndex == -1 || intentData != null && intentData.getInt(INDEX) == itemIndex) {
                 setItem(data.getParcelableExtra(ITEM))
             }
         }
@@ -109,6 +105,6 @@ abstract class SelectorBase<T : Parcelable>(
     }
 
     companion object {
-        const val INDEX = "index"
+        const val INDEX = "itemIndex"
     }
 }

@@ -23,7 +23,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.fragments.EditableListFragment
+import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
+import de.dreier.mytargets.base.fragments.EditableListFragmentBase
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentBowsBinding
@@ -33,7 +34,7 @@ import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.utils.DividerItemDecoration
 import de.dreier.mytargets.utils.SlideInItemAnimator
 
-class EditBowListFragment : EditableListFragment<Bow>() {
+class EditBowListFragment : EditableListFragmentBase<Bow, SimpleListAdapterBase<Bow>>() {
 
     private lateinit var binding: FragmentBowsBinding
 
@@ -85,7 +86,7 @@ class EditBowListFragment : EditableListFragment<Bow>() {
         navigationController.navigateToEditBow(itemId)
     }
 
-    override fun onItemSelected(item: Bow) {
+    override fun onSelected(item: Bow) {
         navigationController.navigateToEditBow(item.id)
     }
 

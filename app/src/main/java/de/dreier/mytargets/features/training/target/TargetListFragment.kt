@@ -26,10 +26,10 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
 import de.dreier.mytargets.base.adapters.header.ExpandableListAdapter
 import de.dreier.mytargets.base.adapters.header.HeaderListAdapter
 import de.dreier.mytargets.base.fragments.SelectItemFragmentBase
+import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
 import de.dreier.mytargets.databinding.FragmentTargetSelectBinding
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding
 import de.dreier.mytargets.features.training.target.TargetListFragment.EFixedType.*

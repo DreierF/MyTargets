@@ -16,10 +16,9 @@
 package de.dreier.mytargets.features.bows
 
 import android.support.v4.app.Fragment
+import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase
 
-import de.dreier.mytargets.base.activities.ItemSelectActivity
-
-class BowListActivity : ItemSelectActivity() {
+class BowListActivity : SimpleFragmentActivityBase() {
 
     public override fun instantiateFragment(): Fragment {
         return BowListFragment()

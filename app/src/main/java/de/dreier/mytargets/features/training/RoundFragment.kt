@@ -24,7 +24,7 @@ import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
-import de.dreier.mytargets.base.fragments.EditableListFragment
+import de.dreier.mytargets.base.fragments.EditableListFragmentBase
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentListBinding
@@ -43,7 +43,7 @@ import java.util.*
 /**
  * Shows all ends of one round
  */
-class RoundFragment : EditableListFragment<End>() {
+class RoundFragment : EditableListFragmentBase<End, SimpleListAdapterBase<End>>() {
 
     private var roundId: Long = 0
     private lateinit var binding: FragmentListBinding
@@ -151,7 +151,7 @@ class RoundFragment : EditableListFragment<End>() {
         }
     }
 
-    override fun onItemSelected(item: End) {
+    override fun onSelected(item: End) {
         navigationController.navigateToEditEnd(round!!, item.index)
                 .start()
     }

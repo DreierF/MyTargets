@@ -25,7 +25,6 @@ import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
-import de.dreier.mytargets.base.fragments.EditableListFragment
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
 import de.dreier.mytargets.base.fragments.LoaderUICallback
@@ -43,7 +42,7 @@ import junit.framework.Assert
 /**
  * Shows all rounds of one training.
  */
-open class TrainingFragment : EditableListFragment<Round>() {
+open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterBase<Round>>() {
 
     private val equals = BooleanArray(2)
     private lateinit var binding: FragmentTrainingBinding
@@ -170,7 +169,7 @@ open class TrainingFragment : EditableListFragment<Round>() {
         }
     }
 
-    override fun onItemSelected(item: Round) {
+    override fun onSelected(item: Round) {
         navigationController.navigateToRound(item)
                 .start()
     }

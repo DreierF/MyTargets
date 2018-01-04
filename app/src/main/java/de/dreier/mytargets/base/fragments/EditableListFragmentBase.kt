@@ -23,13 +23,19 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.ListAdapterBase
 import de.dreier.mytargets.shared.models.IIdSettable
 import de.dreier.mytargets.utils.multiselector.MultiSelector
+import de.dreier.mytargets.utils.multiselector.OnItemClickListener
 import de.dreier.mytargets.utils.multiselector.OnItemLongClickListener
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 
 /**
  * @param <T> Model of the item which is managed within the fragment.
 </T> */
-abstract class EditableListFragmentBase<T, U : ListAdapterBase<*, T>> : ListFragmentBase<T, U>(), OnItemLongClickListener<T> where T : IIdSettable {
+abstract class EditableListFragmentBase<T, U : ListAdapterBase<*, T>> : FragmentBase(), OnItemClickListener<T>, OnItemLongClickListener<T> where T : IIdSettable {
+
+    /**
+     * Adapter for the fragment's RecyclerView
+     */
+    protected var adapter: U? = null
 
     var selector = MultiSelector()
 

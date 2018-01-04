@@ -16,10 +16,11 @@
 package de.dreier.mytargets.base.navigation
 
 import android.app.Activity
+import android.content.Intent
+import android.os.Parcelable
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.preference.PreferenceFragmentCompat
-import de.dreier.mytargets.base.activities.ItemSelectActivity
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase
 import de.dreier.mytargets.base.gallery.GalleryActivity
 import de.dreier.mytargets.features.arrows.ArrowListActivity
@@ -197,12 +198,12 @@ class NavigationController(
 
     fun navigateToEditStandardRound(item: AugmentedStandardRound): IntentWrapper {
         return IntentWrapper(activity, fragment, EditStandardRoundActivity::class.java)
-                .with(ItemSelectActivity.ITEM, item)
+                .with(ITEM, item)
     }
 
     fun navigateToDistance(item: Dimension, index: Int, requestCode: Int = DistanceSelector.DISTANCE_REQUEST_CODE) {
         IntentWrapper(activity, fragment, DistanceActivity::class.java)
-                .with(ItemSelectActivity.ITEM, item)
+                .with(ITEM, item)
                 .with(SelectorBase.INDEX, index)
                 .forResult(requestCode)
                 .start()
@@ -210,7 +211,7 @@ class NavigationController(
 
     fun navigateToTarget(item: Target, index: Int = -1, requestCode: Int = TargetSelector.TARGET_REQUEST_CODE, fixedType: TargetListFragment.EFixedType = TargetListFragment.EFixedType.NONE) {
         IntentWrapper(activity, fragment, TargetActivity::class.java)
-                .with(ItemSelectActivity.ITEM, item)
+                .with(ITEM, item)
                 .with(SelectorBase.INDEX, index)
                 .with(TargetListFragment.FIXED_TYPE, fixedType.name)
                 .forResult(requestCode)
@@ -219,44 +220,63 @@ class NavigationController(
 
     fun navigateToStandardRoundList(currentSelection: StandardRound, requestCode: Int = StandardRoundSelector.STANDARD_ROUND_REQUEST_CODE) {
         IntentWrapper(activity, fragment, StandardRoundActivity::class.java)
-                .with(ItemSelectActivity.ITEM, currentSelection)
+                .with(ITEM, currentSelection)
                 .forResult(requestCode)
                 .start()
     }
 
     fun navigateToArrowList(currentSelection: Arrow, requestCode: Int = ArrowSelector.ARROW_REQUEST_CODE) {
         IntentWrapper(activity, fragment, ArrowListActivity::class.java)
-                .with(ItemSelectActivity.ITEM, currentSelection)
+                .with(ITEM, currentSelection)
                 .forResult(requestCode)
                 .start()
     }
 
     fun navigateToBowList(currentSelection: Bow, requestCode: Int = BowSelector.BOW_REQUEST_CODE) {
         IntentWrapper(activity, fragment, BowListActivity::class.java)
-                .with(ItemSelectActivity.ITEM, currentSelection)
+                .with(ITEM, currentSelection)
                 .forResult(requestCode)
                 .start()
     }
 
     fun navigateToEnvironment(item: Environment, requestCode: Int = EnvironmentSelector.ENVIRONMENT_REQUEST_CODE) {
         IntentWrapper(activity, fragment, EnvironmentActivity::class.java)
-                .with(ItemSelectActivity.ITEM, item)
+                .with(ITEM, item)
                 .forResult(requestCode)
                 .start()
     }
 
     fun navigateToWindDirection(selectedItem: WindDirection, requestCode: Int = WindDirectionSelector.WIND_DIRECTION_REQUEST_CODE) {
         IntentWrapper(activity, fragment, WindDirectionActivity::class.java)
-                .with(ItemSelectActivity.ITEM, selectedItem)
+                .with(ITEM, selectedItem)
                 .forResult(requestCode)
                 .start()
     }
 
     fun navigateToWindSpeed(selectedItem: WindSpeed, requestCode: Int = WindSpeedSelector.WIND_SPEED_REQUEST_CODE) {
         IntentWrapper(activity, fragment, WindSpeedActivity::class.java)
-                .with(ItemSelectActivity.ITEM, selectedItem)
+                .with(ITEM, selectedItem)
                 .forResult(requestCode)
                 .start()
+    }
+
+    fun setResultSuccess() {
+        activity.setResult(Activity.RESULT_OK)
+    }
+
+    fun setResultSuccess(intent: Intent) {
+        activity.setResult(Activity.RESULT_OK, intent)
+    }
+
+    fun setResultSuccess(data: Parcelable) {
+        val intent = Intent()
+        intent.putExtra(ITEM, data)
+        intent.putExtra(INTENT, activity.intent?.extras)
+        setResultSuccess(intent)
+    }
+
+    fun setResult(resultCode: Int) {
+        activity.setResult(resultCode)
     }
 
 //    fun navigateToSearch() {
@@ -283,4 +303,9 @@ class NavigationController(
 //                .addToBackStack(null)
 //                .commitAllowingStateLoss()
 //    }
+
+    companion object {
+        const val ITEM = "item"
+        const val INTENT = "intent"
+    }
 }

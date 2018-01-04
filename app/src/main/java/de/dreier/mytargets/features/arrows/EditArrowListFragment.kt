@@ -23,7 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
-import de.dreier.mytargets.base.fragments.EditableListFragment
+import de.dreier.mytargets.base.fragments.EditableListFragmentBase
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentArrowsBinding
@@ -34,7 +34,7 @@ import de.dreier.mytargets.utils.DividerItemDecoration
 import de.dreier.mytargets.utils.SlideInItemAnimator
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 
-class EditArrowListFragment : EditableListFragment<Arrow>() {
+class EditArrowListFragment : EditableListFragmentBase<Arrow, SimpleListAdapterBase<Arrow>>() {
 
     private lateinit var binding: FragmentArrowsBinding
 
@@ -79,7 +79,7 @@ class EditArrowListFragment : EditableListFragment<Arrow>() {
                 .start()
     }
 
-    override fun onItemSelected(item: Arrow) {
+    override fun onSelected(item: Arrow) {
         navigationController.navigateToEditArrow(item.id)
                 .start()
     }

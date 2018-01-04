@@ -17,7 +17,6 @@ package de.dreier.mytargets.base.gallery
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.AsyncTask
@@ -33,6 +32,7 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.base.activities.ChildActivityBase
 import de.dreier.mytargets.base.gallery.adapters.HorizontalListAdapters
 import de.dreier.mytargets.base.gallery.adapters.ViewPagerAdapter
+import de.dreier.mytargets.base.navigation.NavigationController
 import de.dreier.mytargets.databinding.ActivityGalleryBinding
 import de.dreier.mytargets.shared.utils.ImageList
 import de.dreier.mytargets.shared.utils.moveTo
@@ -170,13 +170,7 @@ class GalleryActivity : ChildActivityBase() {
     }
 
     private fun updateResult() {
-        setResult(Activity.RESULT_OK, wrap(imageList!!))
-    }
-
-    private fun wrap(imageList: ImageList): Intent {
-        val i = Intent()
-        i.putExtra(RESULT_IMAGES, imageList)
-        return i
+        navigationController.setResultSuccess(imageList!!)
     }
 
     public override fun onSaveInstanceState(outState: Bundle?) {
@@ -261,12 +255,11 @@ class GalleryActivity : ChildActivityBase() {
     }
 
     companion object {
-        const val RESULT_IMAGES = "images"
         const val EXTRA_IMAGES = "images"
         const val EXTRA_TITLE = "title"
 
         fun getResult(data: Intent): ImageList {
-            return data.getParcelableExtra(RESULT_IMAGES)
+            return data.getParcelableExtra(NavigationController.ITEM)
         }
     }
 }

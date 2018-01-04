@@ -19,9 +19,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
 
 import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase
+import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
 import de.dreier.mytargets.shared.models.WindSpeed
 
 class WindSpeedListFragment : SelectPureListItemFragmentBase<WindSpeed>() {

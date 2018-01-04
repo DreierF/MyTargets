@@ -22,10 +22,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.SelectItemFragmentBase
+import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
 import de.dreier.mytargets.databinding.FragmentListBinding
 import de.dreier.mytargets.databinding.ItemDistanceBinding
 import de.dreier.mytargets.shared.models.Dimension
@@ -62,12 +62,11 @@ class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapter
         var distance = this.distance
         try {
             val distanceVal = Integer.parseInt(input.replace("[^0-9]".toRegex(), ""))
-            distance = Dimension(distanceVal.toFloat(), unit)
+            distance = Dimension(distanceVal.toFloat(), unit) //TODO
         } catch (e: NumberFormatException) {
             // leave distance as it is
         }
-
-        listener?.onItemSelected(distance!!)
+        navigationController.setResultSuccess(distance!!)
         finish()
     }
 
@@ -80,7 +79,6 @@ class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapter
     }
 
     private inner class DistanceAdapter : SimpleListAdapterBase<Dimension>() {
-
         public override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
             val itemView = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_distance, parent, false)
@@ -109,5 +107,4 @@ class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapter
             return fragment
         }
     }
-
 }

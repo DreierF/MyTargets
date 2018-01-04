@@ -27,10 +27,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.evernote.android.state.State
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.activities.ItemSelectActivity
 import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemAdapter
 import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemHolder
 import de.dreier.mytargets.base.fragments.EditWithImageFragmentBase
+import de.dreier.mytargets.base.navigation.NavigationController.Companion.INTENT
+import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
 import de.dreier.mytargets.databinding.FragmentEditBowBinding
 import de.dreier.mytargets.databinding.ItemSightMarkBinding
 import de.dreier.mytargets.shared.models.Dimension
@@ -112,9 +113,9 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == SimpleDistanceSelector.SIMPLE_DISTANCE_REQUEST_CODE && data != null) {
-            val intentData = data.getBundleExtra(ItemSelectActivity.INTENT)
+            val intentData = data.getBundleExtra(INTENT)
             val index = intentData.getInt(SelectorBase.INDEX)
-            val parcelable = data.getParcelableExtra<Dimension>(ItemSelectActivity.ITEM)
+            val parcelable = data.getParcelableExtra<Dimension>(ITEM)
             sightMarks[index].distance = parcelable
             adapter.notifyItemChanged(index)
         }
@@ -179,7 +180,7 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
             binding.distance.setOnClickListener { selectedItem, index ->
                 navigationController.navigateToDistance(selectedItem!!, index, SimpleDistanceSelector.SIMPLE_DISTANCE_REQUEST_CODE)
             }
-            binding.distance.setItemIndex(position)
+            binding.distance.itemIndex = position
             binding.distance.setItem(item.distance)
             binding.sightSetting.setText(item.value)
             binding.removeSightSetting.setOnClickListener(removeListener)
