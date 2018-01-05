@@ -20,6 +20,8 @@ import android.os.Parcelable
 import android.support.v4.util.Pair
 import com.raizlabs.android.dbflow.annotation.*
 import com.raizlabs.android.dbflow.config.FlowManager
+import com.raizlabs.android.dbflow.kotlinextensions.delete
+import com.raizlabs.android.dbflow.kotlinextensions.save
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import com.raizlabs.android.dbflow.structure.BaseModel
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper

@@ -18,7 +18,6 @@ package de.dreier.mytargets.shared.models.db
 import android.annotation.SuppressLint
 import android.os.Parcelable
 import com.raizlabs.android.dbflow.annotation.*
-import com.raizlabs.android.dbflow.structure.BaseModel
 import de.dreier.mytargets.shared.AppDatabase
 import kotlinx.android.parcel.Parcelize
 
@@ -35,4 +34,4 @@ data class ArrowImage(
 
         @ForeignKey(tableClass = Arrow::class, references = [(ForeignKeyReference(columnName = "arrow", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
         var arrowId: Long? = null
-) : BaseModel(), Image, Parcelable
+) : Image, Parcelable

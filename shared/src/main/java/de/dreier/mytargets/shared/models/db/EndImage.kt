@@ -18,7 +18,6 @@ package de.dreier.mytargets.shared.models.db
 import android.os.Parcel
 import android.os.Parcelable
 import com.raizlabs.android.dbflow.annotation.*
-import com.raizlabs.android.dbflow.structure.BaseModel
 import de.dreier.mytargets.shared.AppDatabase
 
 @Table(database = AppDatabase::class)
@@ -32,7 +31,7 @@ data class EndImage(
 
         @ForeignKey(tableClass = End::class, references = [(ForeignKeyReference(columnName = "end", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
         var endId: Long? = null
-) : BaseModel(), Image, Parcelable {
+) : Image, Parcelable {
     constructor(imageFile: String) : this(fileName = imageFile)
 
     constructor(source: Parcel) : this(

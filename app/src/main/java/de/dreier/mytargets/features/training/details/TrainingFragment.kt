@@ -120,8 +120,7 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
 
             // Set round info
             binding.weatherIcon.setImageResource(training!!.environment.colorDrawable)
-            binding.detailRoundInfo.text = Utils
-                    .fromHtml(HtmlUtils.getTrainingInfoHTML(context!!, training!!, rounds, equals))
+            binding.detailRoundInfo.text = HtmlUtils.getTrainingInfoHTML(context!!, training!!, rounds, equals)
             adapter!!.setList(rounds.toMutableList())
 
             activity!!.invalidateOptionsMenu()
@@ -203,15 +202,14 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
         override fun bindItem(item: Round) {
             binding.title.text = resources.getQuantityString(R.plurals.rounds, item
                     .index + 1, item.index + 1)
-            binding.subtitle.text = Utils.fromHtml(HtmlUtils.getRoundInfo(item, equals))
-            if (binding.subtitle.text.toString().isEmpty()) {
+            binding.subtitle.text = HtmlUtils.getRoundInfo(item, equals)
+            if (binding.subtitle.text.isEmpty()) {
                 binding.subtitle.visibility = View.GONE
             } else {
                 binding.subtitle.visibility = View.VISIBLE
             }
             binding.points.text = item.reachedScore
-                    .format(Utils.getCurrentLocale(context!!), SettingsManager
-                            .scoreConfiguration)
+                    .format(Utils.getCurrentLocale(context!!), SettingsManager.scoreConfiguration)
         }
     }
 }

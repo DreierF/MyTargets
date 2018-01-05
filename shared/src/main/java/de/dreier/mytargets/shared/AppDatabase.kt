@@ -17,9 +17,10 @@ package de.dreier.mytargets.shared
 
 import com.raizlabs.android.dbflow.annotation.Database
 import com.raizlabs.android.dbflow.annotation.Migration
+import com.raizlabs.android.dbflow.kotlinextensions.delete
+import com.raizlabs.android.dbflow.kotlinextensions.save
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration
-import com.raizlabs.android.dbflow.structure.BaseModel
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
 import de.dreier.mytargets.shared.models.db.ArrowImage
 import de.dreier.mytargets.shared.models.db.BowImage
@@ -58,12 +59,20 @@ object AppDatabase {
     class Migration23 : BaseMigration() {
 
         override fun migrate(database: DatabaseWrapper) {
-            removeFilePath(database, EndImage::class.java)
-            removeFilePath(database, BowImage::class.java)
-            removeFilePath(database, ArrowImage::class.java)
+            removeFilePath(database, EndImage::class.java,
+                    { endImage, db -> endImage.save(db) },
+                    { endImage, db -> endImage.delete(db) })
+            removeFilePath(database, BowImage::class.java,
+                    { bowImage, db -> bowImage.save(db) },
+                    { bowImage, db -> bowImage.delete(db) })
+            removeFilePath(database, ArrowImage::class.java,
+                    { arrowImage, db -> arrowImage.save(db) },
+                    { arrowImage, db -> arrowImage.delete(db) })
         }
 
-        private fun <T> removeFilePath(database: DatabaseWrapper, clazz: Class<out T>) where T : BaseModel, T : Image {
+        private fun <T> removeFilePath(database: DatabaseWrapper, clazz: Class<out T>,
+                                       save: (T, DatabaseWrapper) -> Boolean,
+                                       delete: (T, DatabaseWrapper) -> Boolean) where T : Image {
             val images = SQLite.select().from(clazz).queryList(database)
             for (image in images) {
                 val filesDir = SharedApplicationInstance.context.filesDir
@@ -76,7 +85,7 @@ object AppDatabase {
                 // In case the image was already copied to the files, but does still contain the wrong path
                 if (imageFile.exists() || imageFileFromSomewhere.exists()) {
                     image.fileName = imageFile.name
-                    image.save(database)
+                    save(image, database)
                     continue
                 }
 
@@ -87,13 +96,13 @@ object AppDatabase {
                                 .createTempFile("img", imageFromSomewhere.name, filesDir)
                         imageFromSomewhere.moveTo(imageFile)
                         image.fileName = imageFile.name
-                        image.save(database)
+                        save(image, database)
                     } catch (e: IOException) {
                         e.printStackTrace()
                     }
 
                 } else {
-                    image.delete(database)
+                    delete(image, database)
                 }
             }
         }

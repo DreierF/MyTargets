@@ -16,19 +16,21 @@
 package de.dreier.mytargets.features.training.details
 
 import android.content.Context
+import android.text.Spanned
 import android.text.TextUtils
 import de.dreier.mytargets.R
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.utils.SharedUtils
+import de.dreier.mytargets.utils.Utils
 
 object HtmlUtils {
 
-    fun getTrainingInfoHTML(context: Context, training: Training, rounds: List<Round>, equals: BooleanArray): String {
+    fun getTrainingInfoHTML(context: Context, training: Training, rounds: List<Round>, equals: BooleanArray): Spanned {
         val info = HtmlInfoBuilder()
         addStaticTrainingHeaderInfo(context, info, training)
         addDynamicTrainingHeaderInfo(rounds, equals, info)
-        return info.toString()
+        return Utils.fromHtml(info.toString())
     }
 
     private fun addStaticTrainingHeaderInfo(context: Context, info: HtmlInfoBuilder, training: Training) {
@@ -83,7 +85,7 @@ object HtmlUtils {
         }
     }
 
-    fun getRoundInfo(round: Round, equals: BooleanArray): String {
+    fun getRoundInfo(round: Round, equals: BooleanArray): Spanned {
         val info = HtmlInfoBuilder()
         if (!equals[0]) {
             info.addLine(R.string.distance, round.distance)
@@ -94,6 +96,6 @@ object HtmlUtils {
         if (!round.comment.isEmpty()) {
             info.addLine(R.string.comment, round.comment)
         }
-        return info.toString()
+        return Utils.fromHtml(info.toString())
     }
 }
