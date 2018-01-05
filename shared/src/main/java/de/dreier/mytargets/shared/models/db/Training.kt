@@ -42,10 +42,10 @@ data class Training(
         override var id: Long = 0L,
 
         @Column
-        var title: String? = "",
+        var title: String = "",
 
         @Column(typeConverter = LocalDateConverter::class)
-        var date: LocalDate? = null,
+        var date: LocalDate = LocalDate.now(),
 
         @ForeignKey(tableClass = StandardRound::class, references = [(ForeignKeyReference(columnName = "standardRound", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
         var standardRoundId: Long? = null,
@@ -63,7 +63,7 @@ data class Training(
         var indoor: Boolean = false,
 
         @Column(typeConverter = EWeatherConverter::class)
-        var weather: EWeather? = null,
+        var weather: EWeather = EWeather.SUNNY,
 
         @Column
         var windDirection: Int = 0,
@@ -72,7 +72,7 @@ data class Training(
         var windSpeed: Int = 0,
 
         @Column
-        var location: String? = "",
+        var location: String = "",
 
         @Column
         var comment: String = "",
@@ -88,7 +88,7 @@ data class Training(
     var rounds: MutableList<Round>? = null
 
     var environment: Environment
-        get() = Environment(indoor, weather!!, windSpeed, windDirection, location!!)
+        get() = Environment(indoor, weather, windSpeed, windDirection, location)
         set(env) {
             indoor = env.indoor
             weather = env.weather
@@ -152,7 +152,7 @@ data class Training(
         }
 
     val formattedDate: String
-        get() = date!!.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+        get() = date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
 
     val reachedScore: Score
         get() = loadRounds()
@@ -174,7 +174,7 @@ data class Training(
     override fun compareTo(other: Training): Int {
         return if (date == other.date) {
             (id - other.id).toInt()
-        } else date!!.compareTo(other.date!!)
+        } else date.compareTo(other.date)
     }
 
     override fun save(): Boolean {

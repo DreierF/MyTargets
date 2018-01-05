@@ -129,7 +129,7 @@ open class TrainingFragment : EditableListFragment<Round>() {
 
             activity!!.invalidateOptionsMenu()
 
-            ToolbarUtils.setTitle(this@TrainingFragment, training!!.title!!)
+            ToolbarUtils.setTitle(this@TrainingFragment, training!!.title)
             ToolbarUtils.setSubtitle(this@TrainingFragment, training!!.formattedDate)
         }
     }

@@ -57,7 +57,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
 
     private var trainingId: Long? = null
     private var trainingType = FREE_TRAINING
-    private var date: LocalDate? = LocalDate.now()
+    private var date: LocalDate = LocalDate.now()
     private lateinit var binding: FragmentEditTrainingBinding
     private var roundTarget: Target? = null
 

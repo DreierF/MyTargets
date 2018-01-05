@@ -36,7 +36,7 @@ object AppDatabase {
     const val NAME = "database"
     const val DATABASE_FILE_NAME = "database.db"
     const val DATABASE_IMPORT_FILE_NAME = "database"
-    const val VERSION = 24
+    const val VERSION = 25
 
     @Migration(version = 0, database = AppDatabase::class)
     class Migration0 : BaseMigration() {

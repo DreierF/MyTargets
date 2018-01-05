@@ -40,7 +40,7 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
         this.builder = builder
 
         if (configuration.showTitle) {
-            builder.title(training.title!!)
+            builder.title(training.title)
         }
 
         val equals = BooleanArray(2)
