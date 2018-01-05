@@ -52,10 +52,10 @@ class GalleryActivity : ChildActivityBase() {
 
     internal var adapter: ViewPagerAdapter? = null
     internal var layoutManager: LinearLayoutManager? = null
-    internal var previewAdapter: HorizontalListAdapters? = null
+    internal lateinit var previewAdapter: HorizontalListAdapters
 
     @State
-    var imageList: ImageList? = null
+    lateinit var imageList: ImageList
 
     private lateinit var binding: ActivityGalleryBinding
 
@@ -79,19 +79,19 @@ class GalleryActivity : ChildActivityBase() {
         layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.imagesHorizontalList.layoutManager = layoutManager
 
-        adapter = ViewPagerAdapter(this, imageList!!, binding.toolbar, binding.imagesHorizontalList)
+        adapter = ViewPagerAdapter(this, imageList, binding.toolbar, binding.imagesHorizontalList)
         binding.pager.adapter = adapter
 
-        previewAdapter = HorizontalListAdapters(this, imageList!!, { this.goToImage(it) })
+        previewAdapter = HorizontalListAdapters(this, imageList, { this.goToImage(it) })
         binding.imagesHorizontalList.adapter = previewAdapter
-        previewAdapter!!.notifyDataSetChanged()
+        previewAdapter.notifyDataSetChanged()
 
         binding.pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
             override fun onPageSelected(position: Int) {
                 binding.imagesHorizontalList.smoothScrollToPosition(position)
-                previewAdapter!!.setSelectedItem(position)
+                previewAdapter.setSelectedItem(position)
             }
 
             override fun onPageScrollStateChanged(state: Int) {
@@ -100,10 +100,10 @@ class GalleryActivity : ChildActivityBase() {
         })
 
         val currentPos = 0
-        previewAdapter!!.setSelectedItem(currentPos)
+        previewAdapter.setSelectedItem(currentPos)
         binding.pager.currentItem = currentPos
 
-        if (imageList!!.size() == 0 && savedInstanceState == null) {
+        if (imageList.size() == 0 && savedInstanceState == null) {
             onTakePictureWithPermissionCheck()
         }
     }
@@ -115,8 +115,8 @@ class GalleryActivity : ChildActivityBase() {
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         super.onPrepareOptionsMenu(menu)
-        menu.findItem(R.id.action_share).isVisible = !imageList!!.isEmpty
-        menu.findItem(R.id.action_delete).isVisible = !imageList!!.isEmpty
+        menu.findItem(R.id.action_share).isVisible = !imageList.isEmpty
+        menu.findItem(R.id.action_delete).isVisible = !imageList.isEmpty
         return true
     }
 
@@ -141,7 +141,7 @@ class GalleryActivity : ChildActivityBase() {
     }
 
     private fun shareImage(currentItem: Int) {
-        val currentImage = imageList!![currentItem]
+        val currentImage = imageList[currentItem]
         val file = File(filesDir, currentImage.fileName)
         val uri = file.toUri(this)
         val shareIntent = Intent(Intent.ACTION_SEND)
@@ -158,19 +158,19 @@ class GalleryActivity : ChildActivityBase() {
                 .positiveText(R.string.delete)
                 .positiveColorRes(R.color.md_red_500)
                 .onPositive { _, _ ->
-                    imageList!!.remove(currentItem)
+                    imageList.remove(currentItem)
                     updateResult()
                     invalidateOptionsMenu()
                     adapter!!.notifyDataSetChanged()
-                    val nextItem = Math.min(imageList!!.size() - 1, currentItem)
-                    previewAdapter!!.setSelectedItem(nextItem)
+                    val nextItem = Math.min(imageList.size() - 1, currentItem)
+                    previewAdapter.setSelectedItem(nextItem)
                     binding.pager.currentItem = nextItem
                 }
                 .show()
     }
 
     private fun updateResult() {
-        navigationController.setResultSuccess(imageList!!)
+        navigationController.setResultSuccess(imageList)
     }
 
     public override fun onSaveInstanceState(outState: Bundle?) {
@@ -234,20 +234,20 @@ class GalleryActivity : ChildActivityBase() {
 
             override fun onPostExecute(files: List<String>) {
                 super.onPostExecute(files)
-                imageList!!.addAll(files)
+                imageList.addAll(files)
                 updateResult()
                 invalidateOptionsMenu()
-                previewAdapter!!.notifyDataSetChanged()
+                previewAdapter.notifyDataSetChanged()
                 adapter!!.notifyDataSetChanged()
-                val currentPos = imageList!!.size() - 1
-                previewAdapter!!.setSelectedItem(currentPos)
+                val currentPos = imageList.size() - 1
+                previewAdapter.setSelectedItem(currentPos)
                 binding.pager.currentItem = currentPos
             }
         }.execute()
     }
 
     private fun goToImage(pos: Int) {
-        if (imageList!!.size() == pos) {
+        if (imageList.size() == pos) {
             onTakePictureWithPermissionCheck()
         } else {
             binding.pager.setCurrentItem(pos, true)
