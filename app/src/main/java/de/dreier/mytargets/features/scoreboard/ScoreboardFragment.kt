@@ -236,6 +236,6 @@ class ScoreboardFragment : FragmentBase() {
 
     fun getDefaultFileName(extension: EFileType): String {
         return training!!.date.format(DateTimeFormatter.ISO_LOCAL_DATE) + "-" +
-                getString(R.string.scoreboard) + "." + extension.name.toLowerCase()
+                getString(R.string.scoreboard) + "." + extension.name.toLowerCase(Locale.US)
     }
 }

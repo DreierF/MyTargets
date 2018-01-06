@@ -207,7 +207,7 @@ data class Training(
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.saveRecursively(it) })
     }
 
-    fun saveRecursively(databaseWrapper: DatabaseWrapper) {
+    private fun saveRecursively(databaseWrapper: DatabaseWrapper) {
         super.save(databaseWrapper)
         loadRounds().forEach { s ->
             s.trainingId = id

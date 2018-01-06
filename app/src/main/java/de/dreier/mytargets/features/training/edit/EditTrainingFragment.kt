@@ -44,6 +44,7 @@ import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.targets.models.WA3Ring3Spot
 import de.dreier.mytargets.utils.ToolbarUtils
+import de.dreier.mytargets.utils.getLongOrNull
 import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.views.selector.ArrowSelector
 import de.dreier.mytargets.views.selector.BowSelector
@@ -71,17 +72,8 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
             training.title = binding.training.text.toString()
             training.date = date
             training.environment = binding.environment.selectedItem!!
-            training.bowId = if (binding.bow.selectedItem == null)
-                null
-            else
-                binding.bow
-                        .selectedItem!!
-                        .id
-            training.arrowId = if (binding.arrow.selectedItem == null)
-                null
-            else
-                binding.arrow
-                        .selectedItem!!.id
+            training.bowId = binding.bow.selectedItem?.id
+            training.arrowId = binding.arrow.selectedItem?.id
             training.arrowNumbering = binding.numberArrows.isChecked
 
             SettingsManager.bow = training.bowId
@@ -109,10 +101,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
         binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_edit_training, container, false)
 
-        val arguments = arguments
-        if (arguments != null && arguments.containsKey(ITEM_ID)) {
-            trainingId = arguments.getLong(ITEM_ID)
-        }
+        trainingId = arguments.getLongOrNull(ITEM_ID)
         trainingType = if (activity?.intent?.action == CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION) {
             TRAINING_WITH_STANDARD_ROUND
         } else {

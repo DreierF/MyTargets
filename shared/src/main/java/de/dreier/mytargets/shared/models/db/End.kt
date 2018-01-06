@@ -57,7 +57,7 @@ data class End(
         var saveTime: LocalTime? = null,
 
         @Column
-        var comment: String? = ""
+        var comment: String = ""
 ) : BaseModel(), IIdSettable, Comparable<End>, Parcelable {
 
     @IgnoredOnParcel
@@ -163,7 +163,7 @@ data class End(
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.saveRecursively(it) })
     }
 
-    fun saveRecursively(databaseWrapper: DatabaseWrapper) {
+    private fun saveRecursively(databaseWrapper: DatabaseWrapper) {
         val round = Round[roundId!!]
         val ends = round!!.loadEnds(databaseWrapper).toMutableList()
 
@@ -188,18 +188,18 @@ data class End(
             rounds.flatMap { it.loadEnds() }
                     .forEach {
                         it.loadShots().forEach { s ->
-                            if (s.scoringRing != Shot.NOTHING_SELECTED) {
-                                val tuple = SelectableZone(s.scoringRing,
-                                        t.model.getZone(s.scoringRing),
-                                        t.zoneToString(s.scoringRing, s.index),
-                                        t.getScoreByZone(s.scoringRing, s.index))
-                                val integer = scoreCount[tuple]
-                                if (integer != null) {
-                                    val count = integer + 1
-                                    scoreCount[tuple] = count
+                                    if (s.scoringRing != Shot.NOTHING_SELECTED) {
+                                        val tuple = SelectableZone(s.scoringRing,
+                                                t.model.getZone(s.scoringRing),
+                                                t.zoneToString(s.scoringRing, s.index),
+                                                t.getScoreByZone(s.scoringRing, s.index))
+                                        val integer = scoreCount[tuple]
+                                        if (integer != null) {
+                                            val count = integer + 1
+                                            scoreCount[tuple] = count
+                                        }
+                                    }
                                 }
-                            }
-                        }
                     }
             return scoreCount
         }

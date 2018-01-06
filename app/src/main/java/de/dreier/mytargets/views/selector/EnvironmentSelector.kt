@@ -87,7 +87,7 @@ class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: Att
         return description
     }
 
-    fun queryWeather(fragment: Fragment, request_code: Int) {
+    fun queryWeather(fragment: Fragment, requestCode: Int) {
         if (isTestMode) {
             setDefaultWeather()
             return
@@ -95,9 +95,9 @@ class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: Att
         if (ContextCompat.checkSelfPermission(fragment.context!!, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             setDefaultWeather()
             fragment.requestPermissions(arrayOf(ACCESS_FINE_LOCATION),
-                    request_code)
+                    requestCode)
         } else {
-            queryWeatherInfo(fragment.context)
+            queryWeatherInfo(fragment.context!!)
         }
     }
 
@@ -113,9 +113,9 @@ class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: Att
     // Start getting weather for current location
     @SuppressLint("MissingPermission", "SupportAnnotationUsage")
     @RequiresPermission(anyOf = [ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION])
-    private fun queryWeatherInfo(context: Context?) {
+    private fun queryWeatherInfo(context: Context) {
         setItem(null)
-        Locator(context!!).getLocation(Locator.Method.NETWORK_THEN_GPS, object : Locator.Listener {
+        Locator(context).getLocation(Locator.Method.NETWORK_THEN_GPS, object : Locator.Listener {
             override fun onLocationFound(location: Location) {
                 val locationStr = getAddressFromLocation(location.latitude, location.longitude)
                 val weatherService = WeatherService()

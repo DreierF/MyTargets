@@ -18,7 +18,6 @@ package de.dreier.mytargets.shared.models.db
 import android.os.Parcel
 import android.os.Parcelable
 import com.raizlabs.android.dbflow.annotation.*
-import com.raizlabs.android.dbflow.structure.BaseModel
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.IIdSettable
 
@@ -36,10 +35,10 @@ data class Shot(
         var endId: Long? = null,
 
         @Column
-        var x: Float = 0.toFloat(),
+        var x: Float = 0f,
 
         @Column
-        var y: Float = 0.toFloat(),
+        var y: Float = 0f,
 
         @Column
         var scoringRing: Int = NOTHING_SELECTED,
@@ -47,7 +46,7 @@ data class Shot(
         // Is the actual number of the arrow not its index, arrow id or something else
         @Column
         var arrowNumber: String? = null
-) : BaseModel(), IIdSettable, Comparable<Shot>, Parcelable {
+) : IIdSettable, Comparable<Shot>, Parcelable {
     constructor(i: Int) : this(index = i)
 
     override fun compareTo(other: Shot): Int {
@@ -84,7 +83,6 @@ data class Shot(
 
     companion object {
         const val NOTHING_SELECTED = -2
-
         const val MISS = -1
 
         @JvmField
