@@ -25,11 +25,11 @@ import de.dreier.mytargets.features.scoreboard.builder.model.TextCell
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.SelectableZone
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle
+import de.dreier.mytargets.shared.utils.ScoreUtils
 import de.dreier.mytargets.shared.utils.SharedUtils
 import java.util.*
 
@@ -172,9 +172,7 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
     }
 
     private fun getStatisticsForRound(rounds: List<Round>): Table {
-        val scoreDistribution = End
-                .getSortedScoreDistribution(
-                        rounds)
+        val scoreDistribution = ScoreUtils.getSortedScoreDistribution(rounds)
         var hits = 0
         var total = 0
         for ((key, value) in scoreDistribution) {
@@ -184,7 +182,7 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
             total += value
         }
 
-        val topScores = End.getTopScoreDistribution(scoreDistribution)
+        val topScores = ScoreUtils.getTopScoreDistribution(scoreDistribution)
 
         val table = Table(false)
         var row: Table.Row = table.startRow()
@@ -198,7 +196,7 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
         for (topScore in topScores) {
             row.addCell(topScore.second!!)
         }
-        row.addCell(hits.toString() + "/" + total)
+        row.addCell("$hits/$total")
         row.addCell(getAverageScore(scoreDistribution))
         return table
     }

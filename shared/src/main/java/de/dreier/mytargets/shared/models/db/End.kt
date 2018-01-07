@@ -17,7 +17,6 @@ package de.dreier.mytargets.shared.models.db
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
-import android.support.v4.util.Pair
 import com.raizlabs.android.dbflow.annotation.*
 import com.raizlabs.android.dbflow.config.FlowManager
 import com.raizlabs.android.dbflow.kotlinextensions.delete
@@ -27,8 +26,6 @@ import com.raizlabs.android.dbflow.structure.BaseModel
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.IIdSettable
-import de.dreier.mytargets.shared.models.SelectableZone
-import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.utils.typeconverters.LocalTimeConverter
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
@@ -177,68 +174,6 @@ data class End(
         for ((i, end) in ends.withIndex()) {
             end.index = i
             end.save(databaseWrapper)
-        }
-    }
-
-    companion object {
-
-        private fun getRoundScores(rounds: List<Round>): Map<SelectableZone, Int> {
-            val t = rounds[0].target
-            val scoreCount = getAllPossibleZones(t)
-            rounds.flatMap { it.loadEnds() }
-                    .forEach {
-                        it.loadShots().forEach { s ->
-                                    if (s.scoringRing != Shot.NOTHING_SELECTED) {
-                                        val tuple = SelectableZone(s.scoringRing,
-                                                t.model.getZone(s.scoringRing),
-                                                t.zoneToString(s.scoringRing, s.index),
-                                                t.getScoreByZone(s.scoringRing, s.index))
-                                        val integer = scoreCount[tuple]
-                                        if (integer != null) {
-                                            val count = integer + 1
-                                            scoreCount[tuple] = count
-                                        }
-                                    }
-                                }
-                    }
-            return scoreCount
-        }
-
-        private fun getAllPossibleZones(t: Target): MutableMap<SelectableZone, Int> {
-            val scoreCount = HashMap<SelectableZone, Int>()
-            for (arrow in 0..2) {
-                val zoneList = t.getSelectableZoneList(arrow)
-                for (selectableZone in zoneList) {
-                    scoreCount[selectableZone] = 0
-                }
-                if (!t.model.dependsOnArrowIndex()) {
-                    break
-                }
-            }
-            return scoreCount
-        }
-
-        fun getTopScoreDistribution(sortedScore: List<Map.Entry<SelectableZone, Int>>): List<Pair<String, Int>> {
-            val result = sortedScore.map { Pair(it.key.text, it.value) }.toMutableList()
-
-            // Collapse first two entries if they yield the same score points,
-            // e.g. 10 and X => {X, 10+X, 9, ...}
-            if (sortedScore.size > 1) {
-                val first = sortedScore[0]
-                val second = sortedScore[1]
-                if (first.key.points == second.key.points) {
-                    val newTitle = second.key.text + "+" + first.key.text
-                    result[1] = Pair(newTitle, second.value + first.value)
-                }
-            }
-            return result
-        }
-
-        /**
-         * Compound 9ers are already collapsed to one SelectableZone.
-         */
-        fun getSortedScoreDistribution(rounds: List<Round>): List<Map.Entry<SelectableZone, Int>> {
-            return getRoundScores(rounds).entries.sortedBy { it.key }
         }
     }
 }

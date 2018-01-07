@@ -47,6 +47,7 @@ import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.utils.Color
+import de.dreier.mytargets.shared.utils.ScoreUtils
 import de.dreier.mytargets.shared.utils.SharedUtils
 import de.dreier.mytargets.utils.MobileWearableClient
 import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
@@ -290,8 +291,7 @@ class StatisticsFragment : FragmentBase() {
     }
 
     private fun addPieData() {
-        val scores = End
-                .getSortedScoreDistribution(rounds!!)
+        val scores = ScoreUtils.getSortedScoreDistribution(rounds!!)
 
         val yValues = ArrayList<PieEntry>()
         val colors = ArrayList<Int>()
