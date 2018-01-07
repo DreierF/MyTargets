@@ -286,7 +286,7 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
                     comments.startRow()
                             .addCell(round.index + 1)
                             .addCell(index + 1)
-                            .addCell(TextCell(comment!!, wrapText = true))
+                            .addCell(TextCell(comment, wrapText = true))
                     commentsCount++
                 }
             }

@@ -41,7 +41,7 @@ data class ArrowStatistic(
         var totalScore: Score = Score(),
         var arrowDiameter: Dimension = Dimension(5f, Dimension.Unit.MILLIMETER),
         var exportFileName: String? = null
-) : Comparable<ArrowStatistic>, Parcelable {
+) : Parcelable {
 
     val appropriateBgColor: Int
         get() = BG_COLORS[ceil(((BG_COLORS.size - 1) * totalScore.percent).toDouble()).toInt()]
@@ -63,7 +63,6 @@ data class ArrowStatistic(
                 .sum()
     }
 
-    override fun compareTo(other: ArrowStatistic) = compareByDescending<ArrowStatistic>({ totalScore.shotAverage }).compare(this, other)
 
     companion object {
         private val BG_COLORS = intArrayOf(-0xbbcca, -0xa8de, -0x6800, -0x3ef9, -0x14c5, -0x3223c7, -0x743cb6, -0xb350b0)

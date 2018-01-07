@@ -23,11 +23,16 @@ import de.dreier.mytargets.utils.multiselector.ItemBindingHolder
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 import java.util.*
 
-abstract class HeaderListAdapterBase<P : IIdProvider, C : IIdProvider, H : HeaderListAdapterBase.HeaderHolder<P, C>>(private val partitionDelegate: PartitionDelegate<P, C>, private val headerComparator: Comparator<P>, private val childComparator: Comparator<C>) : ListAdapterBase<ItemBindingHolder<IIdProvider>, C>() {
+abstract class HeaderListAdapterBase<P : IIdProvider, C : IIdProvider, H : HeaderListAdapterBase.HeaderHolder<P, C>>(
+        private val partitionDelegate: PartitionDelegate<P, C>,
+        private val headerComparator: Comparator<P>,
+        private val childComparator: Comparator<C>
+) : ListAdapterBase<ItemBindingHolder<IIdProvider>, C>() {
+
     protected var headersList: MutableList<H> = ArrayList()
 
     init {
-        setHasStableIds(true)
+        super.setHasStableIds(true)
     }
 
     override fun getItem(position: Int): C? {
@@ -56,6 +61,7 @@ abstract class HeaderListAdapterBase<P : IIdProvider, C : IIdProvider, H : Heade
         return if (getHeaderRelativePosition(position) == 0) HEADER_TYPE else ITEM_TYPE
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemBindingHolder<IIdProvider> {
         return if (viewType == HEADER_TYPE) {
             getTopLevelViewHolder(parent) as ItemBindingHolder<IIdProvider>

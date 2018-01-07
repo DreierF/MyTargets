@@ -166,6 +166,7 @@ class StatisticsFragment : FragmentBase() {
                 .filterNotNull()
 
         val data = ArrowStatistic.getAll(target!!, rounds!!)
+                .sortedWith(compareByDescending({ it.totalScore.shotAverage }))
 
         return {
             showLineChart()
@@ -175,7 +176,6 @@ class StatisticsFragment : FragmentBase() {
             binding.chartView.invalidate()
 
             binding.arrowRankingLabel.visibility = if (data.isEmpty()) View.GONE else View.VISIBLE
-            Collections.sort(data)
             adapter!!.setData(data)
         }
     }
