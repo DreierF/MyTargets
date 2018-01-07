@@ -24,6 +24,7 @@ import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Score
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.dao.ArrowDAO
+import de.dreier.mytargets.shared.models.dao.EndDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.models.sum
@@ -75,7 +76,7 @@ data class ArrowStatistic(
                         val arrow = ArrowDAO.loadArrowOrNull(t.key)
                         val name = arrow?.name ?: SharedApplicationInstance.getStr(R.string.unknown)
                         t.value.flatMap { it.loadEnds() }
-                                .flatMap { it.loadShots() }
+                                .flatMap { EndDAO.loadShots(it.id) }
                                 .filter { it.arrowNumber != null }
                                 .groupBy {it.arrowNumber!! }
                                 .filter { it.value.size > 1 }

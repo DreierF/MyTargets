@@ -50,7 +50,8 @@ class InputActivity : WearableActivity(), TargetViewBase.OnEndFinishedListener {
 
         // Set up target view
         binding.target.initWithTarget(round.round.target)
-        binding.target.replaceWithEnd(End(round.round.shotsPerEnd, 0))
+        binding.target.replaceWithEnd((0 until round.round.shotsPerEnd)
+                .map { Shot(it) }.toMutableList(), false)
         binding.target.setOnTargetSetListener(this)
 
         // Ensure Moto 360 is not cut off at the bottom
@@ -96,12 +97,10 @@ class InputActivity : WearableActivity(), TargetViewBase.OnEndFinishedListener {
             intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, this@InputActivity
                     .getString(R.string.saved))
             this@InputActivity.startActivity(intent)
-            val v = this@InputActivity
-                    .getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            val v = this@InputActivity.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             VibratorCompat.vibrate(v, 200)
             this@InputActivity.finish()
-            val end = End(round.round.shotsPerEnd, 0)
-            end.roundId = round.round.id
+            val end = End(index = 0, roundId = round.round.id)
             val ae = AugmentedEnd(end, shotList.toMutableList(), mutableListOf())
             ApplicationInstance.wearableClient.sendEndUpdate(ae)
         }

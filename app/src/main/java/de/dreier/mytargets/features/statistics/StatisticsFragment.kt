@@ -42,6 +42,7 @@ import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.SelectableZone
 import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.models.dao.EndDAO
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
@@ -83,7 +84,7 @@ class StatisticsFragment : FragmentBase() {
         get() {
             val shots = rounds!!
                     .flatMap { r -> r.loadEnds() }
-                    .flatMap { p -> p.loadShots() }
+                    .flatMap { EndDAO.loadShots(it.id) }
                     .filter { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }
             val missCount = shots.filter { (_, _, _, _, _, scoringRing) -> scoringRing == Shot.MISS }.count().toLong()
             val hitCount = shots.size - missCount
@@ -167,7 +168,7 @@ class StatisticsFragment : FragmentBase() {
                 .filterNotNull()
 
         val data = ArrowStatistic.getAll(target!!, rounds!!)
-                .sortedWith(compareByDescending({ it.totalScore.shotAverage }))
+                .sortedWith(compareByDescending { it.totalScore.shotAverage })
 
         return {
             showLineChart()
@@ -185,7 +186,7 @@ class StatisticsFragment : FragmentBase() {
         val exactShots = rounds!!
                 .flatMap { r -> r.loadEnds() }
                 .filter { (_, _, _, exact) -> exact }
-                .flatMap { p -> p.loadShots() }
+                .flatMap { EndDAO.loadShots(it.id) }
                 .filter { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }
                 .toList()
         if (exactShots.isEmpty()) {
@@ -382,9 +383,8 @@ class StatisticsFragment : FragmentBase() {
     }
 
     private fun getPairEndSummary(target: Target, end: End, trainingDate: LocalDate): Pair<Float, LocalDateTime> {
-        val reachedScore = target.getReachedScore(end.loadShots())
-        return Pair(reachedScore.shotAverage,
-                LocalDateTime.of(trainingDate, end.saveTime!!))
+        val reachedScore = target.getReachedScore(EndDAO.loadShots(end.id))
+        return Pair(reachedScore.shotAverage, LocalDateTime.of(trainingDate, end.saveTime!!))
     }
 
     private fun convertToLineData(values: List<Pair<Float, LocalDateTime>>, evaluator: Evaluator): LineDataSet {

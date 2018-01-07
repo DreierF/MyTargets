@@ -30,6 +30,8 @@ import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentListBinding
 import de.dreier.mytargets.databinding.ItemEndBinding
 import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
+import de.dreier.mytargets.shared.models.dao.EndDAO
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.utils.DividerItemDecoration
@@ -43,7 +45,7 @@ import java.util.*
 /**
  * Shows all ends of one round
  */
-class RoundFragment : EditableListFragmentBase<End, SimpleListAdapterBase<End>>() {
+class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBase<AugmentedEnd>>() {
 
     private var roundId: Long = 0
     private lateinit var binding: FragmentListBinding
@@ -107,7 +109,7 @@ class RoundFragment : EditableListFragmentBase<End, SimpleListAdapterBase<End>>(
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
         round = Round[roundId]
-        val ends = round!!.loadEnds()
+        val ends = round!!.loadEnds().map { AugmentedEnd(it) }.toMutableList()
         val showFab = round!!.maxEndCount == null || ends.size < round!!.maxEndCount!!
 
         return {
@@ -151,45 +153,45 @@ class RoundFragment : EditableListFragmentBase<End, SimpleListAdapterBase<End>>(
         }
     }
 
-    override fun onSelected(item: End) {
-        navigationController.navigateToEditEnd(round!!, item.index)
+    override fun onSelected(item: AugmentedEnd) {
+        navigationController.navigateToEditEnd(round!!, item.end.index)
                 .start()
     }
 
     private fun onEdit(itemId: Long) {
-        navigationController.navigateToEditEnd(round!!, adapter!!.getItemById(itemId)!!.index)
+        navigationController.navigateToEditEnd(round!!, adapter!!.getItemById(itemId)!!.end.index)
                 .start()
     }
 
-    override fun deleteItem(item: End): () -> End {
-        item.delete()
+    override fun deleteItem(item: AugmentedEnd): () -> AugmentedEnd {
+        EndDAO.deleteEnd(item.end)
         return {
-            item.saveRecursively()
+            EndDAO.insertEnd(item.end, item.images, item.shots)
             item
         }
     }
 
-    private inner class EndAdapter : SimpleListAdapterBase<End>(compareBy(End::index)) {
+    private inner class EndAdapter : SimpleListAdapterBase<AugmentedEnd>(compareBy { it.end.index }) {
 
-        override fun onCreateViewHolder(parent: ViewGroup): SelectableViewHolder<End> {
+        override fun onCreateViewHolder(parent: ViewGroup): SelectableViewHolder<AugmentedEnd> {
             val itemView = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_end, parent, false)
             return EndViewHolder(itemView)
         }
     }
 
-    private inner class EndViewHolder internal constructor(itemView: View) : SelectableViewHolder<End>(itemView, selector, this@RoundFragment, this@RoundFragment) {
+    private inner class EndViewHolder internal constructor(itemView: View) : SelectableViewHolder<AugmentedEnd>(itemView, selector, this@RoundFragment, this@RoundFragment) {
 
         private val binding: ItemEndBinding = DataBindingUtil.bind(itemView)
 
-        override fun bindItem(item: End) {
-            val shots = item.loadShots()
+        override fun bindItem(item: AugmentedEnd) {
+            val shots = item.shots
             if (SettingsManager.shouldSortTarget(round!!.target)) {
                 shots.sort()
             }
             binding.shoots.setShots(round!!.target, shots)
-            binding.imageIndicator.visibility = if (item.loadImages().isEmpty()) View.INVISIBLE else View.VISIBLE
-            binding.end.text = getString(R.string.end_n, item.index + 1)
+            binding.imageIndicator.visibility = if (item.images.isEmpty()) View.INVISIBLE else View.VISIBLE
+            binding.end.text = getString(R.string.end_n, item.end.index + 1)
         }
     }
 

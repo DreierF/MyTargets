@@ -25,6 +25,7 @@ import de.dreier.mytargets.features.scoreboard.builder.model.TextCell
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.SelectableZone
 import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.models.dao.EndDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.models.db.Training
@@ -223,14 +224,13 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
             val row = table.startRow()
             row.addCell(end.index + 1)
             var sum = 0
-            val shots = ArrayList(end.loadShots())
+            val shots = ArrayList(EndDAO.loadShots(end.id))
             if (SettingsManager.shouldSortTarget(round.target)) {
-                Collections.sort(shots)
+                shots.sort()
             }
             for (shot in shots) {
                 appendPointsCell(row, shot, round.target)
-                val points = round.target.getScoreByZone(shot.scoringRing, shot
-                        .index)
+                val points = round.target.getScoreByZone(shot.scoringRing, shot.index)
                 sum += points
                 carry += points
             }

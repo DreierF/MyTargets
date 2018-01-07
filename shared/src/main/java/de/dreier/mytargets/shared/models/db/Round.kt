@@ -19,12 +19,15 @@ import android.annotation.SuppressLint
 import android.os.Parcelable
 import com.raizlabs.android.dbflow.annotation.*
 import com.raizlabs.android.dbflow.config.FlowManager
+import com.raizlabs.android.dbflow.kotlinextensions.delete
+import com.raizlabs.android.dbflow.kotlinextensions.save
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import com.raizlabs.android.dbflow.structure.BaseModel
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.*
 import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.models.dao.EndDAO
 import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
@@ -106,7 +109,7 @@ data class Round(
         get() {
             val target = target
             return loadEnds().
-                    map { end: End -> target.getReachedScore(end.loadShots()) }
+                    map { end: End -> target.getReachedScore(EndDAO.loadShots(end.id)) }
                     .sum()
         }
 

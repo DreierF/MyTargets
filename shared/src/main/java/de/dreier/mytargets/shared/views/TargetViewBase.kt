@@ -41,7 +41,6 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import de.dreier.mytargets.shared.R
 import de.dreier.mytargets.shared.models.SelectableZone
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.RoundTemplate
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable
@@ -51,8 +50,7 @@ import de.dreier.mytargets.shared.utils.RectUtils
 import java.util.*
 
 abstract class TargetViewBase : View, View.OnTouchListener {
-    private val touchHelper = TargetAccessibilityTouchHelper(
-            this)
+    private val touchHelper = TargetAccessibilityTouchHelper(this)
     @VisibleForTesting
     val virtualViews: MutableList<VirtualView> = ArrayList()
     /**
@@ -69,7 +67,7 @@ abstract class TargetViewBase : View, View.OnTouchListener {
     protected var endRenderer = EndRenderer()
     protected lateinit var shots: List<Shot>
     protected var round: RoundTemplate? = null
-    protected var setListener: OnEndFinishedListener? = null
+    private var setListener: OnEndFinishedListener? = null
     protected open var inputMethod = EInputMethod.KEYBOARD
     protected var density: Float = 0.toFloat()
     protected lateinit var selectableZones: List<SelectableZone>
@@ -153,12 +151,11 @@ abstract class TargetViewBase : View, View.OnTouchListener {
         updateSelectableZones()
     }
 
-    open fun replaceWithEnd(end: End) {
-        shots = end.loadShots()
+    open fun replaceWithEnd(shots: List<Shot>, exact: Boolean) {
+        this.shots = shots
         currentShotIndex = getNextShotIndex(-1)
         endRenderer.setShots(shots)
-        endRenderer.setSelection(currentShotIndex, null, EndRenderer
-                .MAX_CIRCLE_SIZE)
+        endRenderer.setSelection(currentShotIndex, null, EndRenderer.MAX_CIRCLE_SIZE)
         animateToNewState()
         notifyTargetShotsChanged()
     }

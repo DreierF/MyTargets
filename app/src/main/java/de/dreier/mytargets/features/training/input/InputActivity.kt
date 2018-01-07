@@ -48,6 +48,7 @@ import de.dreier.mytargets.features.settings.ESettingsScreens
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
 import de.dreier.mytargets.shared.models.dao.BowDAO
+import de.dreier.mytargets.shared.models.dao.EndDAO
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
@@ -134,7 +135,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
             for (image in imageList.removedImages) {
                 File(filesDir, image).delete()
             }
-            this.data!!.currentEnd.toEnd().save()
+            this.data!!.currentEnd.save()
             updateEnd()
             invalidateOptionsMenu()
         }
@@ -214,7 +215,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
                         .inputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
                         .input("", data!!.currentEnd.end.comment) { _, input ->
                             data!!.currentEnd.end.comment = input.toString()
-                            data!!.currentEnd.toEnd().save()
+                            EndDAO.saveEnd(data!!.currentEnd.end)
                         }
                         .negativeText(android.R.string.cancel)
                         .show()
@@ -222,8 +223,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
             R.id.action_timer -> {
                 val timerEnabled = !SettingsManager.timerEnabled
                 SettingsManager.timerEnabled = timerEnabled
-                ApplicationInstance.wearableClient
-                        .sendTimerSettingsFromLocal(SettingsManager.timerSettings)
+                ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(SettingsManager.timerSettings)
                 openTimer()
                 item.isChecked = timerEnabled
                 invalidateOptionsMenu()
@@ -319,7 +319,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     }
 
     private fun updateEnd() {
-        targetView!!.replaceWithEnd(data!!.currentEnd.toEnd())
+        targetView!!.replaceWithEnd(data!!.currentEnd.shots, data!!.currentEnd.end.exact)
         val totalEnds = if (data!!.currentRound.round.maxEndCount == null)
             data!!.ends.size
         else
@@ -396,7 +396,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
 
     override fun onEndUpdated(shots: List<Shot>) {
         data!!.currentEnd.shots = shots.toMutableList()
-        data!!.currentEnd.toEnd().save()
+        data!!.currentEnd.save()
 
         // Set current end score
         val reachedEndScore = data!!.currentRound.round.target
@@ -426,7 +426,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     override fun onEndFinished(shotList: List<Shot>) {
         data!!.currentEnd.shots = shotList.toMutableList()
         data!!.currentEnd.end.exact = targetView!!.inputMode === EInputMethod.PLOTTING
-        data!!.currentEnd.toEnd().save()
+        data!!.currentEnd.save()
 
         updateWearNotification()
         updateNavigationButtons()

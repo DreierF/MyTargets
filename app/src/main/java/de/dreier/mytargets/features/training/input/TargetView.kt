@@ -35,7 +35,6 @@ import de.dreier.mytargets.features.training.input.TargetView.EKeyboardType.LEFT
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.targets.drawable.TargetDrawable
 import de.dreier.mytargets.shared.utils.EndRenderer
@@ -153,13 +152,13 @@ class TargetView : TargetViewBase {
         borderPaint.style = Paint.Style.STROKE
     }
 
-    override fun replaceWithEnd(end: End) {
-        inputMethod = if (!end.isEmpty) {
-            if (end.exact) PLOTTING else KEYBOARD
+    override fun replaceWithEnd(shots: List<Shot>, exact: Boolean) {
+        inputMethod = if (shots.all { it.scoringRing == Shot.NOTHING_SELECTED }) {
+            if (exact) PLOTTING else KEYBOARD
         } else {
             SettingsManager.inputMethod
         }
-        super.replaceWithEnd(end)
+        super.replaceWithEnd(shots, exact)
     }
 
     fun setArrow(diameter: Dimension, numbers: Boolean, maxArrowNumber: Int) {

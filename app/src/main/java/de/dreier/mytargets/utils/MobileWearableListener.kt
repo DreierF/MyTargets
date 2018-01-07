@@ -104,7 +104,7 @@ class MobileWearableListener : WearableListenerService() {
         val newEnd = getLastEmptyOrCreateNewEnd(round)
         newEnd.end.exact = false
         newEnd.shots = shots
-        newEnd.toEnd().save()
+        newEnd.save()
 
         ApplicationInstance.wearableClient.sendUpdateTrainingFromRemoteBroadcast(round.round, newEnd.end)
         ApplicationInstance.wearableClient

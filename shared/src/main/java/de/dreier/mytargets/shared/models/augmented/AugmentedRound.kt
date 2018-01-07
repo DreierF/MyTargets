@@ -20,6 +20,7 @@ import android.os.Parcelable
 import de.dreier.mytargets.shared.models.Score
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
+import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.models.sum
 
 data class AugmentedRound(
@@ -36,22 +37,18 @@ data class AugmentedRound(
             return ends.map { target.getReachedScore(it.shots) }.sum()
         }
 
-    fun toRound(): Round {
-        round.ends = ends.map { it.toEnd() }.toMutableList()
-        return round
-    }
-
     /**
      * Adds a new end to the internal list of ends, but does not yet save it.
      *
      * @return Returns the newly created end
      */
     fun addEnd(): AugmentedEnd {
-        val end = AugmentedEnd(End(round.shotsPerEnd, ends.size))
-        end.end.roundId = round.id
-        end.end.save()
-        ends.add(end)
-        return end
+        val end = End(index = ends.size, roundId = round.id)
+        val augmentedEnd = AugmentedEnd(end, (0 until round.shotsPerEnd)
+                .map { Shot(it) }.toMutableList(), mutableListOf())
+        augmentedEnd.save()
+        ends.add(augmentedEnd)
+        return augmentedEnd
     }
 
     constructor(source: Parcel) : this(

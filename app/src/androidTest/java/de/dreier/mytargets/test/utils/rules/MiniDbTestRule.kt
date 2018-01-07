@@ -49,11 +49,11 @@ class MiniDbTestRule : DbTestRuleBase() {
         val round1 = at.rounds[0]
         val round2 = at.rounds[1]
 
-        randomEnd(round1, 6, generator).toEnd().save()
-        randomEnd(round1, 6, generator).toEnd().save()
+        randomEnd(round1, 6, generator).save()
+        randomEnd(round1, 6, generator).save()
 
-        randomEnd(round2, 6, generator).toEnd().save()
-        randomEnd(round2, 6, generator).toEnd().save()
+        randomEnd(round2, 6, generator).save()
+        randomEnd(round2, 6, generator).save()
     }
 
 }

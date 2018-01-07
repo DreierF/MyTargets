@@ -16,10 +16,12 @@
 package de.dreier.mytargets.shared.models.dao
 
 import com.raizlabs.android.dbflow.config.FlowManager
+import com.raizlabs.android.dbflow.kotlinextensions.delete
 import com.raizlabs.android.dbflow.kotlinextensions.save
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.db.*
+import org.threeten.bp.LocalTime
 
 object EndDAO {
     fun loadEnds(): List<End> = SQLite.select().from(End::class.java).queryList()
@@ -44,7 +46,14 @@ object EndDAO {
             .where(Shot_Table.end.eq(id))
             .queryList().toMutableList()
 
+    fun saveEnd(end: End) {
+        end.save()
+    }
+
     fun saveEnd(end: End, images: List<EndImage>, shots: List<Shot>) {
+        if (end.saveTime == null) {
+            end.saveTime = LocalTime.now()
+        }
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
                     end.save(db)
                     SQLite.delete(EndImage::class.java)
@@ -66,13 +75,40 @@ object EndDAO {
 
     fun deleteEnd(end: End) {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-                    SQLite.delete(EndImage::class.java)
-                            .where(EndImage_Table.end.eq(end.id))
-                            .execute(db)
-                    SQLite.delete(Shot::class.java)
-                            .where(Shot_Table.end.eq(end.id))
-                            .execute(db)
+                    //TODO check if this is really getting deleted
+//                    SQLite.delete(EndImage::class.java)
+//                            .where(EndImage_Table.end.eq(end.id))
+//                            .execute(db)
+//                    SQLite.delete(Shot::class.java)
+//                            .where(Shot_Table.end.eq(end.id))
+//                            .execute(db)
                     end.delete(db)
+
+                    val round = Round[end.roundId!!] ?: return@executeTransaction
+
+                    for ((i, end) in round.loadEnds(db).withIndex()) {
+                        end.index = i
+                        end.save(db)
+                    }
+                }
+    }
+
+    fun insertEnd(end: End, images: List<EndImage>, shots: List<Shot>) {
+        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
+                    val round = Round[end.roundId!!]
+                    val ends = round!!.loadEnds(db).toMutableList()
+
+                    val pos = ends.binarySearch(end, compareBy(End::index))
+                    if (pos < 0) {
+                        ends.add(-pos - 1, end)
+                    } else {
+                        ends.add(pos, end)
+                    }
+
+                    for ((i, end) in ends.withIndex()) {
+                        end.index = i
+                        end.save(db)
+                    }
                 }
     }
 }

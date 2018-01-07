@@ -18,19 +18,11 @@ package de.dreier.mytargets.shared.models.db
 import android.annotation.SuppressLint
 import android.os.Parcelable
 import com.raizlabs.android.dbflow.annotation.*
-import com.raizlabs.android.dbflow.config.FlowManager
-import com.raizlabs.android.dbflow.kotlinextensions.delete
-import com.raizlabs.android.dbflow.kotlinextensions.save
-import com.raizlabs.android.dbflow.sql.language.SQLite
-import com.raizlabs.android.dbflow.structure.BaseModel
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.IIdSettable
 import de.dreier.mytargets.shared.utils.typeconverters.LocalTimeConverter
-import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.LocalTime
-import java.util.*
 
 @SuppressLint("ParcelCreator")
 @Parcelize
@@ -55,125 +47,4 @@ data class End(
 
         @Column
         var comment: String = ""
-) : BaseModel(), IIdSettable, Comparable<End>, Parcelable {
-
-    @IgnoredOnParcel
-    var images: MutableList<EndImage>? = null
-
-    @IgnoredOnParcel
-    internal var shots: MutableList<Shot>? = null
-
-    val isEmpty: Boolean
-        get() = loadShots().any { it.scoringRing == Shot.NOTHING_SELECTED } && loadImages().isEmpty()
-
-    constructor(shotCount: Int, index: Int) : this(index = index) {
-        shots = (0 until shotCount)
-                .map { Shot(it) }
-                .toMutableList()
-    }
-
-    constructor(end: End) : this(index = end.index) {
-        this.shots = ArrayList(end.loadShots())
-    }
-
-    @OneToMany(methods = [], variableName = "shots")
-    fun loadShots(): MutableList<Shot> {
-        if (shots == null) {
-            shots = SQLite.select()
-                    .from(Shot::class.java)
-                    .where(Shot_Table.end.eq(id))
-                    .queryList().toMutableList()
-        }
-        return shots!!
-    }
-
-    @OneToMany(methods = [], variableName = "images")
-    fun loadImages(): MutableList<EndImage> {
-        if (images == null) {
-            images = SQLite.select()
-                    .from(EndImage::class.java)
-                    .where(EndImage_Table.end.eq(id))
-                    .queryList().toMutableList()
-        }
-        return images!!
-    }
-
-    override fun save(): Boolean {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.save(it) })
-        return true
-    }
-
-    override fun save(databaseWrapper: DatabaseWrapper): Boolean {
-        if (saveTime == null) {
-            saveTime = LocalTime.now()
-        }
-        super.save(databaseWrapper)
-        if (shots != null) {
-            SQLite.delete(Shot::class.java)
-                    .where(Shot_Table.end.eq(id))
-                    .execute(databaseWrapper)
-            // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-            for (s in shots!!) {
-                s.endId = id
-                s.save(databaseWrapper)
-            }
-        }
-        if (images != null) {
-            SQLite.delete(EndImage::class.java)
-                    .where(EndImage_Table.end.eq(id))
-                    .execute(databaseWrapper)
-            // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-            loadImages().forEach { image ->
-                image.endId = id
-                image.save(databaseWrapper)
-            }
-        }
-        return true
-    }
-
-    override fun delete(): Boolean {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.delete(it) })
-        return true
-    }
-
-    override fun delete(databaseWrapper: DatabaseWrapper): Boolean {
-        loadShots().forEach { it.delete(databaseWrapper) }
-        loadImages().forEach { it.delete(databaseWrapper) }
-        super.delete(databaseWrapper)
-        updateEndIndicesForRound(databaseWrapper)
-        return true
-    }
-
-    private fun updateEndIndicesForRound(databaseWrapper: DatabaseWrapper) {
-        // FIXME very inefficient
-        val round = Round[roundId!!] ?: return
-
-        for ((i, end) in round.loadEnds(databaseWrapper).withIndex()) {
-            end.index = i
-            end.save(databaseWrapper)
-        }
-    }
-
-    override fun compareTo(other: End) = compareBy(End::index).compare(this, other)
-
-    fun saveRecursively() {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.saveRecursively(it) })
-    }
-
-    private fun saveRecursively(databaseWrapper: DatabaseWrapper) {
-        val round = Round[roundId!!]
-        val ends = round!!.loadEnds(databaseWrapper).toMutableList()
-
-        val pos = Collections.binarySearch(ends, this)
-        if (pos < 0) {
-            ends.add(-pos - 1, this)
-        } else {
-            ends.add(pos, this)
-        }
-
-        for ((i, end) in ends.withIndex()) {
-            end.index = i
-            end.save(databaseWrapper)
-        }
-    }
-}
+) : IIdSettable, Parcelable

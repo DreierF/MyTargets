@@ -17,6 +17,7 @@ package de.dreier.mytargets.features.statistics
 
 import android.content.Context
 import de.dreier.mytargets.R
+import de.dreier.mytargets.shared.models.dao.EndDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import org.threeten.bp.format.DateTimeFormatter
@@ -99,7 +100,7 @@ class CsvExporter(private val context: Context) {
             csv.add((e.index + 1).toString())
             // Timestamp
             csv.add(e.saveTime!!.format(DateTimeFormatter.ISO_LOCAL_TIME))
-            for ((_, index, _, x, y, scoringRing) in e.loadShots()) {
+            for ((_, index, _, x, y, scoringRing) in EndDAO.loadShots(e.id)) {
                 csv.enterScope()
                 // Score
                 csv.add(target.zoneToString(scoringRing, index))

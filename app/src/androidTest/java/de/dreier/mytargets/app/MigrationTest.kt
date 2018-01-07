@@ -33,6 +33,7 @@ import de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER
 import de.dreier.mytargets.shared.models.Dimension.Unit.METER
 import de.dreier.mytargets.shared.models.EWeather
 import de.dreier.mytargets.shared.models.dao.BowDAO
+import de.dreier.mytargets.shared.models.dao.EndDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.test.base.InstrumentedTestBase
@@ -143,10 +144,10 @@ class MigrationTest : InstrumentedTestBase() {
         Truth.assertThat(ends[0].id).isEqualTo(1L)
         Truth.assertThat(ends[0].roundId).isEqualTo(1L)
         Truth.assertThat(ends[0].index).isEqualTo(0)
-        Truth.assertThat(ends[0].loadImages()).isEmpty()
+        Truth.assertThat(EndDAO.loadEndImages(ends[0].id)).isEmpty()
         Truth.assertThat(ends[0].exact).isEqualTo(true)
         Truth.assertThat(ends[2].exact).isEqualTo(false)
-        val shots = ends[0].loadShots()
+        val shots = EndDAO.loadShots(ends[0].id)
         Truth.assertThat(shots).hasSize(4)
         Truth.assertThat(shots[0].index).isEqualTo(0)
         Truth.assertThat(shots[0].x).isWithin(0f).of(-0.41206896f)

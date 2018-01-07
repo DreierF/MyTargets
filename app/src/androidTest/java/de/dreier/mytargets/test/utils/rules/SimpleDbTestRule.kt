@@ -71,19 +71,19 @@ class SimpleDbTestRule : DbTestRuleBase() {
         round2.save()
         val r2 = AugmentedRound(round2)
 
-        randomEnd(r1, 6, generator).toEnd().save()
-        randomEnd(r1, 6, generator).toEnd().save()
-        randomEnd(r1, 6, generator).toEnd().save()
-        randomEnd(r1, 6, generator).toEnd().save()
-        randomEnd(r1, 6, generator).toEnd().save()
-        randomEnd(r1, 6, generator).toEnd().save()
+        randomEnd(r1, 6, generator).save()
+        randomEnd(r1, 6, generator).save()
+        randomEnd(r1, 6, generator).save()
+        randomEnd(r1, 6, generator).save()
+        randomEnd(r1, 6, generator).save()
+        randomEnd(r1, 6, generator).save()
 
-        randomEnd(r2, 6, generator).toEnd().save()
-        randomEnd(r2, 6, generator).toEnd().save()
-        randomEnd(r2, 6, generator).toEnd().save()
-        randomEnd(r2, 6, generator).toEnd().save()
-        randomEnd(r2, 6, generator).toEnd().save()
-        randomEnd(r2, 6, generator).toEnd().save()
+        randomEnd(r2, 6, generator).save()
+        randomEnd(r2, 6, generator).save()
+        randomEnd(r2, 6, generator).save()
+        randomEnd(r2, 6, generator).save()
+        randomEnd(r2, 6, generator).save()
+        randomEnd(r2, 6, generator).save()
     }
 
     private fun getRoundTemplate(index: Int, distance: Int): RoundTemplate {
@@ -110,19 +110,19 @@ class SimpleDbTestRule : DbTestRuleBase() {
 
         val round2 = at.rounds[1]
 
-        randomEnd(round1, 6, generator).toEnd().save()
-        randomEnd(round1, 6, generator).toEnd().save()
-        randomEnd(round1, 6, generator).toEnd().save()
-        randomEnd(round1, 6, generator).toEnd().save()
-        randomEnd(round1, 6, generator).toEnd().save()
-        randomEnd(round1, 6, generator).toEnd().save()
+        randomEnd(round1, 6, generator).save()
+        randomEnd(round1, 6, generator).save()
+        randomEnd(round1, 6, generator).save()
+        randomEnd(round1, 6, generator).save()
+        randomEnd(round1, 6, generator).save()
+        randomEnd(round1, 6, generator).save()
 
-        randomEnd(round2, 6, generator).toEnd().save()
-        randomEnd(round2, 6, generator).toEnd().save()
-        randomEnd(round2, 6, generator).toEnd().save()
-        randomEnd(round2, 6, generator).toEnd().save()
-        randomEnd(round2, 6, generator).toEnd().save()
-        randomEnd(round2, 6, generator).toEnd().save()
+        randomEnd(round2, 6, generator).save()
+        randomEnd(round2, 6, generator).save()
+        randomEnd(round2, 6, generator).save()
+        randomEnd(round2, 6, generator).save()
+        randomEnd(round2, 6, generator).save()
+        randomEnd(round2, 6, generator).save()
     }
 
     private fun addFullTraining(bow: Bow) {
@@ -146,18 +146,18 @@ class SimpleDbTestRule : DbTestRuleBase() {
 
         val round2 = at.rounds[1]
 
-        buildEnd(round1, 1, 1, 2, 3, 3, 4).toEnd().save()
-        buildEnd(round1, 0, 0, 1, 2, 2, 3).toEnd().save()
-        buildEnd(round1, 1, 1, 1, 3, 4, 4).toEnd().save()
-        buildEnd(round1, 0, 1, 1, 1, 2, 3).toEnd().save()
-        buildEnd(round1, 1, 2, 3, 3, 4, 5).toEnd().save()
-        buildEnd(round1, 1, 2, 2, 3, 3, 3).toEnd().save()
+        buildEnd(round1, 1, 1, 2, 3, 3, 4).save()
+        buildEnd(round1, 0, 0, 1, 2, 2, 3).save()
+        buildEnd(round1, 1, 1, 1, 3, 4, 4).save()
+        buildEnd(round1, 0, 1, 1, 1, 2, 3).save()
+        buildEnd(round1, 1, 2, 3, 3, 4, 5).save()
+        buildEnd(round1, 1, 2, 2, 3, 3, 3).save()
 
-        buildEnd(round2, 1, 2, 2, 3, 4, 5).toEnd().save()
-        buildEnd(round2, 0, 0, 1, 2, 2, 3).toEnd().save()
-        buildEnd(round2, 0, 1, 2, 2, 2, 3).toEnd().save()
-        buildEnd(round2, 1, 1, 2, 3, 4, 4).toEnd().save()
-        buildEnd(round2, 1, 2, 2, 3, 3, 3).toEnd().save()
-        buildEnd(round2, 1, 2, 2, 3, 3, 4).toEnd().save()
+        buildEnd(round2, 1, 2, 2, 3, 4, 5).save()
+        buildEnd(round2, 0, 0, 1, 2, 2, 3).save()
+        buildEnd(round2, 0, 1, 2, 2, 2, 3).save()
+        buildEnd(round2, 1, 1, 2, 3, 4, 4).save()
+        buildEnd(round2, 1, 2, 2, 3, 3, 3).save()
+        buildEnd(round2, 1, 2, 2, 3, 3, 4).save()
     }
 }

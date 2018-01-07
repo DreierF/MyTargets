@@ -30,7 +30,7 @@ data class AugmentedTraining(
             .toMutableList())
 
     fun toTraining(): Training {
-        training.rounds = rounds.map { it.toRound() }.toMutableList()
+        training.rounds = rounds.map { it.round }.toMutableList()
         return training
     }
 

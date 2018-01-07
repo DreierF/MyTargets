@@ -18,6 +18,7 @@ package de.dreier.mytargets.shared.utils
 import android.support.v4.util.Pair
 import de.dreier.mytargets.shared.models.SelectableZone
 import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.models.dao.EndDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
 import java.util.*
@@ -52,7 +53,7 @@ object ScoreUtils {
         val scoreCount = getAllPossibleZones(t)
         rounds.flatMap { it.loadEnds() }
                 .forEach {
-                    it.loadShots().forEach { s ->
+                    EndDAO.loadShots(it.id).forEach { s ->
                                 if (s.scoringRing != Shot.NOTHING_SELECTED) {
                                     val tuple = SelectableZone(s.scoringRing,
                                             t.model.getZone(s.scoringRing),
