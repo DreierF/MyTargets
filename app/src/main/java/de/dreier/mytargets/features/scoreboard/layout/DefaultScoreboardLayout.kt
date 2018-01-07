@@ -34,7 +34,7 @@ import de.dreier.mytargets.shared.utils.SharedUtils
 import java.util.*
 
 class DefaultScoreboardLayout(private val context: Context, private val locale: Locale, private val configuration: ScoreboardConfiguration) {
-    private var builder: ScoreboardBuilder? = null
+    private lateinit var builder: ScoreboardBuilder
 
     fun generateWithBuilder(builder: ScoreboardBuilder, training: Training, rounds: List<Round>) {
         this.builder = builder
@@ -141,19 +141,19 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
 
     private fun appendStatistics(rounds: List<Round>) {
         if (rounds.size == 1) {
-            builder!!.table(getStatisticsForRound(rounds))
+            builder.table(getStatisticsForRound(rounds))
         } else if (rounds.size > 1) {
             for (round in rounds) {
-                builder!!.openSection()
-                builder!!.subtitle(context.resources.getQuantityString(R.plurals.rounds, round
+                builder.openSection()
+                builder.subtitle(context.resources.getQuantityString(R.plurals.rounds, round
                         .index + 1, round.index + 1))
-                builder!!.table(getStatisticsForRound(listOf(round)))
-                builder!!.closeSection()
+                builder.table(getStatisticsForRound(listOf(round)))
+                builder.closeSection()
             }
-            builder!!.openSection()
-            builder!!.subtitle(context.getString(R.string.scoreboard_title_all_rounds))
-            builder!!.table(getStatisticsForRound(rounds))
-            builder!!.closeSection()
+            builder.openSection()
+            builder.subtitle(context.getString(R.string.scoreboard_title_all_rounds))
+            builder.table(getStatisticsForRound(rounds))
+            builder.closeSection()
         }
     }
 
@@ -294,7 +294,7 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
 
         // If a minimum of one comment is present show comments table
         if (commentsCount > 0) {
-            builder!!.table(comments)
+            builder.table(comments)
         }
     }
 
@@ -323,6 +323,6 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
     }
 
     private fun appendSignature(training: Training) {
-        builder!!.signature(training.orCreateArcherSignature, training.orCreateWitnessSignature)
+        builder.signature(training.orCreateArcherSignature, training.orCreateWitnessSignature)
     }
 }
