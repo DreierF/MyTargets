@@ -61,7 +61,7 @@ data class Target(
     }
 
     fun getScoreByZone(zone: Int, arrow: Int): Int {
-        return getScoringStyle().getScoreByScoringRing(zone, arrow)
+        return getScoringStyle().getPointsByScoringRing(zone, arrow)
     }
 
     override fun getDrawable(context: Context): Drawable {

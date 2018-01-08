@@ -36,8 +36,8 @@ public class DAIR3DTest {
 
     @Test
     public void testScoringStyle() {
-        Assert.assertEquals(8, target.getScoringStyle(0).getScoreByScoringRing(0, 0));
-        Assert.assertEquals(12, target.getScoringStyle(0).getScoreByScoringRing(2, 0));
-        Assert.assertEquals(14, target.getScoringStyle(1).getScoreByScoringRing(1, 0));
+        Assert.assertEquals(8, target.getScoringStyle(0).getPointsByScoringRing(0, 0));
+        Assert.assertEquals(12, target.getScoringStyle(0).getPointsByScoringRing(2, 0));
+        Assert.assertEquals(14, target.getScoringStyle(1).getPointsByScoringRing(1, 0));
     }
 }

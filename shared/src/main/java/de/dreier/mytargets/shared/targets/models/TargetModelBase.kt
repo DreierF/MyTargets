@@ -120,7 +120,7 @@ open class TargetModelBase protected constructor(
             val zoneText = scoringStyle.zoneToString(i, arrow)
             if (last != zoneText) {
                 val index = if (i == zones.size) -1 else i
-                val score = scoringStyle.getScoreByScoringRing(i, arrow)
+                val score = scoringStyle.getPointsByScoringRing(i, arrow)
                 list.add(SelectableZone(index, getZone(i), zoneText, score))
                 last = zoneText
             }
