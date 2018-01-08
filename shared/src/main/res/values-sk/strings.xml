@@ -56,9 +56,9 @@
   <string name="right_back">zozadu z prava</string>
   <string name="stop">Zastaviť</string>
   <string name="end_n">Sada %d</string>
-  <string name="miss">Miss</string>
+  <string name="miss">Minutie</string>
   <string name="backspace">Backspace</string>
-  <string name="accessibility_description_shot_n_score">Shot %d: %s</string>
+  <string name="accessibility_description_shot_n_score">Strela %d: %s</string>
   <plurals name="rounds">
     <item quantity="one">%d kolo</item>
     <item quantity="few">%d kôl</item>
