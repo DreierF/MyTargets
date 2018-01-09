@@ -80,6 +80,7 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
         }
         ToolbarUtils.setTitle(this, bow.name)
         contentBinding.bow = bow
+        contentBinding.showAll = false
 
         loadImage(imageFile)
         adapter = SightMarksAdapter(this, sightMarks)

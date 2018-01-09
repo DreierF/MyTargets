@@ -33,6 +33,7 @@ import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.utils.toUri
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils
+import org.threeten.bp.format.DateTimeFormatter
 import java.io.File
 import java.io.IOException
 
@@ -60,13 +61,11 @@ class DispersionPatternActivity : ChildActivityBase() {
     override fun onResume() {
         super.onResume()
 
-        val strategy = SettingsManager
-                .statisticsDispersionPatternAggregationStrategy
+        val strategy = SettingsManager.statisticsDispersionPatternAggregationStrategy
         val drawable = statistic!!.target.impactAggregationDrawable
         drawable.setAggregationStrategy(strategy)
         drawable.replaceShotsWith(statistic!!.shots)
-        drawable.setArrowDiameter(statistic!!.arrowDiameter, SettingsManager
-                .inputArrowDiameterScale)
+        drawable.setArrowDiameter(statistic!!.arrowDiameter, SettingsManager.inputArrowDiameterScale)
 
         binding!!.dispersionView.setImageDrawable(drawable)
     }
@@ -91,10 +90,8 @@ class DispersionPatternActivity : ChildActivityBase() {
     private fun shareImage() {
         Thread {
             try {
-                val dir = cacheDir
                 val fileType = SettingsManager.statisticsDispersionPatternFileType
-                val f = File.createTempFile("dispersion_pattern",
-                        "." + fileType.name.toLowerCase(), dir)
+                val f = File(cacheDir, getDefaultFileName(fileType))
                 if (fileType === EFileType.PDF && Utils.isKitKat) {
                     DispersionPatternUtils.generatePdf(f, statistic!!)
                 } else {
@@ -104,8 +101,7 @@ class DispersionPatternActivity : ChildActivityBase() {
                 // Build and fire intent to ask for share provider
                 val shareIntent = Intent(Intent.ACTION_SEND)
                 shareIntent.type = fileType.mimeType
-                shareIntent.putExtra(Intent.EXTRA_STREAM,
-                        f.toUri(this@DispersionPatternActivity))
+                shareIntent.putExtra(Intent.EXTRA_STREAM, f.toUri(this@DispersionPatternActivity))
                 startActivity(Intent.createChooser(shareIntent, getString(R.string.share)))
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -123,6 +119,19 @@ class DispersionPatternActivity : ChildActivityBase() {
         // Get the image
         val image = DispersionPatternUtils.getDispersionPatternBitmap(800, statistic!!)
         printHelper.printBitmap("Dispersion Pattern", image)
+    }
+
+    private fun getDefaultFileName(extension: EFileType): String {
+        val name = if (statistic!!.arrowName != null) {
+            statistic!!.arrowName!! + "-" + getString(R.string.arrow_number_x, statistic!!.arrowNumber)
+        } else {
+            getString(R.string.dispersion_pattern)
+        }
+        val formattedDate = statistic!!.date?.let {
+            DateTimeFormatter.ISO_LOCAL_DATE.format(it)
+        } ?: ""
+
+        return formattedDate + name + "." + extension.name.toLowerCase()
     }
 
     companion object {

@@ -21,10 +21,12 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Process
+import android.support.media.ExifInterface
 import android.text.Html
 import android.text.Spanned
 import android.view.View
@@ -32,7 +34,11 @@ import android.view.WindowManager
 import de.dreier.mytargets.features.main.MainActivity
 import de.dreier.mytargets.features.training.overview.Header
 import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
+import java.io.File
+import java.io.FileOutputStream
 import java.util.*
 
 object Utils {
@@ -142,4 +148,15 @@ object Utils {
             context.resources.configuration.locale
         }
     }
+}
+
+fun Bitmap.writeToJPGFile(file: File) {
+    val fileOutputStream = FileOutputStream(file)
+    compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+    fileOutputStream.flush()
+    fileOutputStream.close()
+    recycle()
+    val exif = ExifInterface(file.absolutePath)
+    exif.dateTime = LocalDateTime.now().atOffset(ZoneOffset.UTC).toInstant().toEpochMilli()
+    exif.saveAttributes()
 }

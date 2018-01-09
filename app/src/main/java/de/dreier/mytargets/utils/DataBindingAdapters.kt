@@ -16,7 +16,6 @@
 package de.dreier.mytargets.utils
 
 import android.databinding.BindingAdapter
-import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
 
@@ -31,7 +30,7 @@ object DataBindingAdapters {
     @JvmStatic
     @BindingAdapter("propertyShowAll", "propertyShouldShow", "propertyValue")
     fun setPropertyVisibility(view: View, showAll: Boolean, shouldShow: Boolean, value: String) {
-        val visible = shouldShow && (showAll || !TextUtils.isEmpty(value))
+        val visible = shouldShow && (showAll || !value.isEmpty())
         view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 }

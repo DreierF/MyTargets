@@ -47,8 +47,8 @@ class ViewToPdfWriter(private val content: LinearLayout) {
     @SuppressLint("Range")
     fun layoutPages(resolution: PrintAttributes.Resolution, mediaSize: PrintAttributes.MediaSize): Int {
         fullPage = RectF(0f, 0f,
-                (mediaSize.widthMils * resolution.horizontalDpi / 1000).toFloat(),
-                (mediaSize.heightMils * resolution.verticalDpi / 1000).toFloat())
+                mediaSize.widthMils * resolution.horizontalDpi / 1000f,
+                mediaSize.heightMils * resolution.verticalDpi / 1000f)
 
         contentRect = RectF(fullPage)
         contentRect!!.inset(resolution.horizontalDpi * MARGIN_HORIZONTAL,

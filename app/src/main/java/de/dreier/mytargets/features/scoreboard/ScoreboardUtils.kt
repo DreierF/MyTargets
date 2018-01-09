@@ -31,6 +31,7 @@ import de.dreier.mytargets.features.scoreboard.pdf.ViewPrintDocumentAdapter
 import de.dreier.mytargets.features.scoreboard.pdf.ViewToPdfWriter
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
+import de.dreier.mytargets.utils.writeToJPGFile
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -79,8 +80,7 @@ object ScoreboardUtils {
         val height = content.measuredHeight
         content.layout(0, 0, width, height)
 
-        val b = Bitmap
-                .createBitmap(width + 2 * margin, height + 2 * margin, Bitmap.Config.ARGB_8888)
+        val b = Bitmap.createBitmap(width + 2 * margin, height + 2 * margin, Bitmap.Config.ARGB_8888)
 
         val canvas = Canvas(b)
 
@@ -94,10 +94,6 @@ object ScoreboardUtils {
         content.draw(canvas)
         canvas.restore()
 
-        val fileOutputStream = FileOutputStream(file)
-        b.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
-        fileOutputStream.flush()
-        fileOutputStream.close()
-        b.recycle()
+        b.writeToJPGFile(file)
     }
 }

@@ -26,6 +26,7 @@ import android.print.PrintAttributes
 import android.support.annotation.RequiresApi
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable
+import de.dreier.mytargets.utils.writeToJPGFile
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -33,24 +34,10 @@ import java.io.IOException
 
 object DispersionPatternUtils {
 
-    @Throws(FileNotFoundException::class)
-    fun createDispersionPatternImageFile(size: Int, f: File, statistic: ArrowStatistic) {
+    @Throws(IOException::class)
+    fun createDispersionPatternImageFile(size: Int, file: File, statistic: ArrowStatistic) {
         val b = getDispersionPatternBitmap(size, statistic)
-        val fOut = FileOutputStream(f)
-        try {
-            b.compress(Bitmap.CompressFormat.JPEG, 100, fOut)
-            fOut.flush()
-            fOut.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } finally {
-            try {
-                fOut.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-
-        }
+        b.writeToJPGFile(file)
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -60,8 +47,8 @@ object DispersionPatternUtils {
         try {
             val target = TargetImpactAggregationDrawable(statistic.target)
             target.replaceShotsWith(statistic.shots)
-            target.setArrowDiameter(statistic.arrowDiameter,
-                    SettingsManager.inputArrowDiameterScale)
+            target.setAggregationStrategy(SettingsManager.statisticsDispersionPatternAggregationStrategy)
+            target.setArrowDiameter(statistic.arrowDiameter, SettingsManager.inputArrowDiameterScale)
 
             val document = PdfDocument()
 
@@ -94,16 +81,16 @@ object DispersionPatternUtils {
     }
 
     fun getDispersionPatternBitmap(size: Int, statistic: ArrowStatistic): Bitmap {
-        val b = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(b)
+        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
         canvas.drawColor(Color.WHITE)
 
         val target = TargetImpactAggregationDrawable(statistic.target)
         target.replaceShotsWith(statistic.shots)
-        target.setArrowDiameter(statistic.arrowDiameter,
-                SettingsManager.inputArrowDiameterScale)
+        target.setAggregationStrategy(SettingsManager.statisticsDispersionPatternAggregationStrategy)
+        target.setArrowDiameter(statistic.arrowDiameter, SettingsManager.inputArrowDiameterScale)
         target.bounds = Rect(0, 0, size, size)
         target.draw(canvas)
-        return b
+        return bitmap
     }
 }
