@@ -21,7 +21,6 @@ import android.text.TextUtils
 import de.dreier.mytargets.R
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
-import de.dreier.mytargets.shared.utils.SharedUtils
 import de.dreier.mytargets.utils.Utils
 
 object HtmlUtils {
@@ -80,8 +79,8 @@ object HtmlUtils {
         equals[1] = true
         val round = rounds[0]
         for (r in rounds) {
-            equals[0] = SharedUtils.equals(r.distance, round.distance) && equals[0]
-            equals[1] = SharedUtils.equals(r.target, round.target) && equals[1]
+            equals[0] = r.distance == round.distance && equals[0]
+            equals[1] = r.target == round.target && equals[1]
         }
     }
 

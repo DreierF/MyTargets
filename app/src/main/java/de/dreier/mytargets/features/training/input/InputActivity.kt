@@ -55,7 +55,6 @@ import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.models.sum
 import de.dreier.mytargets.shared.utils.ImageList
-import de.dreier.mytargets.shared.utils.SharedUtils
 import de.dreier.mytargets.shared.views.TargetViewBase
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod
 import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.BROADCAST_TIMER_SETTINGS_FROM_REMOTE
@@ -477,7 +476,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
         }
 
         private fun shouldShowEnd(end: End, currentEndId: Long?): Boolean {
-            return !SharedUtils.equals(end.id, currentEndId) && end.exact
+            return end.id != currentEndId && end.exact
         }
     }
 

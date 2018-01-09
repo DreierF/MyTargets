@@ -49,7 +49,6 @@ import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.utils.Color
 import de.dreier.mytargets.shared.utils.ScoreUtils
-import de.dreier.mytargets.shared.utils.SharedUtils
 import de.dreier.mytargets.utils.MobileWearableClient
 import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
 import de.dreier.mytargets.utils.RoundedTextDrawable
@@ -74,7 +73,7 @@ class StatisticsFragment : FragmentBase() {
     private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
         override fun onUpdate(trainingId: Long, roundId: Long, end: End) {
-            if (roundIds!!.any { r -> SharedUtils.equals(r, roundId) }) {
+            if (roundIds!!.contains(roundId)) {
                 reloadData()
             }
         }
@@ -184,7 +183,7 @@ class StatisticsFragment : FragmentBase() {
 
     private fun showDispersionView() {
         val exactShots = rounds!!
-                .flatMap { r -> r.loadEnds() }
+                .flatMap { it.loadEnds() }
                 .filter { (_, _, _, exact) -> exact }
                 .flatMap { EndDAO.loadShots(it.id) }
                 .filter { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }

@@ -31,7 +31,6 @@ import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle
 import de.dreier.mytargets.shared.utils.ScoreUtils
-import de.dreier.mytargets.shared.utils.SharedUtils
 import java.util.*
 
 class DefaultScoreboardLayout(private val context: Context, private val locale: Locale, private val configuration: ScoreboardConfiguration) {
@@ -135,8 +134,8 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
         equals[1] = true
         val round = rounds[0]
         for (r in rounds) {
-            equals[0] = SharedUtils.equals(r.distance, round.distance) && equals[0]
-            equals[1] = SharedUtils.equals(r.target, round.target) && equals[1]
+            equals[0] = r.distance == round.distance && equals[0]
+            equals[1] = r.target == round.target && equals[1]
         }
     }
 
