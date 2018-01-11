@@ -191,12 +191,12 @@ class EditStandardRoundFragment : EditFragmentBase() {
             binding.target.setItem(item.targetTemplate)
 
             // Ends
-            binding.endCount.setTextPattern(R.plurals.passe)
+            binding.endCount.textPattern = R.plurals.passe
             binding.endCount.setOnValueChangedListener { item.endCount = it }
             binding.endCount.value = item.endCount
 
             // Shots per end
-            binding.shotCount.setTextPattern(R.plurals.arrow)
+            binding.shotCount.textPattern = R.plurals.arrow
             binding.shotCount.minimum = 1
             binding.shotCount.maximum = 12
             binding.shotCount.setOnValueChangedListener { item.shotsPerEnd = it }

@@ -35,9 +35,6 @@ import de.dreier.mytargets.databinding.LayoutNumberPickerBinding
  * @author Jeffrey F. Cole
  */
 
-
-typealias OnValueChangedListener = (Int) -> Unit
-
 class NumberPicker(context: Context, attributeSet: AttributeSet) : LinearLayout(context, attributeSet) {
 
     var minimum = 1
@@ -67,13 +64,13 @@ class NumberPicker(context: Context, attributeSet: AttributeSet) : LinearLayout(
 
     private var autoIncrement = false
     private var autoDecrement = false
-    private var changeListener: OnValueChangedListener? = null
+    private var changeListener: ((Int) -> Unit)? = null
 
     @PluralsRes
-    private var textPattern: Int = 0
+    var textPattern: Int = 0
     private val binding: LayoutNumberPickerBinding
 
-    fun setOnValueChangedListener(listener: OnValueChangedListener) {
+    fun setOnValueChangedListener(listener: (Int) -> Unit) {
         changeListener = listener
     }
 
@@ -145,10 +142,6 @@ class NumberPicker(context: Context, attributeSet: AttributeSet) : LinearLayout(
             }
             false
         }
-    }
-
-    fun setTextPattern(@PluralsRes textPattern: Int) {
-        this.textPattern = textPattern
     }
 
     companion object {
