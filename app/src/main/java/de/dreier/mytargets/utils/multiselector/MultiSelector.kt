@@ -22,10 +22,10 @@ class MultiSelector : SelectorBase() {
     private val selections = HashSet<Long>()
 
     val selectedItemCount: Int
-            get() = selections.size
+        get() = selections.size
 
-    val selectedIds: ArrayList<Long>
-        get() = ArrayList(selections)
+    val selectedIds: List<Long>
+        get() = selections.toList()
 
     override fun setSelected(id: Long, isSelected: Boolean) {
         if (isSelected) {

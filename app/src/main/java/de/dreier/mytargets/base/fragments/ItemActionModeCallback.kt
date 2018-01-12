@@ -23,7 +23,6 @@ import android.view.MenuItem
 import de.dreier.mytargets.R
 import de.dreier.mytargets.utils.multiselector.MultiSelector
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
-import timber.log.Timber
 
 
 typealias EditCallback = (Long) -> Unit
@@ -57,7 +56,6 @@ class ItemActionModeCallback(
     }
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-        Timber.d("onCreateActionMode")
         selector.selectable = true
         actionMode = mode
         mode.menuInflater.inflate(R.menu.context_menu_edit_delete, menu)
@@ -87,16 +85,13 @@ class ItemActionModeCallback(
     }
 
     override fun onDestroyActionMode(mode: ActionMode) {
-        Timber.d("onDestroyActionMode")
         selector.selectable = false
         selector.clearSelections()
         actionMode = null
     }
 
     fun longClick(holder: SelectableViewHolder<*>) {
-        Timber.d("longClick")
         if (actionMode == null) {
-            Timber.d("startActionMode")
             val activity = fragment.getActivity() as AppCompatActivity?
             activity!!.startSupportActionMode(this)
         }
@@ -105,7 +100,6 @@ class ItemActionModeCallback(
     }
 
     fun restartActionMode() {
-        Timber.d("restartActionMode")
         val activity = fragment.getActivity() as AppCompatActivity?
         activity!!.startSupportActionMode(this)
         updateTitle()
@@ -115,7 +109,6 @@ class ItemActionModeCallback(
      * Returns true if the click has been handled.
      */
     fun click(holder: SelectableViewHolder<*>): Boolean {
-        Timber.d("IAMC#click")
         if (selector.tapSelection(holder)) {
             updateTitle()
             return true
@@ -124,7 +117,6 @@ class ItemActionModeCallback(
     }
 
     private fun updateTitle() {
-        Timber.d("updateTitle")
         if (actionMode == null) {
             return
         }
