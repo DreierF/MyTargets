@@ -156,10 +156,12 @@ abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
     }
 
     private fun playHorn(n: Int) {
-        horn.start()
-        horn.setOnCompletionListener {
-            if (n > 1) {
-                playHorn(n - 1)
+        if(!horn.isPlaying && !isDetached) {
+            horn.start()
+            horn.setOnCompletionListener {
+                if (n > 1) {
+                    playHorn(n - 1)
+                }
             }
         }
     }
