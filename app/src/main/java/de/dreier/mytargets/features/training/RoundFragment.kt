@@ -60,8 +60,7 @@ class RoundFragment : EditableListFragment<End>() {
 
     init {
         itemTypeDelRes = R.plurals.passe_deleted
-        actionModeCallback = ItemActionModeCallback(this, selector,
-                R.plurals.passe_selected)
+        actionModeCallback = ItemActionModeCallback(this, selector, R.plurals.passe_selected)
         actionModeCallback?.setEditCallback(this::onEdit)
         actionModeCallback?.setDeleteCallback(this::onDelete)
     }

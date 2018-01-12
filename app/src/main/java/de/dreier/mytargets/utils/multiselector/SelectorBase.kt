@@ -20,12 +20,11 @@ import android.support.annotation.CallSuper
 
 abstract class SelectorBase {
     protected var tracker = WeakHolderTracker()
-    private var isSelectable: Boolean = false
-
-    fun setSelectable(isSelectable: Boolean) {
-        this.isSelectable = isSelectable
-        refreshAllHolders()
-    }
+    var selectable: Boolean = false
+        set(value) {
+            field = value
+            refreshAllHolders()
+        }
 
     protected fun refreshAllHolders() {
         for (holder in tracker.trackedHolders) {
@@ -38,9 +37,8 @@ abstract class SelectorBase {
             if (holder is ItemBindingHolder<*> && holder.item != null) {
                 holder.bindItem()
             }
-            holder.isSelectable = isSelectable
-            val isActivated = isSelected(holder.itemIdentifier)
-            holder.isActivated = isActivated
+            holder.isSelectable = selectable
+            holder.isActivated = isSelected(holder.itemIdentifier)
         }
     }
 
@@ -54,7 +52,7 @@ abstract class SelectorBase {
 
     fun tapSelection(holder: SelectableHolder): Boolean {
         val itemId = holder.itemIdentifier
-        return if (isSelectable) {
+        return if (selectable) {
             val isSelected = isSelected(itemId)
             setSelected(itemId, !isSelected)
             true
@@ -65,7 +63,7 @@ abstract class SelectorBase {
 
     fun saveSelectionStates(): Bundle {
         val bundle = Bundle()
-        bundle.putBoolean(SELECTIONS_STATE, isSelectable)
+        bundle.putBoolean(SELECTIONS_STATE, selectable)
         saveSelectionStates(bundle)
         return bundle
     }
@@ -79,7 +77,7 @@ abstract class SelectorBase {
 
     @CallSuper
     open fun restoreSelectionStates(savedStates: Bundle) {
-        isSelectable = savedStates.getBoolean(SELECTIONS_STATE)
+        selectable = savedStates.getBoolean(SELECTIONS_STATE)
     }
 
     companion object {

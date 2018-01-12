@@ -21,6 +21,9 @@ import java.util.*
 class MultiSelector : SelectorBase() {
     private val selections = HashSet<Long>()
 
+    val selectedItemCount: Int
+            get() = selections.size
+
     val selectedIds: ArrayList<Long>
         get() = ArrayList(selections)
 
@@ -43,13 +46,13 @@ class MultiSelector : SelectorBase() {
     }
 
     override fun saveSelectionStates(bundle: Bundle) {
-        bundle.putLongArray(SELECTION_IDS, selectedIds.toLongArray())
+        bundle.putLongArray(SELECTION_IDS, selections.toLongArray())
     }
 
     override fun restoreSelectionStates(savedStates: Bundle) {
         super.restoreSelectionStates(savedStates)
         val selectedIds = savedStates.getLongArray(SELECTION_IDS)
-        restoreSelections(selectedIds!!.toList())
+        restoreSelections(selectedIds.toList())
     }
 
     private fun restoreSelections(selected: List<Long>?) {
