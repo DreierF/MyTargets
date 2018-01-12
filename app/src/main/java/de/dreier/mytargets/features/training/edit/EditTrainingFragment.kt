@@ -143,7 +143,9 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
         binding.standardRound.setOnClickListener { selectedItem, _ ->
             navigationController.navigateToStandardRoundList(selectedItem!!)
         }
-        binding.standardRound.setOnUpdateListener { item -> roundTarget = item!!.loadRounds()[0].targetTemplate }
+        binding.standardRound.setOnUpdateListener { item ->
+            roundTarget = item!!.loadRounds()[0].targetTemplate
+        }
         binding.changeTargetFace.setOnClickListener {
             navigationController.navigateToTarget(roundTarget!!,
                     requestCode = SR_TARGET_REQUEST_CODE,
