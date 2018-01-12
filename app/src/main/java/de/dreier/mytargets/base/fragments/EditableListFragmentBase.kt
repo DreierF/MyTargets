@@ -26,7 +26,6 @@ import de.dreier.mytargets.shared.models.IRecursiveModel
 import de.dreier.mytargets.utils.multiselector.MultiSelector
 import de.dreier.mytargets.utils.multiselector.OnItemLongClickListener
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
-import timber.log.Timber
 
 /**
  * @param <T> Model of the item which is managed within the fragment.
@@ -45,8 +44,8 @@ abstract class EditableListFragmentBase<T, U : ListAdapterBase<*, T>> : ListFrag
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Timber.d("onCreate: %b", selector.selectable)
 
+        // Restore action mode after fragment recreation
         if(savedInstanceState != null) {
             selector.restoreSelectionStates(savedInstanceState.getBundle(KEY_SELECTOR)!!)
             if(selector.selectable) {
@@ -101,11 +100,8 @@ abstract class EditableListFragmentBase<T, U : ListAdapterBase<*, T>> : ListFrag
     }
 
     override fun onClick(holder: SelectableViewHolder<T>, item: T?) {
-        Timber.d("onClick: ")
         if (!actionModeCallback!!.click(holder)) {
-            Timber.d("item: ")
             if (item != null) {
-                Timber.d("onSelected: ")
                 onSelected(item)
             }
         }
