@@ -51,9 +51,9 @@ import de.dreier.mytargets.shared.utils.toUri
 import de.dreier.mytargets.utils.MobileWearableClient
 import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
 import de.dreier.mytargets.utils.Utils
+import org.threeten.bp.format.DateTimeFormatter
 import java.io.File
 import java.io.IOException
-import java.util.*
 
 class ScoreboardFragment : FragmentBase() {
 
@@ -72,8 +72,7 @@ class ScoreboardFragment : FragmentBase() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentScoreboardBinding
-                .inflate(inflater, container, false)
+        binding = FragmentScoreboardBinding.inflate(inflater, container, false)
 
         val args = arguments
         trainingId = args!!.getLong(ScoreboardActivity.TRAINING_ID)
@@ -87,7 +86,7 @@ class ScoreboardFragment : FragmentBase() {
         super.onActivityCreated(savedInstanceState)
 
         LocalBroadcastManager.getInstance(context!!).registerReceiver(updateReceiver,
-                IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE))
+                        IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE))
     }
 
     override fun onDestroy() {
@@ -110,7 +109,7 @@ class ScoreboardFragment : FragmentBase() {
             binding!!.container.addView(scoreboard)
 
             val signaturesView = scoreboard.findViewById<View>(R.id.signatures_layout)
-            if(signaturesView != null) {
+            if (signaturesView != null) {
                 val signatures = PartialScoreboardSignaturesBinding.bind(signaturesView)
 
                 var archer = SettingsManager.profileFullName
@@ -133,8 +132,7 @@ class ScoreboardFragment : FragmentBase() {
     private fun onSignatureClicked(signature: Signature, defaultName: String) {
         val fm = fragmentManager
         if (fm != null) {
-            val signatureDialogFragment = SignatureDialogFragment
-                    .newInstance(signature, defaultName)
+            val signatureDialogFragment = SignatureDialogFragment.newInstance(signature, defaultName)
             signatureDialogFragment.show(fm, "signature")
             fm.registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
                 override fun onFragmentViewDestroyed(fm: FragmentManager?, f: Fragment?) {
@@ -183,8 +181,7 @@ class ScoreboardFragment : FragmentBase() {
 
             override fun doInBackground(vararg objects: Void): Uri? {
                 try {
-                    val scoreboardFile = File(context!!
-                            .cacheDir, getDefaultFileName(fileType))
+                    val scoreboardFile = File(context!!.cacheDir, getDefaultFileName(fileType))
                     val content = ScoreboardUtils
                             .getScoreboardView(context!!, Utils
                                     .getCurrentLocale(context!!), training!!, roundId, SettingsManager
@@ -238,11 +235,7 @@ class ScoreboardFragment : FragmentBase() {
     }
 
     fun getDefaultFileName(extension: EFileType): String {
-        return String
-                .format(Locale.US, "%04d-%02d-%02d-%s.%s", training!!.date!!.year, training!!
-                        .date!!
-                        .monthValue, training!!.date!!
-                        .dayOfMonth, getString(R.string.scoreboard), extension.name
-                        .toLowerCase())
+        return DateTimeFormatter.ISO_LOCAL_DATE.format(training!!.date) + "-" +
+                getString(R.string.scoreboard) + "." + extension.name.toLowerCase()
     }
 }

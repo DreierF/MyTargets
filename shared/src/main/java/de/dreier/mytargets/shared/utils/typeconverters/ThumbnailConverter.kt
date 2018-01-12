@@ -23,11 +23,11 @@ import de.dreier.mytargets.shared.models.Thumbnail
 class ThumbnailConverter : TypeConverter<Blob, Thumbnail>() {
 
     override fun getDBValue(model: Thumbnail?): Blob? {
-        return model?.blob
+        return if(model == null) null else Blob(model.data)
     }
 
     override fun getModelValue(data: Blob?): Thumbnail? {
-        return if (data != null) Thumbnail(data) else null
+        return if (data != null) Thumbnail(data.blob) else null
     }
 
 }

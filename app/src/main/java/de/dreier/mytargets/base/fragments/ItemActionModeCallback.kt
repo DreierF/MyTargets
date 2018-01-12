@@ -23,6 +23,7 @@ import android.view.MenuItem
 import de.dreier.mytargets.R
 import de.dreier.mytargets.utils.multiselector.MultiSelector
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
+import timber.log.Timber
 
 
 typealias EditCallback = (Long) -> Unit
@@ -31,13 +32,11 @@ typealias DeleteCallback = (List<Long>) -> Unit
 
 typealias StatisticsCallback = (List<Long>) -> Unit
 
-class ItemActionModeCallback(private val fragment: ListFragmentBase<*, *>,
-                             private val selector: MultiSelector,
-                             /**
-                              * Resource used to set title when items are selected.
-                              */
-                             @PluralsRes
-                             private val itemTypeSelRes: Int) : ActionMode.Callback {
+class ItemActionModeCallback(
+        private val fragment: ListFragmentBase<*, *>,
+        private val selector: MultiSelector,
+        @PluralsRes private val itemTitleRes: Int
+) : ActionMode.Callback {
 
     private var actionMode: ActionMode? = null
 
@@ -51,17 +50,17 @@ class ItemActionModeCallback(private val fragment: ListFragmentBase<*, *>,
 
     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
         val edit = menu.findItem(R.id.action_edit)
-        edit.isVisible = selector.selectedIds.size == 1
+        edit.isVisible = selector.selectedItemCount == 1
         menu.findItem(R.id.action_statistics).isVisible = statisticsCallback != null
         menu.findItem(R.id.action_delete).isVisible = deleteCallback != null
         return false
     }
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-        selector.setSelectable(true)
+        Timber.d("onCreateActionMode")
+        selector.selectable = true
         actionMode = mode
-        val inflater = mode.menuInflater
-        inflater.inflate(R.menu.context_menu_edit_delete, menu)
+        mode.menuInflater.inflate(R.menu.context_menu_edit_delete, menu)
         return true
     }
 
@@ -88,18 +87,27 @@ class ItemActionModeCallback(private val fragment: ListFragmentBase<*, *>,
     }
 
     override fun onDestroyActionMode(mode: ActionMode) {
-        selector.setSelectable(false)
+        Timber.d("onDestroyActionMode")
+        selector.selectable = false
         selector.clearSelections()
         actionMode = null
     }
 
     fun longClick(holder: SelectableViewHolder<*>) {
+        Timber.d("longClick")
         if (actionMode == null) {
+            Timber.d("startActionMode")
             val activity = fragment.getActivity() as AppCompatActivity?
             activity!!.startSupportActionMode(this)
-            selector.setSelectable(true)
         }
         selector.setSelected(holder, true)
+        updateTitle()
+    }
+
+    fun restartActionMode() {
+        Timber.d("restartActionMode")
+        val activity = fragment.getActivity() as AppCompatActivity?
+        activity!!.startSupportActionMode(this)
         updateTitle()
     }
 
@@ -107,6 +115,7 @@ class ItemActionModeCallback(private val fragment: ListFragmentBase<*, *>,
      * Returns true if the click has been handled.
      */
     fun click(holder: SelectableViewHolder<*>): Boolean {
+        Timber.d("IAMC#click")
         if (selector.tapSelection(holder)) {
             updateTitle()
             return true
@@ -115,16 +124,15 @@ class ItemActionModeCallback(private val fragment: ListFragmentBase<*, *>,
     }
 
     private fun updateTitle() {
+        Timber.d("updateTitle")
         if (actionMode == null) {
             return
         }
-        val count = selector.selectedIds.size
+        val count = selector.selectedItemCount
         if (count == 0) {
-            actionMode!!.finish()
+            finish()
         } else {
-            val title = fragment.getResources()
-                    .getQuantityString(itemTypeSelRes, count, count)
-            actionMode!!.title = title
+            actionMode!!.title = fragment.getResources().getQuantityString(itemTitleRes, count, count)
             actionMode!!.invalidate()
         }
     }

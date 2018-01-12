@@ -21,10 +21,12 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Process
+import android.support.media.ExifInterface
 import android.text.Html
 import android.text.Spanned
 import android.view.View
@@ -32,7 +34,11 @@ import android.view.WindowManager
 import de.dreier.mytargets.features.main.MainActivity
 import de.dreier.mytargets.features.training.overview.Header
 import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
+import java.io.File
+import java.io.FileOutputStream
 import java.util.*
 
 object Utils {
@@ -44,8 +50,7 @@ object Utils {
         get() = VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP
 
     fun getMonthHeader(context: Context, date: LocalDate): Header {
-        val dateFormat = DateTimeFormatter.ofPattern("MMMM yyyy",
-                getCurrentLocale(context))
+        val dateFormat = DateTimeFormatter.ofPattern("MMMM yyyy", getCurrentLocale(context))
         val month = getMonthStart(date)
         return Header(month.toEpochDay(), month.format(dateFormat))
     }
@@ -62,8 +67,7 @@ object Utils {
         // We use an AlarmManager to call this intent in 100ms
         val mPendingIntentId = 223344
         val mPendingIntent = PendingIntent
-                .getActivity(context, mPendingIntentId, intent,
-                        PendingIntent.FLAG_CANCEL_CURRENT)
+                .getActivity(context, mPendingIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT)
         val mgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent)
 
@@ -92,9 +96,7 @@ object Utils {
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-
                 or View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-
                 or View.SYSTEM_UI_FLAG_IMMERSIVE)
     }
 
@@ -129,8 +131,7 @@ object Utils {
     }
 
     fun argb(alpha: Int, color: Int): Int {
-        return Color.argb(alpha, Color.red(color), Color.green(color),
-                Color.blue(color))
+        return Color.argb(alpha, Color.red(color), Color.green(color), Color.blue(color))
     }
 
     @Suppress("DEPRECATION")
@@ -138,8 +139,18 @@ object Utils {
         return if (VERSION.SDK_INT >= VERSION_CODES.N) {
             context.resources.configuration.locales.get(0)
         } else {
-
             context.resources.configuration.locale
         }
     }
+}
+
+fun Bitmap.writeToJPGFile(file: File) {
+    val fileOutputStream = FileOutputStream(file)
+    compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+    fileOutputStream.flush()
+    fileOutputStream.close()
+    recycle()
+    val exif = ExifInterface(file.absolutePath)
+    exif.dateTime = LocalDateTime.now().atOffset(ZoneOffset.UTC).toInstant().toEpochMilli()
+    exif.saveAttributes()
 }

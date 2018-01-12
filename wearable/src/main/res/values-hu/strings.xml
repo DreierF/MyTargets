@@ -23,5 +23,5 @@
   <string name="vibration">Rezgés</string>
   <string name="sound">Hang</string>
   <string name="today">Ma</string>
-  <string name="notification_channel_default">Default</string>
+  <string name="notification_channel_default">Alapértelmezett</string>
 </resources>

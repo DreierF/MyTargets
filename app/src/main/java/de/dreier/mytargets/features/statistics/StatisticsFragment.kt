@@ -72,8 +72,7 @@ class StatisticsFragment : FragmentBase() {
     private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
         override fun onUpdate(trainingId: Long, roundId: Long, end: End) {
-            if (roundIds!!
-                    .any { r -> SharedUtils.equals(r, roundId) }) {
+            if (roundIds!!.any { r -> SharedUtils.equals(r, roundId) }) {
                 reloadData()
             }
         }
@@ -109,7 +108,7 @@ class StatisticsFragment : FragmentBase() {
                         roundIdPair.second.loadEnds()
                                 .map { end -> Pair(roundIdPair.first, end) }
                     }
-                    .map { endPair -> getPairEndSummary(target!!, endPair.second, endPair.first!!) }
+                    .map { endPair -> getPairEndSummary(target!!, endPair.second, endPair.first) }
                     .sortedBy { pair -> pair.second }
             if (values.isEmpty()) {
                 return null
@@ -195,6 +194,13 @@ class StatisticsFragment : FragmentBase() {
         val stats = ArrowStatistic(target!!, exactShots)
         stats.arrowDiameter = Dimension(5f, Dimension.Unit.MILLIMETER)
 
+        val trainingsIds = rounds!!
+                .map { it.trainingId!! }
+                .distinct()
+        if (trainingsIds.size == 1) {
+            stats.date = Training[trainingsIds[0]]!!.date
+        }
+
         val strategy = SettingsManager.statisticsDispersionPatternAggregationStrategy
         val drawable = stats.target.impactAggregationDrawable
         drawable.setAggregationStrategy(strategy)
@@ -203,8 +209,7 @@ class StatisticsFragment : FragmentBase() {
         binding.dispersionView.setImageDrawable(drawable)
 
         binding.dispersionViewOverlay.setOnClickListener {
-            val statistics = ArrowStatistic(target!!, exactShots)
-            navigationController.navigateToDispersionPattern(statistics)
+            navigationController.navigateToDispersionPattern(stats)
         }
     }
 

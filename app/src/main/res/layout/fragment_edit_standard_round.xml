@@ -58,7 +58,7 @@
                         android:layout_toLeftOf="@+id/deleteStandardRound"
                         android:layout_toStartOf="@+id/deleteStandardRound">
 
-                        <android.support.design.widget.TextInputEditText
+                        <de.dreier.mytargets.views.TextInputEditText
                             android:id="@+id/name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

@@ -207,7 +207,7 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
                 .map { bid ->
                     if (bid != null) {
                         val bow = Bow[bid] ?: return@map Tag(bid, "Deleted " + bid)
-                        Tag(bow.id, bow.name, bow.thumbnail!!.blob.blob, true)
+                        Tag(bow.id, bow.name, bow.thumbnail, true)
                     } else {
                         Tag(null, getString(R.string.unknown))
                     }
@@ -221,7 +221,7 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
                 .map { aid ->
                     if (aid != null) {
                         val arrow = Arrow[aid] ?: return@map Tag(aid, "Deleted " + aid)
-                        Tag(arrow.id, arrow.name, arrow.thumbnail!!.blob.blob, true)
+                        Tag(arrow.id, arrow.name, arrow.thumbnail, true)
                     } else {
                         Tag(null, getString(R.string.unknown))
                     }

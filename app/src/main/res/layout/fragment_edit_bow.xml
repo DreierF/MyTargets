@@ -58,7 +58,7 @@
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <de.dreier.mytargets.views.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:enabled="false"
@@ -79,7 +79,7 @@
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <de.dreier.mytargets.views.TextInputEditText
                         android:id="@+id/name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -100,7 +100,7 @@
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <de.dreier.mytargets.views.TextInputEditText
                         android:id="@+id/brand"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <de.dreier.mytargets.views.TextInputEditText
                         android:id="@+id/size"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -159,7 +159,7 @@
                         app:propertyShowAll="@{showAll}"
                         app:propertyValue="@{bow.drawWeight}">
 
-                        <android.support.design.widget.TextInputEditText
+                        <de.dreier.mytargets.views.TextInputEditText
                             android:id="@+id/drawWeight"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -176,7 +176,7 @@
                         app:propertyShowAll="@{showAll}"
                         app:propertyValue="@{bow.letoffWeight}">
 
-                        <android.support.design.widget.TextInputEditText
+                        <de.dreier.mytargets.views.TextInputEditText
                             android:id="@+id/letoffWeight"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -212,7 +212,7 @@
                         app:propertyShowAll="@{showAll}"
                         app:propertyValue="@{bow.arrowRest}">
 
-                        <android.support.design.widget.TextInputEditText
+                        <de.dreier.mytargets.views.TextInputEditText
                             android:id="@+id/rest"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -229,7 +229,7 @@
                         app:propertyShowAll="@{showAll}"
                         app:propertyValue="@{bow.restVerticalPosition}">
 
-                        <android.support.design.widget.TextInputEditText
+                        <de.dreier.mytargets.views.TextInputEditText
                             android:id="@+id/restVerticalPosition"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -246,7 +246,7 @@
                         app:propertyShowAll="@{showAll}"
                         app:propertyValue="@{bow.restHorizontalPosition}">
 
-                        <android.support.design.widget.TextInputEditText
+                        <de.dreier.mytargets.views.TextInputEditText
                             android:id="@+id/restHorizontalPosition"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -263,7 +263,7 @@
                         app:propertyShowAll="@{showAll}"
                         app:propertyValue="@{bow.restStiffness}">
 
-                        <android.support.design.widget.TextInputEditText
+                        <de.dreier.mytargets.views.TextInputEditText
                             android:id="@+id/restStiffness"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -290,7 +290,7 @@
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <de.dreier.mytargets.views.TextInputEditText
                         android:id="@+id/cam"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -315,7 +315,7 @@
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <de.dreier.mytargets.views.TextInputEditText
                         android:id="@+id/tiller"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -340,7 +340,7 @@
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <de.dreier.mytargets.views.TextInputEditText
                         android:id="@+id/braceHeight"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -365,7 +365,7 @@
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <de.dreier.mytargets.views.TextInputEditText
                         android:id="@+id/limbs"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -390,7 +390,7 @@
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <de.dreier.mytargets.views.TextInputEditText
                         android:id="@+id/sight"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -415,7 +415,7 @@
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <de.dreier.mytargets.views.TextInputEditText
                         android:id="@+id/scopeMagnification"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -440,7 +440,7 @@
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <de.dreier.mytargets.views.TextInputEditText
                         android:id="@+id/stabilizer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -465,7 +465,7 @@
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <de.dreier.mytargets.views.TextInputEditText
                         android:id="@+id/clicker"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -490,7 +490,7 @@
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <de.dreier.mytargets.views.TextInputEditText
                         android:id="@+id/nockingPoint"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -515,7 +515,7 @@
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <de.dreier.mytargets.views.TextInputEditText
                         android:id="@+id/string"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -540,7 +540,7 @@
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <de.dreier.mytargets.views.TextInputEditText
                         android:id="@+id/button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -565,7 +565,7 @@
 
                 <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <de.dreier.mytargets.views.TextInputEditText
                         android:id="@+id/description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

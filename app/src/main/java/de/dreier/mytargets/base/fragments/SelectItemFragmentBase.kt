@@ -56,7 +56,7 @@ abstract class SelectItemFragmentBase<T, U : ListAdapterBase<out ItemBindingHold
      */
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        selector.setSelectable(true)
+        selector.selectable = true
     }
 
     /**

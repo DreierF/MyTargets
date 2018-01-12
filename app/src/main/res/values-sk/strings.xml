@@ -49,7 +49,7 @@
     <item quantity="other">Vybraných šípov: %d</item>
   </plurals>
   <plurals name="passe_selected">
-    <item quantity="one">Vybraná sada: %d</item>
+    <item quantity="one">%d sada zvolená</item>
     <item quantity="few">Vybrané sady: %d</item>
     <item quantity="other">Vybraných sád: %d</item>
   </plurals>
@@ -93,7 +93,7 @@
   <string name="format">Formát</string>
   <!-- x ends of y arrows -->
   <plurals name="passe">
-    <item quantity="one">Sada: %d</item>
+    <item quantity="one">%d sada</item>
     <item quantity="few">Sady: %d</item>
     <item quantity="other">Sád: %d</item>
   </plurals>
@@ -191,7 +191,7 @@
     <item quantity="other">Odstránených tréningov: %d</item>
   </plurals>
   <plurals name="passe_deleted">
-    <item quantity="one">Odstránená sada: %d</item>
+    <item quantity="one">%d sada odstránená</item>
     <item quantity="few">Odstránené sady: %d</item>
     <item quantity="other">Odstránených sád: %d</item>
   </plurals>
@@ -346,35 +346,35 @@
   <string name="target_captain">Terčový kapitán</string>
   <string name="language">Jazyk</string>
   <string name="warning_backup_experimental">Upozornenie: Táto funkcia je stále experimentálna! Prosím, kontrolujte v pravidelných intervaloch či bola záloha skutočne úspešná!</string>
-  <string name="drawer_open">Open drawer</string>
-  <string name="drawer_close">Close drawer</string>
+  <string name="drawer_open">Otvoriť zásuvku</string>
+  <string name="drawer_close">Zatvoriť zásuvku</string>
   <string name="help">Pomoc</string>
   <string name="home">Domov</string>
-  <string name="click_to_enter_profile">Click to enter profile information</string>
-  <string name="no_trainings">Ešte nie si vyškolení!</string>
-  <string name="no_bows">No bows</string>
-  <string name="no_arrows">No arrows</string>
-  <string name="version_info">Version info</string>
-  <string name="version_prefix">Version</string>
-  <string name="max_arrow_number">Maximum arrow number</string>
-  <string name="distances">Distances</string>
-  <string name="diameters">Diameters</string>
-  <string name="bows">Bows</string>
-  <string name="reset">Reset</string>
+  <string name="click_to_enter_profile">Kliknite na zadanie informácií o profile</string>
+  <string name="no_trainings">Zatiaľ ešte nemáte žiadne tréningy!</string>
+  <string name="no_bows">Žiadne luky</string>
+  <string name="no_arrows">Žiadne šípy</string>
+  <string name="version_info">Info o verzii</string>
+  <string name="version_prefix">Verzia</string>
+  <string name="max_arrow_number">Maximálne číslo šípu</string>
+  <string name="distances">Vzdialenosti</string>
+  <string name="diameters">Priemery</string>
+  <string name="bows">Luky</string>
+  <string name="reset">Vynulovať</string>
   <string name="end_x_of_y">Sada %1$d/%2$d</string>
   <string name="round_x_of_y">Kolo %1$d/%2$d</string>
-  <string name="settings_summary_timer">Adjust archery timer\' behaviour</string>
-  <string name="settings_summary_scoreboard">Change scoreboard appearance</string>
-  <string name="settings_summary_input">Customize input screen</string>
-  <string name="settings_summary_overview">Personalize information shown for trainings, rounds and ends</string>
-  <string name="settings_summary_profile">Enter personal information</string>
-  <string name="licence_number">Licence number</string>
-  <string name="file_type">File type</string>
-  <string name="clear">Clear</string>
-  <string name="tap_to_sign">Tap to sign</string>
-  <string name="pdf_file">PDF file</string>
-  <string name="image_file">Image file</string>
-  <string name="settings_summary_statistics">Adjust statistics screen</string>
-  <string name="settings_statistics_spots_to_single_target">Aggregate spots to single target</string>
-  <string name="keep_above_lockscreen">Keep above lockscreen</string>
+  <string name="settings_summary_timer">Nastaviť správanie časovača lukostreľby</string>
+  <string name="settings_summary_scoreboard">Zmena vzhľadu tabuľky výsledkov</string>
+  <string name="settings_summary_input">Prispôsobiť obrazovky zadávania</string>
+  <string name="settings_summary_overview">Prispôsobiť informácie zobrazené pre tréningy, sady a kolá</string>
+  <string name="settings_summary_profile">Zadanie osobných informácií</string>
+  <string name="licence_number">Číslo licencie</string>
+  <string name="file_type">Typ súboru</string>
+  <string name="clear">Vyčistiť</string>
+  <string name="tap_to_sign">Ťuknite pre prihlásenie</string>
+  <string name="pdf_file">Súbor PDF</string>
+  <string name="image_file">Obrázok</string>
+  <string name="settings_summary_statistics">Upraviť obrazovku štatistiky</string>
+  <string name="settings_statistics_spots_to_single_target">Agregovať body do jedného terča</string>
+  <string name="keep_above_lockscreen">Ponechať nad uzamykacou obrazovkou</string>
 </resources>

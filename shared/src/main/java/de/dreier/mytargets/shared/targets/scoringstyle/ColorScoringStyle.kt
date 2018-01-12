@@ -23,7 +23,7 @@ class ColorScoringStyle(@StringRes title: Int, private val maxEndPoints: Int, va
 
     override fun getReachedScore(shots: MutableList<Shot>): Score {
         val reachedScore = shots
-                .map { s -> getScoreByScoringRing(s.scoringRing, s.index) }
+                .map { s -> getPointsByScoringRing(s.scoringRing, s.index) }
                 .distinct()
                 .fold(0) { a, b -> a + b }
         return Score(reachedScore, maxEndPoints)

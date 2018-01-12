@@ -133,6 +133,7 @@ dependencies {
     implementation dependencies.supportDesign
     implementation dependencies.supportAnnotations
     implementation dependencies.supportPreference
+    implementation dependencies.supportExifInterface
     implementation dependencies.recyclerView
     implementation dependencies.cardView
 

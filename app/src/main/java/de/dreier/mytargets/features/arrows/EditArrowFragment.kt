@@ -57,6 +57,7 @@ class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrow
         }
         ToolbarUtils.setTitle(this, arrow.name)
         contentBinding.arrow = arrow
+        contentBinding.showAll = false
         loadImage(imageFile)
         return rootView
     }

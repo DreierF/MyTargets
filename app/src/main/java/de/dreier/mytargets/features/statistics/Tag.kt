@@ -18,17 +18,14 @@ package de.dreier.mytargets.features.statistics
 import android.annotation.SuppressLint
 import android.content.Context
 import android.databinding.DataBindingUtil
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.RelativeLayout
-
 import de.dreier.mytargets.R
 import de.dreier.mytargets.databinding.ViewChipsBinding
-import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable
+import de.dreier.mytargets.shared.models.Thumbnail
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 
@@ -37,22 +34,12 @@ import kotlinx.android.parcel.Parcelize
 class Tag @JvmOverloads constructor(
         var id: Long?,
         var text: String,
-        var image: ByteArray? = null,
-        var isChecked: Boolean = true) : Parcelable {
+        var image: Thumbnail? = null,
+        var isChecked: Boolean = true
+) : Parcelable {
 
     @IgnoredOnParcel
-    private var thumbnail: Bitmap? = null
-
-    val drawable: Drawable?
-        get() {
-            if (image == null) {
-                return null
-            }
-            if (thumbnail == null) {
-                thumbnail = BitmapFactory.decodeByteArray(image, 0, image!!.size)
-            }
-            return RoundedAvatarDrawable(thumbnail!!)
-        }
+    val drawable: Drawable? by lazy { image?.roundDrawable }
 
     fun getView(context: Context, parent: ViewGroup): ViewChipsBinding {
         val binding = DataBindingUtil
