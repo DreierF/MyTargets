@@ -23,29 +23,27 @@ import android.graphics.drawable.Drawable
 import android.media.ThumbnailUtils
 import android.os.Parcelable
 import android.support.annotation.DrawableRes
-import com.raizlabs.android.dbflow.data.Blob
 import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable
 import de.dreier.mytargets.shared.utils.toByteArray
 import kotlinx.android.parcel.Parcelize
+import timber.log.Timber
 import java.io.File
+import java.util.*
 
 @SuppressLint("ParcelCreator")
 @Parcelize
-class Thumbnail(internal var data: ByteArray) : Parcelable {
+class Thumbnail(val data: ByteArray) : Parcelable {
 
     @Suppress("PLUGIN_WARNING")
     val roundDrawable: Drawable by lazy {
         val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+        if (bitmap == null) {
+            Timber.w("Invalid bitmap data provided: %s", Arrays.asList(data).toString())
+            val dummyBitmap = Bitmap.createBitmap(20, 20, Bitmap.Config.ARGB_8888)
+            return@lazy RoundedAvatarDrawable(dummyBitmap)
+        }
         RoundedAvatarDrawable(bitmap)
     }
-
-    val blob: Blob
-        get() = Blob(data)
-
-
-    constructor() : this(ByteArray(0))
-
-    constructor(data: Blob) : this(data.blob)
 
     companion object {
         /**
@@ -64,12 +62,12 @@ class Thumbnail(internal var data: ByteArray) : Parcelable {
         fun from(imageFile: File): Thumbnail {
             val thumbnail = ThumbnailUtils
                     .extractThumbnail(BitmapFactory.decodeFile(imageFile.path),
-                            TARGET_SIZE_MICRO_THUMBNAIL, TARGET_SIZE_MICRO_THUMBNAIL) ?:
-                    Bitmap.createBitmap(TARGET_SIZE_MICRO_THUMBNAIL, TARGET_SIZE_MICRO_THUMBNAIL, Bitmap.Config.RGB_565)
+                            TARGET_SIZE_MICRO_THUMBNAIL, TARGET_SIZE_MICRO_THUMBNAIL)
+                    ?: Bitmap.createBitmap(TARGET_SIZE_MICRO_THUMBNAIL, TARGET_SIZE_MICRO_THUMBNAIL, Bitmap.Config.RGB_565)
             return Thumbnail(thumbnail.toByteArray())
         }
 
-        fun from(context: Context, @DrawableRes resId: Int) :Thumbnail {
+        fun from(context: Context, @DrawableRes resId: Int): Thumbnail {
             return from(BitmapFactory.decodeResource(context.resources, resId))
         }
     }
