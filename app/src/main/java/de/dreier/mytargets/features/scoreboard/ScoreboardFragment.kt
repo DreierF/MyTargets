@@ -54,6 +54,7 @@ import de.dreier.mytargets.utils.Utils
 import org.threeten.bp.format.DateTimeFormatter
 import java.io.File
 import java.io.IOException
+import java.util.*
 
 class ScoreboardFragment : FragmentBase() {
 

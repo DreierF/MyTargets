@@ -52,8 +52,7 @@ class MobileWearableListener : WearableListenerService() {
     }
 
     private fun timerSettings(messageEvent: MessageEvent) {
-        val data = messageEvent.data
-        val settings = data.unmarshall(TimerSettings.CREATOR)
+        val settings = messageEvent.data.unmarshall(TimerSettings.CREATOR)
         SettingsManager.timerSettings = settings
         ApplicationInstance.wearableClient.sendTimerSettingsFromRemote()
     }
@@ -89,8 +88,7 @@ class MobileWearableListener : WearableListenerService() {
     }
 
     private fun createTraining(messageEvent: MessageEvent) {
-        val data = messageEvent.data
-        val augmentedTraining = data.unmarshall(AugmentedTraining.CREATOR)
+        val augmentedTraining = messageEvent.data.unmarshall(AugmentedTraining.CREATOR)
         val training = augmentedTraining.toTraining()
         training.save()
         ApplicationInstance.wearableClient.updateTraining(AugmentedTraining(training))
@@ -98,8 +96,7 @@ class MobileWearableListener : WearableListenerService() {
     }
 
     private fun endUpdated(messageEvent: MessageEvent) {
-        val data = messageEvent.data
-        val (end, shots) = data.unmarshall(AugmentedEnd.CREATOR)
+        val (end, shots) = messageEvent.data.unmarshall(AugmentedEnd.CREATOR)
         val round = AugmentedRound(Round[end.roundId!!]!!)
         val newEnd = getLastEmptyOrCreateNewEnd(round)
         newEnd.end.exact = false

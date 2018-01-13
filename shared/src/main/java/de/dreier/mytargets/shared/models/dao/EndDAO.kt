@@ -19,6 +19,7 @@ import com.raizlabs.android.dbflow.config.FlowManager
 import com.raizlabs.android.dbflow.kotlinextensions.delete
 import com.raizlabs.android.dbflow.kotlinextensions.save
 import com.raizlabs.android.dbflow.sql.language.SQLite
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.db.*
 import org.threeten.bp.LocalTime
@@ -55,60 +56,46 @@ object EndDAO {
             end.saveTime = LocalTime.now()
         }
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-                    end.save(db)
-                    SQLite.delete(EndImage::class.java)
-                            .where(EndImage_Table.end.eq(end.id))
-                            .execute(db)
-                    for (image in images) {
-                        image.endId = end.id
-                        image.save(db)
-                    }
-                    SQLite.delete(Shot::class.java)
-                            .where(Shot_Table.end.eq(end.id))
-                            .execute(db)
-                    for (shot in shots) {
-                        shot.endId = end.id
-                        shot.save(db)
-                    }
-                }
+            saveEnd(end, db, images, shots)
+        }
+    }
+
+    fun insertEnd(end: End, images: List<EndImage>, shots: List<Shot>) {
+        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
+            db.execSQL("UPDATE End SET index = index + 1 WHERE index>=${end.index}")
+            saveEnd(end, db, images, shots)
+        }
+    }
+
+    private fun saveEnd(end: End, db: DatabaseWrapper, images: List<EndImage>, shots: List<Shot>) {
+        end.save(db)
+        SQLite.delete(EndImage::class.java)
+                .where(EndImage_Table.end.eq(end.id))
+                .execute(db)
+        for (image in images) {
+            image.endId = end.id
+            image.save(db)
+        }
+        SQLite.delete(Shot::class.java)
+                .where(Shot_Table.end.eq(end.id))
+                .execute(db)
+        for (shot in shots) {
+            shot.endId = end.id
+            shot.save(db)
+        }
     }
 
     fun deleteEnd(end: End) {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-                    //TODO check if this is really getting deleted
+            //TODO check if this is really getting deleted
 //                    SQLite.delete(EndImage::class.java)
 //                            .where(EndImage_Table.end.eq(end.id))
 //                            .execute(db)
 //                    SQLite.delete(Shot::class.java)
 //                            .where(Shot_Table.end.eq(end.id))
 //                            .execute(db)
-                    end.delete(db)
-
-                    val round = Round[end.roundId!!] ?: return@executeTransaction
-
-                    for ((i, end) in round.loadEnds(db).withIndex()) {
-                        end.index = i
-                        end.save(db)
-                    }
-                }
-    }
-
-    fun insertEnd(end: End, images: List<EndImage>, shots: List<Shot>) {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-                    val round = Round[end.roundId!!]
-                    val ends = round!!.loadEnds(db).toMutableList()
-
-                    val pos = ends.binarySearch(end, compareBy(End::index))
-                    if (pos < 0) {
-                        ends.add(-pos - 1, end)
-                    } else {
-                        ends.add(pos, end)
-                    }
-
-                    for ((i, end) in ends.withIndex()) {
-                        end.index = i
-                        end.save(db)
-                    }
-                }
+            end.delete(db)
+            db.execSQL("UPDATE End SET index = index - 1 WHERE index>${end.index}")
+        }
     }
 }

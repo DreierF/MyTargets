@@ -66,9 +66,8 @@ abstract class EditableListFragmentBase<T, U : ListAdapterBase<*, T>> : Fragment
 
     fun onDelete(deletedIds: List<Long>) {
         FirebaseAnalytics.getInstance(context!!).logEvent("delete", null)
-        val deleted = deleteItems(deletedIds)
-        val message = resources
-                .getQuantityString(itemTypeDelRes, deleted.size, deleted.size)
+        val undoDeletions = deleteItems(deletedIds)
+        val message = resources.getQuantityString(itemTypeDelRes, deletedIds.size, deletedIds.size)
         val coordinatorLayout = view!!.findViewById<View>(R.id.coordinatorLayout)
         Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo) {
@@ -77,7 +76,7 @@ abstract class EditableListFragmentBase<T, U : ListAdapterBase<*, T>> : Fragment
                 .show()
     }
 
-    private fun deleteItems(deletedIds: List<Long>): MutableList<T> {
+    private fun deleteItems(deletedIds: List<Long>): MutableList<() -> T> {
         val deleted = deletedIds
                 .map { id -> adapter!!.getItemById(id) }
                 .filter { item -> item != null }
