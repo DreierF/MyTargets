@@ -24,7 +24,6 @@ import com.google.android.gms.wearable.Node
 import com.google.android.gms.wearable.Wearable
 import de.dreier.mytargets.shared.models.TimerSettings
 import de.dreier.mytargets.shared.utils.marshall
-import timber.log.Timber
 
 open class WearableClientBase(protected val context: Context) {
 
@@ -58,9 +57,6 @@ open class WearableClientBase(protected val context: Context) {
 
     private fun sendToNode(node: Node, path: String, data: ByteArray) {
         msgClient.sendMessage(node.id, path, data)
-                .addOnFailureListener { e ->
-                    Timber.e(e, "Failed to send message")
-                }
     }
 
     protected fun sendTimerSettings(settings: TimerSettings) {

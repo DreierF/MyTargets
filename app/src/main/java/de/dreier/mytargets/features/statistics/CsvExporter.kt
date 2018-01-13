@@ -68,7 +68,7 @@ class CsvExporter(private val context: Context) {
         // Title
         csv.add(t.title)
         // Date
-        csv.add(t.date!!.format(DateTimeFormatter.ISO_LOCAL_DATE))
+        csv.add(t.date.format(DateTimeFormatter.ISO_LOCAL_DATE))
         // StandardRound
         csv.add(if (t.standardRoundId == null)
             context.getString(R.string.practice)
