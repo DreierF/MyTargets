@@ -49,7 +49,6 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
     private lateinit var binding: FragmentTrainingsBinding
 
     private val updateReceiver = object : BroadcastReceiver() {
-
         override fun onReceive(context: Context, intent: Intent) {
             reloadData()
         }
@@ -162,7 +161,7 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
 
     private inner class TrainingAdapter internal constructor(context: Context
     ) : ExpandableListAdapter<Header, Training>({ child ->
-        Utils.getMonthHeader(context, child.date!!)
+        Utils.getMonthHeader(context, child.date)
     }, Collections.reverseOrder(), Collections.reverseOrder()) {
 
         override fun getSecondLevelViewHolder(parent: ViewGroup): ViewHolder {

@@ -127,10 +127,7 @@ class DispersionPatternActivity : ChildActivityBase() {
         } else {
             getString(R.string.dispersion_pattern)
         }
-        val formattedDate = statistic!!.date?.let {
-            DateTimeFormatter.ISO_LOCAL_DATE.format(it)
-        } ?: ""
-
+        val formattedDate = statistic!!.date?.format(DateTimeFormatter.ISO_LOCAL_DATE) ?: ""
         return formattedDate + name + "." + extension.name.toLowerCase()
     }
 

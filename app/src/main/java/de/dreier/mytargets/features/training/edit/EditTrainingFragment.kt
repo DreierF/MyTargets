@@ -249,7 +249,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
     }
 
     private fun onDateClick() {
-        val datePickerDialog = DatePickerFragment.newInstance(date!!)
+        val datePickerDialog = DatePickerFragment.newInstance(date)
         datePickerDialog.setTargetFragment(this, REQ_SELECTED_DATE)
         datePickerDialog.show(activity!!.supportFragmentManager, "date_picker")
     }
@@ -266,7 +266,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
     }
 
     private fun setTrainingDate() {
-        binding.trainingDate.text = date!!.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+        binding.trainingDate.text = date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
     }
 
     override fun onSave() {

@@ -86,7 +86,7 @@ class ScoreboardFragment : FragmentBase() {
         super.onActivityCreated(savedInstanceState)
 
         LocalBroadcastManager.getInstance(context!!).registerReceiver(updateReceiver,
-                        IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE))
+                IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE))
     }
 
     override fun onDestroy() {
@@ -235,7 +235,7 @@ class ScoreboardFragment : FragmentBase() {
     }
 
     fun getDefaultFileName(extension: EFileType): String {
-        return DateTimeFormatter.ISO_LOCAL_DATE.format(training!!.date) + "-" +
+        return training!!.date.format(DateTimeFormatter.ISO_LOCAL_DATE) + "-" +
                 getString(R.string.scoreboard) + "." + extension.name.toLowerCase()
     }
 }
