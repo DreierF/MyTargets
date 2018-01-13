@@ -119,9 +119,14 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
             binding.fab.visibility = if (supportsDeletion) View.VISIBLE else View.GONE
 
             // Set round info
-            binding.weatherIcon.setImageResource(training!!.environment.colorDrawable)
+            val colorDrawable = if (training!!.environment.indoor) {
+                R.drawable.ic_house_24dp
+            } else {
+                training!!.environment.weather.colorDrawable
+            }
+            binding.weatherIcon.setImageResource(colorDrawable)
             binding.detailRoundInfo.text = HtmlUtils.getTrainingInfoHTML(context!!, training!!, rounds, equals)
-            adapter!!.setList(rounds.toMutableList())
+            adapter!!.setList(rounds)
 
             activity!!.invalidateOptionsMenu()
 

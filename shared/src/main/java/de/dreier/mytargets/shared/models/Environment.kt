@@ -16,14 +16,7 @@ package de.dreier.mytargets.shared.models
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.os.Parcelable
-import android.support.annotation.DrawableRes
-import android.support.v4.content.ContextCompat
-import android.text.TextUtils
-
-import de.dreier.mytargets.shared.R
-import de.dreier.mytargets.shared.SharedApplicationInstance
 import kotlinx.android.parcel.Parcelize
 
 @SuppressLint("ParcelCreator")
@@ -35,14 +28,6 @@ data class Environment(
         var windDirection: Int = 0,
         var location: String = ""
 ) : Parcelable {
-
-    val colorDrawable: Int
-        @DrawableRes
-        get() = if (indoor) {
-            R.drawable.ic_house_24dp
-        } else {
-            weather.colorDrawable
-        }
 
     fun getWindSpeed(context: Context): String {
         return windSpeed.toString() + " Bft " + WindDirection.getList(context)[windDirection].name

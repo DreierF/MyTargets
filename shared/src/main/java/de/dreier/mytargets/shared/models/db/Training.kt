@@ -160,7 +160,7 @@ data class Training(
                 .sum()
 
     @OneToMany(methods = [], variableName = "rounds")
-    fun loadRounds(): List<Round> {
+    fun loadRounds(): MutableList<Round> {
         if (rounds == null) {
             rounds = SQLite.select()
                     .from(Round::class.java)

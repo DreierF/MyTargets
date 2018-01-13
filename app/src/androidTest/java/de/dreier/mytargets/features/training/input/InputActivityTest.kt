@@ -49,7 +49,7 @@ class InputActivityTest : UITestBase() {
             InputActivity::class.java, true, false)
 
     @get:Rule
-    val rule = RuleChain.outerRule(object : DbTestRuleBase() {
+    val rule: RuleChain = RuleChain.outerRule(object : DbTestRuleBase() {
         override fun addDatabaseContent() {
             val generator = Random(3435)
             val standardRound = StandardRound[32L]

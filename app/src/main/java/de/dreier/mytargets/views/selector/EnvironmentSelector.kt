@@ -60,7 +60,7 @@ class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: Att
 
         if (item.indoor) {
             binding.name.setText(de.dreier.mytargets.shared.R.string.indoor)
-            binding.image.setImageResource(de.dreier.mytargets.shared.R.drawable.ic_house_24dp)
+            binding.image.setImageResource(R.drawable.ic_house_24dp)
         } else {
             binding.name.text = item.weather.getName()
             binding.image.setImageResource(item.weather.drawable)

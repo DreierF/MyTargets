@@ -48,6 +48,8 @@ import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.dao.ArrowDAO
 import de.dreier.mytargets.shared.models.dao.BowDAO
+import de.dreier.mytargets.shared.models.db.Arrow
+import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.targets.models.WAFull
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod
@@ -181,7 +183,7 @@ class MainActivityTest : UITestBase() {
         // openBow
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
                 .perform(click())
-        val firstBow = BowDAO.loadBows().sorted().firstOrNull()
+        val firstBow = BowDAO.loadBows().sortedWith(compareBy(Bow::name, Bow::id)).firstOrNull()
         intended(allOf(hasClass(EditBowActivity::class.java),
                 hasExtra<Long>(EditBowFragment.BOW_ID, firstBow!!.id)))
 
@@ -193,7 +195,7 @@ class MainActivityTest : UITestBase() {
         // openArrow
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
                 .perform(click())
-        val firstArrow = ArrowDAO.loadArrows().sorted().firstOrNull()
+        val firstArrow = ArrowDAO.loadArrows().sortedWith(compareBy(Arrow::name, Arrow::id)).firstOrNull()
         intended(allOf(hasClass(EditArrowActivity::class.java),
                 hasExtra<Long>(EditArrowFragment.ARROW_ID, firstArrow!!.id)))
 

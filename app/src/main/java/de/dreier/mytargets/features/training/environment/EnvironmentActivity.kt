@@ -16,11 +16,22 @@
 package de.dreier.mytargets.features.training.environment
 
 import android.support.v4.app.Fragment
+import android.view.MenuItem
 import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase
 
 class EnvironmentActivity : SimpleFragmentActivityBase() {
     override fun instantiateFragment(): Fragment {
         return EnvironmentFragment()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                (childFragment as EnvironmentFragment).onSave()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onBackPressed() {
