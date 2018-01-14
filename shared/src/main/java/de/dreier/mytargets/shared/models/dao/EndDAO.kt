@@ -62,7 +62,7 @@ object EndDAO {
 
     fun insertEnd(end: End, images: List<EndImage>, shots: List<Shot>) {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-            db.execSQL("UPDATE End SET index = index + 1 WHERE index>=${end.index}")
+            db.execSQL("UPDATE End SET `index` = `index` + 1 WHERE `index` >= ${end.index}")
             saveEnd(end, db, images, shots)
         }
     }
@@ -87,15 +87,8 @@ object EndDAO {
 
     fun deleteEnd(end: End) {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-            //TODO check if this is really getting deleted
-//                    SQLite.delete(EndImage::class.java)
-//                            .where(EndImage_Table.end.eq(end.id))
-//                            .execute(db)
-//                    SQLite.delete(Shot::class.java)
-//                            .where(Shot_Table.end.eq(end.id))
-//                            .execute(db)
             end.delete(db)
-            db.execSQL("UPDATE End SET index = index - 1 WHERE index>${end.index}")
+            db.execSQL("UPDATE End SET `index` = `index` - 1 WHERE `index` > ${end.index}")
         }
     }
 }
