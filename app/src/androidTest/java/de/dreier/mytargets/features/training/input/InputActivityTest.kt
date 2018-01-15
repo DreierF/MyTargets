@@ -25,8 +25,9 @@ import android.support.test.runner.AndroidJUnit4
 import android.support.test.uiautomator.UiObjectNotFoundException
 import de.dreier.mytargets.R
 import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.shared.models.dao.RoundDAO
+import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.models.db.Round
-import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.views.TargetViewBase
 import de.dreier.mytargets.test.base.UITestBase
 import de.dreier.mytargets.test.utils.actions.TargetViewActions
@@ -52,19 +53,19 @@ class InputActivityTest : UITestBase() {
     val rule: RuleChain = RuleChain.outerRule(object : DbTestRuleBase() {
         override fun addDatabaseContent() {
             val generator = Random(3435)
-            val standardRound = StandardRound[32L]
+            val standardRound = StandardRoundDAO.loadStandardRoundOrNull(32L)
 
             val (id) = saveDefaultTraining(standardRound!!.id, generator)
 
-            round = Round(standardRound.loadRounds()[0])
+            round = Round(StandardRoundDAO.loadRoundTemplates(standardRound.id)[0])
             round.trainingId = id
             round.comment = ""
-            round.save()
+            RoundDAO.saveRound(round)
 
-            val round2 = Round(standardRound.loadRounds()[1])
+            val round2 = Round(StandardRoundDAO.loadRoundTemplates(standardRound.id)[1])
             round2.trainingId = id
             round2.comment = ""
-            round2.save()
+            RoundDAO.saveRound(round2)
         }
     }).around(activityTestRule)
 

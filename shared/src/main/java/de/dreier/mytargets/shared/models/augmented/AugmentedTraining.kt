@@ -21,7 +21,6 @@ import com.raizlabs.android.dbflow.config.FlowManager
 import com.raizlabs.android.dbflow.kotlinextensions.save
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.db.Round
-import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.models.db.Training
 
 data class AugmentedTraining(
@@ -37,9 +36,9 @@ data class AugmentedTraining(
         return training
     }
 
-    fun initRoundsFromTemplate(standardRound: StandardRound) {
+    fun initRoundsFromTemplate(standardRound: AugmentedStandardRound) {
         rounds = mutableListOf()
-        for (template in standardRound.loadRounds()) {
+        for (template in standardRound.roundTemplates) {
             val round = AugmentedRound(Round(template))
             round.round.trainingId = training.id
             round.round.target = template.targetTemplate

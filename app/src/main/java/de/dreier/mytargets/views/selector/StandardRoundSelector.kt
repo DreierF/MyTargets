@@ -21,28 +21,29 @@ import android.util.AttributeSet
 import android.view.View
 import de.dreier.mytargets.R
 import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding
-import de.dreier.mytargets.shared.models.db.StandardRound
+import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
+import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
 
 class StandardRoundSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null)
-    : SelectorBase<StandardRound>(context, attrs, R.layout.selector_item_image_details, STANDARD_ROUND_REQUEST_CODE) {
+    : SelectorBase<AugmentedStandardRound>(context, attrs, R.layout.selector_item_image_details, STANDARD_ROUND_REQUEST_CODE) {
 
     private lateinit var binding: SelectorItemImageDetailsBinding
 
-    override fun bindView(item: StandardRound) {
+    override fun bindView(item: AugmentedStandardRound) {
         binding = DataBindingUtil.bind(view)
-        binding.name.text = item.name
+        binding.name.text = item.standardRound.name
         binding.details.visibility = View.VISIBLE
         binding.details.text = item.getDescription(context)
         binding.image.setImageDrawable(item.targetDrawable)
     }
 
     fun setItemId(standardRoundId: Long?) {
-        var standardRound = StandardRound[standardRoundId!!]
+        var standardRound = StandardRoundDAO.loadStandardRoundOrNull(standardRoundId!!)
         // If the round has been removed, choose default one
-        if (standardRound == null || standardRound.loadRounds().isEmpty()) {
-            standardRound = StandardRound[32L]
+        if (standardRound == null || StandardRoundDAO.loadRoundTemplates(standardRound.id).isEmpty()) {
+            standardRound = StandardRoundDAO.loadStandardRoundOrNull(32L)
         }
-        setItem(standardRound)
+        setItem(AugmentedStandardRound(standardRound!!))
     }
 
     companion object {

@@ -23,6 +23,7 @@ import de.dreier.mytargets.shared.models.EWeather
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.augmented.AugmentedRound
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
+import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.models.db.*
 import de.dreier.mytargets.shared.targets.models.WAFull
 import de.dreier.mytargets.shared.views.TargetViewBase
@@ -98,7 +99,7 @@ class SimpleDbTestRule : DbTestRuleBase() {
 
     private fun addRandomTraining(seed: Int) {
         val generator = Random(seed.toLong())
-        val standardRound = StandardRound[32L]
+        val standardRound = StandardRoundDAO.loadStandardRoundOrNull(32L)
 
         val training = saveDefaultTraining(standardRound!!.id, generator)
 
@@ -126,7 +127,7 @@ class SimpleDbTestRule : DbTestRuleBase() {
     }
 
     private fun addFullTraining(bow: Bow) {
-        val standardRound = StandardRound[32L]
+        val standardRound = StandardRoundDAO.loadStandardRoundOrNull(32L)
 
         val training = Training()
         training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training)

@@ -25,10 +25,11 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
+import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.models.db.RoundTemplate
 import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.utils.StandardRoundFactory
-import java.util.*
 
 @Migration(version = 9, database = AppDatabase::class)
 class Migration9 : BaseMigration() {
@@ -164,7 +165,7 @@ class Migration9 : BaseMigration() {
         val sr = StandardRound()
         sr.name = "Practice"
         sr.club = 512
-        sr.setRounds(ArrayList())
+        val rounds = mutableListOf<RoundTemplate>()
         if (res.moveToFirst()) {
             do {
                 val template = RoundTemplate()
@@ -174,37 +175,37 @@ class Migration9 : BaseMigration() {
                         (if (target == 4) 5 else target).toLong(), if (target == 5) 1 else 0)
                 template.distance = Dimension.from(res.getInt(2).toFloat(), res.getString(3))
                 template.endCount = res.getInt(4)
-                template.index = sr.loadRounds().size
-                sr.loadRounds().add(template)
+                template.index = rounds.size
+                rounds.add(template)
             } while (res.moveToNext())
         }
         res.close()
 
-        if (sr.loadRounds().isEmpty()) {
+        if (StandardRoundDAO.loadRoundTemplates(sr.id).isEmpty()) {
             return 0L
         }
-        insertStandardRound(db, sr)
+        insertStandardRound(db, AugmentedStandardRound(sr, rounds))
         return sr.id
     }
 
     companion object {
 
-        private fun insertStandardRound(database: DatabaseWrapper, item: StandardRound) {
+        private fun insertStandardRound(database: DatabaseWrapper, item: AugmentedStandardRound) {
             val values = ContentValues()
-            values.put("name", item.name)
-            values.put("club", item.club)
+            values.put("name", item.standardRound.name)
+            values.put("club", item.standardRound.club)
             values.put("indoor", 0)
             if (item.id == 0L) {
-                item.id = database
+                item.standardRound.id = database
                         .insertWithOnConflict("STANDARD_ROUND_TEMPLATE", null, values, SQLiteDatabase.CONFLICT_NONE)
-                for (r in item.loadRounds()) {
+                for (r in item.roundTemplates) {
                     r.standardRound = item.id
                 }
             } else {
                 values.put("_id", item.id)
                 database.insertWithOnConflict("STANDARD_ROUND_TEMPLATE", null, values, SQLiteDatabase.CONFLICT_REPLACE)
             }
-            for (template in item.loadRounds()) {
+            for (template in item.roundTemplates) {
                 template.standardRound = item.id
                 insertRoundTemplate(database, template)
             }

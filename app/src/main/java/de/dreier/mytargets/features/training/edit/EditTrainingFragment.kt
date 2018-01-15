@@ -130,10 +130,10 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
             navigationController.navigateToDistance(selectedItem!!, index)
         }
         binding.standardRound.setOnClickListener { selectedItem, _ ->
-            navigationController.navigateToStandardRoundList(selectedItem!!)
+            navigationController.navigateToStandardRoundList(selectedItem!!.standardRound)
         }
         binding.standardRound.setOnUpdateListener { item ->
-            roundTarget = item!!.loadRounds()[0].targetTemplate
+            roundTarget = item!!.roundTemplates[0].targetTemplate
         }
         binding.changeTargetFace.setOnClickListener {
             navigationController.navigateToTarget(roundTarget!!,
@@ -268,12 +268,13 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
                 training.rounds = ArrayList()
                 training.rounds.add(AugmentedRound(round))
             } else {
-                val standardRound = binding.standardRound.selectedItem
-                SettingsManager.standardRound = standardRound!!.id
-                if (standardRound.id == 0L) {
-                    standardRound.save()
+                val standardRound = binding.standardRound.selectedItem!!
+                if (standardRound.standardRound.id == 0L) {
+                    throw IllegalStateException("I assumed the standard round would have already been saved")
+                    //StandardRoundDAO.saveStandardRound(standardRound.standardRound, standardRound.roundTemplates)
                 }
-                training.training.standardRoundId = standardRound.id
+                SettingsManager.standardRound = standardRound.standardRound.id
+                training.training.standardRoundId = standardRound.standardRound.id
                 training.initRoundsFromTemplate(standardRound)
                 for (round in training.rounds) {
                     round.round.target = roundTarget!!
@@ -308,7 +309,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
         if (resultCode == Activity.RESULT_OK && requestCode == SR_TARGET_REQUEST_CODE && data != null) {
             val target = data.getParcelableExtra<Target>(ITEM)
             val item = binding.standardRound.selectedItem
-            item!!.loadRounds().forEach { it.targetTemplate = target }
+            item!!.roundTemplates.forEach { it.targetTemplate = target }
             binding.standardRound.setItem(item)
         }
     }

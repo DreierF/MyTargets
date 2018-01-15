@@ -18,8 +18,6 @@ package de.dreier.mytargets.shared.models.db
 import android.os.Parcel
 import android.os.Parcelable
 import com.raizlabs.android.dbflow.annotation.*
-import com.raizlabs.android.dbflow.sql.language.SQLite
-import com.raizlabs.android.dbflow.structure.BaseModel
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.IIdSettable
@@ -55,7 +53,7 @@ data class RoundTemplate(
 
         @Column(typeConverter = DimensionConverter::class)
         var targetDiameter: Dimension = Dimension.UNKNOWN
-) : BaseModel(), IIdSettable, Parcelable {
+) : IIdSettable, Parcelable {
     var targetTemplate: Target
         get() = Target(targetId.toLong(), targetScoringStyle, targetDiameter)
         set(targetTemplate) {
@@ -91,14 +89,6 @@ data class RoundTemplate(
     }
 
     companion object {
-        operator fun get(sid: Long, index: Int): RoundTemplate? {
-            return SQLite.select()
-                    .from(RoundTemplate::class.java)
-                    .where(RoundTemplate_Table.standardRound.eq(sid))
-                    .and(RoundTemplate_Table.index.eq(index))
-                    .querySingle()
-        }
-
         @JvmField
         val CREATOR: Parcelable.Creator<RoundTemplate> = object : Parcelable.Creator<RoundTemplate> {
             override fun createFromParcel(source: Parcel): RoundTemplate = RoundTemplate(source)

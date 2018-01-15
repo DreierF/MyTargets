@@ -22,6 +22,7 @@ import com.raizlabs.android.dbflow.kotlinextensions.save
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
+import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.models.db.ArrowImage
 import de.dreier.mytargets.shared.models.db.BowImage
 import de.dreier.mytargets.shared.models.db.EndImage
@@ -109,9 +110,9 @@ object AppDatabase {
     }
 
     private fun fillStandardRound(db: DatabaseWrapper) {
-        val rounds = StandardRoundFactory.initTable()
-        for (round in rounds) {
-            round.save(db)
+        val standardRounds = StandardRoundFactory.initTable()
+        for (standardRound in standardRounds) {
+            StandardRoundDAO.saveStandardRound(db, standardRound.standardRound, standardRound.roundTemplates)
         }
     }
 

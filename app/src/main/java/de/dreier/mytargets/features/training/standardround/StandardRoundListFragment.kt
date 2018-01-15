@@ -36,7 +36,7 @@ import de.dreier.mytargets.databinding.FragmentListBinding
 import de.dreier.mytargets.databinding.ItemStandardRoundBinding
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
-import de.dreier.mytargets.shared.models.db.StandardRound
+import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.utils.StandardRoundFactory
 import de.dreier.mytargets.shared.utils.contains
 import de.dreier.mytargets.utils.SlideInItemAnimator
@@ -44,11 +44,11 @@ import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.multiselector.OnItemLongClickListener
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 
-class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderListAdapter<StandardRound>>(),
-        SearchView.OnQueryTextListener, OnItemLongClickListener<StandardRound> {
+class StandardRoundListFragment : SelectItemFragmentBase<AugmentedStandardRound, HeaderListAdapter<AugmentedStandardRound>>(),
+        SearchView.OnQueryTextListener, OnItemLongClickListener<AugmentedStandardRound> {
 
     @State
-    var currentSelection: StandardRound? = null
+    var currentSelection: AugmentedStandardRound? = null
     private var searchView: SearchView? = null
 
     private lateinit var binding: FragmentListBinding
@@ -81,15 +81,14 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        val data: List<StandardRound>
-        data = if (args != null && args.containsKey(KEY_QUERY)) {
+        val data = if (args != null && args.containsKey(KEY_QUERY)) {
             val query = args.getString(KEY_QUERY)
-            StandardRound.getAllSearch(query!!)
+            StandardRoundDAO.getAllSearch(query!!)
         } else {
-            StandardRound.all
-        }
+            StandardRoundDAO.loadStandardRounds()
+        }.map { AugmentedStandardRound(it) }.toMutableList()
         return {
-            adapter!!.setList(data.toMutableList())
+            adapter!!.setList(data)
             selectItem(binding.recyclerView, currentSelection!!)
         }
     }
@@ -105,15 +104,15 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
         }
     }
 
-    override fun onClick(holder: SelectableViewHolder<StandardRound>, item: StandardRound?) {
+    override fun onClick(holder: SelectableViewHolder<AugmentedStandardRound>, item: AugmentedStandardRound?) {
         currentSelection = item
         super.onClick(holder, item)
     }
 
-    override fun onLongClick(holder: SelectableViewHolder<StandardRound>) {
+    override fun onLongClick(holder: SelectableViewHolder<AugmentedStandardRound>) {
         val item = holder.item!!
-        if (item.club == StandardRoundFactory.CUSTOM) {
-            navigationController.navigateToEditStandardRound(AugmentedStandardRound(item))
+        if (item.standardRound.club == StandardRoundFactory.CUSTOM) {
+            navigationController.navigateToEditStandardRound(item)
                     .forResult(EDIT_STANDARD_ROUND)
                     .start()
         } else {
@@ -124,7 +123,7 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
                     .negativeText(android.R.string.cancel)
                     .onPositive { _, _ ->
                         navigationController
-                                .navigateToEditStandardRound(AugmentedStandardRound(item))
+                                .navigateToEditStandardRound(item)
                                 .forResult(NEW_STANDARD_ROUND)
                                 .start()
                     }
@@ -170,19 +169,19 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
                 currentSelection = data.getParcelableExtra(ITEM)
                 reloadData()
             } else if (resultCode == EditStandardRoundFragment.RESULT_STANDARD_ROUND_DELETED) {
-                currentSelection = StandardRound[32L]
+                currentSelection = AugmentedStandardRound(StandardRoundDAO.loadStandardRound(32L))
                 saveItem()
                 reloadData()
             }
         }
     }
 
-    override fun onSave(): StandardRound {
+    override fun onSave(): AugmentedStandardRound {
         persistSelection(currentSelection!!)
         return currentSelection!!
     }
 
-    private fun persistSelection(standardRound: StandardRound) {
+    private fun persistSelection(standardRound: AugmentedStandardRound) {
         val map = SettingsManager.standardRoundsLastUsed
         val counter = map.get(standardRound.id)
         if (counter == null) {
@@ -196,13 +195,13 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
     private inner class StandardRoundListAdapter internal constructor(
             context: Context,
             usedIds: LongSparseArray<Int>
-    ) : HeaderListAdapter<StandardRound>({ id ->
+    ) : HeaderListAdapter<AugmentedStandardRound>({ id ->
         if (usedIds.contains(id.id)) {
             HeaderListAdapter.SimpleHeader(0L, context.getString(R.string.recently_used))
         } else {
             HeaderListAdapter.SimpleHeader(1L, "")
         }
-    }, compareBy({ usedIds.get(it.id) ?: 0 }, StandardRound::name, StandardRound::id)) {
+    }, compareBy({ usedIds.get(it.standardRound.id) ?: 0 }, { it.standardRound.name }, { it.standardRound.id })) {
 
         override fun getSecondLevelViewHolder(parent: ViewGroup): ViewHolder {
             val itemView = LayoutInflater.from(parent.context)
@@ -211,15 +210,15 @@ class StandardRoundListFragment : SelectItemFragmentBase<StandardRound, HeaderLi
         }
     }
 
-    private inner class ViewHolder(itemView: View) : SelectableViewHolder<StandardRound>(itemView,
+    private inner class ViewHolder(itemView: View) : SelectableViewHolder<AugmentedStandardRound>(itemView,
             selector, this@StandardRoundListFragment, this@StandardRoundListFragment) {
 
         private val binding: ItemStandardRoundBinding = DataBindingUtil.bind(itemView)
 
-        override fun bindItem(item: StandardRound) {
-            binding.name.text = item.name
+        override fun bindItem(item: AugmentedStandardRound) {
+            binding.name.text = item.standardRound.name
 
-            if (item == currentSelection) {
+            if (item.id == currentSelection!!.id) {
                 binding.image.visibility = View.VISIBLE
                 binding.details.visibility = View.VISIBLE
                 binding.details.text = item.getDescription(activity!!)

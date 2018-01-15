@@ -33,6 +33,7 @@ import de.dreier.mytargets.databinding.FragmentEditStandardRoundBinding
 import de.dreier.mytargets.databinding.ItemRoundTemplateBinding
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
+import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.models.db.RoundTemplate
 import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.utils.StandardRoundFactory
@@ -74,7 +75,7 @@ class EditStandardRoundFragment : EditFragmentBase() {
                 } else {
                     standardRound!!.standardRound.id = 0L
                     binding.name.setText(
-                            String.format("%s %s", getString(R.string.custom), standardRound!!.standardRound
+                            "%s %s".format(getString(R.string.custom), standardRound!!.standardRound
                                     .name))
                     // When copying an existing standard round make sure
                     // we don't overwrite the other rounds templates
@@ -125,7 +126,7 @@ class EditStandardRoundFragment : EditFragmentBase() {
     }
 
     private fun onDeleteStandardRound() {
-        standardRound!!.standardRound.delete()
+        StandardRoundDAO.deleteStandardRound(standardRound!!.standardRound)
         navigationController.setResult(RESULT_STANDARD_ROUND_DELETED)
         navigationController.finish()
     }
@@ -133,7 +134,7 @@ class EditStandardRoundFragment : EditFragmentBase() {
     override fun onSave() {
         standardRound!!.standardRound.club = StandardRoundFactory.CUSTOM
         standardRound!!.standardRound.name = binding.name.text.toString()
-        standardRound!!.toStandardRound().save()
+        StandardRoundDAO.saveStandardRound(standardRound!!.standardRound, standardRound!!.roundTemplates)
 
         val round = standardRound!!.roundTemplates[0]
         SettingsManager.shotsPerEnd = round.shotsPerEnd

@@ -20,10 +20,10 @@ import de.dreier.mytargets.shared.SharedApplicationInstance
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Dimension.Unit.*
 import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
 import de.dreier.mytargets.shared.models.db.RoundTemplate
 import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.targets.models.*
-import java.util.*
 
 object StandardRoundFactory {
     const val IFAA = 8
@@ -38,8 +38,8 @@ object StandardRoundFactory {
     private var idCounter: Long = 0
     private var roundCounter: Long = 0
 
-    fun initTable(): List<StandardRound> {
-        val rounds = ArrayList<StandardRound>()
+    fun initTable(): List<AugmentedStandardRound> {
+        val rounds = mutableListOf<AugmentedStandardRound>()
 
         /*
             * 3 arrows = 2 min
@@ -705,13 +705,13 @@ object StandardRoundFactory {
      * @param roundDetails Per round distance, targetSize and number of ends are expected
      * @return The standard round with the specified properties
      */
-    private fun build(institution: Int, name: Int, distanceUnit: Dimension.Unit, targetUnit: Dimension.Unit, target: Long, scoringStyle: Int, shotsPerEnd: Int, vararg roundDetails: Int): StandardRound {
+    private fun build(institution: Int, name: Int, distanceUnit: Dimension.Unit, targetUnit: Dimension.Unit, target: Long, scoringStyle: Int, shotsPerEnd: Int, vararg roundDetails: Int): AugmentedStandardRound {
         val standardRound = StandardRound()
         idCounter++
         standardRound.id = idCounter
         standardRound.name = SharedApplicationInstance.context.getString(name)
         standardRound.club = institution
-        standardRound.setRounds(ArrayList())
+        val rounds = mutableListOf<RoundTemplate>()
         var i = 0
         while (i < roundDetails.size) {
             roundCounter++
@@ -721,16 +721,18 @@ object StandardRoundFactory {
             roundTemplate.distance = Dimension(roundDetails[i].toFloat(), distanceUnit)
             roundTemplate.targetTemplate = Target(target, scoringStyle, Dimension(roundDetails[i + 1].toFloat(), targetUnit))
             roundTemplate.endCount = roundDetails[i + 2]
-            standardRound.insert(roundTemplate)
+            roundTemplate.index = rounds.size
+            roundTemplate.standardRound = standardRound.id
+            rounds.add(roundTemplate)
             i += 3
         }
-        return standardRound
+        return AugmentedStandardRound(standardRound, rounds)
     }
 
-    private fun build(institution: Int, name: Int, distanceUnit: Dimension.Unit, targetUnit: Dimension.Unit, target: Long, scoringStyle: Int, target2: Target, shotsPerEnd: Int, vararg roundDetails: Int): StandardRound {
+    private fun build(institution: Int, name: Int, distanceUnit: Dimension.Unit, targetUnit: Dimension.Unit, target: Long, scoringStyle: Int, target2: Target, shotsPerEnd: Int, vararg roundDetails: Int): AugmentedStandardRound {
         val standardRound = build(institution, name, distanceUnit,
                 targetUnit, target, scoringStyle, shotsPerEnd, *roundDetails)
-        val round2 = standardRound.loadRounds()[1]
+        val round2 = standardRound.roundTemplates[1]
         target2.diameter = round2.targetTemplate.diameter
         round2.targetTemplate = target2
         return standardRound
