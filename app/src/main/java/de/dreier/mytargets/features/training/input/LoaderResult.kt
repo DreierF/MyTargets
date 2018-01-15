@@ -58,10 +58,6 @@ class LoaderResult @JvmOverloads constructor(
             return ends[endIndex]
         }
 
-    init {
-        this.standardRound = training.training.standardRound
-    }
-
     fun setRoundId(roundId: Long) {
         val rounds = training.rounds
         roundIndex = 0

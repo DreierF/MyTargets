@@ -27,6 +27,7 @@ import de.dreier.mytargets.shared.models.augmented.AugmentedRound
 import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
 import de.dreier.mytargets.shared.models.dao.RoundDAO
+import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
@@ -83,7 +84,7 @@ class MobileWearableListener : WearableListenerService() {
                 round.distance = SettingsManager.distance
                 aTraining.rounds = mutableListOf(AugmentedRound(round))
             } else {
-                aTraining.initRoundsFromTemplate(AugmentedStandardRound(lastTraining!!.standardRound!!))
+                aTraining.initRoundsFromTemplate(AugmentedStandardRound(StandardRoundDAO.loadStandardRound(lastTraining!!.standardRoundId!!)))
             }
             ApplicationInstance.wearableClient.sendTrainingTemplate(aTraining)
         }

@@ -21,7 +21,10 @@ import com.raizlabs.android.dbflow.annotation.*
 import com.raizlabs.android.dbflow.structure.BaseModel
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.*
-import de.dreier.mytargets.shared.models.dao.*
+import de.dreier.mytargets.shared.models.dao.ArrowDAO
+import de.dreier.mytargets.shared.models.dao.BowDAO
+import de.dreier.mytargets.shared.models.dao.SignatureDAO
+import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.utils.typeconverters.EWeatherConverter
 import de.dreier.mytargets.shared.utils.typeconverters.LocalDateConverter
 import kotlinx.android.parcel.Parcelize
@@ -90,9 +93,6 @@ data class Training(
             windSpeed = env.windSpeed
             location = env.location
         }
-
-    val standardRound: StandardRound?
-        get() = if (standardRoundId == null) null else StandardRoundDAO.loadStandardRoundOrNull(standardRoundId!!)
 
     val bow: Bow?
         get() = if (bowId == null) null else BowDAO.loadBowOrNull(bowId!!)

@@ -19,6 +19,7 @@ import android.content.Context
 import de.dreier.mytargets.R
 import de.dreier.mytargets.shared.models.dao.EndDAO
 import de.dreier.mytargets.shared.models.dao.RoundDAO
+import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
@@ -73,7 +74,7 @@ class CsvExporter(private val context: Context) {
         // Date
         csv.add(t.date.format(DateTimeFormatter.ISO_LOCAL_DATE))
         // StandardRound
-        csv.add(t.standardRound?.name ?: context.getString(R.string.practice))
+        csv.add(StandardRoundDAO.loadStandardRoundOrNull(t.standardRoundId!!)?.name ?: context.getString(R.string.practice))
         // Indoor
         csv.add(if (t.indoor) context.getString(R.string.indoor) else context.getString(R.string.outdoor))
         // Bow

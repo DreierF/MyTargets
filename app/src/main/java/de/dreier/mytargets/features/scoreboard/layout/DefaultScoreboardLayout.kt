@@ -27,6 +27,7 @@ import de.dreier.mytargets.shared.models.SelectableZone
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.dao.EndDAO
 import de.dreier.mytargets.shared.models.dao.RoundDAO
+import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.models.db.Training
@@ -108,8 +109,8 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
         }
 
         if (training.standardRoundId != null) {
-            val standardRound = training.standardRound
-            info.addLine(R.string.standard_round, standardRound!!.name)
+            val standardRound = StandardRoundDAO.loadStandardRound(training.standardRoundId!!)
+            info.addLine(R.string.standard_round, standardRound.name)
         }
         if (!training.comment.isEmpty() && configuration.showComments) {
             info.addWrappedLine(R.string.comment, training.comment)

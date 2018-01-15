@@ -19,6 +19,7 @@ import android.content.Context
 import android.text.Spanned
 import android.text.TextUtils
 import de.dreier.mytargets.R
+import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.utils.Utils
@@ -54,8 +55,8 @@ object HtmlUtils {
             info.addLine(R.string.arrow, arrow.name)
         }
 
-        val standardRound = training.standardRound
-        if (standardRound != null) {
+        if (training.standardRoundId != null) {
+            val standardRound = StandardRoundDAO.loadStandardRound(training.standardRoundId!!)
             info.addLine(R.string.standard_round, standardRound.name)
         }
     }
