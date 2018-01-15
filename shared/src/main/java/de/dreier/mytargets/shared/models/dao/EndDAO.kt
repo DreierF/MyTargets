@@ -21,11 +21,20 @@ import com.raizlabs.android.dbflow.kotlinextensions.save
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
 import de.dreier.mytargets.shared.AppDatabase
+import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
 import de.dreier.mytargets.shared.models.db.*
 import org.threeten.bp.LocalTime
 
 object EndDAO {
     fun loadEnds(): List<End> = SQLite.select().from(End::class.java).queryList()
+
+    fun loadAugmentedEnds(roundId: Long): MutableList<AugmentedEnd> = SQLite.select()
+            .from(End::class.java)
+            .where(End_Table.round.eq(roundId))
+            .orderBy(End_Table.index, true)
+            .queryList()
+            .map { AugmentedEnd(it) }
+            .toMutableList()
 
     fun loadEnd(id: Long): End = SQLite.select()
             .from(End::class.java)

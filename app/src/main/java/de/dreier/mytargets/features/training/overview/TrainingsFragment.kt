@@ -32,6 +32,7 @@ import de.dreier.mytargets.databinding.ItemTrainingBinding
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.features.training.edit.EditTrainingFragment.Companion.CREATE_FREE_TRAINING_ACTION
 import de.dreier.mytargets.features.training.edit.EditTrainingFragment.Companion.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION
+import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.utils.DividerItemDecoration
 import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_CREATE_TRAINING_FROM_REMOTE
@@ -151,9 +152,10 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
     }
 
     override fun deleteItem(item: Training): () -> Training {
+        val training = AugmentedTraining(item)
         item.delete()
         return {
-            item.saveRecursively()
+            training.saveRecursively()
             item
         }
     }

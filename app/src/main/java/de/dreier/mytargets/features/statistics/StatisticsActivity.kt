@@ -40,6 +40,7 @@ import de.dreier.mytargets.databinding.ActivityStatisticsBinding
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.dao.ArrowDAO
 import de.dreier.mytargets.shared.models.dao.BowDAO
+import de.dreier.mytargets.shared.models.dao.RoundDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.utils.toSparseArray
@@ -88,7 +89,7 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
         val roundIds = intent.getLongArrayExtra(ROUND_IDS)
         return object : AsyncTaskLoader<List<Pair<Training, Round>>>(this) {
             override fun loadInBackground(): List<Pair<Training, Round>> {
-                val rounds = Round.getAll(roundIds)
+                val rounds = RoundDAO.loadRounds(roundIds)
                 val trainingsMap = rounds.map { (_, trainingId) -> trainingId!! }
                         .distinct()
                         .map { id -> Pair(id, Training[id]!!) }

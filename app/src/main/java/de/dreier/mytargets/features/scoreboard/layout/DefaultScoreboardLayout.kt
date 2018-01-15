@@ -26,6 +26,7 @@ import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.SelectableZone
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.dao.EndDAO
+import de.dreier.mytargets.shared.models.dao.RoundDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.models.db.Training
@@ -219,7 +220,7 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
         val table = Table(false)
         appendTableHeader(table, round.shotsPerEnd)
         var carry = 0
-        for (end in round.loadEnds()) {
+        for (end in RoundDAO.loadEnds(round.id)) {
             val row = table.startRow()
             row.addCell(end.index + 1)
             var sum = 0
@@ -277,7 +278,7 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
 
         var commentsCount = 0
         for (round in rounds) {
-            val ends = round.loadEnds()
+            val ends = RoundDAO.loadEnds(round.id)
             for ((_, index, _, _, _, comment) in ends) {
                 if (!TextUtils.isEmpty(comment)) {
                     comments.startRow()

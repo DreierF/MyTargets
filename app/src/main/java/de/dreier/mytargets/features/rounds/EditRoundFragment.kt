@@ -26,6 +26,7 @@ import de.dreier.mytargets.base.fragments.EditableListFragmentBase.Companion.ITE
 import de.dreier.mytargets.databinding.FragmentEditRoundBinding
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.features.training.target.TargetListFragment
+import de.dreier.mytargets.shared.models.dao.RoundDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.utils.ToolbarUtils
@@ -76,11 +77,11 @@ class EditRoundFragment : EditFragmentBase() {
             loadRoundDefaultValues()
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_round)
-            val round = Round[roundId!!]
-            binding.distance.setItem(round!!.distance)
+            val round = RoundDAO.loadRound(roundId!!)
+            binding.distance.setItem(round.distance)
             binding.target.setItem(round.target)
             binding.notEditable.visibility = View.GONE
-            if (round.training.standardRoundId != null) {
+            if (Training[round.trainingId!!]!!.standardRoundId != null) {
                 binding.distanceLayout.visibility = View.GONE
             }
         }
@@ -109,7 +110,7 @@ class EditRoundFragment : EditFragmentBase() {
     private fun onSaveRound(): Round? {
         val training = Training[trainingId]
 
-        val round: Round?
+        val round: Round
         if (roundId == null) {
             round = Round()
             round.trainingId = trainingId
@@ -117,11 +118,11 @@ class EditRoundFragment : EditFragmentBase() {
             round.maxEndCount = null
             round.index = training!!.loadRounds().size
         } else {
-            round = Round[roundId!!]
+            round = RoundDAO.loadRound(roundId!!)
         }
-        round!!.distance = binding.distance.selectedItem!!
+        round.distance = binding.distance.selectedItem!!
         round.target = binding.target.selectedItem!!
-        round.save()
+        RoundDAO.saveRound(round)
         return round
     }
 

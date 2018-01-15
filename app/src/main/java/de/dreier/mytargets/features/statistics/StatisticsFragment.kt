@@ -43,6 +43,7 @@ import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.SelectableZone
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.dao.EndDAO
+import de.dreier.mytargets.shared.models.dao.RoundDAO
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
@@ -82,7 +83,7 @@ class StatisticsFragment : FragmentBase() {
     private val hitMissText: String
         get() {
             val shots = rounds!!
-                    .flatMap { r -> r.loadEnds() }
+                    .flatMap { r -> RoundDAO.loadEnds(r.id) }
                     .flatMap { EndDAO.loadShots(it.id) }
                     .filter { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }
             val missCount = shots.filter { (_, _, _, _, _, scoringRing) -> scoringRing == Shot.MISS }.count().toLong()
@@ -106,7 +107,7 @@ class StatisticsFragment : FragmentBase() {
             val values = rounds!!
                     .map { r -> Pair(trainingsMap[r.trainingId]!!.date, r) }
                     .flatMap { roundIdPair ->
-                        roundIdPair.second.loadEnds()
+                        RoundDAO.loadEnds(roundIdPair.second.id)
                                 .map { end -> Pair(roundIdPair.first, end) }
                     }
                     .map { endPair -> getPairEndSummary(target!!, endPair.second, endPair.first) }
@@ -163,7 +164,7 @@ class StatisticsFragment : FragmentBase() {
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
         rounds = roundIds!!
-                .map { Round[it] }
+                .map { RoundDAO.loadRoundOrNull(it) }
                 .filterNotNull()
 
         val data = ArrowStatistic.getAll(target!!, rounds!!)
@@ -183,7 +184,7 @@ class StatisticsFragment : FragmentBase() {
 
     private fun showDispersionView() {
         val exactShots = rounds!!
-                .flatMap { it.loadEnds() }
+                .flatMap { RoundDAO.loadEnds(it.id) }
                 .filter { (_, _, _, exact) -> exact }
                 .flatMap { EndDAO.loadShots(it.id) }
                 .filter { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }

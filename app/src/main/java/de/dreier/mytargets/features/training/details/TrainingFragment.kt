@@ -31,6 +31,7 @@ import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentTrainingBinding
 import de.dreier.mytargets.databinding.ItemRoundBinding
 import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.shared.models.dao.RoundDAO
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
@@ -185,9 +186,10 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
     }
 
     override fun deleteItem(item: Round): () -> Round {
-        item.delete()
+        val round = RoundDAO.loadAugmentedRound(item)
+        RoundDAO.deleteRound(item)
         return {
-            item.saveRecursively()
+            RoundDAO.insertRound(round)
             item
         }
     }

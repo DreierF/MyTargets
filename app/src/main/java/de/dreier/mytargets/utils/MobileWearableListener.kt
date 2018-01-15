@@ -25,6 +25,7 @@ import de.dreier.mytargets.shared.models.TimerSettings
 import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
 import de.dreier.mytargets.shared.models.augmented.AugmentedRound
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
+import de.dreier.mytargets.shared.models.dao.RoundDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.utils.unmarshall
@@ -97,7 +98,7 @@ class MobileWearableListener : WearableListenerService() {
 
     private fun endUpdated(messageEvent: MessageEvent) {
         val (end, shots) = messageEvent.data.unmarshall(AugmentedEnd.CREATOR)
-        val round = AugmentedRound(Round[end.roundId!!]!!)
+        val round = AugmentedRound(RoundDAO.loadRound(end.roundId!!))
         val newEnd = getLastEmptyOrCreateNewEnd(round)
         newEnd.end.exact = false
         newEnd.shots = shots

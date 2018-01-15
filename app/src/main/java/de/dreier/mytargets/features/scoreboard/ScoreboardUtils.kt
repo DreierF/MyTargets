@@ -29,6 +29,7 @@ import de.dreier.mytargets.features.scoreboard.builder.ViewBuilder
 import de.dreier.mytargets.features.scoreboard.layout.DefaultScoreboardLayout
 import de.dreier.mytargets.features.scoreboard.pdf.ViewPrintDocumentAdapter
 import de.dreier.mytargets.features.scoreboard.pdf.ViewToPdfWriter
+import de.dreier.mytargets.shared.models.dao.RoundDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.utils.writeToJPGFile
@@ -46,7 +47,7 @@ object ScoreboardUtils {
         val rounds: List<Round>? = if (roundId == -1L) {
             training.loadRounds()
         } else {
-            listOf(Round[roundId]!!)
+            listOf(RoundDAO.loadRound(roundId))
         }
 
         val scoreboardLayout = DefaultScoreboardLayout(context, locale, configuration)

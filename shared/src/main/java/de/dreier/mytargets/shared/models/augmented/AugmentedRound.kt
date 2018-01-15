@@ -18,6 +18,7 @@ package de.dreier.mytargets.shared.models.augmented
 import android.os.Parcel
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.Score
+import de.dreier.mytargets.shared.models.dao.RoundDAO
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
@@ -27,7 +28,7 @@ data class AugmentedRound(
         val round: Round,
         var ends: MutableList<AugmentedEnd>
 ) : Parcelable {
-    constructor(round: Round) : this(round, round.loadEnds()
+    constructor(round: Round) : this(round, RoundDAO.loadEnds(round.id)
             .map { AugmentedEnd(it) }
             .toMutableList())
 

@@ -34,6 +34,7 @@ import de.dreier.mytargets.shared.models.Dimension.Unit.METER
 import de.dreier.mytargets.shared.models.EWeather
 import de.dreier.mytargets.shared.models.dao.BowDAO
 import de.dreier.mytargets.shared.models.dao.EndDAO
+import de.dreier.mytargets.shared.models.dao.RoundDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.test.base.InstrumentedTestBase
@@ -124,7 +125,7 @@ class MigrationTest : InstrumentedTestBase() {
         Truth.assertThat(rounds[1].target.id).isEqualTo(0)
         Truth.assertThat(rounds[1].target.scoringStyleIndex).isEqualTo(0)
         Truth.assertThat(rounds[1].target.diameter).isEqualTo(Dimension(60f, CENTIMETER))
-        Truth.assertThat(rounds[1].loadEnds()).hasSize(2)
+        Truth.assertThat(RoundDAO.loadEnds(rounds[1].id)).hasSize(2)
     }
 
     private fun assertRound11(rounds: List<Round>) {
@@ -139,7 +140,7 @@ class MigrationTest : InstrumentedTestBase() {
         Truth.assertThat(round1.target.id).isEqualTo(1)
         Truth.assertThat(round1.target.scoringStyleIndex).isEqualTo(2)
         Truth.assertThat(round1.target.diameter).isEqualTo(Dimension(40f, CENTIMETER))
-        val ends = round1.loadEnds()
+        val ends = RoundDAO.loadEnds(round1.id)
         Truth.assertThat(ends).hasSize(3)
         Truth.assertThat(ends[0].id).isEqualTo(1L)
         Truth.assertThat(ends[0].roundId).isEqualTo(1L)
@@ -175,8 +176,8 @@ class MigrationTest : InstrumentedTestBase() {
         Truth.assertThat(training.windSpeed).isEqualTo(3)
         Truth.assertThat(training.location).isEqualTo("Neufahrn bei Freising")
         val rounds = training.loadRounds()
-        Truth.assertThat(rounds[0].loadEnds()).hasSize(6)
-        Truth.assertThat(rounds[1].loadEnds()).hasSize(6)
+        Truth.assertThat(RoundDAO.loadEnds(rounds[0].id)).hasSize(6)
+        Truth.assertThat(RoundDAO.loadEnds(rounds[1].id)).hasSize(6)
     }
 
     @Test

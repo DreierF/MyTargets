@@ -19,6 +19,7 @@ import android.support.v4.util.Pair
 import de.dreier.mytargets.shared.models.SelectableZone
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.dao.EndDAO
+import de.dreier.mytargets.shared.models.dao.RoundDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
 import java.util.*
@@ -51,7 +52,7 @@ object ScoreUtils {
     private fun getRoundScores(rounds: List<Round>): Map<SelectableZone, Int> {
         val t = rounds[0].target
         val scoreCount = getAllPossibleZones(t)
-        rounds.flatMap { it.loadEnds() }
+        rounds.flatMap { RoundDAO.loadEnds(it.id) }
                 .forEach {
                     EndDAO.loadShots(it.id).forEach { s ->
                                 if (s.scoringRing != Shot.NOTHING_SELECTED) {

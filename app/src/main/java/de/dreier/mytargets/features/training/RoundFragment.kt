@@ -32,13 +32,11 @@ import de.dreier.mytargets.databinding.ItemEndBinding
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
 import de.dreier.mytargets.shared.models.dao.EndDAO
+import de.dreier.mytargets.shared.models.dao.RoundDAO
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
-import de.dreier.mytargets.utils.DividerItemDecoration
-import de.dreier.mytargets.utils.MobileWearableClient
+import de.dreier.mytargets.utils.*
 import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
-import de.dreier.mytargets.utils.SlideInItemAnimator
-import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 import java.util.*
 
@@ -81,8 +79,7 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false)
         binding.recyclerView.setHasFixedSize(true)
-        binding.recyclerView.addItemDecoration(
-                DividerItemDecoration(context!!, R.drawable.full_divider))
+        binding.recyclerView.addItemDecoration(DividerItemDecoration(context!!, R.drawable.full_divider))
         adapter = EndAdapter()
         binding.recyclerView.itemAnimator = SlideInItemAnimator()
         binding.recyclerView.adapter = adapter
@@ -94,9 +91,7 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
                     .start()
         }
 
-        if (arguments != null) {
-            roundId = arguments!!.getLong(ROUND_ID, -1)
-        }
+        roundId = arguments!!.getLongOrNull(ROUND_ID) ?: throw IllegalStateException("Missing required argument round id!")
 
         setHasOptionsMenu(true)
         return binding.root
@@ -108,8 +103,8 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        round = Round[roundId]
-        val ends = round!!.loadEnds().map { AugmentedEnd(it) }.toMutableList()
+        round = RoundDAO.loadRound(roundId)
+        val ends = RoundDAO.loadEnds(round!!.id).map { AugmentedEnd(it) }.toMutableList()
         val showFab = round!!.maxEndCount == null || ends.size < round!!.maxEndCount!!
 
         return {
@@ -117,8 +112,7 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
             binding.fab.visibility = if (showFab) View.VISIBLE else View.GONE
 
             ToolbarUtils.setTitle(this@RoundFragment,
-                    String.format(Locale.US, "%s %d", getString(R.string.round),
-                            round!!.index + 1))
+                    String.format(Locale.US, "%s %d", getString(R.string.round), round!!.index + 1))
             ToolbarUtils.setSubtitle(this@RoundFragment, round!!.reachedScore.toString())
         }
     }
@@ -130,7 +124,7 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_statistics -> {
-                navigationController.navigateToStatistics(listOf(round!!.id))
+                navigationController.navigateToStatistics(listOf(roundId))
                 return true
             }
             R.id.action_comment -> {
@@ -139,7 +133,7 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
                         .inputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
                         .input("", round!!.comment) { _, input ->
                             round!!.comment = input.toString()
-                            round!!.save()
+                            RoundDAO.saveRound(round!!)
                         }
                         .negativeText(android.R.string.cancel)
                         .show()

@@ -19,6 +19,8 @@ import android.annotation.SuppressLint
 import android.os.Parcelable
 import com.raizlabs.android.dbflow.annotation.*
 import com.raizlabs.android.dbflow.config.FlowManager
+import com.raizlabs.android.dbflow.kotlinextensions.delete
+import com.raizlabs.android.dbflow.kotlinextensions.save
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import com.raizlabs.android.dbflow.structure.BaseModel
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
@@ -201,18 +203,6 @@ data class Training(
         loadRounds().forEach { round -> round.delete(databaseWrapper) }
         super.delete(databaseWrapper)
         return true
-    }
-
-    fun saveRecursively() {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.saveRecursively(it) })
-    }
-
-    private fun saveRecursively(databaseWrapper: DatabaseWrapper) {
-        super.save(databaseWrapper)
-        loadRounds().forEach { s ->
-            s.trainingId = id
-            s.saveRecursively(databaseWrapper)
-        }
     }
 
     fun loadRounds(databaseWrapper: DatabaseWrapper): List<Round> {
