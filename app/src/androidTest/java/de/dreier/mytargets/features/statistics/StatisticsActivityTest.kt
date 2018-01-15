@@ -47,7 +47,7 @@ class StatisticsActivityTest : UITestBase() {
     fun navigationTest() {
         // Add round ids
         val roundIds = TrainingDAO.loadTrainings()
-                .flatMap { t -> t.loadRounds() }
+                .flatMap { t -> TrainingDAO.loadRounds(t.id) }
                 .map { it.id }
                 .toList()
         val i = Intent()

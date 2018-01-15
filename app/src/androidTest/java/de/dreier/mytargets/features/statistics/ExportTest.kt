@@ -39,7 +39,7 @@ class ExportTest : InstrumentedTestBase() {
     fun testDataExport() {
         val writer = StringWriter()
         val roundIds = TrainingDAO.loadTrainings()
-                .flatMap { it.loadRounds() }
+                .flatMap { TrainingDAO.loadRounds(it.id) }
                 .map { it.id }
                 .sorted()
                 .toMutableList()

@@ -112,7 +112,7 @@ class MigrationTest : InstrumentedTestBase() {
         Truth.assertThat(training.windDirection).isEqualTo(0)
         Truth.assertThat(training.windSpeed).isEqualTo(3)
         Truth.assertThat(training.location).isEqualTo("Neufahrn bei Freising")
-        val rounds = training.loadRounds()
+        val rounds = TrainingDAO.loadRounds(training.id)
 
         assertRound11(rounds)
 
@@ -176,7 +176,7 @@ class MigrationTest : InstrumentedTestBase() {
         Truth.assertThat(training.windDirection).isEqualTo(0)
         Truth.assertThat(training.windSpeed).isEqualTo(3)
         Truth.assertThat(training.location).isEqualTo("Neufahrn bei Freising")
-        val rounds = training.loadRounds()
+        val rounds = TrainingDAO.loadRounds(training.id)
         Truth.assertThat(RoundDAO.loadEnds(rounds[0].id)).hasSize(6)
         Truth.assertThat(RoundDAO.loadEnds(rounds[1].id)).hasSize(6)
     }

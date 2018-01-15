@@ -80,7 +80,7 @@ class CsvExporter(private val context: Context) {
         csv.add(if (t.bow == null) "" else t.bow!!.name)
         // Arrow
         csv.add(if (t.arrow == null) "" else t.arrow!!.name)
-        t.loadRounds()
+        TrainingDAO.loadRounds(t.id)
                 .filter { roundIds.contains(it.id) }
                 .forEach { addRound(csv, it) }
         csv.exitScope()

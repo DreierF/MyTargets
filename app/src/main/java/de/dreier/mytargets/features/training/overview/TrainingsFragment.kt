@@ -41,7 +41,6 @@ import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE
 import de.dreier.mytargets.utils.SlideInItemAnimator
 import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
-import java.util.*
 
 /**
  * Shows an overview over all training days
@@ -128,8 +127,8 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
         return when (item.itemId) {
             R.id.action_statistics -> {
                 navigationController.navigateToStatistics(TrainingDAO.loadTrainings()
-                                .flatMap { training -> training.loadRounds() }
-                                .map { it.id })
+                        .flatMap { training -> TrainingDAO.loadRounds(training.id) }
+                        .map { it.id })
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -144,7 +143,7 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
     private fun onStatistics(ids: List<Long>) {
         navigationController.navigateToStatistics(ids
                 .map { TrainingDAO.loadTrainingOrNull(it)!! }
-                .flatMap { t -> t.loadRounds() }
+                .flatMap { t -> TrainingDAO.loadRounds(t.id) }
                 .map { it.id })
     }
 
@@ -154,9 +153,9 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
 
     override fun deleteItem(item: Training): () -> Training {
         val training = AugmentedTraining(item)
-        item.delete()
+        TrainingDAO.deleteTraining(item)
         return {
-            training.saveRecursively()
+            TrainingDAO.insertTraining(training)
             item
         }
     }
@@ -173,7 +172,8 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
     private inner class TrainingAdapter internal constructor(context: Context
     ) : ExpandableListAdapter<Header, Training>({ child ->
         Utils.getMonthHeader(context, child.date)
-    }, Collections.reverseOrder(), Collections.reverseOrder()) {
+    }, compareByDescending(Header::id),
+            compareByDescending(Training::date).thenByDescending(Training::id)) {
 
         override fun getSecondLevelViewHolder(parent: ViewGroup): ViewHolder {
             val itemView = LayoutInflater.from(parent.context)

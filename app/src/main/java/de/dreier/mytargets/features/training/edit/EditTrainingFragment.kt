@@ -294,7 +294,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
             navigationController.navigateToCreateEnd(round.round)
         } else {
             // Edit training
-            training.toTraining().update()
+            TrainingDAO.saveTraining(training.training)
             activity!!.overridePendingTransition(R.anim.left_in, R.anim.right_out)
         }
     }

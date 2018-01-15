@@ -86,9 +86,16 @@ object TrainingDAO {
     }
 
     fun insertTraining(training: AugmentedTraining) {
-        TrainingDAO.insertTraining(training.training, training.rounds.map { it.round })
-        training.rounds.forEach {
-            RoundDAO.saveRound(it)
+        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db->
+            training.training.save(db)
+            training.rounds.forEach { round ->
+                round.round.trainingId = training.training.id
+                round.save(db)
+                for (end in round.ends) {
+                    end.end.roundId = round.round.id
+                    end.save(db)
+                }
+            }
         }
     }
 

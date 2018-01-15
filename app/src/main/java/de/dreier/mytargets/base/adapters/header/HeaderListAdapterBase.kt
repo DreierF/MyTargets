@@ -177,7 +177,7 @@ abstract class HeaderListAdapterBase<P : IIdProvider, C : IIdProvider, H : Heade
             get() = 1 + children.size
 
         fun add(item: CHILD) {
-            val pos = Collections.binarySearch(children, item, childComparator)
+            val pos = children.binarySearch(item, childComparator)
             if (pos < 0) {
                 children.add(-pos - 1, item)
             } else {

@@ -116,7 +116,7 @@ class EditRoundFragment : EditFragmentBase() {
             round.trainingId = trainingId
             round.shotsPerEnd = binding.arrows.progress
             round.maxEndCount = null
-            round.index = training!!.loadRounds().size
+            round.index = TrainingDAO.loadRounds(training!!.id).size
         } else {
             round = RoundDAO.loadRound(roundId!!)
         }

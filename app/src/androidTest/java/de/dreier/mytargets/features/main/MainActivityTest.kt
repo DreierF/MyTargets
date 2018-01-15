@@ -137,7 +137,7 @@ class MainActivityTest : UITestBase() {
         intended(hasClass(StatisticsActivity::class.java))
 
         var expectedRoundIds = TrainingDAO.loadTrainings()
-                .flatMap { t -> t.loadRounds() }
+                .flatMap { t -> TrainingDAO.loadRounds(t.id) }
                 .map { it.id }
                 .toSet()
         intended(allOf(hasClass(StatisticsActivity::class.java),
@@ -167,7 +167,7 @@ class MainActivityTest : UITestBase() {
         val trainings = TrainingDAO.loadTrainings()
                 .sortedWith(Collections.reverseOrder())
         expectedRoundIds = listOf(trainings[1], trainings[2])
-                .flatMap { t -> t.loadRounds() }
+                .flatMap { t -> TrainingDAO.loadRounds(t.id) }
                 .map { it.id }
                 .toSet()
 

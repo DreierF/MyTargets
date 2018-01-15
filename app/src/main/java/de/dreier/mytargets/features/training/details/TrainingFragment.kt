@@ -109,7 +109,7 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
         training = TrainingDAO.loadTrainingOrNull(trainingId)
-        val rounds = training!!.loadRounds() //FIXME can be null!?
+        val rounds = TrainingDAO.loadRounds(training!!.id) //FIXME can be null!?
         return {
             // Hide fab for standard rounds
             val supportsDeletion = training!!.standardRoundId == null
@@ -154,7 +154,7 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
                 return true
             }
             R.id.action_statistics -> {
-                navigationController.navigateToStatistics(training!!.loadRounds().map { it.id })
+                navigationController.navigateToStatistics(TrainingDAO.loadRounds(training!!.id).map { it.id })
                 return true
             }
             R.id.action_comment -> {

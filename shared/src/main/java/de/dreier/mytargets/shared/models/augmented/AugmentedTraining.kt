@@ -17,9 +17,7 @@ package de.dreier.mytargets.shared.models.augmented
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.raizlabs.android.dbflow.config.FlowManager
-import com.raizlabs.android.dbflow.kotlinextensions.save
-import de.dreier.mytargets.shared.AppDatabase
+import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 
@@ -27,14 +25,9 @@ data class AugmentedTraining(
         val training: Training,
         var rounds: MutableList<AugmentedRound>
 ) : Parcelable {
-    constructor(training: Training) : this(training, training.loadRounds()
+    constructor(training: Training) : this(training, TrainingDAO.loadRounds(training.id)
             .map { AugmentedRound(it) }
             .toMutableList())
-
-    fun toTraining(): Training {
-        training.rounds = rounds.map { it.round }.toMutableList()
-        return training
-    }
 
     fun initRoundsFromTemplate(standardRound: AugmentedStandardRound) {
         rounds = mutableListOf()
@@ -64,20 +57,6 @@ data class AugmentedTraining(
         val CREATOR: Parcelable.Creator<AugmentedTraining> = object : Parcelable.Creator<AugmentedTraining> {
             override fun createFromParcel(source: Parcel): AugmentedTraining = AugmentedTraining(source)
             override fun newArray(size: Int): Array<AugmentedTraining?> = arrayOfNulls(size)
-        }
-    }
-
-    fun saveRecursively() {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction {
-            training.save(it)
-            rounds.forEach { round ->
-                round.round.trainingId = training.id
-                round.save(it)
-                for (end in round.ends) {
-                    end.end.roundId = round.round.id
-                    end.save(it)
-                }
-            }
         }
     }
 }

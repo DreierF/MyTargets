@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.base.adapters.header
 
-
 import android.databinding.DataBindingUtil
 import android.view.LayoutInflater
 import android.view.View
@@ -25,7 +24,6 @@ import de.dreier.mytargets.databinding.ItemHeaderExpandableBinding
 import de.dreier.mytargets.shared.models.IIdProvider
 import de.dreier.mytargets.utils.multiselector.ExpandableHeaderBindingHolder
 import de.dreier.mytargets.utils.multiselector.ItemBindingHolder
-import java.util.*
 
 typealias PartitionDelegate<PARENT, CHILD> = (CHILD) -> PARENT
 abstract class ExpandableListAdapter<P : IIdProvider, C : IIdProvider>(

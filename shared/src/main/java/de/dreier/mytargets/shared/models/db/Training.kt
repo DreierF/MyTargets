@@ -18,17 +18,12 @@ package de.dreier.mytargets.shared.models.db
 import android.annotation.SuppressLint
 import android.os.Parcelable
 import com.raizlabs.android.dbflow.annotation.*
-import com.raizlabs.android.dbflow.config.FlowManager
-import com.raizlabs.android.dbflow.kotlinextensions.delete
-import com.raizlabs.android.dbflow.sql.language.SQLite
 import com.raizlabs.android.dbflow.structure.BaseModel
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.*
 import de.dreier.mytargets.shared.models.dao.*
 import de.dreier.mytargets.shared.utils.typeconverters.EWeatherConverter
 import de.dreier.mytargets.shared.utils.typeconverters.LocalDateConverter
-import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -84,10 +79,7 @@ data class Training(
 
         @ForeignKey(tableClass = Signature::class, references = [(ForeignKeyReference(columnName = "witnessSignature", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
         var witnessSignatureId: Long? = null
-) : BaseModel(), IIdSettable, Comparable<Training>, Parcelable {
-
-    @IgnoredOnParcel
-    var rounds: MutableList<Round>? = null
+) : BaseModel(), IIdSettable, Parcelable {
 
     var environment: Environment
         get() = Environment(indoor, weather, windSpeed, windDirection, location)
@@ -142,44 +134,7 @@ data class Training(
         get() = date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
 
     val reachedScore: Score
-        get() = loadRounds()
+        get() = TrainingDAO.loadRounds(id)
                 .map { it.reachedScore }
                 .sum()
-
-    @OneToMany(methods = [], variableName = "rounds")
-    fun loadRounds(): MutableList<Round> {
-        if (rounds == null) {
-            rounds = SQLite.select()
-                    .from(Round::class.java)
-                    .where(Round_Table.training.eq(id))
-                    .orderBy(Round_Table.index, true)
-                    .queryList().toMutableList()
-        }
-        return rounds!!
-    }
-
-    override fun compareTo(other: Training): Int {
-        return if (date == other.date) {
-            (id - other.id).toInt()
-        } else date.compareTo(other.date)
-    }
-
-    override fun delete(): Boolean {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.delete(it) })
-        return true
-    }
-
-    override fun delete(databaseWrapper: DatabaseWrapper): Boolean{
-        loadRounds().forEach { round -> round.delete(databaseWrapper) }
-        super.delete(databaseWrapper)
-        return true
-    }
-
-    fun loadRounds(databaseWrapper: DatabaseWrapper): List<Round> {
-        return SQLite.select()
-                .from(Round::class.java)
-                .where(Round_Table.training.eq(id))
-                .orderBy(Round_Table.index, true)
-                .queryList(databaseWrapper)
-    }
 }
