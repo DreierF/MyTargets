@@ -49,12 +49,8 @@ import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.utils.Color
-import de.dreier.mytargets.shared.utils.ScoreUtils
-import de.dreier.mytargets.utils.MobileWearableClient
+import de.dreier.mytargets.utils.*
 import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
-import de.dreier.mytargets.utils.RoundedTextDrawable
-import de.dreier.mytargets.utils.ToolbarUtils
-import de.dreier.mytargets.utils.Utils
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
@@ -110,7 +106,7 @@ class StatisticsFragment : FragmentBase() {
                         RoundDAO.loadEnds(roundIdPair.second.id)
                                 .map { end -> Pair(roundIdPair.first, end) }
                     }
-                    .map { endPair -> getPairEndSummary(target!!, endPair.second, endPair.first) }
+                    .map { endPair -> getPairEndSummary(endPair.second, endPair.first) }
                     .sortedBy { pair -> pair.second }
             if (values.isEmpty()) {
                 return null
@@ -382,9 +378,8 @@ class StatisticsFragment : FragmentBase() {
         return eval
     }
 
-    private fun getPairEndSummary(target: Target, end: End, trainingDate: LocalDate): Pair<Float, LocalDateTime> {
-        val reachedScore = target.getReachedScore(EndDAO.loadShots(end.id))
-        return Pair(reachedScore.shotAverage, LocalDateTime.of(trainingDate, end.saveTime!!))
+    private fun getPairEndSummary(end: End, trainingDate: LocalDate): Pair<Float, LocalDateTime> {
+        return Pair(end.score.shotAverage, LocalDateTime.of(trainingDate, end.saveTime!!))
     }
 
     private fun convertToLineData(values: List<Pair<Float, LocalDateTime>>, evaluator: Evaluator): LineDataSet {

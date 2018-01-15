@@ -23,65 +23,65 @@ import java.util.*
 @SuppressLint("ParcelCreator")
 @Parcelize
 data class Score(
-        var reachedScore: Int = 0,
-        var totalScore: Int = 0,
+        var reachedPoints: Int = 0,
+        var totalPoints: Int = 0,
         var shotCount: Int = 0
 ) : Parcelable {
 
     constructor() : this(
-            reachedScore = 0,
-            totalScore = 0,
+            reachedPoints = 0,
+            totalPoints = 0,
             shotCount = 0
     )
 
     constructor(reachedScore: Int, totalScore: Int) : this(
-            reachedScore = reachedScore,
-            totalScore = totalScore,
+            reachedPoints = reachedScore,
+            totalPoints = totalScore,
             shotCount = 1
     )
 
     constructor(totalScore: Int) : this(
-            reachedScore = 0,
-            totalScore = totalScore,
+            reachedPoints = 0,
+            totalPoints = totalScore,
             shotCount = 0
     )
 
     val shotAverage: Float
         get() = if (shotCount == 0) {
             -1f
-        } else reachedScore / shotCount.toFloat()
+        } else reachedPoints / shotCount.toFloat()
 
     /**
      * @return The percent of points reached relative to the total reachable score.
      */
     val percent: Float
-        get() = if (totalScore > 0) {
-            reachedScore / totalScore.toFloat()
+        get() = if (totalPoints > 0) {
+            reachedPoints / totalPoints.toFloat()
         } else 0f
 
     private val percentString: String
-        get() = if (totalScore > 0) "${reachedScore * 100 / totalScore}%" else ""
+        get() = if (totalPoints > 0) "${reachedPoints * 100 / totalPoints}%" else ""
 
     fun add(other: Score): Score {
-        reachedScore += other.reachedScore
-        totalScore += other.totalScore
+        reachedPoints += other.reachedPoints
+        totalPoints += other.totalPoints
         shotCount += other.shotCount
         return this
     }
 
     override fun toString(): String {
-        return "$reachedScore/$totalScore"
+        return "$reachedPoints/$totalPoints"
     }
 
     fun format(locale: Locale, config: Configuration): String {
         if (!config.showReachedScore) {
             return ""
         }
-        var score = reachedScore.toString()
+        var score = reachedPoints.toString()
         if (config.showTotalScore) {
-            score += "/" + totalScore
+            score += "/" + totalPoints
         }
-        if ((config.showPercentage || config.showAverage) && totalScore > 0) {
+        if ((config.showPercentage || config.showAverage) && totalPoints > 0) {
             score += " ("
             if (config.showPercentage) {
                 score += percentString

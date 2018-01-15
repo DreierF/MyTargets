@@ -30,7 +30,7 @@ import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle
-import de.dreier.mytargets.shared.utils.ScoreUtils
+import de.dreier.mytargets.utils.ScoreUtils
 import java.util.*
 
 class DefaultScoreboardLayout(private val context: Context, private val locale: Locale, private val configuration: ScoreboardConfiguration) {
@@ -313,13 +313,13 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
             info.addLine(R.string.licence_number, licenceNumber)
         }
         if (rounds.size > 1) {
-            info.addLine(R.string.points, training.reachedScore
+            info.addLine(R.string.points, training.score
                     .format(locale, SettingsManager.scoreConfiguration))
         }
         info.addLine(R.string.date, training.formattedDate)
     }
 
     private fun appendSignature(training: Training) {
-        builder.signature(training.orCreateArcherSignature, training.orCreateWitnessSignature)
+        builder.signature(TrainingDAO.getOrCreateArcherSignature(training), TrainingDAO.getOrCreateWitnessSignature(training))
     }
 }

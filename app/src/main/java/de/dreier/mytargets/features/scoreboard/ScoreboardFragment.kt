@@ -97,9 +97,9 @@ class ScoreboardFragment : FragmentBase() {
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        training = TrainingDAO.loadTrainingOrNull(trainingId)
-        val archerSignature = training!!.orCreateArcherSignature
-        val witnessSignature = training!!.orCreateWitnessSignature
+        training = TrainingDAO.loadTraining(trainingId)
+        val archerSignature = TrainingDAO.getOrCreateArcherSignature(training!!)
+        val witnessSignature = TrainingDAO.getOrCreateWitnessSignature(training!!)
 
         val scoreboard = ScoreboardUtils
                 .getScoreboardView(context!!, Utils.getCurrentLocale(context!!),

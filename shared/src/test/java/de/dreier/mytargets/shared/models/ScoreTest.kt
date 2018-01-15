@@ -25,8 +25,8 @@ class ScoreTest {
     @Throws(Exception::class)
     fun zeroShots() {
         val s = Score(10)
-        assertEquals(0, s.reachedScore)
-        assertEquals(10, s.totalScore)
+        assertEquals(0, s.reachedPoints)
+        assertEquals(10, s.totalPoints)
         assertEquals(0, s.shotCount)
     }
 
@@ -34,8 +34,8 @@ class ScoreTest {
     @Throws(Exception::class)
     fun singleShot() {
         val s = Score(9, 10)
-        assertEquals(9, s.reachedScore)
-        assertEquals(10, s.totalScore)
+        assertEquals(9, s.reachedPoints)
+        assertEquals(10, s.totalPoints)
         assertEquals(1, s.shotCount)
     }
 
@@ -44,8 +44,8 @@ class ScoreTest {
     fun add() {
         val s = Score(9, 10)
         s.add(Score(8, 10))
-        assertEquals(17, s.reachedScore)
-        assertEquals(20, s.totalScore)
+        assertEquals(17, s.reachedPoints)
+        assertEquals(20, s.totalPoints)
         assertEquals(2, s.shotCount)
     }
 

@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils
+package de.dreier.mytargets.utils
 
 import android.support.v4.util.Pair
 import de.dreier.mytargets.shared.models.SelectableZone

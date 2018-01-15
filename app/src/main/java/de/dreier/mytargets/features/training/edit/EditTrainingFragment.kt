@@ -37,8 +37,6 @@ import de.dreier.mytargets.features.training.ETrainingType.TRAINING_WITH_STANDAR
 import de.dreier.mytargets.features.training.target.TargetListFragment
 import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.models.augmented.AugmentedRound
-import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
 import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.Round
@@ -53,7 +51,6 @@ import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
-import java.util.*
 
 class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListener {
 
@@ -102,7 +99,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
         binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_edit_training, container, false)
 
-        trainingId = arguments.getLongOrNull(ITEM_ID)
+        trainingId = arguments.getLongOrNull(ITEM_ID)!!
         trainingType = if (activity?.intent?.action == CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION) {
             TRAINING_WITH_STANDARD_ROUND
         } else {
@@ -260,14 +257,15 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
     }
 
     override fun onSave() {
-        val training = AugmentedTraining(training)
         navigationController.finish()
 
+        val training = training
+
         if (trainingId == null) {
+            val rounds: MutableList<Round>
             if (trainingType == FREE_TRAINING) {
-                training.training.standardRoundId = null
-                training.rounds = ArrayList()
-                training.rounds.add(AugmentedRound(round))
+                training.standardRoundId = null
+                rounds = mutableListOf(round)
             } else {
                 val standardRound = binding.standardRound.selectedItem!!
                 if (standardRound.standardRound.id == 0L) {
@@ -275,26 +273,26 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
                     //StandardRoundDAO.saveStandardRound(standardRound.standardRound, standardRound.roundTemplates)
                 }
                 SettingsManager.standardRound = standardRound.standardRound.id
-                training.training.standardRoundId = standardRound.standardRound.id
-                training.initRoundsFromTemplate(standardRound)
-                for (round in training.rounds) {
-                    round.round.target = roundTarget!!
+                training.standardRoundId = standardRound.standardRound.id
+                rounds = standardRound.createRoundsFromTemplate()
+                for (round in rounds) {
+                    round.target = roundTarget!!
                 }
             }
-            TrainingDAO.saveTraining(training.training, training.rounds.map { it.round })
+            TrainingDAO.saveTraining(training, rounds)
 
-            val round = training.rounds[0]
+            val round = rounds[0]
 
-            navigationController.navigateToTraining(training.training)
+            navigationController.navigateToTraining(training)
                     .noAnimation()
                     .start()
-            navigationController.navigateToRound(round.round)
+            navigationController.navigateToRound(round)
                     .noAnimation()
                     .start()
-            navigationController.navigateToCreateEnd(round.round)
+            navigationController.navigateToCreateEnd(round)
         } else {
             // Edit training
-            TrainingDAO.saveTraining(training.training)
+            TrainingDAO.saveTraining(training)
             activity!!.overridePendingTransition(R.anim.left_in, R.anim.right_out)
         }
     }

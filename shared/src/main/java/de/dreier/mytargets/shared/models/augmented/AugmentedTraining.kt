@@ -17,27 +17,15 @@ package de.dreier.mytargets.shared.models.augmented
 
 import android.os.Parcel
 import android.os.Parcelable
-import de.dreier.mytargets.shared.models.dao.TrainingDAO
-import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 
 data class AugmentedTraining(
         val training: Training,
         var rounds: MutableList<AugmentedRound>
 ) : Parcelable {
-    constructor(training: Training) : this(training, TrainingDAO.loadRounds(training.id)
-            .map { AugmentedRound(it) }
-            .toMutableList())
 
     fun initRoundsFromTemplate(standardRound: AugmentedStandardRound) {
-        rounds = mutableListOf()
-        for (template in standardRound.roundTemplates) {
-            val round = AugmentedRound(Round(template))
-            round.round.trainingId = training.id
-            round.round.target = template.targetTemplate
-            round.round.comment = ""
-            rounds.add(round)
-        }
+        rounds = standardRound.createRoundsFromTemplate().map { AugmentedRound(it, mutableListOf()) }.toMutableList()
     }
 
     constructor(source: Parcel) : this(

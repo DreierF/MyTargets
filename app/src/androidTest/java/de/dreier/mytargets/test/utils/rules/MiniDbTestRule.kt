@@ -18,8 +18,8 @@ package de.dreier.mytargets.test.utils.rules
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
-import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
+import de.dreier.mytargets.shared.models.augmented.AugmentedRound
+import de.dreier.mytargets.shared.models.dao.RoundDAO
 import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.targets.models.WAFull
@@ -41,21 +41,22 @@ class MiniDbTestRule : DbTestRuleBase() {
 
     private fun addRandomTraining(seed: Int) {
         val generator = Random(seed.toLong())
-        val standardRound = AugmentedStandardRound(StandardRoundDAO.loadStandardRound(32L))
+        val standardRound = StandardRoundDAO.loadAugmentedStandardRound(32L)
 
-        val training = saveDefaultTraining(standardRound!!.id, generator)
-        val at = AugmentedTraining(training)
-        at.initRoundsFromTemplate(standardRound)
-        TrainingDAO.saveTraining(at.training, at.rounds)
+        val training = saveDefaultTraining(standardRound.id, generator)
+        val rounds = standardRound.createRoundsFromTemplate()
+        TrainingDAO.saveTraining(training, rounds)
 
-        val round1 = at.rounds[0]
-        val round2 = at.rounds[1]
+        val round1 = AugmentedRound(rounds[0], mutableListOf())
+        val round2 = AugmentedRound(rounds[1], mutableListOf())
 
-        randomEnd(round1, 6, generator).save()
-        randomEnd(round1, 6, generator).save()
+        round1.ends.add(randomEnd(round1, 6, generator))
+        round1.ends.add(randomEnd(round1, 6, generator))
+        RoundDAO.saveRound(round1)
 
-        randomEnd(round2, 6, generator).save()
-        randomEnd(round2, 6, generator).save()
+        round2.ends.add(randomEnd(round2, 6, generator))
+        round2.ends.add(randomEnd(round2, 6, generator))
+        RoundDAO.saveRound(round2)
     }
 
 }

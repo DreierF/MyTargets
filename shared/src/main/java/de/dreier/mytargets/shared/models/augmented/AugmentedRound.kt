@@ -17,40 +17,12 @@ package de.dreier.mytargets.shared.models.augmented
 
 import android.os.Parcel
 import android.os.Parcelable
-import de.dreier.mytargets.shared.models.Score
-import de.dreier.mytargets.shared.models.dao.RoundDAO
-import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
-import de.dreier.mytargets.shared.models.db.Shot
-import de.dreier.mytargets.shared.models.sum
 
 data class AugmentedRound(
         val round: Round,
         var ends: MutableList<AugmentedEnd>
 ) : Parcelable {
-    constructor(round: Round) : this(round, RoundDAO.loadEnds(round.id)
-            .map { AugmentedEnd(it) }
-            .toMutableList())
-
-    val reachedScore: Score
-        get() {
-            val target = round.target
-            return ends.map { target.getReachedScore(it.shots) }.sum()
-        }
-
-    /**
-     * Adds a new end to the internal list of ends, but does not yet save it.
-     *
-     * @return Returns the newly created end
-     */
-    fun addEnd(): AugmentedEnd {
-        val end = End(index = ends.size, roundId = round.id)
-        val augmentedEnd = AugmentedEnd(end, (0 until round.shotsPerEnd)
-                .map { Shot(it) }.toMutableList(), mutableListOf())
-        augmentedEnd.save()
-        ends.add(augmentedEnd)
-        return augmentedEnd
-    }
 
     constructor(source: Parcel) : this(
             source.readParcelable<Round>(Round::class.java.classLoader),

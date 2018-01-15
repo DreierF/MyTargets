@@ -18,11 +18,11 @@ package de.dreier.mytargets.shared.models.db
 import android.annotation.SuppressLint
 import android.os.Parcelable
 import com.raizlabs.android.dbflow.annotation.*
-import com.raizlabs.android.dbflow.structure.BaseModel
 import de.dreier.mytargets.shared.AppDatabase
-import de.dreier.mytargets.shared.models.*
-import de.dreier.mytargets.shared.models.dao.SignatureDAO
-import de.dreier.mytargets.shared.models.dao.TrainingDAO
+import de.dreier.mytargets.shared.models.EWeather
+import de.dreier.mytargets.shared.models.Environment
+import de.dreier.mytargets.shared.models.IIdSettable
+import de.dreier.mytargets.shared.models.Score
 import de.dreier.mytargets.shared.utils.typeconverters.EWeatherConverter
 import de.dreier.mytargets.shared.utils.typeconverters.LocalDateConverter
 import kotlinx.android.parcel.Parcelize
@@ -79,8 +79,18 @@ data class Training(
         var archerSignatureId: Long? = null,
 
         @ForeignKey(tableClass = Signature::class, references = [(ForeignKeyReference(columnName = "witnessSignature", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
-        var witnessSignatureId: Long? = null
-) : BaseModel(), IIdSettable, Parcelable {
+        var witnessSignatureId: Long? = null,
+
+        @Column
+        var scoreReachedPoints: Int = 0,
+
+        @Column
+        var scoreTotalPoints: Int = 0,
+
+        @Column
+        var scoreShotCount: Int = 0
+
+) : IIdSettable, Parcelable {
 
     var environment: Environment
         get() = Environment(indoor, weather, windSpeed, windDirection, location)
@@ -92,41 +102,9 @@ data class Training(
             location = env.location
         }
 
-    val orCreateArcherSignature: Signature
-        get() {
-            if (archerSignatureId != null) {
-                val signature = SignatureDAO.loadSignatureOrNull(archerSignatureId!!)
-                if (signature != null) {
-                    return signature
-                }
-            }
-            val signature = Signature()
-            SignatureDAO.saveSignature(signature)
-            archerSignatureId = signature.id
-            TrainingDAO.saveTraining(this)
-            return signature
-        }
-
-    val orCreateWitnessSignature: Signature
-        get() {
-            if (witnessSignatureId != null) {
-                val signature = SignatureDAO.loadSignatureOrNull(witnessSignatureId!!)
-                if (signature != null) {
-                    return signature
-                }
-            }
-            val signature = Signature()
-            SignatureDAO.saveSignature(signature)
-            witnessSignatureId = signature.id
-            TrainingDAO.saveTraining(this)
-            return signature
-        }
-
     val formattedDate: String
         get() = date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
 
-    val reachedScore: Score
-        get() = TrainingDAO.loadRounds(id)
-                .map { it.reachedScore }
-                .sum()
+    val score: Score
+        get() = Score(scoreReachedPoints, scoreTotalPoints, scoreShotCount)
 }

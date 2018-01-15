@@ -46,7 +46,6 @@ import de.dreier.mytargets.base.gallery.GalleryActivity
 import de.dreier.mytargets.databinding.ActivityInputBinding
 import de.dreier.mytargets.features.settings.ESettingsScreens
 import de.dreier.mytargets.features.settings.SettingsManager
-import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
 import de.dreier.mytargets.shared.models.dao.*
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
@@ -61,8 +60,10 @@ import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.utils.Utils.getCurrentLocale
+import de.dreier.mytargets.utils.addEnd
 import de.dreier.mytargets.utils.transitions.FabTransform
 import de.dreier.mytargets.utils.transitions.TransitionAdapter
+import org.threeten.bp.LocalTime
 import java.io.File
 
 class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener, TargetView.OnEndUpdatedListener, LoaderManager.LoaderCallbacks<LoaderResult> {
@@ -128,14 +129,24 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             val imageList = GalleryActivity.getResult(data)
-            this.data!!.currentEnd.images = imageList.toEndImageList()
+            val currentEnd = this.data!!.currentEnd
+            currentEnd.images = imageList.toEndImageList()
             for (image in imageList.removedImages) {
                 File(filesDir, image).delete()
             }
-            this.data!!.currentEnd.save()
+            saveCurrentEnd()
             updateEnd()
             invalidateOptionsMenu()
         }
+    }
+
+    private fun saveCurrentEnd() {
+        val currentEnd = data!!.currentEnd
+        if (currentEnd.end.saveTime == null) {
+            currentEnd.end.saveTime = LocalTime.now()
+        }
+        currentEnd.end.score = data!!.currentRound.round.target.getReachedScore(currentEnd.shots)
+        EndDAO.saveEnd(currentEnd.end, currentEnd.images, currentEnd.shots)
     }
 
     override fun onDestroy() {
@@ -393,7 +404,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
 
     override fun onEndUpdated(shots: List<Shot>) {
         data!!.currentEnd.shots = shots.toMutableList()
-        data!!.currentEnd.save()
+        saveCurrentEnd()
 
         // Set current end score
         val reachedEndScore = data!!.currentRound.round.target
@@ -423,7 +434,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     override fun onEndFinished(shotList: List<Shot>) {
         data!!.currentEnd.shots = shotList.toMutableList()
         data!!.currentEnd.end.exact = targetView!!.inputMode === EInputMethod.PLOTTING
-        data!!.currentEnd.save()
+        saveCurrentEnd()
 
         updateWearNotification()
         updateNavigationButtons()
@@ -443,19 +454,19 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     ) : AsyncTaskLoader<LoaderResult>(context) {
 
         override fun loadInBackground(): LoaderResult? {
-            val training = TrainingDAO.loadTraining(trainingId)
-            val standardRound = if (training.standardRoundId == null) null else StandardRoundDAO.loadStandardRound(training.standardRoundId!!)
-            val result = LoaderResult(AugmentedTraining(training), standardRound)
+            val training = TrainingDAO.loadAugmentedTraining(trainingId)
+            val standardRound = if (training.training.standardRoundId == null) null else StandardRoundDAO.loadStandardRound(training.training.standardRoundId!!)
+            val result = LoaderResult(training, standardRound)
             result.setRoundId(roundId)
             result.setAdjustEndIndex(endIndex)
 
-            if (training.arrowId != null) {
-                val arrow = ArrowDAO.loadArrow(training.arrowId!!)
+            if (training.training.arrowId != null) {
+                val arrow = ArrowDAO.loadArrow(training.training.arrowId!!)
                 result.maxArrowNumber = arrow.maxArrowNumber
                 result.arrowDiameter = arrow.diameter
             }
-            if (training.bowId != null) {
-                result.sightMark = BowDAO.loadSightMarks(training.bowId!!)
+            if (training.training.bowId != null) {
+                result.sightMark = BowDAO.loadSightMarks(training.training.bowId!!)
                         .firstOrNull { it.distance == result.distance!! }
             }
             return result

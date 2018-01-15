@@ -22,6 +22,7 @@ import android.os.Parcelable
 import de.dreier.mytargets.shared.R
 import de.dreier.mytargets.shared.models.IIdProvider
 import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
+import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.RoundTemplate
 import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.targets.drawable.CombinedSpot
@@ -52,6 +53,16 @@ data class AugmentedStandardRound(
                     r.shotsPerEnd, r.targetTemplate.diameter)
         }
         return desc
+    }
+
+    fun createRoundsFromTemplate(): MutableList<Round> {
+        val rounds = mutableListOf<Round>()
+        for (template in roundTemplates) {
+            val round = Round(template)
+            round.target = template.targetTemplate
+            rounds.add(round)
+        }
+        return rounds
     }
 
     constructor(source: Parcel) : this(

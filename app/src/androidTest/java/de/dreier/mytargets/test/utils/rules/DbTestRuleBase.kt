@@ -32,6 +32,7 @@ import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.Training
+import de.dreier.mytargets.utils.addEnd
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
@@ -74,8 +75,7 @@ abstract class DbTestRuleBase : TestRule {
             end.shots[i].x = gaussianRand(gen)
             end.shots[i].y = gaussianRand(gen)
             end.shots[i].scoringRing = round.round.target.model
-                    .getZoneFromPoint(end.shots[i].x,
-                            end.shots[i].y, 0.05f)
+                    .getZoneFromPoint(end.shots[i].x, end.shots[i].y, 0.05f)
         }
         end.end.saveTime = LocalTime.of(14, gen.nextInt(59), gen.nextInt(59), 0)
         return end

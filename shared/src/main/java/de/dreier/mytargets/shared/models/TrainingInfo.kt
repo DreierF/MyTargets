@@ -43,7 +43,7 @@ data class TrainingInfo(
             context.resources
                     .getQuantityString(R.plurals.rounds, roundCount, roundCount)
         } else {
-            round.reachedScore.toString()
+            round.round.score.toString()
         }
     }
 

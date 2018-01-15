@@ -22,10 +22,10 @@ import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
 import de.dreier.mytargets.shared.models.augmented.AugmentedRound
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
-import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.SightMark
 import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.views.TargetViewBase
+import de.dreier.mytargets.utils.addEnd
 import kotlinx.android.parcel.Parcelize
 
 @SuppressLint("ParcelCreator")

@@ -20,6 +20,7 @@ import android.os.Parcelable
 import com.raizlabs.android.dbflow.annotation.*
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.IIdSettable
+import de.dreier.mytargets.shared.models.Score
 import de.dreier.mytargets.shared.utils.typeconverters.LocalTimeConverter
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.LocalTime
@@ -46,5 +47,24 @@ data class End(
         var saveTime: LocalTime? = null,
 
         @Column
-        var comment: String = ""
-) : IIdSettable, Parcelable
+        var comment: String = "",
+
+        @Column
+        var scoreReachedPoints: Int = 0,
+
+        @Column
+        var scoreTotalPoints: Int = 0,
+
+        @Column
+        var scoreShotCount: Int = 0
+) : IIdSettable, Parcelable {
+
+    var score: Score
+        get() = Score(scoreReachedPoints, scoreTotalPoints, scoreShotCount)
+        set(value) {
+            scoreReachedPoints = value.reachedPoints
+            scoreTotalPoints = value.totalPoints
+            scoreShotCount = value.shotCount
+        }
+
+}

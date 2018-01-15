@@ -18,7 +18,6 @@ package de.dreier.mytargets.shared.models.augmented
 import android.os.Parcel
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.IIdSettable
-import de.dreier.mytargets.shared.models.dao.EndDAO
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.EndImage
 import de.dreier.mytargets.shared.models.db.Shot
@@ -33,12 +32,6 @@ data class AugmentedEnd(
         set(value) {
             end.id = value
         }
-
-    constructor(end: End) : this(end, EndDAO.loadShots(end.id).toMutableList(), EndDAO.loadEndImages(end.id).toMutableList())
-
-    fun save() {
-        EndDAO.saveEnd(end, images, shots)
-    }
 
     val isEmpty: Boolean
         get() = shots.any { it.scoringRing == Shot.NOTHING_SELECTED } && images.isEmpty()

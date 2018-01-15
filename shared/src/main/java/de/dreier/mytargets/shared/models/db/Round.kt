@@ -19,10 +19,10 @@ import android.annotation.SuppressLint
 import android.os.Parcelable
 import com.raizlabs.android.dbflow.annotation.*
 import de.dreier.mytargets.shared.AppDatabase
-import de.dreier.mytargets.shared.models.*
+import de.dreier.mytargets.shared.models.Dimension
+import de.dreier.mytargets.shared.models.IIdSettable
+import de.dreier.mytargets.shared.models.Score
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.models.dao.EndDAO
-import de.dreier.mytargets.shared.models.dao.RoundDAO
 import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter
 import kotlinx.android.parcel.Parcelize
 
@@ -59,7 +59,16 @@ data class Round(
         var targetScoringStyle: Int = 0,
 
         @Column(typeConverter = DimensionConverter::class)
-        var targetDiameter: Dimension = Dimension.UNKNOWN
+        var targetDiameter: Dimension = Dimension.UNKNOWN,
+
+        @Column
+        var scoreReachedPoints: Int = 0,
+
+        @Column
+        var scoreTotalPoints: Int = 0,
+
+        @Column
+        var scoreShotCount: Int = 0
 ) : IIdSettable, Parcelable {
 
     constructor(info: RoundTemplate) : this(
@@ -80,10 +89,6 @@ data class Round(
             targetDiameter = targetTemplate.diameter
         }
 
-    val reachedScore: Score
-        get() {
-            val target = target
-            return RoundDAO.loadEnds(id).map { end: End -> target.getReachedScore(EndDAO.loadShots(end.id)) }
-                    .sum()
-        }
+    val score: Score
+        get() = Score(scoreReachedPoints, scoreTotalPoints, scoreShotCount)
 }

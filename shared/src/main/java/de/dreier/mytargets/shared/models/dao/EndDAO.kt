@@ -23,7 +23,6 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
 import de.dreier.mytargets.shared.models.db.*
-import org.threeten.bp.LocalTime
 
 object EndDAO {
     fun loadEnds(): List<End> = SQLite.select().from(End::class.java).queryList()
@@ -33,7 +32,7 @@ object EndDAO {
             .where(End_Table.round.eq(roundId))
             .orderBy(End_Table.index, true)
             .queryList()
-            .map { AugmentedEnd(it) }
+            .map { AugmentedEnd(it, loadShots(it.id).toMutableList(), loadEndImages(it.id).toMutableList()) }
             .toMutableList()
 
     fun loadEnd(id: Long): End = SQLite.select()
@@ -61,9 +60,6 @@ object EndDAO {
     }
 
     fun saveEnd(end: End, images: List<EndImage>, shots: List<Shot>) {
-        if (end.saveTime == null) {
-            end.saveTime = LocalTime.now()
-        }
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
             saveEnd(end, db, images, shots)
         }

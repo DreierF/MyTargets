@@ -22,11 +22,9 @@ import com.raizlabs.android.dbflow.kotlinextensions.save
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
-import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
-import de.dreier.mytargets.shared.models.db.ArrowImage
-import de.dreier.mytargets.shared.models.db.BowImage
-import de.dreier.mytargets.shared.models.db.EndImage
 import de.dreier.mytargets.shared.models.Image
+import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
+import de.dreier.mytargets.shared.models.db.*
 import de.dreier.mytargets.shared.utils.StandardRoundFactory
 import de.dreier.mytargets.shared.utils.moveTo
 import java.io.File
@@ -38,13 +36,64 @@ object AppDatabase {
     const val NAME = "database"
     const val DATABASE_FILE_NAME = "database.db"
     const val DATABASE_IMPORT_FILE_NAME = "database"
-    const val VERSION = 25
+    const val VERSION = 26
 
     @Migration(version = 0, database = AppDatabase::class)
     class Migration0 : BaseMigration() {
 
         override fun migrate(database: DatabaseWrapper) {
             fillStandardRound(database)
+        }
+    }
+
+    @Migration(version = 26, database = AppDatabase::class)
+    class Migration26 : BaseMigration() {
+
+        override fun migrate(database: DatabaseWrapper) {
+            database.execSQL("ALTER TABLE `Training` ADD COLUMN scoreReachedPoints INTEGER;")
+            database.execSQL("ALTER TABLE `Training` ADD COLUMN scoreTotalPoints INTEGER;")
+            database.execSQL("ALTER TABLE `Training` ADD COLUMN scoreShotCount INTEGER;")
+
+            database.execSQL("ALTER TABLE `Round` ADD COLUMN scoreReachedPoints INTEGER;")
+            database.execSQL("ALTER TABLE `Round` ADD COLUMN scoreTotalPoints INTEGER;")
+            database.execSQL("ALTER TABLE `Round` ADD COLUMN scoreShotCount INTEGER;")
+
+            database.execSQL("ALTER TABLE `End` ADD COLUMN scoreReachedPoints INTEGER;")
+            database.execSQL("ALTER TABLE `End` ADD COLUMN scoreTotalPoints INTEGER;")
+            database.execSQL("ALTER TABLE `End` ADD COLUMN scoreShotCount INTEGER;")
+
+            database.execSQL("CREATE TRIGGER round_sum_score " +
+                    "AFTER UPDATE ON `End` " +
+                    "BEGIN " +
+                    "UPDATE `Round` SET " +
+                    "scoreReachedPoints = (SELECT SUM(scoreReachedPoints) FROM `End` WHERE round = NEW.round), " +
+                    "scoreTotalPoints = (SELECT SUM(scoreTotalPoints) FROM `End` WHERE round = NEW.round), " +
+                    "scoreShotCount = (SELECT SUM(scoreShotCount) FROM `End` WHERE round = NEW.round) " +
+                    "WHERE _id = NEW.round;" +
+                    "END;")
+
+            database.execSQL("CREATE TRIGGER training_sum_score " +
+                    "AFTER UPDATE ON `Round` " +
+                    "BEGIN " +
+                    "UPDATE `Training` SET " +
+                    "scoreReachedPoints = (SELECT SUM(scoreReachedPoints) FROM `Round` WHERE training = NEW.training), " +
+                    "scoreTotalPoints = (SELECT SUM(scoreTotalPoints) FROM `Round` WHERE training = NEW.training), " +
+                    "scoreShotCount = (SELECT SUM(scoreShotCount) FROM `Round` WHERE training = NEW.training) " +
+                    "WHERE _id = NEW.training;" +
+                    "END;")
+
+            val rounds = SQLite.select().from(Round::class.java).queryList(database)
+            for (round in rounds) {
+                val target = round.target
+                val ends = SQLite.select().from(End::class.java).where(End_Table.round.eq(round.id))
+                        .queryList(database)
+                for (end in ends) {
+                    val shots = SQLite.select().from(Shot::class.java).where(Shot_Table.end.eq(end.id))
+                            .queryList(database)
+                    end.score = target.getReachedScore(shots)
+                    end.save(database)
+                }
+            }
         }
     }
 

@@ -108,8 +108,8 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        training = TrainingDAO.loadTrainingOrNull(trainingId)
-        val rounds = TrainingDAO.loadRounds(training!!.id) //FIXME can be null!?
+        training = TrainingDAO.loadTraining(trainingId)
+        val rounds = TrainingDAO.loadRounds(trainingId)
         return {
             // Hide fab for standard rounds
             val supportsDeletion = training!!.standardRoundId == null
@@ -216,7 +216,7 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
             } else {
                 binding.subtitle.visibility = View.VISIBLE
             }
-            binding.points.text = item.reachedScore
+            binding.points.text = item.score
                     .format(Utils.getCurrentLocale(context!!), SettingsManager.scoreConfiguration)
         }
     }

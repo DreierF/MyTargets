@@ -38,6 +38,10 @@ object RoundDAO {
             .where(Round_Table._id.eq(id))
             .querySingle() ?: throw IllegalStateException("Round $id does not exist")
 
+    fun loadAugmentedRound(id: Long) = AugmentedRound(loadRound(id), EndDAO.loadAugmentedEnds(id))
+
+    fun loadAugmentedRound(round: Round) = AugmentedRound(round, EndDAO.loadAugmentedEnds(round.id))
+
     fun loadRoundOrNull(id: Long): Round? = SQLite.select()
             .from(Round::class.java)
             .where(Round_Table._id.eq(id))
@@ -90,8 +94,6 @@ object RoundDAO {
             saveRound(db, round, ends)
         }
     }
-
-    fun loadAugmentedRound(item: Round) = AugmentedRound(item)
 
     fun saveRound(round: AugmentedRound) {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->

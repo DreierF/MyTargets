@@ -104,7 +104,7 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
         round = RoundDAO.loadRound(roundId)
-        val ends = RoundDAO.loadEnds(round!!.id).map { AugmentedEnd(it) }.toMutableList()
+        val ends = EndDAO.loadAugmentedEnds(round!!.id)
         val showFab = round!!.maxEndCount == null || ends.size < round!!.maxEndCount!!
 
         return {
@@ -113,7 +113,7 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
 
             ToolbarUtils.setTitle(this@RoundFragment,
                     String.format(Locale.US, "%s %d", getString(R.string.round), round!!.index + 1))
-            ToolbarUtils.setSubtitle(this@RoundFragment, round!!.reachedScore.toString())
+            ToolbarUtils.setSubtitle(this@RoundFragment, round!!.score.toString())
         }
     }
 

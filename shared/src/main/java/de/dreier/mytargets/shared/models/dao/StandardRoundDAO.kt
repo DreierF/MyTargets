@@ -21,6 +21,7 @@ import com.raizlabs.android.dbflow.kotlinextensions.save
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
 import de.dreier.mytargets.shared.AppDatabase
+import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
 import de.dreier.mytargets.shared.models.db.RoundTemplate
 import de.dreier.mytargets.shared.models.db.RoundTemplate_Table
 import de.dreier.mytargets.shared.models.db.StandardRound
@@ -33,6 +34,8 @@ object StandardRoundDAO {
             .from(StandardRound::class.java)
             .where(StandardRound_Table._id.eq(id))
             .querySingle() ?: throw IllegalStateException("StandardRound $id does not exist")
+
+    fun loadAugmentedStandardRound(id: Long): AugmentedStandardRound = AugmentedStandardRound(loadStandardRound(id), loadRoundTemplates(id))
 
     fun loadStandardRoundOrNull(id: Long): StandardRound? = SQLite.select()
             .from(StandardRound::class.java)

@@ -22,11 +22,13 @@ import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.EWeather
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.augmented.AugmentedRound
-import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
-import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
+import de.dreier.mytargets.shared.models.dao.RoundDAO
 import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.models.dao.TrainingDAO
-import de.dreier.mytargets.shared.models.db.*
+import de.dreier.mytargets.shared.models.db.Bow
+import de.dreier.mytargets.shared.models.db.Round
+import de.dreier.mytargets.shared.models.db.RoundTemplate
+import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.targets.models.WAFull
 import de.dreier.mytargets.shared.views.TargetViewBase
 import org.threeten.bp.LocalDate
@@ -64,29 +66,31 @@ class SimpleDbTestRule : DbTestRuleBase() {
 
         val (id) = saveDefaultTraining(null, generator)
 
-        val round1 = Round(rounds[0])
-        round1.trainingId = id
-        round1.save()
-        val r1 = AugmentedRound(round1)
+        val round1r = Round(rounds[0])
+        round1r.trainingId = id
+        RoundDAO.saveRound(round1r)
+        val round1 = AugmentedRound(round1r, mutableListOf())
 
-        val round2 = Round(rounds[1])
-        round2.trainingId = id
-        round2.save()
-        val r2 = AugmentedRound(round2)
+        val round2r = Round(rounds[1])
+        round2r.trainingId = id
+        RoundDAO.saveRound(round2r)
+        val round2 = AugmentedRound(round2r, mutableListOf())
 
-        randomEnd(r1, 6, generator).save()
-        randomEnd(r1, 6, generator).save()
-        randomEnd(r1, 6, generator).save()
-        randomEnd(r1, 6, generator).save()
-        randomEnd(r1, 6, generator).save()
-        randomEnd(r1, 6, generator).save()
+        round1.ends.add(randomEnd(round1, 6, generator))
+        round1.ends.add(randomEnd(round1, 6, generator))
+        round1.ends.add(randomEnd(round1, 6, generator))
+        round1.ends.add(randomEnd(round1, 6, generator))
+        round1.ends.add(randomEnd(round1, 6, generator))
+        round1.ends.add(randomEnd(round1, 6, generator))
+        RoundDAO.saveRound(round1)
 
-        randomEnd(r2, 6, generator).save()
-        randomEnd(r2, 6, generator).save()
-        randomEnd(r2, 6, generator).save()
-        randomEnd(r2, 6, generator).save()
-        randomEnd(r2, 6, generator).save()
-        randomEnd(r2, 6, generator).save()
+        round2.ends.add(randomEnd(round2, 6, generator))
+        round2.ends.add(randomEnd(round2, 6, generator))
+        round2.ends.add(randomEnd(round2, 6, generator))
+        round2.ends.add(randomEnd(round2, 6, generator))
+        round2.ends.add(randomEnd(round2, 6, generator))
+        round2.ends.add(randomEnd(round2, 6, generator))
+        RoundDAO.saveRound(round2)
     }
 
     private fun getRoundTemplate(index: Int, distance: Int): RoundTemplate {
@@ -101,35 +105,35 @@ class SimpleDbTestRule : DbTestRuleBase() {
 
     private fun addRandomTraining(seed: Int) {
         val generator = Random(seed.toLong())
-        val standardRound = AugmentedStandardRound(StandardRoundDAO.loadStandardRound(32L))
+        val standardRound = StandardRoundDAO.loadAugmentedStandardRound(32L)
 
         val training = saveDefaultTraining(standardRound.id, generator)
 
-        val at = AugmentedTraining(training)
-        at.initRoundsFromTemplate(standardRound)
-        TrainingDAO.saveTraining(at.training, at.rounds)
+        val rounds = standardRound.createRoundsFromTemplate()
+        TrainingDAO.saveTraining(training, rounds)
 
-        val round1 = at.rounds[0]
+        val round1 = AugmentedRound(rounds[0], mutableListOf())
+        val round2 = AugmentedRound(rounds[1], mutableListOf())
 
-        val round2 = at.rounds[1]
+        round1.ends.add(randomEnd(round1, 6, generator))
+        round1.ends.add(randomEnd(round1, 6, generator))
+        round1.ends.add(randomEnd(round1, 6, generator))
+        round1.ends.add(randomEnd(round1, 6, generator))
+        round1.ends.add(randomEnd(round1, 6, generator))
+        round1.ends.add(randomEnd(round1, 6, generator))
+        RoundDAO.saveRound(round1)
 
-        randomEnd(round1, 6, generator).save()
-        randomEnd(round1, 6, generator).save()
-        randomEnd(round1, 6, generator).save()
-        randomEnd(round1, 6, generator).save()
-        randomEnd(round1, 6, generator).save()
-        randomEnd(round1, 6, generator).save()
-
-        randomEnd(round2, 6, generator).save()
-        randomEnd(round2, 6, generator).save()
-        randomEnd(round2, 6, generator).save()
-        randomEnd(round2, 6, generator).save()
-        randomEnd(round2, 6, generator).save()
-        randomEnd(round2, 6, generator).save()
+        round2.ends.add(randomEnd(round2, 6, generator))
+        round2.ends.add(randomEnd(round2, 6, generator))
+        round2.ends.add(randomEnd(round2, 6, generator))
+        round2.ends.add(randomEnd(round2, 6, generator))
+        round2.ends.add(randomEnd(round2, 6, generator))
+        round2.ends.add(randomEnd(round2, 6, generator))
+        RoundDAO.saveRound(round2)
     }
 
     private fun addFullTraining(bow: Bow) {
-        val standardRound = AugmentedStandardRound(StandardRoundDAO.loadStandardRound(32L))
+        val standardRound = StandardRoundDAO.loadAugmentedStandardRound(32L)
 
         val training = Training()
         training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training)
@@ -141,26 +145,27 @@ class SimpleDbTestRule : DbTestRuleBase() {
         training.bowId = bow.id
         training.arrowId = null
         training.arrowNumbering = false
-        val at = AugmentedTraining(training)
-        at.initRoundsFromTemplate(standardRound)
-        TrainingDAO.saveTraining(at.training, at.rounds.map { it.round })
 
-        val round1 = at.rounds[0]
+        val rounds = standardRound.createRoundsFromTemplate()
+        TrainingDAO.saveTraining(training, rounds)
 
-        val round2 = at.rounds[1]
+        val round1 = AugmentedRound(rounds[0], mutableListOf())
+        val round2 = AugmentedRound(rounds[1], mutableListOf())
 
-        buildEnd(round1, 1, 1, 2, 3, 3, 4).save()
-        buildEnd(round1, 0, 0, 1, 2, 2, 3).save()
-        buildEnd(round1, 1, 1, 1, 3, 4, 4).save()
-        buildEnd(round1, 0, 1, 1, 1, 2, 3).save()
-        buildEnd(round1, 1, 2, 3, 3, 4, 5).save()
-        buildEnd(round1, 1, 2, 2, 3, 3, 3).save()
+        round1.ends.add(buildEnd(round1, 1, 1, 2, 3, 3, 4))
+        round1.ends.add(buildEnd(round1, 0, 0, 1, 2, 2, 3))
+        round1.ends.add(buildEnd(round1, 1, 1, 1, 3, 4, 4))
+        round1.ends.add(buildEnd(round1, 0, 1, 1, 1, 2, 3))
+        round1.ends.add(buildEnd(round1, 1, 2, 3, 3, 4, 5))
+        round1.ends.add(buildEnd(round1, 1, 2, 2, 3, 3, 3))
+        RoundDAO.saveRound(round1)
 
-        buildEnd(round2, 1, 2, 2, 3, 4, 5).save()
-        buildEnd(round2, 0, 0, 1, 2, 2, 3).save()
-        buildEnd(round2, 0, 1, 2, 2, 2, 3).save()
-        buildEnd(round2, 1, 1, 2, 3, 4, 4).save()
-        buildEnd(round2, 1, 2, 2, 3, 3, 3).save()
-        buildEnd(round2, 1, 2, 2, 3, 3, 4).save()
+        round2.ends.add(buildEnd(round2, 1, 2, 2, 3, 4, 5))
+        round2.ends.add(buildEnd(round2, 0, 0, 1, 2, 2, 3))
+        round2.ends.add(buildEnd(round2, 0, 1, 2, 2, 2, 3))
+        round2.ends.add(buildEnd(round2, 1, 1, 2, 3, 4, 4))
+        round2.ends.add(buildEnd(round2, 1, 2, 2, 3, 3, 3))
+        round2.ends.add(buildEnd(round2, 1, 2, 2, 3, 3, 4))
+        RoundDAO.saveRound(round2)
     }
 }
