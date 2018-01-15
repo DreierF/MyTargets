@@ -21,8 +21,11 @@ import de.dreier.mytargets.shared.models.Score
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.models.sum
 
-open class ScoringStyle private constructor(title: String?, private val showAsX: Boolean, protected val points: Array<IntArray>) {
-    private val title: String = title ?: descriptionString
+open class ScoringStyle private constructor(
+        val title: String?,
+        private val showAsX: Boolean,
+        protected val points: Array<IntArray>
+) {
     private val maxScorePerShot: List<Int> by lazy { points.map { it.max() ?: 0 } }
 
     internal constructor(showAsX: Boolean, points: Array<IntArray>) : this(null, showAsX, points)
@@ -48,8 +51,8 @@ open class ScoringStyle private constructor(title: String?, private val showAsX:
         }
 
     constructor(showAsX: Boolean, vararg points: Int) : this(showAsX, arrayOf<IntArray>(points))
-
-    override fun toString() = title
+    
+    override fun toString() = title ?: descriptionString
 
     fun zoneToString(zone: Int, arrow: Int): String {
         return if (isOutOfRange(zone)) {
