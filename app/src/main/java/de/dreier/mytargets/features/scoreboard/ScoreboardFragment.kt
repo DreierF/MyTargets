@@ -44,6 +44,7 @@ import de.dreier.mytargets.databinding.PartialScoreboardSignaturesBinding
 import de.dreier.mytargets.features.scoreboard.pdf.ViewPrintDocumentAdapter
 import de.dreier.mytargets.features.settings.ESettingsScreens
 import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Signature
 import de.dreier.mytargets.shared.models.db.Training
@@ -96,7 +97,7 @@ class ScoreboardFragment : FragmentBase() {
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        training = Training[trainingId]
+        training = TrainingDAO.loadTrainingOrNull(trainingId)
         val archerSignature = training!!.orCreateArcherSignature
         val witnessSignature = training!!.orCreateWitnessSignature
 

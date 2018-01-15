@@ -33,6 +33,7 @@ import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.features.training.edit.EditTrainingFragment.Companion.CREATE_FREE_TRAINING_ACTION
 import de.dreier.mytargets.features.training.edit.EditTrainingFragment.Companion.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
+import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.utils.DividerItemDecoration
 import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_CREATE_TRAINING_FROM_REMOTE
@@ -126,7 +127,7 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_statistics -> {
-                navigationController.navigateToStatistics(Training.all
+                navigationController.navigateToStatistics(TrainingDAO.loadTrainings()
                                 .flatMap { training -> training.loadRounds() }
                                 .map { it.id })
                 true
@@ -142,7 +143,7 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
 
     private fun onStatistics(ids: List<Long>) {
         navigationController.navigateToStatistics(ids
-                .map { Training[it]!! }
+                .map { TrainingDAO.loadTrainingOrNull(it)!! }
                 .flatMap { t -> t.loadRounds() }
                 .map { it.id })
     }
@@ -161,7 +162,7 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        val trainings = Training.all
+        val trainings = TrainingDAO.loadTrainings()
         return {
             this@TrainingsFragment.setList(trainings, false)
             activity?.invalidateOptionsMenu()

@@ -27,8 +27,8 @@ import de.dreier.mytargets.databinding.FragmentEditRoundBinding
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.features.training.target.TargetListFragment
 import de.dreier.mytargets.shared.models.dao.RoundDAO
+import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Round
-import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.views.selector.DistanceSelector
@@ -81,7 +81,7 @@ class EditRoundFragment : EditFragmentBase() {
             binding.distance.setItem(round.distance)
             binding.target.setItem(round.target)
             binding.notEditable.visibility = View.GONE
-            if (Training[round.trainingId!!]!!.standardRoundId != null) {
+            if (TrainingDAO.loadTrainingOrNull(round.trainingId!!)!!.standardRoundId != null) {
                 binding.distanceLayout.visibility = View.GONE
             }
         }
@@ -108,7 +108,7 @@ class EditRoundFragment : EditFragmentBase() {
     }
 
     private fun onSaveRound(): Round? {
-        val training = Training[trainingId]
+        val training = TrainingDAO.loadTrainingOrNull(trainingId)
 
         val round: Round
         if (roundId == null) {

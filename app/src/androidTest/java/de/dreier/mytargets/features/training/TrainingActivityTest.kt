@@ -25,7 +25,7 @@ import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.runner.AndroidJUnit4
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase
-import de.dreier.mytargets.shared.models.db.Training
+import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.test.base.UITestBase
 import de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher.Companion.withRecyclerView
 import de.dreier.mytargets.test.utils.rules.SimpleDbTestRule
@@ -49,7 +49,7 @@ class TrainingActivityTest : UITestBase() {
 
     @Test
     fun navigation() {
-        val trainings = Training.all
+        val trainings = TrainingDAO.loadTrainings()
         Collections.sort(trainings, Collections.reverseOrder())
         val training = trainings[0]
         val i = Intent()

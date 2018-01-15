@@ -20,13 +20,12 @@ import android.os.Parcelable
 import com.raizlabs.android.dbflow.annotation.*
 import com.raizlabs.android.dbflow.config.FlowManager
 import com.raizlabs.android.dbflow.kotlinextensions.delete
-import com.raizlabs.android.dbflow.kotlinextensions.save
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import com.raizlabs.android.dbflow.structure.BaseModel
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.*
-import de.dreier.mytargets.shared.models.dao.SignatureDAO
+import de.dreier.mytargets.shared.models.dao.*
 import de.dreier.mytargets.shared.utils.typeconverters.EWeatherConverter
 import de.dreier.mytargets.shared.utils.typeconverters.LocalDateConverter
 import kotlinx.android.parcel.IgnoredOnParcel
@@ -101,22 +100,13 @@ data class Training(
         }
 
     val standardRound: StandardRound?
-        get() = if (standardRoundId == null) null else SQLite.select()
-                .from(StandardRound::class.java)
-                .where(StandardRound_Table._id.eq(standardRoundId!!))
-                .querySingle()
+        get() = if (standardRoundId == null) null else StandardRoundDAO.loadStandardRoundOrNull(standardRoundId!!)
 
     val bow: Bow?
-        get() = if (bowId == null) null else SQLite.select()
-                .from(Bow::class.java)
-                .where(Bow_Table._id.eq(bowId!!))
-                .querySingle()
+        get() = if (bowId == null) null else BowDAO.loadBowOrNull(bowId!!)
 
     val arrow: Arrow?
-        get() = if (arrowId == null) null else SQLite.select()
-                .from(Arrow::class.java)
-                .where(Arrow_Table._id.eq(arrowId!!))
-                .querySingle()
+        get() = if (arrowId == null) null else ArrowDAO.loadArrowOrNull(arrowId!!)
 
     val orCreateArcherSignature: Signature
         get() {
@@ -129,7 +119,7 @@ data class Training(
             val signature = Signature()
             SignatureDAO.saveSignature(signature)
             archerSignatureId = signature.id
-            save()
+            TrainingDAO.saveTraining(this)
             return signature
         }
 
@@ -144,7 +134,7 @@ data class Training(
             val signature = Signature()
             SignatureDAO.saveSignature(signature)
             witnessSignatureId = signature.id
-            save()
+            TrainingDAO.saveTraining(this)
             return signature
         }
 
@@ -174,21 +164,6 @@ data class Training(
         } else date.compareTo(other.date)
     }
 
-    override fun save(): Boolean {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.save(it) })
-        return true
-    }
-
-    override fun save(databaseWrapper: DatabaseWrapper): Boolean {
-        super.save(databaseWrapper)
-        // TODO Replace this super ugly workaround by stubbed Relationship in version 4 of dbFlow
-        loadRounds().forEach { s ->
-            s.trainingId = id
-            s.save(databaseWrapper)
-        }
-        return true
-    }
-
     override fun delete(): Boolean {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction({ this.delete(it) })
         return true
@@ -206,17 +181,5 @@ data class Training(
                 .where(Round_Table.training.eq(id))
                 .orderBy(Round_Table.index, true)
                 .queryList(databaseWrapper)
-    }
-
-    companion object {
-        operator fun get(id: Long): Training? {
-            return SQLite.select()
-                    .from(Training::class.java)
-                    .where(Training_Table._id.eq(id))
-                    .querySingle()
-        }
-
-        val all: List<Training>
-            get() = SQLite.select().from(Training::class.java).queryList()
     }
 }

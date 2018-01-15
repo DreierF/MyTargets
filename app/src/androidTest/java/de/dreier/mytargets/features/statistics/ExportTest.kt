@@ -18,7 +18,7 @@ package de.dreier.mytargets.features.statistics
 import android.support.test.InstrumentationRegistry.getInstrumentation
 import android.support.test.filters.SmallTest
 import android.support.test.runner.AndroidJUnit4
-import de.dreier.mytargets.shared.models.db.Training
+import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.test.base.InstrumentedTestBase
 import de.dreier.mytargets.test.utils.rules.MiniDbTestRule
 import org.junit.Assert
@@ -38,7 +38,7 @@ class ExportTest : InstrumentedTestBase() {
     @Throws(IOException::class)
     fun testDataExport() {
         val writer = StringWriter()
-        val roundIds = Training.all
+        val roundIds = TrainingDAO.loadTrainings()
                 .flatMap { it.loadRounds() }
                 .map { it.id }
                 .sorted()

@@ -48,9 +48,9 @@ import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.dao.ArrowDAO
 import de.dreier.mytargets.shared.models.dao.BowDAO
+import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.Bow
-import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.targets.models.WAFull
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod
 import de.dreier.mytargets.test.base.UITestBase
@@ -125,7 +125,7 @@ class MainActivityTest : UITestBase() {
         onView(withRecyclerView(R.id.recyclerView).atPosition(1))
                 .perform(click())
 
-        val firstTraining = Training.all
+        val firstTraining = TrainingDAO.loadTrainings()
                 .sortedWith(Collections.reverseOrder())
                 .firstOrNull()
 
@@ -136,7 +136,7 @@ class MainActivityTest : UITestBase() {
         clickActionBarItem(R.id.action_statistics, R.string.statistic)
         intended(hasClass(StatisticsActivity::class.java))
 
-        var expectedRoundIds = Training.all
+        var expectedRoundIds = TrainingDAO.loadTrainings()
                 .flatMap { t -> t.loadRounds() }
                 .map { it.id }
                 .toSet()
@@ -164,7 +164,7 @@ class MainActivityTest : UITestBase() {
                 .perform(click())
         clickContextualActionBarItem(R.id.action_statistics, R.string.statistic)
 
-        val trainings = Training.all
+        val trainings = TrainingDAO.loadTrainings()
                 .sortedWith(Collections.reverseOrder())
         expectedRoundIds = listOf(trainings[1], trainings[2])
                 .flatMap { t -> t.loadRounds() }

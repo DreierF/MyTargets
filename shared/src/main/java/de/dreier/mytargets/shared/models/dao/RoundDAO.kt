@@ -55,18 +55,11 @@ object RoundDAO {
 
     fun saveRound(round: Round, ends: List<End>) {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-            saveRound(round, db, ends)
+            saveRound(db, round, ends)
         }
     }
 
-    fun insertRound(round: Round, ends: List<End>) {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-            db.execSQL("UPDATE Round SET `index` = `index` + 1 WHERE `index` >= ${round.index}")
-            saveRound(round, db, ends)
-        }
-    }
-
-    private fun saveRound(round: Round, db: DatabaseWrapper, ends: List<End>) {
+    private fun saveRound(db: DatabaseWrapper, round: Round, ends: List<End>) {
         round.save(db)
         SQLite.delete(End::class.java)
                 .where(End_Table.round.eq(round.id))
@@ -91,5 +84,22 @@ object RoundDAO {
         }
     }
 
+    private fun insertRound(round: Round, ends: List<End>) {
+        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
+            db.execSQL("UPDATE Round SET `index` = `index` + 1 WHERE `index` >= ${round.index}")
+            saveRound(db, round, ends)
+        }
+    }
+
     fun loadAugmentedRound(item: Round) = AugmentedRound(item)
+
+    fun saveRound(round: AugmentedRound) {
+        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
+            round.round.save(db)
+            for(end in round.ends) {
+                end.end.roundId = round.round.id
+                EndDAO.saveEnd(end.end, end.images, end.shots)
+            }
+        }
+    }
 }

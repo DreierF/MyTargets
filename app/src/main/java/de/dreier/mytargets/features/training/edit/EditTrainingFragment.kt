@@ -39,6 +39,7 @@ import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.augmented.AugmentedRound
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
+import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
@@ -67,7 +68,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
             val training = if (trainingId == null) {
                 Training()
             } else {
-                Training[trainingId!!]!!
+                TrainingDAO.loadTrainingOrNull(trainingId!!)!!
             }
             training.title = binding.training.text.toString()
             training.date = date
@@ -184,7 +185,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
                 GONE
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_training)
-            val train = Training[trainingId!!]!!
+            val train = TrainingDAO.loadTrainingOrNull(trainingId!!)!!
             binding.training.setText(train.title)
             date = train.date
             binding.bow.setItemId(train.bowId)
@@ -280,7 +281,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
                     round.round.target = roundTarget!!
                 }
             }
-            training.toTraining().save()
+            TrainingDAO.saveTraining(training.training, training.rounds.map { it.round })
 
             val round = training.rounds[0]
 

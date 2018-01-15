@@ -35,6 +35,7 @@ import de.dreier.mytargets.shared.models.EWeather
 import de.dreier.mytargets.shared.models.dao.BowDAO
 import de.dreier.mytargets.shared.models.dao.EndDAO
 import de.dreier.mytargets.shared.models.dao.RoundDAO
+import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.test.base.InstrumentedTestBase
@@ -90,7 +91,7 @@ class MigrationTest : InstrumentedTestBase() {
     @Test
     @Throws(IOException::class)
     fun upgradeShouldKeepData() {
-        val trainings = Training.all
+        val trainings = TrainingDAO.loadTrainings()
         assertTraining1(trainings[0])
         assertTraining2(trainings[1])
 

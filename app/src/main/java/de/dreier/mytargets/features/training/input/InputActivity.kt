@@ -49,10 +49,10 @@ import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
 import de.dreier.mytargets.shared.models.dao.BowDAO
 import de.dreier.mytargets.shared.models.dao.EndDAO
+import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
-import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.models.sum
 import de.dreier.mytargets.shared.utils.ImageList
 import de.dreier.mytargets.shared.views.TargetViewBase
@@ -445,7 +445,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     ) : AsyncTaskLoader<LoaderResult>(context) {
 
         override fun loadInBackground(): LoaderResult? {
-            val training = Training[trainingId]
+            val training = TrainingDAO.loadTrainingOrNull(trainingId)
             val result = LoaderResult(AugmentedTraining(training!!))
             result.setRoundId(roundId)
             result.setAdjustEndIndex(endIndex)

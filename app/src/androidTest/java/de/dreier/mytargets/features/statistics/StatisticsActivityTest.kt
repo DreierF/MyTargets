@@ -24,7 +24,7 @@ import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.espresso.matcher.ViewMatchers.withParent
 import android.support.test.runner.AndroidJUnit4
 import de.dreier.mytargets.R
-import de.dreier.mytargets.shared.models.db.Training
+import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.test.base.UITestBase
 import de.dreier.mytargets.test.utils.rules.SimpleDbTestRule
 import org.hamcrest.Matchers.allOf
@@ -46,7 +46,7 @@ class StatisticsActivityTest : UITestBase() {
     @Test
     fun navigationTest() {
         // Add round ids
-        val roundIds = Training.all
+        val roundIds = TrainingDAO.loadTrainings()
                 .flatMap { t -> t.loadRounds() }
                 .map { it.id }
                 .toList()

@@ -27,6 +27,7 @@ import de.dreier.mytargets.shared.models.augmented.AugmentedRound
 import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
 import de.dreier.mytargets.shared.models.dao.RoundDAO
+import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.utils.unmarshall
@@ -60,7 +61,7 @@ class MobileWearableListener : WearableListenerService() {
     }
 
     private fun trainingTemplate() {
-        val lastTraining = Training.all.minWith(Collections.reverseOrder())
+        val lastTraining = TrainingDAO.loadTrainings().minWith(Collections.reverseOrder())
         if (lastTraining != null && lastTraining.date.isEqual(LocalDate.now())) {
             ApplicationInstance.wearableClient.updateTraining(AugmentedTraining(lastTraining))
         } else {
@@ -90,9 +91,8 @@ class MobileWearableListener : WearableListenerService() {
 
     private fun createTraining(messageEvent: MessageEvent) {
         val augmentedTraining = messageEvent.data.unmarshall(AugmentedTraining.CREATOR)
-        val training = augmentedTraining.toTraining()
-        training.save()
-        ApplicationInstance.wearableClient.updateTraining(AugmentedTraining(training))
+        TrainingDAO.saveTraining(augmentedTraining.training, augmentedTraining.rounds.map { it.round })
+        ApplicationInstance.wearableClient.updateTraining(augmentedTraining)
         ApplicationInstance.wearableClient.sendCreateTrainingFromRemoteBroadcast()
     }
 
@@ -106,7 +106,7 @@ class MobileWearableListener : WearableListenerService() {
 
         ApplicationInstance.wearableClient.sendUpdateTrainingFromRemoteBroadcast(round.round, newEnd.end)
         ApplicationInstance.wearableClient
-                .sendUpdateTrainingFromLocalBroadcast(AugmentedTraining(Training[round.round.trainingId!!]!!))
+                .sendUpdateTrainingFromLocalBroadcast(AugmentedTraining(TrainingDAO.loadTraining(round.round.trainingId!!)))
     }
 
     private fun getLastEmptyOrCreateNewEnd(round: AugmentedRound): AugmentedEnd {

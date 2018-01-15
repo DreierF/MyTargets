@@ -22,8 +22,10 @@ import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.EWeather
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.augmented.AugmentedRound
+import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
 import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
+import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.*
 import de.dreier.mytargets.shared.targets.models.WAFull
 import de.dreier.mytargets.shared.views.TargetViewBase
@@ -99,13 +101,13 @@ class SimpleDbTestRule : DbTestRuleBase() {
 
     private fun addRandomTraining(seed: Int) {
         val generator = Random(seed.toLong())
-        val standardRound = StandardRoundDAO.loadStandardRoundOrNull(32L)
+        val standardRound = AugmentedStandardRound(StandardRoundDAO.loadStandardRound(32L))
 
-        val training = saveDefaultTraining(standardRound!!.id, generator)
+        val training = saveDefaultTraining(standardRound.id, generator)
 
         val at = AugmentedTraining(training)
         at.initRoundsFromTemplate(standardRound)
-        at.toTraining().save()
+        TrainingDAO.saveTraining(at.training, at.rounds)
 
         val round1 = at.rounds[0]
 
@@ -127,7 +129,7 @@ class SimpleDbTestRule : DbTestRuleBase() {
     }
 
     private fun addFullTraining(bow: Bow) {
-        val standardRound = StandardRoundDAO.loadStandardRoundOrNull(32L)
+        val standardRound = AugmentedStandardRound(StandardRoundDAO.loadStandardRound(32L))
 
         val training = Training()
         training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training)
@@ -135,13 +137,13 @@ class SimpleDbTestRule : DbTestRuleBase() {
         training.weather = EWeather.SUNNY
         training.windSpeed = 1
         training.windDirection = 0
-        training.standardRoundId = standardRound!!.id
+        training.standardRoundId = standardRound.id
         training.bowId = bow.id
         training.arrowId = null
         training.arrowNumbering = false
         val at = AugmentedTraining(training)
         at.initRoundsFromTemplate(standardRound)
-        at.toTraining().save()
+        TrainingDAO.saveTraining(at.training, at.rounds.map { it.round })
 
         val round1 = at.rounds[0]
 

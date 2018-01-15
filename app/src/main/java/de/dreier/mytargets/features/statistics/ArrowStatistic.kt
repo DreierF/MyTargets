@@ -26,9 +26,9 @@ import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.dao.ArrowDAO
 import de.dreier.mytargets.shared.models.dao.EndDAO
 import de.dreier.mytargets.shared.models.dao.RoundDAO
+import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
-import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.models.sum
 import kotlinx.android.parcel.Parcelize
 import java.lang.Math.ceil
@@ -73,7 +73,7 @@ data class ArrowStatistic(
 
         fun getAll(target: Target, rounds: List<Round>): List<ArrowStatistic> {
             return rounds
-                    .groupBy { r -> Training[r.trainingId!!]!!.arrowId ?: 0 }
+                    .groupBy { r -> TrainingDAO.loadTrainingOrNull(r.trainingId!!)!!.arrowId ?: 0 }
                     .flatMap { t ->
                         val arrow = ArrowDAO.loadArrowOrNull(t.key)
                         val name = arrow?.name ?: SharedApplicationInstance.getStr(R.string.unknown)

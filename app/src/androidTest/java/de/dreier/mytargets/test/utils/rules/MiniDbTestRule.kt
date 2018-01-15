@@ -18,8 +18,10 @@ package de.dreier.mytargets.test.utils.rules
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
 import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
+import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.targets.models.WAFull
 import de.dreier.mytargets.shared.views.TargetViewBase
 import java.util.*
@@ -39,12 +41,12 @@ class MiniDbTestRule : DbTestRuleBase() {
 
     private fun addRandomTraining(seed: Int) {
         val generator = Random(seed.toLong())
-        val standardRound = StandardRoundDAO.loadStandardRoundOrNull(32L)
+        val standardRound = AugmentedStandardRound(StandardRoundDAO.loadStandardRound(32L))
 
         val training = saveDefaultTraining(standardRound!!.id, generator)
         val at = AugmentedTraining(training)
         at.initRoundsFromTemplate(standardRound)
-        at.toTraining().save()
+        TrainingDAO.saveTraining(at.training, at.rounds)
 
         val round1 = at.rounds[0]
         val round2 = at.rounds[1]

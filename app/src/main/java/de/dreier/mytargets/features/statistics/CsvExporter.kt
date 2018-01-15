@@ -19,6 +19,7 @@ import android.content.Context
 import de.dreier.mytargets.R
 import de.dreier.mytargets.shared.models.dao.EndDAO
 import de.dreier.mytargets.shared.models.dao.RoundDAO
+import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import org.threeten.bp.format.DateTimeFormatter
@@ -56,7 +57,7 @@ class CsvExporter(private val context: Context) {
         csv.add("y")
         csv.newLine()
         csv.exitScope()
-        for (t in Training.all) {
+        for (t in TrainingDAO.loadTrainings()) {
             addTraining(csv, t, roundIds)
         }
 

@@ -44,10 +44,10 @@ import de.dreier.mytargets.shared.models.SelectableZone
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.dao.EndDAO
 import de.dreier.mytargets.shared.models.dao.RoundDAO
+import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
-import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.utils.Color
 import de.dreier.mytargets.shared.utils.ScoreUtils
 import de.dreier.mytargets.utils.MobileWearableClient
@@ -100,7 +100,7 @@ class StatisticsFragment : FragmentBase() {
             val trainingsMap = rounds!!
                     .map { it.trainingId!! }
                     .distinct()
-                    .map { Training[it]!! }
+                    .map { TrainingDAO.loadTrainingOrNull(it)!! }
                     .map { Pair(it.id, it) }
                     .toMap()
 
@@ -200,7 +200,7 @@ class StatisticsFragment : FragmentBase() {
                 .map { it.trainingId!! }
                 .distinct()
         if (trainingsIds.size == 1) {
-            val training = Training[trainingsIds[0]]!!
+            val training = TrainingDAO.loadTraining(trainingsIds[0])
             val date = training.date.format(DateTimeFormatter.ISO_LOCAL_DATE)
             val round = if (rounds!!.size == 1) {
                 val index = rounds!![0].index + 1

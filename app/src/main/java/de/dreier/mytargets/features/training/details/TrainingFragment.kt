@@ -32,6 +32,7 @@ import de.dreier.mytargets.databinding.FragmentTrainingBinding
 import de.dreier.mytargets.databinding.ItemRoundBinding
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.dao.RoundDAO
+import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
@@ -107,7 +108,7 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        training = Training[trainingId]
+        training = TrainingDAO.loadTrainingOrNull(trainingId)
         val rounds = training!!.loadRounds() //FIXME can be null!?
         return {
             // Hide fab for standard rounds
@@ -162,7 +163,7 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
                         .inputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
                         .input("", training!!.comment) { _, input ->
                             training!!.comment = input.toString()
-                            training!!.save()
+                            TrainingDAO.saveTraining(training!!)
                         }
                         .negativeText(android.R.string.cancel)
                         .show()

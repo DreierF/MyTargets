@@ -28,6 +28,7 @@ import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
 import de.dreier.mytargets.shared.models.augmented.AugmentedRound
 import de.dreier.mytargets.shared.models.dao.ArrowDAO
 import de.dreier.mytargets.shared.models.dao.BowDAO
+import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.Training
@@ -124,7 +125,7 @@ abstract class DbTestRuleBase : TestRule {
         training.bowId = null
         training.arrowId = null
         training.arrowNumbering = false
-        training.save()
+        TrainingDAO.saveTraining(training)
         return training
     }
 }
