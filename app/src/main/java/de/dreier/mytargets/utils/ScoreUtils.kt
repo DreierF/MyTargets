@@ -22,6 +22,7 @@ import de.dreier.mytargets.shared.models.dao.EndDAO
 import de.dreier.mytargets.shared.models.dao.RoundDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
+import de.dreier.mytargets.shared.targets.scoringstyle.ArrowAwareScoringStyle
 import java.util.*
 
 object ScoreUtils {
@@ -55,18 +56,18 @@ object ScoreUtils {
         rounds.flatMap { RoundDAO.loadEnds(it.id) }
                 .forEach {
                     EndDAO.loadShots(it.id).forEach { s ->
-                                if (s.scoringRing != Shot.NOTHING_SELECTED) {
-                                    val tuple = SelectableZone(s.scoringRing,
-                                            t.model.getZone(s.scoringRing),
-                                            t.zoneToString(s.scoringRing, s.index),
-                                            t.getScoreByZone(s.scoringRing, s.index))
-                                    val integer = scoreCount[tuple]
-                                    if (integer != null) {
-                                        val count = integer + 1
-                                        scoreCount[tuple] = count
-                                    }
-                                }
+                        if (s.scoringRing != Shot.NOTHING_SELECTED) {
+                            val tuple = SelectableZone(s.scoringRing,
+                                    t.model.getZone(s.scoringRing),
+                                    t.zoneToString(s.scoringRing, s.index),
+                                    t.getScoreByZone(s.scoringRing, s.index))
+                            val integer = scoreCount[tuple]
+                            if (integer != null) {
+                                val count = integer + 1
+                                scoreCount[tuple] = count
                             }
+                        }
+                    }
                 }
         return scoreCount
     }
@@ -78,7 +79,7 @@ object ScoreUtils {
             for (selectableZone in zoneList) {
                 scoreCount[selectableZone] = 0
             }
-            if (!t.model.dependsOnArrowIndex()) {
+            if (t.getScoringStyle() !is ArrowAwareScoringStyle) {
                 break
             }
         }

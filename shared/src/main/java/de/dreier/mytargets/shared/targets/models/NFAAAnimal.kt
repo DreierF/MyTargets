@@ -15,8 +15,8 @@
 package de.dreier.mytargets.shared.targets.models
 
 import de.dreier.mytargets.shared.R
+import de.dreier.mytargets.shared.models.Diameter
 import de.dreier.mytargets.shared.models.ETargetType
-import de.dreier.mytargets.shared.targets.TargetOvalBase
 import de.dreier.mytargets.shared.targets.scoringstyle.ArrowAwareScoringStyle
 import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle
 import de.dreier.mytargets.shared.targets.zone.CircularZone
@@ -27,9 +27,10 @@ import de.dreier.mytargets.shared.utils.Color.LIGHTER_GRAY
 import de.dreier.mytargets.shared.utils.Color.ORANGE
 import de.dreier.mytargets.shared.utils.Color.TURBO_YELLOW
 
-class NFAAAnimal : TargetOvalBase(
+class NFAAAnimal : TargetModelBase(
         id = ID,
         nameRes = R.string.nfaa_animal,
+        diameters = arrayOf(Diameter.SMALL, Diameter.MEDIUM, Diameter.LARGE, Diameter.XLARGE),
         zones = arrayOf(
                 CircularZone(0.162f, TURBO_YELLOW, BLACK, 5),
                 EllipseZone(1.0f, 0.0f, 0.0f, ORANGE, BLACK, 4),

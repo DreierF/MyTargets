@@ -83,10 +83,6 @@ open class TargetModelBase protected constructor(
         return scoringStyles[scoringStyle]
     }
 
-    open fun dependsOnArrowIndex(): Boolean {
-        return false
-    }
-
     open fun shouldDrawZone(zone: Int, scoringStyle: Int): Boolean {
         return true
     }

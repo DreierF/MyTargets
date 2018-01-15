@@ -88,7 +88,9 @@ object AppDatabase {
                 val ends = SQLite.select().from(End::class.java).where(End_Table.round.eq(round.id))
                         .queryList(database)
                 for (end in ends) {
-                    val shots = SQLite.select().from(Shot::class.java).where(Shot_Table.end.eq(end.id))
+                    val shots = SQLite.select().from(Shot::class.java)
+                            .where(Shot_Table.end.eq(end.id))
+                            .orderBy(Shot_Table.index, true)
                             .queryList(database)
                     end.score = target.getReachedScore(shots)
                     end.save(database)

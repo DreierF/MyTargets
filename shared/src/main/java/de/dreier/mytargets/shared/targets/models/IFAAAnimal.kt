@@ -15,8 +15,8 @@
 package de.dreier.mytargets.shared.targets.models
 
 import de.dreier.mytargets.shared.R
+import de.dreier.mytargets.shared.models.Diameter
 import de.dreier.mytargets.shared.models.ETargetType
-import de.dreier.mytargets.shared.targets.TargetOvalBase
 import de.dreier.mytargets.shared.targets.scoringstyle.ArrowAwareScoringStyle
 import de.dreier.mytargets.shared.targets.zone.CircularZone
 import de.dreier.mytargets.shared.targets.zone.EllipseZone
@@ -25,9 +25,10 @@ import de.dreier.mytargets.shared.utils.Color.GRAY
 import de.dreier.mytargets.shared.utils.Color.LIGHTER_GRAY
 import de.dreier.mytargets.shared.utils.Color.ORANGE
 
-class IFAAAnimal : TargetOvalBase(
+class IFAAAnimal : TargetModelBase(
         id = ID,
         nameRes = R.string.ifaa_animal,
+        diameters = arrayOf(Diameter.SMALL, Diameter.MEDIUM, Diameter.LARGE, Diameter.XLARGE),
         zones = arrayOf(
                 EllipseZone(1.0f, 0.0f, 0.0f, ORANGE, BLACK, 4),
                 CircularZone(1.0f, LIGHTER_GRAY, GRAY, 3)

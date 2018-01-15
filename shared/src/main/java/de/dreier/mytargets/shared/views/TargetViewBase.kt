@@ -45,6 +45,7 @@ import de.dreier.mytargets.shared.models.db.RoundTemplate
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable
 import de.dreier.mytargets.shared.targets.models.WAFull
+import de.dreier.mytargets.shared.targets.scoringstyle.ArrowAwareScoringStyle
 import de.dreier.mytargets.shared.utils.EndRenderer
 import de.dreier.mytargets.shared.utils.RectUtils
 import java.util.*
@@ -60,7 +61,7 @@ abstract class TargetViewBase : View, View.OnTouchListener {
     protected var currentShotIndex: Int = 0
         set(currentArrow) {
             field = currentArrow
-            if (target.model.dependsOnArrowIndex()) {
+            if (target.getScoringStyle() is ArrowAwareScoringStyle) {
                 updateSelectableZones()
             }
         }

@@ -53,6 +53,7 @@ object EndDAO {
     fun loadShots(id: Long): MutableList<Shot> = SQLite.select()
             .from(Shot::class.java)
             .where(Shot_Table.end.eq(id))
+            .orderBy(Shot_Table.index, true)
             .queryList().toMutableList()
 
     fun saveEnd(end: End) {

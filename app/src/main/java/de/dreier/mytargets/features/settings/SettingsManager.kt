@@ -31,6 +31,7 @@ import de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER
 import de.dreier.mytargets.shared.models.Score
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.TimerSettings
+import de.dreier.mytargets.shared.targets.scoringstyle.ArrowAwareScoringStyle
 import de.dreier.mytargets.shared.utils.map
 import de.dreier.mytargets.shared.utils.toSparseArray
 import de.dreier.mytargets.shared.views.TargetViewBase
@@ -359,6 +360,8 @@ object SettingsManager {
         set(value) = preferences.set(KEY_INTRO_SHOWED, value)
 
     fun shouldSortTarget(target: Target): Boolean {
-        return preferences.getBoolean(KEY_OVERVIEW_SHOT_SORTING, true) && (target.model.faceCount == 1 || preferences.getBoolean(KEY_OVERVIEW_SHOT_SORTING_SPOT, false))
+        return preferences.getBoolean(KEY_OVERVIEW_SHOT_SORTING, true)
+                && (target.model.faceCount == 1 || preferences.getBoolean(KEY_OVERVIEW_SHOT_SORTING_SPOT, false))
+                && target.getScoringStyle() !is ArrowAwareScoringStyle
     }
 }
