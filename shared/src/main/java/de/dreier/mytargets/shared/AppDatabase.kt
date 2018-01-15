@@ -26,7 +26,7 @@ import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.models.db.ArrowImage
 import de.dreier.mytargets.shared.models.db.BowImage
 import de.dreier.mytargets.shared.models.db.EndImage
-import de.dreier.mytargets.shared.models.db.Image
+import de.dreier.mytargets.shared.models.Image
 import de.dreier.mytargets.shared.utils.StandardRoundFactory
 import de.dreier.mytargets.shared.utils.moveTo
 import java.io.File

@@ -26,6 +26,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.*
+import de.dreier.mytargets.shared.models.dao.SignatureDAO
 import de.dreier.mytargets.shared.utils.typeconverters.EWeatherConverter
 import de.dreier.mytargets.shared.utils.typeconverters.LocalDateConverter
 import kotlinx.android.parcel.IgnoredOnParcel
@@ -120,16 +121,13 @@ data class Training(
     val orCreateArcherSignature: Signature
         get() {
             if (archerSignatureId != null) {
-                val signature = SQLite.select()
-                        .from(Signature::class.java)
-                        .where(Signature_Table._id.eq(archerSignatureId!!))
-                        .querySingle()
+                val signature = SignatureDAO.loadSignatureOrNull(archerSignatureId!!)
                 if (signature != null) {
                     return signature
                 }
             }
             val signature = Signature()
-            signature.save()
+            SignatureDAO.saveSignature(signature)
             archerSignatureId = signature.id
             save()
             return signature
@@ -138,16 +136,13 @@ data class Training(
     val orCreateWitnessSignature: Signature
         get() {
             if (witnessSignatureId != null) {
-                val signature = SQLite.select()
-                        .from(Signature::class.java)
-                        .where(Signature_Table._id.eq(witnessSignatureId!!))
-                        .querySingle()
+                val signature = SignatureDAO.loadSignatureOrNull(witnessSignatureId!!)
                 if (signature != null) {
                     return signature
                 }
             }
             val signature = Signature()
-            signature.save()
+            SignatureDAO.saveSignature(signature)
             witnessSignatureId = signature.id
             save()
             return signature

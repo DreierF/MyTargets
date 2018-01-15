@@ -17,7 +17,6 @@ package de.dreier.mytargets.shared.models.db
 import android.annotation.SuppressLint
 import android.os.Parcelable
 import com.raizlabs.android.dbflow.annotation.*
-import com.raizlabs.android.dbflow.structure.BaseModel
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Dimension.Unit.METER
@@ -41,4 +40,4 @@ data class SightMark(
 
         @Column
         var value: String? = ""
-) : BaseModel(), IIdSettable, Parcelable
+) : IIdSettable, Parcelable

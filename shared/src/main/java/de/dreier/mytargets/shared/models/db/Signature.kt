@@ -22,7 +22,6 @@ import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
 import com.raizlabs.android.dbflow.annotation.Table
 import com.raizlabs.android.dbflow.sql.language.SQLite
-import com.raizlabs.android.dbflow.structure.BaseModel
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.utils.readBitmap
 import de.dreier.mytargets.shared.utils.typeconverters.BitmapConverter
@@ -40,7 +39,7 @@ data class Signature(
         /** A bitmap of the signature or null if no signature has been set. */
         @Column(typeConverter = BitmapConverter::class)
         var bitmap: Bitmap? = null
-) : BaseModel(), Parcelable {
+) : Parcelable {
 
     val isSigned: Boolean
         get() = bitmap != null

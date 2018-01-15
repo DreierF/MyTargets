@@ -19,6 +19,7 @@ import android.annotation.SuppressLint
 import android.os.Parcelable
 import com.raizlabs.android.dbflow.annotation.*
 import de.dreier.mytargets.shared.AppDatabase
+import de.dreier.mytargets.shared.models.Image
 import kotlinx.android.parcel.Parcelize
 
 @SuppressLint("ParcelCreator")

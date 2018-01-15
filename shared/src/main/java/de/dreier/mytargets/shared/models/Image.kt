@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models.db
+package de.dreier.mytargets.shared.models
 
 interface Image {
 

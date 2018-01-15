@@ -26,6 +26,7 @@ import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog
 import de.dreier.mytargets.R
 import de.dreier.mytargets.databinding.FragmentSignatureBinding
+import de.dreier.mytargets.shared.models.dao.SignatureDAO
 import de.dreier.mytargets.shared.models.db.Signature
 
 class SignatureDialogFragment : DialogFragment() {
@@ -45,7 +46,7 @@ class SignatureDialogFragment : DialogFragment() {
                     .inputType(InputType.TYPE_CLASS_TEXT)
                     .input(defaultName, signature.name) { _, input ->
                         signature.name = input.toString()
-                        signature.save()
+                        SignatureDAO.saveSignature(signature)
                         binding.signer.text = signature.name
                     }
                     .negativeText(android.R.string.cancel)
@@ -58,7 +59,7 @@ class SignatureDialogFragment : DialogFragment() {
                 bitmap = binding.signatureView.transparentSignatureBitmap
             }
             signature.bitmap = bitmap
-            signature.save()
+            SignatureDAO.saveSignature(signature)
             dismiss()
         }
         binding.clear.setOnClickListener { binding.signatureView.clear() }

@@ -19,6 +19,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.raizlabs.android.dbflow.annotation.*
 import de.dreier.mytargets.shared.AppDatabase
+import de.dreier.mytargets.shared.models.Image
 
 @Table(database = AppDatabase::class)
 data class EndImage(

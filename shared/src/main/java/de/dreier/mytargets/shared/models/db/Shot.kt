@@ -31,7 +31,7 @@ data class Shot(
         @Column
         var index: Int = 0,
 
-        @ForeignKey(tableClass = End::class, references = arrayOf(ForeignKeyReference(columnName = "end", foreignKeyColumnName = "_id")), onDelete = ForeignKeyAction.CASCADE)
+        @ForeignKey(tableClass = End::class, references = [(ForeignKeyReference(columnName = "end", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
         var endId: Long? = null,
 
         @Column

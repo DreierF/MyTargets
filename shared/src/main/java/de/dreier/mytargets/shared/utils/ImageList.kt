@@ -18,7 +18,7 @@ package de.dreier.mytargets.shared.utils
 import android.annotation.SuppressLint
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.db.EndImage
-import de.dreier.mytargets.shared.models.db.Image
+import de.dreier.mytargets.shared.models.Image
 import kotlinx.android.parcel.Parcelize
 
 @SuppressLint("ParcelCreator")
