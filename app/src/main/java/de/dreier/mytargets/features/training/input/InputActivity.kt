@@ -47,10 +47,7 @@ import de.dreier.mytargets.databinding.ActivityInputBinding
 import de.dreier.mytargets.features.settings.ESettingsScreens
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
-import de.dreier.mytargets.shared.models.dao.BowDAO
-import de.dreier.mytargets.shared.models.dao.EndDAO
-import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
-import de.dreier.mytargets.shared.models.dao.TrainingDAO
+import de.dreier.mytargets.shared.models.dao.*
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
@@ -453,14 +450,12 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
             result.setAdjustEndIndex(endIndex)
 
             if (training.arrowId != null) {
-                val arrow = training.arrow
-                if (arrow != null) {
-                    result.setArrow(arrow)
-                }
+                val arrow = ArrowDAO.loadArrow(training.arrowId!!)
+                result.maxArrowNumber = arrow.maxArrowNumber
+                result.arrowDiameter = arrow.diameter
             }
-            val bow = training.bow
-            if (bow != null) {
-                result.sightMark = BowDAO.loadSightMarks(bow.id)
+            if (training.bowId != null) {
+                result.sightMark = BowDAO.loadSightMarks(training.bowId!!)
                         .firstOrNull { it.distance == result.distance!! }
             }
             return result
@@ -481,5 +476,4 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
             return end.id != currentEndId && end.exact
         }
     }
-
 }

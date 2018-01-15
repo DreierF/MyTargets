@@ -21,8 +21,6 @@ import com.raizlabs.android.dbflow.annotation.*
 import com.raizlabs.android.dbflow.structure.BaseModel
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.*
-import de.dreier.mytargets.shared.models.dao.ArrowDAO
-import de.dreier.mytargets.shared.models.dao.BowDAO
 import de.dreier.mytargets.shared.models.dao.SignatureDAO
 import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.utils.typeconverters.EWeatherConverter
@@ -93,12 +91,6 @@ data class Training(
             windSpeed = env.windSpeed
             location = env.location
         }
-
-    val bow: Bow?
-        get() = if (bowId == null) null else BowDAO.loadBowOrNull(bowId!!)
-
-    val arrow: Arrow?
-        get() = if (arrowId == null) null else ArrowDAO.loadArrowOrNull(arrowId!!)
 
     val orCreateArcherSignature: Signature
         get() {

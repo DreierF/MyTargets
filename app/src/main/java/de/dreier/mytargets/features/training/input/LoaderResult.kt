@@ -73,8 +73,4 @@ class LoaderResult @JvmOverloads constructor(
         this.endIndex = Math.min(endIndex, currentRound.ends.size)
     }
 
-    fun setArrow(arrow: Arrow) {
-        maxArrowNumber = arrow.maxArrowNumber
-        arrowDiameter = arrow.diameter
-    }
 }

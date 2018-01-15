@@ -19,6 +19,8 @@ import android.content.Context
 import android.text.Spanned
 import android.text.TextUtils
 import de.dreier.mytargets.R
+import de.dreier.mytargets.shared.models.dao.ArrowDAO
+import de.dreier.mytargets.shared.models.dao.BowDAO
 import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
@@ -45,13 +47,13 @@ object HtmlUtils {
             }
         }
 
-        val bow = training.bow
-        if (bow != null) {
+        if (training.bowId != null) {
+            val bow = BowDAO.loadBow(training.bowId!!)
             info.addLine(R.string.bow, bow.name)
         }
 
-        val arrow = training.arrow
-        if (arrow != null) {
+        if (training.arrowId != null) {
+            val arrow = ArrowDAO.loadArrow(training.arrowId!!)
             info.addLine(R.string.arrow, arrow.name)
         }
 

@@ -25,9 +25,7 @@ import de.dreier.mytargets.features.scoreboard.builder.model.TextCell
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.SelectableZone
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.models.dao.EndDAO
-import de.dreier.mytargets.shared.models.dao.RoundDAO
-import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
+import de.dreier.mytargets.shared.models.dao.*
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.models.db.Training
@@ -97,14 +95,14 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
             }
         }
 
-        val bow = training.bow
-        if (bow != null) {
+        if (training.bowId != null) {
+            val bow = BowDAO.loadBow(training.bowId!!)
             info.addLine(R.string.bow, bow.name)
             info.addLine(R.string.bow_type, bow.type!!)
         }
 
-        val arrow = training.arrow
-        if (arrow != null) {
+        if (training.arrowId != null) {
+            val arrow = ArrowDAO.loadArrow(training.arrowId!!)
             info.addLine(R.string.arrow, arrow.name)
         }
 
