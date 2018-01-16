@@ -65,7 +65,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
             val training = if (trainingId == null) {
                 Training()
             } else {
-                TrainingDAO.loadTrainingOrNull(trainingId!!)!!
+                TrainingDAO.loadTraining(trainingId!!)
             }
             training.title = binding.training.text.toString()
             training.date = date
@@ -182,7 +182,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
                 GONE
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_training)
-            val train = TrainingDAO.loadTrainingOrNull(trainingId!!)!!
+            val train = TrainingDAO.loadTraining(trainingId!!)
             binding.training.setText(train.title)
             date = train.date
             binding.bow.setItemId(train.bowId)

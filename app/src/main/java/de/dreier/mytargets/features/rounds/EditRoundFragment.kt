@@ -21,8 +21,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.db.dao.TrainingDAO
 import de.dreier.mytargets.base.db.dao.RoundDAO
+import de.dreier.mytargets.base.db.dao.TrainingDAO
 import de.dreier.mytargets.base.fragments.EditFragmentBase
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase.Companion.ITEM_ID
 import de.dreier.mytargets.databinding.FragmentEditRoundBinding
@@ -81,7 +81,7 @@ class EditRoundFragment : EditFragmentBase() {
             binding.distance.setItem(round.distance)
             binding.target.setItem(round.target)
             binding.notEditable.visibility = View.GONE
-            if (TrainingDAO.loadTrainingOrNull(round.trainingId!!)!!.standardRoundId != null) {
+            if (TrainingDAO.loadTraining(round.trainingId!!).standardRoundId != null) {
                 binding.distanceLayout.visibility = View.GONE
             }
         }
@@ -108,7 +108,7 @@ class EditRoundFragment : EditFragmentBase() {
     }
 
     private fun onSaveRound(): Round? {
-        val training = TrainingDAO.loadTrainingOrNull(trainingId)
+        val training = TrainingDAO.loadTraining(trainingId)
 
         val round: Round
         if (roundId == null) {
@@ -116,7 +116,7 @@ class EditRoundFragment : EditFragmentBase() {
             round.trainingId = trainingId
             round.shotsPerEnd = binding.arrows.progress
             round.maxEndCount = null
-            round.index = TrainingDAO.loadRounds(training!!.id).size
+            round.index = TrainingDAO.loadRounds(training.id).size
         } else {
             round = RoundDAO.loadRound(roundId!!)
         }

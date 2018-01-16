@@ -20,7 +20,6 @@ import com.raizlabs.android.dbflow.kotlinextensions.save
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
-import de.dreier.mytargets.base.db.migrations.Migration0.Companion.createScoreTriggers
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.db.*
 

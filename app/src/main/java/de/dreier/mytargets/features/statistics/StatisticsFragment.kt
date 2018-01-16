@@ -34,9 +34,9 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.renderer.LineChartRenderer
 import com.github.mikephil.charting.utils.ColorTemplate
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.db.dao.TrainingDAO
 import de.dreier.mytargets.base.db.dao.EndDAO
 import de.dreier.mytargets.base.db.dao.RoundDAO
+import de.dreier.mytargets.base.db.dao.TrainingDAO
 import de.dreier.mytargets.base.fragments.FragmentBase
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentStatisticsBinding
@@ -52,7 +52,6 @@ import de.dreier.mytargets.shared.utils.Color
 import de.dreier.mytargets.utils.*
 import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
 import org.threeten.bp.Duration
-import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
@@ -93,38 +92,66 @@ class StatisticsFragment : FragmentBase() {
     private// Without regression line
     val lineChartDataSet: LineData?
         get() {
-            val trainingsMap = rounds!!
-                    .map { it.trainingId!! }
-                    .distinct()
-                    .map { TrainingDAO.loadTrainingOrNull(it)!! }
-                    .map { Pair(it.id, it) }
-                    .toMap()
+            val isSingleTraining = rounds!!.distinctBy(Round::trainingId).count() == 1
 
-            val values = rounds!!
-                    .map { r -> Pair(trainingsMap[r.trainingId]!!.date, r) }
-                    .flatMap { roundIdPair ->
-                        RoundDAO.loadEnds(roundIdPair.second.id)
-                                .map { end -> Pair(roundIdPair.first, end) }
-                    }
-                    .map { endPair -> getPairEndSummary(endPair.second, endPair.first) }
-                    .sortedBy { pair -> pair.second }
-            if (values.isEmpty()) {
+            val values = getDataPointsForLineChart(isSingleTraining)
+            if (values?.isEmpty() != false) {
                 return null
             }
 
-            val eval = getEntryEvaluator(values)
+            val eval = getEntryEvaluator(values, isSingleTraining)
             binding.chartView.xAxis.setValueFormatter { value, _ -> eval.getXValueFormatted(value) }
 
             val data: LineData
             if (values.size < 2) {
                 data = LineData(convertToLineData(values, eval))
             } else {
-                data = LineData(generateLinearRegressionLine(values, eval)!!)
+                data = LineData(generateLinearRegressionLine(values, eval))
                 data.addDataSet(convertToLineData(values, eval))
             }
             data.setDrawValues(false)
             return data
         }
+
+    private fun getDataPointsForLineChart(isSingleTraining: Boolean): List<Pair<Float, LocalDateTime>>? {
+        val trainingsMap = rounds!!
+                .map { it.trainingId!! }
+                .distinct()
+                .map { TrainingDAO.loadTraining(it) }
+                .map { Pair(it.id, it) }
+                .toMap()
+
+        val values: List<Pair<Float, LocalDateTime>>
+        if (isSingleTraining) {
+            val trainingDate = trainingsMap.values.toList()[0].date
+            val ends = rounds!!.sortedBy { it.index }.map { RoundDAO.loadEnds(it.id) }
+            val firstRound = ends[0]
+            if (firstRound.isEmpty()) {
+                return null
+            }
+            var firstEndTime = firstRound[0].saveTime
+            var dayShift = 0L
+            values = ends.flatMap { it }
+                    .map { end ->
+                        if (end.saveTime!!.isBefore(firstEndTime)) {
+                            dayShift += 1
+                            firstEndTime = end.saveTime
+                        }
+                        val dateTime = LocalDateTime.of(trainingDate, end.saveTime).plusDays(dayShift)
+                        Pair(end.score.shotAverage, dateTime)
+                    }
+                    .sortedBy { (_, date) -> date }
+        } else {
+            values = rounds!!
+                    .map { r -> Pair(trainingsMap[r.trainingId]!!.date, r) }
+                    .flatMap { (date, round) ->
+                        RoundDAO.loadEnds(round.id).map { end -> Pair(end, date) }
+                    }
+                    .map { (end, date) -> Pair(end.score.shotAverage, LocalDateTime.of(date, end.saveTime!!)) }
+                    .sortedBy { (_, date) -> date }
+        }
+        return values
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -159,10 +186,7 @@ class StatisticsFragment : FragmentBase() {
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        rounds = roundIds!!
-                .map { RoundDAO.loadRoundOrNull(it) }
-                .filterNotNull()
-
+        rounds = RoundDAO.loadRounds(roundIds!!)
         val data = ArrowStatistic.getAll(target!!, rounds!!)
                 .sortedWith(compareByDescending { it.totalScore.shotAverage })
 
@@ -344,8 +368,7 @@ class StatisticsFragment : FragmentBase() {
         reloadData()
     }
 
-    private fun getEntryEvaluator(values: List<Pair<Float, LocalDateTime>>): Evaluator {
-        val singleTraining = rounds!!.groupBy { (_, trainingId) -> trainingId }.count() == 1
+    private fun getEntryEvaluator(values: List<Pair<Float, LocalDateTime>>, singleTraining: Boolean): Evaluator {
 
         val eval: Evaluator
         if (singleTraining) {
@@ -378,10 +401,6 @@ class StatisticsFragment : FragmentBase() {
         return eval
     }
 
-    private fun getPairEndSummary(end: End, trainingDate: LocalDate): Pair<Float, LocalDateTime> {
-        return Pair(end.score.shotAverage, LocalDateTime.of(trainingDate, end.saveTime!!))
-    }
-
     private fun convertToLineData(values: List<Pair<Float, LocalDateTime>>, evaluator: Evaluator): LineDataSet {
         val seriesEntries = values.indices.map { Entry(evaluator.getXValue(values, it).toFloat(), values[it].first) }
 
@@ -401,7 +420,10 @@ class StatisticsFragment : FragmentBase() {
         return series
     }
 
-    private fun generateLinearRegressionLine(values: List<Pair<Float, LocalDateTime>>, eval: Evaluator): ILineDataSet? {
+    /**
+     * @param values Must not be empty
+     */
+    private fun generateLinearRegressionLine(values: List<Pair<Float, LocalDateTime>>, eval: Evaluator): ILineDataSet {
         val dataSetSize = values.size
         val x = DoubleArray(dataSetSize)
         val y = DoubleArray(dataSetSize)
@@ -424,9 +446,7 @@ class StatisticsFragment : FragmentBase() {
             }
             n++
         }
-        if (n < 1) {
-            return null
-        }
+
         val xBar = sumX / n
         val yBar = sumY / n
 

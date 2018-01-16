@@ -29,11 +29,6 @@ object TrainingDAO {
             .from(Training::class.java)
             .queryList()
 
-    fun loadTrainings(trainingIds: LongArray): List<Training> = SQLite.select()
-            .from(Training::class.java)
-            .where(Training_Table._id.`in`(trainingIds.toList()))
-            .queryList()
-
     fun loadTraining(id: Long): Training = SQLite.select()
             .from(Training::class.java)
             .where(Training_Table._id.eq(id))
@@ -42,11 +37,6 @@ object TrainingDAO {
     fun loadAugmentedTraining(id: Long): AugmentedTraining = AugmentedTraining(loadTraining(id), loadRounds(id)
             .map { RoundDAO.loadAugmentedRound(it) }
             .toMutableList())
-
-    fun loadTrainingOrNull(id: Long): Training? = SQLite.select()
-            .from(Training::class.java)
-            .where(Training_Table._id.eq(id))
-            .querySingle()
 
     fun loadRounds(id: Long): MutableList<Round> = SQLite.select()
             .from(Round::class.java)

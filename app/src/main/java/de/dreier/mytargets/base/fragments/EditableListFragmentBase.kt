@@ -56,6 +56,11 @@ abstract class EditableListFragmentBase<T, U : ListAdapterBase<*, T>> : Fragment
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBundle(KEY_SELECTOR, selector.saveSelectionStates())
+    }
+
     override fun onResume() {
         super.onResume()
         reloadData()

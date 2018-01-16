@@ -19,9 +19,9 @@ import android.annotation.SuppressLint
 import android.os.Parcelable
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.db.dao.ArrowDAO
-import de.dreier.mytargets.base.db.dao.TrainingDAO
 import de.dreier.mytargets.base.db.dao.EndDAO
 import de.dreier.mytargets.base.db.dao.RoundDAO
+import de.dreier.mytargets.base.db.dao.TrainingDAO
 import de.dreier.mytargets.shared.SharedApplicationInstance
 import de.dreier.mytargets.shared.analysis.aggregation.average.Average
 import de.dreier.mytargets.shared.models.Dimension
@@ -73,7 +73,7 @@ data class ArrowStatistic(
 
         fun getAll(target: Target, rounds: List<Round>): List<ArrowStatistic> {
             return rounds
-                    .groupBy { r -> TrainingDAO.loadTrainingOrNull(r.trainingId!!)!!.arrowId ?: 0 }
+                    .groupBy { r -> TrainingDAO.loadTraining(r.trainingId!!).arrowId ?: 0 }
                     .flatMap { t ->
                         val arrow = ArrowDAO.loadArrowOrNull(t.key)
                         val name = arrow?.name ?: SharedApplicationInstance.getStr(R.string.unknown)

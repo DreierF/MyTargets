@@ -37,9 +37,9 @@ import com.evernote.android.state.StateSaver
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.activities.ChildActivityBase
 import de.dreier.mytargets.base.db.dao.ArrowDAO
-import de.dreier.mytargets.base.db.dao.TrainingDAO
 import de.dreier.mytargets.base.db.dao.BowDAO
 import de.dreier.mytargets.base.db.dao.RoundDAO
+import de.dreier.mytargets.base.db.dao.TrainingDAO
 import de.dreier.mytargets.databinding.ActivityStatisticsBinding
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.db.Round
@@ -93,7 +93,7 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
                 val rounds = RoundDAO.loadRounds(roundIds)
                 val trainingsMap = rounds.map { (_, trainingId) -> trainingId!! }
                         .distinct()
-                        .map { id -> Pair(id, TrainingDAO.loadTrainingOrNull(id)!!) }
+                        .map { id -> Pair(id, TrainingDAO.loadTraining(id)) }
                         .toSparseArray()
                 return rounds.map { round -> Pair(trainingsMap.get(round.trainingId!!), round) }
             }
