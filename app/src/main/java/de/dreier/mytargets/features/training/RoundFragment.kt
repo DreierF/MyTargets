@@ -186,6 +186,7 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
             binding.shoots.setShots(round!!.target, shots)
             binding.imageIndicator.visibility = if (item.images.isEmpty()) View.INVISIBLE else View.VISIBLE
             binding.end.text = getString(R.string.end_n, item.end.index + 1)
+            binding.endDetails.text = item.end.score.format(Utils.getCurrentLocale(context!!), SettingsManager.scoreConfiguration)
         }
     }
 
