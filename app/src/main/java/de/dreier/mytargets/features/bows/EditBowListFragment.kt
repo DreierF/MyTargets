@@ -24,13 +24,13 @@ import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
+import de.dreier.mytargets.base.db.dao.BowDAO
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentBowsBinding
 import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.EBowType.*
-import de.dreier.mytargets.shared.models.dao.BowDAO
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.utils.DividerItemDecoration
 import de.dreier.mytargets.utils.SlideInItemAnimator

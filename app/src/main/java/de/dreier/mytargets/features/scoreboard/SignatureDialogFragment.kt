@@ -25,8 +25,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog
 import de.dreier.mytargets.R
+import de.dreier.mytargets.base.db.dao.SignatureDAO
 import de.dreier.mytargets.databinding.FragmentSignatureBinding
-import de.dreier.mytargets.shared.models.dao.SignatureDAO
 import de.dreier.mytargets.shared.models.db.Signature
 
 class SignatureDialogFragment : DialogFragment() {

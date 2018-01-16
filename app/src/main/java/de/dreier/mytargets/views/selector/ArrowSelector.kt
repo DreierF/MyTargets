@@ -21,8 +21,8 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.util.AttributeSet
 import de.dreier.mytargets.R
+import de.dreier.mytargets.base.db.dao.ArrowDAO
 import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding
-import de.dreier.mytargets.shared.models.dao.ArrowDAO
 import de.dreier.mytargets.shared.models.db.Arrow
 
 class ArrowSelector @JvmOverloads constructor(

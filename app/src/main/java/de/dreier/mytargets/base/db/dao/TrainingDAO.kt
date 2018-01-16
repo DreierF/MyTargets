@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models.dao
+package de.dreier.mytargets.base.db.dao
 
 import com.raizlabs.android.dbflow.config.FlowManager
 import com.raizlabs.android.dbflow.kotlinextensions.delete
@@ -83,7 +83,7 @@ object TrainingDAO {
                 round.round.save(db)
                 for (end in round.ends) {
                     end.end.roundId = round.round.id
-                    end.end.save(db)
+                    EndDAO.saveEnd(db, end.end, end.images, end.shots)
                 }
             }
         }
@@ -105,7 +105,7 @@ object TrainingDAO {
         val signature = Signature()
         SignatureDAO.saveSignature(signature)
         training.archerSignatureId = signature.id
-        TrainingDAO.saveTraining(training)
+        saveTraining(training)
         return signature
     }
 
@@ -119,7 +119,7 @@ object TrainingDAO {
         val signature = Signature()
         SignatureDAO.saveSignature(signature)
         training.witnessSignatureId = signature.id
-        TrainingDAO.saveTraining(training)
+        saveTraining(training)
         return signature
     }
 }

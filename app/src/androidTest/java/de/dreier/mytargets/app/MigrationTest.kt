@@ -32,10 +32,10 @@ import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER
 import de.dreier.mytargets.shared.models.Dimension.Unit.METER
 import de.dreier.mytargets.shared.models.EWeather
-import de.dreier.mytargets.shared.models.dao.BowDAO
-import de.dreier.mytargets.shared.models.dao.EndDAO
-import de.dreier.mytargets.shared.models.dao.RoundDAO
-import de.dreier.mytargets.shared.models.dao.TrainingDAO
+import de.dreier.mytargets.base.db.dao.dao.BowDAO
+import de.dreier.mytargets.base.db.dao.dao.EndDAO
+import de.dreier.mytargets.base.db.dao.dao.RoundDAO
+import de.dreier.mytargets.base.db.dao.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.test.base.InstrumentedTestBase

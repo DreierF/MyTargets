@@ -24,6 +24,8 @@ import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
+import de.dreier.mytargets.base.db.dao.EndDAO
+import de.dreier.mytargets.base.db.dao.RoundDAO
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
 import de.dreier.mytargets.base.fragments.LoaderUICallback
@@ -31,8 +33,6 @@ import de.dreier.mytargets.databinding.FragmentListBinding
 import de.dreier.mytargets.databinding.ItemEndBinding
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
-import de.dreier.mytargets.shared.models.dao.EndDAO
-import de.dreier.mytargets.shared.models.dao.RoundDAO
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.utils.*

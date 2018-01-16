@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
+import de.dreier.mytargets.base.db.dao.DimensionDAO
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.SelectItemFragmentBase
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
@@ -71,7 +72,7 @@ class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapter
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        val distances = Dimension.getAll(distance!!, unit!!)
+        val distances = DimensionDAO.getAll(distance!!, unit!!)
         return {
             adapter!!.setList(distances.toMutableList())
             selectItem(binding.recyclerView, distance!!)

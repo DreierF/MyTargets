@@ -21,13 +21,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
+import de.dreier.mytargets.base.db.dao.TrainingDAO
+import de.dreier.mytargets.base.db.dao.RoundDAO
 import de.dreier.mytargets.base.fragments.EditFragmentBase
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase.Companion.ITEM_ID
 import de.dreier.mytargets.databinding.FragmentEditRoundBinding
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.features.training.target.TargetListFragment
-import de.dreier.mytargets.shared.models.dao.RoundDAO
-import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils

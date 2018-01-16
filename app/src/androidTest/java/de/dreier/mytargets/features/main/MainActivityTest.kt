@@ -46,9 +46,9 @@ import de.dreier.mytargets.features.training.edit.EditTrainingFragment
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.models.dao.ArrowDAO
-import de.dreier.mytargets.shared.models.dao.BowDAO
-import de.dreier.mytargets.shared.models.dao.TrainingDAO
+import de.dreier.mytargets.base.db.dao.ArrowDAO
+import de.dreier.mytargets.base.db.dao.dao.BowDAO
+import de.dreier.mytargets.base.db.dao.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.Training

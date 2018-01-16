@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.migration
+package de.dreier.mytargets.base.db.migrations
 
 import android.content.ContentValues
 import android.database.Cursor
@@ -22,11 +22,11 @@ import android.database.sqlite.SQLiteDatabase.CONFLICT_IGNORE
 import com.raizlabs.android.dbflow.annotation.Migration
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
+import de.dreier.mytargets.base.db.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
-import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.models.db.RoundTemplate
 import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.utils.StandardRoundFactory

@@ -36,12 +36,12 @@ import com.evernote.android.state.State
 import com.evernote.android.state.StateSaver
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.activities.ChildActivityBase
+import de.dreier.mytargets.base.db.dao.ArrowDAO
+import de.dreier.mytargets.base.db.dao.TrainingDAO
+import de.dreier.mytargets.base.db.dao.BowDAO
+import de.dreier.mytargets.base.db.dao.RoundDAO
 import de.dreier.mytargets.databinding.ActivityStatisticsBinding
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.models.dao.ArrowDAO
-import de.dreier.mytargets.shared.models.dao.BowDAO
-import de.dreier.mytargets.shared.models.dao.RoundDAO
-import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.utils.toSparseArray

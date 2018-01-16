@@ -18,6 +18,7 @@ package de.dreier.mytargets.features.scoreboard.layout
 import android.content.Context
 import android.text.TextUtils
 import de.dreier.mytargets.R
+import de.dreier.mytargets.base.db.dao.*
 import de.dreier.mytargets.features.scoreboard.ScoreboardBuilder
 import de.dreier.mytargets.features.scoreboard.ScoreboardConfiguration
 import de.dreier.mytargets.features.scoreboard.builder.model.Table
@@ -25,7 +26,6 @@ import de.dreier.mytargets.features.scoreboard.builder.model.TextCell
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.SelectableZone
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.models.dao.*
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.models.db.Training

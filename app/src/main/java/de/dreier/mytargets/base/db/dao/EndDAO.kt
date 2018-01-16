@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models.dao
+package de.dreier.mytargets.base.db.dao
 
 import com.raizlabs.android.dbflow.config.FlowManager
 import com.raizlabs.android.dbflow.kotlinextensions.delete
@@ -62,18 +62,18 @@ object EndDAO {
 
     fun saveEnd(end: End, images: List<EndImage>, shots: List<Shot>) {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-            saveEnd(end, db, images, shots)
+            saveEnd(db, end, images, shots)
         }
     }
 
     fun insertEnd(end: End, images: List<EndImage>, shots: List<Shot>) {
         FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
             db.execSQL("UPDATE End SET `index` = `index` + 1 WHERE `index` >= ${end.index}")
-            saveEnd(end, db, images, shots)
+            saveEnd(db, end, images, shots)
         }
     }
 
-    private fun saveEnd(end: End, db: DatabaseWrapper, images: List<EndImage>, shots: List<Shot>) {
+    internal fun saveEnd(db: DatabaseWrapper, end: End, images: List<EndImage>, shots: List<Shot>) {
         end.save(db)
         SQLite.delete(EndImage::class.java)
                 .where(EndImage_Table.end.eq(end.id))

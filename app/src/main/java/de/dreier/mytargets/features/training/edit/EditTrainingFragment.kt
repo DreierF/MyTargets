@@ -26,6 +26,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.DatePicker
 import de.dreier.mytargets.R
+import de.dreier.mytargets.base.db.dao.TrainingDAO
 import de.dreier.mytargets.base.fragments.EditFragmentBase
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase.Companion.ITEM_ID
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
@@ -37,7 +38,6 @@ import de.dreier.mytargets.features.training.ETrainingType.TRAINING_WITH_STANDAR
 import de.dreier.mytargets.features.training.target.TargetListFragment
 import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training

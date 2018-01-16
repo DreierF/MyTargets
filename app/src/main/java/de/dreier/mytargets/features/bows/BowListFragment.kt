@@ -16,10 +16,10 @@
 package de.dreier.mytargets.features.bows
 
 import android.os.Bundle
+import de.dreier.mytargets.base.db.dao.BowDAO
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
-import de.dreier.mytargets.shared.models.dao.BowDAO
 import de.dreier.mytargets.shared.models.db.Bow
 
 class BowListFragment : SelectPureListItemFragmentBase<Bow>(compareBy(Bow::name, Bow::id)) {

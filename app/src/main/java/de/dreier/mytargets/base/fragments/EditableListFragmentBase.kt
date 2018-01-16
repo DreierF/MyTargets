@@ -27,9 +27,6 @@ import de.dreier.mytargets.utils.multiselector.OnItemClickListener
 import de.dreier.mytargets.utils.multiselector.OnItemLongClickListener
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 
-/**
- * @param <T> Model of the item which is managed within the fragment.
-</T> */
 abstract class EditableListFragmentBase<T, U : ListAdapterBase<*, T>> : FragmentBase(), OnItemClickListener<T>, OnItemLongClickListener<T> where T : IIdSettable {
 
     /**

@@ -20,9 +20,9 @@ import android.databinding.DataBindingUtil
 import android.util.AttributeSet
 import android.view.View
 import de.dreier.mytargets.R
+import de.dreier.mytargets.base.db.dao.StandardRoundDAO
 import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding
 import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
-import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
 
 class StandardRoundSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null)
     : SelectorBase<AugmentedStandardRound>(context, attrs, R.layout.selector_item_image_details, STANDARD_ROUND_REQUEST_CODE) {
@@ -43,7 +43,7 @@ class StandardRoundSelector @JvmOverloads constructor(context: Context, attrs: A
         if (standardRound == null || StandardRoundDAO.loadRoundTemplates(standardRound.id).isEmpty()) {
             standardRound = StandardRoundDAO.loadStandardRoundOrNull(32L)
         }
-        setItem(AugmentedStandardRound(standardRound!!))
+        setItem(AugmentedStandardRound(standardRound!!, StandardRoundDAO.loadRoundTemplates(standardRound.id)))
     }
 
     companion object {

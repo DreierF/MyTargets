@@ -34,6 +34,9 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.renderer.LineChartRenderer
 import com.github.mikephil.charting.utils.ColorTemplate
 import de.dreier.mytargets.R
+import de.dreier.mytargets.base.db.dao.TrainingDAO
+import de.dreier.mytargets.base.db.dao.EndDAO
+import de.dreier.mytargets.base.db.dao.RoundDAO
 import de.dreier.mytargets.base.fragments.FragmentBase
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentStatisticsBinding
@@ -42,9 +45,6 @@ import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.SelectableZone
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.models.dao.EndDAO
-import de.dreier.mytargets.shared.models.dao.RoundDAO
-import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot

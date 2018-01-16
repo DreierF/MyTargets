@@ -79,10 +79,6 @@ dependencies {
     implementation dependencies.supportCompat
     implementation dependencies.supportWear
 
-    kapt dependencies.dbFlowProcessor
-    implementation dependencies.dbFlowCore
-    implementation dependencies.dbFlow
-
     implementation dependencies.androidState
     kapt dependencies.androidStateProcessor
 

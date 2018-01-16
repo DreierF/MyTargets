@@ -25,6 +25,7 @@ import android.support.v4.content.LocalBroadcastManager
 import android.view.*
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.header.ExpandableListAdapter
+import de.dreier.mytargets.base.db.dao.TrainingDAO
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentTrainingsBinding
@@ -32,7 +33,6 @@ import de.dreier.mytargets.databinding.ItemTrainingBinding
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.features.training.edit.EditTrainingFragment.Companion.CREATE_FREE_TRAINING_ACTION
 import de.dreier.mytargets.features.training.edit.EditTrainingFragment.Companion.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION
-import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.utils.DividerItemDecoration
 import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_CREATE_TRAINING_FROM_REMOTE
@@ -141,7 +141,7 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
 
     private fun onStatistics(ids: List<Long>) {
         navigationController.navigateToStatistics(ids
-                .map { TrainingDAO.loadTrainingOrNull(it)!! }
+                .map { TrainingDAO.loadTraining(it) }
                 .flatMap { t -> TrainingDAO.loadRounds(t.id) }
                 .map { it.id })
     }

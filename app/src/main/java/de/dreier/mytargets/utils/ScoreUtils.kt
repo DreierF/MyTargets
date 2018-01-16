@@ -16,10 +16,10 @@
 package de.dreier.mytargets.utils
 
 import android.support.v4.util.Pair
+import de.dreier.mytargets.base.db.dao.EndDAO
+import de.dreier.mytargets.base.db.dao.RoundDAO
 import de.dreier.mytargets.shared.models.SelectableZone
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.models.dao.EndDAO
-import de.dreier.mytargets.shared.models.dao.RoundDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.targets.scoringstyle.ArrowAwareScoringStyle

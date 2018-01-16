@@ -29,6 +29,7 @@ import com.evernote.android.state.State
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemAdapter
 import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemHolder
+import de.dreier.mytargets.base.db.dao.BowDAO
 import de.dreier.mytargets.base.fragments.EditWithImageFragmentBase
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.INTENT
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
@@ -36,7 +37,6 @@ import de.dreier.mytargets.databinding.FragmentEditBowBinding
 import de.dreier.mytargets.databinding.ItemSightMarkBinding
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.EBowType
-import de.dreier.mytargets.shared.models.dao.BowDAO
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.BowImage
 import de.dreier.mytargets.shared.models.db.SightMark

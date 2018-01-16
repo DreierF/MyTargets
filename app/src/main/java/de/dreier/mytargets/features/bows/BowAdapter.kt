@@ -21,9 +21,9 @@ import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
+import de.dreier.mytargets.base.db.dao.BowDAO
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding
 import de.dreier.mytargets.features.training.details.HtmlInfoBuilder
-import de.dreier.mytargets.shared.models.dao.BowDAO
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.utils.multiselector.MultiSelector

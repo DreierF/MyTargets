@@ -29,6 +29,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.evernote.android.state.State
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.header.HeaderListAdapter
+import de.dreier.mytargets.base.db.dao.StandardRoundDAO
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.SelectItemFragmentBase
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
@@ -36,7 +37,6 @@ import de.dreier.mytargets.databinding.FragmentListBinding
 import de.dreier.mytargets.databinding.ItemStandardRoundBinding
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
-import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.utils.StandardRoundFactory
 import de.dreier.mytargets.shared.utils.contains
 import de.dreier.mytargets.utils.SlideInItemAnimator
@@ -86,7 +86,7 @@ class StandardRoundListFragment : SelectItemFragmentBase<AugmentedStandardRound,
             StandardRoundDAO.getAllSearch(query!!)
         } else {
             StandardRoundDAO.loadStandardRounds()
-        }.map { AugmentedStandardRound(it) }.toMutableList()
+        }.map { AugmentedStandardRound(it, StandardRoundDAO.loadRoundTemplates(it.id)) }.toMutableList()
         return {
             adapter!!.setList(data)
             selectItem(binding.recyclerView, currentSelection!!)
@@ -169,7 +169,7 @@ class StandardRoundListFragment : SelectItemFragmentBase<AugmentedStandardRound,
                 currentSelection = data.getParcelableExtra(ITEM)
                 reloadData()
             } else if (resultCode == EditStandardRoundFragment.RESULT_STANDARD_ROUND_DELETED) {
-                currentSelection = AugmentedStandardRound(StandardRoundDAO.loadStandardRound(32L))
+                currentSelection = StandardRoundDAO.loadAugmentedStandardRound(32L)
                 saveItem()
                 reloadData()
             }

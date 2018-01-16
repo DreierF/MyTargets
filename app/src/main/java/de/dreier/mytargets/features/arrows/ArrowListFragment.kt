@@ -16,10 +16,10 @@
 package de.dreier.mytargets.features.arrows
 
 import android.os.Bundle
+import de.dreier.mytargets.base.db.dao.ArrowDAO
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
-import de.dreier.mytargets.shared.models.dao.ArrowDAO
 import de.dreier.mytargets.shared.models.db.Arrow
 
 class ArrowListFragment : SelectPureListItemFragmentBase<Arrow>(compareBy(Arrow::name, Arrow::id)) {

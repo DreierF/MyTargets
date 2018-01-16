@@ -26,10 +26,10 @@ import android.databinding.ObservableInt
 import android.text.TextUtils
 import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
+import de.dreier.mytargets.base.db.dao.ArrowDAO
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Dimension.Unit.MILLIMETER
 import de.dreier.mytargets.shared.models.Thumbnail
-import de.dreier.mytargets.shared.models.dao.ArrowDAO
 import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.ArrowImage
 

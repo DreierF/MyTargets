@@ -26,6 +26,7 @@ import com.evernote.android.state.State
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemAdapter
 import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemHolder
+import de.dreier.mytargets.base.db.dao.StandardRoundDAO
 import de.dreier.mytargets.base.fragments.EditFragmentBase
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.INTENT
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
@@ -33,7 +34,6 @@ import de.dreier.mytargets.databinding.FragmentEditStandardRoundBinding
 import de.dreier.mytargets.databinding.ItemRoundTemplateBinding
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
-import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.models.db.RoundTemplate
 import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.utils.StandardRoundFactory

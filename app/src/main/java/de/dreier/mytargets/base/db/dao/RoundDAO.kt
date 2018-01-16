@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.models.dao
+package de.dreier.mytargets.base.db.dao
 
 import com.raizlabs.android.dbflow.config.FlowManager
 import com.raizlabs.android.dbflow.kotlinextensions.delete
@@ -82,7 +82,7 @@ object RoundDAO {
     }
 
     fun insertRound(round: AugmentedRound) {
-        RoundDAO.insertRound(round.round, round.ends.map { it.end })
+        insertRound(round.round, round.ends.map { it.end })
         round.ends.forEach {
             EndDAO.saveEnd(it.end, it.images, it.shots)
         }

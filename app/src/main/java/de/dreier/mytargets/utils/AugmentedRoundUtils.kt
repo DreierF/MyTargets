@@ -15,9 +15,9 @@
 
 package de.dreier.mytargets.utils
 
+import de.dreier.mytargets.base.db.dao.EndDAO
 import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
 import de.dreier.mytargets.shared.models.augmented.AugmentedRound
-import de.dreier.mytargets.shared.models.dao.EndDAO
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Shot
 

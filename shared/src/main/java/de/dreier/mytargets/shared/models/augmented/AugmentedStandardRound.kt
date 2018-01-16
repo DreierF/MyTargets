@@ -21,7 +21,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import de.dreier.mytargets.shared.R
 import de.dreier.mytargets.shared.models.IIdProvider
-import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.RoundTemplate
 import de.dreier.mytargets.shared.models.db.StandardRound
@@ -34,8 +33,6 @@ data class AugmentedStandardRound(
 
     override val id: Long
         get() = standardRound.id
-
-    constructor(standardRound: StandardRound) : this(standardRound, StandardRoundDAO.loadRoundTemplates(standardRound.id))
 
     val targetDrawable: Drawable
         get() {
