@@ -26,16 +26,15 @@ import com.raizlabs.android.dbflow.config.FlowManager
 import com.raizlabs.android.dbflow.structure.database.AndroidDatabase
 import com.raizlabs.android.dbflow.structure.database.DatabaseHelperDelegate
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
-import de.dreier.mytargets.features.settings.backup.provider.BackupUtils
+import de.dreier.mytargets.base.db.dao.BowDAO
+import de.dreier.mytargets.base.db.dao.EndDAO
+import de.dreier.mytargets.base.db.dao.RoundDAO
+import de.dreier.mytargets.base.db.dao.TrainingDAO
 import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER
 import de.dreier.mytargets.shared.models.Dimension.Unit.METER
 import de.dreier.mytargets.shared.models.EWeather
-import de.dreier.mytargets.base.db.dao.dao.BowDAO
-import de.dreier.mytargets.base.db.dao.dao.EndDAO
-import de.dreier.mytargets.base.db.dao.dao.RoundDAO
-import de.dreier.mytargets.base.db.dao.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.test.base.InstrumentedTestBase
@@ -76,7 +75,12 @@ class MigrationTest : InstrumentedTestBase() {
         val tmpDb = getTargetContext().getDatabasePath(DatabaseHelperDelegate
                 .getTempDbFileName(FlowManager.getDatabase(AppDatabase.NAME)))
 
-        BackupUtils.copy(getContext().assets.open("database.db"), FileOutputStream(tmpDb))
+        val `in` = getContext().assets.open("database.db")
+        val out = FileOutputStream(tmpDb)
+        `in`.copyTo(out)
+        out.flush()
+        `in`.close()
+        out.close()
 
         helper = FlowManager.getDatabase(AppDatabase.NAME).helper.delegate
         upgradedDb = FlowManager.getDatabase(AppDatabase.NAME).writableDatabase

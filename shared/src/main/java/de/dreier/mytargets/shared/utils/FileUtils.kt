@@ -20,8 +20,6 @@ import android.net.Uri
 import android.support.v4.content.FileProvider
 import java.io.File
 import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
 
 @Throws(IOException::class)
 fun File.moveTo(to: File) {
@@ -29,7 +27,7 @@ fun File.moveTo(to: File) {
     if (!directory.exists()) {
         directory.mkdir()
     }
-    copyTo(to)
+    copyTo(to, overwrite = true)
     delete()
 }
 

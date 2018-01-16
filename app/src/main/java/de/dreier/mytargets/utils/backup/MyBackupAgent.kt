@@ -18,8 +18,7 @@ package de.dreier.mytargets.utils.backup
 import android.app.backup.BackupAgentHelper
 import android.app.backup.FileBackupHelper
 import android.app.backup.SharedPreferencesBackupHelper
-
-import de.dreier.mytargets.features.settings.backup.provider.BackupUtils
+import de.dreier.mytargets.base.db.dao.ImageDAO
 
 class MyBackupAgent : BackupAgentHelper() {
 
@@ -28,7 +27,7 @@ class MyBackupAgent : BackupAgentHelper() {
         addHelper(PREFS_BACKUP_KEY, SharedPreferencesBackupHelper(this, PREFS))
         addHelper(SQLITE_BACKUP_KEY, DbBackupHelper(this))
         addHelper(IMAGES_BACKUP_KEY,
-                FileBackupHelper(this, *BackupUtils.images))
+                FileBackupHelper(this, *ImageDAO.loadAllFileNames().toTypedArray()))
     }
 
     companion object {

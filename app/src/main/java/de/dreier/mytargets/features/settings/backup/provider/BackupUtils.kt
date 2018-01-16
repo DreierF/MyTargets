@@ -16,11 +16,8 @@
 package de.dreier.mytargets.features.settings.backup.provider
 
 import android.content.Context
-import com.raizlabs.android.dbflow.sql.language.SQLite
+import de.dreier.mytargets.base.db.dao.ImageDAO
 import de.dreier.mytargets.shared.AppDatabase
-import de.dreier.mytargets.shared.models.db.ArrowImage
-import de.dreier.mytargets.shared.models.db.BowImage
-import de.dreier.mytargets.shared.models.db.EndImage
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -35,42 +32,6 @@ object BackupUtils {
             val format = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
             return "MyTargets_backup_" + format.format(Date()) + ".zip"
         }
-
-    /**
-     * Returns a list of file names, which are implicitly placed in the ../files/ folder of the app.
-     */
-    val images: Array<String>
-        get() {
-            val list = ArrayList<String>()
-            list.addAll(SQLite.select()
-                    .from(BowImage::class.java)
-                    .queryList()
-                    .map { (_, fileName) -> fileName })
-            list.addAll(SQLite.select()
-                    .from(EndImage::class.java)
-                    .queryList()
-                    .map { (_, fileName) -> fileName }
-            )
-            list.addAll(SQLite.select()
-                    .from(ArrowImage::class.java)
-                    .queryList()
-                    .map { (_, fileName) -> fileName }
-            )
-            return list.toTypedArray()
-        }
-
-    @Throws(IOException::class)
-    fun copy(src: File, dst: File) {
-        src.copyTo(dst)
-    }
-
-    @Throws(IOException::class)
-    fun copy(`in`: InputStream, out: OutputStream) {
-        `in`.copyTo(out)
-        out.flush()
-        `in`.close()
-        out.close()
-    }
 
     @Throws(IOException::class)
     fun importZip(context: Context, `in`: InputStream) {
@@ -90,8 +51,7 @@ object BackupUtils {
             out.putNextEntry(entry)
             FileInputStream(db).use { it.copyTo(out) }
 
-            val files = images
-            for (file in files) {
+            for (file in ImageDAO.loadAllFileNames()) {
                 try {
                     entry = ZipEntry("/" + file)
                     out.putNextEntry(entry)
@@ -105,22 +65,11 @@ object BackupUtils {
         }
     }
 
-    private fun safeCloseClosable(closeable: Closeable?) {
-        try {
-            closeable?.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-    }
-
     @Throws(IOException::class)
     private fun unzip(context: Context, `in`: InputStream): File? {
-        val tmpDb: File?
+        val tmpDb = File.createTempFile("import", ".db")
         var dbFiles = 0
-        try {
-            tmpDb = File.createTempFile("import", ".db")
-
+        `in`.use {
             val zin = ZipInputStream(`in`)
             var sourceEntry: ZipEntry?
             while (true) {
@@ -148,19 +97,15 @@ object BackupUtils {
                     fOut = context.openFileOutput(name, Context.MODE_PRIVATE)
                 }
 
-                try {
+                fOut.use {
                     zin.copyTo(fOut)
                     fOut.flush()
-                } finally {
-                    safeCloseClosable(fOut)
                 }
                 zin.closeEntry()
             }
-        } finally {
-            safeCloseClosable(`in`)
         }
         if (dbFiles != 1) {
-            throw IllegalStateException("Input file is not a valid backup")
+            throw IOException("Input file is not a valid backup")
         }
         return tmpDb
     }
