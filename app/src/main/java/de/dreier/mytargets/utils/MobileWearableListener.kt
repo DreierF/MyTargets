@@ -25,7 +25,6 @@ import de.dreier.mytargets.base.db.dao.StandardRoundDAO
 import de.dreier.mytargets.base.db.dao.TrainingDAO
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.Environment
-import de.dreier.mytargets.utils.addEnd
 import de.dreier.mytargets.shared.models.TimerSettings
 import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
 import de.dreier.mytargets.shared.models.augmented.AugmentedRound
@@ -34,6 +33,7 @@ import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.utils.unmarshall
 import de.dreier.mytargets.shared.wearable.WearableClientBase
+import de.dreier.mytargets.utils.addEnd
 import org.threeten.bp.LocalDate
 
 /**
@@ -85,7 +85,11 @@ class MobileWearableListener : WearableListenerService() {
                 round.distance = SettingsManager.distance
                 aTraining.rounds = mutableListOf(AugmentedRound(round, mutableListOf()))
             } else {
-                aTraining.initRoundsFromTemplate(StandardRoundDAO.loadAugmentedStandardRound(lastTraining!!.standardRoundId!!))
+                aTraining.rounds = StandardRoundDAO
+                        .loadAugmentedStandardRound(lastTraining!!.standardRoundId!!)
+                        .createRoundsFromTemplate()
+                        .map { AugmentedRound(it, mutableListOf()) }
+                        .toMutableList()
             }
             ApplicationInstance.wearableClient.sendTrainingTemplate(aTraining)
         }

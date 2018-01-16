@@ -24,10 +24,6 @@ data class AugmentedTraining(
         var rounds: MutableList<AugmentedRound>
 ) : Parcelable {
 
-    fun initRoundsFromTemplate(standardRound: AugmentedStandardRound) {
-        rounds = standardRound.createRoundsFromTemplate().map { AugmentedRound(it, mutableListOf()) }.toMutableList()
-    }
-
     constructor(source: Parcel) : this(
             source.readParcelable<Training>(Training::class.java.classLoader),
             source.createTypedArrayList(AugmentedRound.CREATOR)
