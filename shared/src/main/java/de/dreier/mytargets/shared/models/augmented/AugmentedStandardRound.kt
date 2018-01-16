@@ -56,13 +56,7 @@ data class AugmentedStandardRound(
     }
 
     fun createRoundsFromTemplate(): MutableList<Round> {
-        val rounds = mutableListOf<Round>()
-        for (template in roundTemplates) {
-            val round = Round(template)
-            round.target = template.targetTemplate
-            rounds.add(round)
-        }
-        return rounds
+        return roundTemplates.map { Round(it) }.toMutableList()
     }
 
     constructor(source: Parcel) : this(

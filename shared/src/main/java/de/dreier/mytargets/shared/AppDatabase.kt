@@ -43,6 +43,7 @@ object AppDatabase {
 
         override fun migrate(database: DatabaseWrapper) {
             fillStandardRound(database)
+            createScoreTriggers(database)
         }
     }
 
@@ -62,25 +63,7 @@ object AppDatabase {
             database.execSQL("ALTER TABLE `End` ADD COLUMN scoreTotalPoints INTEGER;")
             database.execSQL("ALTER TABLE `End` ADD COLUMN scoreShotCount INTEGER;")
 
-            database.execSQL("CREATE TRIGGER round_sum_score " +
-                    "AFTER UPDATE ON `End` " +
-                    "BEGIN " +
-                    "UPDATE `Round` SET " +
-                    "scoreReachedPoints = (SELECT SUM(scoreReachedPoints) FROM `End` WHERE round = NEW.round), " +
-                    "scoreTotalPoints = (SELECT SUM(scoreTotalPoints) FROM `End` WHERE round = NEW.round), " +
-                    "scoreShotCount = (SELECT SUM(scoreShotCount) FROM `End` WHERE round = NEW.round) " +
-                    "WHERE _id = NEW.round;" +
-                    "END;")
-
-            database.execSQL("CREATE TRIGGER training_sum_score " +
-                    "AFTER UPDATE ON `Round` " +
-                    "BEGIN " +
-                    "UPDATE `Training` SET " +
-                    "scoreReachedPoints = (SELECT SUM(scoreReachedPoints) FROM `Round` WHERE training = NEW.training), " +
-                    "scoreTotalPoints = (SELECT SUM(scoreTotalPoints) FROM `Round` WHERE training = NEW.training), " +
-                    "scoreShotCount = (SELECT SUM(scoreShotCount) FROM `Round` WHERE training = NEW.training) " +
-                    "WHERE _id = NEW.training;" +
-                    "END;")
+            createScoreTriggers(database)
 
             val rounds = SQLite.select().from(Round::class.java).queryList(database)
             for (round in rounds) {
@@ -97,6 +80,28 @@ object AppDatabase {
                 }
             }
         }
+    }
+
+    private fun createScoreTriggers(database: DatabaseWrapper) {
+        database.execSQL("CREATE TRIGGER round_sum_score " +
+                "AFTER UPDATE ON `End` " +
+                "BEGIN " +
+                "UPDATE `Round` SET " +
+                "scoreReachedPoints = (SELECT SUM(scoreReachedPoints) FROM `End` WHERE round = NEW.round), " +
+                "scoreTotalPoints = (SELECT SUM(scoreTotalPoints) FROM `End` WHERE round = NEW.round), " +
+                "scoreShotCount = (SELECT SUM(scoreShotCount) FROM `End` WHERE round = NEW.round) " +
+                "WHERE _id = NEW.round;" +
+                "END;")
+
+        database.execSQL("CREATE TRIGGER training_sum_score " +
+                "AFTER UPDATE ON `Round` " +
+                "BEGIN " +
+                "UPDATE `Training` SET " +
+                "scoreReachedPoints = (SELECT SUM(scoreReachedPoints) FROM `Round` WHERE training = NEW.training), " +
+                "scoreTotalPoints = (SELECT SUM(scoreTotalPoints) FROM `Round` WHERE training = NEW.training), " +
+                "scoreShotCount = (SELECT SUM(scoreShotCount) FROM `Round` WHERE training = NEW.training) " +
+                "WHERE _id = NEW.training;" +
+                "END;")
     }
 
     @Migration(version = 22, database = AppDatabase::class)

@@ -99,7 +99,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
         binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_edit_training, container, false)
 
-        trainingId = arguments.getLongOrNull(ITEM_ID)!!
+        trainingId = arguments.getLongOrNull(ITEM_ID)
         trainingType = if (activity?.intent?.action == CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION) {
             TRAINING_WITH_STANDARD_ROUND
         } else {
@@ -128,7 +128,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
             navigationController.navigateToDistance(selectedItem!!, index)
         }
         binding.standardRound.setOnClickListener { selectedItem, _ ->
-            navigationController.navigateToStandardRoundList(selectedItem!!.standardRound)
+            navigationController.navigateToStandardRoundList(selectedItem!!)
         }
         binding.standardRound.setOnUpdateListener { item ->
             roundTarget = item!!.roundTemplates[0].targetTemplate

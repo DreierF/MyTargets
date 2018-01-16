@@ -60,10 +60,12 @@ abstract class DbTestRuleBase : TestRule {
     protected fun buildEnd(round: AugmentedRound, vararg shots: Int): AugmentedEnd {
         val end = round.addEnd()
         end.end.roundId = round.round.id
+        end.end.saveTime = LocalTime.now()
         for (i in shots.indices) {
             end.shots[i].index = i
             end.shots[i].scoringRing = shots[i]
         }
+        end.end.score = round.round.target.getReachedScore(end.shots)
         return end
     }
 
@@ -77,6 +79,7 @@ abstract class DbTestRuleBase : TestRule {
             end.shots[i].scoringRing = round.round.target.model
                     .getZoneFromPoint(end.shots[i].x, end.shots[i].y, 0.05f)
         }
+        end.end.score = round.round.target.getReachedScore(end.shots)
         end.end.saveTime = LocalTime.of(14, gen.nextInt(59), gen.nextInt(59), 0)
         return end
     }

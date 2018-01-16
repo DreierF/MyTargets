@@ -33,6 +33,7 @@ import de.dreier.mytargets.features.scoreboard.ScoreboardActivity
 import de.dreier.mytargets.features.settings.ESettingsScreens
 import de.dreier.mytargets.features.settings.SettingsActivity
 import de.dreier.mytargets.shared.models.dao.TrainingDAO
+import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.test.base.UITestBase
 import de.dreier.mytargets.test.utils.matchers.IntentMatcher.hasClass
 import de.dreier.mytargets.test.utils.rules.SimpleDbTestRule
@@ -41,7 +42,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
-import java.util.*
 
 @RunWith(AndroidJUnit4::class)
 class ScoreboardActivityTest : UITestBase() {
@@ -55,7 +55,7 @@ class ScoreboardActivityTest : UITestBase() {
     @Test
     fun navigation() {
         val trainings = TrainingDAO.loadTrainings()
-        trainings.sortedWith(Collections.reverseOrder())
+        trainings.sortedWith(compareByDescending(Training::date).thenByDescending(Training::id))
         val id = trainings[0].id
         val i = Intent()
         i.putExtra(ScoreboardActivity.TRAINING_ID, id)

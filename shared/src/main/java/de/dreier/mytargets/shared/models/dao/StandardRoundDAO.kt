@@ -54,8 +54,8 @@ object StandardRoundDAO {
     fun loadRoundTemplates(id: Long): ArrayList<RoundTemplate> = ArrayList(SQLite.select()
             .from(RoundTemplate::class.java)
             .where(RoundTemplate_Table.standardRound.eq(id))
+            .orderBy(RoundTemplate_Table.index, true)
             .queryList()
-            .sortedBy { roundTemplate -> roundTemplate.distance }
             .toMutableList())
 
     fun saveStandardRound(standardRound: StandardRound, roundTemplates: List<RoundTemplate>) {

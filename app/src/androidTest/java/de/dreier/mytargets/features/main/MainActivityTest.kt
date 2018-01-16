@@ -51,6 +51,7 @@ import de.dreier.mytargets.shared.models.dao.BowDAO
 import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.Bow
+import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.targets.models.WAFull
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod
 import de.dreier.mytargets.test.base.UITestBase
@@ -67,7 +68,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
-import java.util.*
 
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest : UITestBase() {
@@ -126,7 +126,7 @@ class MainActivityTest : UITestBase() {
                 .perform(click())
 
         val firstTraining = TrainingDAO.loadTrainings()
-                .sortedWith(Collections.reverseOrder())
+                .sortedWith(compareByDescending(Training::date).thenByDescending(Training::id))
                 .firstOrNull()
 
         intended(allOf(hasClass(TrainingActivity::class.java),
@@ -165,7 +165,7 @@ class MainActivityTest : UITestBase() {
         clickContextualActionBarItem(R.id.action_statistics, R.string.statistic)
 
         val trainings = TrainingDAO.loadTrainings()
-                .sortedWith(Collections.reverseOrder())
+                .sortedWith(compareByDescending(Training::date).thenByDescending(Training::id))
         expectedRoundIds = listOf(trainings[1], trainings[2])
                 .flatMap { t -> TrainingDAO.loadRounds(t.id) }
                 .map { it.id }

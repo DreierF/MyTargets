@@ -60,7 +60,10 @@ import de.dreier.mytargets.shared.base.fragment.TimerFragmentBase
 import de.dreier.mytargets.shared.models.*
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
-import de.dreier.mytargets.shared.models.db.*
+import de.dreier.mytargets.shared.models.db.Arrow
+import de.dreier.mytargets.shared.models.db.Bow
+import de.dreier.mytargets.shared.models.db.Round
+import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.utils.ImageList
 import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.Utils
@@ -221,7 +224,7 @@ class NavigationController(
                 .start()
     }
 
-    fun navigateToStandardRoundList(currentSelection: StandardRound, requestCode: Int = StandardRoundSelector.STANDARD_ROUND_REQUEST_CODE) {
+    fun navigateToStandardRoundList(currentSelection: AugmentedStandardRound, requestCode: Int = StandardRoundSelector.STANDARD_ROUND_REQUEST_CODE) {
         IntentWrapper(activity, fragment, StandardRoundActivity::class.java)
                 .with(ITEM, currentSelection)
                 .forResult(requestCode)

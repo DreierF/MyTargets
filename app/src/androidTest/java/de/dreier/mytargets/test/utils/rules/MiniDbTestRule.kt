@@ -50,12 +50,12 @@ class MiniDbTestRule : DbTestRuleBase() {
         val round1 = AugmentedRound(rounds[0], mutableListOf())
         val round2 = AugmentedRound(rounds[1], mutableListOf())
 
-        round1.ends.add(randomEnd(round1, 6, generator))
-        round1.ends.add(randomEnd(round1, 6, generator))
+        randomEnd(round1, 6, generator)
+        randomEnd(round1, 6, generator)
         RoundDAO.saveRound(round1)
 
-        round2.ends.add(randomEnd(round2, 6, generator))
-        round2.ends.add(randomEnd(round2, 6, generator))
+        randomEnd(round2, 6, generator)
+        randomEnd(round2, 6, generator)
         RoundDAO.saveRound(round2)
     }
 
