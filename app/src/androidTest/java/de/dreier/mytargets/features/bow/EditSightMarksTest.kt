@@ -70,6 +70,8 @@ class EditSightMarksTest : UITestBase() {
 
         save()
 
+        Thread.sleep(500)
+
         // Make sure changes have been saved and are sorted correctly
         onView(withRecyclerView(R.id.recyclerView).atPositionOnView(0, R.id.details))
                 .check(matches(allOf(containsStringRes(R.string.recurve_bow),
@@ -97,6 +99,8 @@ class EditSightMarksTest : UITestBase() {
         onView(withId(R.id.snackbar_action)).perform(click())
 
         save()
+
+        Thread.sleep(500)
 
         // Make sure changes have been saved and are sorted correctly
         onView(withRecyclerView(R.id.recyclerView).atPositionOnView(0, R.id.details))

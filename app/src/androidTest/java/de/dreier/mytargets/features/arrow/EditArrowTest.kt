@@ -64,6 +64,7 @@ class EditArrowTest : UITestBase() {
 
         // Attempt to save and check if error is shown
         save()
+        Thread.sleep(500)
         onView(withId(R.id.diameterTextInputLayout))
                 .check(matches(hasDescendant(withText(getString(R.string.not_within_expected_range_mm)))))
 
@@ -71,6 +72,8 @@ class EditArrowTest : UITestBase() {
         onView(withId(R.id.diameter))
                 .perform(nestedScrollTo(), replaceText("6.8"), closeSoftKeyboard())
         save()
+
+        Thread.sleep(500)
 
         // Check if arrow has been saved
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
@@ -94,6 +97,8 @@ class EditArrowTest : UITestBase() {
         onData(allOf(`is`(instanceOf<Any>(String::class.java)), `is`("inch"))).perform(click())
         save()
 
+        Thread.sleep(500)
+
         // Correct value and save
         onView(withId(R.id.diameterTextInputLayout))
                 .check(matches(hasDescendant(withText(R.string.not_within_expected_range_inch))))
@@ -113,6 +118,8 @@ class EditArrowTest : UITestBase() {
         //        intendedImageCapture();
 
         save()
+
+        Thread.sleep(500)
 
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
                 .perform(click())
