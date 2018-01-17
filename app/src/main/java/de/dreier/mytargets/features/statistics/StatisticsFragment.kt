@@ -198,7 +198,16 @@ class StatisticsFragment : FragmentBase() {
                 .map { it.trainingId!! }
                 .distinct()
         if (trainingsIds.size == 1) {
-            stats.date = Training[trainingsIds[0]]!!.date
+            val training = Training[trainingsIds[0]]!!
+            val date = training.date.format(DateTimeFormatter.ISO_LOCAL_DATE)
+            val round = if (rounds!!.size == 1) {
+                val index = rounds!![0].index + 1
+                "-" + resources.getQuantityString(R.plurals.rounds, index, index)
+                        .replace(' ', '-')
+            } else ""
+            stats.exportFileName = "$date-${training.title}$round"
+        } else {
+            stats.exportFileName = ""
         }
 
         val strategy = SettingsManager.statisticsDispersionPatternAggregationStrategy

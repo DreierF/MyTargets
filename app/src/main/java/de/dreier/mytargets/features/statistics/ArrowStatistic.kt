@@ -28,9 +28,7 @@ import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.models.sum
 import kotlinx.android.parcel.Parcelize
-import org.threeten.bp.LocalDate
 import java.lang.Math.ceil
-import java.util.*
 
 @SuppressLint("ParcelCreator")
 @Parcelize
@@ -38,11 +36,11 @@ data class ArrowStatistic(
         var arrowName: String? = null,
         var arrowNumber: String? = null,
         var target: Target,
-        var shots: MutableList<Shot> = ArrayList(),
+        var shots: MutableList<Shot> = mutableListOf(),
         var average: Average = Average(),
         var totalScore: Score = Score(),
         var arrowDiameter: Dimension = Dimension(5f, Dimension.Unit.MILLIMETER),
-        var date: LocalDate? = null
+        var exportFileName: String? = null
 ) : Comparable<ArrowStatistic>, Parcelable {
 
     val appropriateBgColor: Int
