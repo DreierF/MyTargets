@@ -151,7 +151,7 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
                 builder!!.closeSection()
             }
             builder!!.openSection()
-            builder!!.subtitle(context.getString(R.string.training))
+            builder!!.subtitle(context.getString(R.string.scoreboard_title_all_rounds))
             builder!!.table(getStatisticsForRound(rounds))
             builder!!.closeSection()
         }
