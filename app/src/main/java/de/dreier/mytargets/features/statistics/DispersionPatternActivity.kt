@@ -33,13 +33,12 @@ import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.utils.toUri
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils
-import org.threeten.bp.format.DateTimeFormatter
 import java.io.File
 import java.io.IOException
 
 class DispersionPatternActivity : ChildActivityBase() {
     private var binding: ActivityArrowRankingDetailsBinding? = null
-    private var statistic: ArrowStatistic? = null
+    private lateinit var statistic: ArrowStatistic
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,10 +48,10 @@ class DispersionPatternActivity : ChildActivityBase() {
         statistic = intent.getParcelableExtra(ITEM)
 
         ToolbarUtils.showHomeAsUp(this)
-        if (statistic!!.arrowName != null) {
-            ToolbarUtils.setTitle(this, getString(R.string.arrow_number_x, statistic!!
+        if (statistic.arrowName != null) {
+            ToolbarUtils.setTitle(this, getString(R.string.arrow_number_x, statistic
                     .arrowNumber))
-            ToolbarUtils.setSubtitle(this, statistic!!.arrowName!!)
+            ToolbarUtils.setSubtitle(this, statistic.arrowName!!)
         } else {
             ToolbarUtils.setTitle(this, R.string.dispersion_pattern)
         }
@@ -62,10 +61,10 @@ class DispersionPatternActivity : ChildActivityBase() {
         super.onResume()
 
         val strategy = SettingsManager.statisticsDispersionPatternAggregationStrategy
-        val drawable = statistic!!.target.impactAggregationDrawable
+        val drawable = statistic.target.impactAggregationDrawable
         drawable.setAggregationStrategy(strategy)
-        drawable.replaceShotsWith(statistic!!.shots)
-        drawable.setArrowDiameter(statistic!!.arrowDiameter, SettingsManager.inputArrowDiameterScale)
+        drawable.replaceShotsWith(statistic.shots)
+        drawable.setArrowDiameter(statistic.arrowDiameter, SettingsManager.inputArrowDiameterScale)
 
         binding!!.dispersionView.setImageDrawable(drawable)
     }
@@ -93,9 +92,9 @@ class DispersionPatternActivity : ChildActivityBase() {
                 val fileType = SettingsManager.statisticsDispersionPatternFileType
                 val f = File(cacheDir, getDefaultFileName(fileType))
                 if (fileType === EFileType.PDF && Utils.isKitKat) {
-                    DispersionPatternUtils.generatePdf(f, statistic!!)
+                    DispersionPatternUtils.generatePdf(f, statistic)
                 } else {
-                    DispersionPatternUtils.createDispersionPatternImageFile(800, f, statistic!!)
+                    DispersionPatternUtils.createDispersionPatternImageFile(800, f, statistic)
                 }
 
                 // Build and fire intent to ask for share provider
@@ -117,18 +116,17 @@ class DispersionPatternActivity : ChildActivityBase() {
         printHelper.scaleMode = PrintHelper.SCALE_MODE_FIT
 
         // Get the image
-        val image = DispersionPatternUtils.getDispersionPatternBitmap(800, statistic!!)
+        val image = DispersionPatternUtils.getDispersionPatternBitmap(800, statistic)
         printHelper.printBitmap("Dispersion Pattern", image)
     }
 
     private fun getDefaultFileName(extension: EFileType): String {
-        val name = if (statistic!!.arrowName != null) {
-            statistic!!.arrowName!! + "-" + getString(R.string.arrow_number_x, statistic!!.arrowNumber)
+        val name = if (statistic.arrowName != null) {
+            statistic.arrowName!! + "-" + getString(R.string.arrow_number_x, statistic.arrowNumber)
         } else {
-            getString(R.string.dispersion_pattern)
+            statistic.exportFileName
         }
-        val formattedDate = statistic!!.date?.format(DateTimeFormatter.ISO_LOCAL_DATE) ?: ""
-        return formattedDate + name + "." + extension.name.toLowerCase()
+        return getString(R.string.dispersion_pattern) + "-" + name + "." + extension.name.toLowerCase()
     }
 
     companion object {
