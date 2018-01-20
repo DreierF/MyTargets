@@ -121,12 +121,15 @@ class DispersionPatternActivity : ChildActivityBase() {
     }
 
     private fun getDefaultFileName(extension: EFileType): String {
-        val name = if (statistic.arrowName != null) {
+        var name = if (statistic.arrowName != null) {
             statistic.arrowName!! + "-" + getString(R.string.arrow_number_x, statistic.arrowNumber)
         } else {
             statistic.exportFileName
         }
-        return getString(R.string.dispersion_pattern) + "-" + name + "." + extension.name.toLowerCase()
+        if (!name.isNullOrEmpty()) {
+            name = "-" + name
+        }
+        return getString(R.string.dispersion_pattern) + name + "." + extension.name.toLowerCase()
     }
 
     companion object {
