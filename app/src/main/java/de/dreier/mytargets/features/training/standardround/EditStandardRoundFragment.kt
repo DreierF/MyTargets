@@ -37,7 +37,7 @@ import de.dreier.mytargets.shared.models.db.RoundTemplate
 import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.utils.StandardRoundFactory
 import de.dreier.mytargets.utils.ToolbarUtils
-import de.dreier.mytargets.utils.transitions.FabTransform
+import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.views.selector.DistanceSelector
 import de.dreier.mytargets.views.selector.SelectorBase
 import de.dreier.mytargets.views.selector.TargetSelector
@@ -104,7 +104,7 @@ class EditStandardRoundFragment : EditFragmentBase() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        FabTransform.setup(activity!!, binding.root)
+        Utils.setupFabTransform(activity!!, binding.root)
     }
 
     private fun onAddRound() {

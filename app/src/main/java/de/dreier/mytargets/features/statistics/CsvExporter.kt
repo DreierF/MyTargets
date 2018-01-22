@@ -70,10 +70,7 @@ class CsvExporter(private val context: Context) {
         // Date
         csv.add(t.date.format(DateTimeFormatter.ISO_LOCAL_DATE))
         // StandardRound
-        csv.add(if (t.standardRoundId == null)
-            context.getString(R.string.practice)
-        else
-            t.standardRound!!.name)
+        csv.add(t.standardRound?.name ?: context.getString(R.string.practice))
         // Indoor
         csv.add(if (t.indoor) context.getString(R.string.indoor) else context.getString(R.string.outdoor))
         // Bow

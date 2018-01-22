@@ -15,11 +15,11 @@
 
 package de.dreier.mytargets.features.statistics
 
-import android.annotation.TargetApi
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Build
 import android.os.Bundle
+import android.support.annotation.RequiresApi
 import android.support.design.widget.Snackbar
 import android.support.v4.print.PrintHelper
 import android.view.Menu
@@ -78,7 +78,7 @@ class DispersionPatternActivity : ChildActivityBase() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_share -> shareImage()
-            R.id.action_print -> print()
+            R.id.action_print -> if(Utils.isKitKat) print()
             R.id.action_settings -> navigationController.navigateToSettings(ESettingsScreens.STATISTICS)
             else -> return super.onOptionsItemSelected(item)
         }
@@ -110,7 +110,7 @@ class DispersionPatternActivity : ChildActivityBase() {
         }.start()
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun print() {
         val printHelper = PrintHelper(this)
         printHelper.scaleMode = PrintHelper.SCALE_MODE_FIT

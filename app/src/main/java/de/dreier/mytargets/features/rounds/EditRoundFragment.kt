@@ -29,7 +29,7 @@ import de.dreier.mytargets.features.training.target.TargetListFragment
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.utils.ToolbarUtils
-import de.dreier.mytargets.utils.transitions.FabTransform
+import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.views.selector.DistanceSelector
 import de.dreier.mytargets.views.selector.TargetSelector
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
@@ -89,7 +89,7 @@ class EditRoundFragment : EditFragmentBase() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        FabTransform.setup(activity!!, binding.root)
+        Utils.setupFabTransform(activity!!, binding.root)
     }
 
     override fun onSave() {

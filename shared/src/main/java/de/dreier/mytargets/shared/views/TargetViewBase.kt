@@ -70,7 +70,7 @@ abstract class TargetViewBase : View, View.OnTouchListener {
     protected lateinit var shots: List<Shot>
     protected var round: RoundTemplate? = null
     protected var setListener: OnEndFinishedListener? = null
-    open protected var inputMethod = EInputMethod.KEYBOARD
+    protected open var inputMethod = EInputMethod.KEYBOARD
     protected var density: Float = 0.toFloat()
     protected lateinit var selectableZones: List<SelectableZone>
     protected lateinit var target: Target

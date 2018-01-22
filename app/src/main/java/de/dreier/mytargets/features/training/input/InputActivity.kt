@@ -98,7 +98,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
         binding = DataBindingUtil.setContentView(this, R.layout.activity_input)
         setSupportActionBar(binding.toolbar)
         ToolbarUtils.showHomeAsUp(this)
-        FabTransform.setup(this, binding.root)
+        Utils.setupFabTransform(this, binding.root)
 
         if (Utils.isLollipop) {
             setupTransitionListener()
