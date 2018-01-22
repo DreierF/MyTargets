@@ -19,7 +19,6 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Outline
@@ -29,6 +28,7 @@ import android.os.Build.VERSION_CODES.LOLLIPOP
 import android.support.annotation.ColorInt
 import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
+import android.support.annotation.RequiresApi
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.animation.FastOutLinearInInterpolator
 import android.support.v4.view.animation.FastOutSlowInInterpolator
@@ -41,7 +41,6 @@ import android.view.ViewAnimationUtils
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
 import de.dreier.mytargets.R
-import de.dreier.mytargets.utils.Utils
 import java.util.*
 
 /**
@@ -50,9 +49,11 @@ import java.util.*
  *
  * See: https://www.google.com/design/spec/motion/transforming-material.html#transforming-material-radial-transformation
  */
-@TargetApi(LOLLIPOP)
-class FabTransform private constructor(@ColorInt @field:ColorInt
-                                       private val color: Int, @DrawableRes private val icon: Int) : Transition() {
+@RequiresApi(LOLLIPOP)
+class FabTransform private constructor(
+        @ColorInt private val color: Int,
+        @DrawableRes private val icon: Int
+) : Transition() {
 
     init {
         pathMotion = GravityArcMotion()
@@ -257,7 +258,7 @@ class FabTransform private constructor(@ColorInt @field:ColorInt
          * Create a [FabTransform] from the supplied `activity` extras and set as its
          * shared element enter/return transition.
          */
-        private fun setupUnchecked(activity: Activity, target: View?): Boolean {
+        fun setupUnchecked(activity: Activity, target: View?): Boolean {
             val intent = activity.intent
             if (!intent.hasExtra(EXTRA_FAB_COLOR_RES) || !intent.hasExtra(EXTRA_FAB_ICON_RES_ID)) {
                 return false
@@ -272,12 +273,6 @@ class FabTransform private constructor(@ColorInt @field:ColorInt
             }
             activity.window.sharedElementEnterTransition = sharedEnter
             return true
-        }
-
-        fun setup(activity: Activity, root: View) {
-            if (Utils.isLollipop) {
-                setupUnchecked(activity, root)
-            }
         }
     }
 }

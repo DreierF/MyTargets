@@ -36,7 +36,7 @@ import de.dreier.mytargets.shared.models.Thumbnail
 import de.dreier.mytargets.shared.models.db.Image
 import de.dreier.mytargets.shared.utils.FileUtils
 import de.dreier.mytargets.utils.ToolbarUtils
-import de.dreier.mytargets.utils.transitions.FabTransform
+import de.dreier.mytargets.utils.Utils
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
 import pl.aprilapps.easyphotopicker.DefaultCallback
@@ -97,7 +97,7 @@ abstract class EditWithImageFragmentBase<T : Image> protected constructor(
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setFocusListenerForAllEditText(view)
-        FabTransform.setup(activity!!, binding.root)
+        Utils.setupFabTransform(activity!!, binding.root)
     }
 
     private fun setFocusListenerForAllEditText(view: View?) {

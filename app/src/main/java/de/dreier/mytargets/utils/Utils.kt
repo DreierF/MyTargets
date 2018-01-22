@@ -33,6 +33,7 @@ import android.view.View
 import android.view.WindowManager
 import de.dreier.mytargets.features.main.MainActivity
 import de.dreier.mytargets.features.training.overview.Header
+import de.dreier.mytargets.utils.transitions.FabTransform
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
@@ -140,6 +141,12 @@ object Utils {
             context.resources.configuration.locales.get(0)
         } else {
             context.resources.configuration.locale
+        }
+    }
+
+    fun setupFabTransform(activity: Activity, root: View) {
+        if (Utils.isLollipop) {
+            FabTransform.setupUnchecked(activity, root)
         }
     }
 }

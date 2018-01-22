@@ -44,7 +44,7 @@ import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.targets.models.WA3Ring3Spot
 import de.dreier.mytargets.utils.ToolbarUtils
-import de.dreier.mytargets.utils.transitions.FabTransform
+import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.views.selector.ArrowSelector
 import de.dreier.mytargets.views.selector.BowSelector
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
@@ -231,7 +231,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        FabTransform.setup(activity!!, binding.root)
+        Utils.setupFabTransform(activity!!, binding.root)
     }
 
     private fun applyTrainingType() {
