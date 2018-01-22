@@ -102,7 +102,7 @@ abstract class TargetViewBase : View, View.OnTouchListener {
             : super(context, attrs, defStyleAttr, defStyleRes)
 
     init {
-        setOnTouchListener(this)
+        super.setOnTouchListener(this)
         density = resources.displayMetrics.density
         ViewCompat.setAccessibilityDelegate(this, touchHelper)
         ViewCompat.setImportantForAccessibility(this, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES)
@@ -113,7 +113,7 @@ abstract class TargetViewBase : View, View.OnTouchListener {
     protected val isCurrentlySelecting: Boolean
         get() = currentShotIndex != EndRenderer.NO_SELECTION && shots[currentShotIndex].scoringRing != Shot.NOTHING_SELECTED
 
-    protected val circleAnimation: Animator?
+    private val circleAnimation: Animator?
         get() {
             var pos: PointF? = null
             if (isCurrentlySelecting) {
@@ -264,7 +264,7 @@ abstract class TargetViewBase : View, View.OnTouchListener {
      * Can also be set to -1, to start the search from the first shot.
      * @return Returns a valid index or EndRenderer.NO_SELECTION
      */
-    protected fun getNextShotIndex(currentShotIndex: Int): Int {
+    private fun getNextShotIndex(currentShotIndex: Int): Int {
         var nextShotIndex = currentShotIndex + 1
         while (nextShotIndex < shots.size && shots[nextShotIndex].scoringRing != Shot.NOTHING_SELECTED) {
             nextShotIndex++
@@ -278,7 +278,7 @@ abstract class TargetViewBase : View, View.OnTouchListener {
         invalidate()
     }
 
-    protected fun notifyEndFinished() {
+    private fun notifyEndFinished() {
         if (this.currentShotIndex == EndRenderer.NO_SELECTION) {
             setListener?.onEndFinished(shots)
         }
@@ -303,7 +303,7 @@ abstract class TargetViewBase : View, View.OnTouchListener {
         }
     }
 
-    protected fun playAnimations(setList: List<Animator>) {
+    private fun playAnimations(setList: List<Animator>) {
         cancelPendingAnimations()
         animator = AnimatorSet()
         animator!!.playTogether(setList)
@@ -362,7 +362,7 @@ abstract class TargetViewBase : View, View.OnTouchListener {
         return false
     }
 
-    protected fun updateSelectableZones() {
+    private fun updateSelectableZones() {
         if (currentShotIndex != EndRenderer.NO_SELECTION) {
             selectableZones = target.getSelectableZoneList(currentShotIndex)
             if (virtualViews.size > 0) {
@@ -427,12 +427,7 @@ abstract class TargetViewBase : View, View.OnTouchListener {
         }
 
         private fun findVirtualViewByPosition(x: Float, y: Float): VirtualView? {
-            for (virtualView in targetView.virtualViews) {
-                if (virtualView.rect!!.contains(x.toInt(), y.toInt())) {
-                    return virtualView
-                }
-            }
-            return null
+            return targetView.virtualViews.firstOrNull { it.rect!!.contains(x.toInt(), y.toInt()) }
         }
 
         override fun getVisibleVirtualViews(virtualViewIds: MutableList<Int>) {
@@ -447,12 +442,7 @@ abstract class TargetViewBase : View, View.OnTouchListener {
         }
 
         private fun findVirtualViewById(virtualViewId: Int): VirtualView? {
-            for (virtualView in targetView.virtualViews) {
-                if (virtualView.id == virtualViewId) {
-                    return virtualView
-                }
-            }
-            return null
+            return targetView.virtualViews.firstOrNull { it.id == virtualViewId }
         }
 
         override fun onPopulateNodeForVirtualView(virtualViewId: Int, node: AccessibilityNodeInfoCompat) {

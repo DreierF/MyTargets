@@ -30,63 +30,63 @@ import java.util.*
  * transition tries to pause the animator. Yikes! We can fix this by wrapping the Animator:
  */
 @RequiresApi(Build.VERSION_CODES.KITKAT)
-class NoPauseAnimator(private val mAnimator: Animator) : Animator() {
-    private val mListeners = ArrayMap<Animator.AnimatorListener, Animator.AnimatorListener>()
+class NoPauseAnimator(private val animator: Animator) : Animator() {
+    private val listeners = ArrayMap<Animator.AnimatorListener, Animator.AnimatorListener>()
 
     override fun addListener(listener: Animator.AnimatorListener) {
         val wrapper = AnimatorListenerWrapper(this, listener)
-        if (!mListeners.containsKey(listener)) {
-            mListeners.put(listener, wrapper)
-            mAnimator.addListener(wrapper)
+        if (!listeners.containsKey(listener)) {
+            listeners[listener] = wrapper
+            animator.addListener(wrapper)
         }
     }
 
     override fun cancel() {
-        mAnimator.cancel()
+        animator.cancel()
     }
 
     override fun end() {
-        mAnimator.end()
+        animator.end()
     }
 
     override fun getDuration(): Long {
-        return mAnimator.duration
+        return animator.duration
     }
 
     override fun getInterpolator(): TimeInterpolator {
-        return mAnimator.interpolator
+        return animator.interpolator
     }
 
     override fun setInterpolator(timeInterpolator: TimeInterpolator) {
-        mAnimator.interpolator = timeInterpolator
+        animator.interpolator = timeInterpolator
     }
 
     override fun getListeners(): ArrayList<Animator.AnimatorListener> {
-        return ArrayList(mListeners.keys)
+        return ArrayList(listeners.keys)
     }
 
     override fun getStartDelay(): Long {
-        return mAnimator.startDelay
+        return animator.startDelay
     }
 
     override fun setStartDelay(delayMS: Long) {
-        mAnimator.startDelay = delayMS
+        animator.startDelay = delayMS
     }
 
     override fun isPaused(): Boolean {
-        return mAnimator.isPaused
+        return animator.isPaused
     }
 
     override fun isRunning(): Boolean {
-        return mAnimator.isRunning
+        return animator.isRunning
     }
 
     override fun isStarted(): Boolean {
-        return mAnimator.isStarted
+        return animator.isStarted
     }
 
     /* We don't want to override pause or resume methods because we don't want them
-         * to affect mAnimator.
+         * to affect animator.
         public void pause();
         public void resume();
         public void addPauseListener(AnimatorPauseListener listener);
@@ -94,37 +94,37 @@ class NoPauseAnimator(private val mAnimator: Animator) : Animator() {
         */
 
     override fun removeAllListeners() {
-        mListeners.clear()
-        mAnimator.removeAllListeners()
+        listeners.clear()
+        animator.removeAllListeners()
     }
 
     override fun removeListener(listener: Animator.AnimatorListener) {
-        val wrapper = mListeners[listener]
+        val wrapper = listeners[listener]
         if (wrapper != null) {
-            mListeners.remove(listener)
-            mAnimator.removeListener(wrapper)
+            listeners.remove(listener)
+            animator.removeListener(wrapper)
         }
     }
 
     override fun setDuration(durationMS: Long): Animator {
-        mAnimator.duration = durationMS
+        animator.duration = durationMS
         return this
     }
 
     override fun setTarget(target: Any?) {
-        mAnimator.setTarget(target)
+        animator.setTarget(target)
     }
 
     override fun setupEndValues() {
-        mAnimator.setupEndValues()
+        animator.setupEndValues()
     }
 
     override fun setupStartValues() {
-        mAnimator.setupStartValues()
+        animator.setupStartValues()
     }
 
     override fun start() {
-        mAnimator.start()
+        animator.start()
     }
 
     private class AnimatorListenerWrapper(private val mAnimator: Animator, private val mListener: Animator.AnimatorListener) : Animator.AnimatorListener {
