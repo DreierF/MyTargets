@@ -17,8 +17,8 @@ package de.dreier.mytargets.utils.transitions
 
 import android.animation.Animator
 import android.animation.TimeInterpolator
-import android.annotation.TargetApi
 import android.os.Build
+import android.support.annotation.RequiresApi
 import android.support.v4.util.ArrayMap
 import java.util.*
 
@@ -29,7 +29,7 @@ import java.util.*
  * Interrupting Activity transitions can yield an OperationNotSupportedException when the
  * transition tries to pause the animator. Yikes! We can fix this by wrapping the Animator:
  */
-@TargetApi(Build.VERSION_CODES.KITKAT)
+@RequiresApi(Build.VERSION_CODES.KITKAT)
 class NoPauseAnimator(private val mAnimator: Animator) : Animator() {
     private val mListeners = ArrayMap<Animator.AnimatorListener, Animator.AnimatorListener>()
 
