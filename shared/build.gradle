@@ -58,6 +58,7 @@ dependencies {
     kapt dependencies.dbFlowProcessor
     implementation dependencies.dbFlowCore
     implementation dependencies.dbFlow
+    implementation dependencies.dbFlowKotlinExtensions
 
     implementation dependencies.androidState
     kapt dependencies.androidStateProcessor
