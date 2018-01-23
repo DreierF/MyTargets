@@ -25,14 +25,14 @@ import android.print.PageRange
 import android.support.annotation.RequiresApi
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
-import de.dreier.mytargets.base.db.dao.TrainingDAO
 import de.dreier.mytargets.base.db.dao.RoundDAO
+import de.dreier.mytargets.base.db.dao.TrainingDAO
 import de.dreier.mytargets.features.scoreboard.builder.ViewBuilder
 import de.dreier.mytargets.features.scoreboard.layout.DefaultScoreboardLayout
-import de.dreier.mytargets.features.scoreboard.pdf.ViewPrintDocumentAdapter
-import de.dreier.mytargets.features.scoreboard.pdf.ViewToPdfWriter
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
+import de.dreier.mytargets.utils.print.CustomPrintDocumentAdapter
+import de.dreier.mytargets.utils.print.ViewToPdfWriter
 import de.dreier.mytargets.utils.writeToJPGFile
 import java.io.File
 import java.io.FileOutputStream
@@ -61,8 +61,8 @@ object ScoreboardUtils {
     @Throws(IOException::class)
     fun generatePdf(content: LinearLayout, file: File) {
         val writer = ViewToPdfWriter(content)
-        writer.layoutPages(ViewPrintDocumentAdapter
-                .DEFAULT_RESOLUTION, ViewPrintDocumentAdapter
+        writer.layoutPages(CustomPrintDocumentAdapter
+                .DEFAULT_RESOLUTION, CustomPrintDocumentAdapter
                 .DEFAULT_MEDIA_SIZE)
 
         val fileOutputStream = FileOutputStream(file)

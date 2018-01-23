@@ -131,7 +131,7 @@ abstract class TargetViewBase : View, View.OnTouchListener {
             shots[0].x = 0.01f
             shots[0].y = 0.05f
             target = Target(WAFull.ID, 0)
-            targetDrawable = target.impactAggregationDrawable
+            targetDrawable = TargetImpactAggregationDrawable(target)
             endRenderer.init(this, density, target)
             endRenderer.setShots(shots)
             currentShotIndex = 1
@@ -146,7 +146,7 @@ abstract class TargetViewBase : View, View.OnTouchListener {
 
     open fun initWithTarget(target: Target) {
         this.target = target
-        targetDrawable = this.target.impactAggregationDrawable
+        targetDrawable = TargetImpactAggregationDrawable(this.target)
         targetDrawable?.callback = this
         endRenderer.init(this, density, this.target)
         updateSelectableZones()

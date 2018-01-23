@@ -153,7 +153,7 @@ object Utils {
 
 fun Bitmap.writeToJPGFile(file: File) {
     val fileOutputStream = FileOutputStream(file)
-    compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+    compress(Bitmap.CompressFormat.JPEG, 99, fileOutputStream)
     fileOutputStream.flush()
     fileOutputStream.close()
     recycle()

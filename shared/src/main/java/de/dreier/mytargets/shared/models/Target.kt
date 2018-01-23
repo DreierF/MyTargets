@@ -20,7 +20,6 @@ import android.os.Parcelable
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.targets.TargetFactory
 import de.dreier.mytargets.shared.targets.drawable.TargetDrawable
-import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable
 import de.dreier.mytargets.shared.targets.models.TargetModelBase
 import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle
 import kotlinx.android.parcel.IgnoredOnParcel
@@ -42,10 +41,6 @@ data class Target(
     val model: TargetModelBase by lazy { TargetFactory.getTarget(id.toInt()) }
     @IgnoredOnParcel
     val drawable: TargetDrawable by lazy { TargetDrawable(this) }
-    @IgnoredOnParcel
-    val impactAggregationDrawable: TargetImpactAggregationDrawable by lazy {
-        TargetImpactAggregationDrawable(this)
-    }
 
     constructor(target: Long, scoringStyle: Int) : this(target, scoringStyle, Dimension.UNKNOWN) {
         this.diameter = model.diameters[0]

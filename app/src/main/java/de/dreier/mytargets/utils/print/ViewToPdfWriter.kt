@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.scoreboard.pdf
+package de.dreier.mytargets.utils.print
 
 import android.annotation.SuppressLint
 import android.graphics.RectF
@@ -36,34 +36,34 @@ import java.io.OutputStream
  * it gets placed on the next page.
  */
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-class ViewToPdfWriter(private val content: LinearLayout) {
-    private var contentRect: RectF? = null
-    private var fullPage: RectF? = null
+class ViewToPdfWriter(private val content: LinearLayout) : IPdfWriter {
+    private lateinit var contentRect: RectF
+    private lateinit var fullPage: RectF
 
     /**
      * Calculates the number of pages it takes to print the content to the given print medium.
      * MUST be called before [.writePdfDocument].
      */
     @SuppressLint("Range")
-    fun layoutPages(resolution: PrintAttributes.Resolution, mediaSize: PrintAttributes.MediaSize): Int {
+    override fun layoutPages(resolution: PrintAttributes.Resolution, mediaSize: PrintAttributes.MediaSize): Int {
         fullPage = RectF(0f, 0f,
                 mediaSize.widthMils * resolution.horizontalDpi / 1000f,
                 mediaSize.heightMils * resolution.verticalDpi / 1000f)
 
         contentRect = RectF(fullPage)
-        contentRect!!.inset(resolution.horizontalDpi * MARGIN_HORIZONTAL,
+        contentRect.inset(resolution.horizontalDpi * MARGIN_HORIZONTAL,
                 resolution.verticalDpi * MARGIN_VERTICAL)
 
-        content.measure(makeMeasureSpec(contentRect!!.width().toInt(), EXACTLY),
-                makeMeasureSpec(contentRect!!.height().toInt(), View.MeasureSpec.UNSPECIFIED))
-        content.layout(0, 0, contentRect!!.width().toInt(), contentRect!!.height().toInt())
+        content.measure(makeMeasureSpec(contentRect.width().toInt(), EXACTLY),
+                makeMeasureSpec(contentRect.height().toInt(), View.MeasureSpec.UNSPECIFIED))
+        content.layout(0, 0, contentRect.width().toInt(), contentRect.height().toInt())
 
         var sumHeight = 0
         var pageCount = 1
         for (i in 0 until content.childCount) {
             val measuredHeight = content.getChildAt(i).measuredHeight
             sumHeight += measuredHeight
-            if (sumHeight > contentRect!!.height().toInt()) {
+            if (sumHeight > contentRect.height().toInt()) {
                 sumHeight = measuredHeight
                 pageCount++
             }
@@ -75,7 +75,7 @@ class ViewToPdfWriter(private val content: LinearLayout) {
      * Writes the given pages as PDF to the output stream.
      */
     @Throws(IOException::class)
-    fun writePdfDocument(pages: Array<PageRange>, outputStream: OutputStream) {
+    override fun writePdfDocument(pages: Array<PageRange>, outputStream: OutputStream) {
         val document = PdfDocument()
 
         var sumHeight = 0
@@ -83,15 +83,15 @@ class ViewToPdfWriter(private val content: LinearLayout) {
         var topAnchor = 0
         var page: PdfDocument.Page? = null
         if (containsPage(pages, pageNumber)) {
-            val pageInfo = PdfDocument.PageInfo.Builder(fullPage!!
-                    .width().toInt(), fullPage!!.height().toInt(), pageNumber).create()
+            val pageInfo = PdfDocument.PageInfo.Builder(fullPage
+                    .width().toInt(), fullPage.height().toInt(), pageNumber).create()
             page = document.startPage(pageInfo)
         }
 
         for (i in 0 until content.childCount) {
             val view = content.getChildAt(i)
             val measuredHeight = view.measuredHeight
-            if (sumHeight + measuredHeight > contentRect!!.height()) {
+            if (sumHeight + measuredHeight > contentRect.height()) {
                 sumHeight = 0
                 topAnchor = view.top
                 pageNumber++
@@ -102,8 +102,8 @@ class ViewToPdfWriter(private val content: LinearLayout) {
                 }
 
                 if (containsPage(pages, pageNumber)) {
-                    val pageInfo = PdfDocument.PageInfo.Builder(fullPage!!
-                            .width().toInt(), fullPage!!.height().toInt(), pageNumber).create()
+                    val pageInfo = PdfDocument.PageInfo.Builder(fullPage
+                            .width().toInt(), fullPage.height().toInt(), pageNumber).create()
                     page = document.startPage(pageInfo)
                 }
             }
@@ -111,7 +111,7 @@ class ViewToPdfWriter(private val content: LinearLayout) {
             if (page != null) {
                 val canvas = page.canvas
                 canvas.save()
-                canvas.translate(contentRect!!.left, contentRect!!.top + view.top - topAnchor)
+                canvas.translate(contentRect.left, contentRect.top + view.top - topAnchor)
                 view.draw(canvas)
                 canvas.restore()
             }

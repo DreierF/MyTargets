@@ -15,13 +15,15 @@
 
 package de.dreier.mytargets.features.statistics
 
+import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Build
 import android.os.Bundle
+import android.print.PrintAttributes
+import android.print.PrintManager
 import android.support.annotation.RequiresApi
 import android.support.design.widget.Snackbar
-import android.support.v4.print.PrintHelper
 import android.view.Menu
 import android.view.MenuItem
 import de.dreier.mytargets.R
@@ -33,6 +35,8 @@ import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.utils.toUri
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils
+import de.dreier.mytargets.utils.print.CustomPrintDocumentAdapter
+import de.dreier.mytargets.utils.print.DrawableToPdfWriter
 import java.io.File
 import java.io.IOException
 
@@ -59,13 +63,7 @@ class DispersionPatternActivity : ChildActivityBase() {
 
     override fun onResume() {
         super.onResume()
-
-        val strategy = SettingsManager.statisticsDispersionPatternAggregationStrategy
-        val drawable = statistic.target.impactAggregationDrawable
-        drawable.setAggregationStrategy(strategy)
-        drawable.replaceShotsWith(statistic.shots)
-        drawable.setArrowDiameter(statistic.arrowDiameter, SettingsManager.inputArrowDiameterScale)
-
+        val drawable = DispersionPatternUtils.targetFromArrowStatistics(statistic)
         binding!!.dispersionView.setImageDrawable(drawable)
     }
 
@@ -94,7 +92,7 @@ class DispersionPatternActivity : ChildActivityBase() {
                 if (fileType === EFileType.PDF && Utils.isKitKat) {
                     DispersionPatternUtils.generatePdf(f, statistic)
                 } else {
-                    DispersionPatternUtils.createDispersionPatternImageFile(800, f, statistic)
+                    DispersionPatternUtils.createDispersionPatternImageFile(1200, f, statistic)
                 }
 
                 // Build and fire intent to ask for share provider
@@ -112,12 +110,14 @@ class DispersionPatternActivity : ChildActivityBase() {
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun print() {
-        val printHelper = PrintHelper(this)
-        printHelper.scaleMode = PrintHelper.SCALE_MODE_FIT
+        val target = DispersionPatternUtils.targetFromArrowStatistics(statistic)
+        val fileName = getDefaultFileName(EFileType.PDF)
+        val pda = CustomPrintDocumentAdapter(DrawableToPdfWriter(target), fileName)
 
-        // Get the image
-        val image = DispersionPatternUtils.getDispersionPatternBitmap(800, statistic)
-        printHelper.printBitmap("Dispersion Pattern", image)
+        // Create a print job with name and adapter instance
+        val printManager = getSystemService(Context.PRINT_SERVICE) as PrintManager
+        val jobName = "Dispersion Pattern"
+        printManager.print(jobName, pda, PrintAttributes.Builder().build())
     }
 
     private fun getDefaultFileName(extension: EFileType): String {

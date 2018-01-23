@@ -232,11 +232,7 @@ class StatisticsFragment : FragmentBase() {
             stats.exportFileName = ""
         }
 
-        val strategy = SettingsManager.statisticsDispersionPatternAggregationStrategy
-        val drawable = stats.target.impactAggregationDrawable
-        drawable.setAggregationStrategy(strategy)
-        drawable.replaceShotsWith(stats.shots)
-        drawable.setArrowDiameter(stats.arrowDiameter, SettingsManager.inputArrowDiameterScale)
+        val drawable = DispersionPatternUtils.targetFromArrowStatistics(stats)
         binding.dispersionView.setImageDrawable(drawable)
 
         binding.dispersionViewOverlay.setOnClickListener {

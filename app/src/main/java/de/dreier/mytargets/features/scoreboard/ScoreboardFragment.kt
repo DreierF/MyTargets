@@ -42,7 +42,6 @@ import de.dreier.mytargets.base.fragments.FragmentBase
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentScoreboardBinding
 import de.dreier.mytargets.databinding.PartialScoreboardSignaturesBinding
-import de.dreier.mytargets.features.scoreboard.pdf.ViewPrintDocumentAdapter
 import de.dreier.mytargets.features.settings.ESettingsScreens
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.db.End
@@ -52,6 +51,8 @@ import de.dreier.mytargets.shared.utils.toUri
 import de.dreier.mytargets.utils.MobileWearableClient
 import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
 import de.dreier.mytargets.utils.Utils
+import de.dreier.mytargets.utils.print.CustomPrintDocumentAdapter
+import de.dreier.mytargets.utils.print.ViewToPdfWriter
 import org.threeten.bp.format.DateTimeFormatter
 import java.io.File
 import java.io.IOException
@@ -228,7 +229,7 @@ class ScoreboardFragment : FragmentBase() {
                 .scoreboardConfiguration)
 
         val jobName = getString(R.string.scoreboard) + " Document"
-        val pda = ViewPrintDocumentAdapter(content, fileName)
+        val pda = CustomPrintDocumentAdapter(ViewToPdfWriter(content), fileName)
 
         // Create a print job with name and adapter instance
         val printManager = context!!

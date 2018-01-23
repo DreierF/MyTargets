@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.features.scoreboard.pdf
+package de.dreier.mytargets.utils.print
 
 import android.os.Build
 import android.os.Bundle
@@ -24,13 +24,10 @@ import android.print.PrintAttributes
 import android.print.PrintDocumentAdapter
 import android.print.PrintDocumentInfo
 import android.support.annotation.RequiresApi
-import android.widget.LinearLayout
 import java.io.FileOutputStream
 
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-class ViewPrintDocumentAdapter(content: LinearLayout, private val fileName: String) : PrintDocumentAdapter() {
-
-    private val pdfWriter = ViewToPdfWriter(content)
+class CustomPrintDocumentAdapter(private val pdfWriter: IPdfWriter, private val fileName: String) : PrintDocumentAdapter() {
 
     override fun onLayout(oldAttributes: PrintAttributes, newAttributes: PrintAttributes, cancellationSignal: CancellationSignal, callback: PrintDocumentAdapter.LayoutResultCallback, extras: Bundle) {
         if (cancellationSignal.isCanceled) {

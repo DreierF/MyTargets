@@ -15,17 +15,17 @@
 
 package de.dreier.mytargets.features.statistics
 
-import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Rect
-import android.graphics.pdf.PdfDocument
 import android.os.Build
-import android.print.PrintAttributes
+import android.print.PageRange
 import android.support.annotation.RequiresApi
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable
+import de.dreier.mytargets.utils.print.CustomPrintDocumentAdapter
+import de.dreier.mytargets.utils.print.DrawableToPdfWriter
 import de.dreier.mytargets.utils.writeToJPGFile
 import java.io.File
 import java.io.FileNotFoundException
@@ -36,61 +36,31 @@ object DispersionPatternUtils {
 
     @Throws(IOException::class)
     fun createDispersionPatternImageFile(size: Int, file: File, statistic: ArrowStatistic) {
-        val b = getDispersionPatternBitmap(size, statistic)
-        b.writeToJPGFile(file)
+        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        canvas.drawColor(Color.WHITE)
+        val target = targetFromArrowStatistics(statistic)
+        target.bounds = Rect(0, 0, size, size)
+        target.draw(canvas)
+        bitmap.writeToJPGFile(file)
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Throws(FileNotFoundException::class)
     fun generatePdf(f: File, statistic: ArrowStatistic) {
-        val outputStream = FileOutputStream(f)
-        try {
-            val target = TargetImpactAggregationDrawable(statistic.target)
-            target.replaceShotsWith(statistic.shots)
-            target.setAggregationStrategy(SettingsManager.statisticsDispersionPatternAggregationStrategy)
-            target.setArrowDiameter(statistic.arrowDiameter, SettingsManager.inputArrowDiameterScale)
-
-            val document = PdfDocument()
-
-            val mediaSize = PrintAttributes.MediaSize.ISO_A4
-            @SuppressLint("Range")
-            val pageInfo = PdfDocument.PageInfo.Builder((mediaSize
-                    .widthMils * 0.072f).toInt(), (mediaSize.heightMils * 0.072f).toInt(), 1)
-                    .create()
-
-            val page = document.startPage(pageInfo)
-            val canvas = page.canvas
-            target.setBounds(0, 0, canvas.width, canvas.height)
-            target.draw(canvas)
-            document.finishPage(page)
-
-            document.writeTo(outputStream)
-            document.close()
-            outputStream.flush()
-            outputStream.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } finally {
-            try {
-                outputStream.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-
+        FileOutputStream(f).use { outputStream ->
+            val target = targetFromArrowStatistics(statistic)
+            val pdfWriter = DrawableToPdfWriter(target)
+            pdfWriter.layoutPages(CustomPrintDocumentAdapter.DEFAULT_RESOLUTION, CustomPrintDocumentAdapter.DEFAULT_MEDIA_SIZE)
+            pdfWriter.writePdfDocument(arrayOf(PageRange(0, 0)), outputStream)
         }
     }
 
-    fun getDispersionPatternBitmap(size: Int, statistic: ArrowStatistic): Bitmap {
-        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        canvas.drawColor(Color.WHITE)
-
+    fun targetFromArrowStatistics(statistic: ArrowStatistic): TargetImpactAggregationDrawable {
         val target = TargetImpactAggregationDrawable(statistic.target)
         target.replaceShotsWith(statistic.shots)
         target.setAggregationStrategy(SettingsManager.statisticsDispersionPatternAggregationStrategy)
         target.setArrowDiameter(statistic.arrowDiameter, SettingsManager.inputArrowDiameterScale)
-        target.bounds = Rect(0, 0, size, size)
-        target.draw(canvas)
-        return bitmap
+        return target
     }
 }
