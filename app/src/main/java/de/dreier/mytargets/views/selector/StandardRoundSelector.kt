@@ -41,9 +41,9 @@ class StandardRoundSelector @JvmOverloads constructor(context: Context, attrs: A
         var standardRound = StandardRoundDAO.loadStandardRoundOrNull(standardRoundId!!)
         // If the round has been removed, choose default one
         if (standardRound == null || StandardRoundDAO.loadRoundTemplates(standardRound.id).isEmpty()) {
-            standardRound = StandardRoundDAO.loadStandardRoundOrNull(32L)
+            standardRound = StandardRoundDAO.loadStandardRound(32L)
         }
-        setItem(AugmentedStandardRound(standardRound!!, StandardRoundDAO.loadRoundTemplates(standardRound.id)))
+        setItem(AugmentedStandardRound(standardRound, StandardRoundDAO.loadRoundTemplates(standardRound.id)))
     }
 
     companion object {
