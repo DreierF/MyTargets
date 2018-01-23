@@ -20,7 +20,6 @@ buildscript {
         jcenter()
         google()
         maven { url "https://jitpack.io" }
-        maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
     }
 
     dependencies {
@@ -47,7 +46,6 @@ allprojects {
         google()
         maven { url 'https://jitpack.io' }
         maven { url 'https://clojars.org/repo/' }
-        maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
     }
 }
 
