@@ -51,6 +51,7 @@ import de.dreier.mytargets.features.settings.backup.synchronization.SyncUtils
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils
 import permissions.dispatcher.NeedsPermission
+import permissions.dispatcher.OnNeverAskAgain
 import permissions.dispatcher.OnPermissionDenied
 import permissions.dispatcher.RuntimePermissions
 import java.io.FileNotFoundException
@@ -64,6 +65,8 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
     private var adapter: BackupAdapter? = null
     private lateinit var binding: FragmentBackupBinding
     private var updateLabelTimer: Timer? = null
+    private var isLeaving = false
+
     /**
      * Handle to a SyncObserver. The ProgressBar element is visible until the SyncObserver reports
      * that the sync is complete.
@@ -156,8 +159,10 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
 
     override fun onResume() {
         super.onResume()
-        internalApplyBackupLocationWithPermissionCheck(SettingsManager.backupLocation)
-        updateAutomaticBackupSwitch()
+        if (!isLeaving) {
+            internalApplyBackupLocationWithPermissionCheck(SettingsManager.backupLocation)
+            updateAutomaticBackupSwitch()
+        }
 
         syncStatusObserver.onStatusChanged(0)
         syncObserverHandle = ContentResolver.addStatusChangeListener(
@@ -165,12 +170,8 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
     }
 
     override fun onPause() {
-        if (backup != null) {
-            backup!!.stop()
-        }
-        if (updateLabelTimer != null) {
-            updateLabelTimer!!.cancel()
-        }
+        backup?.stop()
+        updateLabelTimer?.cancel()
         if (syncObserverHandle != null) {
             ContentResolver.removeStatusChangeListener(syncObserverHandle)
             syncObserverHandle = null
@@ -289,9 +290,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
         binding.recentBackupsList.visibility = VISIBLE
         adapter!!.setList(list.toMutableList())
         binding.lastBackupLabel.visibility = if (list.isNotEmpty()) VISIBLE else GONE
-        if (updateLabelTimer != null) {
-            updateLabelTimer!!.cancel()
-        }
+        updateLabelTimer?.cancel()
         if (list.isNotEmpty()) {
             val time = list[0].modifiedDate!!.time
             updateLabelTimer = Timer()
@@ -380,12 +379,24 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
         startActivityForResult(intent, IMPORT_FROM_URI)
     }
 
+    @OnNeverAskAgain(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    fun neverAskAgainForWritePermission() {
+        isLeaving = true
+        MaterialDialog.Builder(context!!)
+                .title(R.string.permission_required)
+                .content(R.string.backup_permission_explanation)
+                .positiveText(android.R.string.ok)
+                .onPositive { _, _ -> leaveBackupSettings() }
+                .show()
+    }
+
     @OnPermissionDenied(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     internal fun showDeniedForWrite() {
         leaveBackupSettings()
     }
 
     private fun leaveBackupSettings() {
+        isLeaving = true
         val h = Handler()
         h.post { activity!!.supportFragmentManager.popBackStack() }
     }
