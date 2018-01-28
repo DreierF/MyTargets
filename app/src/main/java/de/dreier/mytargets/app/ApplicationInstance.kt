@@ -24,9 +24,9 @@ import android.util.Log
 import com.crashlytics.android.Crashlytics
 import com.evernote.android.state.StateSaver
 import de.dreier.mytargets.BuildConfig
+import de.dreier.mytargets.base.db.AppDatabase
 import de.dreier.mytargets.base.db.migrations.*
 import de.dreier.mytargets.features.settings.SettingsManager
-import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.SharedApplicationInstance
 import de.dreier.mytargets.utils.MobileWearableClient
 import de.dreier.mytargets.utils.backup.MyBackupAgent

@@ -17,7 +17,7 @@ package de.dreier.mytargets.features.statistics
 
 import android.content.Context
 import de.dreier.mytargets.R
-import de.dreier.mytargets.shared.AppDatabase
+import de.dreier.mytargets.base.db.AppDatabase
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import org.threeten.bp.format.DateTimeFormatter

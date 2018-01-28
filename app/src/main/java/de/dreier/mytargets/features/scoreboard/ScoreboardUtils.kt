@@ -25,9 +25,9 @@ import android.print.PageRange
 import android.support.annotation.RequiresApi
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
+import de.dreier.mytargets.base.db.AppDatabase
 import de.dreier.mytargets.features.scoreboard.builder.ViewBuilder
 import de.dreier.mytargets.features.scoreboard.layout.DefaultScoreboardLayout
-import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.utils.print.CustomPrintDocumentAdapter

@@ -13,22 +13,21 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils.typeconverters
+package de.dreier.mytargets.base.db.typeconverters
 
 import android.arch.persistence.room.TypeConverter
-import org.threeten.bp.LocalTime
-import org.threeten.bp.format.DateTimeFormatter
+import de.dreier.mytargets.shared.models.Thumbnail
 
-class LocalTimeConverters {
+class ThumbnailConverters {
 
     @TypeConverter
-    fun getDBValue(model: LocalTime?): String? {
-        return model?.format(DateTimeFormatter.ISO_LOCAL_TIME)
+    fun getDBValue(model: Thumbnail?): ByteArray? {
+        return model?.data
     }
 
     @TypeConverter
-    fun getModelValue(data: String?): LocalTime? {
-        return if (data != null) LocalTime.parse(data) else null
+    fun getModelValue(data: ByteArray?): Thumbnail? {
+        return if (data != null) Thumbnail(data) else null
     }
 
 }

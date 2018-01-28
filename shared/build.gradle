@@ -56,7 +56,6 @@ dependencies {
     api dependencies.threeTenABP
 
     implementation dependencies.archRoomRuntime
-    kapt dependencies.archRoomCompiler
 
     implementation dependencies.androidState
     kapt dependencies.androidStateProcessor

@@ -13,14 +13,14 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared
+package de.dreier.mytargets.base.db
 
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
 import de.dreier.mytargets.base.db.dao.*
+import de.dreier.mytargets.base.db.typeconverters.*
 import de.dreier.mytargets.shared.models.db.*
-import de.dreier.mytargets.shared.utils.typeconverters.*
 
 @Database(entities = [
     Arrow::class,
@@ -49,7 +49,7 @@ import de.dreier.mytargets.shared.utils.typeconverters.*
 abstract class AppDatabase : RoomDatabase() {
     companion object {
         const val NAME = "database"
-        const val DATABASE_FILE_NAME = "$NAME.db"
+        const val DATABASE_FILE_NAME = "${NAME}.db"
         const val DATABASE_IMPORT_FILE_NAME = "database"
         const val VERSION = 26
     }

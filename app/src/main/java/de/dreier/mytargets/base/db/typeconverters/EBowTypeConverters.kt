@@ -13,25 +13,21 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils.typeconverters
+package de.dreier.mytargets.base.db.typeconverters
 
 import android.arch.persistence.room.TypeConverter
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import de.dreier.mytargets.shared.utils.toByteArray
+import de.dreier.mytargets.shared.models.EBowType
 
-class BitmapConverters {
+class EBowTypeConverters {
 
     @TypeConverter
-    fun getDBValue(model: Bitmap?): ByteArray? {
-        return model?.toByteArray()
+    fun getDBValue(model: EBowType?): Int? {
+        return model?.ordinal
     }
 
     @TypeConverter
-    fun getModelValue(data: ByteArray?): Bitmap? {
-        return if (data != null) {
-            BitmapFactory.decodeByteArray(data, 0, data.size)
-        } else null
+    fun getModelValue(data: Int?): EBowType? {
+        return if (data != null) EBowType.fromId(data) else null
     }
 
 }

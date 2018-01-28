@@ -16,7 +16,7 @@
 package de.dreier.mytargets.features.settings.backup.provider
 
 import android.content.Context
-import de.dreier.mytargets.shared.AppDatabase
+import de.dreier.mytargets.base.db.AppDatabase
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*

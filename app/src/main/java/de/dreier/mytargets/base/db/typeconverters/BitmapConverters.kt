@@ -13,21 +13,25 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils.typeconverters
+package de.dreier.mytargets.base.db.typeconverters
 
 import android.arch.persistence.room.TypeConverter
-import de.dreier.mytargets.shared.models.EWeather
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import de.dreier.mytargets.shared.utils.toByteArray
 
-class EWeatherConverters {
+class BitmapConverters {
 
     @TypeConverter
-    fun getDBValue(model: EWeather?): Int? {
-        return model?.ordinal //TODO migrate to save name instead of ordinal
+    fun getDBValue(model: Bitmap?): ByteArray? {
+        return model?.toByteArray()
     }
 
     @TypeConverter
-    fun getModelValue(data: Int?): EWeather? {
-        return if (data != null) EWeather.getOfValue(data) else null
+    fun getModelValue(data: ByteArray?): Bitmap? {
+        return if (data != null) {
+            BitmapFactory.decodeByteArray(data, 0, data.size)
+        } else null
     }
 
 }

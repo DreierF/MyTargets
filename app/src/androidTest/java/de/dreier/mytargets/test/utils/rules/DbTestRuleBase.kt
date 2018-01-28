@@ -17,7 +17,6 @@ package de.dreier.mytargets.test.utils.rules
 
 import android.content.Context
 import android.support.test.InstrumentationRegistry
-import com.raizlabs.android.dbflow.sql.language.SQLite
 import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.shared.models.Dimension
@@ -27,8 +26,6 @@ import de.dreier.mytargets.shared.models.Thumbnail
 import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
 import de.dreier.mytargets.shared.models.augmented.AugmentedRound
 import de.dreier.mytargets.base.db.dao.ArrowDAO
-import de.dreier.mytargets.base.db.dao.dao.BowDAO
-import de.dreier.mytargets.base.db.dao.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.Training
@@ -120,10 +117,10 @@ abstract class DbTestRuleBase : TestRule {
         val training = Training()
         training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training)
         training.date = LocalDate.of(2016, 4 + generator.nextInt(5), generator.nextInt(29))
-        training.location = ""
-        training.weather = EWeather.SUNNY
-        training.windSpeed = 1
-        training.windDirection = 0
+        training.environment.location = ""
+        training.environment.weather = EWeather.SUNNY
+        training.environment.windSpeed = 1
+        training.environment.windDirection = 0
         training.standardRoundId = standardRoundId
         training.bowId = null
         training.arrowId = null

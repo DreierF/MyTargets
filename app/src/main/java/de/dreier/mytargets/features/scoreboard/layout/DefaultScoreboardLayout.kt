@@ -18,6 +18,7 @@ package de.dreier.mytargets.features.scoreboard.layout
 import android.content.Context
 import android.text.TextUtils
 import de.dreier.mytargets.R
+import de.dreier.mytargets.base.db.AppDatabase
 import de.dreier.mytargets.base.db.EndRepository
 import de.dreier.mytargets.base.db.RoundRepository
 import de.dreier.mytargets.base.db.TrainingRepository
@@ -26,7 +27,6 @@ import de.dreier.mytargets.features.scoreboard.ScoreboardConfiguration
 import de.dreier.mytargets.features.scoreboard.builder.model.Table
 import de.dreier.mytargets.features.scoreboard.builder.model.TextCell
 import de.dreier.mytargets.features.settings.SettingsManager
-import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.SelectableZone
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.db.Round
@@ -47,7 +47,7 @@ class DefaultScoreboardLayout(private val context: Context, database: AppDatabas
     private val standardRoundDAO = database.standardRoundDAO()
     private val endRepository = EndRepository(endDAO)
     private val roundRepository = RoundRepository(database, roundDAO, endDAO, endRepository)
-    private val trainingRepository = TrainingRepository(database, trainingDAO, roundDAO,roundRepository, database.signatureDAO())
+    private val trainingRepository = TrainingRepository(database, trainingDAO, roundDAO, roundRepository, database.signatureDAO())
 
     fun generateWithBuilder(builder: ScoreboardBuilder, training: Training, rounds: List<Round>) {
         this.builder = builder

@@ -13,21 +13,28 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils.typeconverters
+package de.dreier.mytargets.base.db.typeconverters
 
 import android.arch.persistence.room.TypeConverter
-import de.dreier.mytargets.shared.models.EBowType
+import de.dreier.mytargets.shared.models.Dimension
 
-class EBowTypeConverters {
+class DimensionConverters {
 
     @TypeConverter
-    fun getDBValue(model: EBowType?): Int? {
-        return model?.ordinal
+    fun getDBValue(model: Dimension): String {
+        return "${model.value} ${model.unit}"
     }
 
     @TypeConverter
-    fun getModelValue(data: Int?): EBowType? {
-        return if (data != null) EBowType.fromId(data) else null
+    fun getModelValue(data: String): Dimension {
+        val index = data.indexOf(' ')
+        val value = data.substring(0, index)
+        val unit = data.substring(index + 1)
+        return Dimension.from(value.toFloat(), unit)
     }
 
+    @TypeConverter
+    fun getDBValue(model: Dimension.Unit): String {
+        return model.toString()
+    }
 }

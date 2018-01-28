@@ -13,28 +13,21 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils.typeconverters
+package de.dreier.mytargets.base.db.typeconverters
 
 import android.arch.persistence.room.TypeConverter
-import de.dreier.mytargets.shared.models.Dimension
+import de.dreier.mytargets.shared.models.EWeather
 
-class DimensionConverters {
+class EWeatherConverters {
 
     @TypeConverter
-    fun getDBValue(model: Dimension): String {
-        return "${model.value} ${model.unit}"
+    fun getDBValue(model: EWeather?): Int? {
+        return model?.ordinal //TODO migrate to save name instead of ordinal
     }
 
     @TypeConverter
-    fun getModelValue(data: String): Dimension {
-        val index = data.indexOf(' ')
-        val value = data.substring(0, index)
-        val unit = data.substring(index + 1)
-        return Dimension.from(value.toFloat(), unit)
+    fun getModelValue(data: Int?): EWeather? {
+        return if (data != null) EWeather.getOfValue(data) else null
     }
 
-    @TypeConverter
-    fun getDBValue(model: Dimension.Unit): String {
-        return model.abbreviation
-    }
 }
