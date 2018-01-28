@@ -21,8 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.db.dao.RoundDAO
-import de.dreier.mytargets.base.db.dao.TrainingDAO
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.fragments.EditFragmentBase
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase.Companion.ITEM_ID
 import de.dreier.mytargets.databinding.FragmentEditRoundBinding
@@ -39,6 +38,9 @@ class EditRoundFragment : EditFragmentBase() {
     private var trainingId: Long = 0
     private var roundId: Long? = null
     private lateinit var binding: FragmentEditRoundBinding
+
+    private val trainingDAO = ApplicationInstance.db.trainingDAO()
+    private val roundDAO = ApplicationInstance.db.roundDAO()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil
@@ -77,11 +79,11 @@ class EditRoundFragment : EditFragmentBase() {
             loadRoundDefaultValues()
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_round)
-            val round = RoundDAO.loadRound(roundId!!)
+            val round = roundDAO.loadRound(roundId!!)
             binding.distance.setItem(round.distance)
             binding.target.setItem(round.target)
             binding.notEditable.visibility = View.GONE
-            if (TrainingDAO.loadTraining(round.trainingId!!).standardRoundId != null) {
+            if (trainingDAO.loadTraining(round.trainingId!!).standardRoundId != null) {
                 binding.distanceLayout.visibility = View.GONE
             }
         }
@@ -108,7 +110,7 @@ class EditRoundFragment : EditFragmentBase() {
     }
 
     private fun onSaveRound(): Round? {
-        val training = TrainingDAO.loadTraining(trainingId)
+        val training = trainingDAO.loadTraining(trainingId)
 
         val round: Round
         if (roundId == null) {
@@ -116,13 +118,17 @@ class EditRoundFragment : EditFragmentBase() {
             round.trainingId = trainingId
             round.shotsPerEnd = binding.arrows.progress
             round.maxEndCount = null
-            round.index = TrainingDAO.loadRounds(training.id).size
+            round.index = roundDAO.loadRounds(training.id).size
         } else {
-            round = RoundDAO.loadRound(roundId!!)
+            round = roundDAO.loadRound(roundId!!)
         }
         round.distance = binding.distance.selectedItem!!
         round.target = binding.target.selectedItem!!
-        RoundDAO.saveRound(round)
+        if (roundId == null) {
+            round.id = roundDAO.insertRound(round)
+        } else {
+            roundDAO.updateRound(round)
+        }
         return round
     }
 

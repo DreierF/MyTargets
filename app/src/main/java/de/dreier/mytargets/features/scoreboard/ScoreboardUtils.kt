@@ -25,10 +25,9 @@ import android.print.PageRange
 import android.support.annotation.RequiresApi
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
-import de.dreier.mytargets.base.db.dao.RoundDAO
-import de.dreier.mytargets.base.db.dao.TrainingDAO
 import de.dreier.mytargets.features.scoreboard.builder.ViewBuilder
 import de.dreier.mytargets.features.scoreboard.layout.DefaultScoreboardLayout
+import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.utils.print.CustomPrintDocumentAdapter
@@ -44,14 +43,10 @@ object ScoreboardUtils {
     private const val PAGE_WIDTH = 600
     private const val MARGIN = 50
 
-    fun getScoreboardView(context: Context, locale: Locale, training: Training, roundId: Long, configuration: ScoreboardConfiguration): LinearLayout {
-        val rounds: List<Round>? = if (roundId == -1L) {
-            TrainingDAO.loadRounds(training.id)
-        } else {
-            listOf(RoundDAO.loadRound(roundId))
-        }
-
-        val scoreboardLayout = DefaultScoreboardLayout(context, locale, configuration)
+    fun getScoreboardView(context: Context, database: AppDatabase, locale: Locale,
+                          training: Training, rounds: List<Round>?,
+                          configuration: ScoreboardConfiguration): LinearLayout {
+        val scoreboardLayout = DefaultScoreboardLayout(context, database, locale, configuration)
         val viewBuilder = ViewBuilder(context)
         scoreboardLayout.generateWithBuilder(viewBuilder, training, rounds!!)
         return viewBuilder.build()

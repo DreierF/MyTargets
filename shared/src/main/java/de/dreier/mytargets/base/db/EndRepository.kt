@@ -13,18 +13,17 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.base.db.dao
+package de.dreier.mytargets.base.db
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Query
+import de.dreier.mytargets.base.db.dao.EndDAO
+import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
 
-@Dao
-interface ImageDAO {
-    /**
-     * Returns a list of file names, which are implicitly placed in the ../files/ folder of the app.
-     */
-    @Query("SELECT fileName FROM BowImage " +
-            "UNION SELECT fileName FROM EndImage " +
-            "UNION SELECT fileName FROM ArrowImage")
-    fun loadAllFileNames(): List<String>
+class EndRepository(
+        private val endDAO: EndDAO
+) {
+    fun loadAugmentedEnds(roundId: Long): List<AugmentedEnd> {
+        return endDAO.loadEnds(roundId)
+                .map { AugmentedEnd(it, endDAO.loadShots(it.id).toMutableList(), endDAO.loadEndImages(it.id).toMutableList()) }
+                .toMutableList()
+    }
 }

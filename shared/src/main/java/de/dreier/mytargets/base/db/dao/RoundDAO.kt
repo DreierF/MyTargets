@@ -15,93 +15,64 @@
 
 package de.dreier.mytargets.base.db.dao
 
-import com.raizlabs.android.dbflow.config.FlowManager
-import com.raizlabs.android.dbflow.kotlinextensions.delete
-import com.raizlabs.android.dbflow.kotlinextensions.save
-import com.raizlabs.android.dbflow.sql.language.SQLite
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
-import de.dreier.mytargets.shared.AppDatabase
-import de.dreier.mytargets.shared.models.augmented.AugmentedRound
+import android.arch.persistence.room.*
 import de.dreier.mytargets.shared.models.db.End
-import de.dreier.mytargets.shared.models.db.End_Table
 import de.dreier.mytargets.shared.models.db.Round
-import de.dreier.mytargets.shared.models.db.Round_Table
 
-object RoundDAO {
-    fun loadRounds(roundIds: LongArray): List<Round> = SQLite.select()
-            .from(Round::class.java)
-            .where(Round_Table._id.`in`(roundIds.toList()))
-            .queryList()
+@Dao
+abstract class RoundDAO {
+    @Query("SELECT * FROM Round WHERE _id in (:roundIds)")
+    abstract fun loadRounds(roundIds: LongArray): List<Round>
 
-    fun loadRound(id: Long): Round = SQLite.select()
-            .from(Round::class.java)
-            .where(Round_Table._id.eq(id))
-            .querySingle() ?: throw IllegalStateException("Round $id does not exist")
+    @Query("SELECT * FROM Round WHERE training = :id ORDER BY `index`")
+    abstract fun loadRounds(id: Long): List<Round>
 
-    fun loadAugmentedRound(id: Long) = AugmentedRound(loadRound(id), EndDAO.loadAugmentedEnds(id))
+    @Query("SELECT * FROM Round WHERE _id = :id")
+    abstract fun loadRound(id: Long): Round
 
-    fun loadAugmentedRound(round: Round) = AugmentedRound(round, EndDAO.loadAugmentedEnds(round.id))
+    @Query("SELECT * FROM Round WHERE _id = :id")
+    abstract fun loadRoundOrNull(id: Long): Round?
 
-    fun loadRoundOrNull(id: Long): Round? = SQLite.select()
-            .from(Round::class.java)
-            .where(Round_Table._id.eq(id))
-            .querySingle()
+    @Query("SELECT * FROM End WHERE round = :id ORDER BY `index`")
+    abstract fun loadEnds(id: Long): MutableList<End>
 
-    fun loadEnds(id: Long): MutableList<End> = SQLite.select()
-            .from(End::class.java)
-            .where(End_Table.round.eq(id))
-            .orderBy(End_Table.index, true)
-            .queryList().toMutableList()
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertRound(round: Round): Long
 
-    fun saveRound(round: Round) {
-        round.save()
-    }
+    @Insert
+    abstract fun insertEnds(round: List<End>)
 
-    fun saveRound(round: Round, ends: List<End>) {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-            saveRound(db, round, ends)
-        }
-    }
+    @Update
+    abstract fun updateRound(round: Round)
 
-    private fun saveRound(db: DatabaseWrapper, round: Round, ends: List<End>) {
-        round.save(db)
-        SQLite.delete(End::class.java)
-                .where(End_Table.round.eq(round.id))
-                .execute(db)
+    @Query("DELETE FROM End WHERE round = :id")
+    abstract fun deleteEnds(id: Long)
+
+    @Transaction
+    open fun saveRound(round: Round, ends: List<End>) {
+        round.id = insertRound(round)
+        deleteEnds(round.id)
         for (end in ends) {
             end.roundId = round.id
-            end.save(db)
         }
+        insertEnds(ends)
     }
 
-    fun deleteRound(round: Round) {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-            round.delete(db)
-            db.execSQL("UPDATE Round SET `index` = `index` - 1 WHERE `index` > ${round.index}")
-        }
+    @Transaction
+    open fun deleteRound(round: Round) {
+        deleteRound(round)
+        decrementIndices(round.index)
     }
 
-    fun insertRound(round: AugmentedRound) {
-        insertRound(round.round, round.ends.map { it.end })
-        round.ends.forEach {
-            EndDAO.saveEnd(it.end, it.images, it.shots)
-        }
-    }
+    @Query("UPDATE Round SET `index` = `index` - 1 WHERE `index` > :allAboveIndex")
+    abstract fun decrementIndices(allAboveIndex: Int)
 
-    private fun insertRound(round: Round, ends: List<End>) {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-            db.execSQL("UPDATE Round SET `index` = `index` + 1 WHERE `index` >= ${round.index}")
-            saveRound(db, round, ends)
-        }
-    }
+    @Query("UPDATE Round SET `index` = `index` + 1 WHERE `index` >= :allAboveIndex")
+    abstract fun incrementIndices(allAboveIndex: Int)
 
-    fun saveRound(round: AugmentedRound) {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-            round.round.save(db)
-            for(end in round.ends) {
-                end.end.roundId = round.round.id
-                EndDAO.saveEnd(end.end, end.images, end.shots)
-            }
-        }
+    @Transaction
+    open fun insertRound(round: Round, ends: List<End>) {
+        incrementIndices(round.index)
+        saveRound(round, ends)
     }
 }

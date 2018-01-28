@@ -24,6 +24,7 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.ResultCallback
 import com.google.android.gms.drive.*
 import com.google.android.gms.drive.query.*
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.features.settings.backup.BackupEntry
 import de.dreier.mytargets.features.settings.backup.BackupException
 import timber.log.Timber
@@ -178,7 +179,7 @@ object GoogleDriveBackup {
             val outputStream = driveContents.outputStream
 
             try {
-                BackupUtils.zip(context, outputStream)
+                BackupUtils.zip(context, ApplicationInstance.db, outputStream)
             } catch (e: IOException) {
                 throw BackupException(e.localizedMessage, e)
             }

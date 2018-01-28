@@ -64,12 +64,5 @@ data class Signature(
 
             override fun newArray(size: Int) = arrayOfNulls<Signature>(size)
         }
-
-        operator fun get(signatureId: Long): Signature? {
-            return SQLite.select()
-                    .from(Signature::class.java)
-                    .where(Signature_Table._id.eq(signatureId))
-                    .querySingle()
-        }
     }
 }

@@ -15,101 +15,36 @@
 
 package de.dreier.mytargets.base.db.dao
 
-import com.raizlabs.android.dbflow.config.FlowManager
-import com.raizlabs.android.dbflow.kotlinextensions.delete
-import com.raizlabs.android.dbflow.kotlinextensions.save
-import com.raizlabs.android.dbflow.sql.language.SQLite
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
-import de.dreier.mytargets.shared.AppDatabase
-import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
-import de.dreier.mytargets.shared.models.db.*
+import android.arch.persistence.room.*
+import de.dreier.mytargets.shared.models.db.Round
+import de.dreier.mytargets.shared.models.db.Training
 
-object TrainingDAO {
-    fun loadTrainings(): List<Training> = SQLite.select()
-            .from(Training::class.java)
-            .queryList()
+@Dao
+abstract class TrainingDAO {
+    @Query("SELECT * FROM Training")
+    abstract fun loadTrainings(): List<Training>
 
-    fun loadTraining(id: Long): Training = SQLite.select()
-            .from(Training::class.java)
-            .where(Training_Table._id.eq(id))
-            .querySingle() ?: throw IllegalStateException("Training $id does not exist")
+    @Query("SELECT * FROM Training WHERE _id = :id")
+    abstract fun loadTraining(id: Long): Training
 
-    fun loadAugmentedTraining(id: Long): AugmentedTraining = AugmentedTraining(loadTraining(id), loadRounds(id)
-            .map { RoundDAO.loadAugmentedRound(it) }
-            .toMutableList())
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun saveTraining(training: Training): Long
 
-    fun loadRounds(id: Long): MutableList<Round> = SQLite.select()
-            .from(Round::class.java)
-            .where(Round_Table.training.eq(id))
-            .orderBy(Round_Table.index, true)
-            .queryList().toMutableList()
+    @Update
+    abstract fun updateTraining(training: Training)
 
-    fun saveTraining(training: Training) {
-        training.save()
-    }
-
-    fun saveTraining(training: Training, rounds: List<Round>) {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-            saveTraining(db, training, rounds)
-        }
-    }
-
-    private fun saveTraining(db: DatabaseWrapper, training: Training, rounds: List<Round>) {
-        training.save(db)
-//        SQLite.delete(Round::class.java)
-//                .where(Round_Table.training.eq(training.id))
-//                .execute(db)
+    @Transaction
+    open fun saveTraining(training: Training, rounds: List<Round>) {
+        training.id = saveTraining(training)
         for (round in rounds) {
             round.trainingId = training.id
-            round.save(db)
         }
+        insertRounds(rounds)
     }
 
-    fun insertTraining(training: AugmentedTraining) {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-            training.training.save(db)
-            training.rounds.forEach { round ->
-                round.round.trainingId = training.training.id
-                round.round.save(db)
-                for (end in round.ends) {
-                    end.end.roundId = round.round.id
-                    EndDAO.saveEnd(db, end.end, end.images, end.shots)
-                }
-            }
-        }
-    }
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertRounds(round: List<Round>)
 
-    fun deleteTraining(training: Training) {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-            training.delete(db)
-        }
-    }
-
-    fun getOrCreateArcherSignature(training: Training): Signature {
-        if (training.archerSignatureId != null) {
-            val signature = SignatureDAO.loadSignatureOrNull(training.archerSignatureId!!)
-            if (signature != null) {
-                return signature
-            }
-        }
-        val signature = Signature()
-        SignatureDAO.saveSignature(signature)
-        training.archerSignatureId = signature.id
-        saveTraining(training)
-        return signature
-    }
-
-    fun getOrCreateWitnessSignature(training: Training): Signature {
-        if (training.witnessSignatureId != null) {
-            val signature = SignatureDAO.loadSignatureOrNull(training.witnessSignatureId!!)
-            if (signature != null) {
-                return signature
-            }
-        }
-        val signature = Signature()
-        SignatureDAO.saveSignature(signature)
-        training.witnessSignatureId = signature.id
-        saveTraining(training)
-        return signature
-    }
+    @Delete
+    abstract fun deleteTraining(training: Training)
 }

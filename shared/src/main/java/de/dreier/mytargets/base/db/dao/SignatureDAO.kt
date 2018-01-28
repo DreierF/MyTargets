@@ -15,29 +15,21 @@
 
 package de.dreier.mytargets.base.db.dao
 
-import com.raizlabs.android.dbflow.kotlinextensions.delete
-import com.raizlabs.android.dbflow.kotlinextensions.save
-import com.raizlabs.android.dbflow.sql.language.SQLite
+import android.arch.persistence.room.*
 import de.dreier.mytargets.shared.models.db.Signature
-import de.dreier.mytargets.shared.models.db.Signature_Table
 
-object SignatureDAO {
+@Dao
+interface SignatureDAO {
 
-    fun loadSignature(id: Long): Signature = SQLite.select()
-            .from(Signature::class.java)
-            .where(Signature_Table._id.eq(id))
-            .querySingle() ?: throw IllegalStateException("Signature $id does not exist")
+    @Query("SELECT * FROM Signature WHERE _id = :id")
+    fun loadSignature(id: Long): Signature
 
-    fun loadSignatureOrNull(id: Long): Signature? = SQLite.select()
-            .from(Signature::class.java)
-            .where(Signature_Table._id.eq(id))
-            .querySingle()
+    @Query("SELECT * FROM Signature WHERE _id = :id")
+    fun loadSignatureOrNull(id: Long): Signature?
 
-    fun saveSignature(signature: Signature) {
-        signature.save()
-    }
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun saveSignature(signature: Signature)
 
-    fun deleteSignature(signature: Signature) {
-        signature.delete()
-    }
+    @Delete
+    fun deleteSignature(signature: Signature)
 }

@@ -17,6 +17,7 @@ package de.dreier.mytargets.shared.models
 
 import android.annotation.SuppressLint
 import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Ignore
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.targets.TargetFactory
@@ -42,10 +43,13 @@ data class Target(
 ) : IIdProvider, Comparable<Target>, Parcelable {
 
     @IgnoredOnParcel
+    @delegate:Ignore
     val model: TargetModelBase by lazy { TargetFactory.getTarget(id.toInt()) }
     @IgnoredOnParcel
+    @delegate:Ignore
     val drawable: TargetDrawable by lazy { TargetDrawable(this) }
 
+    @Ignore
     constructor(target: Long, scoringStyle: Int) : this(target, scoringStyle, Dimension.UNKNOWN) {
         this.diameter = model.diameters[0]
     }
@@ -73,7 +77,7 @@ data class Target(
         return model.getScoringStyle(scoringStyleIndex)
     }
 
-    fun getReachedScore(shots: MutableList<Shot>): Score {
+    fun getReachedScore(shots: List<Shot>): Score {
         return getScoringStyle().getReachedScore(shots)
     }
 

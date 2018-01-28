@@ -24,9 +24,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.evernote.android.state.State
 import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemAdapter
 import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemHolder
-import de.dreier.mytargets.base.db.dao.StandardRoundDAO
 import de.dreier.mytargets.base.fragments.EditFragmentBase
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.INTENT
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
@@ -45,6 +45,8 @@ import de.dreier.mytargets.views.selector.TargetSelector
 import timber.log.Timber
 
 class EditStandardRoundFragment : EditFragmentBase() {
+
+    private val standardRoundDAO = ApplicationInstance.db.standardRoundDAO()
 
     @State
     var standardRound: AugmentedStandardRound? = null
@@ -126,7 +128,7 @@ class EditStandardRoundFragment : EditFragmentBase() {
     }
 
     private fun onDeleteStandardRound() {
-        StandardRoundDAO.deleteStandardRound(standardRound!!.standardRound)
+        standardRoundDAO.deleteStandardRound(standardRound!!.standardRound)
         navigationController.setResult(RESULT_STANDARD_ROUND_DELETED)
         navigationController.finish()
     }
@@ -134,7 +136,7 @@ class EditStandardRoundFragment : EditFragmentBase() {
     override fun onSave() {
         standardRound!!.standardRound.club = StandardRoundFactory.CUSTOM
         standardRound!!.standardRound.name = binding.name.text.toString()
-        StandardRoundDAO.saveStandardRound(standardRound!!.standardRound, standardRound!!.roundTemplates)
+        standardRoundDAO.saveStandardRound(standardRound!!.standardRound, standardRound!!.roundTemplates)
 
         val round = standardRound!!.roundTemplates[0]
         SettingsManager.shotsPerEnd = round.shotsPerEnd

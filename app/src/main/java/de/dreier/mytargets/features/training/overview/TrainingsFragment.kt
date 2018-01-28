@@ -24,8 +24,11 @@ import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 import android.view.*
 import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.adapters.header.ExpandableListAdapter
-import de.dreier.mytargets.base.db.dao.TrainingDAO
+import de.dreier.mytargets.base.db.EndRepository
+import de.dreier.mytargets.base.db.RoundRepository
+import de.dreier.mytargets.base.db.TrainingRepository
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentTrainingsBinding
@@ -44,9 +47,17 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 /**
  * Shows an overview over all training days
  */
-open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
+class TrainingsFragment : ExpandableListFragment<Header, Training>() {
 
     private lateinit var binding: FragmentTrainingsBinding
+
+    private val database = ApplicationInstance.db
+    private val trainingDAO = database.trainingDAO()
+    private val roundDAO = database.roundDAO()
+    private val endDAO = database.endDAO()
+    private val endRepository = EndRepository(endDAO)
+    private val roundRepository = RoundRepository(database, roundDAO, endDAO, endRepository)
+    private val trainingRepository = TrainingRepository(database, trainingDAO, roundDAO,roundRepository, database.signatureDAO())
 
     private val updateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -125,8 +136,8 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_statistics -> {
-                navigationController.navigateToStatistics(TrainingDAO.loadTrainings()
-                        .flatMap { training -> TrainingDAO.loadRounds(training.id) }
+                navigationController.navigateToStatistics(trainingDAO.loadTrainings()
+                        .flatMap { training -> roundDAO.loadRounds(training.id) }
                         .map { it.id })
                 true
             }
@@ -141,8 +152,8 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
 
     private fun onStatistics(ids: List<Long>) {
         navigationController.navigateToStatistics(ids
-                .map { TrainingDAO.loadTraining(it) }
-                .flatMap { t -> TrainingDAO.loadRounds(t.id) }
+                .map { trainingDAO.loadTraining(it) }
+                .flatMap { t -> roundDAO.loadRounds(t.id) }
                 .map { it.id })
     }
 
@@ -151,16 +162,16 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
     }
 
     override fun deleteItem(item: Training): () -> Training {
-        val training = TrainingDAO.loadAugmentedTraining(item.id)
-        TrainingDAO.deleteTraining(item)
+        val training = trainingRepository.loadAugmentedTraining(item.id)
+        trainingDAO.deleteTraining(item)
         return {
-            TrainingDAO.insertTraining(training)
+            trainingRepository.insertTraining(training)
             item
         }
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        val trainings = TrainingDAO.loadTrainings()
+        val trainings = trainingDAO.loadTrainings()
         return {
             this@TrainingsFragment.setList(trainings, false)
             activity?.invalidateOptionsMenu()

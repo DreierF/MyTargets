@@ -15,54 +15,20 @@
 
 package de.dreier.mytargets.base.db.dao
 
-import com.raizlabs.android.dbflow.sql.language.SQLite
+import android.arch.persistence.room.Dao
+import android.arch.persistence.room.Query
 import de.dreier.mytargets.shared.models.Dimension
-import de.dreier.mytargets.shared.models.db.*
-import java.util.*
 
-object DimensionDAO {
+@Dao
+interface DimensionDAO {
     /**
      * Returns a list of all distances that are either default values or used somewhere in the app
      *
-     * @param distance Distance to add to the list (current selected value)
      * @param unit     Distances are only returned which match the specified unit
      * @return List of distances
      */
-    fun getAll(distance: Dimension, unit: Dimension.Unit): List<Dimension> {
-        val distances = HashSet<Dimension>()
-
-        distances.add(Dimension.UNKNOWN)
-
-        // Add currently selected distance to list
-        if (distance.unit == unit) {
-            distances.add(distance)
-        }
-
-        // Get all distances used in Round or SightMark table
-        distances.addAll(SQLite
-                .select(SightMark_Table.distance)
-                .from(SightMark::class.java)
-                .queryList()
-                .map { it.distance }
-                .filter { it.unit == unit }
-                .toSet())
-
-        distances.addAll(SQLite
-                .select(RoundTemplate_Table.distance)
-                .from(RoundTemplate::class.java)
-                .queryList()
-                .map { it.distance }
-                .filter { it.unit == unit }
-                .toSet())
-
-        distances.addAll(SQLite
-                .select(Round_Table.distance)
-                .from(Round::class.java)
-                .queryList()
-                .map { it.distance }
-                .filter { it.unit == unit }
-                .toSet())
-
-        return ArrayList(distances)
-    }
+    @Query("SELECT distance FROM SightMark WHERE distance LIKE ('% ' || :unit)" +
+            "UNION SELECT distance FROM RoundTemplate WHERE distance LIKE ('% ' || :unit)" +
+            "UNION SELECT distance FROM Round WHERE distance LIKE ('% ' || :unit)")
+    fun getAll(unit: Dimension.Unit): List<Dimension>
 }

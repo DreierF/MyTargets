@@ -20,8 +20,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
-import de.dreier.mytargets.base.db.dao.BowDAO
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding
 import de.dreier.mytargets.features.training.details.HtmlInfoBuilder
 import de.dreier.mytargets.shared.models.db.Bow
@@ -36,6 +36,8 @@ internal class BowAdapter(
         private val clickListener: OnItemClickListener<Bow>,
         private val longClickListener: OnItemLongClickListener<Bow>
 ) : SimpleListAdapterBase<Bow>(compareBy(Bow::name, Bow::id)) {
+
+    val bowDAO = ApplicationInstance.db.bowDAO()
 
     public override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -60,7 +62,7 @@ internal class BowAdapter(
             if (!item.size!!.trim { it <= ' ' }.isEmpty()) {
                 info.addLine(R.string.size, item.size!!)
             }
-            val sightMarks = BowDAO.loadSightMarks(item.id).sortedBy { it.distance }
+            val sightMarks = bowDAO.loadSightMarks(item.id).sortedBy { it.distance }
             for ((_, _, distance, value) in sightMarks) {
                 info.addLine(distance.toString(), value!!)
             }

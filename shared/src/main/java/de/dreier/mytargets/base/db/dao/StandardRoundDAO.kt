@@ -15,72 +15,50 @@
 
 package de.dreier.mytargets.base.db.dao
 
-import com.raizlabs.android.dbflow.config.FlowManager
-import com.raizlabs.android.dbflow.kotlinextensions.delete
-import com.raizlabs.android.dbflow.kotlinextensions.save
-import com.raizlabs.android.dbflow.sql.language.SQLite
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
-import de.dreier.mytargets.shared.AppDatabase
+import android.arch.persistence.room.*
 import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
 import de.dreier.mytargets.shared.models.db.RoundTemplate
-import de.dreier.mytargets.shared.models.db.RoundTemplate_Table
 import de.dreier.mytargets.shared.models.db.StandardRound
-import de.dreier.mytargets.shared.models.db.StandardRound_Table
 
-object StandardRoundDAO {
-    fun loadStandardRounds(): List<StandardRound> = SQLite.select().from(StandardRound::class.java).queryList()
+@Dao
+abstract class StandardRoundDAO {
+    @Query("SELECT * FROM StandardRound")
+    abstract fun loadStandardRounds(): List<StandardRound>
 
-    fun loadStandardRound(id: Long): StandardRound = SQLite.select()
-            .from(StandardRound::class.java)
-            .where(StandardRound_Table._id.eq(id))
-            .querySingle() ?: throw IllegalStateException("StandardRound $id does not exist")
+    @Query("SELECT * FROM StandardRound WHERE _id = :id")
+    abstract fun loadStandardRound(id: Long): StandardRound
 
-    fun loadAugmentedStandardRound(id: Long): AugmentedStandardRound = AugmentedStandardRound(loadStandardRound(id), loadRoundTemplates(id))
+    @Transaction
+    open fun loadAugmentedStandardRound(id: Long): AugmentedStandardRound = AugmentedStandardRound(loadStandardRound(id), loadRoundTemplates(id).toMutableList())
 
-    fun loadStandardRoundOrNull(id: Long): StandardRound? = SQLite.select()
-            .from(StandardRound::class.java)
-            .where(StandardRound_Table._id.eq(id))
-            .querySingle()
+    @Query("SELECT * FROM StandardRound WHERE _id = :id")
+    abstract fun loadStandardRoundOrNull(id: Long): StandardRound?
 
-    fun getAllSearch(query: String): List<StandardRound> {
-        val queryString = "%${query.replace(' ', '%')}%"
-        return SQLite.select()
-                .from(StandardRound::class.java)
-                .where(StandardRound_Table.name.like(queryString))
-                .and(StandardRound_Table.club.notEq(512))
-                .queryList()
-    }
+    @Query("SELECT * FROM StandardRound WHERE name LIKE :query AND club != 512")
+    abstract fun getAllSearch(query: String): List<StandardRound>
 
-    fun loadRoundTemplates(id: Long): ArrayList<RoundTemplate> = ArrayList(SQLite.select()
-            .from(RoundTemplate::class.java)
-            .where(RoundTemplate_Table.standardRound.eq(id))
-            .orderBy(RoundTemplate_Table.index, true)
-            .queryList()
-            .toMutableList())
+    @Query("SELECT * FROM RoundTemplate WHERE standardRound = :id ORDER BY `index`")
+    abstract fun loadRoundTemplates(id: Long): List<RoundTemplate>
 
-    fun saveStandardRound(standardRound: StandardRound, roundTemplates: List<RoundTemplate>) {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-            saveStandardRound(db, standardRound, roundTemplates)
-        }
-    }
+    @Insert
+    abstract fun insertStandardRound(round: StandardRound): Long
 
-    fun saveStandardRound(db: DatabaseWrapper, standardRound: StandardRound, roundTemplates: List<RoundTemplate>) {
-        standardRound.save(db)
-        SQLite.delete(RoundTemplate::class.java)
-                .where(RoundTemplate_Table.standardRound.eq(standardRound.id))
-                .execute(db)
+    @Insert
+    abstract fun insertRoundTemplates(round: List<RoundTemplate>)
+
+    @Query("DELETE FROM RoundTemplate WHERE standardRound = (:id)")
+    abstract fun deleteRoundTemplates(id: Long)
+
+    @Transaction
+    open fun saveStandardRound(standardRound: StandardRound, roundTemplates: List<RoundTemplate>) {
+        standardRound.id = insertStandardRound(standardRound)
+        deleteRoundTemplates(standardRound.id)
         for (roundTemplate in roundTemplates) {
             roundTemplate.standardRound = standardRound.id
-            roundTemplate.save(db)
         }
+        insertRoundTemplates(roundTemplates)
     }
 
-    fun deleteStandardRound(standardRound: StandardRound) {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-            SQLite.delete(RoundTemplate::class.java)
-                    .where(RoundTemplate_Table.standardRound.eq(standardRound.id))
-                    .execute(db)
-            standardRound.delete(db)
-        }
-    }
+    @Delete
+    abstract fun deleteStandardRound(standardRound: StandardRound)
 }

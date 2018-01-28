@@ -27,9 +27,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.evernote.android.state.State
 import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemAdapter
 import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemHolder
-import de.dreier.mytargets.base.db.dao.BowDAO
 import de.dreier.mytargets.base.fragments.EditWithImageFragmentBase
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.INTENT
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
@@ -55,7 +55,7 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
     private lateinit var contentBinding: FragmentEditBowBinding
     private lateinit var adapter: SightMarksAdapter
 
-    private val bowDAO = BowDAO
+    private val bowDAO = ApplicationInstance.db.bowDAO()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = super.onCreateView(inflater, container, savedInstanceState)
@@ -72,7 +72,7 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
             if (bundle != null && bundle.containsKey(BOW_ID)) {
                 // Load data from database
                 bow = bowDAO.loadBow(bundle.getLong(BOW_ID))
-                sightMarks = bowDAO.loadSightMarks(bow.id).sortedBy { it.distance }
+                sightMarks = ArrayList(bowDAO.loadSightMarks(bow.id).sortedBy { it.distance })
                 imageFiles = bowDAO.loadBowImages(bow.id)
             } else {
                 // Set to default values

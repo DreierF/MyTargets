@@ -26,7 +26,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.DatePicker
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.db.dao.TrainingDAO
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.fragments.EditFragmentBase
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase.Companion.ITEM_ID
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
@@ -43,8 +43,8 @@ import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.targets.models.WA3Ring3Spot
 import de.dreier.mytargets.utils.ToolbarUtils
-import de.dreier.mytargets.utils.getLongOrNull
 import de.dreier.mytargets.utils.Utils
+import de.dreier.mytargets.utils.getLongOrNull
 import de.dreier.mytargets.views.selector.ArrowSelector
 import de.dreier.mytargets.views.selector.BowSelector
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
@@ -60,12 +60,15 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
     private lateinit var binding: FragmentEditTrainingBinding
     private var roundTarget: Target? = null
 
+    private val database = ApplicationInstance.db
+    private val trainingDAO = database.trainingDAO()
+
     private val training: Training
         get() {
             val training = if (trainingId == null) {
                 Training()
             } else {
-                TrainingDAO.loadTraining(trainingId!!)
+                trainingDAO.loadTraining(trainingId!!)
             }
             training.title = binding.training.text.toString()
             training.date = date
@@ -77,7 +80,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
             SettingsManager.bow = training.bowId
             SettingsManager.arrow = training.arrowId
             SettingsManager.arrowNumbersEnabled = training.arrowNumbering
-            SettingsManager.indoor = training.indoor
+            SettingsManager.indoor = training.environment.indoor
             return training
         }
 
@@ -182,7 +185,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
                 GONE
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_training)
-            val train = TrainingDAO.loadTraining(trainingId!!)
+            val train = trainingDAO.loadTraining(trainingId!!)
             binding.training.setText(train.title)
             date = train.date
             binding.bow.setItemId(train.bowId)
@@ -279,7 +282,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
                     round.target = roundTarget!!
                 }
             }
-            TrainingDAO.saveTraining(training, rounds)
+            trainingDAO.saveTraining(training, rounds)
 
             val round = rounds[0]
 
@@ -292,7 +295,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
             navigationController.navigateToCreateEnd(round)
         } else {
             // Edit training
-            TrainingDAO.saveTraining(training)
+            trainingDAO.updateTraining(training)
             activity!!.overridePendingTransition(R.anim.left_in, R.anim.right_out)
         }
     }

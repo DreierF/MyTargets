@@ -22,8 +22,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
-import de.dreier.mytargets.base.db.dao.ArrowDAO
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
 import de.dreier.mytargets.base.fragments.LoaderUICallback
@@ -37,7 +37,7 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 class EditArrowListFragment : EditableListFragmentBase<Arrow, SimpleListAdapterBase<Arrow>>() {
 
     private lateinit var binding: FragmentArrowsBinding
-    private val arrowDAO = ArrowDAO
+    private val arrowDAO = ApplicationInstance.db.arrowDAO()
 
     init {
         itemTypeDelRes = R.plurals.arrow_deleted

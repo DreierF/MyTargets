@@ -22,8 +22,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
-import de.dreier.mytargets.base.db.dao.DimensionDAO
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.SelectItemFragmentBase
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
@@ -33,12 +33,13 @@ import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Dimension.Unit
 import de.dreier.mytargets.utils.SlideInItemAnimator
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
-import java.util.HashSet
 
 class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapterBase<Dimension>>(), DistanceInputDialog.OnClickListener {
     private lateinit var binding: FragmentListBinding
     private var distance: Dimension? = null
     private var unit: Unit? = null
+
+    private val dimensionDAO = ApplicationInstance.db.dimensionDAO()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false)
@@ -73,16 +74,13 @@ class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapter
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        val distancesDb = DimensionDAO.getAll(unit!!)
-        val distances = HashSet<Dimension>()
-
-        distances.add(Dimension.UNKNOWN)
+        val distances = mutableSetOf(Dimension.UNKNOWN)
 
         // Add currently selected distance to list
         if (this.distance!!.unit == unit) {
             distances.add(this.distance!!)
         }
-        distances.addAll(distancesDb)
+        distances.addAll(dimensionDAO.getAll(unit!!))
         return {
             adapter!!.setList(distances.toMutableList())
             selectItem(binding.recyclerView, distance!!)

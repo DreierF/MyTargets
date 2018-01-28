@@ -21,7 +21,7 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.util.AttributeSet
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.db.dao.BowDAO
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding
 import de.dreier.mytargets.shared.models.db.Bow
 
@@ -31,6 +31,9 @@ class BowSelector @JvmOverloads constructor(
 ) : SelectorBase<Bow>(context, attrs, R.layout.selector_item_image_details, BOW_REQUEST_CODE) {
 
     private lateinit var binding: SelectorItemImageDetailsBinding
+
+    private val database = ApplicationInstance.db
+    private val bowDAO = database.bowDAO()
 
     override fun bindView(item: Bow) {
         binding = DataBindingUtil.bind(view)
@@ -48,10 +51,10 @@ class BowSelector @JvmOverloads constructor(
     fun setItemId(bow: Long?) {
         var item: Bow? = null
         if (bow != null) {
-            item = BowDAO.loadBowOrNull(bow)
+            item = bowDAO.loadBowOrNull(bow)
         }
         if (item == null) {
-            item = BowDAO.loadBows().firstOrNull()
+            item = bowDAO.loadBows().firstOrNull()
         }
         setItem(item)
     }

@@ -24,9 +24,10 @@ import android.text.InputType
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
 import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
-import de.dreier.mytargets.base.db.dao.TrainingDAO
-import de.dreier.mytargets.base.db.dao.RoundDAO
+import de.dreier.mytargets.base.db.EndRepository
+import de.dreier.mytargets.base.db.RoundRepository
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
 import de.dreier.mytargets.base.fragments.LoaderUICallback
@@ -49,6 +50,13 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
     private lateinit var binding: FragmentTrainingBinding
     private var trainingId: Long = 0
     private var training: Training? = null
+
+    private val database = ApplicationInstance.db
+    private val trainingDAO = database.trainingDAO()
+    private val roundDAO = database.roundDAO()
+    private val endDAO = database.endDAO()
+    private val endRepository = EndRepository(endDAO)
+    private val roundRepository = RoundRepository(database, roundDAO, endDAO, endRepository)
 
     private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
@@ -108,8 +116,8 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        training = TrainingDAO.loadTraining(trainingId)
-        val rounds = TrainingDAO.loadRounds(trainingId)
+        training = trainingDAO.loadTraining(trainingId)
+        val rounds = roundDAO.loadRounds(trainingId).toMutableList()
         return {
             // Hide fab for standard rounds
             val supportsDeletion = training!!.standardRoundId == null
@@ -154,7 +162,7 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
                 return true
             }
             R.id.action_statistics -> {
-                navigationController.navigateToStatistics(TrainingDAO.loadRounds(training!!.id).map { it.id })
+                navigationController.navigateToStatistics(roundDAO.loadRounds(training!!.id).map { it.id })
                 return true
             }
             R.id.action_comment -> {
@@ -163,7 +171,7 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
                         .inputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
                         .input("", training!!.comment) { _, input ->
                             training!!.comment = input.toString()
-                            TrainingDAO.saveTraining(training!!)
+                            trainingDAO.updateTraining(training!!)
                         }
                         .negativeText(android.R.string.cancel)
                         .show()
@@ -187,10 +195,10 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
     }
 
     override fun deleteItem(item: Round): () -> Round {
-        val round = RoundDAO.loadAugmentedRound(item)
-        RoundDAO.deleteRound(item)
+        val round = roundRepository.loadAugmentedRound(item)
+        roundDAO.deleteRound(item)
         return {
-            RoundDAO.insertRound(round)
+            roundRepository.insertRound(round)
             item
         }
     }

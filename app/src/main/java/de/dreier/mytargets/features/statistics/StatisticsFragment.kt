@@ -34,9 +34,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.renderer.LineChartRenderer
 import com.github.mikephil.charting.utils.ColorTemplate
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.db.dao.EndDAO
-import de.dreier.mytargets.base.db.dao.RoundDAO
-import de.dreier.mytargets.base.db.dao.TrainingDAO
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.fragments.FragmentBase
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentStatisticsBinding
@@ -66,6 +64,11 @@ class StatisticsFragment : FragmentBase() {
     private var target: Target? = null
     private var animate: Boolean = false
 
+    private val database = ApplicationInstance.db
+    private val trainingDAO = database.trainingDAO()
+    private val roundDAO = database.roundDAO()
+    private val endDAO = database.endDAO()
+
     private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
         override fun onUpdate(trainingId: Long, roundId: Long, end: End) {
@@ -78,8 +81,8 @@ class StatisticsFragment : FragmentBase() {
     private val hitMissText: String
         get() {
             val shots = rounds!!
-                    .flatMap { r -> RoundDAO.loadEnds(r.id) }
-                    .flatMap { EndDAO.loadShots(it.id) }
+                    .flatMap { r -> roundDAO.loadEnds(r.id) }
+                    .flatMap { endDAO.loadShots(it.id) }
                     .filter { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }
             val missCount = shots.filter { (_, _, _, _, _, scoringRing) -> scoringRing == Shot.MISS }.count().toLong()
             val hitCount = shots.size - missCount
@@ -117,14 +120,14 @@ class StatisticsFragment : FragmentBase() {
         val trainingsMap = rounds!!
                 .map { it.trainingId!! }
                 .distinct()
-                .map { TrainingDAO.loadTraining(it) }
+                .map { trainingDAO.loadTraining(it) }
                 .map { Pair(it.id, it) }
                 .toMap()
 
         val values: List<Pair<Float, LocalDateTime>>
         if (isSingleTraining) {
             val trainingDate = trainingsMap.values.toList()[0].date
-            val ends = rounds!!.sortedBy { it.index }.map { RoundDAO.loadEnds(it.id) }
+            val ends = rounds!!.sortedBy { it.index }.map { roundDAO.loadEnds(it.id) }
             val firstRound = ends[0]
             if (firstRound.isEmpty()) {
                 return null
@@ -145,7 +148,7 @@ class StatisticsFragment : FragmentBase() {
             values = rounds!!
                     .map { r -> Pair(trainingsMap[r.trainingId]!!.date, r) }
                     .flatMap { (date, round) ->
-                        RoundDAO.loadEnds(round.id).map { end -> Pair(end, date) }
+                        roundDAO.loadEnds(round.id).map { end -> Pair(end, date) }
                     }
                     .map { (end, date) -> Pair(end.score.shotAverage, LocalDateTime.of(date, end.saveTime!!)) }
                     .sortedBy { (_, date) -> date }
@@ -186,7 +189,7 @@ class StatisticsFragment : FragmentBase() {
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        rounds = RoundDAO.loadRounds(roundIds!!)
+        rounds = roundDAO.loadRounds(roundIds!!)
         val data = ArrowStatistic.getAll(target!!, rounds!!)
                 .sortedWith(compareByDescending { it.totalScore.shotAverage })
 
@@ -204,9 +207,9 @@ class StatisticsFragment : FragmentBase() {
 
     private fun showDispersionView() {
         val exactShots = rounds!!
-                .flatMap { RoundDAO.loadEnds(it.id) }
-                .filter { (_, _, _, exact) -> exact }
-                .flatMap { EndDAO.loadShots(it.id) }
+                .flatMap { roundDAO.loadEnds(it.id) }
+                .filter { it.exact }
+                .flatMap { endDAO.loadShots(it.id) }
                 .filter { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }
                 .toList()
         if (exactShots.isEmpty()) {
@@ -220,7 +223,7 @@ class StatisticsFragment : FragmentBase() {
                 .map { it.trainingId!! }
                 .distinct()
         if (trainingsIds.size == 1) {
-            val training = TrainingDAO.loadTraining(trainingsIds[0])
+            val training = trainingDAO.loadTraining(trainingsIds[0])
             val date = training.date.format(DateTimeFormatter.ISO_LOCAL_DATE)
             val round = if (rounds!!.size == 1) {
                 val index = rounds!![0].index + 1
@@ -308,7 +311,7 @@ class StatisticsFragment : FragmentBase() {
     }
 
     private fun addPieData() {
-        val scores = ScoreUtils.getSortedScoreDistribution(rounds!!)
+        val scores = ScoreUtils.getSortedScoreDistribution(roundDAO, endDAO, rounds!!)
 
         val yValues = ArrayList<PieEntry>()
         val colors = ArrayList<Int>()

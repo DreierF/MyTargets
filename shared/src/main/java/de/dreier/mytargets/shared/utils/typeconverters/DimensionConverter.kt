@@ -32,4 +32,9 @@ class DimensionConverters {
         val unit = data.substring(index + 1)
         return Dimension.from(value.toFloat(), unit)
     }
+
+    @TypeConverter
+    fun getDBValue(model: Dimension.Unit): String {
+        return model.abbreviation
+    }
 }

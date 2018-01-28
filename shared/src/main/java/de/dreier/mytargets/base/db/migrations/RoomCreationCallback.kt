@@ -17,7 +17,8 @@ package de.dreier.mytargets.base.db.migrations
 
 import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.RoomDatabase
-import de.dreier.mytargets.base.db.dao.StandardRoundDAO
+import de.dreier.mytargets.shared.models.db.RoundTemplate
+import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.utils.StandardRoundFactory
 
 object RoomCreationCallback : RoomDatabase.Callback() {
@@ -30,8 +31,33 @@ object RoomCreationCallback : RoomDatabase.Callback() {
     fun fillStandardRound(db: SupportSQLiteDatabase) {
         val standardRounds = StandardRoundFactory.initTable()
         for (standardRound in standardRounds) {
-            StandardRoundDAO.saveStandardRound(db, standardRound.standardRound, standardRound.roundTemplates)
+            saveStandardRound(db, standardRound.standardRound, standardRound.roundTemplates)
         }
+    }
+
+    private fun saveStandardRound(db: SupportSQLiteDatabase, standardRound: StandardRound, roundTemplates: List<RoundTemplate>) {
+        insertStandardRound(db, standardRound)
+        for (roundTemplate in roundTemplates) {
+            roundTemplate.standardRound = standardRound.id
+            insertRoundTemplate(db, roundTemplate)
+        }
+    }
+
+    private fun insertStandardRound(db: SupportSQLiteDatabase, standardRound: StandardRound) {
+        db.query("INSERT OR REPLACE INTO StandardRound(_id, club, name) VALUES (?,?,?)",
+                arrayOf(standardRound.id, standardRound.club, standardRound.name))
+    }
+
+    private fun insertRoundTemplate(db: SupportSQLiteDatabase, roundTemplate: RoundTemplate) {
+        db.query("INSERT OR REPLACE INTO RoundTemplate(_id, standardRound, index, " +
+                "shotsPerEnd, endCount, distance, targetId, targetScoringStyle, targetDiameter) " +
+                "VALUES (?,?,?,?,?,?,?,?,?)",
+                arrayOf(roundTemplate.id, roundTemplate.standardRound, roundTemplate.index,
+                        roundTemplate.shotsPerEnd, roundTemplate.endCount,
+                        "${roundTemplate.distance.value} ${roundTemplate.distance.unit}",
+                        roundTemplate.targetTemplate.id,
+                        roundTemplate.targetTemplate.scoringStyleIndex,
+                        roundTemplate.targetTemplate.diameter))
     }
 
     fun createScoreTriggers(database: SupportSQLiteDatabase) {

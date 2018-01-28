@@ -28,8 +28,8 @@ import android.widget.ImageView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.evernote.android.state.State
 import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.adapters.header.HeaderListAdapter
-import de.dreier.mytargets.base.db.dao.StandardRoundDAO
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.SelectItemFragmentBase
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
@@ -52,6 +52,8 @@ class StandardRoundListFragment : SelectItemFragmentBase<AugmentedStandardRound,
     private var searchView: SearchView? = null
 
     private lateinit var binding: FragmentListBinding
+
+    private val standardRoundDAO = ApplicationInstance.db.standardRoundDAO()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,11 +85,10 @@ class StandardRoundListFragment : SelectItemFragmentBase<AugmentedStandardRound,
     override fun onLoad(args: Bundle?): LoaderUICallback {
         val data = if (args != null && args.containsKey(KEY_QUERY)) {
             val query = args.getString(KEY_QUERY)
-            val queryString = "%${query!!.replace(' ', '%')}%"
-            StandardRoundDAO.getAllSearch(queryString)
+            standardRoundDAO.getAllSearch("%${query!!.replace(' ', '%')}%")
         } else {
-            StandardRoundDAO.loadStandardRounds()
-        }.map { AugmentedStandardRound(it, StandardRoundDAO.loadRoundTemplates(it.id)) }.toMutableList()
+            standardRoundDAO.loadStandardRounds()
+        }.map { AugmentedStandardRound(it, standardRoundDAO.loadRoundTemplates(it.id).toMutableList()) }.toMutableList()
         return {
             adapter!!.setList(data)
             selectItem(binding.recyclerView, currentSelection!!)
@@ -170,7 +171,7 @@ class StandardRoundListFragment : SelectItemFragmentBase<AugmentedStandardRound,
                 currentSelection = data.getParcelableExtra(ITEM)
                 reloadData()
             } else if (resultCode == EditStandardRoundFragment.RESULT_STANDARD_ROUND_DELETED) {
-                currentSelection = StandardRoundDAO.loadAugmentedStandardRound(32L)
+                currentSelection = standardRoundDAO.loadAugmentedStandardRound(32L)
                 saveItem()
                 reloadData()
             }

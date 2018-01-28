@@ -18,10 +18,7 @@ package de.dreier.mytargets.features.statistics
 import android.annotation.SuppressLint
 import android.os.Parcelable
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.db.dao.ArrowDAO
-import de.dreier.mytargets.base.db.dao.EndDAO
-import de.dreier.mytargets.base.db.dao.RoundDAO
-import de.dreier.mytargets.base.db.dao.TrainingDAO
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.shared.SharedApplicationInstance
 import de.dreier.mytargets.shared.analysis.aggregation.average.Average
 import de.dreier.mytargets.shared.models.Dimension
@@ -72,13 +69,14 @@ data class ArrowStatistic(
         private val TEXT_COLORS = intArrayOf(-0x1, -0x1, -0xfffffe, -0xfffffe, -0xfffffe, -0xfffffe, -0xfffffe, -0xfffffe)
 
         fun getAll(target: Target, rounds: List<Round>): List<ArrowStatistic> {
+            val db = ApplicationInstance.db
             return rounds
-                    .groupBy { r -> TrainingDAO.loadTraining(r.trainingId!!).arrowId ?: 0 }
+                    .groupBy { r -> db.trainingDAO().loadTraining(r.trainingId!!).arrowId ?: 0 }
                     .flatMap { t ->
-                        val arrow = ArrowDAO.loadArrowOrNull(t.key)
+                        val arrow = db.arrowDAO().loadArrowOrNull(t.key)
                         val name = arrow?.name ?: SharedApplicationInstance.getStr(R.string.unknown)
-                        t.value.flatMap { RoundDAO.loadEnds(it.id) }
-                                .flatMap { EndDAO.loadShots(it.id) }
+                        t.value.flatMap { db.roundDAO().loadEnds(it.id) }
+                                .flatMap { db.endDAO().loadShots(it.id) }
                                 .filter { it.arrowNumber != null }
                                 .groupBy {it.arrowNumber!! }
                                 .filter { it.value.size > 1 }

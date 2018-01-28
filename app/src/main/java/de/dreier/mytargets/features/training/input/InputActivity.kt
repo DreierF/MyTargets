@@ -41,15 +41,16 @@ import com.evernote.android.state.State
 import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.activities.ChildActivityBase
+import de.dreier.mytargets.base.db.EndRepository
+import de.dreier.mytargets.base.db.RoundRepository
+import de.dreier.mytargets.base.db.TrainingRepository
 import de.dreier.mytargets.base.db.dao.ArrowDAO
-import de.dreier.mytargets.base.db.dao.TrainingDAO
 import de.dreier.mytargets.base.db.dao.BowDAO
-import de.dreier.mytargets.base.db.dao.EndDAO
+import de.dreier.mytargets.base.db.dao.StandardRoundDAO
 import de.dreier.mytargets.base.gallery.GalleryActivity
 import de.dreier.mytargets.databinding.ActivityInputBinding
 import de.dreier.mytargets.features.settings.ESettingsScreens
 import de.dreier.mytargets.features.settings.SettingsManager
-import de.dreier.mytargets.base.db.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
@@ -78,6 +79,17 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     private var transitionFinished = true
     private var summaryShowScope = ETrainingScope.END
     private var targetView: TargetView? = null
+
+    private val database = ApplicationInstance.db
+    private val trainingDAO = database.trainingDAO()
+    private val roundDAO = database.roundDAO()
+    private val endDAO = database.endDAO()
+    private val bowDAO = database.bowDAO()
+    private val arrowDAO = database.arrowDAO()
+    private val standardRoundDAO = database.standardRoundDAO()
+    private val endRepository = EndRepository(endDAO)
+    private val roundRepository = RoundRepository(database, roundDAO, endDAO, endRepository)
+    private val trainingRepository = TrainingRepository(database, trainingDAO, roundDAO,roundRepository, database.signatureDAO())
 
     private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
@@ -148,7 +160,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
             currentEnd.end.saveTime = LocalTime.now()
         }
         currentEnd.end.score = data!!.currentRound.round.target.getReachedScore(currentEnd.shots)
-        EndDAO.saveEnd(currentEnd.end, currentEnd.images, currentEnd.shots)
+        endDAO.saveCompleteEnd(currentEnd.end, currentEnd.images, currentEnd.shots)
     }
 
     override fun onDestroy() {
@@ -225,7 +237,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
                         .inputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
                         .input("", data!!.currentEnd.end.comment) { _, input ->
                             data!!.currentEnd.end.comment = input.toString()
-                            EndDAO.saveEnd(data!!.currentEnd.end)
+                            endDAO.updateEnd(data!!.currentEnd.end)
                         }
                         .negativeText(android.R.string.cancel)
                         .show()
@@ -252,7 +264,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
         val trainingId = args.getLong(TRAINING_ID)
         val roundId = args.getLong(ROUND_ID)
         val endIndex = args.getInt(END_INDEX)
-        return UITaskAsyncTaskLoader(this, trainingId, roundId, endIndex)
+        return UITaskAsyncTaskLoader(this, trainingId, roundId, endIndex, trainingRepository, standardRoundDAO, arrowDAO, bowDAO)
     }
 
     override fun onLoadFinished(loader: Loader<LoaderResult>, data: LoaderResult) {
@@ -450,23 +462,27 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
             context: Context,
             private val trainingId: Long,
             private val roundId: Long,
-            private val endIndex: Int
+            private val endIndex: Int,
+            val trainingRepository: TrainingRepository,
+            val standardRoundDAO: StandardRoundDAO,
+            val arrowDAO: ArrowDAO,
+            val bowDAO: BowDAO
     ) : AsyncTaskLoader<LoaderResult>(context) {
 
         override fun loadInBackground(): LoaderResult? {
-            val training = TrainingDAO.loadAugmentedTraining(trainingId)
-            val standardRound = if (training.training.standardRoundId == null) null else StandardRoundDAO.loadStandardRound(training.training.standardRoundId!!)
+            val training = trainingRepository.loadAugmentedTraining(trainingId)
+            val standardRound = if (training.training.standardRoundId == null) null else standardRoundDAO.loadStandardRound(training.training.standardRoundId!!)
             val result = LoaderResult(training, standardRound)
             result.setRoundId(roundId)
             result.setAdjustEndIndex(endIndex)
 
             if (training.training.arrowId != null) {
-                val arrow = ArrowDAO.loadArrow(training.training.arrowId!!)
+                val arrow = arrowDAO.loadArrow(training.training.arrowId!!)
                 result.maxArrowNumber = arrow.maxArrowNumber
                 result.arrowDiameter = arrow.diameter
             }
             if (training.training.bowId != null) {
-                result.sightMark = BowDAO.loadSightMarks(training.training.bowId!!)
+                result.sightMark = bowDAO.loadSightMarks(training.training.bowId!!)
                         .firstOrNull { it.distance == result.distance!! }
             }
             return result

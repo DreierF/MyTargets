@@ -19,9 +19,7 @@ import android.content.Context
 import android.text.Spanned
 import android.text.TextUtils
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.db.dao.ArrowDAO
-import de.dreier.mytargets.base.db.dao.BowDAO
-import de.dreier.mytargets.base.db.dao.StandardRoundDAO
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.utils.Utils
@@ -36,7 +34,7 @@ object HtmlUtils {
     }
 
     private fun addStaticTrainingHeaderInfo(context: Context, info: HtmlInfoBuilder, training: Training) {
-        if (training.indoor) {
+        if (training.environment.indoor) {
             info.addLine(R.string.environment, context.getString(R.string.indoor))
         } else {
             info.addLine(R.string.weather, training.environment.weather.getName())
@@ -48,17 +46,17 @@ object HtmlUtils {
         }
 
         if (training.bowId != null) {
-            val bow = BowDAO.loadBow(training.bowId!!)
+            val bow = ApplicationInstance.db.bowDAO().loadBow(training.bowId!!)
             info.addLine(R.string.bow, bow.name)
         }
 
         if (training.arrowId != null) {
-            val arrow = ArrowDAO.loadArrow(training.arrowId!!)
+            val arrow = ApplicationInstance.db.arrowDAO().loadArrow(training.arrowId!!)
             info.addLine(R.string.arrow, arrow.name)
         }
 
         if (training.standardRoundId != null) {
-            val standardRound = StandardRoundDAO.loadStandardRound(training.standardRoundId!!)
+            val standardRound = ApplicationInstance.db.standardRoundDAO().loadStandardRound(training.standardRoundId!!)
             info.addLine(R.string.standard_round, standardRound.name)
         }
     }

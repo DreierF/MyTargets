@@ -20,7 +20,6 @@ import android.arch.persistence.room.migration.Migration
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase.*
-import de.dreier.mytargets.base.db.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
@@ -176,7 +175,7 @@ object Migration9 : Migration(8, 9) {
         }
         res.close()
 
-        if (StandardRoundDAO.loadRoundTemplates(sr.id).isEmpty()) {
+        if (loadRoundTemplates(db, sr.id).isEmpty()) {
             return 0L
         }
         insertStandardRound(db, AugmentedStandardRound(sr, rounds))
@@ -224,6 +223,19 @@ object Migration9 : Migration(8, 9) {
             values.put("_id", item.id)
             database.insert("ROUND_TEMPLATE", CONFLICT_REPLACE, values)
         }
+    }
+
+    private fun loadRoundTemplates(database: SupportSQLiteDatabase, sid: Long): List<RoundTemplate> {
+        val cursor = database.query("SELECT _id, r_index, arrows, target, scoring_style, " +
+                "target, scoring_style, distance, unit, size, target_unit, passes, sid " +
+                "FROM ROUND_TEMPLATE WHERE sid=?",
+                arrayOf(sid.toString()))
+        val r: MutableList<RoundTemplate> = mutableListOf()
+        if (cursor.moveToFirst()) {
+            r.add(cursorToRoundTemplate(cursor, 0))
+        }
+        cursor.close()
+        return r
     }
 
     private fun getRoundTemplate(database: SupportSQLiteDatabase, sid: Long, index: Int): RoundTemplate? {

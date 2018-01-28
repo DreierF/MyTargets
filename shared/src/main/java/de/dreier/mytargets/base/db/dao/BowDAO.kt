@@ -15,67 +15,60 @@
 
 package de.dreier.mytargets.base.db.dao
 
-import com.raizlabs.android.dbflow.config.FlowManager
-import com.raizlabs.android.dbflow.kotlinextensions.delete
-import com.raizlabs.android.dbflow.kotlinextensions.save
-import com.raizlabs.android.dbflow.sql.language.SQLite
-import de.dreier.mytargets.shared.AppDatabase
-import de.dreier.mytargets.shared.models.db.*
+import android.arch.persistence.room.*
+import de.dreier.mytargets.shared.models.db.Bow
+import de.dreier.mytargets.shared.models.db.BowImage
+import de.dreier.mytargets.shared.models.db.SightMark
 
-object BowDAO {
-    fun loadBows(): List<Bow> = SQLite.select().from(Bow::class.java).queryList()
+@Dao
+abstract class BowDAO {
+    @Query("SELECT * FROM Bow")
+    abstract fun loadBows(): List<Bow>
 
-    fun loadBow(id: Long): Bow = SQLite.select()
-            .from(Bow::class.java)
-            .where(Bow_Table._id.eq(id))
-            .querySingle() ?: throw IllegalStateException("Bow $id does not exist")
+    @Query("SELECT * FROM Bow WHERE _id = (:id)")
+    abstract fun loadBow(id: Long): Bow
 
-    fun loadBowOrNull(id: Long): Bow? = SQLite.select()
-            .from(Bow::class.java)
-            .where(Bow_Table._id.eq(id))
-            .querySingle()
+    @Query("SELECT * FROM Bow WHERE _id = (:id)")
+    abstract fun loadBowOrNull(id: Long): Bow?
 
-    fun loadBowImages(id: Long): List<BowImage> = SQLite.select()
-            .from(BowImage::class.java)
-            .where(BowImage_Table.bow.eq(id))
-            .queryList()
+    @Query("SELECT * FROM BowImage WHERE bow = (:id)")
+    abstract fun loadBowImages(id: Long): List<BowImage>
 
-    fun loadSightMarks(id: Long): ArrayList<SightMark> = ArrayList(SQLite.select()
-            .from(SightMark::class.java)
-            .where(SightMark_Table.bow.eq(id))
-            .queryList()
-            .sortedBy { sightMark -> sightMark.distance }
-            .toMutableList())
+    @Query("SELECT * FROM SightMark WHERE bow = (:id)")
+    abstract fun loadSightMarks(id: Long): List<SightMark>
 
-    fun saveBow(bow: Bow, images: List<BowImage>, sightMarks: List<SightMark>) {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-                    bow.save(db)
-                    SQLite.delete(BowImage::class.java)
-                            .where(BowImage_Table.bow.eq(bow.id))
-                            .execute(db)
-                    for (image in images) {
-                        image.bowId = bow.id
-                        image.save(db)
-                    }
-                    SQLite.delete(SightMark::class.java)
-                            .where(SightMark_Table.bow.eq(bow.id))
-                            .execute(db)
-                    for (sightMark in sightMarks) {
-                        sightMark.bowId = bow.id
-                        sightMark.save(db)
-                    }
-                }
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertBow(bow: Bow): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertBowImages(images: List<BowImage>)
+
+    @Query("DELETE FROM BowImage WHERE bow = (:bowId)")
+    abstract fun deleteBowImages(bowId: Long)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertSightMarks(sightMarks: List<SightMark>)
+
+    @Query("DELETE FROM SightMark WHERE bow = (:bowId)")
+    abstract fun deleteSightMarks(bowId: Long)
+
+    @Transaction
+    open fun saveBow(bow: Bow, images: List<BowImage>, sightMarks: List<SightMark>) {
+        bow.id = insertBow(bow)
+        // deleteBowImages(bow.id) TODO test
+        for (image in images) {
+            image.bowId = bow.id
+        }
+        insertBowImages(images)
+        // deleteSightMarks(bow.id) TODO
+        for (sightMark in sightMarks) {
+            sightMark.bowId = bow.id
+        }
+        insertSightMarks(sightMarks)
     }
 
-    fun deleteBow(bow: Bow) {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-                    SQLite.delete(BowImage::class.java)
-                            .where(BowImage_Table.bow.eq(bow.id))
-                            .execute(db)
-                    SQLite.delete(SightMark::class.java)
-                            .where(SightMark_Table.bow.eq(bow.id))
-                            .execute(db)
-                    bow.delete(db)
-                }
-    }
+    //    deleteSightMarks(bow.id) // TODO
+    //    deleteBowImages(bow.id)
+    @Delete
+    abstract fun deleteBow(bow: Bow)
 }

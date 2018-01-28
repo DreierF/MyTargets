@@ -15,53 +15,43 @@
 
 package de.dreier.mytargets.base.db.dao
 
-import com.raizlabs.android.dbflow.config.FlowManager
-import com.raizlabs.android.dbflow.kotlinextensions.delete
-import com.raizlabs.android.dbflow.kotlinextensions.save
-import com.raizlabs.android.dbflow.sql.language.SQLite
-import de.dreier.mytargets.shared.AppDatabase
+import android.arch.persistence.room.*
 import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.ArrowImage
-import de.dreier.mytargets.shared.models.db.ArrowImage_Table
-import de.dreier.mytargets.shared.models.db.Arrow_Table
 
-object ArrowDAO {
-    fun loadArrows(): List<Arrow> = SQLite.select().from(Arrow::class.java).queryList()
+@Dao
+abstract class ArrowDAO {
+    @Query("SELECT * FROM Arrow")
+    abstract fun loadArrows(): List<Arrow>
 
-    fun loadArrow(id: Long): Arrow = SQLite.select()
-            .from(Arrow::class.java)
-            .where(Arrow_Table._id.eq(id))
-            .querySingle() ?: throw IllegalStateException("Arrow $id does not exist")
+    @Query("SELECT * FROM Arrow WHERE _id = (:id)")
+    abstract fun loadArrow(id: Long): Arrow
 
-    fun loadArrowOrNull(id: Long): Arrow? = SQLite.select()
-            .from(Arrow::class.java)
-            .where(Arrow_Table._id.eq(id))
-            .querySingle()
+    @Query("SELECT * FROM Arrow WHERE _id = (:id)")
+    abstract fun loadArrowOrNull(id: Long): Arrow?
 
-    fun loadArrowImages(id: Long): List<ArrowImage> = SQLite.select()
-            .from(ArrowImage::class.java)
-            .where(ArrowImage_Table.arrow.eq(id))
-            .queryList()
+    @Query("SELECT * FROM ArrowImage WHERE arrow = (:id)")
+    abstract fun loadArrowImages(id: Long): List<ArrowImage>
 
-    fun saveArrow(arrow: Arrow, images: List<ArrowImage>) {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-            arrow.save(db)
-            SQLite.delete(ArrowImage::class.java)
-                    .where(ArrowImage_Table.arrow.eq(arrow.id))
-                    .execute(db)
-            for (image in images) {
-                image.arrowId = arrow.id
-                image.save(db)
-            }
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertArrow(arrow: Arrow): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertArrowImages(images: List<ArrowImage>)
+
+    @Query("DELETE FROM ArrowImage WHERE arrow = (:arrowId)")
+    abstract fun deleteArrowImages(arrowId: Long)
+
+    @Transaction
+    open fun saveArrow(arrow: Arrow, images: List<ArrowImage>) {
+        arrow.id = insertArrow(arrow)
+       // deleteArrowImages(arrow.id) TODO test if insert replace deletes old images
+        for (image in images) {
+            image.arrowId = arrow.id
         }
+        insertArrowImages(images)
     }
 
-    fun deleteArrow(arrow: Arrow) {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-                    SQLite.delete(ArrowImage::class.java)
-                            .where(ArrowImage_Table.arrow.eq(arrow.id))
-                            .execute(db)
-                    arrow.delete(db)
-                }
-    }
+    @Delete
+    abstract fun deleteArrow(arrow: Arrow)
 }

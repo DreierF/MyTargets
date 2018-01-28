@@ -21,7 +21,7 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.util.AttributeSet
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.db.dao.ArrowDAO
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding
 import de.dreier.mytargets.shared.models.db.Arrow
 
@@ -31,6 +31,8 @@ class ArrowSelector @JvmOverloads constructor(
 ) : SelectorBase<Arrow>(context, attrs, R.layout.selector_item_image_details, ARROW_REQUEST_CODE) {
 
     private lateinit var binding: SelectorItemImageDetailsBinding
+
+    private val arrowDAO = ApplicationInstance.db.arrowDAO()
 
     override fun bindView(item: Arrow) {
         binding = DataBindingUtil.bind(view)
@@ -48,10 +50,10 @@ class ArrowSelector @JvmOverloads constructor(
     fun setItemId(arrowId: Long?) {
         var item: Arrow? = null
         if (arrowId != null) {
-            item = ArrowDAO.loadArrowOrNull(arrowId)
+            item = arrowDAO.loadArrowOrNull(arrowId)
         }
         if (item == null) {
-            val all = ArrowDAO.loadArrows()
+            val all = arrowDAO.loadArrows()
             if (all.isNotEmpty()) {
                 item = all[0]
             }

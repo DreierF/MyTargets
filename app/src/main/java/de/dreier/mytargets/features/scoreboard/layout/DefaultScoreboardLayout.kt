@@ -18,12 +18,15 @@ package de.dreier.mytargets.features.scoreboard.layout
 import android.content.Context
 import android.text.TextUtils
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.db.dao.*
+import de.dreier.mytargets.base.db.EndRepository
+import de.dreier.mytargets.base.db.RoundRepository
+import de.dreier.mytargets.base.db.TrainingRepository
 import de.dreier.mytargets.features.scoreboard.ScoreboardBuilder
 import de.dreier.mytargets.features.scoreboard.ScoreboardConfiguration
 import de.dreier.mytargets.features.scoreboard.builder.model.Table
 import de.dreier.mytargets.features.scoreboard.builder.model.TextCell
 import de.dreier.mytargets.features.settings.SettingsManager
+import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.SelectableZone
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.db.Round
@@ -33,8 +36,18 @@ import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle
 import de.dreier.mytargets.utils.ScoreUtils
 import java.util.*
 
-class DefaultScoreboardLayout(private val context: Context, private val locale: Locale, private val configuration: ScoreboardConfiguration) {
+class DefaultScoreboardLayout(private val context: Context, database: AppDatabase, private val locale: Locale, private val configuration: ScoreboardConfiguration) {
     private lateinit var builder: ScoreboardBuilder
+
+    private val trainingDAO = database.trainingDAO()
+    private val roundDAO = database.roundDAO()
+    private val endDAO = database.endDAO()
+    private val bowDAO = database.bowDAO()
+    private val arrowDAO = database.arrowDAO()
+    private val standardRoundDAO = database.standardRoundDAO()
+    private val endRepository = EndRepository(endDAO)
+    private val roundRepository = RoundRepository(database, roundDAO, endDAO, endRepository)
+    private val trainingRepository = TrainingRepository(database, trainingDAO, roundDAO,roundRepository, database.signatureDAO())
 
     fun generateWithBuilder(builder: ScoreboardBuilder, training: Training, rounds: List<Round>) {
         this.builder = builder
@@ -84,7 +97,7 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
     private fun addStaticTrainingHeaderInfo(info: InfoTableBuilder, training: Training, rounds: List<Round>) {
         getScoreboardOnlyHeaderInfo(info, training, rounds)
 
-        if (training.indoor) {
+        if (training.environment.indoor) {
             info.addLine(R.string.environment, context.getString(R.string.indoor))
         } else {
             info.addLine(R.string.weather, training.environment.weather.getName())
@@ -96,18 +109,18 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
         }
 
         if (training.bowId != null) {
-            val bow = BowDAO.loadBow(training.bowId!!)
+            val bow = bowDAO.loadBow(training.bowId!!)
             info.addLine(R.string.bow, bow.name)
             info.addLine(R.string.bow_type, bow.type!!)
         }
 
         if (training.arrowId != null) {
-            val arrow = ArrowDAO.loadArrow(training.arrowId!!)
+            val arrow = arrowDAO.loadArrow(training.arrowId!!)
             info.addLine(R.string.arrow, arrow.name)
         }
 
         if (training.standardRoundId != null) {
-            val standardRound = StandardRoundDAO.loadStandardRound(training.standardRoundId!!)
+            val standardRound = standardRoundDAO.loadStandardRound(training.standardRoundId!!)
             info.addLine(R.string.standard_round, standardRound.name)
         }
         if (!training.comment.isEmpty() && configuration.showComments) {
@@ -172,7 +185,7 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
     }
 
     private fun getStatisticsForRound(rounds: List<Round>): Table {
-        val scoreDistribution = ScoreUtils.getSortedScoreDistribution(rounds)
+        val scoreDistribution = ScoreUtils.getSortedScoreDistribution(roundDAO, endDAO, rounds)
         var hits = 0
         var total = 0
         for ((key, value) in scoreDistribution) {
@@ -219,11 +232,11 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
         val table = Table(false)
         appendTableHeader(table, round.shotsPerEnd)
         var carry = 0
-        for (end in RoundDAO.loadEnds(round.id)) {
+        for (end in roundDAO.loadEnds(round.id)) {
             val row = table.startRow()
             row.addCell(end.index + 1)
             var sum = 0
-            val shots = ArrayList(EndDAO.loadShots(end.id))
+            val shots = ArrayList(endDAO.loadShots(end.id))
             if (SettingsManager.shouldSortTarget(round.target)) {
                 shots.sort()
             }
@@ -277,7 +290,7 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
 
         var commentsCount = 0
         for (round in rounds) {
-            val ends = RoundDAO.loadEnds(round.id)
+            val ends = roundDAO.loadEnds(round.id)
             for ((_, index, _, _, _, comment) in ends) {
                 if (!TextUtils.isEmpty(comment)) {
                     comments.startRow()
@@ -320,6 +333,6 @@ class DefaultScoreboardLayout(private val context: Context, private val locale: 
     }
 
     private fun appendSignature(training: Training) {
-        builder.signature(TrainingDAO.getOrCreateArcherSignature(training), TrainingDAO.getOrCreateWitnessSignature(training))
+        builder.signature(trainingRepository.getOrCreateArcherSignature(training), trainingRepository.getOrCreateWitnessSignature(training))
     }
 }

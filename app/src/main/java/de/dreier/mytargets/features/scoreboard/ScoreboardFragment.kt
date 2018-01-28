@@ -37,7 +37,10 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.db.dao.TrainingDAO
+import de.dreier.mytargets.app.ApplicationInstance
+import de.dreier.mytargets.base.db.EndRepository
+import de.dreier.mytargets.base.db.RoundRepository
+import de.dreier.mytargets.base.db.TrainingRepository
 import de.dreier.mytargets.base.fragments.FragmentBase
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentScoreboardBinding
@@ -45,6 +48,7 @@ import de.dreier.mytargets.databinding.PartialScoreboardSignaturesBinding
 import de.dreier.mytargets.features.settings.ESettingsScreens
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.db.End
+import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Signature
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.utils.toUri
@@ -64,6 +68,15 @@ class ScoreboardFragment : FragmentBase() {
     private var roundId: Long = 0
     private var binding: FragmentScoreboardBinding? = null
     private var training: Training? = null
+    private lateinit var rounds: List<Round>
+
+    private val database = ApplicationInstance.db
+    private val trainingDAO = database.trainingDAO()
+    private val roundDAO = database.roundDAO()
+    private val endDAO = database.endDAO()
+    private val endRepository = EndRepository(endDAO)
+    private val roundRepository = RoundRepository(database, roundDAO, endDAO, endRepository)
+    private val trainingRepository = TrainingRepository(database, trainingDAO, roundDAO,roundRepository, database.signatureDAO())
 
     private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
@@ -98,13 +111,18 @@ class ScoreboardFragment : FragmentBase() {
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        training = TrainingDAO.loadTraining(trainingId)
-        val archerSignature = TrainingDAO.getOrCreateArcherSignature(training!!)
-        val witnessSignature = TrainingDAO.getOrCreateWitnessSignature(training!!)
+        training = trainingDAO.loadTraining(trainingId)
+        val archerSignature = trainingRepository.getOrCreateArcherSignature(training!!)
+        val witnessSignature = trainingRepository.getOrCreateWitnessSignature(training!!)
 
+        rounds = if (roundId == -1L) {
+            roundDAO.loadRounds(training!!.id)
+        } else {
+            listOf(roundDAO.loadRound(roundId))
+        }
         val scoreboard = ScoreboardUtils
-                .getScoreboardView(context!!, Utils.getCurrentLocale(context!!),
-                        training!!, roundId, SettingsManager.scoreboardConfiguration)
+                .getScoreboardView(context!!, ApplicationInstance.db,
+                        Utils.getCurrentLocale(context!!), training!!, rounds, SettingsManager.scoreboardConfiguration)
         return {
             binding!!.progressBar.visibility = GONE
             scoreboard.layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
@@ -186,9 +204,8 @@ class ScoreboardFragment : FragmentBase() {
                 try {
                     val scoreboardFile = File(context!!.cacheDir, getDefaultFileName(fileType))
                     val content = ScoreboardUtils
-                            .getScoreboardView(context!!, Utils
-                                    .getCurrentLocale(context!!), training!!, roundId, SettingsManager
-                                    .scoreboardConfiguration)
+                            .getScoreboardView(context!!, ApplicationInstance.db,
+                                    Utils.getCurrentLocale(context!!), training!!, rounds, SettingsManager.scoreboardConfiguration)
                     if (fileType === EFileType.PDF && Utils.isKitKat) {
                         ScoreboardUtils.generatePdf(content, scoreboardFile)
                     } else {
@@ -224,9 +241,9 @@ class ScoreboardFragment : FragmentBase() {
     private fun print() {
         val fileName = getDefaultFileName(EFileType.PDF)
 
-        val content = ScoreboardUtils.getScoreboardView(context!!, Utils
-                .getCurrentLocale(context!!), training!!, roundId, SettingsManager
-                .scoreboardConfiguration)
+        val content = ScoreboardUtils.getScoreboardView(context!!, ApplicationInstance.db, Utils
+                .getCurrentLocale(context!!), training!!, rounds, SettingsManager
+        .scoreboardConfiguration)
 
         val jobName = getString(R.string.scoreboard) + " Document"
         val pda = CustomPrintDocumentAdapter(ViewToPdfWriter(content), fileName)

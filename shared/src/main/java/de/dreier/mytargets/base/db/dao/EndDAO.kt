@@ -15,86 +15,70 @@
 
 package de.dreier.mytargets.base.db.dao
 
-import com.raizlabs.android.dbflow.config.FlowManager
-import com.raizlabs.android.dbflow.kotlinextensions.delete
-import com.raizlabs.android.dbflow.kotlinextensions.save
-import com.raizlabs.android.dbflow.sql.language.SQLite
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
-import de.dreier.mytargets.shared.AppDatabase
-import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
-import de.dreier.mytargets.shared.models.db.*
+import android.arch.persistence.room.*
+import de.dreier.mytargets.shared.models.db.End
+import de.dreier.mytargets.shared.models.db.EndImage
+import de.dreier.mytargets.shared.models.db.Shot
 
-object EndDAO {
-    fun loadEnds(): List<End> = SQLite.select().from(End::class.java).queryList()
+@Dao
+abstract class EndDAO {
 
-    fun loadAugmentedEnds(roundId: Long): MutableList<AugmentedEnd> = SQLite.select()
-            .from(End::class.java)
-            .where(End_Table.round.eq(roundId))
-            .orderBy(End_Table.index, true)
-            .queryList()
-            .map { AugmentedEnd(it, loadShots(it.id).toMutableList(), loadEndImages(it.id).toMutableList()) }
-            .toMutableList()
+    @Query("SELECT * FROM End WHERE round = :roundId ORDER BY `index`")
+    abstract fun loadEnds(roundId: Long): MutableList<End>
 
-    fun loadEnd(id: Long): End = SQLite.select()
-            .from(End::class.java)
-            .where(End_Table._id.eq(id))
-            .querySingle() ?: throw IllegalStateException("End $id does not exist")
+    @Query("SELECT * FROM EndImage WHERE end = :id")
+    abstract fun loadEndImages(id: Long): List<EndImage>
 
-    fun loadEndOrNull(id: Long): End? = SQLite.select()
-            .from(End::class.java)
-            .where(End_Table._id.eq(id))
-            .querySingle()
+    @Query("SELECT * FROM Shot WHERE end = :id ORDER BY `index`")
+    abstract fun loadShots(id: Long): List<Shot>
 
-    fun loadEndImages(id: Long): List<EndImage> = SQLite.select()
-            .from(EndImage::class.java)
-            .where(EndImage_Table.end.eq(id))
-            .queryList()
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun saveEnd(end: End): Long
 
-    fun loadShots(id: Long): MutableList<Shot> = SQLite.select()
-            .from(Shot::class.java)
-            .where(Shot_Table.end.eq(id))
-            .orderBy(Shot_Table.index, true)
-            .queryList().toMutableList()
+    @Update
+    abstract fun updateEnd(end: End)
 
-    fun saveEnd(end: End) {
-        end.save()
+    @Transaction
+    open fun insertEnd(end: End, images: List<EndImage>, shots: List<Shot>) {
+        incrementIndices(end.index)
+        saveCompleteEnd(end, images, shots)
     }
 
-    fun saveEnd(end: End, images: List<EndImage>, shots: List<Shot>) {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-            saveEnd(db, end, images, shots)
-        }
-    }
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertEndImages(images: List<EndImage>)
 
-    fun insertEnd(end: End, images: List<EndImage>, shots: List<Shot>) {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-            db.execSQL("UPDATE End SET `index` = `index` + 1 WHERE `index` >= ${end.index}")
-            saveEnd(db, end, images, shots)
-        }
-    }
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertShots(images: List<Shot>)
 
-    internal fun saveEnd(db: DatabaseWrapper, end: End, images: List<EndImage>, shots: List<Shot>) {
-        end.save(db)
-        SQLite.delete(EndImage::class.java)
-                .where(EndImage_Table.end.eq(end.id))
-                .execute(db)
+    @Query("DELETE FROM EndImage WHERE end = (:endId)")
+    abstract fun deleteEndImages(endId: Long)
+
+    @Transaction
+    open fun saveCompleteEnd(end: End, images: List<EndImage>, shots: List<Shot>) {
+        end.id = saveEnd(end)
         for (image in images) {
             image.endId = end.id
-            image.save(db)
         }
-        SQLite.delete(Shot::class.java)
-                .where(Shot_Table.end.eq(end.id))
-                .execute(db)
+        insertEndImages(images)
+
         for (shot in shots) {
             shot.endId = end.id
-            shot.save(db)
         }
+        insertShots(shots)
     }
 
-    fun deleteEnd(end: End) {
-        FlowManager.getDatabase(AppDatabase::class.java).executeTransaction { db ->
-            end.delete(db)
-            db.execSQL("UPDATE End SET `index` = `index` - 1 WHERE `index` > ${end.index}")
-        }
+    @Transaction
+    open fun deleteEnd(end: End) {
+        deleteEndWithoutIndexUpdate(end)
+        decrementIndices(end.index)
     }
+
+    @Delete
+    abstract fun deleteEndWithoutIndexUpdate(end: End)
+
+    @Query("UPDATE End SET `index` = `index` - 1 WHERE `index` > :allAboveIndex")
+    abstract fun decrementIndices(allAboveIndex: Int)
+
+    @Query("UPDATE End SET `index` = `index` + 1 WHERE `index` >= :allAboveIndex")
+    abstract fun incrementIndices(allAboveIndex: Int)
 }

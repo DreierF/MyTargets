@@ -25,11 +25,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.db.dao.SignatureDAO
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.databinding.FragmentSignatureBinding
 import de.dreier.mytargets.shared.models.db.Signature
 
 class SignatureDialogFragment : DialogFragment() {
+
+    private val signatureDAO = ApplicationInstance.db.signatureDAO()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentSignatureBinding.inflate(inflater, container, false)
@@ -46,7 +48,7 @@ class SignatureDialogFragment : DialogFragment() {
                     .inputType(InputType.TYPE_CLASS_TEXT)
                     .input(defaultName, signature.name) { _, input ->
                         signature.name = input.toString()
-                        SignatureDAO.saveSignature(signature)
+                        signatureDAO.saveSignature(signature)
                         binding.signer.text = signature.name
                     }
                     .negativeText(android.R.string.cancel)
@@ -59,7 +61,7 @@ class SignatureDialogFragment : DialogFragment() {
                 bitmap = binding.signatureView.transparentSignatureBitmap
             }
             signature.bitmap = bitmap
-            SignatureDAO.saveSignature(signature)
+            signatureDAO.saveSignature(signature)
             dismiss()
         }
         binding.clear.setOnClickListener { binding.signatureView.clear() }

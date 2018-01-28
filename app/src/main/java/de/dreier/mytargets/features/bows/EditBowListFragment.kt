@@ -23,8 +23,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
-import de.dreier.mytargets.base.db.dao.BowDAO
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
 import de.dreier.mytargets.base.fragments.LoaderUICallback
@@ -38,6 +38,8 @@ import de.dreier.mytargets.utils.SlideInItemAnimator
 class EditBowListFragment : EditableListFragmentBase<Bow, SimpleListAdapterBase<Bow>>() {
 
     private lateinit var binding: FragmentBowsBinding
+
+    private val bowDAO = ApplicationInstance.db.bowDAO()
 
     init {
         itemTypeDelRes = R.plurals.bow_deleted
@@ -76,7 +78,7 @@ class EditBowListFragment : EditableListFragmentBase<Bow, SimpleListAdapterBase<
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        val bows = BowDAO.loadBows()
+        val bows = bowDAO.loadBows()
         return {
             adapter!!.setList(bows.toMutableList())
             binding.emptyState!!.root.visibility = if (bows.isEmpty()) View.VISIBLE else View.GONE
@@ -92,11 +94,11 @@ class EditBowListFragment : EditableListFragmentBase<Bow, SimpleListAdapterBase<
     }
 
     override fun deleteItem(item: Bow): () -> Bow {
-        val images = BowDAO.loadBowImages(item.id)
-        val sightMarks = BowDAO.loadSightMarks(item.id)
-        BowDAO.deleteBow(item)
+        val images = bowDAO.loadBowImages(item.id)
+        val sightMarks = bowDAO.loadSightMarks(item.id)
+        bowDAO.deleteBow(item)
         return {
-            BowDAO.saveBow(item, images, sightMarks)
+            bowDAO.saveBow(item, images, sightMarks)
             item
         }
     }

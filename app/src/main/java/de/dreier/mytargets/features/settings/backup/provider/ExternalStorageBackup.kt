@@ -18,6 +18,7 @@ package de.dreier.mytargets.features.settings.backup.provider
 import android.app.Activity
 import android.content.Context
 import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.features.settings.backup.BackupEntry
 import de.dreier.mytargets.features.settings.backup.BackupException
 import de.dreier.mytargets.shared.SharedApplicationInstance.Companion
@@ -124,7 +125,7 @@ object ExternalStorageBackup {
                 val backupDir = File(microSdCardPath, FOLDER_NAME)
                 createDirectory(backupDir)
                 val zipFile = File(backupDir, BackupUtils.backupName)
-                BackupUtils.zip(context, FileOutputStream(zipFile))
+                BackupUtils.zip(context, ApplicationInstance.db, FileOutputStream(zipFile))
             } catch (e: IOException) {
                 throw BackupException(e.localizedMessage, e)
             }

@@ -23,9 +23,9 @@ import android.text.InputType
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
 import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
-import de.dreier.mytargets.base.db.dao.EndDAO
-import de.dreier.mytargets.base.db.dao.RoundDAO
+import de.dreier.mytargets.base.db.EndRepository
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
 import de.dreier.mytargets.base.fragments.LoaderUICallback
@@ -48,6 +48,10 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
     private var roundId: Long = 0
     private lateinit var binding: FragmentListBinding
     private var round: Round? = null
+
+    private val roundDAO = ApplicationInstance.db.roundDAO()
+    private val endDAO = ApplicationInstance.db.endDAO()
+    private val endRepository = EndRepository(endDAO)
 
     private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
@@ -103,12 +107,12 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        round = RoundDAO.loadRound(roundId)
-        val ends = EndDAO.loadAugmentedEnds(round!!.id)
+        round = roundDAO.loadRound(roundId)
+        val ends = endRepository.loadAugmentedEnds(round!!.id)
         val showFab = round!!.maxEndCount == null || ends.size < round!!.maxEndCount!!
 
         return {
-            adapter!!.setList(ends)
+            adapter!!.setList(ends.toMutableList())
             binding.fab.visibility = if (showFab) View.VISIBLE else View.GONE
 
             ToolbarUtils.setTitle(this@RoundFragment,
@@ -133,7 +137,7 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
                         .inputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
                         .input("", round!!.comment) { _, input ->
                             round!!.comment = input.toString()
-                            RoundDAO.saveRound(round!!)
+                            roundDAO.updateRound(round!!)
                         }
                         .negativeText(android.R.string.cancel)
                         .show()
@@ -158,9 +162,9 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
     }
 
     override fun deleteItem(item: AugmentedEnd): () -> AugmentedEnd {
-        EndDAO.deleteEnd(item.end)
+        endDAO.deleteEnd(item.end)
         return {
-            EndDAO.insertEnd(item.end, item.images, item.shots)
+            endDAO.insertEnd(item.end, item.images, item.shots)
             item
         }
     }

@@ -16,7 +16,6 @@
 package de.dreier.mytargets.features.settings.backup.provider
 
 import android.content.Context
-import de.dreier.mytargets.base.db.dao.ImageDAO
 import de.dreier.mytargets.shared.AppDatabase
 import java.io.*
 import java.text.SimpleDateFormat
@@ -43,19 +42,23 @@ object BackupUtils {
     }
 
     @Throws(IOException::class)
-    fun zip(context: Context, dest: OutputStream) {
+    fun zip(context: Context, database: AppDatabase, dest: OutputStream) {
+        val imageFiles = database.imageDAO().loadAllFileNames().map { File(context.filesDir, it) }
+        zip(context, dest, imageFiles)
+    }
+
+    @Throws(IOException::class)
+    private fun zip(context: Context, dest: OutputStream, imageFiles: List<File>) {
         ZipOutputStream(BufferedOutputStream(dest)).use { out ->
             val db = context.getDatabasePath(AppDatabase.DATABASE_FILE_NAME)
 
-            var entry = ZipEntry("/data.db")
-            out.putNextEntry(entry)
+            out.putNextEntry(ZipEntry("/data.db"))
             FileInputStream(db).use { it.copyTo(out) }
 
-            for (file in ImageDAO.loadAllFileNames()) {
+            for (file in imageFiles) {
                 try {
-                    entry = ZipEntry("/" + file)
-                    out.putNextEntry(entry)
-                    FileInputStream(File(context.filesDir, file)).use {
+                    out.putNextEntry(ZipEntry("/" + file.name))
+                    FileInputStream(file).use {
                         it.copyTo(out)
                     }
                 } catch (e: FileNotFoundException) {

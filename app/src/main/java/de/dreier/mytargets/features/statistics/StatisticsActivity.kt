@@ -35,11 +35,8 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.evernote.android.state.State
 import com.evernote.android.state.StateSaver
 import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.activities.ChildActivityBase
-import de.dreier.mytargets.base.db.dao.ArrowDAO
-import de.dreier.mytargets.base.db.dao.BowDAO
-import de.dreier.mytargets.base.db.dao.RoundDAO
-import de.dreier.mytargets.base.db.dao.TrainingDAO
 import de.dreier.mytargets.databinding.ActivityStatisticsBinding
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.db.Round
@@ -70,6 +67,11 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
     @State
     var bowTags: HashSet<Long?>? = null
 
+    private val trainingDAO = ApplicationInstance.db.trainingDAO()
+    private val roundDAO = ApplicationInstance.db.roundDAO()
+    private val bowDAO = ApplicationInstance.db.bowDAO()
+    private val arrowDAO = ApplicationInstance.db.arrowDAO()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_statistics)
@@ -89,10 +91,10 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
         val roundIds = intent.getLongArrayExtra(ROUND_IDS)
         return object : AsyncTaskLoader<List<Pair<Training, Round>>>(this) {
             override fun loadInBackground(): List<Pair<Training, Round>> {
-                val rounds = RoundDAO.loadRounds(roundIds)
+                val rounds = roundDAO.loadRounds(roundIds)
                 val trainingsMap = rounds.map { (_, trainingId) -> trainingId!! }
                         .distinct()
-                        .map { id -> Pair(id, TrainingDAO.loadTraining(id)) }
+                        .map { id -> Pair(id, trainingDAO.loadTraining(id)) }
                         .toSparseArray()
                 return rounds.map { round -> Pair(trainingsMap.get(round.trainingId!!), round) }
             }
@@ -207,7 +209,7 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
                 .distinct()
                 .map { bid ->
                     if (bid != null) {
-                        val bow = BowDAO.loadBowOrNull(bid) ?: return@map Tag(bid, "Deleted " + bid)
+                        val bow = bowDAO.loadBowOrNull(bid) ?: return@map Tag(bid, "Deleted " + bid)
                         Tag(bow.id, bow.name, bow.thumbnail, true)
                     } else {
                         Tag(null, getString(R.string.unknown))
@@ -221,7 +223,7 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
                 .distinct()
                 .map { aid ->
                     if (aid != null) {
-                        val arrow = ArrowDAO.loadArrowOrNull(aid) ?: return@map Tag(aid, "Deleted " + aid)
+                        val arrow = arrowDAO.loadArrowOrNull(aid) ?: return@map Tag(aid, "Deleted " + aid)
                         Tag(arrow.id, arrow.name, arrow.thumbnail, true)
                     } else {
                         Tag(null, getString(R.string.unknown))
@@ -260,7 +262,7 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
             override fun doInBackground(vararg params: Void): Uri? {
                 return try {
                     val f = File(cacheDir, exportFileName)
-                    CsvExporter(applicationContext)
+                    CsvExporter(applicationContext, ApplicationInstance.db)
                             .exportAll(f, filteredRounds!!.flatMap { it.second }.map { it.id })
                     f.toUri(this@StatisticsActivity)
                 } catch (e: IOException) {

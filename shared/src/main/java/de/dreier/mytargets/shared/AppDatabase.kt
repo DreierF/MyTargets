@@ -18,7 +18,7 @@ package de.dreier.mytargets.shared
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
-import de.dreier.mytargets.base.db.dao.TrainingDAO
+import de.dreier.mytargets.base.db.dao.*
 import de.dreier.mytargets.shared.models.db.*
 import de.dreier.mytargets.shared.utils.typeconverters.*
 
@@ -54,5 +54,13 @@ abstract class AppDatabase : RoomDatabase() {
         const val VERSION = 26
     }
 
+    abstract fun arrowDAO(): ArrowDAO
+    abstract fun bowDAO(): BowDAO
+    abstract fun dimensionDAO(): DimensionDAO
+    abstract fun endDAO(): EndDAO
+    abstract fun imageDAO(): ImageDAO
+    abstract fun roundDAO(): RoundDAO
+    abstract fun signatureDAO(): SignatureDAO
+    abstract fun standardRoundDAO(): StandardRoundDAO
     abstract fun trainingDAO(): TrainingDAO
 }
