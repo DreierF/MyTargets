@@ -44,7 +44,7 @@ abstract class StandardRoundDAO {
     abstract fun insertStandardRound(round: StandardRound): Long
 
     @Insert
-    abstract fun insertRoundTemplates(round: List<RoundTemplate>)
+    abstract fun insertRoundTemplate(round: RoundTemplate): Long
 
     @Query("DELETE FROM RoundTemplate WHERE standardRound = (:id)")
     abstract fun deleteRoundTemplates(id: Long)
@@ -55,8 +55,8 @@ abstract class StandardRoundDAO {
         deleteRoundTemplates(standardRound.id)
         for (roundTemplate in roundTemplates) {
             roundTemplate.standardRound = standardRound.id
+            roundTemplate.id = insertRoundTemplate(roundTemplate)
         }
-        insertRoundTemplates(roundTemplates)
     }
 
     @Delete

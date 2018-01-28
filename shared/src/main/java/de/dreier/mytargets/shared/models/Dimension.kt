@@ -70,7 +70,6 @@ data class Dimension(val value: Float, val unit: Unit?) : IIdProvider, Comparabl
         }
 
         companion object {
-
             fun from(unit: String?): Unit? {
                 return when (unit) {
                     "cm" -> CENTIMETER
@@ -81,10 +80,6 @@ data class Dimension(val value: Float, val unit: Unit?) : IIdProvider, Comparabl
                     "mm" -> MILLIMETER
                     else -> null
                 }
-            }
-
-            fun toStringHandleNull(unit: Unit?): String? {
-                return unit?.toString()
             }
         }
     }

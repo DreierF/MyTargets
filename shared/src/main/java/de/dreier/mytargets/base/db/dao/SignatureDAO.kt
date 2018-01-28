@@ -28,7 +28,10 @@ interface SignatureDAO {
     fun loadSignatureOrNull(id: Long): Signature?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveSignature(signature: Signature)
+    fun insertSignature(signature: Signature): Long
+
+    @Update
+    fun updateSignature(signature: Signature)
 
     @Delete
     fun deleteSignature(signature: Signature)

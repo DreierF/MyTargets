@@ -53,7 +53,7 @@ class TrainingRepository(
             }
         }
         val signature = Signature()
-        signatureDAO.saveSignature(signature)
+        signature.id = signatureDAO.insertSignature(signature)
         training.archerSignatureId = signature.id
         trainingDAO.saveTraining(training)
         return signature
@@ -67,7 +67,7 @@ class TrainingRepository(
             }
         }
         val signature = Signature()
-        signatureDAO.saveSignature(signature)
+        signature.id = signatureDAO.insertSignature(signature)
         training.witnessSignatureId = signature.id
         trainingDAO.saveTraining(training)
         return signature

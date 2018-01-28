@@ -94,8 +94,7 @@ class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: Att
         }
         if (ContextCompat.checkSelfPermission(fragment.context!!, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             setDefaultWeather()
-            fragment.requestPermissions(arrayOf(ACCESS_FINE_LOCATION),
-                    requestCode)
+            fragment.requestPermissions(arrayOf(ACCESS_FINE_LOCATION), requestCode)
         } else {
             queryWeatherInfo(fragment.context!!)
         }
@@ -152,7 +151,11 @@ class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: Att
 
             if (addresses.size > 0) {
                 val fetchedAddress = addresses[0]
-                "${fetchedAddress.locality}, ${fetchedAddress.subLocality}"
+                var address = fetchedAddress.locality
+                if(fetchedAddress.subLocality != null) {
+                    address += ", ${fetchedAddress.subLocality}"
+                }
+                address
             } else {
                 null
             }

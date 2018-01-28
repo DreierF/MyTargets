@@ -38,12 +38,12 @@ abstract class TrainingDAO {
         training.id = saveTraining(training)
         for (round in rounds) {
             round.trainingId = training.id
+            round.id = insertRound(round)
         }
-        insertRounds(rounds)
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertRounds(round: List<Round>)
+    abstract fun insertRound(round: Round): Long
 
     @Delete
     abstract fun deleteTraining(training: Training)

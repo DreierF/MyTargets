@@ -35,7 +35,8 @@ object RoomCreationCallback : RoomDatabase.Callback() {
         }
     }
 
-    private fun saveStandardRound(db: SupportSQLiteDatabase, standardRound: StandardRound, roundTemplates: List<RoundTemplate>) {
+    private fun saveStandardRound(db: SupportSQLiteDatabase, standardRound: StandardRound,
+                                  roundTemplates: List<RoundTemplate>) {
         insertStandardRound(db, standardRound)
         for (roundTemplate in roundTemplates) {
             roundTemplate.standardRound = standardRound.id
@@ -44,12 +45,12 @@ object RoomCreationCallback : RoomDatabase.Callback() {
     }
 
     private fun insertStandardRound(db: SupportSQLiteDatabase, standardRound: StandardRound) {
-        db.query("INSERT OR REPLACE INTO StandardRound(_id, club, name) VALUES (?,?,?)",
+        db.execSQL("INSERT OR REPLACE INTO StandardRound(_id, club, name) VALUES (?,?,?)",
                 arrayOf(standardRound.id, standardRound.club, standardRound.name))
     }
 
     private fun insertRoundTemplate(db: SupportSQLiteDatabase, roundTemplate: RoundTemplate) {
-        db.query("INSERT OR REPLACE INTO RoundTemplate(_id, standardRound, index, " +
+        db.execSQL("INSERT OR REPLACE INTO RoundTemplate(_id, standardRound, `index`, " +
                 "shotsPerEnd, endCount, distance, targetId, targetScoringStyle, targetDiameter) " +
                 "VALUES (?,?,?,?,?,?,?,?,?)",
                 arrayOf(roundTemplate.id, roundTemplate.standardRound, roundTemplate.index,
@@ -57,7 +58,8 @@ object RoomCreationCallback : RoomDatabase.Callback() {
                         "${roundTemplate.distance.value} ${roundTemplate.distance.unit}",
                         roundTemplate.targetTemplate.id,
                         roundTemplate.targetTemplate.scoringStyleIndex,
-                        roundTemplate.targetTemplate.diameter))
+                        roundTemplate.targetTemplate.diameter.value.toString() + " " +
+                                roundTemplate.targetTemplate.diameter.unit))
     }
 
     fun createScoreTriggers(database: SupportSQLiteDatabase) {

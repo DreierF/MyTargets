@@ -38,6 +38,9 @@ abstract class EndDAO {
     @Update
     abstract fun updateEnd(end: End)
 
+    @Update
+    abstract fun updateShots(shots: List<Shot>)
+
     @Transaction
     open fun insertEnd(end: End, images: List<EndImage>, shots: List<Shot>) {
         incrementIndices(end.index)
@@ -81,4 +84,10 @@ abstract class EndDAO {
 
     @Query("UPDATE End SET `index` = `index` + 1 WHERE `index` >= :allAboveIndex")
     abstract fun incrementIndices(allAboveIndex: Int)
+
+    @Transaction
+    open fun replaceImages(end: End, images: List<EndImage>) {
+        deleteEndImages(end.id)
+        insertEndImages(images)
+    }
 }

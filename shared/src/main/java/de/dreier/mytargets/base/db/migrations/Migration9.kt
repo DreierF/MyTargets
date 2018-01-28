@@ -208,13 +208,12 @@ object Migration9 : Migration(8, 9) {
         values.put("sid", item.standardRound)
         values.put("r_index", item.index)
         values.put("distance", item.distance.value)
-        values.put("unit", Dimension.Unit.toStringHandleNull(item.distance.unit))
+        values.put("unit", item.distance.unit?.toString())
         values.put("passes", item.endCount)
         values.put("arrows", item.shotsPerEnd)
         values.put("target", item.targetTemplate.id.toInt())
         values.put("size", item.targetTemplate.diameter.value)
-        values.put("target_unit", Dimension.Unit
-                .toStringHandleNull(item.targetTemplate.diameter.unit))
+        values.put("target_unit", item.targetTemplate.diameter.unit?.toString())
         values.put("scoring_style", item.targetTemplate.scoringStyleIndex)
         if (item.id == 0L) {
             item.id = database

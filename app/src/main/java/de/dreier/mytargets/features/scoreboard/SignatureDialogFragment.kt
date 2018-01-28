@@ -48,7 +48,7 @@ class SignatureDialogFragment : DialogFragment() {
                     .inputType(InputType.TYPE_CLASS_TEXT)
                     .input(defaultName, signature.name) { _, input ->
                         signature.name = input.toString()
-                        signatureDAO.saveSignature(signature)
+                        signatureDAO.updateSignature(signature)
                         binding.signer.text = signature.name
                     }
                     .negativeText(android.R.string.cancel)
@@ -61,7 +61,7 @@ class SignatureDialogFragment : DialogFragment() {
                 bitmap = binding.signatureView.transparentSignatureBitmap
             }
             signature.bitmap = bitmap
-            signatureDAO.saveSignature(signature)
+            signatureDAO.updateSignature(signature)
             dismiss()
         }
         binding.clear.setOnClickListener { binding.signatureView.clear() }

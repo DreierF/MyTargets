@@ -148,7 +148,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
             for (image in imageList.removedImages) {
                 File(filesDir, image).delete()
             }
-            saveCurrentEnd()
+            endDAO.replaceImages(currentEnd.end, currentEnd.images)
             updateEnd()
             invalidateOptionsMenu()
         }
@@ -160,7 +160,8 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
             currentEnd.end.saveTime = LocalTime.now()
         }
         currentEnd.end.score = data!!.currentRound.round.target.getReachedScore(currentEnd.shots)
-        endDAO.saveCompleteEnd(currentEnd.end, currentEnd.images, currentEnd.shots)
+        endDAO.updateEnd(currentEnd.end)
+        endDAO.updateShots(currentEnd.shots)
     }
 
     override fun onDestroy() {
