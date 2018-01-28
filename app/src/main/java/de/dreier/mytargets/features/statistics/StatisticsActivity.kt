@@ -41,8 +41,8 @@ import de.dreier.mytargets.databinding.ActivityStatisticsBinding
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
-import de.dreier.mytargets.shared.utils.toSparseArray
-import de.dreier.mytargets.shared.utils.toUri
+import de.dreier.mytargets.utils.toSparseArray
+import de.dreier.mytargets.utils.toUri
 import de.dreier.mytargets.utils.ToolbarUtils
 import java.io.File
 import java.io.IOException

@@ -32,8 +32,8 @@ import de.dreier.mytargets.shared.models.Score
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.TimerSettings
 import de.dreier.mytargets.shared.targets.scoringstyle.ArrowAwareScoringStyle
-import de.dreier.mytargets.shared.utils.map
-import de.dreier.mytargets.shared.utils.toSparseArray
+import de.dreier.mytargets.utils.map
+import de.dreier.mytargets.utils.toSparseArray
 import de.dreier.mytargets.shared.views.TargetViewBase
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod.KEYBOARD
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod.PLOTTING

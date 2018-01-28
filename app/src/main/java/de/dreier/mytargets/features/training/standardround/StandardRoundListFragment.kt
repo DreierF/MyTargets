@@ -37,8 +37,8 @@ import de.dreier.mytargets.databinding.FragmentListBinding
 import de.dreier.mytargets.databinding.ItemStandardRoundBinding
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
-import de.dreier.mytargets.shared.utils.StandardRoundFactory
-import de.dreier.mytargets.shared.utils.contains
+import de.dreier.mytargets.base.db.StandardRoundFactory
+import de.dreier.mytargets.utils.contains
 import de.dreier.mytargets.utils.SlideInItemAnimator
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.multiselector.OnItemLongClickListener

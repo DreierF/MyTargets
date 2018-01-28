@@ -25,7 +25,7 @@ import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
 import de.dreier.mytargets.shared.models.db.RoundTemplate
 import de.dreier.mytargets.shared.models.db.StandardRound
-import de.dreier.mytargets.shared.utils.StandardRoundFactory
+import de.dreier.mytargets.base.db.StandardRoundFactory
 
 object Migration9 : Migration(8, 9) {
     override fun migrate(database: SupportSQLiteDatabase) {

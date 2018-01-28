@@ -35,8 +35,8 @@ import de.dreier.mytargets.base.gallery.adapters.ViewPagerAdapter
 import de.dreier.mytargets.base.navigation.NavigationController
 import de.dreier.mytargets.databinding.ActivityGalleryBinding
 import de.dreier.mytargets.shared.utils.ImageList
-import de.dreier.mytargets.shared.utils.moveTo
-import de.dreier.mytargets.shared.utils.toUri
+import de.dreier.mytargets.utils.moveTo
+import de.dreier.mytargets.utils.toUri
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils
 import permissions.dispatcher.NeedsPermission

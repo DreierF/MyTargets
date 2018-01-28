@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils
+package de.dreier.mytargets.utils
 
 import de.dreier.mytargets.shared.models.db.EndImage
 import org.junit.Assert.assertEquals

@@ -18,7 +18,7 @@ package de.dreier.mytargets.base.db.migrations
 import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.migration.Migration
 import de.dreier.mytargets.shared.SharedApplicationInstance
-import de.dreier.mytargets.shared.utils.moveTo
+import de.dreier.mytargets.utils.moveTo
 import java.io.File
 import java.io.IOException
 

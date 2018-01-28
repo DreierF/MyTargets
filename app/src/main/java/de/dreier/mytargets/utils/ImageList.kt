@@ -13,12 +13,12 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils
+package de.dreier.mytargets.utils
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
-import de.dreier.mytargets.shared.models.db.EndImage
 import de.dreier.mytargets.shared.models.Image
+import de.dreier.mytargets.shared.models.db.EndImage
 import kotlinx.android.parcel.Parcelize
 
 @SuppressLint("ParcelCreator")

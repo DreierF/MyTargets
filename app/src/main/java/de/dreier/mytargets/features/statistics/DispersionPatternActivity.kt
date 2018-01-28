@@ -32,7 +32,7 @@ import de.dreier.mytargets.databinding.ActivityArrowRankingDetailsBinding
 import de.dreier.mytargets.features.scoreboard.EFileType
 import de.dreier.mytargets.features.settings.ESettingsScreens
 import de.dreier.mytargets.features.settings.SettingsManager
-import de.dreier.mytargets.shared.utils.toUri
+import de.dreier.mytargets.utils.toUri
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.utils.print.CustomPrintDocumentAdapter

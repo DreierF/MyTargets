@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils
+package de.dreier.mytargets.utils
 
 import android.content.Context
 import android.net.Uri

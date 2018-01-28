@@ -34,7 +34,7 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.databinding.FragmentEditImageBinding
 import de.dreier.mytargets.shared.models.Thumbnail
 import de.dreier.mytargets.shared.models.Image
-import de.dreier.mytargets.shared.utils.moveTo
+import de.dreier.mytargets.utils.moveTo
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils
 import permissions.dispatcher.NeedsPermission
