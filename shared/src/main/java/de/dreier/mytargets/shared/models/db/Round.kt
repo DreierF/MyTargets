@@ -16,59 +16,46 @@
 package de.dreier.mytargets.shared.models.db
 
 import android.annotation.SuppressLint
+import android.arch.persistence.room.*
+import android.arch.persistence.room.ForeignKey.CASCADE
 import android.os.Parcelable
-import com.raizlabs.android.dbflow.annotation.*
-import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.IIdSettable
 import de.dreier.mytargets.shared.models.Score
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter
 import kotlinx.android.parcel.Parcelize
 
 @SuppressLint("ParcelCreator")
 @Parcelize
-@Table(database = AppDatabase::class)
+@Entity(foreignKeys = [
+    ForeignKey(entity = Training::class,
+            parentColumns = ["_id"],
+            childColumns = ["training"],
+            onDelete = CASCADE)
+])
 data class Round(
-        @Column(name = "_id")
-        @PrimaryKey(autoincrement = true)
+        @ColumnInfo(name = "_id")
+        @PrimaryKey(autoGenerate = true)
         override var id: Long = 0,
 
-        @ForeignKey(tableClass = Training::class, references = [(ForeignKeyReference(columnName = "training", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
+        @ColumnInfo(name = "training")
         var trainingId: Long? = null,
 
-        @Column
         var index: Int = 0,
 
-        @Column
         var shotsPerEnd: Int = 0,
 
-        @Column
         var maxEndCount: Int? = null,
 
-        @Column(typeConverter = DimensionConverter::class)
         var distance: Dimension = Dimension.UNKNOWN,
 
-        @Column
         var comment: String = "",
 
-        @Column
-        var targetId: Int = 0,
+        @Embedded
+        var target: Target = Target(),
 
-        @Column
-        var targetScoringStyle: Int = 0,
-
-        @Column(typeConverter = DimensionConverter::class)
-        var targetDiameter: Dimension = Dimension.UNKNOWN,
-
-        @Column
-        var scoreReachedPoints: Int = 0,
-
-        @Column
-        var scoreTotalPoints: Int = 0,
-
-        @Column
-        var scoreShotCount: Int = 0
+        @Embedded
+        var score: Score = Score()
 ) : IIdSettable, Parcelable {
 
     constructor(info: RoundTemplate) : this(
@@ -76,19 +63,6 @@ data class Round(
             shotsPerEnd = info.shotsPerEnd,
             maxEndCount = info.endCount,
             index = info.index,
-            targetId = info.targetId,
-            targetScoringStyle = info.targetScoringStyle,
-            targetDiameter = info.targetDiameter
+            target = info.targetTemplate.copy()
     )
-
-    var target: Target
-        get() = Target(targetId.toLong(), targetScoringStyle, targetDiameter)
-        set(targetTemplate) {
-            targetId = targetTemplate.id.toInt()
-            targetScoringStyle = targetTemplate.scoringStyleIndex
-            targetDiameter = targetTemplate.diameter
-        }
-
-    val score: Score
-        get() = Score(scoreReachedPoints, scoreTotalPoints, scoreShotCount)
 }

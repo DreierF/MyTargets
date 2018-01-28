@@ -45,6 +45,16 @@ android {
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary true
         playAccountConfig = playAccountConfigs.defaultAccountConfig
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
+    }
+
+    // used by Room, to test migrations
+    sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
 
     dataBinding {
@@ -178,11 +188,6 @@ dependencies {
 
     implementation dependencies.materialIntroScreen
 
-    kapt dependencies.dbFlowProcessor
-    implementation dependencies.dbFlowCore
-    implementation dependencies.dbFlow
-    implementation dependencies.dbFlowKotlinExtensions
-
     implementation dependencies.photoView
 
     implementation dependencies.androidLanguages
@@ -193,6 +198,8 @@ dependencies {
 
     implementation dependencies.archLifecycleExtensions
     kapt dependencies.archLifecycleCompiler
+    implementation dependencies.archRoomRuntime
+    kapt dependencies.archRoomCompiler
 
     implementation project(':shared')
     wearApp project(':wearable')
@@ -220,6 +227,7 @@ dependencies {
 
     implementation dependencies.espressoIdlingResource
     androidTestScreengrabImplementation dependencies.screengrab
+    androidTestImplementation dependencies.archRoomTesting
 
     implementation dependencies.multiDex
 }

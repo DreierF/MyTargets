@@ -15,19 +15,23 @@
 
 package de.dreier.mytargets.shared.utils.typeconverters
 
-import com.raizlabs.android.dbflow.converter.TypeConverter
+import android.arch.persistence.room.TypeConverter
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import de.dreier.mytargets.shared.utils.toByteArray
 
-import org.threeten.bp.LocalDate
-import org.threeten.bp.format.DateTimeFormatter
+class BitmapConverters {
 
-class LocalDateConverter : TypeConverter<String, LocalDate>() {
-
-    override fun getDBValue(model: LocalDate?): String? {
-        return model?.format(DateTimeFormatter.ISO_LOCAL_DATE)
+    @TypeConverter
+    fun getDBValue(model: Bitmap?): ByteArray? {
+        return model?.toByteArray()
     }
 
-    override fun getModelValue(data: String?): LocalDate? {
-        return if (data != null) LocalDate.parse(data) else null
+    @TypeConverter
+    fun getModelValue(data: ByteArray?): Bitmap? {
+        return if (data != null) {
+            BitmapFactory.decodeByteArray(data, 0, data.size)
+        } else null
     }
 
 }

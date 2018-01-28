@@ -15,29 +15,25 @@
 
 package de.dreier.mytargets.shared.models.db
 
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import android.graphics.Bitmap
 import android.os.Parcel
 import android.os.Parcelable
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
-import com.raizlabs.android.dbflow.sql.language.SQLite
-import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.utils.readBitmap
-import de.dreier.mytargets.shared.utils.typeconverters.BitmapConverter
 import de.dreier.mytargets.shared.utils.writeBitmap
 
-@Table(database = AppDatabase::class)
+@Entity
 data class Signature(
-        @Column(name = "_id")
-        @PrimaryKey(autoincrement = true)
+        @ColumnInfo(name = "_id")
+        @PrimaryKey(autoGenerate = true)
         var id: Long = 0,
 
-        @Column
         var name: String = "",
 
         /** A bitmap of the signature or null if no signature has been set. */
-        @Column(typeConverter = BitmapConverter::class)
+        @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
         var bitmap: Bitmap? = null
 ) : Parcelable {
 

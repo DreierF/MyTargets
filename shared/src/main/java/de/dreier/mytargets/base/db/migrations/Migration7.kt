@@ -18,20 +18,10 @@ package de.dreier.mytargets.base.db.migrations
 import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.migration.Migration
 
-object Migration4 : Migration(3, 4) {
+object Migration7 : Migration(6, 7) {
     override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL(
-                "CREATE TABLE IF NOT EXISTS VISIER ( _id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "bow REFERENCES BOW ON DELETE CASCADE," +
-                        "distance INTEGER," +
-                        "setting TEXT);")
-        val valuesMetric = intArrayOf(10, 15, 18, 20, 25, 30, 40, 50, 60, 70, 90)
-        for (table in arrayOf("ROUND", "VISIER")) {
-            for (i in 10 downTo 0) {
-                database.execSQL("UPDATE " + table + " SET distance=" +
-                        valuesMetric[i] + " WHERE distance=" + i)
-            }
-        }
-        database.execSQL("ALTER TABLE BOW ADD COLUMN height TEXT DEFAULT '';")
+        database.execSQL("DELETE FROM ROUND WHERE _id IN (SELECT r._id FROM ROUND r LEFT JOIN TRAINING t ON t._id=r.training WHERE t._id IS NULL)")
+        database.execSQL("DELETE FROM PASSE WHERE _id IN (SELECT p._id FROM PASSE p LEFT JOIN ROUND r ON r._id=p.round WHERE r._id IS NULL)")
+        database.execSQL("DELETE FROM SHOOT WHERE _id IN (SELECT s._id FROM SHOOT s LEFT JOIN PASSE p ON p._id=s.passe WHERE p._id IS NULL)")
     }
 }

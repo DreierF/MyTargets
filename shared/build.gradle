@@ -55,10 +55,8 @@ dependencies {
     api dependencies.supportAnnotations
     api dependencies.threeTenABP
 
-    kapt dependencies.dbFlowProcessor
-    implementation dependencies.dbFlowCore
-    implementation dependencies.dbFlow
-    implementation dependencies.dbFlowKotlinExtensions
+    implementation dependencies.archRoomRuntime
+    kapt dependencies.archRoomCompiler
 
     implementation dependencies.androidState
     kapt dependencies.androidStateProcessor

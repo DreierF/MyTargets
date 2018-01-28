@@ -33,6 +33,7 @@ import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Dimension.Unit
 import de.dreier.mytargets.utils.SlideInItemAnimator
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
+import java.util.HashSet
 
 class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapterBase<Dimension>>(), DistanceInputDialog.OnClickListener {
     private lateinit var binding: FragmentListBinding
@@ -72,7 +73,16 @@ class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapter
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        val distances = DimensionDAO.getAll(distance!!, unit!!)
+        val distancesDb = DimensionDAO.getAll(unit!!)
+        val distances = HashSet<Dimension>()
+
+        distances.add(Dimension.UNKNOWN)
+
+        // Add currently selected distance to list
+        if (this.distance!!.unit == unit) {
+            distances.add(this.distance!!)
+        }
+        distances.addAll(distancesDb)
         return {
             adapter!!.setList(distances.toMutableList())
             selectItem(binding.recyclerView, distance!!)

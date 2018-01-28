@@ -83,7 +83,8 @@ class StandardRoundListFragment : SelectItemFragmentBase<AugmentedStandardRound,
     override fun onLoad(args: Bundle?): LoaderUICallback {
         val data = if (args != null && args.containsKey(KEY_QUERY)) {
             val query = args.getString(KEY_QUERY)
-            StandardRoundDAO.getAllSearch(query!!)
+            val queryString = "%${query!!.replace(' ', '%')}%"
+            StandardRoundDAO.getAllSearch(queryString)
         } else {
             StandardRoundDAO.loadStandardRounds()
         }.map { AugmentedStandardRound(it, StandardRoundDAO.loadRoundTemplates(it.id)) }.toMutableList()

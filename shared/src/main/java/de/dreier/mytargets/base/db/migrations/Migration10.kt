@@ -13,20 +13,15 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils.typeconverters
+package de.dreier.mytargets.base.db.migrations
 
-import com.raizlabs.android.dbflow.converter.TypeConverter
+import android.arch.persistence.db.SupportSQLiteDatabase
+import android.arch.persistence.room.migration.Migration
 
-import de.dreier.mytargets.shared.models.EBowType
-
-class EBowTypeConverter : TypeConverter<Int, EBowType>() {
-
-    override fun getDBValue(model: EBowType?): Int? {
-        return model?.ordinal
+object Migration10 : Migration(9, 10) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE BOW ADD COLUMN limbs TEXT DEFAULT ''")
+        database.execSQL("ALTER TABLE BOW ADD COLUMN sight TEXT DEFAULT ''")
+        database.execSQL("ALTER TABLE BOW ADD COLUMN draw_weight TEXT DEFAULT ''")
     }
-
-    override fun getModelValue(data: Int?): EBowType? {
-        return if (data != null) EBowType.fromId(data) else null
-    }
-
 }

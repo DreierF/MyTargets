@@ -15,25 +15,20 @@
 package de.dreier.mytargets.shared.models.db
 
 import android.annotation.SuppressLint
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
-import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.IIdSettable
 import kotlinx.android.parcel.Parcelize
 
 @SuppressLint("ParcelCreator")
 @Parcelize
-@Table(database = AppDatabase::class)
+@Entity
 data class StandardRound(
-        @Column(name = "_id")
-        @PrimaryKey(autoincrement = true)
+        @ColumnInfo(name = "_id")
+        @PrimaryKey(autoGenerate = true)
         override var id: Long = 0,
-
-        @Column
         var club: Int = 0,
-
-        @Column
         var name: String = ""
 ) : IIdSettable, Parcelable

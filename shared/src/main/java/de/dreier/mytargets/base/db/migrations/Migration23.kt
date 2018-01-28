@@ -15,53 +15,35 @@
 
 package de.dreier.mytargets.base.db.migrations
 
-import com.raizlabs.android.dbflow.annotation.Migration
-import com.raizlabs.android.dbflow.kotlinextensions.delete
-import com.raizlabs.android.dbflow.kotlinextensions.save
-import com.raizlabs.android.dbflow.sql.language.SQLite
-import com.raizlabs.android.dbflow.sql.migration.BaseMigration
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
-import de.dreier.mytargets.shared.AppDatabase
+import android.arch.persistence.db.SupportSQLiteDatabase
+import android.arch.persistence.room.migration.Migration
 import de.dreier.mytargets.shared.SharedApplicationInstance
-import de.dreier.mytargets.shared.models.Image
-import de.dreier.mytargets.shared.models.db.ArrowImage
-import de.dreier.mytargets.shared.models.db.BowImage
-import de.dreier.mytargets.shared.models.db.EndImage
 import de.dreier.mytargets.shared.utils.moveTo
 import java.io.File
 import java.io.IOException
 
-@Migration(version = 23, database = AppDatabase::class)
-class Migration23 : BaseMigration() {
-
-    override fun migrate(database: DatabaseWrapper) {
-        removeFilePath(database, EndImage::class.java,
-                { endImage, db -> endImage.save(db) },
-                { endImage, db -> endImage.delete(db) })
-        removeFilePath(database, BowImage::class.java,
-                { bowImage, db -> bowImage.save(db) },
-                { bowImage, db -> bowImage.delete(db) })
-        removeFilePath(database, ArrowImage::class.java,
-                { arrowImage, db -> arrowImage.save(db) },
-                { arrowImage, db -> arrowImage.delete(db) })
+object Migration23 : Migration(22, 23) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        removeFilePath(database, "EndImage")
+        removeFilePath(database, "BowImage")
+        removeFilePath(database, "ArrowImage")
     }
 
-    private fun <T> removeFilePath(database: DatabaseWrapper, clazz: Class<out T>,
-                                   save: (T, DatabaseWrapper) -> Boolean,
-                                   delete: (T, DatabaseWrapper) -> Boolean) where T : Image {
-        val images = SQLite.select().from(clazz).queryList(database)
-        for (image in images) {
+    private fun removeFilePath(database: SupportSQLiteDatabase, tableName: String) {
+        val cursor = database.query("SELECT _id, fileName FROM $tableName")
+        while (cursor.moveToNext()) {
+            val imageId = cursor.getLong(0)
+            val fileName = cursor.getString(1)
             val filesDir = SharedApplicationInstance.context.filesDir
-            var imageFile = File(filesDir, image.fileName)
+            var imageFile = File(filesDir, fileName)
 
-            val imageFromSomewhere = File(image.fileName)
+            val imageFromSomewhere = File(fileName)
             val imageFileFromSomewhere = File(filesDir, imageFromSomewhere.name)
 
             // If imagePath is just the name and is placed inside files directory or
             // In case the image was already copied to the files, but does still contain the wrong path
             if (imageFile.exists() || imageFileFromSomewhere.exists()) {
-                image.fileName = imageFile.name
-                save(image, database)
+                database.execSQL("UPDATE $tableName SET fileName = ${imageFile.name} WHERE _id = $imageId")
                 continue
             }
 
@@ -70,14 +52,13 @@ class Migration23 : BaseMigration() {
                 try {
                     imageFile = File.createTempFile("img", imageFromSomewhere.name, filesDir)
                     imageFromSomewhere.moveTo(imageFile)
-                    image.fileName = imageFile.name
-                    save(image, database)
+                    database.execSQL("UPDATE $tableName SET fileName = ${imageFile.name} WHERE _id = $imageId")
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
 
             } else {
-                delete(image, database)
+                database.execSQL("DELETE FROM $tableName WHERE _id = $imageId")
             }
         }
     }

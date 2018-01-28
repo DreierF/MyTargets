@@ -15,15 +15,11 @@
 
 package de.dreier.mytargets.base.db.migrations
 
-import com.raizlabs.android.dbflow.annotation.Migration
-import com.raizlabs.android.dbflow.sql.migration.BaseMigration
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
-import de.dreier.mytargets.shared.AppDatabase
+import android.arch.persistence.db.SupportSQLiteDatabase
+import android.arch.persistence.room.migration.Migration
 
-@Migration(version = 22, database = AppDatabase::class)
-class Migration22 : BaseMigration() {
-
-    override fun migrate(database: DatabaseWrapper) {
-        Migration0.fillStandardRound(database)
+object Migration22 : Migration(21, 22) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        RoomCreationCallback.fillStandardRound(database)
     }
 }

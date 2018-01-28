@@ -15,22 +15,19 @@
 
 package de.dreier.mytargets.shared.utils.typeconverters
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import com.raizlabs.android.dbflow.converter.TypeConverter
-import com.raizlabs.android.dbflow.data.Blob
-import de.dreier.mytargets.shared.utils.toByteArray
+import android.arch.persistence.room.TypeConverter
+import de.dreier.mytargets.shared.models.Thumbnail
 
-class BitmapConverter : TypeConverter<Blob, Bitmap>() {
+class ThumbnailConverters {
 
-    override fun getDBValue(model: Bitmap?): Blob? {
-        return if (model != null) Blob(model.toByteArray()) else null
+    @TypeConverter
+    fun getDBValue(model: Thumbnail?): ByteArray? {
+        return model?.data
     }
 
-    override fun getModelValue(data: Blob?): Bitmap? {
-        return if (data != null) {
-            BitmapFactory.decodeByteArray(data.blob, 0, data.blob.size)
-        } else null
+    @TypeConverter
+    fun getModelValue(data: ByteArray?): Thumbnail? {
+        return if (data != null) Thumbnail(data) else null
     }
 
 }

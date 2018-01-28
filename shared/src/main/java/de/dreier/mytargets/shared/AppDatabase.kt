@@ -15,13 +15,44 @@
 
 package de.dreier.mytargets.shared
 
-import com.raizlabs.android.dbflow.annotation.Database
+import android.arch.persistence.room.Database
+import android.arch.persistence.room.RoomDatabase
+import android.arch.persistence.room.TypeConverters
+import de.dreier.mytargets.base.db.dao.TrainingDAO
+import de.dreier.mytargets.shared.models.db.*
+import de.dreier.mytargets.shared.utils.typeconverters.*
 
-@Database(name = AppDatabase.NAME, version = AppDatabase.VERSION, foreignKeyConstraintsEnforced = true)
-object AppDatabase {
+@Database(entities = [
+    Arrow::class,
+    ArrowImage::class,
+    Bow::class,
+    BowImage::class,
+    End::class,
+    EndImage::class,
+    Round::class,
+    RoundTemplate::class,
+    Shot::class,
+    SightMark::class,
+    Signature::class,
+    StandardRound::class,
+    Training::class
+], version = AppDatabase.VERSION)
+@TypeConverters(
+        DimensionConverters::class,
+        ThumbnailConverters::class,
+        LocalDateConverters::class,
+        EWeatherConverters::class,
+        BitmapConverters::class,
+        LocalTimeConverters::class,
+        EBowTypeConverters::class
+)
+abstract class AppDatabase : RoomDatabase() {
+    companion object {
+        const val NAME = "database"
+        const val DATABASE_FILE_NAME = "$NAME.db"
+        const val DATABASE_IMPORT_FILE_NAME = "database"
+        const val VERSION = 26
+    }
 
-    const val NAME = "database"
-    const val DATABASE_FILE_NAME = "$NAME.db"
-    const val DATABASE_IMPORT_FILE_NAME = "database"
-    const val VERSION = 26
+    abstract fun trainingDAO(): TrainingDAO
 }

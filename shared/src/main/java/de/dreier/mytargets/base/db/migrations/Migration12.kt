@@ -13,20 +13,14 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils.typeconverters
+package de.dreier.mytargets.base.db.migrations
 
-import com.raizlabs.android.dbflow.converter.TypeConverter
+import android.arch.persistence.db.SupportSQLiteDatabase
+import android.arch.persistence.room.migration.Migration
 
-import de.dreier.mytargets.shared.models.EWeather
-
-class EWeatherConverter : TypeConverter<Int, EWeather>() {
-
-    override fun getDBValue(model: EWeather?): Int? {
-        return model?.ordinal //TODO migrate to save name instead of ordinal
+object Migration12 : Migration(11, 12) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE BOW ADD COLUMN stabilizer TEXT DEFAULT ''")
+        database.execSQL("ALTER TABLE BOW ADD COLUMN clicker TEXT DEFAULT ''")
     }
-
-    override fun getModelValue(data: Int?): EWeather? {
-        return if (data != null) EWeather.getOfValue(data) else null
-    }
-
 }

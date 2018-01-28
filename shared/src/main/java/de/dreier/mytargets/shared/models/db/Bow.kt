@@ -16,93 +16,46 @@
 package de.dreier.mytargets.shared.models.db
 
 import android.annotation.SuppressLint
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
-import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.IIdSettable
 import de.dreier.mytargets.shared.models.Thumbnail
-import de.dreier.mytargets.shared.utils.typeconverters.EBowTypeConverter
-import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter
 import kotlinx.android.parcel.Parcelize
 
 @SuppressLint("ParcelCreator")
 @Parcelize
-@Table(database = AppDatabase::class)
+@Entity
 data class Bow(
-        @Column(name = "_id")
-        @PrimaryKey(autoincrement = true)
+        @ColumnInfo(name = "_id")
+        @PrimaryKey(autoGenerate = true)
         override var id: Long = 0,
 
-        @Column
         var name: String = "",
-
-        @Column(typeConverter = EBowTypeConverter::class)
         var type: EBowType? = EBowType.RECURVE_BOW,
-
-        @Column
         var brand: String? = "",
-
-        @Column
         var size: String? = "",
-
-        @Column
         var braceHeight: String? = "",
-
-        @Column
         var tiller: String? = "",
-
-        @Column
         var limbs: String? = "",
-
-        @Column
         var sight: String? = "",
-
-        @Column
         var drawWeight: String? = "",
-
-        @Column
         var stabilizer: String? = "",
-
-        @Column
         var clicker: String? = "",
-
-        @Column
         var button: String? = "",
-
-        @Column
         var string: String? = "",
-
-        @Column
         var nockingPoint: String? = "",
-
-        @Column
         var letoffWeight: String? = "",
-
-        @Column
         var arrowRest: String? = "",
-
-        @Column
         var restHorizontalPosition: String? = "",
-
-        @Column
         var restVerticalPosition: String? = "",
-
-        @Column
         var restStiffness: String? = "",
-
-        @Column
         var camSetting: String? = "",
-
-        @Column
         var scopeMagnification: String? = "",
-
-        @Column
         var description: String? = "",
-
-        @Column(typeConverter = ThumbnailConverter::class)
+        @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
         var thumbnail: Thumbnail? = null
 ) : IIdSettable, Parcelable {
 

@@ -13,21 +13,15 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils.typeconverters
+package de.dreier.mytargets.base.db.migrations
 
-import com.raizlabs.android.dbflow.converter.TypeConverter
-import com.raizlabs.android.dbflow.data.Blob
+import android.arch.persistence.db.SupportSQLiteDatabase
+import android.arch.persistence.room.migration.Migration
 
-import de.dreier.mytargets.shared.models.Thumbnail
-
-class ThumbnailConverter : TypeConverter<Blob, Thumbnail>() {
-
-    override fun getDBValue(model: Thumbnail?): Blob? {
-        return if(model == null) null else Blob(model.data)
+object Migration8 : Migration(7, 8) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("UPDATE ROUND SET target=4 WHERE target=8")
+        database.execSQL("UPDATE ROUND SET target=5 WHERE target=9")
+        database.execSQL("UPDATE ROUND SET target=6 WHERE target=10")
     }
-
-    override fun getModelValue(data: Blob?): Thumbnail? {
-        return if (data != null) Thumbnail(data.blob) else null
-    }
-
 }

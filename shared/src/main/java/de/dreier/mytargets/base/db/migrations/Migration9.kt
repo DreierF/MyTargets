@@ -15,15 +15,12 @@
 
 package de.dreier.mytargets.base.db.migrations
 
+import android.arch.persistence.db.SupportSQLiteDatabase
+import android.arch.persistence.room.migration.Migration
 import android.content.ContentValues
 import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteDatabase.CONFLICT_IGNORE
-import com.raizlabs.android.dbflow.annotation.Migration
-import com.raizlabs.android.dbflow.sql.migration.BaseMigration
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
+import android.database.sqlite.SQLiteDatabase.*
 import de.dreier.mytargets.base.db.dao.StandardRoundDAO
-import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
@@ -31,10 +28,8 @@ import de.dreier.mytargets.shared.models.db.RoundTemplate
 import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.utils.StandardRoundFactory
 
-@Migration(version = 9, database = AppDatabase::class)
-class Migration9 : BaseMigration() {
-
-    override fun migrate(database: DatabaseWrapper) {
+object Migration9 : Migration(8, 9) {
+    override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("DROP TABLE IF EXISTS ZONE_MATRIX")
         database.execSQL("ALTER TABLE VISIER ADD COLUMN unit TEXT DEFAULT 'm'")
         database.execSQL("ALTER TABLE PASSE ADD COLUMN image TEXT DEFAULT ''")
@@ -107,7 +102,7 @@ class Migration9 : BaseMigration() {
                 "target INTEGER," +
                 "scoring_style INTEGER);")
 
-        val trainings = database.rawQuery("SELECT _id FROM TRAINING", null)
+        val trainings = database.query("SELECT _id FROM TRAINING")
         if (trainings.moveToFirst()) {
             do {
                 val training = trainings.getLong(0)
@@ -119,12 +114,12 @@ class Migration9 : BaseMigration() {
                             "UPDATE TRAINING SET standard_round=$sid WHERE _id=$training")
                 }
 
-                val res = database.rawQuery(
+                val res = database.query(
                         "SELECT r._id, r.comment, r.target, r.bow, r.arrow " +
                                 "FROM ROUND_OLD r " +
                                 "WHERE r.training=" + training + " " +
                                 "GROUP BY r._id " +
-                                "ORDER BY r._id ASC", null)
+                                "ORDER BY r._id ASC")
                 var index = 0
                 if (res.moveToFirst()) {
                     val bow = res.getLong(3)
@@ -144,7 +139,7 @@ class Migration9 : BaseMigration() {
                                 .put("target", if (target == 4) 5 else target)
                         contentValues.put("scoring_style",
                                 if (target == 5) 1 else 0)
-                        database.insertWithOnConflict("ROUND", null, contentValues, CONFLICT_IGNORE)
+                        database.insert("ROUND", CONFLICT_IGNORE, contentValues)
                         index++
                     } while (res.moveToNext())
                 }
@@ -154,14 +149,14 @@ class Migration9 : BaseMigration() {
         trainings.close()
     }
 
-    private fun getOrCreateStandardRound(db: DatabaseWrapper, training: Long): Long? {
-        val res = db.rawQuery(
+    private fun getOrCreateStandardRound(db: SupportSQLiteDatabase, training: Long): Long? {
+        val res = db.query(
                 "SELECT r.ppp, r.target, r.distance, r.unit, COUNT(p._id), r.indoor " +
                         "FROM ROUND_OLD r " +
                         "LEFT JOIN PASSE p ON r._id = p.round " +
                         "WHERE r.training=" + training + " " +
                         "GROUP BY r._id " +
-                        "ORDER BY r._id ASC", null)
+                        "ORDER BY r._id ASC")
         val sr = StandardRound()
         sr.name = "Practice"
         sr.club = 512
@@ -188,78 +183,75 @@ class Migration9 : BaseMigration() {
         return sr.id
     }
 
-    companion object {
-
-        private fun insertStandardRound(database: DatabaseWrapper, item: AugmentedStandardRound) {
-            val values = ContentValues()
-            values.put("name", item.standardRound.name)
-            values.put("club", item.standardRound.club)
-            values.put("indoor", 0)
-            if (item.id == 0L) {
-                item.standardRound.id = database
-                        .insertWithOnConflict("STANDARD_ROUND_TEMPLATE", null, values, SQLiteDatabase.CONFLICT_NONE)
-                for (r in item.roundTemplates) {
-                    r.standardRound = item.id
-                }
-            } else {
-                values.put("_id", item.id)
-                database.insertWithOnConflict("STANDARD_ROUND_TEMPLATE", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+    private fun insertStandardRound(database: SupportSQLiteDatabase, item: AugmentedStandardRound) {
+        val values = ContentValues()
+        values.put("name", item.standardRound.name)
+        values.put("club", item.standardRound.club)
+        values.put("indoor", 0)
+        if (item.id == 0L) {
+            item.standardRound.id = database
+                    .insert("STANDARD_ROUND_TEMPLATE", CONFLICT_NONE, values)
+            for (r in item.roundTemplates) {
+                r.standardRound = item.id
             }
-            for (template in item.roundTemplates) {
-                template.standardRound = item.id
-                insertRoundTemplate(database, template)
-            }
+        } else {
+            values.put("_id", item.id)
+            database.insert("STANDARD_ROUND_TEMPLATE", CONFLICT_REPLACE, values)
         }
+        for (template in item.roundTemplates) {
+            template.standardRound = item.id
+            insertRoundTemplate(database, template)
+        }
+    }
 
-        private fun insertRoundTemplate(database: DatabaseWrapper, item: RoundTemplate) {
-            val values = ContentValues()
-            values.put("sid", item.standardRound)
-            values.put("r_index", item.index)
-            values.put("distance", item.distance.value)
-            values.put("unit", Dimension.Unit.toStringHandleNull(item.distance.unit))
-            values.put("passes", item.endCount)
-            values.put("arrows", item.shotsPerEnd)
-            values.put("target", item.targetTemplate.id.toInt())
-            values.put("size", item.targetTemplate.diameter.value)
-            values.put("target_unit", Dimension.Unit
-                    .toStringHandleNull(item.targetTemplate.diameter.unit))
-            values.put("scoring_style", item.targetTemplate.scoringStyleIndex)
-            if (item.id == 0L) {
-                item.id = database
-                        .insertWithOnConflict("ROUND_TEMPLATE", null, values, SQLiteDatabase.CONFLICT_NONE)
-            } else {
-                values.put("_id", item.id)
-                database.insertWithOnConflict("ROUND_TEMPLATE", null, values, SQLiteDatabase.CONFLICT_REPLACE)
-            }
+    private fun insertRoundTemplate(database: SupportSQLiteDatabase, item: RoundTemplate) {
+        val values = ContentValues()
+        values.put("sid", item.standardRound)
+        values.put("r_index", item.index)
+        values.put("distance", item.distance.value)
+        values.put("unit", Dimension.Unit.toStringHandleNull(item.distance.unit))
+        values.put("passes", item.endCount)
+        values.put("arrows", item.shotsPerEnd)
+        values.put("target", item.targetTemplate.id.toInt())
+        values.put("size", item.targetTemplate.diameter.value)
+        values.put("target_unit", Dimension.Unit
+                .toStringHandleNull(item.targetTemplate.diameter.unit))
+        values.put("scoring_style", item.targetTemplate.scoringStyleIndex)
+        if (item.id == 0L) {
+            item.id = database
+                    .insert("ROUND_TEMPLATE", CONFLICT_NONE, values)
+        } else {
+            values.put("_id", item.id)
+            database.insert("ROUND_TEMPLATE", CONFLICT_REPLACE, values)
         }
+    }
 
-        private fun getRoundTemplate(database: DatabaseWrapper, sid: Long, index: Int): RoundTemplate? {
-            val cursor = database.rawQuery("SELECT _id, r_index, arrows, target, scoring_style, " +
-                    "target, scoring_style, distance, unit, size, target_unit, passes, sid " +
-                    "FROM ROUND_TEMPLATE WHERE sid=? AND r_index=?",
-                    arrayOf(sid.toString(), index.toString()))
-            var r: RoundTemplate? = null
-            if (cursor.moveToFirst()) {
-                r = cursorToRoundTemplate(cursor, 0)
-            }
-            cursor.close()
-            return r
+    private fun getRoundTemplate(database: SupportSQLiteDatabase, sid: Long, index: Int): RoundTemplate? {
+        val cursor = database.query("SELECT _id, r_index, arrows, target, scoring_style, " +
+                "target, scoring_style, distance, unit, size, target_unit, passes, sid " +
+                "FROM ROUND_TEMPLATE WHERE sid=? AND r_index=?",
+                arrayOf(sid.toString(), index.toString()))
+        var r: RoundTemplate? = null
+        if (cursor.moveToFirst()) {
+            r = cursorToRoundTemplate(cursor, 0)
         }
+        cursor.close()
+        return r
+    }
 
-        private fun cursorToRoundTemplate(cursor: Cursor, startColumnIndex: Int): RoundTemplate {
-            val roundTemplate = RoundTemplate()
-            roundTemplate.id = cursor.getLong(startColumnIndex)
-            roundTemplate.index = cursor.getInt(startColumnIndex + 1)
-            roundTemplate.shotsPerEnd = cursor.getInt(startColumnIndex + 2)
-            val diameter = Dimension.from(
-                    cursor.getInt(startColumnIndex + 9).toFloat(), cursor.getString(startColumnIndex + 10))
-            roundTemplate.targetTemplate = Target(cursor.getLong(startColumnIndex + 3),
-                    cursor.getInt(startColumnIndex + 4), diameter)
-            roundTemplate.distance = Dimension.from(cursor.getInt(startColumnIndex + 7).toFloat(),
-                    cursor.getString(startColumnIndex + 8))
-            roundTemplate.endCount = cursor.getInt(startColumnIndex + 11)
-            roundTemplate.standardRound = cursor.getLong(startColumnIndex + 12)
-            return roundTemplate
-        }
+    private fun cursorToRoundTemplate(cursor: Cursor, startColumnIndex: Int): RoundTemplate {
+        val roundTemplate = RoundTemplate()
+        roundTemplate.id = cursor.getLong(startColumnIndex)
+        roundTemplate.index = cursor.getInt(startColumnIndex + 1)
+        roundTemplate.shotsPerEnd = cursor.getInt(startColumnIndex + 2)
+        val diameter = Dimension.from(
+                cursor.getInt(startColumnIndex + 9).toFloat(), cursor.getString(startColumnIndex + 10))
+        roundTemplate.targetTemplate = Target(cursor.getLong(startColumnIndex + 3),
+                cursor.getInt(startColumnIndex + 4), diameter)
+        roundTemplate.distance = Dimension.from(cursor.getInt(startColumnIndex + 7).toFloat(),
+                cursor.getString(startColumnIndex + 8))
+        roundTemplate.endCount = cursor.getInt(startColumnIndex + 11)
+        roundTemplate.standardRound = cursor.getLong(startColumnIndex + 12)
+        return roundTemplate
     }
 }

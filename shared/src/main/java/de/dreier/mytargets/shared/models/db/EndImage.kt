@@ -15,22 +15,29 @@
 
 package de.dreier.mytargets.shared.models.db
 
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.ForeignKey
+import android.arch.persistence.room.ForeignKey.CASCADE
+import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
-import com.raizlabs.android.dbflow.annotation.*
-import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.Image
 
-@Table(database = AppDatabase::class)
+@Entity(foreignKeys = [
+    ForeignKey(entity = End::class,
+            parentColumns = ["_id"],
+            childColumns = ["end"],
+            onDelete = CASCADE)
+])
 data class EndImage(
-        @Column(name = "_id")
-        @PrimaryKey(autoincrement = true)
+        @ColumnInfo(name = "_id")
+        @PrimaryKey(autoGenerate = true)
         var _id: Long = 0,
 
-        @Column
         override var fileName: String = "",
 
-        @ForeignKey(tableClass = End::class, references = [(ForeignKeyReference(columnName = "end", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
+        @ColumnInfo(name = "end")
         var endId: Long? = null
 ) : Image, Parcelable {
     constructor(imageFile: String) : this(fileName = imageFile)

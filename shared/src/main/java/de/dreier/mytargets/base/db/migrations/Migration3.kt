@@ -15,21 +15,17 @@
 
 package de.dreier.mytargets.base.db.migrations
 
-import com.raizlabs.android.dbflow.annotation.Migration
-import com.raizlabs.android.dbflow.sql.migration.BaseMigration
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
-import de.dreier.mytargets.shared.AppDatabase
+import android.arch.persistence.db.SupportSQLiteDatabase
+import android.arch.persistence.room.migration.Migration
 
-@Migration(version = 3, database = AppDatabase::class)
-class Migration3 : BaseMigration() {
-
-    override fun migrate(database: DatabaseWrapper) {
+object Migration3 : Migration(2, 3) {
+    override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("ALTER TABLE SHOOT ADD COLUMN x REAL")
         database.execSQL("ALTER TABLE SHOOT ADD COLUMN y REAL")
-        val cur = database.rawQuery("SELECT s._id, s.points, r.target " +
+        val cur = database.query("SELECT s._id, s.points, r.target " +
                 "FROM SHOOT s, PASSE p, ROUND r " +
                 "WHERE s.passe=p._id " +
-                "AND p.round=r._id", null)
+                "AND p.round=r._id")
         if (cur.moveToFirst()) {
             do {
                 val shoot = cur.getInt(0)

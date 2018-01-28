@@ -16,20 +16,19 @@
 package de.dreier.mytargets.shared.utils.typeconverters
 
 import android.arch.persistence.room.TypeConverter
-import de.dreier.mytargets.shared.models.Dimension
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 
-class DimensionConverters {
+class LocalDateConverters {
 
     @TypeConverter
-    fun getDBValue(model: Dimension): String {
-        return "${model.value} ${model.unit}"
+    fun getDBValue(model: LocalDate?): String? {
+        return model?.format(DateTimeFormatter.ISO_LOCAL_DATE)
     }
 
     @TypeConverter
-    fun getModelValue(data: String): Dimension {
-        val index = data.indexOf(' ')
-        val value = data.substring(0, index)
-        val unit = data.substring(index + 1)
-        return Dimension.from(value.toFloat(), unit)
+    fun getModelValue(data: String?): LocalDate? {
+        return if (data != null) LocalDate.parse(data) else null
     }
+
 }

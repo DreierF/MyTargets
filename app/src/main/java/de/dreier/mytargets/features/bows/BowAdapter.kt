@@ -60,7 +60,8 @@ internal class BowAdapter(
             if (!item.size!!.trim { it <= ' ' }.isEmpty()) {
                 info.addLine(R.string.size, item.size!!)
             }
-            for ((_, _, distance, value) in BowDAO.loadSightMarks(item.id)) {
+            val sightMarks = BowDAO.loadSightMarks(item.id).sortedBy { it.distance }
+            for ((_, _, distance, value) in sightMarks) {
                 info.addLine(distance.toString(), value!!)
             }
             binding.details.text = Utils.fromHtml(info.toString())

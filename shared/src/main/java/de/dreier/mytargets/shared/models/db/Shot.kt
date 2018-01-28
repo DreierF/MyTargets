@@ -15,36 +15,37 @@
 
 package de.dreier.mytargets.shared.models.db
 
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.ForeignKey
+import android.arch.persistence.room.ForeignKey.CASCADE
+import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
-import com.raizlabs.android.dbflow.annotation.*
-import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.IIdSettable
 
-@Table(database = AppDatabase::class)
+@Entity(foreignKeys = [(ForeignKey(entity = End::class,
+                parentColumns = ["_id"],
+                childColumns = ["end"],
+                onDelete = CASCADE))])
 data class Shot(
-        @Column(name = "_id")
-        @PrimaryKey(autoincrement = true)
+        @ColumnInfo(name = "_id")
+        @PrimaryKey(autoGenerate = true)
         override var id: Long = 0,
 
         // The index of the shot in the containing end
-        @Column
         var index: Int = 0,
 
-        @ForeignKey(tableClass = End::class, references = [(ForeignKeyReference(columnName = "end", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
+        @ColumnInfo(name = "end")
         var endId: Long? = null,
 
-        @Column
         var x: Float = 0f,
 
-        @Column
         var y: Float = 0f,
 
-        @Column
         var scoringRing: Int = NOTHING_SELECTED,
 
         // Is the actual number of the arrow not its index, arrow id or something else
-        @Column
         var arrowNumber: String? = null
 ) : IIdSettable, Comparable<Shot>, Parcelable {
     constructor(i: Int) : this(index = i)

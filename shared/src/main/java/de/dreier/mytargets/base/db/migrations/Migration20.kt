@@ -18,20 +18,13 @@ package de.dreier.mytargets.base.db.migrations
 import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.migration.Migration
 
-object Migration4 : Migration(3, 4) {
+object Migration20 : Migration(19, 20) {
     override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL(
-                "CREATE TABLE IF NOT EXISTS VISIER ( _id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "bow REFERENCES BOW ON DELETE CASCADE," +
-                        "distance INTEGER," +
-                        "setting TEXT);")
-        val valuesMetric = intArrayOf(10, 15, 18, 20, 25, 30, 40, 50, 60, 70, 90)
-        for (table in arrayOf("ROUND", "VISIER")) {
-            for (i in 10 downTo 0) {
-                database.execSQL("UPDATE " + table + " SET distance=" +
-                        valuesMetric[i] + " WHERE distance=" + i)
-            }
-        }
-        database.execSQL("ALTER TABLE BOW ADD COLUMN height TEXT DEFAULT '';")
+        database.execSQL("UPDATE Round SET targetScoringStyle = targetScoringStyle+1 "+
+                "WHERE targetScoringStyle > 0 "+
+                "AND (targetId < 7 OR targetId = 26 OR targetId = 27)")
+        database.execSQL("UPDATE RoundTemplate SET targetScoringStyle = targetScoringStyle+1 "+
+                "WHERE targetScoringStyle > 0 "+
+                "AND (targetId < 7 OR targetId = 26 OR targetId = 27)")
     }
 }

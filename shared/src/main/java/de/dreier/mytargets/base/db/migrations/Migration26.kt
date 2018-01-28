@@ -15,44 +15,57 @@
 
 package de.dreier.mytargets.base.db.migrations
 
-import com.raizlabs.android.dbflow.annotation.Migration
-import com.raizlabs.android.dbflow.kotlinextensions.save
-import com.raizlabs.android.dbflow.sql.language.SQLite
-import com.raizlabs.android.dbflow.sql.migration.BaseMigration
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper
-import de.dreier.mytargets.shared.AppDatabase
-import de.dreier.mytargets.shared.models.db.*
+import android.arch.persistence.db.SupportSQLiteDatabase
+import android.arch.persistence.room.migration.Migration
+import de.dreier.mytargets.shared.models.Dimension
+import de.dreier.mytargets.shared.models.Target
+import de.dreier.mytargets.shared.models.db.Shot
 
-@Migration(version = 26, database = AppDatabase::class)
-class Migration26 : BaseMigration() {
+object Migration26 : Migration(25, 26) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE `Training` ADD COLUMN reachedPoints INTEGER;")
+        database.execSQL("ALTER TABLE `Training` ADD COLUMN totalPoints INTEGER;")
+        database.execSQL("ALTER TABLE `Training` ADD COLUMN shotCount INTEGER;")
 
-    override fun migrate(database: DatabaseWrapper) {
-        database.execSQL("ALTER TABLE `Training` ADD COLUMN scoreReachedPoints INTEGER;")
-        database.execSQL("ALTER TABLE `Training` ADD COLUMN scoreTotalPoints INTEGER;")
-        database.execSQL("ALTER TABLE `Training` ADD COLUMN scoreShotCount INTEGER;")
+        database.execSQL("ALTER TABLE `Round` ADD COLUMN reachedPoints INTEGER;")
+        database.execSQL("ALTER TABLE `Round` ADD COLUMN totalPoints INTEGER;")
+        database.execSQL("ALTER TABLE `Round` ADD COLUMN shotCount INTEGER;")
 
-        database.execSQL("ALTER TABLE `Round` ADD COLUMN scoreReachedPoints INTEGER;")
-        database.execSQL("ALTER TABLE `Round` ADD COLUMN scoreTotalPoints INTEGER;")
-        database.execSQL("ALTER TABLE `Round` ADD COLUMN scoreShotCount INTEGER;")
+        database.execSQL("ALTER TABLE `End` ADD COLUMN reachedPoints INTEGER;")
+        database.execSQL("ALTER TABLE `End` ADD COLUMN totalPoints INTEGER;")
+        database.execSQL("ALTER TABLE `End` ADD COLUMN shotCount INTEGER;")
 
-        database.execSQL("ALTER TABLE `End` ADD COLUMN scoreReachedPoints INTEGER;")
-        database.execSQL("ALTER TABLE `End` ADD COLUMN scoreTotalPoints INTEGER;")
-        database.execSQL("ALTER TABLE `End` ADD COLUMN scoreShotCount INTEGER;")
+        RoomCreationCallback.createScoreTriggers(database)
 
-        Migration0.createScoreTriggers(database)
+        val rounds = database.query("SELECT _id, targetId, targetScoringStyle, targetDiameter " +
+                "FROM Round")
 
-        val rounds = SQLite.select().from(Round::class.java).queryList(database)
-        for (round in rounds) {
-            val target = round.target
-            val ends = SQLite.select().from(End::class.java).where(End_Table.round.eq(round.id))
-                    .queryList(database)
-            for (end in ends) {
-                val shots = SQLite.select().from(Shot::class.java)
-                        .where(Shot_Table.end.eq(end.id))
-                        .orderBy(Shot_Table.index, true)
-                        .queryList(database)
-                end.score = target.getReachedScore(shots)
-                end.save(database)
+        while (rounds.moveToNext()) {
+            val diameterData = rounds.getString(3)
+            val index = diameterData.indexOf(' ')
+            val value = diameterData.substring(0, index)
+            val unit = diameterData.substring(index + 1)
+            val diameter = Dimension.from(value.toFloat(), unit)
+            val target = Target(rounds.getLong(1), rounds.getInt(2), diameter)
+            val roundId = rounds.getLong(0)
+
+            val ends = database.query("SELECT _id, FROM `End` WHERE round = $roundId")
+            while (ends.moveToNext()) {
+                val endId = ends.getLong(0)
+
+                val shotsCursor = database.query("SELECT index, scoringRing FROM Shot WHERE end = $endId ORDER BY `index`")
+                val shots = mutableListOf<Shot>()
+                while(shotsCursor.moveToNext()) {
+                    val shot = Shot(index = shotsCursor.getInt(0), scoringRing = shotsCursor.getInt(1))
+                    shots.add(shot)
+                }
+
+                val score = target.getReachedScore(shots)
+                database.execSQL("UPDATE `End` SET " +
+                        "scoreReachedPoints = ${score.reachedPoints}, " +
+                        "scoreTotalPoints = ${score.totalPoints}, " +
+                        "scoreShotCount = ${score.shotCount} " +
+                        "WHERE _id = $endId")
             }
         }
     }

@@ -18,6 +18,7 @@ package de.dreier.mytargets.shared
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.StrictMode
 import android.preference.PreferenceManager
 import android.support.annotation.StringRes
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -32,10 +33,12 @@ open class SharedApplicationInstance : Application() {
     }
 
     protected fun enableDebugLogging() {
-//        StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
+        StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
+                .detectDiskReads()
+                .detectDiskWrites()
 //                .detectAll()
-//                .penaltyLog()
-//                .build())
+                .penaltyLog()
+                .build())
 //        StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder()
 //                .detectLeakedSqlLiteObjects()
 //                .detectLeakedClosableObjects()

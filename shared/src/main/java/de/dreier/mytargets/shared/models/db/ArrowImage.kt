@@ -16,23 +16,30 @@
 package de.dreier.mytargets.shared.models.db
 
 import android.annotation.SuppressLint
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.ForeignKey
+import android.arch.persistence.room.ForeignKey.CASCADE
+import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
-import com.raizlabs.android.dbflow.annotation.*
-import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.Image
 import kotlinx.android.parcel.Parcelize
 
 @SuppressLint("ParcelCreator")
 @Parcelize
-@Table(database = AppDatabase::class)
+@Entity(foreignKeys = [
+    ForeignKey(entity = Arrow::class,
+            parentColumns = ["_id"],
+            childColumns = ["arrow"],
+            onDelete = CASCADE)
+])
 data class ArrowImage(
-        @Column(name = "_id")
-        @PrimaryKey(autoincrement = true)
+        @ColumnInfo(name = "_id")
+        @PrimaryKey(autoGenerate = true)
         var id: Long = 0,
 
-        @Column
         override var fileName: String = "",
 
-        @ForeignKey(tableClass = Arrow::class, references = [(ForeignKeyReference(columnName = "arrow", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
+        @ColumnInfo(name = "arrow")
         var arrowId: Long? = null
 ) : Image, Parcelable

@@ -72,7 +72,7 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
             if (bundle != null && bundle.containsKey(BOW_ID)) {
                 // Load data from database
                 bow = bowDAO.loadBow(bundle.getLong(BOW_ID))
-                sightMarks = bowDAO.loadSightMarks(bow.id)
+                sightMarks = bowDAO.loadSightMarks(bow.id).sortedBy { it.distance }
                 imageFiles = bowDAO.loadBowImages(bow.id)
             } else {
                 // Set to default values

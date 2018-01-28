@@ -13,21 +13,13 @@
  * GNU General Public License for more details.
  */
 
-package de.dreier.mytargets.shared.utils.typeconverters
+package de.dreier.mytargets.base.db.migrations
 
-import com.raizlabs.android.dbflow.converter.TypeConverter
+import android.arch.persistence.db.SupportSQLiteDatabase
+import android.arch.persistence.room.migration.Migration
 
-import org.threeten.bp.LocalTime
-import org.threeten.bp.format.DateTimeFormatter
-
-class LocalTimeConverter : TypeConverter<String, LocalTime>() {
-
-    override fun getDBValue(model: LocalTime?): String? {
-        return model?.format(DateTimeFormatter.ISO_LOCAL_TIME)
+object Migration2 : Migration(1, 2) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.query("DROP TABLE IF EXISTS BOW_IMAGE")
     }
-
-    override fun getModelValue(data: String?): LocalTime? {
-        return if (data != null) LocalTime.parse(data) else null
-    }
-
 }
