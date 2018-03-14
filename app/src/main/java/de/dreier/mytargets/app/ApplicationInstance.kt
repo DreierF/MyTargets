@@ -20,8 +20,8 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.support.multidex.MultiDex
 import android.util.Log
+import com.crashlytics.android.Crashlytics
 import com.evernote.android.state.StateSaver
-import com.google.firebase.crash.FirebaseCrash
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import de.dreier.mytargets.BuildConfig
@@ -90,13 +90,13 @@ class ApplicationInstance : SharedApplicationInstance() {
                 return
             }
 
-            FirebaseCrash.log(message)
+            Crashlytics.log(message)
 
             if (t != null) {
                 if (priority == Log.ERROR) {
-                    FirebaseCrash.report(t)
+                    Crashlytics.logException(t)
                 } else if (priority == Log.WARN) {
-                    FirebaseCrash.report(t)
+                    Crashlytics.logException(t)
                 }
             }
         }
