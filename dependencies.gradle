@@ -80,9 +80,9 @@ ext {
 
             archLifecycleExtensions       : "android.arch.lifecycle:extensions:$libraryVersion.architectureComponents",
             archLifecycleCompiler         : "android.arch.lifecycle:compiler:$libraryVersion.architectureComponents",
-            archRoomRuntime               : "android.arch.persistence.room:runtime:$libraryVersion.architectureComponents",
-            archRoomCompiler              : "android.arch.persistence.room:compiler:$libraryVersion.architectureComponents",
-            archRoomTesting               : "android.arch.persistence.room:testing:$libraryVersion.architectureComponents",
+            archRoomRuntime               : "android.arch.persistence.room:runtime:$libraryVersion.architectureComponentsRoom",
+            archRoomCompiler              : "android.arch.persistence.room:compiler:$libraryVersion.architectureComponentsRoom",
+            archRoomTesting               : "android.arch.persistence.room:testing:$libraryVersion.architectureComponentsRoom",
 
             playServicesDrive             : "com.google.android.gms:play-services-drive:$libraryVersion.playService",
             playServicesWearable          : "com.google.android.gms:play-services-wearable:$libraryVersion.playService",
