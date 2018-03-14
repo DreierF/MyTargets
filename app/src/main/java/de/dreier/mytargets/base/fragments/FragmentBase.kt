@@ -45,8 +45,8 @@ abstract class FragmentBase : Fragment(), LoaderManager.LoaderCallbacks<Fragment
     }
 
     @SuppressLint("StaticFieldLeak")
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<LoaderUICallbackHelper>? {
-        return  object : AsyncTaskLoader<LoaderUICallbackHelper>(context!!) {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<LoaderUICallbackHelper> {
+        return object : AsyncTaskLoader<LoaderUICallbackHelper>(context!!) {
             override fun loadInBackground(): LoaderUICallbackHelper? {
                 val callback = onLoad(args)
                 return object : LoaderUICallbackHelper {
@@ -55,8 +55,6 @@ abstract class FragmentBase : Fragment(), LoaderManager.LoaderCallbacks<Fragment
                     }
                 }
             }
-
-
         }
     }
 

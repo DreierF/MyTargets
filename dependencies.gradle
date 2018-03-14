@@ -40,7 +40,7 @@ ext {
             okhttp                    : '3.10.0',
             permissionsdispatcher     : '3.1.0',
             photoView                 : '2.1.3',
-            picasso                   : '2.71828',
+            picasso                   : '2.5.2',
             playService               : '11.8.0',
             screengrab                : '1.1.0',
             retrofit                  : '2.4.0',
