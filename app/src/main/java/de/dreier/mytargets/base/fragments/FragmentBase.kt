@@ -38,17 +38,6 @@ abstract class FragmentBase : Fragment(), LoaderManager.LoaderCallbacks<Fragment
 
     protected lateinit var navigationController: NavigationController
 
-    @CallSuper
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        StateSaver.restoreInstanceState(this, savedInstanceState)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        StateSaver.saveInstanceState(this, outState)
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         navigationController = NavigationController(this)

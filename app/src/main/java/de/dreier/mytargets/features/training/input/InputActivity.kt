@@ -110,7 +110,6 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
 
         updateSummaryVisibility()
 
-        StateSaver.restoreInstanceState(this, savedInstanceState)
         if (data == null) {
             supportLoaderManager.initLoader(0, intent.extras, this).forceLoad()
         }
@@ -443,11 +442,6 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
         updateWearNotification()
         updateNavigationButtons()
         invalidateOptionsMenu()
-    }
-
-    public override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-        StateSaver.saveInstanceState(this, outState!!)
     }
 
     private class UITaskAsyncTaskLoader(

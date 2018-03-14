@@ -20,6 +20,7 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.support.multidex.MultiDex
 import android.util.Log
+import com.evernote.android.state.StateSaver
 import com.google.firebase.crash.FirebaseCrash
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
@@ -58,6 +59,7 @@ class ApplicationInstance : SharedApplicationInstance() {
         handleDatabaseImport()
         initFlowManager(this)
         wearableClient = MobileWearableClient(this)
+        StateSaver.setEnabledForAllActivitiesAndSupportFragments(this, true);
     }
 
     private fun handleDatabaseImport() {
