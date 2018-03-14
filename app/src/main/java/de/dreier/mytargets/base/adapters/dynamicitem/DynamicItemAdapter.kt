@@ -40,6 +40,7 @@ abstract class DynamicItemAdapter<T>(private val fragment: Fragment,
             val currentPosition = list.indexOf(item)
             list.remove(item)
             notifyItemRemoved(currentPosition)
+            notifyDataSetChanged()
 
             Snackbar.make(fragment.view!!, undoString, Snackbar.LENGTH_LONG)
                     .setAction(R.string.undo) {
