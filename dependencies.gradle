@@ -22,6 +22,7 @@ ext {
             androidState              : '1.2.0',
             architectureComponents    : '1.1.0',
             architectureComponentsRoom: '1.0.0',
+            crashlytics               : '2.9.1',
             dbFlow                    : '4.2.4',
             dexmaker                  : '2.2.0',
             discreteSeekbar           : '1.0.1',
@@ -83,7 +84,7 @@ ext {
             playServicesDrive             : "com.google.android.gms:play-services-drive:$libraryVersion.playService",
             playServicesWearable          : "com.google.android.gms:play-services-wearable:$libraryVersion.playService",
             firebaseCore                  : "com.google.firebase:firebase-core:$libraryVersion.playService",
-            firebaseCrash                 : "com.google.firebase:firebase-crash:$libraryVersion.playService",
+            firebaseCrashlytics           : "com.crashlytics.sdk.android:crashlytics:$libraryVersion.crashlytics@aar",
 
             gson                          : "com.google.code.gson:gson:$libraryVersion.gson",
 

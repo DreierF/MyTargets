@@ -20,7 +20,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.github.triplet.play'
 apply plugin: 'jacoco-android'
 apply plugin: 'com.getkeepsafe.dexcount'
-apply plugin: 'com.google.firebase.firebase-crash'
+apply plugin: 'io.fabric'
 
 android {
     compileOptions {
@@ -139,7 +139,9 @@ dependencies {
 
     implementation dependencies.playServicesDrive
     implementation dependencies.firebaseCore
-    implementation dependencies.firebaseCrash
+    implementation(dependencies.firebaseCrashlytics) {
+        transitive = true
+    }
 
     implementation dependencies.gson
 
