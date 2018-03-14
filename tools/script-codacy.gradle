@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    codacy 'com.github.codacy:codacy-coverage-reporter:2.0.2'
+    codacy 'com.github.codacy:codacy-coverage-reporter:3.0.0'
 }
 
 task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
