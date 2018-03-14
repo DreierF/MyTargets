@@ -58,7 +58,7 @@ abstract class ChildActivityBase : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (!supportFragmentManager.popBackStackImmediate()) {
+        if (!supportFragmentManager.popBackStackImmediate()) { //FIXME not allowed after onSaveInstanceState
             if (Utils.isLollipop) {
                 finishAfterTransition()
             } else {

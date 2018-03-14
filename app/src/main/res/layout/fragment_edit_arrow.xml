@@ -67,7 +67,9 @@
                 android:contentDescription="@string/max_arrow_number"
                 app:srcCompat="@drawable/ic_arrow_number_grey600_24dp"/>
 
-            <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/maxArrowNumberTextInputLayout"
+                style="@style/propertyTextInputLayout">
 
                 <de.dreier.mytargets.views.TextInputEditText
                     android:id="@+id/maxArrowNumber"

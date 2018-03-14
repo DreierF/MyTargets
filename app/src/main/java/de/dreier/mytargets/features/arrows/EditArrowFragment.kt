@@ -29,6 +29,7 @@ import de.dreier.mytargets.shared.models.Dimension.Unit.MILLIMETER
 import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.ArrowImage
 import de.dreier.mytargets.utils.ToolbarUtils
+import java.lang.Float.parseFloat
 import java.lang.Integer.parseInt
 
 class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrows) {
@@ -81,9 +82,17 @@ class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrow
     }
 
     private fun validateInput(): Boolean {
+        try {
+            parseInt(contentBinding.maxArrowNumber.text.toString())
+        } catch (ignored: NumberFormatException) {
+            contentBinding.maxArrowNumberTextInputLayout.error = getString(R.string.invalid_number)
+            return false
+        }
+        contentBinding.maxArrowNumberTextInputLayout.error = null
+
         val diameterValue: Float
         try {
-            diameterValue = java.lang.Float.parseFloat(contentBinding.diameter.text.toString())
+            diameterValue = parseFloat(contentBinding.diameter.text.toString())
         } catch (ignored: NumberFormatException) {
             contentBinding.diameterTextInputLayout.error = getString(R.string.invalid_decimal_number)
             return false
