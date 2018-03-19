@@ -82,7 +82,7 @@ abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
         countdown?.cancel()
         if (status === ETimerState.EXIT) {
             if (exitAfterStop) {
-                activity.finish()
+                activity?.finish()
             } else {
                 changeStatus(WAIT_FOR_START)
             }
