@@ -48,10 +48,10 @@ abstract class EndDAO {
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertEndImages(images: List<EndImage>)
+    abstract fun insertEndImage(images: EndImage): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertShots(images: List<Shot>)
+    abstract fun insertShot(images: Shot): Long
 
     @Query("DELETE FROM EndImage WHERE end = (:endId)")
     abstract fun deleteEndImages(endId: Long)
@@ -61,13 +61,13 @@ abstract class EndDAO {
         end.id = saveEnd(end)
         for (image in images) {
             image.endId = end.id
+            image._id = insertEndImage(image)
         }
-        insertEndImages(images)
 
         for (shot in shots) {
             shot.endId = end.id
+            shot.id = insertShot(shot)
         }
-        insertShots(shots)
     }
 
     @Transaction
@@ -88,6 +88,8 @@ abstract class EndDAO {
     @Transaction
     open fun replaceImages(end: End, images: List<EndImage>) {
         deleteEndImages(end.id)
-        insertEndImages(images)
+        for (image in images) {
+            image._id = insertEndImage(image)
+        }
     }
 }
