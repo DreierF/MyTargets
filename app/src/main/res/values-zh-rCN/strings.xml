@@ -349,4 +349,6 @@
   <string name="settings_summary_statistics">调整统计屏幕</string>
   <string name="settings_statistics_spots_to_single_target">聚集点到单个目标</string>
   <string name="keep_above_lockscreen">在锁屏界面上保持显示</string>
+  <string name="scoreboard_title_all_rounds">All rounds</string>
+  <string name="invalid_number">Invalid number</string>
 </resources>

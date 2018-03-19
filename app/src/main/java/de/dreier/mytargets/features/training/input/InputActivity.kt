@@ -331,7 +331,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     }
 
     private fun updateEnd() {
-        targetView!!.replaceWithEnd(data!!.currentEnd.shots, data!!.currentEnd.end.exact)
+        targetView?.replaceWithEnd(data!!.currentEnd.shots, data!!.currentEnd.end.exact)
         val totalEnds = if (data!!.currentRound.round.maxEndCount == null)
             data!!.ends.size
         else

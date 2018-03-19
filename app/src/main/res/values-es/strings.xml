@@ -17,7 +17,7 @@
 <resources>
   <!-- General -->
   <string name="preferences">Opciones</string>
-  <string name="settings">Settings</string>
+  <string name="settings">Ajustes</string>
   <string name="prev">Previo</string>
   <string name="next">Siguiente</string>
   <string name="save">Guardar</string>
@@ -251,7 +251,7 @@
   <string name="diameter">Diámetro</string>
   <string name="input">Input</string>
   <string name="target_zoom">Nivel de zoom</string>
-  <string name="action_pdf">Export as PDF</string>
+  <string name="action_pdf">Exportar como PDF</string>
   <string name="arrow_diameter_scale">Medida de diámetro de Flecha</string>
   <string name="timestamp">Fecha/Hora</string>
   <string name="change_target_face">Cambiar el modelo de diana</string>
@@ -329,13 +329,13 @@
   <string name="keyboard_enabled">Teclado habilitado</string>
   <string name="sort_shots">Sort shots</string>
   <string name="sort_shots_for_spots">Sort shots for spot target faces</string>
-  <string name="target_captain">Target captain</string>
-  <string name="language">Language</string>
-  <string name="warning_backup_experimental">Warning: This feature is still experimental! Please check in regular intervals if the backup was really successful!</string>
-  <string name="drawer_open">Open drawer</string>
-  <string name="drawer_close">Close drawer</string>
-  <string name="help">Help</string>
-  <string name="home">Home</string>
+  <string name="target_captain">Capitan de Diana</string>
+  <string name="language">idioma</string>
+  <string name="warning_backup_experimental">Precaución: esta caracteristica es todavia experimental. por favor, revisa regularmente que tu backup se ha realizado exitosamente!</string>
+  <string name="drawer_open">Abrir menu</string>
+  <string name="drawer_close">Cerrar menú</string>
+  <string name="help">Ayuda</string>
+  <string name="home">Inicio</string>
   <string name="click_to_enter_profile">Haz Click para la informacion del perfil</string>
   <string name="no_trainings">No tienes ningun entrenamiento todavía!</string>
   <string name="no_bows">Sin Arcos</string>
@@ -361,6 +361,8 @@
   <string name="pdf_file">Archivo PDF</string>
   <string name="image_file">Archivo de imagen</string>
   <string name="settings_summary_statistics">Ajustar la pantalla de estadísticas</string>
-  <string name="settings_statistics_spots_to_single_target">Aggregate spots to single target</string>
+  <string name="settings_statistics_spots_to_single_target">Agregar puntos en una sola diana</string>
   <string name="keep_above_lockscreen">Mantener sobre la pantalla de bloqueo</string>
+  <string name="scoreboard_title_all_rounds">Todas las rondas</string>
+  <string name="invalid_number">Invalid number</string>
 </resources>

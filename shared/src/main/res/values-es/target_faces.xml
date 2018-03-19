@@ -17,7 +17,7 @@
 <resources>
   <!-- Target groups -->
   <string name="target_type_target_archery">Regular</string>
-  <string name="target_type_field_archery">Field</string>
+  <string name="target_type_field_archery">Campo</string>
   <string name="target_type_3d_archery">3D</string>
   <!-- Target names -->
   <string name="wa_full">WA completo</string>
@@ -51,13 +51,13 @@
   <string name="dbsc_blowpipe">DBSC cerbatana</string>
   <!-- Scoring styles -->
   <string name="fcfs_color_reversed">Color FCFS (invertido 10 – 1)</string>
-  <string name="recurve_style_x_1">Recurve style (X–1)</string>
-  <string name="recurve_style_10_1">Recurve style (10–1)</string>
-  <string name="recurve_style_x_5">Recurve style (X–5)</string>
-  <string name="recurve_style_10_5">Recurve style (10–5)</string>
-  <string name="recurve_style_x_6">Recurve style (X–6)</string>
-  <string name="recurve_style_10_6">Recurve style (10–6)</string>
-  <string name="recurve_style_x_8">Recurve style (X–8)</string>
-  <string name="recurve_style_10_8">Recurve style (10–8)</string>
+  <string name="recurve_style_x_1">Estilo recurvo (X-1)</string>
+  <string name="recurve_style_10_1">Estilo recurvo (10-1)</string>
+  <string name="recurve_style_x_5">Estilo recurvo (X-5)</string>
+  <string name="recurve_style_10_5">Estilo recurvo (10-5)</string>
+  <string name="recurve_style_x_6">Estilo recurvo (X-6)</string>
+  <string name="recurve_style_10_6">Estilo recurvo (10-6)</string>
+  <string name="recurve_style_x_8">Estilo recurvo (X-8)</string>
+  <string name="recurve_style_10_8">Estilo recurvo (10-8)</string>
   <string name="compound_style">Estilo compuesto</string>
 </resources>
