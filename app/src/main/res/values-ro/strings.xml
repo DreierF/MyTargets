@@ -16,78 +16,78 @@
   -->
 <resources>
   <!-- General -->
-  <string name="preferences">Options</string>
+  <string name="preferences">Opțiuni</string>
   <string name="settings">Settings</string>
-  <string name="prev">Previous</string>
-  <string name="next">Next</string>
-  <string name="save">Save</string>
-  <string name="custom">Custom</string>
-  <string name="training">Training</string>
-  <string name="bow">Bow</string>
-  <string name="arrow">Arrow</string>
-  <string name="round">Round</string>
-  <string name="points">Points</string>
-  <string name="passe">End</string>
+  <string name="prev">Anterior</string>
+  <string name="next">Următor</string>
+  <string name="save">Salvare</string>
+  <string name="custom">Personalizare</string>
+  <string name="training">Antrenament</string>
+  <string name="bow">Arc</string>
+  <string name="arrow">Săgeată</string>
+  <string name="round">Runda</string>
+  <string name="points">Puncte</string>
+  <string name="passe">Set</string>
   <!-- Overview -->
-  <string name="new_training">New training</string>
-  <string name="new_bow">New bow</string>
-  <string name="new_arrow">New arrow</string>
-  <string name="new_round">New round</string>
+  <string name="new_training">Antrenament nou</string>
+  <string name="new_bow">Arc nou</string>
+  <string name="new_arrow">Săgeată nouă</string>
+  <string name="new_round">Rundă nouă</string>
   <plurals name="training_selected">
-    <item quantity="one">%d training selected</item>
-    <item quantity="few">%d trainings selected</item>
-    <item quantity="other">%d trainings selected</item>
+    <item quantity="one">Antrenamentul %d selectat</item>
+    <item quantity="few">%d antrenamente selectate</item>
+    <item quantity="other">%d antrenamente selectate</item>
   </plurals>
   <plurals name="bow_selected">
-    <item quantity="one">%d bow selected</item>
-    <item quantity="few">%d bows selected</item>
-    <item quantity="other">%d bows selected</item>
+    <item quantity="one">Arcul %d selectat</item>
+    <item quantity="few">%d arcuri selectate</item>
+    <item quantity="other">%d arcuri selectate</item>
   </plurals>
   <plurals name="arrow_selected">
-    <item quantity="one">%d arrow selected</item>
-    <item quantity="few">%d arrows selected</item>
-    <item quantity="other">%d arrows selected</item>
+    <item quantity="one">Săgeata %d selectată</item>
+    <item quantity="few">%d săgeti selectate</item>
+    <item quantity="other">%d săgeti selectate</item>
   </plurals>
   <plurals name="passe_selected">
-    <item quantity="one">%d end selected</item>
-    <item quantity="few">%d ends selected</item>
-    <item quantity="other">%d ends selected</item>
+    <item quantity="one">Setul %d selectat</item>
+    <item quantity="few">%d seturi selectate</item>
+    <item quantity="other">%d seturi selectate</item>
   </plurals>
-  <string name="edit">Edit</string>
-  <string name="delete">Delete</string>
-  <string name="statistic">Statistic</string>
+  <string name="edit">Editare</string>
+  <string name="delete">Șterge</string>
+  <string name="statistic">Statistici</string>
   <!-- Share -->
-  <string name="share">Share</string>
-  <string name="dispersion_pattern">Dispersion pattern</string>
-  <string name="sharing_failed">Sharing failed!</string>
+  <string name="share">Distribuire</string>
+  <string name="dispersion_pattern">Modelul de dispersie</string>
+  <string name="sharing_failed">Distribuirea nu a reușit!</string>
   <!-- Export -->
-  <string name="send_exported">Send exported data</string>
-  <string name="exporting_failed">Exporting failed!</string>
+  <string name="send_exported">Trimite datele exportate</string>
+  <string name="exporting_failed">Exportul a eșuat!</string>
   <!-- New bow -->
-  <string name="add_bow">Add bow</string>
-  <string name="name">Name</string>
-  <string name="bow_type">Bow type</string>
-  <string name="properties">Properties</string>
-  <string name="brand">Brand</string>
-  <string name="size">Size</string>
-  <string name="description">Description</string>
+  <string name="add_bow">Adauga arc</string>
+  <string name="name">Nume</string>
+  <string name="bow_type">Tipul de arc</string>
+  <string name="properties">Proprietăţi</string>
+  <string name="brand">Marcă</string>
+  <string name="size">Dimensiune</string>
+  <string name="description">Descriere</string>
   <string name="height">Brace height</string>
   <string name="tiller">Tiller</string>
-  <string name="sight_settings">Sight settings</string>
-  <string name="add">Add</string>
-  <string name="take_picture">Take a picture</string>
-  <string name="pick_from_gallery">Select a picture from gallery</string>
+  <string name="sight_settings">Setări aparat de ochire</string>
+  <string name="add">Adaugă</string>
+  <string name="take_picture">Fotografiați</string>
+  <string name="pick_from_gallery">Selectaţi imagine din Galerie</string>
   <!-- New arrow -->
-  <string name="add_arrow">Add arrow</string>
-  <string name="length">Length</string>
+  <string name="add_arrow">Adauga săgeată</string>
+  <string name="length">Lungime</string>
   <string name="spine">Spine</string>
-  <string name="weight">Weight</string>
-  <string name="vanes">Vanes</string>
+  <string name="weight">Greutate</string>
+  <string name="vanes">Pene</string>
   <string name="nock">Nock</string>
   <string name="material">Material</string>
   <!-- New round -->
-  <string name="title">Title</string>
-  <string name="outdoor">Outdoor</string>
+  <string name="title">Titlu</string>
+  <string name="outdoor">Exterior</string>
   <string name="indoor">Indoor</string>
   <string name="distance">Distance</string>
   <string name="format">Format</string>
@@ -159,51 +159,51 @@
   <string name="sight_setting_removed">Sight setting deleted!</string>
   <string name="metric">Metric</string>
   <string name="imperial">Imperial</string>
-  <string name="undo">Undo</string>
-  <string name="standard_rounds">Standard rounds</string>
-  <string name="expand_collapse">Expand/Collapse</string>
-  <string name="new_round_template">New template</string>
-  <string name="arrow_numbers">Arrow numbers</string>
-  <string name="round_removed">Round deleted!</string>
-  <string name="custom_round">Custom round</string>
-  <string name="filter">Filter</string>
+  <string name="undo">Revenire</string>
+  <string name="standard_rounds">Runda standard</string>
+  <string name="expand_collapse">Extinde/Restrânge</string>
+  <string name="new_round_template">Şablon nou</string>
+  <string name="arrow_numbers">Numărul săgetilor</string>
+  <string name="round_removed">Rundă ştearsă!</string>
+  <string name="custom_round">Rundă personalizată</string>
+  <string name="filter">Filtrare</string>
   <string name="club">Club</string>
-  <string name="target">Target</string>
-  <string name="standard_round">Standard round</string>
-  <string name="use_as_template">Use as template?</string>
-  <string name="create_copy">This is a standard round!\nDo you want to create a copy in order to edit it?</string>
-  <string name="practice">Practice</string>
-  <string name="edit_training">Edit Training</string>
-  <string name="edit_standard_round">Edit Standard Round</string>
+  <string name="target">Ţintă</string>
+  <string name="standard_round">Rundă standard</string>
+  <string name="use_as_template">Utilizează ca şablon?</string>
+  <string name="create_copy">Aceasta este o rotundă standard! \nDoriți să creați o copie pentru a o edita?</string>
+  <string name="practice">Antrenament</string>
+  <string name="edit_training">Editare antrenament</string>
+  <string name="edit_standard_round">Editare rundă standars</string>
   <plurals name="arrow_deleted">
-    <item quantity="one">%d arrow deleted</item>
-    <item quantity="few">%d arrows deleted</item>
-    <item quantity="other">%d arrows deleted</item>
+    <item quantity="one">Săgeata %d ştearsă</item>
+    <item quantity="few">%d săgeţi şterse</item>
+    <item quantity="other">%d săgeţi şterse</item>
   </plurals>
   <plurals name="bow_deleted">
-    <item quantity="one">%d bow deleted</item>
-    <item quantity="few">%d bows deleted</item>
-    <item quantity="other">%d bows deleted</item>
+    <item quantity="one">Arcul %d şters</item>
+    <item quantity="few">%d arcuri şterse</item>
+    <item quantity="other">%d arcuri şterse</item>
   </plurals>
   <plurals name="training_deleted">
-    <item quantity="one">%d training deleted</item>
-    <item quantity="few">%d trainings deleted</item>
-    <item quantity="other">%d trainings deleted</item>
+    <item quantity="one">Antrenamentul %d şters</item>
+    <item quantity="few">%d antrenamente şterse</item>
+    <item quantity="other">%d antrenamente şterse</item>
   </plurals>
   <plurals name="passe_deleted">
-    <item quantity="one">%d end deleted</item>
-    <item quantity="few">%d ends deleted</item>
-    <item quantity="other">%d ends deleted</item>
+    <item quantity="one">Runda %d ştearsă</item>
+    <item quantity="few">%d runde şterse</item>
+    <item quantity="other">%d runde şterse</item>
   </plurals>
   <plurals name="rounds">
-    <item quantity="one">Round %d</item>
-    <item quantity="few">Round %d</item>
-    <item quantity="other">Round %d</item>
+    <item quantity="one">Runda %d</item>
+    <item quantity="few">%d runde</item>
+    <item quantity="other">%d runde</item>
   </plurals>
   <plurals name="round_selected">
-    <item quantity="one">%d round selected</item>
-    <item quantity="few">%d rounds selected</item>
-    <item quantity="other">%d rounds selected</item>
+    <item quantity="one">Runda %d selectată</item>
+    <item quantity="few">%d runde selectate</item>
+    <item quantity="other">%d runde selectate</item>
   </plurals>
   <plurals name="round_deleted">
     <item quantity="one">%d round deleted</item>
@@ -377,4 +377,6 @@
   <string name="settings_summary_statistics">Adjust statistics screen</string>
   <string name="settings_statistics_spots_to_single_target">Aggregate spots to single target</string>
   <string name="keep_above_lockscreen">Keep above lockscreen</string>
+  <string name="scoreboard_title_all_rounds">All rounds</string>
+  <string name="invalid_number">Invalid number</string>
 </resources>

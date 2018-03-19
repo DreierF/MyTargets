@@ -363,4 +363,6 @@
   <string name="settings_summary_statistics">İstatistik ekranını ayarla</string>
   <string name="settings_statistics_spots_to_single_target">Noktaları tek hedefe topla</string>
   <string name="keep_above_lockscreen">Kilit ekranın üstünde tutun</string>
+  <string name="scoreboard_title_all_rounds">All rounds</string>
+  <string name="invalid_number">Invalid number</string>
 </resources>

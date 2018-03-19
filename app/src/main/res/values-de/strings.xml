@@ -363,4 +363,6 @@
   <string name="settings_summary_statistics">Statistik anpassen</string>
   <string name="settings_statistics_spots_to_single_target">Fasse Spots zu einer einzigen Zielscheibe zusammen</string>
   <string name="keep_above_lockscreen">Auf dem Sperrbildschirm anzeigen</string>
+  <string name="scoreboard_title_all_rounds">Alle Runden</string>
+  <string name="invalid_number">Invalid number</string>
 </resources>

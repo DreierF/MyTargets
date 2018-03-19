@@ -62,16 +62,19 @@
   <plurals name="rounds">
     <item quantity="one">%d kolo</item>
     <item quantity="few">%d kôl</item>
+    <item quantity="many">%d rounds</item>
     <item quantity="other">%d kôl</item>
   </plurals>
   <plurals name="ends_arrow">
     <item quantity="one">%1$d \u00D7 %2$d šíp</item>
     <item quantity="few">%1$d \u00D7 %2$d šípov</item>
+    <item quantity="many">%1$d \u00D7 %2$d arrows</item>
     <item quantity="other">%1$d \u00D7 %2$d šípov</item>
   </plurals>
   <plurals name="arrows_per_end">
     <item quantity="one">%d šíp za sadu</item>
     <item quantity="few">%d šípov za sadu</item>
+    <item quantity="many">%d arrows per end</item>
     <item quantity="other">%d šípov za sadu</item>
   </plurals>
 </resources>

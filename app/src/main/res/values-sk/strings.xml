@@ -36,21 +36,25 @@
   <plurals name="training_selected">
     <item quantity="one">Vybraný tréning: %d</item>
     <item quantity="few">Vybrané tréningy: %d</item>
+    <item quantity="many">%d trainings selected</item>
     <item quantity="other">Vybraných tréningov: %d</item>
   </plurals>
   <plurals name="bow_selected">
     <item quantity="one">Vybraný luk: %d</item>
     <item quantity="few">Vybrané luky: %d</item>
+    <item quantity="many">%d bows selected</item>
     <item quantity="other">Vybraných lukov: %d</item>
   </plurals>
   <plurals name="arrow_selected">
     <item quantity="one">Vybraný šíp: %d</item>
     <item quantity="few">Vybrané šípy: %d</item>
+    <item quantity="many">%d arrows selected</item>
     <item quantity="other">Vybraných šípov: %d</item>
   </plurals>
   <plurals name="passe_selected">
     <item quantity="one">%d sada zvolená</item>
     <item quantity="few">Vybrané sady: %d</item>
+    <item quantity="many">%d ends selected</item>
     <item quantity="other">Vybraných sád: %d</item>
   </plurals>
   <string name="edit">Upraviť</string>
@@ -95,12 +99,14 @@
   <plurals name="passe">
     <item quantity="one">%d sada</item>
     <item quantity="few">Sady: %d</item>
+    <item quantity="many">%d ends</item>
     <item quantity="other">Sád: %d</item>
   </plurals>
   <string name="with">z</string>
   <plurals name="arrow">
     <item quantity="one">%d šíp</item>
     <item quantity="few">%d šípy</item>
+    <item quantity="many">%d arrows</item>
     <item quantity="other">%d šípov</item>
   </plurals>
   <string name="target_face">Typ terča</string>
@@ -148,6 +154,7 @@
   <plurals name="second">
     <item quantity="one">%d sekunda</item>
     <item quantity="few">%d sekundy</item>
+    <item quantity="many">%d seconds</item>
     <item quantity="other">%d sekúnd</item>
   </plurals>
   <string name="info">Informácie</string>
@@ -178,36 +185,43 @@
   <plurals name="arrow_deleted">
     <item quantity="one">%d šíp odstránený</item>
     <item quantity="few">%d šípy odstránené</item>
+    <item quantity="many">%d arrows deleted</item>
     <item quantity="other">%d šípov odstránených</item>
   </plurals>
   <plurals name="bow_deleted">
     <item quantity="one">%d odstránený luk</item>
     <item quantity="few">%d odstránené luky</item>
+    <item quantity="many">%d bows deleted</item>
     <item quantity="other">%d odstránených lukov</item>
   </plurals>
   <plurals name="training_deleted">
     <item quantity="one">Odstránený tréning: %d</item>
     <item quantity="few">Odstránené tréningy: %d</item>
+    <item quantity="many">%d trainings deleted</item>
     <item quantity="other">Odstránených tréningov: %d</item>
   </plurals>
   <plurals name="passe_deleted">
     <item quantity="one">%d sada odstránená</item>
     <item quantity="few">Odstránené sady: %d</item>
+    <item quantity="many">%d ends deleted</item>
     <item quantity="other">Odstránených sád: %d</item>
   </plurals>
   <plurals name="rounds">
     <item quantity="one">Kolo %d</item>
     <item quantity="few">Kolo %d</item>
+    <item quantity="many">Round %d</item>
     <item quantity="other">Kolá %d</item>
   </plurals>
   <plurals name="round_selected">
     <item quantity="one">Vybraté %d kolo</item>
     <item quantity="few">Vybraté %d kolá</item>
+    <item quantity="many">%d rounds selected</item>
     <item quantity="other">Vybratých %d kôl</item>
   </plurals>
   <plurals name="round_deleted">
     <item quantity="one">Zmazané %d kolo</item>
     <item quantity="few">Zmazané %d kolá</item>
+    <item quantity="many">%d rounds deleted</item>
     <item quantity="other">Zmazaných %d kôl</item>
   </plurals>
   <string name="date">Dátum</string>
@@ -377,4 +391,6 @@
   <string name="settings_summary_statistics">Upraviť obrazovku štatistiky</string>
   <string name="settings_statistics_spots_to_single_target">Agregovať body do jedného terča</string>
   <string name="keep_above_lockscreen">Ponechať nad uzamykacou obrazovkou</string>
+  <string name="scoreboard_title_all_rounds">All rounds</string>
+  <string name="invalid_number">Invalid number</string>
 </resources>

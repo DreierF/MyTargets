@@ -377,4 +377,6 @@
   <string name="settings_summary_statistics">Adjust statistics screen</string>
   <string name="settings_statistics_spots_to_single_target">Aggregate spots to single target</string>
   <string name="keep_above_lockscreen">Keep above lockscreen</string>
+  <string name="scoreboard_title_all_rounds">All rounds</string>
+  <string name="invalid_number">Invalid number</string>
 </resources>

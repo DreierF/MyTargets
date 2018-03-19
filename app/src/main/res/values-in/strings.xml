@@ -349,4 +349,6 @@
   <string name="settings_summary_statistics">Sesuaikan layar statistik</string>
   <string name="settings_statistics_spots_to_single_target">Bintik agregat ke target tunggal</string>
   <string name="keep_above_lockscreen">Simpan di atas layar lockscreen</string>
+  <string name="scoreboard_title_all_rounds">All rounds</string>
+  <string name="invalid_number">Invalid number</string>
 </resources>

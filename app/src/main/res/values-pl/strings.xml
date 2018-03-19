@@ -36,21 +36,25 @@
   <plurals name="training_selected">
     <item quantity="one">%d wybrany trening</item>
     <item quantity="few">%d wybrane treningi</item>
+    <item quantity="many">%d trainings selected</item>
     <item quantity="other">%d wybranych treningów</item>
   </plurals>
   <plurals name="bow_selected">
     <item quantity="one">%d wybrany łuk</item>
     <item quantity="few">%d wybrane łuki</item>
+    <item quantity="many">%d bows selected</item>
     <item quantity="other">%d wybranych łuków</item>
   </plurals>
   <plurals name="arrow_selected">
     <item quantity="one">%d wybrana strzała</item>
     <item quantity="few">%d wybrane strzały</item>
+    <item quantity="many">%d arrows selected</item>
     <item quantity="other">%d wybranych strzał</item>
   </plurals>
   <plurals name="passe_selected">
     <item quantity="one">%d wybrany koniec</item>
     <item quantity="few">%d wybrane końce</item>
+    <item quantity="many">%d ends selected</item>
     <item quantity="other">%d wybranych końców</item>
   </plurals>
   <string name="edit">Edytuj</string>
@@ -95,12 +99,14 @@
   <plurals name="passe">
     <item quantity="one">%d koniec</item>
     <item quantity="few">%d końce</item>
+    <item quantity="many">%d ends</item>
     <item quantity="other">%d końców</item>
   </plurals>
   <string name="with">z</string>
   <plurals name="arrow">
     <item quantity="one">%d strzała</item>
     <item quantity="few">%d strzały</item>
+    <item quantity="many">%d arrows</item>
     <item quantity="other">%d strzał</item>
   </plurals>
   <string name="target_face">Rodzaj celu</string>
@@ -148,6 +154,7 @@
   <plurals name="second">
     <item quantity="one">%d sekunda</item>
     <item quantity="few">%d sekundy</item>
+    <item quantity="many">%d seconds</item>
     <item quantity="other">%d sekund</item>
   </plurals>
   <string name="info">Informacje</string>
@@ -178,36 +185,43 @@
   <plurals name="arrow_deleted">
     <item quantity="one">%d skasowana strzała</item>
     <item quantity="few">%d skasowane strzały</item>
+    <item quantity="many">%d arrows deleted</item>
     <item quantity="other">%d skasowanych strzał</item>
   </plurals>
   <plurals name="bow_deleted">
     <item quantity="one">%d skasowany łuk</item>
     <item quantity="few">%d skasowane łuki</item>
+    <item quantity="many">%d bows deleted</item>
     <item quantity="other">%d skasowanych łuków</item>
   </plurals>
   <plurals name="training_deleted">
     <item quantity="one">%d skasowany trening</item>
     <item quantity="few">%d skasowane treningi</item>
+    <item quantity="many">%d trainings deleted</item>
     <item quantity="other">%d skasowanych treningów</item>
   </plurals>
   <plurals name="passe_deleted">
     <item quantity="one">Usunięto %d koniec</item>
     <item quantity="few">Usunięto %d końce</item>
+    <item quantity="many">%d ends deleted</item>
     <item quantity="other">Usunięto %d końców</item>
   </plurals>
   <plurals name="rounds">
     <item quantity="one">Runda %d</item>
     <item quantity="few">Runda %d</item>
+    <item quantity="many">Round %d</item>
     <item quantity="other">Runda %d</item>
   </plurals>
   <plurals name="round_selected">
     <item quantity="one">Wybrano %d rundę</item>
     <item quantity="few">Wybrano %d rundy</item>
+    <item quantity="many">%d rounds selected</item>
     <item quantity="other">Wybrano %d rund</item>
   </plurals>
   <plurals name="round_deleted">
     <item quantity="one">Usunięto %d rundę</item>
     <item quantity="few">Usunięto %d rundy</item>
+    <item quantity="many">%d rounds deleted</item>
     <item quantity="other">Usunięto %d rund</item>
   </plurals>
   <string name="date">Data</string>
@@ -377,4 +391,6 @@
   <string name="settings_summary_statistics">Adjust statistics screen</string>
   <string name="settings_statistics_spots_to_single_target">Aggregate spots to single target</string>
   <string name="keep_above_lockscreen">Keep above lockscreen</string>
+  <string name="scoreboard_title_all_rounds">All rounds</string>
+  <string name="invalid_number">Invalid number</string>
 </resources>
