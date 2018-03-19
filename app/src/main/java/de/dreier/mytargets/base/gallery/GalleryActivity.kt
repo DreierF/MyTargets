@@ -66,8 +66,6 @@ class GalleryActivity : ChildActivityBase() {
         val title = intent.getStringExtra(EXTRA_TITLE)
         if (savedInstanceState == null) {
             imageList = intent.getParcelableExtra(EXTRA_IMAGES)
-        } else {
-            StateSaver.restoreInstanceState(this, savedInstanceState)
         }
 
         setSupportActionBar(binding.toolbar)
@@ -171,11 +169,6 @@ class GalleryActivity : ChildActivityBase() {
 
     private fun updateResult() {
         navigationController.setResultSuccess(imageList)
-    }
-
-    public override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-        StateSaver.saveInstanceState(this, outState!!)
     }
 
     @NeedsPermission(Manifest.permission.CAMERA)

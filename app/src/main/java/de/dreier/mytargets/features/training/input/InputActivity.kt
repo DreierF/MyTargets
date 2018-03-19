@@ -38,7 +38,6 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import com.afollestad.materialdialogs.MaterialDialog
 import com.evernote.android.state.State
-import com.evernote.android.state.StateSaver
 import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.activities.ChildActivityBase
@@ -110,7 +109,6 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
 
         updateSummaryVisibility()
 
-        StateSaver.restoreInstanceState(this, savedInstanceState)
         if (data == null) {
             supportLoaderManager.initLoader(0, intent.extras, this).forceLoad()
         }
@@ -247,7 +245,10 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
         return true
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<LoaderResult> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<LoaderResult> {
+        if (args == null) {
+            throw IllegalArgumentException("Bundle expected")
+        }
         val trainingId = args.getLong(TRAINING_ID)
         val roundId = args.getLong(ROUND_ID)
         val endIndex = args.getInt(END_INDEX)
@@ -443,11 +444,6 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
         updateWearNotification()
         updateNavigationButtons()
         invalidateOptionsMenu()
-    }
-
-    public override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-        StateSaver.saveInstanceState(this, outState!!)
     }
 
     private class UITaskAsyncTaskLoader(

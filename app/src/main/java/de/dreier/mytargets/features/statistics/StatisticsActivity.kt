@@ -80,7 +80,6 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
         binding.progressBar.show()
 
         ToolbarUtils.showHomeAsUp(this)
-        StateSaver.restoreInstanceState(this, savedInstanceState)
 
         loaderManager.initLoader(0, intent.extras, this).forceLoad()
     }
@@ -244,11 +243,6 @@ class StatisticsActivity : ChildActivityBase(), LoaderManager.LoaderCallbacks<Li
                 .distinct()
                 .sorted()
                 .map { Tag(it.id, it.toString()) }
-    }
-
-    public override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        StateSaver.saveInstanceState(this, outState)
     }
 
     override fun onLoaderReset(loader: Loader<List<Pair<Training, Round>>>) {
