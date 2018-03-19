@@ -182,7 +182,7 @@
   </plurals>
   <plurals name="passe_deleted">
     <item quantity="one">%d sorozat törölve</item>
-    <item quantity="other">% sorozatok törölve</item>
+    <item quantity="other">%d sorozatok törölve</item>
   </plurals>
   <plurals name="rounds">
     <item quantity="one">%d. forduló</item>
@@ -363,4 +363,6 @@
   <string name="settings_summary_statistics">Állítsa be a statisztika képernyőt</string>
   <string name="settings_statistics_spots_to_single_target">Összesített pontok egyetlen lőlapon</string>
   <string name="keep_above_lockscreen">Tartsa a zárolt képernyőn</string>
+  <string name="scoreboard_title_all_rounds">Minden fordulóban</string>
+  <string name="invalid_number">Invalid number</string>
 </resources>

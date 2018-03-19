@@ -62,16 +62,19 @@
   <plurals name="rounds">
     <item quantity="one">%d runda</item>
     <item quantity="few">%d rundy</item>
+    <item quantity="many">%d rounds</item>
     <item quantity="other">%d rund</item>
   </plurals>
   <plurals name="ends_arrow">
     <item quantity="one">%1$d \u00D7 %2$d strzała</item>
     <item quantity="few">%1$d \u00D7 %2$d strzał</item>
+    <item quantity="many">%1$d \u00D7 %2$d arrows</item>
     <item quantity="other">%1$d \u00D7 %2$d strzał</item>
   </plurals>
   <plurals name="arrows_per_end">
     <item quantity="one">%d strzała na koniec</item>
     <item quantity="few">%d strzały na koniec</item>
+    <item quantity="many">%d arrows per end</item>
     <item quantity="other">%d strzał na koniec</item>
   </plurals>
 </resources>
