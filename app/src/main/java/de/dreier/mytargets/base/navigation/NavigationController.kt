@@ -64,7 +64,7 @@ import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
-import de.dreier.mytargets.shared.utils.ImageList
+import de.dreier.mytargets.utils.ImageList
 import de.dreier.mytargets.utils.IntentWrapper
 import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.views.selector.*

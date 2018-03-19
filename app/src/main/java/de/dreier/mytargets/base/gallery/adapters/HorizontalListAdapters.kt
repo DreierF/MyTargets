@@ -25,7 +25,7 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.gallery.HorizontalImageViewHolder
-import de.dreier.mytargets.shared.utils.ImageList
+import de.dreier.mytargets.utils.ImageList
 import java.io.File
 
 typealias OnItemClickListener  = (Int) -> Unit

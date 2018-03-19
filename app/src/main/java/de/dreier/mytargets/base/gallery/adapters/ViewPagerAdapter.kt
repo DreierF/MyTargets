@@ -29,8 +29,8 @@ import com.github.chrisbanes.photoview.PhotoView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import de.dreier.mytargets.R
-import de.dreier.mytargets.shared.utils.ImageList
 import de.dreier.mytargets.utils.Utils
+import de.dreier.mytargets.utils.ImageList
 import java.io.File
 
 class ViewPagerAdapter(private val activity: Activity, private val images: ImageList, private val toolbar: Toolbar, private val imagesHorizontalList: RecyclerView) : PagerAdapter() {
