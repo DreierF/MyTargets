@@ -15,8 +15,11 @@
 
 package de.dreier.mytargets.app
 
+import android.arch.persistence.db.framework.FrameworkSQLiteOpenHelperFactory
+import android.arch.persistence.room.testing.MigrationTestHelper
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import android.support.test.InstrumentationRegistry
 import android.support.test.InstrumentationRegistry.getContext
 import android.support.test.InstrumentationRegistry.getTargetContext
 import android.support.test.filters.SmallTest
@@ -34,29 +37,30 @@ import de.dreier.mytargets.shared.models.EWeather
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.test.base.InstrumentedTestBase
-import org.junit.After
-import org.junit.Before
-import org.junit.BeforeClass
-import org.junit.Test
+import org.junit.*
 import org.junit.runner.RunWith
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
+import de.dreier.mytargets.base.db.migrations.*
+import android.arch.persistence.room.Room
+
 
 @SmallTest
 @RunWith(AndroidJUnit4::class)
 class MigrationTest : InstrumentedTestBase() {
 
+    @Rule
+    val testHelper = MigrationTestHelper(
+        InstrumentationRegistry.getInstrumentation(),
+        AppDatabase::class.java.canonicalName
+    )
+
     /**
      * Handle to a database based on schema 16 is updated to the current schema during setUp.
      */
     private var upgradedDb: DatabaseWrapper? = null
-
-    /**
-     * A sqlite open helper for the app's data layer.
-     */
-    private var helper: DatabaseHelperDelegate? = null
 
     @Before
     @Throws(IOException::class)
@@ -65,11 +69,16 @@ class MigrationTest : InstrumentedTestBase() {
 
         // Create artificial image file to ensure the according database entry is not deleted (Migration23)
         getTargetContext()
-                .openFileOutput("img175420839671886584-0f61-43a6-bc1e-dbcd8526056c794370927.jpg", Context.MODE_PRIVATE)
-                .close()
+            .openFileOutput(
+                "img175420839671886584-0f61-43a6-bc1e-dbcd8526056c794370927.jpg",
+                Context.MODE_PRIVATE
+            )
+            .close()
 
-        val tmpDb = getTargetContext().getDatabasePath(DatabaseHelperDelegate
-                .getTempDbFileName(FlowManager.getDatabase(AppDatabase.NAME)))
+        val tmpDb = getTargetContext().getDatabasePath(
+            DatabaseHelperDelegate
+                .getTempDbFileName(FlowManager.getDatabase(AppDatabase.NAME))
+        )
 
         val `in` = getContext().assets.open("database.db")
         val out = FileOutputStream(tmpDb)
@@ -97,7 +106,60 @@ class MigrationTest : InstrumentedTestBase() {
 
         val bows = BowDAO.loadBows()
         Truth.assertThat(BowDAO.loadBowImages(bows[0].id)[0].fileName)
-                .isEqualTo("img175420839671886584-0f61-43a6-bc1e-dbcd8526056c794370927.jpg")
+            .isEqualTo("img175420839671886584-0f61-43a6-bc1e-dbcd8526056c794370927.jpg")
+    }
+
+    private val TEST_DB_NAME = "test_db"
+
+    fun test() {
+        val db = testHelper.createDatabase(TEST_DB_NAME, 2)
+
+        //db.insert("", ...)
+
+        db.close()
+
+        testHelper.runMigrationsAndValidate(
+            TEST_DB_NAME, 3,
+            true, Migration2, Migration3, Migration4,
+            Migration5, Migration6, Migration7,
+            Migration8, Migration9, Migration10,
+            Migration11, Migration12, Migration13,
+            Migration14, Migration15, Migration16,
+            Migration17, Migration18, Migration19,
+            Migration20, Migration21, Migration22,
+            Migration23, Migration24, Migration25,
+            Migration26
+        )
+
+        // MigrationTestHelper automatically verifies the schema
+        //changes, but not the data validity
+        // Validate that the data was migrated properly.
+        val dbUser = getMigratedRoomDatabase().userDao().getUser()
+        assertEquals(dbUser.getId(), USER.getId())
+        assertEquals(dbUser.getUserName(), USER.getUserName())
+        // The date was missing in version 2, so it should be null in
+        //version 3
+        assertEquals(dbUser.getDate(), null)
+    }
+
+    private fun getMigratedRoomDatabase(): AppDatabase {
+        val database = Room.databaseBuilder(
+            InstrumentationRegistry.getTargetContext(),
+            AppDatabase::class.java, TEST_DB_NAME
+        ).addMigrations(
+            Migration2, Migration3, Migration4,
+            Migration5, Migration6, Migration7,
+            Migration8, Migration9, Migration10,
+            Migration11, Migration12, Migration13,
+            Migration14, Migration15, Migration16,
+            Migration17, Migration18, Migration19,
+            Migration20, Migration21, Migration22,
+            Migration23, Migration24, Migration25,
+            Migration26
+        )
+            .build()
+        testHelper.closeWhenFinished(database)
+        return database
     }
 
     private fun assertTraining1(training: Training) {
@@ -188,7 +250,7 @@ class MigrationTest : InstrumentedTestBase() {
 
         val newFile = File.createTempFile("newDb", ".db")
         val newDb = AndroidDatabase
-                .from(SQLiteDatabase.openOrCreateDatabase(newFile, null))
+            .from(SQLiteDatabase.openOrCreateDatabase(newFile, null))
         helper!!.onCreate(newDb)
         val newSchema = extractSchema(newDb)
 
@@ -211,10 +273,12 @@ class MigrationTest : InstrumentedTestBase() {
                 val columnNullable = cu.getString(3)
                 val columnDefault = cu.getString(4)
 
-                schema.add("TABLE " + tableName +
-                        " COLUMN " + columnName + " " + columnType +
-                        " NULLABLE=" + columnNullable +
-                        " DEFAULT=" + columnDefault)
+                schema.add(
+                    "TABLE " + tableName +
+                            " COLUMN " + columnName + " " + columnType +
+                            " NULLABLE=" + columnNullable +
+                            " DEFAULT=" + columnDefault
+                )
                 cu.moveToNext()
             }
             cu.close()
