@@ -36,7 +36,7 @@ import kotlinx.android.parcel.Parcelize
 data class Target(
         @ColumnInfo(name = "targetId")
         override var id: Long = 0,
-        @ColumnInfo(name = "targetScoringStyle")
+        @ColumnInfo(name = "targetScoringStyleIndex")
         var scoringStyleIndex: Int = 0,
         @ColumnInfo(name = "targetDiameter")
         var diameter: Dimension = Dimension.UNKNOWN

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 26,
-    "identityHash": "b6d6b0158fa45fc088c7bc0db5d85fb7",
+    "identityHash": "b555dd5093c13ff4448ebc4fb7f3b8ed",
     "entities": [
       {
         "tableName": "Arrow",
@@ -468,7 +468,7 @@
       },
       {
         "tableName": "Round",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `trainingId` INTEGER, `index` INTEGER NOT NULL, `shotsPerEnd` INTEGER NOT NULL, `maxEndCount` INTEGER, `distance` TEXT NOT NULL, `comment` TEXT NOT NULL, `targetId` INTEGER NOT NULL, `targetScoringStyle` INTEGER NOT NULL, `targetDiameter` TEXT NOT NULL, `reachedPoints` INTEGER NOT NULL, `totalPoints` INTEGER NOT NULL, `shotCount` INTEGER NOT NULL, FOREIGN KEY(`trainingId`) REFERENCES `Training`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `trainingId` INTEGER, `index` INTEGER NOT NULL, `shotsPerEnd` INTEGER NOT NULL, `maxEndCount` INTEGER, `distance` TEXT NOT NULL, `comment` TEXT NOT NULL, `targetId` INTEGER NOT NULL, `targetScoringStyleIndex` INTEGER NOT NULL, `targetDiameter` TEXT NOT NULL, `reachedPoints` INTEGER NOT NULL, `totalPoints` INTEGER NOT NULL, `shotCount` INTEGER NOT NULL, FOREIGN KEY(`trainingId`) REFERENCES `Training`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -520,7 +520,7 @@
           },
           {
             "fieldPath": "target.scoringStyleIndex",
-            "columnName": "targetScoringStyle",
+            "columnName": "targetScoringStyleIndex",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -572,7 +572,7 @@
       },
       {
         "tableName": "RoundTemplate",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `standardRoundId` INTEGER, `index` INTEGER NOT NULL, `shotsPerEnd` INTEGER NOT NULL, `endCount` INTEGER NOT NULL, `distance` TEXT NOT NULL, `targetId` INTEGER NOT NULL, `targetScoringStyle` INTEGER NOT NULL, `targetDiameter` TEXT NOT NULL, FOREIGN KEY(`standardRoundId`) REFERENCES `StandardRound`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `standardRoundId` INTEGER, `index` INTEGER NOT NULL, `shotsPerEnd` INTEGER NOT NULL, `endCount` INTEGER NOT NULL, `distance` TEXT NOT NULL, `targetId` INTEGER NOT NULL, `targetScoringStyleIndex` INTEGER NOT NULL, `targetDiameter` TEXT NOT NULL, FOREIGN KEY(`standardRoundId`) REFERENCES `StandardRound`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -618,7 +618,7 @@
           },
           {
             "fieldPath": "targetTemplate.scoringStyleIndex",
-            "columnName": "targetScoringStyle",
+            "columnName": "targetScoringStyleIndex",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -1013,7 +1013,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"b6d6b0158fa45fc088c7bc0db5d85fb7\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"b555dd5093c13ff4448ebc4fb7f3b8ed\")"
     ]
   }
 }

@@ -17,40 +17,60 @@ package de.dreier.mytargets.base.db.migrations
 
 import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.RoomDatabase
+import de.dreier.mytargets.base.db.StandardRoundFactory
 import de.dreier.mytargets.shared.models.db.RoundTemplate
 import de.dreier.mytargets.shared.models.db.StandardRound
-import de.dreier.mytargets.base.db.StandardRoundFactory
 
 object RoomCreationCallback : RoomDatabase.Callback() {
 
     override fun onCreate(db: SupportSQLiteDatabase) {
-        fillStandardRound(db)
+        fillStandardRound(db, "id", "standardRoundId")
         createScoreTriggers(db)
     }
 
-    fun fillStandardRound(db: SupportSQLiteDatabase) {
+    fun fillStandardRound(
+        db: SupportSQLiteDatabase,
+        idColumn: String,
+        standardRoundColumn: String
+    ) {
         val standardRounds = StandardRoundFactory.initTable()
         for (standardRound in standardRounds) {
-            saveStandardRound(db, standardRound.standardRound, standardRound.roundTemplates)
+            saveStandardRound(
+                db,
+                standardRound.standardRound,
+                standardRound.roundTemplates,
+                idColumn,
+                standardRoundColumn
+            )
         }
     }
 
-    private fun saveStandardRound(db: SupportSQLiteDatabase, standardRound: StandardRound,
-                                  roundTemplates: List<RoundTemplate>) {
-        insertStandardRound(db, standardRound)
+    private fun saveStandardRound(
+        db: SupportSQLiteDatabase,
+        standardRound: StandardRound,
+        roundTemplates: List<RoundTemplate>,
+        idColumn: String,
+        standardRoundColumn: String
+    ) {
+        insertStandardRound(db, standardRound, idColumn)
         for (roundTemplate in roundTemplates) {
             roundTemplate.standardRoundId = standardRound.id
-            insertRoundTemplate(db, roundTemplate)
+            insertRoundTemplate(db, roundTemplate, idColumn, standardRoundColumn)
         }
     }
 
-    private fun insertStandardRound(db: SupportSQLiteDatabase, standardRound: StandardRound) {
-        db.execSQL("INSERT OR REPLACE INTO StandardRound(id, club, name) VALUES (?,?,?)",
+    private fun insertStandardRound(db: SupportSQLiteDatabase, standardRound: StandardRound, idColumn: String) {
+        db.execSQL("INSERT OR REPLACE INTO StandardRound($idColumn, club, name) VALUES (?,?,?)",
                 arrayOf(standardRound.id, standardRound.club, standardRound.name))
     }
 
-    private fun insertRoundTemplate(db: SupportSQLiteDatabase, roundTemplate: RoundTemplate) {
-        db.execSQL("INSERT OR REPLACE INTO RoundTemplate(id, standardRoundId, `index`, " +
+    private fun insertRoundTemplate(
+        db: SupportSQLiteDatabase,
+        roundTemplate: RoundTemplate,
+        idColumn: String,
+        standardRoundColumn: String
+    ) {
+        db.execSQL("INSERT OR REPLACE INTO RoundTemplate($idColumn, $standardRoundColumn, `index`, " +
                 "shotsPerEnd, endCount, distance, targetId, targetScoringStyle, targetDiameter) " +
                 "VALUES (?,?,?,?,?,?,?,?,?)",
                 arrayOf(roundTemplate.id, roundTemplate.standardRoundId, roundTemplate.index,
@@ -67,20 +87,20 @@ object RoomCreationCallback : RoomDatabase.Callback() {
                 "AFTER UPDATE ON `End` " +
                 "BEGIN " +
                 "UPDATE `Round` SET " +
-                "reachedPoints = (SELECT SUM(reachedPoints) FROM `End` WHERE round = NEW.round), " +
-                "totalPoints = (SELECT SUM(totalPoints) FROM `End` WHERE round = NEW.round), " +
-                "shotCount = (SELECT SUM(shotCount) FROM `End` WHERE round = NEW.round) " +
-                "WHERE id = NEW.round;" +
+                "reachedPoints = (SELECT SUM(reachedPoints) FROM `End` WHERE roundId = NEW.roundId), " +
+                "totalPoints = (SELECT SUM(totalPoints) FROM `End` WHERE roundId = NEW.roundId), " +
+                "shotCount = (SELECT SUM(shotCount) FROM `End` WHERE roundId = NEW.roundId) " +
+                "WHERE id = NEW.roundId;" +
                 "END;")
 
         database.execSQL("CREATE TRIGGER training_sum_score " +
                 "AFTER UPDATE ON `Round` " +
                 "BEGIN " +
                 "UPDATE `Training` SET " +
-                "reachedPoints = (SELECT SUM(reachedPoints) FROM `Round` WHERE training = NEW.training), " +
-                "totalPoints = (SELECT SUM(totalPoints) FROM `Round` WHERE training = NEW.training), " +
-                "shotCount = (SELECT SUM(shotCount) FROM `Round` WHERE training = NEW.training) " +
-                "WHERE id = NEW.training;" +
+                "reachedPoints = (SELECT SUM(reachedPoints) FROM `Round` WHERE trainingId = NEW.trainingId), " +
+                "totalPoints = (SELECT SUM(totalPoints) FROM `Round` WHERE trainingId = NEW.trainingId), " +
+                "shotCount = (SELECT SUM(shotCount) FROM `Round` WHERE trainingId = NEW.trainingId) " +
+                "WHERE id = NEW.trainingId;" +
                 "END;")
     }
 }

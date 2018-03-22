@@ -24,23 +24,24 @@ import de.dreier.mytargets.shared.models.db.Shot
 object Migration26 : Migration(25, 26) {
     override fun migrate(database: SupportSQLiteDatabase) {
 
-        database.execSQL("ALTER TABLE `Training` ADD COLUMN reachedPoints INTEGER;")
-        database.execSQL("ALTER TABLE `Training` ADD COLUMN totalPoints INTEGER;")
-        database.execSQL("ALTER TABLE `Training` ADD COLUMN shotCount INTEGER;")
+        database.execSQL("ALTER TABLE `Training` ADD COLUMN reachedPoints INTEGER DEFAULT 0;")
+        database.execSQL("ALTER TABLE `Training` ADD COLUMN totalPoints INTEGER DEFAULT 0;")
+        database.execSQL("ALTER TABLE `Training` ADD COLUMN shotCount INTEGER DEFAULT 0;")
 
-        database.execSQL("ALTER TABLE `Round` ADD COLUMN reachedPoints INTEGER;")
-        database.execSQL("ALTER TABLE `Round` ADD COLUMN totalPoints INTEGER;")
-        database.execSQL("ALTER TABLE `Round` ADD COLUMN shotCount INTEGER;")
+        database.execSQL("ALTER TABLE `Round` ADD COLUMN reachedPoints INTEGER DEFAULT 0;")
+        database.execSQL("ALTER TABLE `Round` ADD COLUMN totalPoints INTEGER DEFAULT 0;")
+        database.execSQL("ALTER TABLE `Round` ADD COLUMN shotCount INTEGER DEFAULT 0;")
 
-        database.execSQL("ALTER TABLE `End` ADD COLUMN reachedPoints INTEGER;")
-        database.execSQL("ALTER TABLE `End` ADD COLUMN totalPoints INTEGER;")
-        database.execSQL("ALTER TABLE `End` ADD COLUMN shotCount INTEGER;")
+        database.execSQL("ALTER TABLE `End` ADD COLUMN reachedPoints INTEGER DEFAULT 0;")
+        database.execSQL("ALTER TABLE `End` ADD COLUMN totalPoints INTEGER DEFAULT 0;")
+        database.execSQL("ALTER TABLE `End` ADD COLUMN shotCount INTEGER DEFAULT 0;")
+
+        recreateTablesWithNonNull(database)
 
         RoomCreationCallback.createScoreTriggers(database)
 
         val rounds = database.query(
-            "SELECT id, targetId, targetScoringStyle, targetDiameter " +
-                    "FROM Round"
+            "SELECT id, targetId, targetScoringStyleIndex, targetDiameter FROM Round"
         )
 
         while (rounds.moveToNext()) {
@@ -52,12 +53,12 @@ object Migration26 : Migration(25, 26) {
             val target = Target(rounds.getLong(1), rounds.getInt(2), diameter)
             val roundId = rounds.getLong(0)
 
-            val ends = database.query("SELECT _id FROM `End` WHERE round = $roundId")
+            val ends = database.query("SELECT id FROM `End` WHERE roundId = $roundId")
             while (ends.moveToNext()) {
                 val endId = ends.getLong(0)
 
                 val shotsCursor =
-                    database.query("SELECT `index`, scoringRing FROM Shot WHERE end = $endId ORDER BY `index`")
+                    database.query("SELECT `index`, scoringRing FROM Shot WHERE endId = $endId ORDER BY `index`")
                 val shots = mutableListOf<Shot>()
                 while (shotsCursor.moveToNext()) {
                     val shot =
@@ -71,11 +72,13 @@ object Migration26 : Migration(25, 26) {
                             "reachedPoints = ${score.reachedPoints}, " +
                             "totalPoints = ${score.totalPoints}, " +
                             "shotCount = ${score.shotCount} " +
-                            "WHERE _id = $endId"
+                            "WHERE id = $endId"
                 )
             }
         }
+    }
 
+    private fun recreateTablesWithNonNull(database: SupportSQLiteDatabase) {
         val migrations = listOf(
             TableMigrationBuilder("Arrow")
                 .field(
@@ -161,7 +164,7 @@ object Migration26 : Migration(25, 26) {
                     refColumn = "id",
                     onDelete = "CASCADE"
                 ),
-            
+
             TableMigrationBuilder("StandardRound")
                 .field(
                     name = "id",
@@ -181,7 +184,7 @@ object Migration26 : Migration(25, 26) {
                 )
                 .field(
                     name = "standardRoundId",
-                    columnName = "standardRoundId",
+                    columnName = "standardRound",
                     affinity = "INTEGER",
                     refTable = "StandardRound",
                     refColumn = "id",
@@ -248,7 +251,7 @@ object Migration26 : Migration(25, 26) {
                 .field(name = "date", notNull = true)
                 .field(
                     name = "standardRoundId",
-                    columnName = "standardRoundId",
+                    columnName = "standardRound",
                     affinity = "INTEGER",
                     refTable = "StandardRound",
                     refColumn = "id",
@@ -296,7 +299,7 @@ object Migration26 : Migration(25, 26) {
                 .field(name = "reachedPoints", affinity = "INTEGER", notNull = true)
                 .field(name = "totalPoints", affinity = "INTEGER", notNull = true)
                 .field(name = "shotCount", affinity = "INTEGER", notNull = true),
-            
+
             TableMigrationBuilder("Round")
                 .field(
                     name = "id",
@@ -318,18 +321,17 @@ object Migration26 : Migration(25, 26) {
                 .field(name = "distance", notNull = true)
                 .field(name = "comment", notNull = true)
                 .field(
-                    name = "target.id",
-                    columnName = "targetId",
+                    name = "targetId",
                     affinity = "INTEGER",
                     notNull = true
                 )
                 .field(
-                    name = "target.scoringStyleIndex",
+                    name = "targetScoringStyleIndex",
                     columnName = "targetScoringStyle",
                     affinity = "INTEGER",
                     notNull = true
                 )
-                .field(name = "target.diameter", columnName = "targetDiameter", notNull = true)
+                .field(name = "targetDiameter", notNull = true)
                 .field(name = "reachedPoints", affinity = "INTEGER", notNull = true)
                 .field(name = "totalPoints", affinity = "INTEGER", notNull = true)
                 .field(name = "shotCount", affinity = "INTEGER", notNull = true),
@@ -426,8 +428,8 @@ class TableMigrationBuilder(val tableName: String) {
     ): TableMigrationBuilder {
         fieldMigrations.add(
             FieldMigration(
-                name = name,
-                columnName = columnName ?: name,
+                name = "`$name`",
+                columnName = "`${columnName ?: name}`",
                 affinity = affinity,
                 notNull = notNull,
                 refTable = refTable,
@@ -450,13 +452,13 @@ class TableMigrationBuilder(val tableName: String) {
 
     fun copyData(database: SupportSQLiteDatabase) {
         database.execSQL("INSERT INTO `$newTableName` (" + fieldMigrations.joinToString(separator = ", ") { it.name } + ") "
-                + "SELECT " + fieldMigrations.joinToString(separator = ", ") { it.columnName }
-                + " FROM $tableName")
+                + "SELECT " + fieldMigrations.joinToString(separator = ", ") {  it.columnName }
+                + " FROM `$tableName`")
     }
 
     fun replaceOldTableWithNewTable(database: SupportSQLiteDatabase) {
-        database.execSQL("DROP TABLE $tableName")
-        database.execSQL("ALTER TABLE $newTableName RENAME TO $tableName")
+        database.execSQL("DROP TABLE `$tableName`")
+        database.execSQL("ALTER TABLE `$newTableName` RENAME TO `$tableName`")
     }
 }
 
@@ -471,10 +473,10 @@ data class FieldMigration(
     val onDelete: String
 ) {
     override fun toString(): String {
-        return "`$name` $affinity${if (notNull) " NOT NULL" else ""}"
+        return "$name $affinity${if (notNull) " NOT NULL" else ""}"
     }
 
     fun referenceToString(): String {
-        return "FOREIGN KEY(`$name`) REFERENCES `$refTable`(`$refColumn`) ON UPDATE $onUpdate ON DELETE $onDelete"
+        return "FOREIGN KEY($name) REFERENCES `$refTable`(`$refColumn`) ON UPDATE $onUpdate ON DELETE $onDelete"
     }
 }

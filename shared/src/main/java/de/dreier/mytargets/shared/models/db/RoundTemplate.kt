@@ -15,23 +15,30 @@
 
 package de.dreier.mytargets.shared.models.db
 
-import android.arch.persistence.room.*
+import android.arch.persistence.room.Embedded
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.ForeignKey.CASCADE
+import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.IIdSettable
 import de.dreier.mytargets.shared.models.Target
 
-@Entity(foreignKeys = [(ForeignKey(entity = StandardRound::class,
+@Entity(
+    foreignKeys = [(ForeignKey(
+        entity = StandardRound::class,
         parentColumns = ["id"],
         childColumns = ["standardRoundId"],
-        onDelete = CASCADE))])
+        onDelete = CASCADE
+    ))]
+)
 data class RoundTemplate(
     @PrimaryKey(autoGenerate = true)
-        override var id: Long = 0,
+    override var id: Long = 0,
 
-        var standardRoundId: Long? = null,
+    var standardRoundId: Long? = null,
 
     var index: Int = 0,
 
@@ -42,16 +49,16 @@ data class RoundTemplate(
     var distance: Dimension = Dimension.UNKNOWN,
 
     @Embedded
-        var targetTemplate: Target = Target()
+    var targetTemplate: Target = Target()
 ) : IIdSettable, Parcelable {
     constructor(source: Parcel) : this(
-            source.readLong(),
-            source.readValue(Long::class.java.classLoader) as Long?,
-            source.readInt(),
-            source.readInt(),
-            source.readInt(),
-            source.readParcelable<Dimension>(Dimension::class.java.classLoader),
-            source.readParcelable<Target>(Target::class.java.classLoader)
+        source.readLong(),
+        source.readValue(Long::class.java.classLoader) as Long?,
+        source.readInt(),
+        source.readInt(),
+        source.readInt(),
+        source.readParcelable<Dimension>(Dimension::class.java.classLoader),
+        source.readParcelable<Target>(Target::class.java.classLoader)
     )
 
     override fun describeContents() = 0
@@ -68,9 +75,10 @@ data class RoundTemplate(
 
     companion object {
         @JvmField
-        val CREATOR: Parcelable.Creator<RoundTemplate> = object : Parcelable.Creator<RoundTemplate> {
-            override fun createFromParcel(source: Parcel): RoundTemplate = RoundTemplate(source)
-            override fun newArray(size: Int): Array<RoundTemplate?> = arrayOfNulls(size)
-        }
+        val CREATOR: Parcelable.Creator<RoundTemplate> =
+            object : Parcelable.Creator<RoundTemplate> {
+                override fun createFromParcel(source: Parcel): RoundTemplate = RoundTemplate(source)
+                override fun newArray(size: Int): Array<RoundTemplate?> = arrayOfNulls(size)
+            }
     }
 }
