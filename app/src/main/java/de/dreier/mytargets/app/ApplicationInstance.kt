@@ -57,7 +57,7 @@ class ApplicationInstance : SharedApplicationInstance() {
         }
         super.onCreate()
         handleDatabaseImport()
-        initFlowManager(this)
+        initRoomDb(this)
         wearableClient = MobileWearableClient(this)
         StateSaver.setEnabledForAllActivitiesAndSupportFragments(this, true);
     }
@@ -112,7 +112,7 @@ class ApplicationInstance : SharedApplicationInstance() {
         val lastSharedPreferences: SharedPreferences
             get() = SharedApplicationInstance.Companion.context.getSharedPreferences(MyBackupAgent.PREFS, 0)
 
-        fun initFlowManager(context: Context) {
+        fun initRoomDb(context: Context) {
             db = Room.databaseBuilder(context,
                     AppDatabase::class.java, AppDatabase.DATABASE_FILE_NAME)
                     .allowMainThreadQueries()

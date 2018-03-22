@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.shared.models.db
 
-import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.ForeignKey.CASCADE
@@ -25,18 +24,16 @@ import android.os.Parcelable
 import de.dreier.mytargets.shared.models.IIdSettable
 
 @Entity(foreignKeys = [(ForeignKey(entity = End::class,
-                parentColumns = ["_id"],
-                childColumns = ["end"],
+                parentColumns = ["id"],
+                childColumns = ["endId"],
                 onDelete = CASCADE))])
 data class Shot(
-        @ColumnInfo(name = "_id")
         @PrimaryKey(autoGenerate = true)
         override var id: Long = 0,
 
         // The index of the shot in the containing end
         var index: Int = 0,
 
-        @ColumnInfo(name = "end")
         var endId: Long? = null,
 
         var x: Float = 0f,

@@ -24,13 +24,13 @@ abstract class ArrowDAO {
     @Query("SELECT * FROM Arrow")
     abstract fun loadArrows(): List<Arrow>
 
-    @Query("SELECT * FROM Arrow WHERE _id = (:id)")
+    @Query("SELECT * FROM Arrow WHERE id = (:id)")
     abstract fun loadArrow(id: Long): Arrow
 
-    @Query("SELECT * FROM Arrow WHERE _id = (:id)")
+    @Query("SELECT * FROM Arrow WHERE id = (:id)")
     abstract fun loadArrowOrNull(id: Long): Arrow?
 
-    @Query("SELECT * FROM ArrowImage WHERE arrow = (:id)")
+    @Query("SELECT * FROM ArrowImage WHERE arrowId = (:id)")
     abstract fun loadArrowImages(id: Long): List<ArrowImage>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -39,7 +39,7 @@ abstract class ArrowDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertArrowImages(images: List<ArrowImage>)
 
-    @Query("DELETE FROM ArrowImage WHERE arrow = (:arrowId)")
+    @Query("DELETE FROM ArrowImage WHERE arrowId = (:arrowId)")
     abstract fun deleteArrowImages(arrowId: Long)
 
     @Transaction

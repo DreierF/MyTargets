@@ -14,7 +14,6 @@
  */
 package de.dreier.mytargets.features.training.input
 
-
 import android.content.Intent
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.Espresso.pressBack
@@ -24,9 +23,8 @@ import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.support.test.uiautomator.UiObjectNotFoundException
 import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.features.settings.SettingsManager
-import de.dreier.mytargets.shared.models.dao.RoundDAO
-import de.dreier.mytargets.shared.models.dao.StandardRoundDAO
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.views.TargetViewBase
 import de.dreier.mytargets.test.base.UITestBase
@@ -53,19 +51,19 @@ class InputActivityTest : UITestBase() {
     val rule: RuleChain = RuleChain.outerRule(object : DbTestRuleBase() {
         override fun addDatabaseContent() {
             val generator = Random(3435)
-            val standardRound = StandardRoundDAO.loadStandardRoundOrNull(32L)
+            val standardRound = ApplicationInstance.db.standardRoundDAO().loadStandardRoundOrNull(32L)
 
             val (id) = saveDefaultTraining(standardRound!!.id, generator)
 
-            round = Round(StandardRoundDAO.loadRoundTemplates(standardRound.id)[0])
+            round = Round(ApplicationInstance.db.standardRoundDAO().loadRoundTemplates(standardRound.id)[0])
             round.trainingId = id
             round.comment = ""
-            RoundDAO.saveRound(round)
+            ApplicationInstance.db.roundDAO().insertRound(round)
 
-            val round2 = Round(StandardRoundDAO.loadRoundTemplates(standardRound.id)[1])
+            val round2 = Round(ApplicationInstance.db.standardRoundDAO().loadRoundTemplates(standardRound.id)[1])
             round2.trainingId = id
             round2.comment = ""
-            RoundDAO.saveRound(round2)
+            ApplicationInstance.db.roundDAO().insertRound(round2)
         }
     }).around(activityTestRule)
 

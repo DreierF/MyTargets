@@ -15,7 +15,6 @@
 package de.dreier.mytargets.shared.models.db
 
 import android.annotation.SuppressLint
-import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
@@ -26,7 +25,6 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Entity
 data class StandardRound(
-        @ColumnInfo(name = "_id")
         @PrimaryKey(autoGenerate = true)
         override var id: Long = 0,
         var club: Int = 0,

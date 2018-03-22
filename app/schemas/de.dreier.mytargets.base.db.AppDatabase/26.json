@@ -2,15 +2,15 @@
   "formatVersion": 1,
   "database": {
     "version": 26,
-    "identityHash": "073ada58fac1a02407d87cc2562ed1dc",
+    "identityHash": "b6d6b0158fa45fc088c7bc0db5d85fb7",
     "entities": [
       {
         "tableName": "Arrow",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `maxArrowNumber` INTEGER NOT NULL, `length` TEXT, `material` TEXT, `spine` TEXT, `weight` TEXT, `tipWeight` TEXT, `vanes` TEXT, `nock` TEXT, `comment` TEXT, `diameter` TEXT NOT NULL, `thumbnail` BLOB)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `maxArrowNumber` INTEGER NOT NULL, `length` TEXT, `material` TEXT, `spine` TEXT, `weight` TEXT, `tipWeight` TEXT, `vanes` TEXT, `nock` TEXT, `comment` TEXT, `diameter` TEXT NOT NULL, `thumbnail` BLOB)",
         "fields": [
           {
             "fieldPath": "id",
-            "columnName": "_id",
+            "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -89,7 +89,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "_id"
+            "id"
           ],
           "autoGenerate": true
         },
@@ -98,11 +98,11 @@
       },
       {
         "tableName": "ArrowImage",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `fileName` TEXT NOT NULL, `arrow` INTEGER, FOREIGN KEY(`arrow`) REFERENCES `Arrow`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `fileName` TEXT NOT NULL, `arrowId` INTEGER, FOREIGN KEY(`arrowId`) REFERENCES `Arrow`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
-            "columnName": "_id",
+            "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -114,14 +114,14 @@
           },
           {
             "fieldPath": "arrowId",
-            "columnName": "arrow",
+            "columnName": "arrowId",
             "affinity": "INTEGER",
             "notNull": false
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "_id"
+            "id"
           ],
           "autoGenerate": true
         },
@@ -132,21 +132,21 @@
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "arrow"
+              "arrowId"
             ],
             "referencedColumns": [
-              "_id"
+              "id"
             ]
           }
         ]
       },
       {
         "tableName": "Bow",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `type` INTEGER, `brand` TEXT, `size` TEXT, `braceHeight` TEXT, `tiller` TEXT, `limbs` TEXT, `sight` TEXT, `drawWeight` TEXT, `stabilizer` TEXT, `clicker` TEXT, `button` TEXT, `string` TEXT, `nockingPoint` TEXT, `letoffWeight` TEXT, `arrowRest` TEXT, `restHorizontalPosition` TEXT, `restVerticalPosition` TEXT, `restStiffness` TEXT, `camSetting` TEXT, `scopeMagnification` TEXT, `description` TEXT, `thumbnail` BLOB)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `type` INTEGER, `brand` TEXT, `size` TEXT, `braceHeight` TEXT, `tiller` TEXT, `limbs` TEXT, `sight` TEXT, `drawWeight` TEXT, `stabilizer` TEXT, `clicker` TEXT, `button` TEXT, `string` TEXT, `nockingPoint` TEXT, `letoffWeight` TEXT, `arrowRest` TEXT, `restHorizontalPosition` TEXT, `restVerticalPosition` TEXT, `restStiffness` TEXT, `camSetting` TEXT, `scopeMagnification` TEXT, `description` TEXT, `thumbnail` BLOB)",
         "fields": [
           {
             "fieldPath": "id",
-            "columnName": "_id",
+            "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -291,7 +291,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "_id"
+            "id"
           ],
           "autoGenerate": true
         },
@@ -300,11 +300,11 @@
       },
       {
         "tableName": "BowImage",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `fileName` TEXT NOT NULL, `bow` INTEGER, FOREIGN KEY(`bow`) REFERENCES `Bow`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `fileName` TEXT NOT NULL, `bowId` INTEGER, FOREIGN KEY(`bowId`) REFERENCES `Bow`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
-            "columnName": "_id",
+            "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -316,14 +316,14 @@
           },
           {
             "fieldPath": "bowId",
-            "columnName": "bow",
+            "columnName": "bowId",
             "affinity": "INTEGER",
             "notNull": false
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "_id"
+            "id"
           ],
           "autoGenerate": true
         },
@@ -334,21 +334,21 @@
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "bow"
+              "bowId"
             ],
             "referencedColumns": [
-              "_id"
+              "id"
             ]
           }
         ]
       },
       {
         "tableName": "End",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `index` INTEGER NOT NULL, `round` INTEGER, `exact` INTEGER NOT NULL, `saveTime` TEXT, `comment` TEXT NOT NULL, `reachedPoints` INTEGER NOT NULL, `totalPoints` INTEGER NOT NULL, `shotCount` INTEGER NOT NULL, FOREIGN KEY(`round`) REFERENCES `Round`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `index` INTEGER NOT NULL, `roundId` INTEGER, `exact` INTEGER NOT NULL, `saveTime` TEXT, `comment` TEXT NOT NULL, `reachedPoints` INTEGER NOT NULL, `totalPoints` INTEGER NOT NULL, `shotCount` INTEGER NOT NULL, FOREIGN KEY(`roundId`) REFERENCES `Round`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
-            "columnName": "_id",
+            "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -360,7 +360,7 @@
           },
           {
             "fieldPath": "roundId",
-            "columnName": "round",
+            "columnName": "roundId",
             "affinity": "INTEGER",
             "notNull": false
           },
@@ -403,7 +403,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "_id"
+            "id"
           ],
           "autoGenerate": true
         },
@@ -414,21 +414,21 @@
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "round"
+              "roundId"
             ],
             "referencedColumns": [
-              "_id"
+              "id"
             ]
           }
         ]
       },
       {
         "tableName": "EndImage",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `fileName` TEXT NOT NULL, `end` INTEGER, FOREIGN KEY(`end`) REFERENCES `End`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `fileName` TEXT NOT NULL, `endId` INTEGER, FOREIGN KEY(`endId`) REFERENCES `End`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
-            "fieldPath": "_id",
-            "columnName": "_id",
+            "fieldPath": "id",
+            "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -440,14 +440,14 @@
           },
           {
             "fieldPath": "endId",
-            "columnName": "end",
+            "columnName": "endId",
             "affinity": "INTEGER",
             "notNull": false
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "_id"
+            "id"
           ],
           "autoGenerate": true
         },
@@ -458,27 +458,27 @@
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "end"
+              "endId"
             ],
             "referencedColumns": [
-              "_id"
+              "id"
             ]
           }
         ]
       },
       {
         "tableName": "Round",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `training` INTEGER, `index` INTEGER NOT NULL, `shotsPerEnd` INTEGER NOT NULL, `maxEndCount` INTEGER, `distance` TEXT NOT NULL, `comment` TEXT NOT NULL, `targetId` INTEGER NOT NULL, `targetScoringStyle` INTEGER NOT NULL, `targetDiameter` TEXT NOT NULL, `reachedPoints` INTEGER NOT NULL, `totalPoints` INTEGER NOT NULL, `shotCount` INTEGER NOT NULL, FOREIGN KEY(`training`) REFERENCES `Training`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `trainingId` INTEGER, `index` INTEGER NOT NULL, `shotsPerEnd` INTEGER NOT NULL, `maxEndCount` INTEGER, `distance` TEXT NOT NULL, `comment` TEXT NOT NULL, `targetId` INTEGER NOT NULL, `targetScoringStyle` INTEGER NOT NULL, `targetDiameter` TEXT NOT NULL, `reachedPoints` INTEGER NOT NULL, `totalPoints` INTEGER NOT NULL, `shotCount` INTEGER NOT NULL, FOREIGN KEY(`trainingId`) REFERENCES `Training`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
-            "columnName": "_id",
+            "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "trainingId",
-            "columnName": "training",
+            "columnName": "trainingId",
             "affinity": "INTEGER",
             "notNull": false
           },
@@ -551,7 +551,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "_id"
+            "id"
           ],
           "autoGenerate": true
         },
@@ -562,27 +562,27 @@
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "training"
+              "trainingId"
             ],
             "referencedColumns": [
-              "_id"
+              "id"
             ]
           }
         ]
       },
       {
         "tableName": "RoundTemplate",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `standardRound` INTEGER, `index` INTEGER NOT NULL, `shotsPerEnd` INTEGER NOT NULL, `endCount` INTEGER NOT NULL, `distance` TEXT NOT NULL, `targetId` INTEGER NOT NULL, `targetScoringStyle` INTEGER NOT NULL, `targetDiameter` TEXT NOT NULL, FOREIGN KEY(`standardRound`) REFERENCES `StandardRound`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `standardRoundId` INTEGER, `index` INTEGER NOT NULL, `shotsPerEnd` INTEGER NOT NULL, `endCount` INTEGER NOT NULL, `distance` TEXT NOT NULL, `targetId` INTEGER NOT NULL, `targetScoringStyle` INTEGER NOT NULL, `targetDiameter` TEXT NOT NULL, FOREIGN KEY(`standardRoundId`) REFERENCES `StandardRound`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
-            "columnName": "_id",
+            "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "standardRound",
-            "columnName": "standardRound",
+            "fieldPath": "standardRoundId",
+            "columnName": "standardRoundId",
             "affinity": "INTEGER",
             "notNull": false
           },
@@ -631,7 +631,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "_id"
+            "id"
           ],
           "autoGenerate": true
         },
@@ -642,21 +642,21 @@
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "standardRound"
+              "standardRoundId"
             ],
             "referencedColumns": [
-              "_id"
+              "id"
             ]
           }
         ]
       },
       {
         "tableName": "Shot",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `index` INTEGER NOT NULL, `end` INTEGER, `x` REAL NOT NULL, `y` REAL NOT NULL, `scoringRing` INTEGER NOT NULL, `arrowNumber` TEXT, FOREIGN KEY(`end`) REFERENCES `End`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `index` INTEGER NOT NULL, `endId` INTEGER, `x` REAL NOT NULL, `y` REAL NOT NULL, `scoringRing` INTEGER NOT NULL, `arrowNumber` TEXT, FOREIGN KEY(`endId`) REFERENCES `End`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
-            "columnName": "_id",
+            "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -668,7 +668,7 @@
           },
           {
             "fieldPath": "endId",
-            "columnName": "end",
+            "columnName": "endId",
             "affinity": "INTEGER",
             "notNull": false
           },
@@ -699,7 +699,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "_id"
+            "id"
           ],
           "autoGenerate": true
         },
@@ -710,27 +710,27 @@
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "end"
+              "endId"
             ],
             "referencedColumns": [
-              "_id"
+              "id"
             ]
           }
         ]
       },
       {
         "tableName": "SightMark",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `bow` INTEGER, `distance` TEXT NOT NULL, `value` TEXT, FOREIGN KEY(`bow`) REFERENCES `Bow`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `bowId` INTEGER, `distance` TEXT NOT NULL, `value` TEXT, FOREIGN KEY(`bowId`) REFERENCES `Bow`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
-            "columnName": "_id",
+            "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "bowId",
-            "columnName": "bow",
+            "columnName": "bowId",
             "affinity": "INTEGER",
             "notNull": false
           },
@@ -749,7 +749,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "_id"
+            "id"
           ],
           "autoGenerate": true
         },
@@ -760,21 +760,21 @@
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "bow"
+              "bowId"
             ],
             "referencedColumns": [
-              "_id"
+              "id"
             ]
           }
         ]
       },
       {
         "tableName": "Signature",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `bitmap` BLOB)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `bitmap` BLOB)",
         "fields": [
           {
             "fieldPath": "id",
-            "columnName": "_id",
+            "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -793,7 +793,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "_id"
+            "id"
           ],
           "autoGenerate": true
         },
@@ -802,11 +802,11 @@
       },
       {
         "tableName": "StandardRound",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `club` INTEGER NOT NULL, `name` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `club` INTEGER NOT NULL, `name` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
-            "columnName": "_id",
+            "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -825,7 +825,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "_id"
+            "id"
           ],
           "autoGenerate": true
         },
@@ -834,11 +834,11 @@
       },
       {
         "tableName": "Training",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `date` TEXT NOT NULL, `standardRound` INTEGER, `bow` INTEGER, `arrow` INTEGER, `arrowNumbering` INTEGER NOT NULL, `comment` TEXT NOT NULL, `archerSignature` INTEGER, `witnessSignature` INTEGER, `indoor` INTEGER NOT NULL, `weather` INTEGER NOT NULL, `windSpeed` INTEGER NOT NULL, `windDirection` INTEGER NOT NULL, `location` TEXT NOT NULL, `reachedPoints` INTEGER NOT NULL, `totalPoints` INTEGER NOT NULL, `shotCount` INTEGER NOT NULL, FOREIGN KEY(`arrow`) REFERENCES `Arrow`(`_id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`bow`) REFERENCES `Bow`(`_id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`standardRound`) REFERENCES `StandardRound`(`_id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`archerSignature`) REFERENCES `Signature`(`_id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`witnessSignature`) REFERENCES `Signature`(`_id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `date` TEXT NOT NULL, `standardRoundId` INTEGER, `bowId` INTEGER, `arrowId` INTEGER, `arrowNumbering` INTEGER NOT NULL, `comment` TEXT NOT NULL, `archerSignatureId` INTEGER, `witnessSignatureId` INTEGER, `indoor` INTEGER NOT NULL, `weather` INTEGER NOT NULL, `windSpeed` INTEGER NOT NULL, `windDirection` INTEGER NOT NULL, `location` TEXT NOT NULL, `reachedPoints` INTEGER NOT NULL, `totalPoints` INTEGER NOT NULL, `shotCount` INTEGER NOT NULL, FOREIGN KEY(`arrowId`) REFERENCES `Arrow`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`bowId`) REFERENCES `Bow`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`standardRoundId`) REFERENCES `StandardRound`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`archerSignatureId`) REFERENCES `Signature`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`witnessSignatureId`) REFERENCES `Signature`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
-            "columnName": "_id",
+            "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -856,19 +856,19 @@
           },
           {
             "fieldPath": "standardRoundId",
-            "columnName": "standardRound",
+            "columnName": "standardRoundId",
             "affinity": "INTEGER",
             "notNull": false
           },
           {
             "fieldPath": "bowId",
-            "columnName": "bow",
+            "columnName": "bowId",
             "affinity": "INTEGER",
             "notNull": false
           },
           {
             "fieldPath": "arrowId",
-            "columnName": "arrow",
+            "columnName": "arrowId",
             "affinity": "INTEGER",
             "notNull": false
           },
@@ -886,13 +886,13 @@
           },
           {
             "fieldPath": "archerSignatureId",
-            "columnName": "archerSignature",
+            "columnName": "archerSignatureId",
             "affinity": "INTEGER",
             "notNull": false
           },
           {
             "fieldPath": "witnessSignatureId",
-            "columnName": "witnessSignature",
+            "columnName": "witnessSignatureId",
             "affinity": "INTEGER",
             "notNull": false
           },
@@ -947,7 +947,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "_id"
+            "id"
           ],
           "autoGenerate": true
         },
@@ -958,10 +958,10 @@
             "onDelete": "SET NULL",
             "onUpdate": "NO ACTION",
             "columns": [
-              "arrow"
+              "arrowId"
             ],
             "referencedColumns": [
-              "_id"
+              "id"
             ]
           },
           {
@@ -969,10 +969,10 @@
             "onDelete": "SET NULL",
             "onUpdate": "NO ACTION",
             "columns": [
-              "bow"
+              "bowId"
             ],
             "referencedColumns": [
-              "_id"
+              "id"
             ]
           },
           {
@@ -980,10 +980,10 @@
             "onDelete": "SET NULL",
             "onUpdate": "NO ACTION",
             "columns": [
-              "standardRound"
+              "standardRoundId"
             ],
             "referencedColumns": [
-              "_id"
+              "id"
             ]
           },
           {
@@ -991,10 +991,10 @@
             "onDelete": "SET NULL",
             "onUpdate": "NO ACTION",
             "columns": [
-              "archerSignature"
+              "archerSignatureId"
             ],
             "referencedColumns": [
-              "_id"
+              "id"
             ]
           },
           {
@@ -1002,10 +1002,10 @@
             "onDelete": "SET NULL",
             "onUpdate": "NO ACTION",
             "columns": [
-              "witnessSignature"
+              "witnessSignatureId"
             ],
             "referencedColumns": [
-              "_id"
+              "id"
             ]
           }
         ]
@@ -1013,7 +1013,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"073ada58fac1a02407d87cc2562ed1dc\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"b6d6b0158fa45fc088c7bc0db5d85fb7\")"
     ]
   }
 }

@@ -43,7 +43,7 @@ object Migration23 : Migration(22, 23) {
             // If imagePath is just the name and is placed inside files directory or
             // In case the image was already copied to the files, but does still contain the wrong path
             if (imageFile.exists() || imageFileFromSomewhere.exists()) {
-                database.execSQL("UPDATE $tableName SET fileName = ${imageFile.name} WHERE _id = $imageId")
+                database.execSQL("UPDATE $tableName SET fileName = \"${imageFile.name}\" WHERE _id = $imageId")
                 continue
             }
 
@@ -52,7 +52,7 @@ object Migration23 : Migration(22, 23) {
                 try {
                     imageFile = File.createTempFile("img", imageFromSomewhere.name, filesDir)
                     imageFromSomewhere.moveTo(imageFile)
-                    database.execSQL("UPDATE $tableName SET fileName = ${imageFile.name} WHERE _id = $imageId")
+                    database.execSQL("UPDATE $tableName SET fileName = \"${imageFile.name}\" WHERE _id = $imageId")
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }

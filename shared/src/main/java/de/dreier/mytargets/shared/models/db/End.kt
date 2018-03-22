@@ -16,8 +16,11 @@
 package de.dreier.mytargets.shared.models.db
 
 import android.annotation.SuppressLint
-import android.arch.persistence.room.*
+import android.arch.persistence.room.Embedded
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.ForeignKey.CASCADE
+import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.IIdSettable
 import de.dreier.mytargets.shared.models.Score
@@ -28,19 +31,17 @@ import org.threeten.bp.LocalTime
 @Parcelize
 @Entity(foreignKeys = [
     ForeignKey(entity = Round::class,
-            parentColumns = ["_id"],
-            childColumns = ["round"],
+            parentColumns = ["id"],
+            childColumns = ["roundId"],
             onDelete = CASCADE)
 ])
 data class End(
 
-        @ColumnInfo(name = "_id")
         @PrimaryKey(autoGenerate = true)
         override var id: Long = 0,
 
         var index: Int = 0,
 
-        @ColumnInfo(name = "round")
         var roundId: Long? = null,
 
         var exact: Boolean = false,

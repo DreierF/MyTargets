@@ -15,7 +15,6 @@
 package de.dreier.mytargets.shared.models.db
 
 import android.annotation.SuppressLint
-import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.ForeignKey.CASCADE
@@ -29,15 +28,13 @@ import kotlinx.android.parcel.Parcelize
 @SuppressLint("ParcelCreator")
 @Parcelize
 @Entity(foreignKeys = [(ForeignKey(entity = Bow::class,
-                parentColumns = ["_id"],
-                childColumns = ["bow"],
+                parentColumns = ["id"],
+                childColumns = ["bowId"],
                 onDelete = CASCADE))])
 data class SightMark(
-        @ColumnInfo(name = "_id")
         @PrimaryKey(autoGenerate = true)
         override var id: Long = 0,
 
-        @ColumnInfo(name = "bow")
         var bowId: Long? = null,
 
         var distance: Dimension = Dimension(18f, METER),

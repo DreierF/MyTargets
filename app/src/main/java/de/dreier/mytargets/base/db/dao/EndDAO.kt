@@ -23,13 +23,13 @@ import de.dreier.mytargets.shared.models.db.Shot
 @Dao
 abstract class EndDAO {
 
-    @Query("SELECT * FROM End WHERE round = :roundId ORDER BY `index`")
+    @Query("SELECT * FROM End WHERE roundId = :roundId ORDER BY `index`")
     abstract fun loadEnds(roundId: Long): MutableList<End>
 
-    @Query("SELECT * FROM EndImage WHERE end = :id")
+    @Query("SELECT * FROM EndImage WHERE endId = :id")
     abstract fun loadEndImages(id: Long): List<EndImage>
 
-    @Query("SELECT * FROM Shot WHERE end = :id ORDER BY `index`")
+    @Query("SELECT * FROM Shot WHERE endId = :id ORDER BY `index`")
     abstract fun loadShots(id: Long): List<Shot>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -53,7 +53,7 @@ abstract class EndDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertShot(images: Shot): Long
 
-    @Query("DELETE FROM EndImage WHERE end = (:endId)")
+    @Query("DELETE FROM EndImage WHERE endId = (:endId)")
     abstract fun deleteEndImages(endId: Long)
 
     @Transaction
@@ -61,7 +61,7 @@ abstract class EndDAO {
         end.id = saveEnd(end)
         for (image in images) {
             image.endId = end.id
-            image._id = insertEndImage(image)
+            image.id = insertEndImage(image)
         }
 
         for (shot in shots) {
@@ -89,7 +89,7 @@ abstract class EndDAO {
     open fun replaceImages(end: End, images: List<EndImage>) {
         deleteEndImages(end.id)
         for (image in images) {
-            image._id = insertEndImage(image)
+            image.id = insertEndImage(image)
         }
     }
 }

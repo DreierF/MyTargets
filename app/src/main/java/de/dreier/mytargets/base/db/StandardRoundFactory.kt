@@ -722,7 +722,7 @@ object StandardRoundFactory {
             roundTemplate.targetTemplate = Target(target, scoringStyle, Dimension(roundDetails[i + 1].toFloat(), targetUnit))
             roundTemplate.endCount = roundDetails[i + 2]
             roundTemplate.index = rounds.size
-            roundTemplate.standardRound = standardRound.id
+            roundTemplate.standardRoundId = standardRound.id
             rounds.add(roundTemplate)
             i += 3
         }

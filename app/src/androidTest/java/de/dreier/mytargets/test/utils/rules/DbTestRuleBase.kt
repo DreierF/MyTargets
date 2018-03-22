@@ -23,9 +23,7 @@ import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.EWeather
 import de.dreier.mytargets.shared.models.Thumbnail
-import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
 import de.dreier.mytargets.shared.models.augmented.AugmentedRound
-import de.dreier.mytargets.base.db.dao.ArrowDAO
 import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.Training
@@ -44,17 +42,14 @@ abstract class DbTestRuleBase : TestRule {
         return object : Statement() {
             @Throws(Throwable::class)
             override fun evaluate() {
-                ApplicationInstance.initFlowManager(context)
-                SQLite.delete(Arrow::class.java).execute()
-                SQLite.delete(Bow::class.java).execute()
-                SQLite.delete(Training::class.java).execute()
+                ApplicationInstance.initRoomDb(context)
                 addDatabaseContent()
                 base.evaluate()
             }
         }
     }
 
-    protected fun buildEnd(round: AugmentedRound, vararg shots: Int): AugmentedEnd {
+    protected fun buildEnd(round: AugmentedRound, vararg shots: Int) {
         val end = round.addEnd()
         end.end.roundId = round.round.id
         end.end.saveTime = LocalTime.now()
@@ -63,10 +58,10 @@ abstract class DbTestRuleBase : TestRule {
             end.shots[i].scoringRing = shots[i]
         }
         end.end.score = round.round.target.getReachedScore(end.shots)
-        return end
+        ApplicationInstance.db.endDAO().saveCompleteEnd(end.end, end.images, end.shots)
     }
 
-    protected fun randomEnd(round: AugmentedRound, arrowsPerEnd: Int, gen: Random): AugmentedEnd {
+    protected fun randomEnd(round: AugmentedRound, arrowsPerEnd: Int, gen: Random) {
         val end = round.addEnd()
         end.end.exact = true
         for (i in 0 until arrowsPerEnd) {
@@ -78,7 +73,7 @@ abstract class DbTestRuleBase : TestRule {
         }
         end.end.score = round.round.target.getReachedScore(end.shots)
         end.end.saveTime = LocalTime.of(14, gen.nextInt(59), gen.nextInt(59), 0)
-        return end
+        ApplicationInstance.db.endDAO().saveCompleteEnd(end.end, end.images, end.shots)
     }
 
     private fun gaussianRand(gen: Random): Float {
@@ -97,7 +92,7 @@ abstract class DbTestRuleBase : TestRule {
         bow.braceHeight = "6 3/8\""
         bow.type = EBowType.COMPOUND_BOW
         bow.thumbnail = Thumbnail.from(context, R.drawable.recurve_bow)
-        BowDAO.saveBow(bow, emptyList(), emptyList())
+        ApplicationInstance.db.bowDAO().saveBow(bow, emptyList(), emptyList())
         return bow
     }
 
@@ -109,7 +104,7 @@ abstract class DbTestRuleBase : TestRule {
         arrow.diameter = Dimension(4f, Dimension.Unit.MILLIMETER)
         arrow.nock = "Awesome nock"
         arrow.thumbnail = Thumbnail.from(context, R.drawable.arrows)
-        ArrowDAO.saveArrow(arrow, emptyList())
+        ApplicationInstance.db.arrowDAO().saveArrow(arrow, emptyList())
         return arrow
     }
 
@@ -125,7 +120,7 @@ abstract class DbTestRuleBase : TestRule {
         training.bowId = null
         training.arrowId = null
         training.arrowNumbering = false
-        TrainingDAO.saveTraining(training)
+        ApplicationInstance.db.trainingDAO().saveTraining(training)
         return training
     }
 }

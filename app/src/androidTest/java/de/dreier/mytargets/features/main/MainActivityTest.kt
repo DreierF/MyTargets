@@ -30,6 +30,7 @@ import android.support.test.espresso.intent.rule.IntentsTestRule
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.runner.AndroidJUnit4
 import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase.Companion.ITEM_ID
 import de.dreier.mytargets.features.arrows.EditArrowActivity
 import de.dreier.mytargets.features.arrows.EditArrowFragment
@@ -46,9 +47,6 @@ import de.dreier.mytargets.features.training.edit.EditTrainingFragment
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.base.db.dao.ArrowDAO
-import de.dreier.mytargets.base.db.dao.dao.BowDAO
-import de.dreier.mytargets.base.db.dao.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.Training
@@ -125,7 +123,7 @@ class MainActivityTest : UITestBase() {
         onView(withRecyclerView(R.id.recyclerView).atPosition(1))
                 .perform(click())
 
-        val firstTraining = TrainingDAO.loadTrainings()
+        val firstTraining = ApplicationInstance.db.trainingDAO().loadTrainings()
                 .sortedWith(compareByDescending(Training::date).thenByDescending(Training::id))
                 .firstOrNull()
 
@@ -136,8 +134,8 @@ class MainActivityTest : UITestBase() {
         clickActionBarItem(R.id.action_statistics, R.string.statistic)
         intended(hasClass(StatisticsActivity::class.java))
 
-        var expectedRoundIds = TrainingDAO.loadTrainings()
-                .flatMap { t -> TrainingDAO.loadRounds(t.id) }
+        var expectedRoundIds = ApplicationInstance.db.trainingDAO().loadTrainings()
+                .flatMap { t -> ApplicationInstance.db.roundDAO().loadRounds(t.id) }
                 .map { it.id }
                 .toSet()
         intended(allOf(hasClass(StatisticsActivity::class.java),
@@ -164,10 +162,10 @@ class MainActivityTest : UITestBase() {
                 .perform(click())
         clickContextualActionBarItem(R.id.action_statistics, R.string.statistic)
 
-        val trainings = TrainingDAO.loadTrainings()
+        val trainings = ApplicationInstance.db.trainingDAO().loadTrainings()
                 .sortedWith(compareByDescending(Training::date).thenByDescending(Training::id))
         expectedRoundIds = listOf(trainings[1], trainings[2])
-                .flatMap { t -> TrainingDAO.loadRounds(t.id) }
+                .flatMap { t -> ApplicationInstance.db.roundDAO().loadRounds(t.id) }
                 .map { it.id }
                 .toSet()
 
@@ -183,7 +181,7 @@ class MainActivityTest : UITestBase() {
         // openBow
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
                 .perform(click())
-        val firstBow = BowDAO.loadBows().sortedWith(compareBy(Bow::name, Bow::id)).firstOrNull()
+        val firstBow = ApplicationInstance.db.bowDAO().loadBows().sortedWith(compareBy(Bow::name, Bow::id)).firstOrNull()
         intended(allOf(hasClass(EditBowActivity::class.java),
                 hasExtra<Long>(EditBowFragment.BOW_ID, firstBow!!.id)))
 
@@ -195,7 +193,7 @@ class MainActivityTest : UITestBase() {
         // openArrow
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
                 .perform(click())
-        val firstArrow = ArrowDAO.loadArrows().sortedWith(compareBy(Arrow::name, Arrow::id)).firstOrNull()
+        val firstArrow = ApplicationInstance.db.arrowDAO().loadArrows().sortedWith(compareBy(Arrow::name, Arrow::id)).firstOrNull()
         intended(allOf(hasClass(EditArrowActivity::class.java),
                 hasExtra<Long>(EditArrowFragment.ARROW_ID, firstArrow!!.id)))
 

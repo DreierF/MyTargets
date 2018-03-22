@@ -29,7 +29,6 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Entity
 data class Bow(
-        @ColumnInfo(name = "_id")
         @PrimaryKey(autoGenerate = true)
         override var id: Long = 0,
 

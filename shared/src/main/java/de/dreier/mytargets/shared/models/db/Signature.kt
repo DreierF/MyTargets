@@ -26,7 +26,6 @@ import de.dreier.mytargets.shared.utils.writeBitmap
 
 @Entity
 data class Signature(
-        @ColumnInfo(name = "_id")
         @PrimaryKey(autoGenerate = true)
         var id: Long = 0,
 

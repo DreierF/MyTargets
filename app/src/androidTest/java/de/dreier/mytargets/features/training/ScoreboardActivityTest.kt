@@ -29,10 +29,10 @@ import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.runner.AndroidJUnit4
 import android.support.v7.preference.PreferenceFragmentCompat
 import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.features.scoreboard.ScoreboardActivity
 import de.dreier.mytargets.features.settings.ESettingsScreens
 import de.dreier.mytargets.features.settings.SettingsActivity
-import de.dreier.mytargets.shared.models.dao.TrainingDAO
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.test.base.UITestBase
 import de.dreier.mytargets.test.utils.matchers.IntentMatcher.hasClass
@@ -54,7 +54,7 @@ class ScoreboardActivityTest : UITestBase() {
 
     @Test
     fun navigation() {
-        val trainings = TrainingDAO.loadTrainings()
+        val trainings = ApplicationInstance.db.trainingDAO().loadTrainings()
         trainings.sortedWith(compareByDescending(Training::date).thenByDescending(Training::id))
         val id = trainings[0].id
         val i = Intent()

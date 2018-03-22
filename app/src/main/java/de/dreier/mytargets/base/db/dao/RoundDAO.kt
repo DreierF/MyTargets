@@ -21,19 +21,19 @@ import de.dreier.mytargets.shared.models.db.Round
 
 @Dao
 abstract class RoundDAO {
-    @Query("SELECT * FROM Round WHERE _id in (:roundIds)")
+    @Query("SELECT * FROM Round WHERE id in (:roundIds)")
     abstract fun loadRounds(roundIds: LongArray): List<Round>
 
-    @Query("SELECT * FROM Round WHERE training = :id ORDER BY `index`")
+    @Query("SELECT * FROM Round WHERE trainingId = :id ORDER BY `index`")
     abstract fun loadRounds(id: Long): List<Round>
 
-    @Query("SELECT * FROM Round WHERE _id = :id")
+    @Query("SELECT * FROM Round WHERE id = :id")
     abstract fun loadRound(id: Long): Round
 
-    @Query("SELECT * FROM Round WHERE _id = :id")
+    @Query("SELECT * FROM Round WHERE id = :id")
     abstract fun loadRoundOrNull(id: Long): Round?
 
-    @Query("SELECT * FROM End WHERE round = :id ORDER BY `index`")
+    @Query("SELECT * FROM End WHERE roundId = :id ORDER BY `index`")
     abstract fun loadEnds(id: Long): MutableList<End>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -45,7 +45,7 @@ abstract class RoundDAO {
     @Update
     abstract fun updateRound(round: Round)
 
-    @Query("DELETE FROM End WHERE round = :id")
+    @Query("DELETE FROM End WHERE roundId = :id")
     abstract fun deleteEnds(id: Long)
 
     @Transaction

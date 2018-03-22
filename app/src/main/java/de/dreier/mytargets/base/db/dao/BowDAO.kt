@@ -25,16 +25,16 @@ abstract class BowDAO {
     @Query("SELECT * FROM Bow")
     abstract fun loadBows(): List<Bow>
 
-    @Query("SELECT * FROM Bow WHERE _id = (:id)")
+    @Query("SELECT * FROM Bow WHERE id = (:id)")
     abstract fun loadBow(id: Long): Bow
 
-    @Query("SELECT * FROM Bow WHERE _id = (:id)")
+    @Query("SELECT * FROM Bow WHERE id = (:id)")
     abstract fun loadBowOrNull(id: Long): Bow?
 
-    @Query("SELECT * FROM BowImage WHERE bow = (:id)")
+    @Query("SELECT * FROM BowImage WHERE bowId = (:id)")
     abstract fun loadBowImages(id: Long): List<BowImage>
 
-    @Query("SELECT * FROM SightMark WHERE bow = (:id)")
+    @Query("SELECT * FROM SightMark WHERE bowId = (:id)")
     abstract fun loadSightMarks(id: Long): List<SightMark>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -43,13 +43,13 @@ abstract class BowDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertBowImages(images: List<BowImage>)
 
-    @Query("DELETE FROM BowImage WHERE bow = (:bowId)")
+    @Query("DELETE FROM BowImage WHERE bowId = (:bowId)")
     abstract fun deleteBowImages(bowId: Long)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertSightMarks(sightMarks: List<SightMark>)
 
-    @Query("DELETE FROM SightMark WHERE bow = (:bowId)")
+    @Query("DELETE FROM SightMark WHERE bowId = (:bowId)")
     abstract fun deleteSightMarks(bowId: Long)
 
     @Transaction

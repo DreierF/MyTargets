@@ -21,10 +21,10 @@ import de.dreier.mytargets.shared.models.db.Signature
 @Dao
 interface SignatureDAO {
 
-    @Query("SELECT * FROM Signature WHERE _id = :id")
+    @Query("SELECT * FROM Signature WHERE id = :id")
     fun loadSignature(id: Long): Signature
 
-    @Query("SELECT * FROM Signature WHERE _id = :id")
+    @Query("SELECT * FROM Signature WHERE id = :id")
     fun loadSignatureOrNull(id: Long): Signature?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

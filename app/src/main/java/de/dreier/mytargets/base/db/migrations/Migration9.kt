@@ -20,12 +20,12 @@ import android.arch.persistence.room.migration.Migration
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase.*
+import de.dreier.mytargets.base.db.StandardRoundFactory
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
 import de.dreier.mytargets.shared.models.db.RoundTemplate
 import de.dreier.mytargets.shared.models.db.StandardRound
-import de.dreier.mytargets.base.db.StandardRoundFactory
 
 object Migration9 : Migration(8, 9) {
     override fun migrate(database: SupportSQLiteDatabase) {
@@ -191,21 +191,21 @@ object Migration9 : Migration(8, 9) {
             item.standardRound.id = database
                     .insert("STANDARD_ROUND_TEMPLATE", CONFLICT_NONE, values)
             for (r in item.roundTemplates) {
-                r.standardRound = item.id
+                r.standardRoundId = item.id
             }
         } else {
             values.put("_id", item.id)
             database.insert("STANDARD_ROUND_TEMPLATE", CONFLICT_REPLACE, values)
         }
         for (template in item.roundTemplates) {
-            template.standardRound = item.id
+            template.standardRoundId = item.id
             insertRoundTemplate(database, template)
         }
     }
 
     private fun insertRoundTemplate(database: SupportSQLiteDatabase, item: RoundTemplate) {
         val values = ContentValues()
-        values.put("sid", item.standardRound)
+        values.put("sid", item.standardRoundId)
         values.put("r_index", item.index)
         values.put("distance", item.distance.value)
         values.put("unit", item.distance.unit?.toString())
@@ -262,7 +262,7 @@ object Migration9 : Migration(8, 9) {
         roundTemplate.distance = Dimension.from(cursor.getInt(startColumnIndex + 7).toFloat(),
                 cursor.getString(startColumnIndex + 8))
         roundTemplate.endCount = cursor.getInt(startColumnIndex + 11)
-        roundTemplate.standardRound = cursor.getLong(startColumnIndex + 12)
+        roundTemplate.standardRoundId = cursor.getLong(startColumnIndex + 12)
         return roundTemplate
     }
 }

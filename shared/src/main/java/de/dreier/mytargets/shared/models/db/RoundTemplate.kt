@@ -24,26 +24,24 @@ import de.dreier.mytargets.shared.models.IIdSettable
 import de.dreier.mytargets.shared.models.Target
 
 @Entity(foreignKeys = [(ForeignKey(entity = StandardRound::class,
-        parentColumns = ["_id"],
-        childColumns = ["standardRound"],
+        parentColumns = ["id"],
+        childColumns = ["standardRoundId"],
         onDelete = CASCADE))])
 data class RoundTemplate(
-        @ColumnInfo(name = "_id")
-        @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = true)
         override var id: Long = 0,
 
-        @ColumnInfo(name = "standardRound")
-        var standardRound: Long? = null,
+        var standardRoundId: Long? = null,
 
-        var index: Int = 0,
+    var index: Int = 0,
 
-        var shotsPerEnd: Int = 0,
+    var shotsPerEnd: Int = 0,
 
-        var endCount: Int = 0,
+    var endCount: Int = 0,
 
-        var distance: Dimension = Dimension.UNKNOWN,
+    var distance: Dimension = Dimension.UNKNOWN,
 
-        @Embedded
+    @Embedded
         var targetTemplate: Target = Target()
 ) : IIdSettable, Parcelable {
     constructor(source: Parcel) : this(
@@ -60,7 +58,7 @@ data class RoundTemplate(
 
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
         writeLong(id)
-        writeValue(standardRound)
+        writeValue(standardRoundId)
         writeInt(index)
         writeInt(shotsPerEnd)
         writeInt(endCount)

@@ -39,21 +39,21 @@ object RoomCreationCallback : RoomDatabase.Callback() {
                                   roundTemplates: List<RoundTemplate>) {
         insertStandardRound(db, standardRound)
         for (roundTemplate in roundTemplates) {
-            roundTemplate.standardRound = standardRound.id
+            roundTemplate.standardRoundId = standardRound.id
             insertRoundTemplate(db, roundTemplate)
         }
     }
 
     private fun insertStandardRound(db: SupportSQLiteDatabase, standardRound: StandardRound) {
-        db.execSQL("INSERT OR REPLACE INTO StandardRound(_id, club, name) VALUES (?,?,?)",
+        db.execSQL("INSERT OR REPLACE INTO StandardRound(id, club, name) VALUES (?,?,?)",
                 arrayOf(standardRound.id, standardRound.club, standardRound.name))
     }
 
     private fun insertRoundTemplate(db: SupportSQLiteDatabase, roundTemplate: RoundTemplate) {
-        db.execSQL("INSERT OR REPLACE INTO RoundTemplate(_id, standardRound, `index`, " +
+        db.execSQL("INSERT OR REPLACE INTO RoundTemplate(id, standardRoundId, `index`, " +
                 "shotsPerEnd, endCount, distance, targetId, targetScoringStyle, targetDiameter) " +
                 "VALUES (?,?,?,?,?,?,?,?,?)",
-                arrayOf(roundTemplate.id, roundTemplate.standardRound, roundTemplate.index,
+                arrayOf(roundTemplate.id, roundTemplate.standardRoundId, roundTemplate.index,
                         roundTemplate.shotsPerEnd, roundTemplate.endCount,
                         "${roundTemplate.distance.value} ${roundTemplate.distance.unit}",
                         roundTemplate.targetTemplate.id,
@@ -70,7 +70,7 @@ object RoomCreationCallback : RoomDatabase.Callback() {
                 "reachedPoints = (SELECT SUM(reachedPoints) FROM `End` WHERE round = NEW.round), " +
                 "totalPoints = (SELECT SUM(totalPoints) FROM `End` WHERE round = NEW.round), " +
                 "shotCount = (SELECT SUM(shotCount) FROM `End` WHERE round = NEW.round) " +
-                "WHERE _id = NEW.round;" +
+                "WHERE id = NEW.round;" +
                 "END;")
 
         database.execSQL("CREATE TRIGGER training_sum_score " +
@@ -80,7 +80,7 @@ object RoomCreationCallback : RoomDatabase.Callback() {
                 "reachedPoints = (SELECT SUM(reachedPoints) FROM `Round` WHERE training = NEW.training), " +
                 "totalPoints = (SELECT SUM(totalPoints) FROM `Round` WHERE training = NEW.training), " +
                 "shotCount = (SELECT SUM(shotCount) FROM `Round` WHERE training = NEW.training) " +
-                "WHERE _id = NEW.training;" +
+                "WHERE id = NEW.training;" +
                 "END;")
     }
 }
