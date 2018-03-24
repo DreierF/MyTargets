@@ -15,11 +15,8 @@
 
 package de.dreier.mytargets.shared.models.db
 
-import android.arch.persistence.room.Embedded
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
+import android.arch.persistence.room.*
 import android.arch.persistence.room.ForeignKey.CASCADE
-import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.Dimension
@@ -27,12 +24,17 @@ import de.dreier.mytargets.shared.models.IIdSettable
 import de.dreier.mytargets.shared.models.Target
 
 @Entity(
-    foreignKeys = [(ForeignKey(
-        entity = StandardRound::class,
-        parentColumns = ["id"],
-        childColumns = ["standardRoundId"],
-        onDelete = CASCADE
-    ))]
+    foreignKeys = [
+        ForeignKey(
+            entity = StandardRound::class,
+            parentColumns = ["id"],
+            childColumns = ["standardRoundId"],
+            onDelete = CASCADE
+        )
+    ],
+    indices = [
+        Index(value = ["standardRoundId"])
+    ]
 )
 data class RoundTemplate(
     @PrimaryKey(autoGenerate = true)

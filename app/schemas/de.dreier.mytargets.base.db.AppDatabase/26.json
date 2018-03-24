@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 26,
-    "identityHash": "b555dd5093c13ff4448ebc4fb7f3b8ed",
+    "identityHash": "f21bd6c3cff16a8f2b423d078c5c8294",
     "entities": [
       {
         "tableName": "Arrow",
@@ -125,7 +125,16 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_ArrowImage_arrowId",
+            "unique": false,
+            "columnNames": [
+              "arrowId"
+            ],
+            "createSql": "CREATE  INDEX `index_ArrowImage_arrowId` ON `${TABLE_NAME}` (`arrowId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "Arrow",
@@ -327,7 +336,16 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_BowImage_bowId",
+            "unique": false,
+            "columnNames": [
+              "bowId"
+            ],
+            "createSql": "CREATE  INDEX `index_BowImage_bowId` ON `${TABLE_NAME}` (`bowId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "Bow",
@@ -407,7 +425,16 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_End_roundId",
+            "unique": false,
+            "columnNames": [
+              "roundId"
+            ],
+            "createSql": "CREATE  INDEX `index_End_roundId` ON `${TABLE_NAME}` (`roundId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "Round",
@@ -451,7 +478,16 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_EndImage_endId",
+            "unique": false,
+            "columnNames": [
+              "endId"
+            ],
+            "createSql": "CREATE  INDEX `index_EndImage_endId` ON `${TABLE_NAME}` (`endId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "End",
@@ -555,7 +591,16 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_Round_trainingId",
+            "unique": false,
+            "columnNames": [
+              "trainingId"
+            ],
+            "createSql": "CREATE  INDEX `index_Round_trainingId` ON `${TABLE_NAME}` (`trainingId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "Training",
@@ -635,7 +680,16 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_RoundTemplate_standardRoundId",
+            "unique": false,
+            "columnNames": [
+              "standardRoundId"
+            ],
+            "createSql": "CREATE  INDEX `index_RoundTemplate_standardRoundId` ON `${TABLE_NAME}` (`standardRoundId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "StandardRound",
@@ -703,7 +757,16 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_Shot_endId",
+            "unique": false,
+            "columnNames": [
+              "endId"
+            ],
+            "createSql": "CREATE  INDEX `index_Shot_endId` ON `${TABLE_NAME}` (`endId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "End",
@@ -753,7 +816,16 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_SightMark_bowId",
+            "unique": false,
+            "columnNames": [
+              "bowId"
+            ],
+            "createSql": "CREATE  INDEX `index_SightMark_bowId` ON `${TABLE_NAME}` (`bowId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "Bow",
@@ -951,7 +1023,48 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_Training_arrowId",
+            "unique": false,
+            "columnNames": [
+              "arrowId"
+            ],
+            "createSql": "CREATE  INDEX `index_Training_arrowId` ON `${TABLE_NAME}` (`arrowId`)"
+          },
+          {
+            "name": "index_Training_bowId",
+            "unique": false,
+            "columnNames": [
+              "bowId"
+            ],
+            "createSql": "CREATE  INDEX `index_Training_bowId` ON `${TABLE_NAME}` (`bowId`)"
+          },
+          {
+            "name": "index_Training_standardRoundId",
+            "unique": false,
+            "columnNames": [
+              "standardRoundId"
+            ],
+            "createSql": "CREATE  INDEX `index_Training_standardRoundId` ON `${TABLE_NAME}` (`standardRoundId`)"
+          },
+          {
+            "name": "index_Training_archerSignatureId",
+            "unique": false,
+            "columnNames": [
+              "archerSignatureId"
+            ],
+            "createSql": "CREATE  INDEX `index_Training_archerSignatureId` ON `${TABLE_NAME}` (`archerSignatureId`)"
+          },
+          {
+            "name": "index_Training_witnessSignatureId",
+            "unique": false,
+            "columnNames": [
+              "witnessSignatureId"
+            ],
+            "createSql": "CREATE  INDEX `index_Training_witnessSignatureId` ON `${TABLE_NAME}` (`witnessSignatureId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "Arrow",
@@ -1013,7 +1126,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"b555dd5093c13ff4448ebc4fb7f3b8ed\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"f21bd6c3cff16a8f2b423d078c5c8294\")"
     ]
   }
 }

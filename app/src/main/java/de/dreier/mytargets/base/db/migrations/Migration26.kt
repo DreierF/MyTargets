@@ -24,25 +24,26 @@ import de.dreier.mytargets.shared.models.db.Shot
 object Migration26 : Migration(25, 26) {
     override fun migrate(database: SupportSQLiteDatabase) {
 
-        database.execSQL("ALTER TABLE `Training` ADD COLUMN reachedPoints INTEGER DEFAULT 0;")
-        database.execSQL("ALTER TABLE `Training` ADD COLUMN totalPoints INTEGER DEFAULT 0;")
-        database.execSQL("ALTER TABLE `Training` ADD COLUMN shotCount INTEGER DEFAULT 0;")
+        database.execSQL("ALTER TABLE `Training` ADD COLUMN `reachedPoints` INTEGER DEFAULT 0;")
+        database.execSQL("ALTER TABLE `Training` ADD COLUMN `totalPoints` INTEGER DEFAULT 0;")
+        database.execSQL("ALTER TABLE `Training` ADD COLUMN `shotCount` INTEGER DEFAULT 0;")
 
-        database.execSQL("ALTER TABLE `Round` ADD COLUMN reachedPoints INTEGER DEFAULT 0;")
-        database.execSQL("ALTER TABLE `Round` ADD COLUMN totalPoints INTEGER DEFAULT 0;")
-        database.execSQL("ALTER TABLE `Round` ADD COLUMN shotCount INTEGER DEFAULT 0;")
+        database.execSQL("ALTER TABLE `Round` ADD COLUMN `reachedPoints` INTEGER DEFAULT 0;")
+        database.execSQL("ALTER TABLE `Round` ADD COLUMN `totalPoints` INTEGER DEFAULT 0;")
+        database.execSQL("ALTER TABLE `Round` ADD COLUMN `shotCount` INTEGER DEFAULT 0;")
 
-        database.execSQL("ALTER TABLE `End` ADD COLUMN reachedPoints INTEGER DEFAULT 0;")
-        database.execSQL("ALTER TABLE `End` ADD COLUMN totalPoints INTEGER DEFAULT 0;")
-        database.execSQL("ALTER TABLE `End` ADD COLUMN shotCount INTEGER DEFAULT 0;")
+        database.execSQL("ALTER TABLE `End` ADD COLUMN `reachedPoints` INTEGER DEFAULT 0;")
+        database.execSQL("ALTER TABLE `End` ADD COLUMN `totalPoints` INTEGER DEFAULT 0;")
+        database.execSQL("ALTER TABLE `End` ADD COLUMN `shotCount` INTEGER DEFAULT 0;")
 
         recreateTablesWithNonNull(database)
 
         RoomCreationCallback.createScoreTriggers(database)
 
-        val rounds = database.query(
-            "SELECT id, targetId, targetScoringStyleIndex, targetDiameter FROM Round"
-        )
+        createIndices(database)
+
+        val rounds =
+            database.query("SELECT `id`, `targetId`, `targetScoringStyleIndex`, `targetDiameter` FROM `Round`")
 
         while (rounds.moveToNext()) {
             val diameterData = rounds.getString(3)
@@ -53,12 +54,12 @@ object Migration26 : Migration(25, 26) {
             val target = Target(rounds.getLong(1), rounds.getInt(2), diameter)
             val roundId = rounds.getLong(0)
 
-            val ends = database.query("SELECT id FROM `End` WHERE roundId = $roundId")
+            val ends = database.query("SELECT `id` FROM `End` WHERE `roundId` = $roundId")
             while (ends.moveToNext()) {
                 val endId = ends.getLong(0)
 
                 val shotsCursor =
-                    database.query("SELECT `index`, scoringRing FROM Shot WHERE endId = $endId ORDER BY `index`")
+                    database.query("SELECT `index`, `scoringRing` FROM `Shot` WHERE `endId` = $endId ORDER BY `index`")
                 val shots = mutableListOf<Shot>()
                 while (shotsCursor.moveToNext()) {
                     val shot =
@@ -69,13 +70,29 @@ object Migration26 : Migration(25, 26) {
                 val score = target.getReachedScore(shots)
                 database.execSQL(
                     "UPDATE `End` SET " +
-                            "reachedPoints = ${score.reachedPoints}, " +
-                            "totalPoints = ${score.totalPoints}, " +
-                            "shotCount = ${score.shotCount} " +
-                            "WHERE id = $endId"
+                            "`reachedPoints` = ${score.reachedPoints}, " +
+                            "`totalPoints` = ${score.totalPoints}, " +
+                            "`shotCount` = ${score.shotCount} " +
+                            "WHERE `id` = $endId"
                 )
             }
         }
+    }
+
+    private fun createIndices(database: SupportSQLiteDatabase) {
+        database.execSQL("CREATE  INDEX `index_ArrowImage_arrowId` ON `ArrowImage` (`arrowId`)")
+        database.execSQL("CREATE  INDEX `index_BowImage_bowId` ON `BowImage` (`bowId`)")
+        database.execSQL("CREATE  INDEX `index_End_roundId` ON `End` (`roundId`)")
+        database.execSQL("CREATE  INDEX `index_EndImage_endId` ON `EndImage` (`endId`)")
+        database.execSQL("CREATE  INDEX `index_Round_trainingId` ON `Round` (`trainingId`)")
+        database.execSQL("CREATE  INDEX `index_RoundTemplate_standardRoundId` ON `RoundTemplate` (`standardRoundId`)")
+        database.execSQL("CREATE  INDEX `index_Shot_endId` ON `Shot` (`endId`)")
+        database.execSQL("CREATE  INDEX `index_SightMark_bowId` ON `SightMark` (`bowId`)")
+        database.execSQL("CREATE  INDEX `index_Training_arrowId` ON `Training` (`arrowId`)")
+        database.execSQL("CREATE  INDEX `index_Training_bowId` ON `Training` (`bowId`)")
+        database.execSQL("CREATE  INDEX `index_Training_standardRoundId` ON `Training` (`standardRoundId`)")
+        database.execSQL("CREATE  INDEX `index_Training_archerSignatureId` ON `Training` (`archerSignatureId`)")
+        database.execSQL("CREATE  INDEX `index_Training_witnessSignatureId` ON `Training` (`witnessSignatureId`)")
     }
 
     private fun recreateTablesWithNonNull(database: SupportSQLiteDatabase) {
@@ -452,7 +469,7 @@ class TableMigrationBuilder(val tableName: String) {
 
     fun copyData(database: SupportSQLiteDatabase) {
         database.execSQL("INSERT INTO `$newTableName` (" + fieldMigrations.joinToString(separator = ", ") { it.name } + ") "
-                + "SELECT " + fieldMigrations.joinToString(separator = ", ") {  it.columnName }
+                + "SELECT " + fieldMigrations.joinToString(separator = ", ") { it.columnName }
                 + " FROM `$tableName`")
     }
 

@@ -15,11 +15,8 @@
 
 package de.dreier.mytargets.shared.models.db
 
-import android.arch.persistence.room.Embedded
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
+import android.arch.persistence.room.*
 import android.arch.persistence.room.ForeignKey.CASCADE
-import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.IIdSettable
 import de.dreier.mytargets.shared.models.Score
@@ -35,6 +32,9 @@ import org.threeten.bp.LocalTime
             childColumns = ["roundId"],
             onDelete = CASCADE
         )
+    ],
+    indices = [
+        Index(value = ["roundId"])
     ]
 )
 data class End(

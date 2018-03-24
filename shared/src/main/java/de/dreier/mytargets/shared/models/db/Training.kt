@@ -15,11 +15,8 @@
 
 package de.dreier.mytargets.shared.models.db
 
-import android.arch.persistence.room.Embedded
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
+import android.arch.persistence.room.*
 import android.arch.persistence.room.ForeignKey.SET_NULL
-import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.Environment
 import de.dreier.mytargets.shared.models.IIdSettable
@@ -62,6 +59,13 @@ import org.threeten.bp.format.FormatStyle
             childColumns = ["witnessSignatureId"],
             onDelete = SET_NULL
         )
+    ],
+    indices = [
+        Index(value = ["arrowId"]),
+        Index(value = ["bowId"]),
+        Index(value = ["standardRoundId"]),
+        Index(value = ["archerSignatureId"]),
+        Index(value = ["witnessSignatureId"])
     ]
 )
 data class Training(

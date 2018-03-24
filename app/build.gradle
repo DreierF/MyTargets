@@ -18,7 +18,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.github.triplet.play'
-apply plugin: 'jacoco-android'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'io.fabric'
 
@@ -107,24 +106,7 @@ android {
     }
 }
 
-project.afterEvaluate {
-    android.applicationVariants.all { variant ->
-        def realVariantName = variant.name
-        def variantName = variant.name.capitalize()
-
-        def task = project.tasks["jacocoTest${variantName}UnitTestReport"]
-        def defaultExcludes = task.classDirectories.excludes
-
-        def excludes = defaultExcludes
-
-        def kotlinDebugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${realVariantName}", excludes: excludes)
-
-        task.classDirectories.excludes = excludes
-        task.classDirectories += kotlinDebugTree
-    }
-}
-
-apply from: '../tools/script-codacy.gradle'
+//apply from: '../tools/script-codacy.gradle'
 apply from: '../tools/script-play-store.gradle'
 
 dependencies {

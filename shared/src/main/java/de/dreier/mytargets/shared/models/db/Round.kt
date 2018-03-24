@@ -15,11 +15,8 @@
 
 package de.dreier.mytargets.shared.models.db
 
-import android.arch.persistence.room.Embedded
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
+import android.arch.persistence.room.*
 import android.arch.persistence.room.ForeignKey.CASCADE
-import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.IIdSettable
@@ -36,6 +33,9 @@ import kotlinx.android.parcel.Parcelize
             childColumns = ["trainingId"],
             onDelete = CASCADE
         )
+    ],
+    indices = [
+        Index(value = ["trainingId"])
     ]
 )
 data class Round(

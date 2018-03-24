@@ -18,6 +18,7 @@ package de.dreier.mytargets.shared.models.db
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.ForeignKey.CASCADE
+import android.arch.persistence.room.Index
 import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
@@ -31,6 +32,9 @@ import de.dreier.mytargets.shared.models.Image
             childColumns = ["endId"],
             onDelete = CASCADE
         )
+    ],
+    indices = [
+        Index(value = ["endId"])
     ]
 )
 data class EndImage(
