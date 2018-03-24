@@ -16,7 +16,6 @@
 package de.dreier.mytargets.views.selector
 
 import android.content.Context
-import android.databinding.DataBindingUtil
 import android.util.AttributeSet
 import android.view.View
 import de.dreier.mytargets.R
@@ -29,7 +28,7 @@ class TargetSelector @JvmOverloads constructor(context: Context, attrs: Attribut
     private lateinit var binding: SelectorItemImageDetailsBinding
 
     override fun bindView(item: Target) {
-        binding = DataBindingUtil.bind(view)
+        binding = SelectorItemImageDetailsBinding.bind(view)
         binding.name.text = item.name
         binding.details.visibility = View.VISIBLE
         binding.details.text = item.getDetails()

@@ -14,19 +14,17 @@
  */
 package de.dreier.mytargets.shared.models.db
 
-import android.annotation.SuppressLint
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.IIdSettable
 import kotlinx.android.parcel.Parcelize
 
-@SuppressLint("ParcelCreator")
 @Parcelize
 @Entity
 data class StandardRound(
-        @PrimaryKey(autoGenerate = true)
-        override var id: Long = 0,
-        var club: Int = 0,
-        var name: String = ""
+    @PrimaryKey(autoGenerate = true)
+    override var id: Long = 0,
+    var club: Int = 0,
+    var name: String = ""
 ) : IIdSettable, Parcelable

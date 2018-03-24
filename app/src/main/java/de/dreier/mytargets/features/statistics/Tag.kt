@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.features.statistics
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.graphics.drawable.Drawable
@@ -29,13 +28,12 @@ import de.dreier.mytargets.shared.models.Thumbnail
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 
-@SuppressLint("ParcelCreator")
 @Parcelize
 class Tag @JvmOverloads constructor(
-        var id: Long?,
-        var text: String,
-        var image: Thumbnail? = null,
-        var isChecked: Boolean = true
+    var id: Long?,
+    var text: String,
+    var image: Thumbnail? = null,
+    var isChecked: Boolean = true
 ) : Parcelable {
 
     @IgnoredOnParcel
@@ -43,12 +41,19 @@ class Tag @JvmOverloads constructor(
 
     fun getView(context: Context, parent: ViewGroup): ViewChipsBinding {
         val binding = DataBindingUtil
-                .inflate<ViewChipsBinding>(LayoutInflater.from(context), R.layout.view_chips, parent, false)
+            .inflate<ViewChipsBinding>(
+                LayoutInflater.from(context),
+                R.layout.view_chips,
+                parent,
+                false
+            )
         binding.tag = this
         binding.root.isActivated = !isChecked
         val mDensity = context.resources.displayMetrics.density
-        binding.root.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                (CHIP_HEIGHT * mDensity).toInt())
+        binding.root.layoutParams = RelativeLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            (CHIP_HEIGHT * mDensity).toInt()
+        )
         return binding
     }
 

@@ -20,6 +20,11 @@ import android.arch.persistence.room.migration.Migration
 
 object Migration22 : Migration(21, 22) {
     override fun migrate(database: SupportSQLiteDatabase) {
-        RoomCreationCallback.fillStandardRound(database, "_id", "standardRound")
+        RoomCreationCallback.fillStandardRound(
+            database,
+            "_id",
+            "standardRound",
+            "targetScoringStyle"
+        )
     }
 }

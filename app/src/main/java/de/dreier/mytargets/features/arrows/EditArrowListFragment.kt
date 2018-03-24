@@ -103,7 +103,7 @@ class EditArrowListFragment : EditableListFragmentBase<Arrow, SimpleListAdapterB
     }
 
     internal inner class ViewHolder(itemView: View) : SelectableViewHolder<Arrow>(itemView, selector, this@EditArrowListFragment, this@EditArrowListFragment) {
-        private val binding: ItemImageDetailsBinding = DataBindingUtil.bind(itemView)
+        private val binding = ItemImageDetailsBinding.bind(itemView)
 
         override fun bindItem(item: Arrow) {
             binding.name.text = item.name

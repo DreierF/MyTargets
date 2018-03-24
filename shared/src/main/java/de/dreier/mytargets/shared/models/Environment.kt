@@ -14,19 +14,17 @@
  */
 package de.dreier.mytargets.shared.models
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
-@SuppressLint("ParcelCreator")
 @Parcelize
 data class Environment(
-        var indoor: Boolean = false,
-        var weather: EWeather = EWeather.SUNNY,
-        var windSpeed: Int = 0,
-        var windDirection: Int = 0,
-        var location: String = ""
+    var indoor: Boolean = false,
+    var weather: EWeather = EWeather.SUNNY,
+    var windSpeed: Int = 0,
+    var windDirection: Int = 0,
+    var location: String = ""
 ) : Parcelable {
 
     fun getWindSpeed(context: Context): String {

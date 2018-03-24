@@ -130,8 +130,6 @@ apply from: '../tools/script-play-store.gradle'
 dependencies {
     Map<String, String> dependencies = rootProject.ext.dependencies
 
-    kapt dependencies.databindingCompiler
-
     implementation dependencies.kotlinStdlibJre7
 
     implementation dependencies.supportCompat

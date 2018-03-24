@@ -30,6 +30,7 @@ import com.evernote.android.state.State
 import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.adapters.header.HeaderListAdapter
+import de.dreier.mytargets.base.db.StandardRoundFactory
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.SelectItemFragmentBase
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
@@ -37,10 +38,9 @@ import de.dreier.mytargets.databinding.FragmentListBinding
 import de.dreier.mytargets.databinding.ItemStandardRoundBinding
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
-import de.dreier.mytargets.base.db.StandardRoundFactory
-import de.dreier.mytargets.utils.contains
 import de.dreier.mytargets.utils.SlideInItemAnimator
 import de.dreier.mytargets.utils.ToolbarUtils
+import de.dreier.mytargets.utils.contains
 import de.dreier.mytargets.utils.multiselector.OnItemLongClickListener
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 
@@ -215,7 +215,7 @@ class StandardRoundListFragment : SelectItemFragmentBase<AugmentedStandardRound,
     private inner class ViewHolder(itemView: View) : SelectableViewHolder<AugmentedStandardRound>(itemView,
             selector, this@StandardRoundListFragment, this@StandardRoundListFragment) {
 
-        private val binding: ItemStandardRoundBinding = DataBindingUtil.bind(itemView)
+        private val binding = ItemStandardRoundBinding.bind(itemView)
 
         override fun bindItem(item: AugmentedStandardRound) {
             binding.name.text = item.standardRound.name

@@ -509,7 +509,7 @@ class StatisticsFragment : FragmentBase() {
 
         init {
             itemView.isClickable = true
-            binding = DataBindingUtil.bind(itemView)
+            binding = ItemImageSimpleBinding.bind(itemView)
             binding.content.setOnClickListener { onItemClicked() }
         }
 

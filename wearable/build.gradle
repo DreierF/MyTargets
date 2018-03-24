@@ -72,8 +72,6 @@ android {
 dependencies {
     Map<String, String> dependencies = rootProject.ext.dependencies
 
-    kapt dependencies.databindingCompiler
-
     implementation dependencies.supportWearable
     compileOnly dependencies.wearable
     implementation dependencies.supportCompat

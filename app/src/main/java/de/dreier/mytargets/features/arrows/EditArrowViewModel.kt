@@ -96,7 +96,7 @@ class EditArrowViewModel(app: ApplicationInstance) : AndroidViewModel(app) {
         }
         val arrow = Arrow()
         arrow.id = arrowId.value ?: 0
-        arrow.name = name.get()
+        arrow.name = name.get() ?: ""
         arrow.maxArrowNumber = maxArrowNumber.get()
         arrow.length = length.get()
         arrow.material = material.get()

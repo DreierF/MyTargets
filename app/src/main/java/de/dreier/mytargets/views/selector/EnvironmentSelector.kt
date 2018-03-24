@@ -21,7 +21,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.databinding.DataBindingUtil
 import android.location.Geocoder
 import android.location.Location
 import android.support.annotation.RequiresPermission
@@ -56,7 +55,7 @@ class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: Att
         }
 
     override fun bindView(item: Environment) {
-        binding = DataBindingUtil.bind(view)
+        binding = SelectorItemImageDetailsBinding.bind(view)
 
         if (item.indoor) {
             binding.name.setText(de.dreier.mytargets.shared.R.string.indoor)

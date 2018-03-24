@@ -68,7 +68,7 @@ abstract class SelectPureListItemFragmentBase<T>(
     }
 
     private inner class ViewHolder(itemView: View) : SelectableViewHolder<T>(itemView, selector, this@SelectPureListItemFragmentBase) {
-        internal var binding: ItemImageSimpleBinding = DataBindingUtil.bind(itemView)
+        internal var binding = ItemImageSimpleBinding.bind(itemView)
 
         override fun bindItem(item: T) {
             binding.name.text = getName(item)

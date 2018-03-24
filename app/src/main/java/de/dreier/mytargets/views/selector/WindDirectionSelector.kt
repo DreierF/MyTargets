@@ -16,7 +16,6 @@
 package de.dreier.mytargets.views.selector
 
 import android.content.Context
-import android.databinding.DataBindingUtil
 import android.util.AttributeSet
 import android.view.View
 import de.dreier.mytargets.R
@@ -29,7 +28,7 @@ class WindDirectionSelector @JvmOverloads constructor(context: Context, attrs: A
     private lateinit var binding: SelectorItemImageDetailsBinding
 
     override fun bindView(item: WindDirection) {
-        binding = DataBindingUtil.bind(view)
+        binding = SelectorItemImageDetailsBinding.bind(view)
         binding.name.text = item.name
         binding.image.setImageResource(item.drawable)
         binding.title.visibility = View.VISIBLE

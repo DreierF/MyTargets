@@ -15,35 +15,33 @@
 
 package de.dreier.mytargets.shared.models
 
-import android.annotation.SuppressLint
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
-@SuppressLint("ParcelCreator")
 @Parcelize
 data class Score(
-        var reachedPoints: Int = 0,
-        var totalPoints: Int = 0,
-        var shotCount: Int = 0
+    var reachedPoints: Int = 0,
+    var totalPoints: Int = 0,
+    var shotCount: Int = 0
 ) : Parcelable {
 
     constructor() : this(
-            reachedPoints = 0,
-            totalPoints = 0,
-            shotCount = 0
+        reachedPoints = 0,
+        totalPoints = 0,
+        shotCount = 0
     )
 
     constructor(reachedScore: Int, totalScore: Int) : this(
-            reachedPoints = reachedScore,
-            totalPoints = totalScore,
-            shotCount = 1
+        reachedPoints = reachedScore,
+        totalPoints = totalScore,
+        shotCount = 1
     )
 
     constructor(totalScore: Int) : this(
-            reachedPoints = 0,
-            totalPoints = totalScore,
-            shotCount = 0
+        reachedPoints = 0,
+        totalPoints = totalScore,
+        shotCount = 0
     )
 
     val shotAverage: Float
@@ -104,10 +102,10 @@ data class Score(
     }
 
     data class Configuration(
-            var showReachedScore: Boolean = false,
-            var showTotalScore: Boolean = false,
-            var showPercentage: Boolean = false,
-            var showAverage: Boolean = false
+        var showReachedScore: Boolean = false,
+        var showTotalScore: Boolean = false,
+        var showPercentage: Boolean = false,
+        var showAverage: Boolean = false
     )
 }
 

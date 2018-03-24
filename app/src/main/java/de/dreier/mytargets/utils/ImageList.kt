@@ -15,17 +15,15 @@
 
 package de.dreier.mytargets.utils
 
-import android.annotation.SuppressLint
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.Image
 import de.dreier.mytargets.shared.models.db.EndImage
 import kotlinx.android.parcel.Parcelize
 
-@SuppressLint("ParcelCreator")
 @Parcelize
 class ImageList(
-        internal var images: MutableList<String> = mutableListOf(),
-        private var removed: MutableList<String> = mutableListOf()
+    internal var images: MutableList<String> = mutableListOf(),
+    private var removed: MutableList<String> = mutableListOf()
 ) : Parcelable {
 
     val isEmpty: Boolean
@@ -35,7 +33,7 @@ class ImageList(
         get() = removed
 
     constructor(images: List<Image>) : this(
-            images = images.map(Image::fileName).toMutableList()
+        images = images.map(Image::fileName).toMutableList()
     )
 
     fun size(): Int {

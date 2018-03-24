@@ -213,7 +213,7 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
     }
 
     private inner class ViewHolder internal constructor(itemView: View) : SelectableViewHolder<Round>(itemView, selector, this@TrainingFragment, this@TrainingFragment) {
-        private val binding: ItemRoundBinding = DataBindingUtil.bind(itemView)
+        private val binding = ItemRoundBinding.bind(itemView)
 
         override fun bindItem(item: Round) {
             binding.title.text = resources.getQuantityString(R.plurals.rounds, item

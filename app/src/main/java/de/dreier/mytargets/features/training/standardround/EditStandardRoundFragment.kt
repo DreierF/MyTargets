@@ -27,6 +27,7 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemAdapter
 import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemHolder
+import de.dreier.mytargets.base.db.StandardRoundFactory
 import de.dreier.mytargets.base.fragments.EditFragmentBase
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.INTENT
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
@@ -36,7 +37,6 @@ import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
 import de.dreier.mytargets.shared.models.db.RoundTemplate
 import de.dreier.mytargets.shared.models.db.StandardRound
-import de.dreier.mytargets.base.db.StandardRoundFactory
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.views.selector.DistanceSelector
@@ -170,7 +170,7 @@ class EditStandardRoundFragment : EditFragmentBase() {
 
     private inner class RoundTemplateHolder internal constructor(view: View) : DynamicItemHolder<RoundTemplate>(view) {
 
-        internal var binding: ItemRoundTemplateBinding = DataBindingUtil.bind(view)
+        internal var binding = ItemRoundTemplateBinding.bind(view)
 
         override fun onBind(item: RoundTemplate, position: Int, fragment: Fragment, removeListener: View.OnClickListener) {
             this.item = item

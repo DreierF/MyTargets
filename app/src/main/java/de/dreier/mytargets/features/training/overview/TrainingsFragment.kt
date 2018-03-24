@@ -193,7 +193,7 @@ class TrainingsFragment : ExpandableListFragment<Header, Training>() {
     }
 
     private inner class ViewHolder(itemView: View) : SelectableViewHolder<Training>(itemView, selector, this@TrainingsFragment, this@TrainingsFragment) {
-        internal var binding: ItemTrainingBinding = DataBindingUtil.bind(itemView)
+        internal var binding = ItemTrainingBinding.bind(itemView)
 
         override fun bindItem(item: Training) {
             binding.training.text = item.title

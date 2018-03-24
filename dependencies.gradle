@@ -58,8 +58,6 @@ ext {
     ]
 
     dependencies = [
-            databindingCompiler           : "com.android.databinding:compiler:$androidPluginVersion",
-
             supportCompat                 : "com.android.support:support-compat:$libraryVersion.support",
             supportCoreUtils              : "com.android.support:support-core-utils:$libraryVersion.support",
             supportCoreUi                 : "com.android.support:support-core-ui:$libraryVersion.support",

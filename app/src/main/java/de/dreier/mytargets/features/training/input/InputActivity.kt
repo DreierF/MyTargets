@@ -297,9 +297,9 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     private fun onDataLoadFinished() {
         title = data!!.training.training.title
         if (!binding.targetViewStub.isInflated) {
-            binding.targetViewStub.viewStub.inflate()
+            binding.targetViewStub.viewStub?.inflate()
         }
-        targetView = binding.targetViewStub.binding.root as TargetView
+        targetView = binding.targetViewStub.binding?.root as TargetView
         targetView!!.initWithTarget(data!!.currentRound.round.target)
         targetView!!.setArrow(
             data!!.arrowDiameter, data!!.training.training.arrowNumbering, data!!

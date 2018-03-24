@@ -24,14 +24,15 @@ import de.dreier.mytargets.shared.models.db.StandardRound
 object RoomCreationCallback : RoomDatabase.Callback() {
 
     override fun onCreate(db: SupportSQLiteDatabase) {
-        fillStandardRound(db, "id", "standardRoundId")
+        fillStandardRound(db, "id", "standardRoundId", "targetScoringStyleIndex")
         createScoreTriggers(db)
     }
 
     fun fillStandardRound(
         db: SupportSQLiteDatabase,
         idColumn: String,
-        standardRoundColumn: String
+        standardRoundColumn: String,
+        scoringStyleColumn: String
     ) {
         val standardRounds = StandardRoundFactory.initTable()
         for (standardRound in standardRounds) {
@@ -40,7 +41,8 @@ object RoomCreationCallback : RoomDatabase.Callback() {
                 standardRound.standardRound,
                 standardRound.roundTemplates,
                 idColumn,
-                standardRoundColumn
+                standardRoundColumn,
+                scoringStyleColumn
             )
         }
     }
@@ -50,12 +52,19 @@ object RoomCreationCallback : RoomDatabase.Callback() {
         standardRound: StandardRound,
         roundTemplates: List<RoundTemplate>,
         idColumn: String,
-        standardRoundColumn: String
+        standardRoundColumn: String,
+        scoringStyleColumn: String
     ) {
         insertStandardRound(db, standardRound, idColumn)
         for (roundTemplate in roundTemplates) {
             roundTemplate.standardRoundId = standardRound.id
-            insertRoundTemplate(db, roundTemplate, idColumn, standardRoundColumn)
+            insertRoundTemplate(
+                db,
+                roundTemplate,
+                idColumn,
+                standardRoundColumn,
+                scoringStyleColumn
+            )
         }
     }
 
@@ -68,10 +77,11 @@ object RoomCreationCallback : RoomDatabase.Callback() {
         db: SupportSQLiteDatabase,
         roundTemplate: RoundTemplate,
         idColumn: String,
-        standardRoundColumn: String
+        standardRoundColumn: String,
+        scoringStyleColumn: String
     ) {
         db.execSQL("INSERT OR REPLACE INTO RoundTemplate($idColumn, $standardRoundColumn, `index`, " +
-                "shotsPerEnd, endCount, distance, targetId, targetScoringStyle, targetDiameter) " +
+                "shotsPerEnd, endCount, distance, targetId, $scoringStyleColumn, targetDiameter) " +
                 "VALUES (?,?,?,?,?,?,?,?,?)",
                 arrayOf(roundTemplate.id, roundTemplate.standardRoundId, roundTemplate.index,
                         roundTemplate.shotsPerEnd, roundTemplate.endCount,

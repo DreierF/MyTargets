@@ -18,7 +18,6 @@ package de.dreier.mytargets.views.selector
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.databinding.DataBindingUtil
 import android.util.AttributeSet
 import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
@@ -36,7 +35,7 @@ class BowSelector @JvmOverloads constructor(
     private val bowDAO = database.bowDAO()
 
     override fun bindView(item: Bow) {
-        binding = DataBindingUtil.bind(view)
+        binding = SelectorItemImageDetailsBinding.bind(view)
         binding.name.text = item.name
         binding.image.setImageDrawable(item.thumbnail!!.roundDrawable)
     }

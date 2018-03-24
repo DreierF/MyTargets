@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.features.training.input
 
-import android.annotation.SuppressLint
 import android.os.Parcelable
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.Dimension
@@ -28,16 +27,16 @@ import de.dreier.mytargets.shared.views.TargetViewBase
 import de.dreier.mytargets.utils.addEnd
 import kotlinx.android.parcel.Parcelize
 
-@SuppressLint("ParcelCreator")
 @Parcelize
 class LoaderResult @JvmOverloads constructor(
-        val training: AugmentedTraining,
-        var standardRound: StandardRound? = null,
-        var arrowDiameter: Dimension = Dimension(5f, Dimension.Unit.MILLIMETER),
-        var sightMark: SightMark? = null,
-        var roundIndex: Int = 0,
-        var endIndex: Int = 0,
-        var maxArrowNumber: Int = 12) : Parcelable {
+    val training: AugmentedTraining,
+    var standardRound: StandardRound? = null,
+    var arrowDiameter: Dimension = Dimension(5f, Dimension.Unit.MILLIMETER),
+    var sightMark: SightMark? = null,
+    var roundIndex: Int = 0,
+    var endIndex: Int = 0,
+    var maxArrowNumber: Int = 12
+) : Parcelable {
 
     val currentRound: AugmentedRound
         get() = training.rounds[roundIndex]

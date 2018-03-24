@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.shared.models.db
 
-import android.annotation.SuppressLint
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.ForeignKey.CASCADE
@@ -24,19 +23,22 @@ import android.os.Parcelable
 import de.dreier.mytargets.shared.models.Image
 import kotlinx.android.parcel.Parcelize
 
-@SuppressLint("ParcelCreator")
 @Parcelize
-@Entity(foreignKeys = [
-    ForeignKey(entity = Bow::class,
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = Bow::class,
             parentColumns = ["id"],
             childColumns = ["bowId"],
-            onDelete = CASCADE)
-])
+            onDelete = CASCADE
+        )
+    ]
+)
 data class BowImage(
-        @PrimaryKey(autoGenerate = true)
-        var id: Long = 0,
+    @PrimaryKey(autoGenerate = true)
+    var id: Long = 0,
 
-        override var fileName: String = "",
+    override var fileName: String = "",
 
-        var bowId: Long? = null
+    var bowId: Long? = null
 ) : Image, Parcelable

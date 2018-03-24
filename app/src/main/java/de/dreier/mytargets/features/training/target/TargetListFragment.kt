@@ -201,7 +201,7 @@ class TargetListFragment : SelectItemFragmentBase<Target, ExpandableListAdapter<
     }
 
     private inner class ViewHolder(itemView: View) : SelectableViewHolder<Target>(itemView, selector, this@TargetListFragment) {
-        private val binding: ItemImageSimpleBinding = DataBindingUtil.bind(itemView)
+        private val binding = ItemImageSimpleBinding.bind(itemView)
 
         override fun bindItem(item: Target) {
             binding.name.text = item.model.toString()

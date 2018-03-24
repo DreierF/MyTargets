@@ -180,7 +180,7 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
 
     private inner class EndViewHolder internal constructor(itemView: View) : SelectableViewHolder<AugmentedEnd>(itemView, selector, this@RoundFragment, this@RoundFragment) {
 
-        private val binding: ItemEndBinding = DataBindingUtil.bind(itemView)
+        private val binding = ItemEndBinding.bind(itemView)
 
         override fun bindItem(item: AugmentedEnd) {
             val shots = item.shots

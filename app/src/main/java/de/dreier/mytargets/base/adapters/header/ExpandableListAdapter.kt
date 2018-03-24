@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.base.adapters.header
 
-import android.databinding.DataBindingUtil
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -129,7 +128,7 @@ abstract class ExpandableListAdapter<P : IIdProvider, C : IIdProvider>(
     }
 
     class HeaderViewHolder<P> internal constructor(itemView: View) : ExpandableHeaderBindingHolder<P>(itemView, R.id.expand_collapse) {
-        private val binding: ItemHeaderExpandableBinding = DataBindingUtil.bind(itemView)
+        private val binding = ItemHeaderExpandableBinding.bind(itemView)
 
         override fun bindItem(item: P) {
             binding.header.text = item.toString()

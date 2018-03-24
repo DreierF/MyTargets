@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.shared.models.db
 
-import android.annotation.SuppressLint
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
@@ -27,29 +26,32 @@ import de.dreier.mytargets.shared.models.Score
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.LocalTime
 
-@SuppressLint("ParcelCreator")
 @Parcelize
-@Entity(foreignKeys = [
-    ForeignKey(entity = Round::class,
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = Round::class,
             parentColumns = ["id"],
             childColumns = ["roundId"],
-            onDelete = CASCADE)
-])
+            onDelete = CASCADE
+        )
+    ]
+)
 data class End(
 
-        @PrimaryKey(autoGenerate = true)
-        override var id: Long = 0,
+    @PrimaryKey(autoGenerate = true)
+    override var id: Long = 0,
 
-        var index: Int = 0,
+    var index: Int = 0,
 
-        var roundId: Long? = null,
+    var roundId: Long? = null,
 
-        var exact: Boolean = false,
+    var exact: Boolean = false,
 
-        var saveTime: LocalTime? = null,
+    var saveTime: LocalTime? = null,
 
-        var comment: String = "",
+    var comment: String = "",
 
-        @Embedded
-        var score: Score = Score()
+    @Embedded
+    var score: Score = Score()
 ) : IIdSettable, Parcelable

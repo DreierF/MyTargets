@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.base.adapters.header
 
-import android.databinding.DataBindingUtil
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,7 +54,7 @@ abstract class HeaderListAdapter<C : IIdProvider>(parentPartition: PartitionDele
     }
 
     inner class HeaderViewHolder internal constructor(itemView: View) : HeaderBindingHolder<SimpleHeader>(itemView) {
-        private val binding: ItemHeaderBinding = DataBindingUtil.bind(itemView)
+        private val binding = ItemHeaderBinding.bind(itemView)
 
         override fun bindItem(item: SimpleHeader) {
             binding.header.text = item.title

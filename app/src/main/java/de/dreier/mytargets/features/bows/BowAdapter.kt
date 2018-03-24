@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.features.bows
 
-import android.databinding.DataBindingUtil
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,7 +46,7 @@ internal class BowAdapter(
 
     internal inner class ViewHolder(itemView: View) : SelectableViewHolder<Bow>(itemView, selector, clickListener, longClickListener) {
 
-        val binding: ItemImageDetailsBinding = DataBindingUtil.bind(itemView)
+        val binding = ItemImageDetailsBinding.bind(itemView)
 
         override fun bindItem(item: Bow) {
             binding.name.text = item.name

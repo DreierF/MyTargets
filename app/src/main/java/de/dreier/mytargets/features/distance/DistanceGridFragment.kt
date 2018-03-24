@@ -97,7 +97,7 @@ class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapter
 
     internal inner class ViewHolder(itemView: View) : SelectableViewHolder<Dimension>(itemView, selector, this@DistanceGridFragment) {
 
-        private val binding: ItemDistanceBinding = DataBindingUtil.bind(itemView)
+        private val binding = ItemDistanceBinding.bind(itemView)
 
         override fun bindItem(item: Dimension) {
             binding.distance.text = item.toString()

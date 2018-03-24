@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.shared.models.db
 
-import android.annotation.SuppressLint
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
@@ -25,25 +24,24 @@ import de.dreier.mytargets.shared.models.IIdSettable
 import de.dreier.mytargets.shared.models.Thumbnail
 import kotlinx.android.parcel.Parcelize
 
-@SuppressLint("ParcelCreator")
 @Parcelize
 @Entity
 data class Arrow(
-        @PrimaryKey(autoGenerate = true)
-        override var id: Long = 0,
+    @PrimaryKey(autoGenerate = true)
+    override var id: Long = 0,
 
-        var name: String = "",
-        var maxArrowNumber: Int = 12,
-        var length: String? = "",
-        var material: String? = "",
-        var spine: String? = "",
-        var weight: String? = "",
-        var tipWeight: String? = "",
-        var vanes: String? = "",
-        var nock: String? = "",
-        var comment: String? = "",
-        var diameter: Dimension = Dimension(5f, Dimension.Unit.MILLIMETER),
+    var name: String = "",
+    var maxArrowNumber: Int = 12,
+    var length: String? = "",
+    var material: String? = "",
+    var spine: String? = "",
+    var weight: String? = "",
+    var tipWeight: String? = "",
+    var vanes: String? = "",
+    var nock: String? = "",
+    var comment: String? = "",
+    var diameter: Dimension = Dimension(5f, Dimension.Unit.MILLIMETER),
 
-        @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
-        var thumbnail: Thumbnail? = null
+    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
+    var thumbnail: Thumbnail? = null
 ) : IIdSettable, Parcelable

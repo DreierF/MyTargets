@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.shared.models
 
-import android.annotation.SuppressLint
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Ignore
 import android.os.Parcelable
@@ -31,7 +30,6 @@ import kotlinx.android.parcel.Parcelize
  * Represents a target face, which is in contrast to a [TargetModelBase] bound to a specific
  * scoring style and diameter.
  */
-@SuppressLint("ParcelCreator")
 @Parcelize
 data class Target(
         @ColumnInfo(name = "targetId")

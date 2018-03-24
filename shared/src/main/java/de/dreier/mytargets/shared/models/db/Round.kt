@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.shared.models.db
 
-import android.annotation.SuppressLint
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
@@ -28,42 +27,45 @@ import de.dreier.mytargets.shared.models.Score
 import de.dreier.mytargets.shared.models.Target
 import kotlinx.android.parcel.Parcelize
 
-@SuppressLint("ParcelCreator")
 @Parcelize
-@Entity(foreignKeys = [
-    ForeignKey(entity = Training::class,
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = Training::class,
             parentColumns = ["id"],
             childColumns = ["trainingId"],
-            onDelete = CASCADE)
-])
+            onDelete = CASCADE
+        )
+    ]
+)
 data class Round(
-        @PrimaryKey(autoGenerate = true)
-        override var id: Long = 0,
+    @PrimaryKey(autoGenerate = true)
+    override var id: Long = 0,
 
-        var trainingId: Long? = null,
+    var trainingId: Long? = null,
 
-        var index: Int = 0,
+    var index: Int = 0,
 
-        var shotsPerEnd: Int = 0,
+    var shotsPerEnd: Int = 0,
 
-        var maxEndCount: Int? = null,
+    var maxEndCount: Int? = null,
 
-        var distance: Dimension = Dimension.UNKNOWN,
+    var distance: Dimension = Dimension.UNKNOWN,
 
-        var comment: String = "",
+    var comment: String = "",
 
-        @Embedded
-        var target: Target = Target(),
+    @Embedded
+    var target: Target = Target(),
 
-        @Embedded
-        var score: Score = Score()
+    @Embedded
+    var score: Score = Score()
 ) : IIdSettable, Parcelable {
 
     constructor(info: RoundTemplate) : this(
-            distance = info.distance,
-            shotsPerEnd = info.shotsPerEnd,
-            maxEndCount = info.endCount,
-            index = info.index,
-            target = info.targetTemplate.copy()
+        distance = info.distance,
+        shotsPerEnd = info.shotsPerEnd,
+        maxEndCount = info.endCount,
+        index = info.index,
+        target = info.targetTemplate.copy()
     )
 }

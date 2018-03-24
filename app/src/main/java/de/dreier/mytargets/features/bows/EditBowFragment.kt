@@ -17,7 +17,6 @@ package de.dreier.mytargets.features.bows
 
 import android.app.Activity
 import android.content.Intent
-import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
@@ -160,7 +159,7 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
 
     private inner class SightSettingHolder internal constructor(view: View) : DynamicItemHolder<SightMark>(view) {
 
-        private val binding: ItemSightMarkBinding = DataBindingUtil.bind(view)
+        private val binding = ItemSightMarkBinding.bind(view)
 
         init {
             binding.sightSetting.addTextChangedListener(object : TextWatcher {
