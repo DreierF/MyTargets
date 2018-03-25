@@ -50,11 +50,9 @@ class MiniDbTestRule : DbTestRuleBase() {
 
         randomEnd(round1, 6, generator)
         randomEnd(round1, 6, generator)
-        ApplicationInstance.db.roundDAO().saveRound(round1.round, round1.ends.map { it.end })
 
         randomEnd(round2, 6, generator)
         randomEnd(round2, 6, generator)
-        ApplicationInstance.db.roundDAO().saveRound(round2.round, round2.ends.map { it.end })
     }
 
 }

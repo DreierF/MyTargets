@@ -25,18 +25,20 @@ import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding
 import de.dreier.mytargets.shared.models.db.Arrow
 
 class ArrowSelector @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null
-) : SelectorBase<Arrow>(context, attrs, R.layout.selector_item_image_details, ARROW_REQUEST_CODE) {
-
-    private lateinit var binding: SelectorItemImageDetailsBinding
+    context: Context,
+    attrs: AttributeSet? = null
+) : SelectorBase<Arrow, SelectorItemImageDetailsBinding>(
+    context,
+    attrs,
+    R.layout.selector_item_image_details,
+    ARROW_REQUEST_CODE
+) {
 
     private val arrowDAO = ApplicationInstance.db.arrowDAO()
 
     override fun bindView(item: Arrow) {
-        binding = SelectorItemImageDetailsBinding.bind(view)
-        binding.name.text = item.name
-        binding.image.setImageDrawable(item.thumbnail!!.roundDrawable)
+        view.name.text = item.name
+        view.image.setImageDrawable(item.thumbnail!!.roundDrawable)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

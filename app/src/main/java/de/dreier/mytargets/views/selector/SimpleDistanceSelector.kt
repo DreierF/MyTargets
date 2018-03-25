@@ -22,13 +22,17 @@ import de.dreier.mytargets.databinding.SelectorItemSimpleTextBinding
 import de.dreier.mytargets.shared.models.Dimension
 
 class SimpleDistanceSelector @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null
-) : SelectorBase<Dimension>(context, attrs, R.layout.selector_item_simple_text, SIMPLE_DISTANCE_REQUEST_CODE) {
+    context: Context,
+    attrs: AttributeSet? = null
+) : SelectorBase<Dimension, SelectorItemSimpleTextBinding>(
+    context,
+    attrs,
+    R.layout.selector_item_simple_text,
+    SIMPLE_DISTANCE_REQUEST_CODE
+) {
 
     override fun bindView(item: Dimension) {
-        val binding = SelectorItemSimpleTextBinding.bind(view)
-        binding.text.text = item.toString()
+        view.text.text = item.toString()
     }
 
     companion object {

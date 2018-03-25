@@ -33,7 +33,7 @@ abstract class RoundDAO {
     @Query("SELECT * FROM Round WHERE id = :id")
     abstract fun loadRoundOrNull(id: Long): Round?
 
-    @Query("SELECT * FROM End WHERE roundId = :id ORDER BY `index`")
+    @Query("SELECT * FROM `End` WHERE `roundId` = :id ORDER BY `index`")
     abstract fun loadEnds(id: Long): MutableList<End>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -45,7 +45,7 @@ abstract class RoundDAO {
     @Update
     abstract fun updateRound(round: Round)
 
-    @Query("DELETE FROM End WHERE roundId = :id")
+    @Query("DELETE FROM `End` WHERE `roundId` = :id")
     abstract fun deleteEnds(id: Long)
 
     @Transaction

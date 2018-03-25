@@ -80,7 +80,6 @@ class SimpleDbTestRule : DbTestRuleBase() {
         randomEnd(round1, 6, generator)
         randomEnd(round1, 6, generator)
         randomEnd(round1, 6, generator)
-        ApplicationInstance.db.roundDAO().saveRound(round1.round, round1.ends.map { it.end })
 
         randomEnd(round2, 6, generator)
         randomEnd(round2, 6, generator)
@@ -88,7 +87,6 @@ class SimpleDbTestRule : DbTestRuleBase() {
         randomEnd(round2, 6, generator)
         randomEnd(round2, 6, generator)
         randomEnd(round2, 6, generator)
-        ApplicationInstance.db.roundDAO().saveRound(round2.round, round2.ends.map { it.end })
     }
 
     private fun getRoundTemplate(index: Int, distance: Int): RoundTemplate {
@@ -119,7 +117,6 @@ class SimpleDbTestRule : DbTestRuleBase() {
         randomEnd(round1, 6, generator)
         randomEnd(round1, 6, generator)
         randomEnd(round1, 6, generator)
-        ApplicationInstance.db.roundDAO().saveRound(round1.round, round1.ends.map { it.end })
 
         randomEnd(round2, 6, generator)
         randomEnd(round2, 6, generator)
@@ -127,7 +124,6 @@ class SimpleDbTestRule : DbTestRuleBase() {
         randomEnd(round2, 6, generator)
         randomEnd(round2, 6, generator)
         randomEnd(round2, 6, generator)
-        ApplicationInstance.db.roundDAO().saveRound(round2.round, round2.ends.map { it.end })
     }
 
     private fun addFullTraining(bow: Bow) {
@@ -156,7 +152,6 @@ class SimpleDbTestRule : DbTestRuleBase() {
         buildEnd(round1, 0, 1, 1, 1, 2, 3)
         buildEnd(round1, 1, 2, 3, 3, 4, 5)
         buildEnd(round1, 1, 2, 2, 3, 3, 3)
-        ApplicationInstance.db.roundDAO().saveRound(round1.round, round1.ends.map { it.end })
 
         buildEnd(round2, 1, 2, 2, 3, 4, 5)
         buildEnd(round2, 0, 0, 1, 2, 2, 3)
@@ -164,6 +159,5 @@ class SimpleDbTestRule : DbTestRuleBase() {
         buildEnd(round2, 1, 1, 2, 3, 4, 4)
         buildEnd(round2, 1, 2, 2, 3, 3, 3)
         buildEnd(round2, 1, 2, 2, 3, 3, 4)
-        ApplicationInstance.db.roundDAO().saveRound(round2.round, round2.ends.map { it.end })
     }
 }

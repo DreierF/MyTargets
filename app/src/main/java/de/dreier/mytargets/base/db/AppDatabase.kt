@@ -49,7 +49,7 @@ import de.dreier.mytargets.shared.models.db.*
 abstract class AppDatabase : RoomDatabase() {
     companion object {
         const val NAME = "database"
-        const val DATABASE_FILE_NAME = "${NAME}.db"
+        const val DATABASE_FILE_NAME = "$NAME.db"
         const val DATABASE_IMPORT_FILE_NAME = "database"
         const val VERSION = 26
     }

@@ -19,6 +19,7 @@ import android.content.Context
 import android.support.test.InstrumentationRegistry
 import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
+import de.dreier.mytargets.base.db.AppDatabase
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.EWeather
@@ -33,6 +34,7 @@ import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
+import java.io.IOException
 import java.util.*
 
 abstract class DbTestRuleBase : TestRule {
@@ -42,9 +44,13 @@ abstract class DbTestRuleBase : TestRule {
         return object : Statement() {
             @Throws(Throwable::class)
             override fun evaluate() {
+                context.deleteDatabase(AppDatabase.DATABASE_FILE_NAME)
                 ApplicationInstance.initRoomDb(context)
                 addDatabaseContent()
                 base.evaluate()
+                try {
+                    ApplicationInstance.db.close()
+                } catch (e: IOException) {}
             }
         }
     }
@@ -69,7 +75,7 @@ abstract class DbTestRuleBase : TestRule {
             end.shots[i].x = gaussianRand(gen)
             end.shots[i].y = gaussianRand(gen)
             end.shots[i].scoringRing = round.round.target.model
-                    .getZoneFromPoint(end.shots[i].x, end.shots[i].y, 0.05f)
+                .getZoneFromPoint(end.shots[i].x, end.shots[i].y, 0.05f)
         }
         end.end.score = round.round.target.getReachedScore(end.shots)
         end.end.saveTime = LocalTime.of(14, gen.nextInt(59), gen.nextInt(59), 0)

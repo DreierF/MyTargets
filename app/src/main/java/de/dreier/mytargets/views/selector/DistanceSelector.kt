@@ -21,11 +21,16 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.databinding.SelectorItemDistanceBinding
 import de.dreier.mytargets.shared.models.Dimension
 
-class DistanceSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : SelectorBase<Dimension>(context, attrs, R.layout.selector_item_distance, DISTANCE_REQUEST_CODE) {
+class DistanceSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
+    SelectorBase<Dimension, SelectorItemDistanceBinding>(
+        context,
+        attrs,
+        R.layout.selector_item_distance,
+        DISTANCE_REQUEST_CODE
+    ) {
 
     override fun bindView(item: Dimension) {
-        val binding = SelectorItemDistanceBinding.bind(view)
-        binding.distanceValue.text = item.toString()
+        view.distanceValue.text = item.toString()
     }
 
     companion object {

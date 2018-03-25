@@ -41,10 +41,14 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 
-class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null
-) : SelectorBase<Environment>(context, attrs, R.layout.selector_item_image_details, ENVIRONMENT_REQUEST_CODE) {
-
-    private lateinit var binding: SelectorItemImageDetailsBinding
+class EnvironmentSelector @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet? = null
+) : SelectorBase<Environment, SelectorItemImageDetailsBinding>(
+    context,
+    attrs,
+    R.layout.selector_item_image_details,
+    ENVIRONMENT_REQUEST_CODE
+) {
 
     override var selectedItem: Environment?
         get() = if (super.selectedItem == null) {
@@ -55,19 +59,17 @@ class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: Att
         }
 
     override fun bindView(item: Environment) {
-        binding = SelectorItemImageDetailsBinding.bind(view)
-
         if (item.indoor) {
-            binding.name.setText(de.dreier.mytargets.shared.R.string.indoor)
-            binding.image.setImageResource(R.drawable.ic_house_24dp)
+            view.name.setText(de.dreier.mytargets.shared.R.string.indoor)
+            view.image.setImageResource(R.drawable.ic_house_24dp)
         } else {
-            binding.name.text = item.weather.getName()
-            binding.image.setImageResource(item.weather.drawable)
+            view.name.text = item.weather.getName()
+            view.image.setImageResource(item.weather.drawable)
         }
-        binding.details.visibility = View.VISIBLE
-        binding.details.text = getDetails(context, item)
-        binding.title.visibility = View.VISIBLE
-        binding.title.setText(R.string.environment)
+        view.details.visibility = View.VISIBLE
+        view.details.text = getDetails(context, item)
+        view.title.visibility = View.VISIBLE
+        view.title.setText(R.string.environment)
     }
 
     private fun getDetails(context: Context, item: Environment): String {
@@ -78,7 +80,10 @@ class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: Att
                 description += "${context.getString(de.dreier.mytargets.shared.R.string.location)}: ${item.location}"
             }
         } else {
-            description = "${context.getString(de.dreier.mytargets.shared.R.string.wind)}: ${item.getWindSpeed(context)}"
+            description =
+                    "${context.getString(de.dreier.mytargets.shared.R.string.wind)}: ${item.getWindSpeed(
+                        context
+                    )}"
             if (!item.location.isEmpty()) {
                 description += "\n${context.getString(de.dreier.mytargets.shared.R.string.location)}: ${item.location}"
             }
@@ -91,7 +96,11 @@ class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: Att
             setDefaultWeather()
             return
         }
-        if (ContextCompat.checkSelfPermission(fragment.context!!, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                fragment.context!!,
+                ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             setDefaultWeather()
             fragment.requestPermissions(arrayOf(ACCESS_FINE_LOCATION), requestCode)
         } else {
@@ -118,13 +127,20 @@ class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: Att
                 val locationStr = getAddressFromLocation(location.latitude, location.longitude)
                 val weatherService = WeatherService()
                 val weatherCall = weatherService
-                        .fetchCurrentWeather(location.longitude, location.latitude)
+                    .fetchCurrentWeather(location.longitude, location.latitude)
                 weatherCall.enqueue(object : Callback<CurrentWeather> {
-                    override fun onResponse(call: Call<CurrentWeather>, response: Response<CurrentWeather>) {
+                    override fun onResponse(
+                        call: Call<CurrentWeather>,
+                        response: Response<CurrentWeather>
+                    ) {
                         if (response.isSuccessful && response.body()!!.httpCode == 200) {
                             val toEnvironment = response.body()!!.toEnvironment()
-                            setItem(toEnvironment.copy(location = locationStr
-                                    ?: toEnvironment.location))
+                            setItem(
+                                toEnvironment.copy(
+                                    location = locationStr
+                                            ?: toEnvironment.location
+                                )
+                            )
                         } else {
                             setDefaultWeather()
                         }
@@ -151,7 +167,7 @@ class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: Att
             if (addresses.size > 0) {
                 val fetchedAddress = addresses[0]
                 var address = fetchedAddress.locality
-                if(fetchedAddress.subLocality != null) {
+                if (fetchedAddress.subLocality != null) {
                     address += ", ${fetchedAddress.subLocality}"
                 }
                 address
