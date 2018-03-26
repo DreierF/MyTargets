@@ -27,8 +27,8 @@ interface DimensionDAO {
      * @param unit     Distances are only returned which match the specified unit
      * @return List of distances
      */
-    @Query("SELECT distance FROM SightMark WHERE distance LIKE ('% ' || :unit)" +
-            "UNION SELECT distance FROM RoundTemplate WHERE distance LIKE ('% ' || :unit)" +
-            "UNION SELECT distance FROM Round WHERE distance LIKE ('% ' || :unit)")
+    @Query("SELECT distance FROM `SightMark` WHERE `distance` LIKE ('% ' || :unit)" +
+            "UNION SELECT distance FROM `RoundTemplate` WHERE `distance` LIKE ('% ' || :unit)" +
+            "UNION SELECT distance FROM `Round` WHERE `distance` LIKE ('% ' || :unit)")
     fun getAll(unit: Dimension.Unit): List<Dimension>
 }

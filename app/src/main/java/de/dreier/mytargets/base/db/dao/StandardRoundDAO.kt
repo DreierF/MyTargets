@@ -22,22 +22,22 @@ import de.dreier.mytargets.shared.models.db.StandardRound
 
 @Dao
 abstract class StandardRoundDAO {
-    @Query("SELECT * FROM StandardRound")
+    @Query("SELECT * FROM `StandardRound`")
     abstract fun loadStandardRounds(): List<StandardRound>
 
-    @Query("SELECT * FROM StandardRound WHERE id = :id")
+    @Query("SELECT * FROM `StandardRound` WHERE `id` = :id")
     abstract fun loadStandardRound(id: Long): StandardRound
 
     @Transaction
     open fun loadAugmentedStandardRound(id: Long): AugmentedStandardRound = AugmentedStandardRound(loadStandardRound(id), loadRoundTemplates(id).toMutableList())
 
-    @Query("SELECT * FROM StandardRound WHERE id = :id")
+    @Query("SELECT * FROM `StandardRound` WHERE `id` = :id")
     abstract fun loadStandardRoundOrNull(id: Long): StandardRound?
 
-    @Query("SELECT * FROM StandardRound WHERE name LIKE :query AND club != 512")
+    @Query("SELECT * FROM `StandardRound` WHERE `name` LIKE :query AND `club` != 512")
     abstract fun getAllSearch(query: String): List<StandardRound>
 
-    @Query("SELECT * FROM RoundTemplate WHERE standardRoundId = :id ORDER BY `index`")
+    @Query("SELECT * FROM `RoundTemplate` WHERE `standardRoundId` = :id ORDER BY `index`")
     abstract fun loadRoundTemplates(id: Long): List<RoundTemplate>
 
     @Insert
@@ -46,7 +46,7 @@ abstract class StandardRoundDAO {
     @Insert
     abstract fun insertRoundTemplate(round: RoundTemplate): Long
 
-    @Query("DELETE FROM RoundTemplate WHERE standardRoundId = (:id)")
+    @Query("DELETE FROM `RoundTemplate` WHERE `standardRoundId` = (:id)")
     abstract fun deleteRoundTemplates(id: Long)
 
     @Transaction

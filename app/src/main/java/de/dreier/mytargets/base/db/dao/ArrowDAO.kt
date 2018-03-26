@@ -21,16 +21,16 @@ import de.dreier.mytargets.shared.models.db.ArrowImage
 
 @Dao
 abstract class ArrowDAO {
-    @Query("SELECT * FROM Arrow")
+    @Query("SELECT * FROM `Arrow`")
     abstract fun loadArrows(): List<Arrow>
 
-    @Query("SELECT * FROM Arrow WHERE id = (:id)")
+    @Query("SELECT * FROM `Arrow` WHERE `id` = (:id)")
     abstract fun loadArrow(id: Long): Arrow
 
-    @Query("SELECT * FROM Arrow WHERE id = (:id)")
+    @Query("SELECT * FROM `Arrow` WHERE `id` = (:id)")
     abstract fun loadArrowOrNull(id: Long): Arrow?
 
-    @Query("SELECT * FROM ArrowImage WHERE arrowId = (:id)")
+    @Query("SELECT * FROM `ArrowImage` WHERE `arrowId` = (:id)")
     abstract fun loadArrowImages(id: Long): List<ArrowImage>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -39,13 +39,12 @@ abstract class ArrowDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertArrowImages(images: List<ArrowImage>)
 
-    @Query("DELETE FROM ArrowImage WHERE arrowId = (:arrowId)")
+    @Query("DELETE FROM `ArrowImage` WHERE `arrowId` = (:arrowId)")
     abstract fun deleteArrowImages(arrowId: Long)
 
     @Transaction
     open fun saveArrow(arrow: Arrow, images: List<ArrowImage>) {
         arrow.id = insertArrow(arrow)
-       // deleteArrowImages(arrow.id) TODO test if insert replace deletes old images
         for (image in images) {
             image.arrowId = arrow.id
         }

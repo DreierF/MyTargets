@@ -21,13 +21,13 @@ import de.dreier.mytargets.shared.models.db.Round
 
 @Dao
 abstract class RoundDAO {
-    @Query("SELECT * FROM Round WHERE id in (:roundIds)")
+    @Query("SELECT * FROM `Round` WHERE `id` in (:roundIds)")
     abstract fun loadRounds(roundIds: LongArray): List<Round>
 
-    @Query("SELECT * FROM Round WHERE trainingId = :id ORDER BY `index`")
+    @Query("SELECT * FROM `Round` WHERE `trainingId` = :id ORDER BY `index`")
     abstract fun loadRounds(id: Long): List<Round>
 
-    @Query("SELECT * FROM Round WHERE id = :id")
+    @Query("SELECT * FROM `Round` WHERE `id` = :id")
     abstract fun loadRound(id: Long): Round
 
     @Query("SELECT * FROM `Round` WHERE `id` = :id")

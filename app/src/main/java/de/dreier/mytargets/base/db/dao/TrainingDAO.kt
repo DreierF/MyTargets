@@ -21,10 +21,10 @@ import de.dreier.mytargets.shared.models.db.Training
 
 @Dao
 abstract class TrainingDAO {
-    @Query("SELECT * FROM Training")
+    @Query("SELECT * FROM `Training`")
     abstract fun loadTrainings(): List<Training>
 
-    @Query("SELECT * FROM Training WHERE id = :id")
+    @Query("SELECT * FROM `Training` WHERE `id` = :id")
     abstract fun loadTraining(id: Long): Training
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
