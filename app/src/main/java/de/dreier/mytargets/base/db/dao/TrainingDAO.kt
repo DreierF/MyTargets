@@ -28,14 +28,14 @@ abstract class TrainingDAO {
     abstract fun loadTraining(id: Long): Training
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun saveTraining(training: Training): Long
+    abstract fun insertTraining(training: Training): Long
 
     @Update
     abstract fun updateTraining(training: Training)
 
     @Transaction
     open fun saveTraining(training: Training, rounds: List<Round>) {
-        training.id = saveTraining(training)
+        training.id = insertTraining(training)
         for (round in rounds) {
             round.trainingId = training.id
             round.id = insertRound(round)

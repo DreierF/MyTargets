@@ -126,7 +126,7 @@ abstract class DbTestRuleBase : TestRule {
         training.bowId = null
         training.arrowId = null
         training.arrowNumbering = false
-        ApplicationInstance.db.trainingDAO().saveTraining(training)
+        training.id = ApplicationInstance.db.trainingDAO().insertTraining(training)
         return training
     }
 }

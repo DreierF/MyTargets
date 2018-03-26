@@ -30,7 +30,7 @@ abstract class RoundDAO {
     @Query("SELECT * FROM Round WHERE id = :id")
     abstract fun loadRound(id: Long): Round
 
-    @Query("SELECT * FROM Round WHERE id = :id")
+    @Query("SELECT * FROM `Round` WHERE `id` = :id")
     abstract fun loadRoundOrNull(id: Long): Round?
 
     @Query("SELECT * FROM `End` WHERE `roundId` = :id ORDER BY `index`")

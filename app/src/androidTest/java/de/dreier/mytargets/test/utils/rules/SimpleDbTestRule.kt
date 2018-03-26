@@ -66,12 +66,12 @@ class SimpleDbTestRule : DbTestRuleBase() {
 
         val round1r = Round(rounds[0])
         round1r.trainingId = id
-        ApplicationInstance.db.roundDAO().insertRound(round1r)
+        round1r.id = ApplicationInstance.db.roundDAO().insertRound(round1r)
         val round1 = AugmentedRound(round1r, mutableListOf())
 
         val round2r = Round(rounds[1])
         round2r.trainingId = id
-        ApplicationInstance.db.roundDAO().insertRound(round2r)
+        round2r.id = ApplicationInstance.db.roundDAO().insertRound(round2r)
         val round2 = AugmentedRound(round2r, mutableListOf())
 
         randomEnd(round1, 6, generator)

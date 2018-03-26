@@ -37,7 +37,7 @@ class TrainingRepository(
 
     fun insertTraining(training: AugmentedTraining) {
         database.runInTransaction {
-            trainingDAO.saveTraining(training.training)
+            training.training.id = trainingDAO.insertTraining(training.training)
             training.rounds.forEach { round ->
                 round.round.trainingId = training.training.id
                 roundRepository.saveRound(round)
@@ -55,7 +55,7 @@ class TrainingRepository(
         val signature = Signature()
         signature.id = signatureDAO.insertSignature(signature)
         training.archerSignatureId = signature.id
-        trainingDAO.saveTraining(training)
+        trainingDAO.updateTraining(training)
         return signature
     }
 
@@ -69,7 +69,7 @@ class TrainingRepository(
         val signature = Signature()
         signature.id = signatureDAO.insertSignature(signature)
         training.witnessSignatureId = signature.id
-        trainingDAO.saveTraining(training)
+        trainingDAO.updateTraining(training)
         return signature
     }
 }
