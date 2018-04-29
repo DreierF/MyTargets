@@ -56,8 +56,7 @@ typealias MenuListener = (menuItem: MenuItem) -> Boolean
  * Adopted from https://github.com/yavski/fab-speed-dial
  */
 @SuppressLint("RestrictedApi")
-@CoordinatorLayout.DefaultBehavior(FabSpeedDialBehaviour::class)
-class FabSpeedDial : LinearLayout, View.OnClickListener {
+class FabSpeedDial : LinearLayout, View.OnClickListener, CoordinatorLayout.AttachedBehavior {
 
     private var menuListener: MenuListener? = null
     private var closeListener: CloseListener? = null
@@ -118,6 +117,10 @@ class FabSpeedDial : LinearLayout, View.OnClickListener {
         val menuItemCount = navigationMenu!!.size()
         fabMenuItemMap = HashMap(menuItemCount)
         cardViewMenuItemMap = HashMap(menuItemCount)
+    }
+
+    override fun getBehavior(): CoordinatorLayout.Behavior<*> {
+        return FabSpeedDialBehaviour
     }
 
     private fun resolveCompulsoryAttributes(typedArray: TypedArray) {
