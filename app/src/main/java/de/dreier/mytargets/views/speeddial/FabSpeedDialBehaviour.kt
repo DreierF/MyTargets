@@ -15,13 +15,15 @@
 
 package de.dreier.mytargets.views.speeddial
 
-import android.support.design.animation.AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
+import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.view.View
 import android.view.ViewPropertyAnimator
 
 object FabSpeedDialBehaviour : CoordinatorLayout.Behavior<FabSpeedDial>() {
+
+    private val FAST_OUT_SLOW_IN_INTERPOLATOR = FastOutSlowInInterpolator()
 
     private var fabTranslationYAnimator: ViewPropertyAnimator? = null
     private var fabTranslationY: Float = 0.toFloat()
