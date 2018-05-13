@@ -180,7 +180,7 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
     }
 
     override fun deleteItem(item: Round): () -> Round {
-        return viewModel.deleteTraining(item)
+        return viewModel.deleteRound(item)
     }
 
     private inner class RoundAdapter(val equals: BooleanArray) : SimpleListAdapterBase<Round>(compareBy(Round::index)) {

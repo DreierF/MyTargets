@@ -68,7 +68,7 @@ class TrainingViewModel(app: ApplicationInstance) : AndroidViewModel(app) {
         trainingDAO.updateComment(trainingId.value!!, comment)
     }
 
-    fun deleteTraining(item: Round): () -> Round {
+    fun deleteRound(item: Round): () -> Round {
         val round = roundRepository.loadAugmentedRound(item)
         roundDAO.deleteRound(item)
         return {
