@@ -87,7 +87,7 @@ abstract class ExpandableListAdapter<P : IIdProvider, C : IIdProvider>(
         header.expanded = !header.expanded
     }
 
-    override fun setList(list: MutableList<C>) {
+    override fun setList(list: List<C>) {
         val oldExpanded = expandedIds
         fillChildMap(list)
         expandedIds = oldExpanded

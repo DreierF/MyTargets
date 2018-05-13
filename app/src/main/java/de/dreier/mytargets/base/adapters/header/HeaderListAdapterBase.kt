@@ -125,7 +125,7 @@ abstract class HeaderListAdapterBase<P : IIdProvider, C : IIdProvider, H : Heade
         }
     }
 
-    override fun setList(list: MutableList<C>) {
+    override fun setList(list: List<C>) {
         fillChildMap(list)
         notifyDataSetChanged()
     }

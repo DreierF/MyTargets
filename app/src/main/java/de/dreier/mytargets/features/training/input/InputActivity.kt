@@ -84,8 +84,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     private val bowDAO = database.bowDAO()
     private val arrowDAO = database.arrowDAO()
     private val standardRoundDAO = database.standardRoundDAO()
-    private val endRepository = EndRepository(endDAO)
-    private val roundRepository = RoundRepository(database, roundDAO, endDAO, endRepository)
+    private val roundRepository = RoundRepository(database)
     private val trainingRepository = TrainingRepository(
         database,
         trainingDAO,
@@ -263,7 +262,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
                 invalidateOptionsMenu()
             }
             R.id.action_settings -> navigationController.navigateToSettings(ESettingsScreens.INPUT)
-            R.id.action_new_round -> navigationController.navigateToCreateRound(data!!.training.training)
+            R.id.action_new_round -> navigationController.navigateToCreateRound(trainingId = data!!.training.training.id)
             else -> return super.onOptionsItemSelected(item)
         }
         return true

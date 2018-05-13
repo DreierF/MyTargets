@@ -83,7 +83,7 @@ object GoogleDriveBackup {
                     .setSortOrder(SortOrder.Builder()
                             .addSortDescending(SortableField.MODIFIED_DATE).build())
                     .build()
-            Drive.DriveApi.getAppFolder(googleApiClient).queryChildren(googleApiClient, query)
+            Drive.DriveApi.getAppFolder(googleApiClient)!!.queryChildren(googleApiClient, query)
                     .setResultCallback(object : ResultCallback<DriveApi.MetadataBufferResult> {
 
                         private val backupsArray = ArrayList<BackupEntry>()
@@ -191,7 +191,7 @@ object GoogleDriveBackup {
                     .build()
 
             // create a file in selected folder
-            val result1 = Drive.DriveApi.getAppFolder(googleApiClient)
+            val result1 = Drive.DriveApi.getAppFolder(googleApiClient)!!
                     .createFile(googleApiClient, changeSet, driveContents).await()
             if (!result1.status.isSuccess) {
                 throw BackupException(result1.status.statusMessage)

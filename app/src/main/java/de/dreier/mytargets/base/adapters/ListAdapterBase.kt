@@ -28,5 +28,5 @@ abstract class ListAdapterBase<S : RecyclerView.ViewHolder, T> : RecyclerView.Ad
 
     abstract fun getItemPosition(item: T): Int
 
-    abstract fun setList(list: MutableList<T>)
+    abstract fun setList(list: List<T>)
 }

@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.base.db.dao
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
@@ -26,6 +27,9 @@ abstract class RoundDAO {
 
     @Query("SELECT * FROM `Round` WHERE `trainingId` = :id ORDER BY `index`")
     abstract fun loadRounds(id: Long): List<Round>
+
+    @Query("SELECT * FROM `Round` WHERE `trainingId` = :id ORDER BY `index`")
+    abstract fun loadRoundsLive(id: Long): LiveData<List<Round>>
 
     @Query("SELECT * FROM `Round` WHERE `id` = :id")
     abstract fun loadRound(id: Long): Round

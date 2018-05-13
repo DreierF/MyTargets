@@ -45,8 +45,7 @@ class DefaultScoreboardLayout(private val context: Context, database: AppDatabas
     private val bowDAO = database.bowDAO()
     private val arrowDAO = database.arrowDAO()
     private val standardRoundDAO = database.standardRoundDAO()
-    private val endRepository = EndRepository(endDAO)
-    private val roundRepository = RoundRepository(database, roundDAO, endDAO, endRepository)
+    private val roundRepository = RoundRepository(database)
     private val trainingRepository = TrainingRepository(database, trainingDAO, roundDAO, roundRepository, database.signatureDAO())
 
     fun generateWithBuilder(builder: ScoreboardBuilder, training: Training, rounds: List<Round>) {

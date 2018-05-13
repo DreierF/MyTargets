@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.base.db.dao
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
@@ -27,11 +28,17 @@ abstract class TrainingDAO {
     @Query("SELECT * FROM `Training` WHERE `id` = :id")
     abstract fun loadTraining(id: Long): Training
 
+    @Query("SELECT * FROM `Training` WHERE `id` = :id")
+    abstract fun loadTrainingLive(id: Long): LiveData<Training>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertTraining(training: Training): Long
 
     @Update
     abstract fun updateTraining(training: Training)
+
+    @Query("UPDATE `Training` SET `comment`=:comment WHERE `id` = :trainingId")
+    abstract fun updateComment(trainingId: Long, comment: String)
 
     @Transaction
     open fun saveTraining(training: Training, rounds: List<Round>) {

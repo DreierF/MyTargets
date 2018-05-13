@@ -22,7 +22,7 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding
-import de.dreier.mytargets.features.training.details.HtmlInfoBuilder
+import de.dreier.mytargets.features.training.details.SpannedInfoBuilder
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.utils.multiselector.MultiSelector
@@ -53,7 +53,7 @@ internal class BowAdapter(
             binding.image.setImageDrawable(item.thumbnail!!.roundDrawable)
             binding.details.visibility = View.VISIBLE
 
-            val info = HtmlInfoBuilder()
+            val info = SpannedInfoBuilder()
             info.addLine(R.string.bow_type, item.type!!)
             if (!item.brand!!.trim { it <= ' ' }.isEmpty()) {
                 info.addLine(R.string.brand, item.brand!!)

@@ -133,18 +133,21 @@ class NavigationController(
                 .start()
     }
 
-    fun navigateToCreateRound(training: Training, fab: FloatingActionButton? = null) {
+    fun navigateToCreateRound(
+        trainingId: Long,
+        fab: FloatingActionButton? = null
+    ) {
         val intentWrapper = IntentWrapper(activity, fragment, EditRoundActivity::class.java)
-                .with(EditableListFragmentBase.ITEM_ID, training.id)
+                .with(EditableListFragmentBase.ITEM_ID, trainingId)
         if (fab != null) {
             intentWrapper.fromFab(fab)
         }
         intentWrapper.start()
     }
 
-    fun navigateToEditRound(training: Training, roundId: Long) {
+    fun navigateToEditRound(trainingId: Long, roundId: Long) {
         IntentWrapper(activity, fragment, EditRoundActivity::class.java)
-                .with(EditableListFragmentBase.ITEM_ID, training.id)
+                .with(EditableListFragmentBase.ITEM_ID, trainingId)
                 .with(EditRoundFragment.ROUND_ID, roundId)
                 .start()
     }
@@ -166,6 +169,12 @@ class NavigationController(
         IntentWrapper(activity, fragment, StatisticsActivity::class.java)
                 .with(StatisticsActivity.ROUND_IDS, roundIds.toLongArray())
                 .start()
+    }
+
+    fun navigateToStatistics(trainingId: Long) {
+        IntentWrapper(activity, fragment, StatisticsActivity::class.java)
+            .with(StatisticsActivity.TRAINING_ID, trainingId)
+            .start()
     }
 
     fun navigateToTimer(exitAfterStop: Boolean) {

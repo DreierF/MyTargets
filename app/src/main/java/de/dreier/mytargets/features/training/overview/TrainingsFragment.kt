@@ -54,9 +54,7 @@ class TrainingsFragment : ExpandableListFragment<Header, Training>() {
     private val database = ApplicationInstance.db
     private val trainingDAO = database.trainingDAO()
     private val roundDAO = database.roundDAO()
-    private val endDAO = database.endDAO()
-    private val endRepository = EndRepository(endDAO)
-    private val roundRepository = RoundRepository(database, roundDAO, endDAO, endRepository)
+    private val roundRepository = RoundRepository(database)
     private val trainingRepository = TrainingRepository(database, trainingDAO, roundDAO,roundRepository, database.signatureDAO())
 
     private val updateReceiver = object : BroadcastReceiver() {

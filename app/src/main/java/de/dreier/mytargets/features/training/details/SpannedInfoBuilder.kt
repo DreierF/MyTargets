@@ -15,36 +15,33 @@
 
 package de.dreier.mytargets.features.training.details
 
-import android.support.annotation.StringRes
-import android.text.TextUtils
+import android.graphics.Typeface.BOLD
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+import android.text.style.StyleSpan
 import de.dreier.mytargets.shared.SharedApplicationInstance
 
-class HtmlInfoBuilder {
-    private val info = StringBuilder()
+class SpannedInfoBuilder {
+    private val info = SpannableStringBuilder()
 
     fun addLine(key: Int, value: Any) {
-        if (info.isNotEmpty()) {
-            info.append("<br>")
-        }
-        info.append(getKeyValueLine(key, value))
+        addLine(SharedApplicationInstance.getStr(key), value)
     }
 
     fun addLine(key: String, value: Any) {
         if (info.isNotEmpty()) {
-            info.append("<br>")
+            info.appendln()
         }
-        info.append(getKeyValueLine(key, value))
+        info.append("$key: ")
+        val start = info.length
+        info.append(value.toString())
+        info.setSpan(StyleSpan(BOLD), start, info.length, SPAN_EXCLUSIVE_EXCLUSIVE)
     }
 
-    private fun getKeyValueLine(key: String, value: Any): String {
-        return String.format("%s: <b>%s</b>", key, TextUtils.htmlEncode(value.toString()))
-    }
-
-    private fun getKeyValueLine(@StringRes key: Int, value: Any): String {
-        return getKeyValueLine(SharedApplicationInstance.getStr(key), value)
-    }
-
-    override fun toString(): String {
-        return info.toString()
+    fun toSpanned(): Spanned {
+        return info
     }
 }

@@ -24,16 +24,16 @@ import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.utils.Utils
 
-object HtmlUtils {
+object TrainingInfoUtils {
 
-    fun getTrainingInfoHTML(context: Context, training: Training, rounds: List<Round>, equals: BooleanArray): Spanned {
-        val info = HtmlInfoBuilder()
+    fun getTrainingInfo(context: Context, training: Training, rounds: List<Round>, equals: BooleanArray): Spanned {
+        val info = SpannedInfoBuilder()
         addStaticTrainingHeaderInfo(context, info, training)
         addDynamicTrainingHeaderInfo(rounds, equals, info)
-        return Utils.fromHtml(info.toString())
+        return info.toSpanned()
     }
 
-    private fun addStaticTrainingHeaderInfo(context: Context, info: HtmlInfoBuilder, training: Training) {
+    private fun addStaticTrainingHeaderInfo(context: Context, info: SpannedInfoBuilder, training: Training) {
         if (training.environment.indoor) {
             info.addLine(R.string.environment, context.getString(R.string.indoor))
         } else {
@@ -61,7 +61,7 @@ object HtmlUtils {
         }
     }
 
-    private fun addDynamicTrainingHeaderInfo(rounds: List<Round>, equals: BooleanArray, info: HtmlInfoBuilder) {
+    private fun addDynamicTrainingHeaderInfo(rounds: List<Round>, equals: BooleanArray, info: SpannedInfoBuilder) {
         if (rounds.isNotEmpty()) {
             getEqualValues(rounds, equals)
             val round = rounds[0]
@@ -86,7 +86,7 @@ object HtmlUtils {
     }
 
     fun getRoundInfo(round: Round, equals: BooleanArray): Spanned {
-        val info = HtmlInfoBuilder()
+        val info = SpannedInfoBuilder()
         if (!equals[0]) {
             info.addLine(R.string.distance, round.distance)
         }
@@ -96,6 +96,6 @@ object HtmlUtils {
         if (!round.comment.isEmpty()) {
             info.addLine(R.string.comment, round.comment)
         }
-        return Utils.fromHtml(info.toString())
+        return info.toSpanned()
     }
 }

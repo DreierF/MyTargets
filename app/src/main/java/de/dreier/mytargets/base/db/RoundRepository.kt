@@ -15,22 +15,22 @@
 
 package de.dreier.mytargets.base.db
 
-import android.arch.persistence.room.RoomDatabase
 import de.dreier.mytargets.base.db.dao.EndDAO
 import de.dreier.mytargets.base.db.dao.RoundDAO
 import de.dreier.mytargets.shared.models.augmented.AugmentedRound
 import de.dreier.mytargets.shared.models.db.Round
 
-class RoundRepository(
-        private val database: RoomDatabase,
-        private val roundDAO: RoundDAO,
-        private val endDAO: EndDAO,
-        private val endRepository: EndRepository
-) {
+class RoundRepository(database: AppDatabase) {
 
-    fun loadAugmentedRound(id: Long) = AugmentedRound(roundDAO.loadRound(id), endRepository.loadAugmentedEnds(id).toMutableList())
+    private val roundDAO: RoundDAO = database.roundDAO()
+    private val endDAO: EndDAO = database.endDAO()
+    private val endRepository = EndRepository(endDAO)
 
-    fun loadAugmentedRound(round: Round) = AugmentedRound(round, endRepository.loadAugmentedEnds(round.id).toMutableList())
+    fun loadAugmentedRound(id: Long) =
+        AugmentedRound(roundDAO.loadRound(id), endRepository.loadAugmentedEnds(id).toMutableList())
+
+    fun loadAugmentedRound(round: Round) =
+        AugmentedRound(round, endRepository.loadAugmentedEnds(round.id).toMutableList())
 
     fun insertRound(round: AugmentedRound) {
         roundDAO.insertRound(round.round, round.ends.map { it.end })
