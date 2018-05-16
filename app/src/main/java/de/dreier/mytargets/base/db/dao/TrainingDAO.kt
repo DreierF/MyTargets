@@ -25,6 +25,9 @@ abstract class TrainingDAO {
     @Query("SELECT * FROM `Training`")
     abstract fun loadTrainings(): List<Training>
 
+    @Query("SELECT * FROM `Training`")
+    abstract fun loadTrainingsLive(): LiveData<List<Training>>
+
     @Query("SELECT * FROM `Training` WHERE `id` = :id")
     abstract fun loadTraining(id: Long): Training
 

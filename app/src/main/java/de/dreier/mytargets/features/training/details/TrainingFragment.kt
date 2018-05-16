@@ -179,9 +179,7 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
         navigationController.navigateToStatistics(ids)
     }
 
-    override fun deleteItem(item: Round): () -> Round {
-        return viewModel.deleteRound(item)
-    }
+    override fun deleteItem(item: Round) = viewModel.deleteRound(item)
 
     private inner class RoundAdapter(val equals: BooleanArray) : SimpleListAdapterBase<Round>(compareBy(Round::index)) {
         override fun onCreateViewHolder(parent: ViewGroup): SelectableViewHolder<Round> {
