@@ -16,20 +16,13 @@
 package de.dreier.mytargets.features.arrows
 
 import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations
 import de.dreier.mytargets.app.ApplicationInstance
-import de.dreier.mytargets.base.db.RoundRepository
 import de.dreier.mytargets.shared.models.db.Arrow
-import de.dreier.mytargets.shared.models.db.Round
-import de.dreier.mytargets.shared.models.db.Training
-import de.dreier.mytargets.utils.LiveDataUtil2
 
 class ArrowListViewModel(app: ApplicationInstance) : AndroidViewModel(app) {
 
     private val arrowDAO = ApplicationInstance.db.arrowDAO()
-    val arrows  = arrowDAO.loadArrowsLive()
+    val arrows = arrowDAO.loadArrowsLive()
 
     fun deleteArrow(item: Arrow): () -> Arrow {
         val images = arrowDAO.loadArrowImages(item.id)

@@ -51,8 +51,8 @@ import java.util.*
  */
 @RequiresApi(LOLLIPOP)
 class FabTransform private constructor(
-        @ColorInt private val color: Int,
-        @DrawableRes private val icon: Int
+    @ColorInt private val color: Int,
+    @DrawableRes private val icon: Int
 ) : Transition() {
 
     init {
@@ -72,9 +72,11 @@ class FabTransform private constructor(
         captureValues(transitionValues)
     }
 
-    override fun createAnimator(sceneRoot: ViewGroup,
-                                startValues: TransitionValues?,
-                                endValues: TransitionValues?): Animator? {
+    override fun createAnimator(
+        sceneRoot: ViewGroup,
+        startValues: TransitionValues?,
+        endValues: TransitionValues?
+    ): Animator? {
         if (startValues == null || endValues == null) {
             return null
         }
@@ -94,8 +96,9 @@ class FabTransform private constructor(
         if (!fromFab) {
             // Force measure / layout the dialog back to it's original bounds
             view.measure(
-                    makeMeasureSpec(startBounds.width(), View.MeasureSpec.EXACTLY),
-                    makeMeasureSpec(startBounds.height(), View.MeasureSpec.EXACTLY))
+                makeMeasureSpec(startBounds.width(), View.MeasureSpec.EXACTLY),
+                makeMeasureSpec(startBounds.height(), View.MeasureSpec.EXACTLY)
+            )
             view.layout(startBounds.left, startBounds.top, startBounds.right, startBounds.bottom)
         }
 
@@ -118,9 +121,11 @@ class FabTransform private constructor(
         val fabIcon = ContextCompat.getDrawable(sceneRoot.context, icon)!!.mutate()
         val iconLeft = (dialogBounds.width() - fabIcon.intrinsicWidth) / 2
         val iconTop = (dialogBounds.height() - fabIcon.intrinsicHeight) / 2
-        fabIcon.setBounds(iconLeft, iconTop,
-                iconLeft + fabIcon.intrinsicWidth,
-                iconTop + fabIcon.intrinsicHeight)
+        fabIcon.setBounds(
+            iconLeft, iconTop,
+            iconLeft + fabIcon.intrinsicWidth,
+            iconTop + fabIcon.intrinsicHeight
+        )
         if (!fromFab) {
             fabIcon.alpha = 0
         }
@@ -129,18 +134,28 @@ class FabTransform private constructor(
         // Circular clip from/to the FAB size
         val circularReveal: Animator
         if (fromFab) {
-            circularReveal = ViewAnimationUtils.createCircularReveal(view,
-                    view.width / 2,
-                    view.height / 2,
-                    (startBounds.width() / 2).toFloat(),
-                    Math.hypot((endBounds.width() / 2).toDouble(), (endBounds.height() / 2).toDouble()).toFloat())
+            circularReveal = ViewAnimationUtils.createCircularReveal(
+                view,
+                view.width / 2,
+                view.height / 2,
+                (startBounds.width() / 2).toFloat(),
+                Math.hypot(
+                    (endBounds.width() / 2).toDouble(),
+                    (endBounds.height() / 2).toDouble()
+                ).toFloat()
+            )
             circularReveal.interpolator = FastOutLinearInInterpolator()
         } else {
-            circularReveal = ViewAnimationUtils.createCircularReveal(view,
-                    view.width / 2,
-                    view.height / 2,
-                    Math.hypot((startBounds.width() / 2).toDouble(), (startBounds.height() / 2).toDouble()).toFloat(),
-                    (endBounds.width() / 2).toFloat())
+            circularReveal = ViewAnimationUtils.createCircularReveal(
+                view,
+                view.width / 2,
+                view.height / 2,
+                Math.hypot(
+                    (startBounds.width() / 2).toDouble(),
+                    (startBounds.height() / 2).toDouble()
+                ).toFloat(),
+                (endBounds.width() / 2).toFloat()
+            )
             circularReveal.interpolator = LinearOutSlowInInterpolator()
 
             // Persist the end clip i.e. stay at FAB size after the reveal has run
@@ -151,7 +166,8 @@ class FabTransform private constructor(
                             val left = (view.width - fabBounds.width()) / 2
                             val top = (view.height - fabBounds.height()) / 2
                             outline.setOval(
-                                    left, top, left + fabBounds.width(), top + fabBounds.height())
+                                left, top, left + fabBounds.width(), top + fabBounds.height()
+                            )
                             view.clipToOutline = true
                         }
                     }
@@ -162,13 +178,14 @@ class FabTransform private constructor(
 
         // Translate to end position along an arc
         val translate = ObjectAnimator.ofFloat(
-                view,
-                View.TRANSLATION_X,
-                View.TRANSLATION_Y,
-                if (fromFab)
-                    pathMotion.getPath(translationX.toFloat(), translationY.toFloat(), 0f, 0f)
-                else
-                    pathMotion.getPath(0f, 0f, (-translationX).toFloat(), (-translationY).toFloat()))
+            view,
+            View.TRANSLATION_X,
+            View.TRANSLATION_Y,
+            if (fromFab)
+                pathMotion.getPath(translationX.toFloat(), translationY.toFloat(), 0f, 0f)
+            else
+                pathMotion.getPath(0f, 0f, (-translationX).toFloat(), (-translationY).toFloat())
+        )
         translate.duration = duration
         translate.interpolator = fastOutSlowInInterpolator
 
@@ -234,8 +251,12 @@ class FabTransform private constructor(
             return
         }
 
-        transitionValues.values.put(PROP_BOUNDS, Rect(view.left, view.top,
-                view.right, view.bottom))
+        transitionValues.values.put(
+            PROP_BOUNDS, Rect(
+                view.left, view.top,
+                view.right, view.bottom
+            )
+        )
     }
 
     companion object {
@@ -248,8 +269,10 @@ class FabTransform private constructor(
         /**
          * Configure `intent` with the extras needed to initialize this transition.
          */
-        fun addExtras(intent: Intent, @ColorRes fabColor: Int,
-                      @DrawableRes fabIconResId: Int) {
+        fun addExtras(
+            intent: Intent, @ColorRes fabColor: Int,
+            @DrawableRes fabIconResId: Int
+        ) {
             intent.putExtra(EXTRA_FAB_COLOR_RES, fabColor)
             intent.putExtra(EXTRA_FAB_ICON_RES_ID, fabIconResId)
         }

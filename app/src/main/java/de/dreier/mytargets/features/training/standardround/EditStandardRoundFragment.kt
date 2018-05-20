@@ -53,9 +53,13 @@ class EditStandardRoundFragment : EditFragmentBase() {
     private var adapter: RoundTemplateAdapter? = null
     private lateinit var binding: FragmentEditStandardRoundBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil
-                .inflate(inflater, R.layout.fragment_edit_standard_round, container, false)
+            .inflate(inflater, R.layout.fragment_edit_standard_round, container, false)
 
         ToolbarUtils.setSupportActionBar(this, binding.toolbar)
         ToolbarUtils.showUpAsX(this)
@@ -68,7 +72,10 @@ class EditStandardRoundFragment : EditFragmentBase() {
             if (standardRound == null) {
                 ToolbarUtils.setTitle(this, R.string.new_round_template)
                 binding.name.setText(R.string.custom_round)
-                standardRound = AugmentedStandardRound(StandardRound(), mutableListOf(getDefaultRoundTemplate()))
+                standardRound = AugmentedStandardRound(
+                    StandardRound(),
+                    mutableListOf(getDefaultRoundTemplate())
+                )
             } else {
                 ToolbarUtils.setTitle(this, R.string.edit_standard_round)
                 // Load saved values
@@ -77,8 +84,11 @@ class EditStandardRoundFragment : EditFragmentBase() {
                 } else {
                     standardRound!!.standardRound.id = 0L
                     binding.name.setText(
-                            "%s %s".format(getString(R.string.custom), standardRound!!.standardRound
-                                    .name))
+                        "%s %s".format(
+                            getString(R.string.custom), standardRound!!.standardRound
+                                .name
+                        )
+                    )
                     // When copying an existing standard round make sure
                     // we don't overwrite the other rounds templates
                     for (round in standardRound!!.roundTemplates) {
@@ -136,7 +146,10 @@ class EditStandardRoundFragment : EditFragmentBase() {
     override fun onSave() {
         standardRound!!.standardRound.club = StandardRoundFactory.CUSTOM
         standardRound!!.standardRound.name = binding.name.text.toString()
-        standardRoundDAO.saveStandardRound(standardRound!!.standardRound, standardRound!!.roundTemplates)
+        standardRoundDAO.saveStandardRound(
+            standardRound!!.standardRound,
+            standardRound!!.roundTemplates
+        )
 
         val round = standardRound!!.roundTemplates[0]
         SettingsManager.shotsPerEnd = round.shotsPerEnd
@@ -161,27 +174,37 @@ class EditStandardRoundFragment : EditFragmentBase() {
                 }
                 TargetSelector.TARGET_REQUEST_CODE -> {
                     standardRound!!.roundTemplates[index]
-                            .targetTemplate = data.getParcelableExtra(ITEM)
+                        .targetTemplate = data.getParcelableExtra(ITEM)
                     adapter!!.notifyItemChanged(index)
                 }
             }
         }
     }
 
-    private inner class RoundTemplateHolder internal constructor(view: View) : DynamicItemHolder<RoundTemplate>(view) {
+    private inner class RoundTemplateHolder internal constructor(view: View) :
+        DynamicItemHolder<RoundTemplate>(view) {
 
         internal var binding = ItemRoundTemplateBinding.bind(view)
 
-        override fun onBind(item: RoundTemplate, position: Int, fragment: Fragment, removeListener: View.OnClickListener) {
+        override fun onBind(
+            item: RoundTemplate,
+            position: Int,
+            fragment: Fragment,
+            removeListener: View.OnClickListener
+        ) {
             this.item = item
 
             // Set title of round
             binding.roundNumber.text = fragment.resources
-                    .getQuantityString(R.plurals.rounds, position + 1, position + 1)
+                .getQuantityString(R.plurals.rounds, position + 1, position + 1)
             item.index = position
 
             binding.distance.setOnClickListener { selectedItem, index ->
-                navigationController.navigateToDistance(selectedItem!!, index, DistanceSelector.DISTANCE_REQUEST_CODE)
+                navigationController.navigateToDistance(
+                    selectedItem!!,
+                    index,
+                    DistanceSelector.DISTANCE_REQUEST_CODE
+                )
             }
             binding.distance.itemIndex = position
             binding.distance.setItem(item.distance)
@@ -214,9 +237,15 @@ class EditStandardRoundFragment : EditFragmentBase() {
         }
     }
 
-    private inner class RoundTemplateAdapter internal constructor(fragment: Fragment, list: MutableList<RoundTemplate>) : DynamicItemAdapter<RoundTemplate>(fragment, list, R.string.round_removed) {
+    private inner class RoundTemplateAdapter internal constructor(
+        fragment: Fragment,
+        list: MutableList<RoundTemplate>
+    ) : DynamicItemAdapter<RoundTemplate>(fragment, list, R.string.round_removed) {
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DynamicItemHolder<RoundTemplate> {
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int
+        ): DynamicItemHolder<RoundTemplate> {
             val v = inflater.inflate(R.layout.item_round_template, parent, false)
             return RoundTemplateHolder(v)
         }

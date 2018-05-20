@@ -33,8 +33,9 @@ object Migration6 : Migration(5, 6) {
                 val file = File.createTempFile("img_", ".png", filesDir)
                 File(fileName).copyTo(file, overwrite = true)
                 database.execSQL(
-                        "UPDATE BOW SET image=\"" + file.name + "\" WHERE image=\"" +
-                                fileName + "\"")
+                    "UPDATE BOW SET image=\"" + file.name + "\" WHERE image=\"" +
+                            fileName + "\""
+                )
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -50,8 +51,9 @@ object Migration6 : Migration(5, 6) {
                 val file = File.createTempFile("img_", ".png", filesDir)
                 File(fileName).copyTo(file)
                 database.execSQL(
-                        "UPDATE ARROW SET image=\"" + file.name + "\" WHERE image=\"" +
-                                fileName + "\"")
+                    "UPDATE ARROW SET image=\"" + file.name + "\" WHERE image=\"" +
+                            fileName + "\""
+                )
             } catch (e: IOException) {
                 e.printStackTrace()
             }

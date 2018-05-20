@@ -19,11 +19,17 @@ import de.dreier.mytargets.base.db.dao.EndDAO
 import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
 
 class EndRepository(
-        private val endDAO: EndDAO
+    private val endDAO: EndDAO
 ) {
     fun loadAugmentedEnds(roundId: Long): List<AugmentedEnd> {
         return endDAO.loadEnds(roundId)
-                .map { AugmentedEnd(it, endDAO.loadShots(it.id).toMutableList(), endDAO.loadEndImages(it.id).toMutableList()) }
-                .toMutableList()
+            .map {
+                AugmentedEnd(
+                    it,
+                    endDAO.loadShots(it.id).toMutableList(),
+                    endDAO.loadEndImages(it.id).toMutableList()
+                )
+            }
+            .toMutableList()
     }
 }

@@ -41,7 +41,9 @@ import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 import java.util.*
 
-class TargetListFragment : SelectItemFragmentBase<Target, ExpandableListAdapter<HeaderListAdapter.SimpleHeader, Target>>(), AdapterView.OnItemSelectedListener {
+class TargetListFragment :
+    SelectItemFragmentBase<Target, ExpandableListAdapter<HeaderListAdapter.SimpleHeader, Target>>(),
+    AdapterView.OnItemSelectedListener {
     private lateinit var binding: FragmentTargetSelectBinding
     private var scoringStyleAdapter: ArrayAdapter<String>? = null
     private var targetSizeAdapter: ArrayAdapter<String>? = null
@@ -50,15 +52,21 @@ class TargetListFragment : SelectItemFragmentBase<Target, ExpandableListAdapter<
         get() {
             val actionBar = (activity as AppCompatActivity).supportActionBar!!
             val themedContext = actionBar.themedContext
-            val spinnerAdapter = ArrayAdapter(themedContext,
-                    android.R.layout.simple_spinner_item, ArrayList<String>())
+            val spinnerAdapter = ArrayAdapter(
+                themedContext,
+                android.R.layout.simple_spinner_item, ArrayList<String>()
+            )
             spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             return spinnerAdapter
         }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil
-                .inflate(inflater, R.layout.fragment_target_select, container, false)
+            .inflate(inflater, R.layout.fragment_target_select, container, false)
         adapter = TargetAdapter()
         binding.recyclerView.itemAnimator = SlideInItemAnimator()
         binding.recyclerView.adapter = adapter
@@ -82,16 +90,16 @@ class TargetListFragment : SelectItemFragmentBase<Target, ExpandableListAdapter<
         // Process passed arguments
         val target = arguments!!.getParcelable<Target>(ITEM)!!
         val fixedType = EFixedType
-                .valueOf(arguments!!.getString(FIXED_TYPE, NONE.name))
+            .valueOf(arguments!!.getString(FIXED_TYPE, NONE.name))
         val list = when (fixedType) {
             NONE -> TargetFactory.getList()
             TARGET -> listOf(target.model)
             GROUP -> TargetFactory.getList(target)
         }
         val targets = list
-                .map { value -> Target(value.id, 0) }
-                .toMutableList()
-        adapter!!.setList(targets)
+            .map { value -> Target(value.id, 0) }
+            .toMutableList()
+        adapter.setList(targets)
         selectItem(binding.recyclerView, target)
 
         updateSettings()
@@ -134,7 +142,11 @@ class TargetListFragment : SelectItemFragmentBase<Target, ExpandableListAdapter<
         }
     }
 
-    private fun updateAdapter(spinner: Spinner, spinnerAdapter: ArrayAdapter<String>, strings: List<String>) {
+    private fun updateAdapter(
+        spinner: Spinner,
+        spinnerAdapter: ArrayAdapter<String>,
+        strings: List<String>
+    ) {
         val lastSelection = spinner.selectedItemPosition
         spinnerAdapter.clear()
         spinnerAdapter.addAll(strings)
@@ -188,19 +200,21 @@ class TargetListFragment : SelectItemFragmentBase<Target, ExpandableListAdapter<
         TARGET
     }
 
-    private inner class TargetAdapter internal constructor() : ExpandableListAdapter<HeaderListAdapter.SimpleHeader, Target>({ child ->
-        val type = child.model.type
-        HeaderListAdapter.SimpleHeader(type.ordinal.toLong(), type.toString())
-    }, compareBy { it }, TargetFactory.comparator) {
+    private inner class TargetAdapter internal constructor() :
+        ExpandableListAdapter<HeaderListAdapter.SimpleHeader, Target>({ child ->
+            val type = child.model.type
+            HeaderListAdapter.SimpleHeader(type.ordinal.toLong(), type.toString())
+        }, compareBy { it }, TargetFactory.comparator) {
 
         override fun getSecondLevelViewHolder(parent: ViewGroup): ViewHolder {
             val itemView = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_image_simple, parent, false)
+                .inflate(R.layout.item_image_simple, parent, false)
             return ViewHolder(itemView)
         }
     }
 
-    private inner class ViewHolder(itemView: View) : SelectableViewHolder<Target>(itemView, selector, this@TargetListFragment) {
+    private inner class ViewHolder(itemView: View) :
+        SelectableViewHolder<Target>(itemView, selector, this@TargetListFragment) {
         private val binding = ItemImageSimpleBinding.bind(itemView)
 
         override fun bindItem(item: Target) {

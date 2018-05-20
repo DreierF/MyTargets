@@ -20,4 +20,5 @@ import android.content.Context
 
 import de.dreier.mytargets.base.db.AppDatabase
 
-internal class DbBackupHelper(ctx: Context) : FileBackupHelper(ctx, ctx.getDatabasePath(AppDatabase.DATABASE_FILE_NAME).absolutePath)
+internal class DbBackupHelper(ctx: Context) :
+    FileBackupHelper(ctx, ctx.getDatabasePath(AppDatabase.DATABASE_FILE_NAME).absolutePath)

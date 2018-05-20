@@ -43,7 +43,8 @@ import java.util.*
 /**
  * Shows all ends of one round
  */
-class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBase<AugmentedEnd>>() {
+class RoundFragment :
+    EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBase<AugmentedEnd>>() {
 
     private var roundId: Long = 0
     private lateinit var binding: FragmentListBinding
@@ -71,8 +72,10 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        LocalBroadcastManager.getInstance(context!!).registerReceiver(updateReceiver,
-                IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE))
+        LocalBroadcastManager.getInstance(context!!).registerReceiver(
+            updateReceiver,
+            IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE)
+        )
     }
 
     override fun onDestroy() {
@@ -80,22 +83,32 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
         LocalBroadcastManager.getInstance(context!!).unregisterReceiver(updateReceiver)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false)
         binding.recyclerView.setHasFixedSize(true)
-        binding.recyclerView.addItemDecoration(DividerItemDecoration(context!!, R.drawable.full_divider))
+        binding.recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                context!!,
+                R.drawable.full_divider
+            )
+        )
         adapter = EndAdapter()
         binding.recyclerView.itemAnimator = SlideInItemAnimator()
         binding.recyclerView.adapter = adapter
         binding.fab.visibility = View.GONE
         binding.fab.setOnClickListener {
             navigationController
-                    .navigateToEditEnd(round!!, binding.recyclerView.adapter.itemCount)
-                    .fromFab(binding.fab)
-                    .start()
+                .navigateToEditEnd(round!!, binding.recyclerView.adapter.itemCount)
+                .fromFab(binding.fab)
+                .start()
         }
 
-        roundId = arguments!!.getLongOrNull(ROUND_ID) ?: throw IllegalStateException("Missing required argument round id!")
+        roundId = arguments!!.getLongOrNull(ROUND_ID) ?:
+                throw IllegalStateException("Missing required argument round id!")
 
         setHasOptionsMenu(true)
         return binding.root
@@ -115,8 +128,10 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
             adapter!!.setList(ends)
             binding.fab.visibility = if (showFab) View.VISIBLE else View.GONE
 
-            ToolbarUtils.setTitle(this@RoundFragment,
-                    String.format(Locale.US, "%s %d", getString(R.string.round), round!!.index + 1))
+            ToolbarUtils.setTitle(
+                this@RoundFragment,
+                String.format(Locale.US, "%s %d", getString(R.string.round), round!!.index + 1)
+            )
             ToolbarUtils.setSubtitle(this@RoundFragment, round!!.score.toString())
         }
     }
@@ -133,14 +148,14 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
             }
             R.id.action_comment -> {
                 MaterialDialog.Builder(context!!)
-                        .title(R.string.comment)
-                        .inputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
-                        .input("", round!!.comment) { _, input ->
-                            round!!.comment = input.toString()
-                            roundDAO.updateRound(round!!)
-                        }
-                        .negativeText(android.R.string.cancel)
-                        .show()
+                    .title(R.string.comment)
+                    .inputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
+                    .input("", round!!.comment) { _, input ->
+                        round!!.comment = input.toString()
+                        roundDAO.updateRound(round!!)
+                    }
+                    .negativeText(android.R.string.cancel)
+                    .show()
                 return true
             }
             R.id.action_scoreboard -> {
@@ -153,12 +168,12 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
 
     override fun onSelected(item: AugmentedEnd) {
         navigationController.navigateToEditEnd(round!!, item.end.index)
-                .start()
+            .start()
     }
 
     private fun onEdit(itemId: Long) {
         navigationController.navigateToEditEnd(round!!, adapter!!.getItemById(itemId)!!.end.index)
-                .start()
+            .start()
     }
 
     override fun deleteItem(item: AugmentedEnd): () -> AugmentedEnd {
@@ -169,16 +184,23 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
         }
     }
 
-    private inner class EndAdapter : SimpleListAdapterBase<AugmentedEnd>(compareBy { it.end.index }) {
+    private inner class EndAdapter :
+        SimpleListAdapterBase<AugmentedEnd>(compareBy { it.end.index }) {
 
         override fun onCreateViewHolder(parent: ViewGroup): SelectableViewHolder<AugmentedEnd> {
             val itemView = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_end, parent, false)
+                .inflate(R.layout.item_end, parent, false)
             return EndViewHolder(itemView)
         }
     }
 
-    private inner class EndViewHolder internal constructor(itemView: View) : SelectableViewHolder<AugmentedEnd>(itemView, selector, this@RoundFragment, this@RoundFragment) {
+    private inner class EndViewHolder internal constructor(itemView: View) :
+        SelectableViewHolder<AugmentedEnd>(
+            itemView,
+            selector,
+            this@RoundFragment,
+            this@RoundFragment
+        ) {
 
         private val binding = ItemEndBinding.bind(itemView)
 
@@ -188,9 +210,13 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
                 shots.sort()
             }
             binding.shoots.setShots(round!!.target, shots)
-            binding.imageIndicator.visibility = if (item.images.isEmpty()) View.INVISIBLE else View.VISIBLE
+            binding.imageIndicator.visibility =
+                    if (item.images.isEmpty()) View.INVISIBLE else View.VISIBLE
             binding.end.text = getString(R.string.end_n, item.end.index + 1)
-            binding.endDetails.text = item.end.score.format(Utils.getCurrentLocale(context!!), SettingsManager.scoreConfiguration)
+            binding.endDetails.text = item.end.score.format(
+                Utils.getCurrentLocale(context!!),
+                SettingsManager.scoreConfiguration
+            )
         }
     }
 

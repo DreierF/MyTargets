@@ -29,7 +29,8 @@ abstract class StandardRoundDAO {
     abstract fun loadStandardRound(id: Long): StandardRound
 
     @Transaction
-    open fun loadAugmentedStandardRound(id: Long): AugmentedStandardRound = AugmentedStandardRound(loadStandardRound(id), loadRoundTemplates(id).toMutableList())
+    open fun loadAugmentedStandardRound(id: Long): AugmentedStandardRound =
+        AugmentedStandardRound(loadStandardRound(id), loadRoundTemplates(id).toMutableList())
 
     @Query("SELECT * FROM `StandardRound` WHERE `id` = :id")
     abstract fun loadStandardRoundOrNull(id: Long): StandardRound?

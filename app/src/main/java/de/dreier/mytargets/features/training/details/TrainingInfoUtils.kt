@@ -22,24 +22,34 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
-import de.dreier.mytargets.utils.Utils
 
 object TrainingInfoUtils {
 
-    fun getTrainingInfo(context: Context, training: Training, rounds: List<Round>, equals: BooleanArray): Spanned {
+    fun getTrainingInfo(
+        context: Context,
+        training: Training,
+        rounds: List<Round>,
+        equals: BooleanArray
+    ): Spanned {
         val info = SpannedInfoBuilder()
         addStaticTrainingHeaderInfo(context, info, training)
         addDynamicTrainingHeaderInfo(rounds, equals, info)
         return info.toSpanned()
     }
 
-    private fun addStaticTrainingHeaderInfo(context: Context, info: SpannedInfoBuilder, training: Training) {
+    private fun addStaticTrainingHeaderInfo(
+        context: Context,
+        info: SpannedInfoBuilder,
+        training: Training
+    ) {
         if (training.environment.indoor) {
             info.addLine(R.string.environment, context.getString(R.string.indoor))
         } else {
             info.addLine(R.string.weather, training.environment.weather.getName())
-            info.addLine(R.string.wind,
-                    training.environment.getWindSpeed(context))
+            info.addLine(
+                R.string.wind,
+                training.environment.getWindSpeed(context)
+            )
             if (!TextUtils.isEmpty(training.environment.location)) {
                 info.addLine(R.string.location, training.environment.location)
             }
@@ -56,12 +66,17 @@ object TrainingInfoUtils {
         }
 
         if (training.standardRoundId != null) {
-            val standardRound = ApplicationInstance.db.standardRoundDAO().loadStandardRound(training.standardRoundId!!)
+            val standardRound = ApplicationInstance.db.standardRoundDAO()
+                .loadStandardRound(training.standardRoundId!!)
             info.addLine(R.string.standard_round, standardRound.name)
         }
     }
 
-    private fun addDynamicTrainingHeaderInfo(rounds: List<Round>, equals: BooleanArray, info: SpannedInfoBuilder) {
+    private fun addDynamicTrainingHeaderInfo(
+        rounds: List<Round>,
+        equals: BooleanArray,
+        info: SpannedInfoBuilder
+    ) {
         if (rounds.isNotEmpty()) {
             getEqualValues(rounds, equals)
             val round = rounds[0]

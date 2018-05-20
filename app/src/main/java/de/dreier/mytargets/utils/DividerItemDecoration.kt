@@ -35,13 +35,15 @@ class DividerItemDecoration : RecyclerView.ItemDecoration {
 
     private constructor(context: Context, attrs: AttributeSet) {
         val a = context
-                .obtainStyledAttributes(attrs, intArrayOf(android.R.attr.listDivider))
+            .obtainStyledAttributes(attrs, intArrayOf(android.R.attr.listDivider))
         mDivider = a.getDrawable(0)
         a.recycle()
     }
 
-    constructor(context: Context, attrs: AttributeSet, showFirstDivider: Boolean,
-                showLastDivider: Boolean) : this(context, attrs) {
+    constructor(
+        context: Context, attrs: AttributeSet, showFirstDivider: Boolean,
+        showLastDivider: Boolean
+    ) : this(context, attrs) {
         mShowFirstDivider = showFirstDivider
         mShowLastDivider = showLastDivider
     }
@@ -50,8 +52,10 @@ class DividerItemDecoration : RecyclerView.ItemDecoration {
         mDivider = ContextCompat.getDrawable(context, resId)
     }
 
-    constructor(context: Context, resId: Int, showFirstDivider: Boolean,
-                showLastDivider: Boolean) : this(context, resId) {
+    constructor(
+        context: Context, resId: Int, showFirstDivider: Boolean,
+        showLastDivider: Boolean
+    ) : this(context, resId) {
         mShowFirstDivider = showFirstDivider
         mShowLastDivider = showLastDivider
     }
@@ -60,14 +64,18 @@ class DividerItemDecoration : RecyclerView.ItemDecoration {
         mDivider = divider
     }
 
-    constructor(divider: Drawable, showFirstDivider: Boolean,
-                showLastDivider: Boolean) : this(divider) {
+    constructor(
+        divider: Drawable, showFirstDivider: Boolean,
+        showLastDivider: Boolean
+    ) : this(divider) {
         mShowFirstDivider = showFirstDivider
         mShowLastDivider = showLastDivider
     }
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView,
-                                state: RecyclerView.State) {
+    override fun getItemOffsets(
+        outRect: Rect, view: View, parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
         super.getItemOffsets(outRect, view, parent, state)
         if (mDivider == null) {
             return
@@ -140,7 +148,7 @@ class DividerItemDecoration : RecyclerView.ItemDecoration {
             val child = parent.getChildAt(childCount - 1)
             if (parent.getChildAdapterPosition(child) == state.itemCount - 1) {
                 val params = child
-                        .layoutParams as RecyclerView.LayoutParams
+                    .layoutParams as RecyclerView.LayoutParams
                 if (orientation == LinearLayoutManager.VERTICAL) {
                     top = child.bottom + params.bottomMargin
                     bottom = top + size
@@ -161,7 +169,8 @@ class DividerItemDecoration : RecyclerView.ItemDecoration {
                 mOrientation = layoutManager.orientation
             } else {
                 throw IllegalStateException(
-                        "DividerItemDecoration can only be used with a LinearLayoutManager.")
+                    "DividerItemDecoration can only be used with a LinearLayoutManager."
+                )
             }
         }
         return mOrientation

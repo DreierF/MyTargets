@@ -22,29 +22,31 @@ import de.dreier.mytargets.base.db.dao.*
 import de.dreier.mytargets.base.db.typeconverters.*
 import de.dreier.mytargets.shared.models.db.*
 
-@Database(entities = [
-    Arrow::class,
-    ArrowImage::class,
-    Bow::class,
-    BowImage::class,
-    End::class,
-    EndImage::class,
-    Round::class,
-    RoundTemplate::class,
-    Shot::class,
-    SightMark::class,
-    Signature::class,
-    StandardRound::class,
-    Training::class
-], version = AppDatabase.VERSION)
+@Database(
+    entities = [
+        Arrow::class,
+        ArrowImage::class,
+        Bow::class,
+        BowImage::class,
+        End::class,
+        EndImage::class,
+        Round::class,
+        RoundTemplate::class,
+        Shot::class,
+        SightMark::class,
+        Signature::class,
+        StandardRound::class,
+        Training::class
+    ], version = AppDatabase.VERSION
+)
 @TypeConverters(
-        DimensionConverters::class,
-        ThumbnailConverters::class,
-        LocalDateConverters::class,
-        EWeatherConverters::class,
-        BitmapConverters::class,
-        LocalTimeConverters::class,
-        EBowTypeConverters::class
+    DimensionConverters::class,
+    ThumbnailConverters::class,
+    LocalDateConverters::class,
+    EWeatherConverters::class,
+    BitmapConverters::class,
+    LocalTimeConverters::class,
+    EBowTypeConverters::class
 )
 abstract class AppDatabase : RoomDatabase() {
     companion object {

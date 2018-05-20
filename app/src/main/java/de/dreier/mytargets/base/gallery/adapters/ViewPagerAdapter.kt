@@ -29,11 +29,16 @@ import com.github.chrisbanes.photoview.PhotoView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import de.dreier.mytargets.R
-import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.utils.ImageList
+import de.dreier.mytargets.utils.Utils
 import java.io.File
 
-class ViewPagerAdapter(private val activity: Activity, private val images: ImageList, private val toolbar: Toolbar, private val imagesHorizontalList: RecyclerView) : PagerAdapter() {
+class ViewPagerAdapter(
+    private val activity: Activity,
+    private val images: ImageList,
+    private val toolbar: Toolbar,
+    private val imagesHorizontalList: RecyclerView
+) : PagerAdapter() {
     private val layoutInflater = LayoutInflater.from(activity)
     private var isShowing = true
 
@@ -55,18 +60,18 @@ class ViewPagerAdapter(private val activity: Activity, private val images: Image
         val imageView = itemView.findViewById<PhotoView>(R.id.iv)
         val image = images[position]
         Picasso.with(activity)
-                .load(File(activity.filesDir, image.fileName))
-                .fit()
-                .centerInside()
-                .into(imageView, object : Callback {
-                    override fun onSuccess() {
-                        imageView.setOnPhotoTapListener { _, _, _ -> toggleToolbar() }
-                    }
+            .load(File(activity.filesDir, image.fileName))
+            .fit()
+            .centerInside()
+            .into(imageView, object : Callback {
+                override fun onSuccess() {
+                    imageView.setOnPhotoTapListener { _, _, _ -> toggleToolbar() }
+                }
 
-                    override fun onError() {
+                override fun onError() {
 
-                    }
-                })
+                }
+            })
 
         container.addView(itemView)
         return itemView
@@ -76,24 +81,24 @@ class ViewPagerAdapter(private val activity: Activity, private val images: Image
         if (isShowing) {
             isShowing = false
             toolbar.animate()
-                    .translationY((-toolbar.bottom).toFloat())
-                    .setInterpolator(AccelerateInterpolator())
-                    .start()
+                .translationY((-toolbar.bottom).toFloat())
+                .setInterpolator(AccelerateInterpolator())
+                .start()
             imagesHorizontalList.animate()
-                    .translationY(imagesHorizontalList.bottom.toFloat())
-                    .setInterpolator(AccelerateInterpolator())
-                    .start()
+                .translationY(imagesHorizontalList.bottom.toFloat())
+                .setInterpolator(AccelerateInterpolator())
+                .start()
             Utils.hideSystemUI(activity)
         } else {
             isShowing = true
             toolbar.animate()
-                    .translationY(0f)
-                    .setInterpolator(DecelerateInterpolator())
-                    .start()
+                .translationY(0f)
+                .setInterpolator(DecelerateInterpolator())
+                .start()
             imagesHorizontalList.animate()
-                    .translationY(0f)
-                    .setInterpolator(DecelerateInterpolator())
-                    .start()
+                .translationY(0f)
+                .setInterpolator(DecelerateInterpolator())
+                .start()
             Utils.showSystemUI(activity)
         }
     }

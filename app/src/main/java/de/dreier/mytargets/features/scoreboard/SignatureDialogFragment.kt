@@ -33,7 +33,11 @@ class SignatureDialogFragment : DialogFragment() {
 
     private val signatureDAO = ApplicationInstance.db.signatureDAO()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val binding = FragmentSignatureBinding.inflate(inflater, container, false)
         val args = arguments
         val signature = args!!.getParcelable<Signature>(ARG_SIGNATURE)
@@ -44,15 +48,15 @@ class SignatureDialogFragment : DialogFragment() {
         }
         binding.editName.setOnClickListener {
             MaterialDialog.Builder(context!!)
-                    .title(R.string.name)
-                    .inputType(InputType.TYPE_CLASS_TEXT)
-                    .input(defaultName, signature.name) { _, input ->
-                        signature.name = input.toString()
-                        signatureDAO.updateSignature(signature)
-                        binding.signer.text = signature.name
-                    }
-                    .negativeText(android.R.string.cancel)
-                    .show()
+                .title(R.string.name)
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input(defaultName, signature.name) { _, input ->
+                    signature.name = input.toString()
+                    signatureDAO.updateSignature(signature)
+                    binding.signer.text = signature.name
+                }
+                .negativeText(android.R.string.cancel)
+                .show()
         }
         binding.signer.text = signature.getName(defaultName!!)
         binding.save.setOnClickListener {

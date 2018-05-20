@@ -19,7 +19,6 @@ import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.WearableListenerService
 import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
-import de.dreier.mytargets.base.db.EndRepository
 import de.dreier.mytargets.base.db.RoundRepository
 import de.dreier.mytargets.base.db.TrainingRepository
 import de.dreier.mytargets.features.settings.SettingsManager
@@ -47,7 +46,13 @@ class MobileWearableListener : WearableListenerService() {
     private val endDAO = database.endDAO()
     private val standardRoundDAO = database.standardRoundDAO()
     private val roundRepository = RoundRepository(database)
-    private val trainingRepository = TrainingRepository(database, trainingDAO, roundDAO,roundRepository, database.signatureDAO())
+    private val trainingRepository = TrainingRepository(
+        database,
+        trainingDAO,
+        roundDAO,
+        roundRepository,
+        database.signatureDAO()
+    )
 
     override fun onMessageReceived(messageEvent: MessageEvent) {
         super.onMessageReceived(messageEvent)
@@ -68,7 +73,8 @@ class MobileWearableListener : WearableListenerService() {
     }
 
     private fun trainingTemplate() {
-        val lastTraining = trainingDAO.loadTrainings().minWith(compareByDescending(Training::date).thenByDescending(Training::id))
+        val lastTraining = trainingDAO.loadTrainings()
+            .minWith(compareByDescending(Training::date).thenByDescending(Training::id))
         if (lastTraining != null && lastTraining.date.isEqual(LocalDate.now())) {
             val training = trainingRepository.loadAugmentedTraining(lastTraining.id)
             ApplicationInstance.wearableClient.updateTraining(training)
@@ -92,10 +98,10 @@ class MobileWearableListener : WearableListenerService() {
                 aTraining.rounds = mutableListOf(AugmentedRound(round, mutableListOf()))
             } else {
                 aTraining.rounds = standardRoundDAO
-                        .loadAugmentedStandardRound(lastTraining!!.standardRoundId!!)
-                        .createRoundsFromTemplate()
-                        .map { AugmentedRound(it, mutableListOf()) }
-                        .toMutableList()
+                    .loadAugmentedStandardRound(lastTraining!!.standardRoundId!!)
+                    .createRoundsFromTemplate()
+                    .map { AugmentedRound(it, mutableListOf()) }
+                    .toMutableList()
             }
             ApplicationInstance.wearableClient.sendTrainingTemplate(aTraining)
         }
@@ -103,7 +109,9 @@ class MobileWearableListener : WearableListenerService() {
 
     private fun createTraining(messageEvent: MessageEvent) {
         val augmentedTraining = messageEvent.data.unmarshall(AugmentedTraining.CREATOR)
-        trainingDAO.saveTraining(augmentedTraining.training, augmentedTraining.rounds.map { it.round })
+        trainingDAO.saveTraining(
+            augmentedTraining.training,
+            augmentedTraining.rounds.map { it.round })
         ApplicationInstance.wearableClient.updateTraining(augmentedTraining)
         ApplicationInstance.wearableClient.sendCreateTrainingFromRemoteBroadcast()
     }
@@ -116,9 +124,12 @@ class MobileWearableListener : WearableListenerService() {
         newEnd.shots = shots
         endDAO.saveCompleteEnd(newEnd.end, newEnd.images, newEnd.shots)
 
-        ApplicationInstance.wearableClient.sendUpdateTrainingFromRemoteBroadcast(round.round, newEnd.end)
+        ApplicationInstance.wearableClient.sendUpdateTrainingFromRemoteBroadcast(
+            round.round,
+            newEnd.end
+        )
         ApplicationInstance.wearableClient
-                .sendUpdateTrainingFromLocalBroadcast(trainingRepository.loadAugmentedTraining(round.round.trainingId!!))
+            .sendUpdateTrainingFromLocalBroadcast(trainingRepository.loadAugmentedTraining(round.round.trainingId!!))
     }
 
     private fun getLastEmptyOrCreateNewEnd(round: AugmentedRound): AugmentedEnd {

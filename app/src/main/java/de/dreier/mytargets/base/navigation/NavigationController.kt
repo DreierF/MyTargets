@@ -70,8 +70,8 @@ import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.views.selector.*
 
 class NavigationController(
-        private val activity: AppCompatActivity,
-        private val fragment: Fragment? = null//,
+    private val activity: AppCompatActivity,
+    private val fragment: Fragment? = null//,
 //        private val fragmentManager: FragmentManager,
 //        private val containerId: Int = R.id.container
 ) {
@@ -80,26 +80,26 @@ class NavigationController(
 
     fun navigateToHelp() {
         return IntentWrapper(activity, fragment, HelpActivity::class.java)
-                .start()
+            .start()
     }
 
     fun navigateToAbout() {
         IntentWrapper(activity, fragment, AboutActivity::class.java)
-                .start()
+            .start()
     }
 
     fun navigateToGallery(images: ImageList, title: String, requestCode: Int) {
         IntentWrapper(activity, fragment, GalleryActivity::class.java)
-                .with(GalleryActivity.EXTRA_TITLE, title)
-                .with(GalleryActivity.EXTRA_IMAGES, images)
-                .forResult(requestCode)
-                .start()
+            .with(GalleryActivity.EXTRA_TITLE, title)
+            .with(GalleryActivity.EXTRA_IMAGES, images)
+            .forResult(requestCode)
+            .start()
     }
 
     fun navigateToSettings(subScreen: ESettingsScreens) {
         IntentWrapper(activity, fragment, SettingsActivity::class.java)
-                .with(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, subScreen.key)
-                .start()
+            .with(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, subScreen.key)
+            .start()
     }
 
     fun navigateToCreateArrow(): IntentWrapper {
@@ -108,29 +108,29 @@ class NavigationController(
 
     fun navigateToEditArrow(arrowId: Long): IntentWrapper {
         return IntentWrapper(activity, fragment, EditArrowActivity::class.java)
-                .with(EditArrowFragment.ARROW_ID, arrowId)
+            .with(EditArrowFragment.ARROW_ID, arrowId)
     }
 
     fun navigateToCreateBow(bowType: EBowType): IntentWrapper {
         return IntentWrapper(activity, fragment, EditBowActivity::class.java)
-                .with(EditBowFragment.BOW_TYPE, bowType.name)
+            .with(EditBowFragment.BOW_TYPE, bowType.name)
     }
 
     fun navigateToEditBow(bowId: Long) {
         IntentWrapper(activity, fragment, EditBowActivity::class.java)
-                .with(EditBowFragment.BOW_ID, bowId)
-                .start()
+            .with(EditBowFragment.BOW_ID, bowId)
+            .start()
     }
 
     fun navigateToCreateTraining(trainingTypeAction: String): IntentWrapper {
         return IntentWrapper(activity, fragment, EditTrainingActivity::class.java)
-                .action(trainingTypeAction)
+            .action(trainingTypeAction)
     }
 
     fun navigateToEditTraining(trainingId: Long) {
         IntentWrapper(activity, fragment, EditTrainingActivity::class.java)
-                .with(EditableListFragmentBase.ITEM_ID, trainingId)
-                .start()
+            .with(EditableListFragmentBase.ITEM_ID, trainingId)
+            .start()
     }
 
     fun navigateToCreateRound(
@@ -138,7 +138,7 @@ class NavigationController(
         fab: FloatingActionButton? = null
     ) {
         val intentWrapper = IntentWrapper(activity, fragment, EditRoundActivity::class.java)
-                .with(EditableListFragmentBase.ITEM_ID, trainingId)
+            .with(EditableListFragmentBase.ITEM_ID, trainingId)
         if (fab != null) {
             intentWrapper.fromFab(fab)
         }
@@ -147,28 +147,28 @@ class NavigationController(
 
     fun navigateToEditRound(trainingId: Long, roundId: Long) {
         IntentWrapper(activity, fragment, EditRoundActivity::class.java)
-                .with(EditableListFragmentBase.ITEM_ID, trainingId)
-                .with(EditRoundFragment.ROUND_ID, roundId)
-                .start()
+            .with(EditableListFragmentBase.ITEM_ID, trainingId)
+            .with(EditRoundFragment.ROUND_ID, roundId)
+            .start()
     }
 
     fun navigateToScoreboard(trainingId: Long, roundId: Long = -1) {
         IntentWrapper(activity, fragment, ScoreboardActivity::class.java)
-                .with(ScoreboardActivity.TRAINING_ID, trainingId)
-                .with(ScoreboardActivity.ROUND_ID, roundId)
-                .start()
+            .with(ScoreboardActivity.TRAINING_ID, trainingId)
+            .with(ScoreboardActivity.ROUND_ID, roundId)
+            .start()
     }
 
     fun navigateToDispersionPattern(statistics: ArrowStatistic) {
         IntentWrapper(activity, fragment, DispersionPatternActivity::class.java)
-                .with(DispersionPatternActivity.ITEM, statistics)
-                .start()
+            .with(DispersionPatternActivity.ITEM, statistics)
+            .start()
     }
 
     fun navigateToStatistics(roundIds: List<Long>) {
         IntentWrapper(activity, fragment, StatisticsActivity::class.java)
-                .with(StatisticsActivity.ROUND_IDS, roundIds.toLongArray())
-                .start()
+            .with(StatisticsActivity.ROUND_IDS, roundIds.toLongArray())
+            .start()
     }
 
     fun navigateToStatistics(trainingId: Long) {
@@ -179,32 +179,32 @@ class NavigationController(
 
     fun navigateToTimer(exitAfterStop: Boolean) {
         IntentWrapper(activity, fragment, TimerActivity::class.java)
-                .with(TimerFragmentBase.ARG_EXIT_AFTER_STOP, exitAfterStop)
-                .with(TimerFragmentBase.ARG_TIMER_SETTINGS, SettingsManager.timerSettings)
-                .start()
+            .with(TimerFragmentBase.ARG_EXIT_AFTER_STOP, exitAfterStop)
+            .with(TimerFragmentBase.ARG_TIMER_SETTINGS, SettingsManager.timerSettings)
+            .start()
     }
 
     fun navigateToRound(round: Round): IntentWrapper {
         return IntentWrapper(activity, fragment, RoundActivity::class.java)
-                .with(RoundFragment.ROUND_ID, round.id)
-                .clearTopSingleTop()
+            .with(RoundFragment.ROUND_ID, round.id)
+            .clearTopSingleTop()
     }
 
     fun navigateToTraining(training: Training): IntentWrapper {
         return IntentWrapper(activity, fragment, TrainingActivity::class.java)
-                .with(EditableListFragmentBase.ITEM_ID, training.id)
+            .with(EditableListFragmentBase.ITEM_ID, training.id)
     }
 
     fun navigateToCreateEnd(round: Round) {
         navigateToEditEnd(round, 0)
-                .start()
+            .start()
     }
 
     fun navigateToEditEnd(round: Round, endIndex: Int): IntentWrapper {
         return IntentWrapper(activity, fragment, InputActivity::class.java)
-                .with(InputActivity.TRAINING_ID, round.trainingId!!)
-                .with(InputActivity.ROUND_ID, round.id)
-                .with(InputActivity.END_INDEX, endIndex)
+            .with(InputActivity.TRAINING_ID, round.trainingId!!)
+            .with(InputActivity.ROUND_ID, round.id)
+            .with(InputActivity.END_INDEX, endIndex)
     }
 
     fun navigateToCreateStandardRound(): IntentWrapper {
@@ -213,66 +213,90 @@ class NavigationController(
 
     fun navigateToEditStandardRound(item: AugmentedStandardRound): IntentWrapper {
         return IntentWrapper(activity, fragment, EditStandardRoundActivity::class.java)
-                .with(ITEM, item)
+            .with(ITEM, item)
     }
 
-    fun navigateToDistance(item: Dimension, index: Int, requestCode: Int = DistanceSelector.DISTANCE_REQUEST_CODE) {
+    fun navigateToDistance(
+        item: Dimension,
+        index: Int,
+        requestCode: Int = DistanceSelector.DISTANCE_REQUEST_CODE
+    ) {
         IntentWrapper(activity, fragment, DistanceActivity::class.java)
-                .with(ITEM, item)
-                .with(SelectorBase.INDEX, index)
-                .forResult(requestCode)
-                .start()
+            .with(ITEM, item)
+            .with(SelectorBase.INDEX, index)
+            .forResult(requestCode)
+            .start()
     }
 
-    fun navigateToTarget(item: Target, index: Int = -1, requestCode: Int = TargetSelector.TARGET_REQUEST_CODE, fixedType: TargetListFragment.EFixedType = TargetListFragment.EFixedType.NONE) {
+    fun navigateToTarget(
+        item: Target,
+        index: Int = -1,
+        requestCode: Int = TargetSelector.TARGET_REQUEST_CODE,
+        fixedType: TargetListFragment.EFixedType = TargetListFragment.EFixedType.NONE
+    ) {
         IntentWrapper(activity, fragment, TargetActivity::class.java)
-                .with(ITEM, item)
-                .with(SelectorBase.INDEX, index)
-                .with(TargetListFragment.FIXED_TYPE, fixedType.name)
-                .forResult(requestCode)
-                .start()
+            .with(ITEM, item)
+            .with(SelectorBase.INDEX, index)
+            .with(TargetListFragment.FIXED_TYPE, fixedType.name)
+            .forResult(requestCode)
+            .start()
     }
 
-    fun navigateToStandardRoundList(currentSelection: AugmentedStandardRound, requestCode: Int = StandardRoundSelector.STANDARD_ROUND_REQUEST_CODE) {
+    fun navigateToStandardRoundList(
+        currentSelection: AugmentedStandardRound,
+        requestCode: Int = StandardRoundSelector.STANDARD_ROUND_REQUEST_CODE
+    ) {
         IntentWrapper(activity, fragment, StandardRoundActivity::class.java)
-                .with(ITEM, currentSelection)
-                .forResult(requestCode)
-                .start()
+            .with(ITEM, currentSelection)
+            .forResult(requestCode)
+            .start()
     }
 
-    fun navigateToArrowList(currentSelection: Arrow, requestCode: Int = ArrowSelector.ARROW_REQUEST_CODE) {
+    fun navigateToArrowList(
+        currentSelection: Arrow,
+        requestCode: Int = ArrowSelector.ARROW_REQUEST_CODE
+    ) {
         IntentWrapper(activity, fragment, ArrowListActivity::class.java)
-                .with(ITEM, currentSelection)
-                .forResult(requestCode)
-                .start()
+            .with(ITEM, currentSelection)
+            .forResult(requestCode)
+            .start()
     }
 
     fun navigateToBowList(currentSelection: Bow, requestCode: Int = BowSelector.BOW_REQUEST_CODE) {
         IntentWrapper(activity, fragment, BowListActivity::class.java)
-                .with(ITEM, currentSelection)
-                .forResult(requestCode)
-                .start()
+            .with(ITEM, currentSelection)
+            .forResult(requestCode)
+            .start()
     }
 
-    fun navigateToEnvironment(item: Environment, requestCode: Int = EnvironmentSelector.ENVIRONMENT_REQUEST_CODE) {
+    fun navigateToEnvironment(
+        item: Environment,
+        requestCode: Int = EnvironmentSelector.ENVIRONMENT_REQUEST_CODE
+    ) {
         IntentWrapper(activity, fragment, EnvironmentActivity::class.java)
-                .with(ITEM, item)
-                .forResult(requestCode)
-                .start()
+            .with(ITEM, item)
+            .forResult(requestCode)
+            .start()
     }
 
-    fun navigateToWindDirection(selectedItem: WindDirection, requestCode: Int = WindDirectionSelector.WIND_DIRECTION_REQUEST_CODE) {
+    fun navigateToWindDirection(
+        selectedItem: WindDirection,
+        requestCode: Int = WindDirectionSelector.WIND_DIRECTION_REQUEST_CODE
+    ) {
         IntentWrapper(activity, fragment, WindDirectionActivity::class.java)
-                .with(ITEM, selectedItem)
-                .forResult(requestCode)
-                .start()
+            .with(ITEM, selectedItem)
+            .forResult(requestCode)
+            .start()
     }
 
-    fun navigateToWindSpeed(selectedItem: WindSpeed, requestCode: Int = WindSpeedSelector.WIND_SPEED_REQUEST_CODE) {
+    fun navigateToWindSpeed(
+        selectedItem: WindSpeed,
+        requestCode: Int = WindSpeedSelector.WIND_SPEED_REQUEST_CODE
+    ) {
         IntentWrapper(activity, fragment, WindSpeedActivity::class.java)
-                .with(ITEM, selectedItem)
-                .forResult(requestCode)
-                .start()
+            .with(ITEM, selectedItem)
+            .forResult(requestCode)
+            .start()
     }
 
     fun setResultSuccess() {
@@ -304,7 +328,7 @@ class NavigationController(
                 }
             } else {
                 activity.finish()
-                if(animate) {
+                if (animate) {
                     activity.overridePendingTransition(R.anim.left_in, R.anim.right_out)
                 }
             }

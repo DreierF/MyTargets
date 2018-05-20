@@ -23,7 +23,8 @@ import de.dreier.mytargets.shared.models.IIdSettable
 /**
  * Shows all rounds of one training day
  */
-abstract class ExpandableListFragment<H : IIdProvider, C> : EditableListFragmentBase<C, ExpandableListAdapter<H, C>>() where C : IIdSettable {
+abstract class ExpandableListFragment<H : IIdProvider, C> :
+    EditableListFragmentBase<C, ExpandableListAdapter<H, C>>() where C : IIdSettable {
 
     private var savedInstanceState: Bundle? = null
 

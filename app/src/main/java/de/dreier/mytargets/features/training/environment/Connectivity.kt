@@ -42,7 +42,7 @@ internal object Connectivity {
     fun isConnectedMobile(context: Context): Boolean {
         val info = Connectivity.getNetworkInfo(context)
         return info != null && info.isConnected && info
-                .type == ConnectivityManager.TYPE_MOBILE
+            .type == ConnectivityManager.TYPE_MOBILE
     }
 
 }

@@ -35,8 +35,10 @@ class TimerSettingsFragment : SettingsFragmentBase() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        LocalBroadcastManager.getInstance(context!!).registerReceiver(timerReceiver,
-                IntentFilter(BROADCAST_TIMER_SETTINGS_FROM_REMOTE))
+        LocalBroadcastManager.getInstance(context!!).registerReceiver(
+            timerReceiver,
+            IntentFilter(BROADCAST_TIMER_SETTINGS_FROM_REMOTE)
+        )
     }
 
     override fun onDestroy() {

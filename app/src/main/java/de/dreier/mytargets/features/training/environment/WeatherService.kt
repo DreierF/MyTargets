@@ -28,29 +28,31 @@ class WeatherService {
 
     private interface OpenWeatherMapWebService {
         @GET("weather?units=metric")
-        fun fetchCurrentWeather(@Query("lon") longitude: Double,
-                                @Query("lat") latitude: Double,
-                                @Query("APPID") appId: String): Call<CurrentWeather>
+        fun fetchCurrentWeather(
+            @Query("lon") longitude: Double,
+            @Query("lat") latitude: Double,
+            @Query("APPID") appId: String
+        ): Call<CurrentWeather>
     }
 
     init {
         val client = OkHttpClient.Builder()
-                .addInterceptor { chain ->
-                    val original = chain.request()
-                    val request = original.newBuilder()
-                            .header("Accept", "application/json")
-                            .method(original.method(), original.body())
-                            .build()
-                    chain.proceed(request)
-                }
-                .build()
+            .addInterceptor { chain ->
+                val original = chain.request()
+                val request = original.newBuilder()
+                    .header("Accept", "application/json")
+                    .method(original.method(), original.body())
+                    .build()
+                chain.proceed(request)
+            }
+            .build()
 
         mWebService = Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .baseUrl(BASE_URL)
-                .build()
-                .create(OpenWeatherMapWebService::class.java)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
+            .baseUrl(BASE_URL)
+            .build()
+            .create(OpenWeatherMapWebService::class.java)
     }
 
     fun fetchCurrentWeather(longitude: Double, latitude: Double): Call<CurrentWeather> {

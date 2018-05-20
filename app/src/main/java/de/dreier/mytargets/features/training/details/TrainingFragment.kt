@@ -123,7 +123,12 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
             }
 
             val equals = BooleanArray(2)
-            binding.detailRoundInfo.text = TrainingInfoUtils.getTrainingInfo(context!!, trainingAndRounds.first, trainingAndRounds.second, equals)
+            binding.detailRoundInfo.text = TrainingInfoUtils.getTrainingInfo(
+                context!!,
+                trainingAndRounds.first,
+                trainingAndRounds.second,
+                equals
+            )
 
             adapter = RoundAdapter(equals)
             binding.recyclerView.adapter = adapter
@@ -181,7 +186,8 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
 
     override fun deleteItem(item: Round) = viewModel.deleteRound(item)
 
-    private inner class RoundAdapter(val equals: BooleanArray) : SimpleListAdapterBase<Round>(compareBy(Round::index)) {
+    private inner class RoundAdapter(val equals: BooleanArray) :
+        SimpleListAdapterBase<Round>(compareBy(Round::index)) {
         override fun onCreateViewHolder(parent: ViewGroup): SelectableViewHolder<Round> {
             val itemView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_round, parent, false)

@@ -45,15 +45,22 @@ class DrawableToPdfWriter(private val content: Drawable) : IPdfWriter {
      * MUST be called before [.writePdfDocument].
      */
     @SuppressLint("Range")
-    override fun layoutPages(resolution: PrintAttributes.Resolution, mediaSize: PrintAttributes.MediaSize): Int {
-        val fullPageRectF = RectF(0f, 0f,
-                mediaSize.widthMils * resolution.horizontalDpi / 1000f,
-                mediaSize.heightMils * resolution.verticalDpi / 1000f)
+    override fun layoutPages(
+        resolution: PrintAttributes.Resolution,
+        mediaSize: PrintAttributes.MediaSize
+    ): Int {
+        val fullPageRectF = RectF(
+            0f, 0f,
+            mediaSize.widthMils * resolution.horizontalDpi / 1000f,
+            mediaSize.heightMils * resolution.verticalDpi / 1000f
+        )
         fullPage = fullPageRectF.toClosestRect()
 
         val contentRectF = RectF(fullPageRectF)
-        contentRectF.inset(resolution.horizontalDpi * MARGIN_HORIZONTAL,
-                resolution.verticalDpi * MARGIN_VERTICAL)
+        contentRectF.inset(
+            resolution.horizontalDpi * MARGIN_HORIZONTAL,
+            resolution.verticalDpi * MARGIN_VERTICAL
+        )
 
         contentRect = RectUtils.fitRectWithin(Rect(0, 0, 1, 1), contentRectF.toClosestRect())
         return 1

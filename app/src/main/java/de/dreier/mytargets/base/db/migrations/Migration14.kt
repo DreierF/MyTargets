@@ -20,10 +20,12 @@ import android.arch.persistence.room.migration.Migration
 
 object Migration14 : Migration(13, 14) {
     override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("UPDATE PASSE SET exact=1 WHERE _id IN (SELECT DISTINCT p._id " +
-                "FROM PASSE p, ROUND r, TRAINING t " +
-                "WHERE p.round=r._id " +
-                "AND r.training=t._id " +
-                "AND t.exact=1)")
+        database.execSQL(
+            "UPDATE PASSE SET exact=1 WHERE _id IN (SELECT DISTINCT p._id " +
+                    "FROM PASSE p, ROUND r, TRAINING t " +
+                    "WHERE p.round=r._id " +
+                    "AND r.training=t._id " +
+                    "AND t.exact=1)"
+        )
     }
 }

@@ -33,7 +33,6 @@ import android.view.Menu
 import android.view.MenuItem
 import com.afollestad.materialdialogs.MaterialDialog
 import com.evernote.android.state.State
-import com.evernote.android.state.StateSaver
 import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.activities.ChildActivityBase
@@ -41,9 +40,9 @@ import de.dreier.mytargets.databinding.ActivityStatisticsBinding
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
+import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.toSparseArray
 import de.dreier.mytargets.utils.toUri
-import de.dreier.mytargets.utils.ToolbarUtils
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat

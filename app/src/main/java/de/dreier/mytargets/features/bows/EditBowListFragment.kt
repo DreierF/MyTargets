@@ -43,8 +43,10 @@ class EditBowListFragment : EditableListFragmentBase<Bow, SimpleListAdapterBase<
 
     init {
         itemTypeDelRes = R.plurals.bow_deleted
-        actionModeCallback = ItemActionModeCallback(this, selector,
-                R.plurals.bow_selected)
+        actionModeCallback = ItemActionModeCallback(
+            this, selector,
+            R.plurals.bow_selected
+        )
         actionModeCallback?.setEditCallback(this::onEdit)
         actionModeCallback?.setDeleteCallback(this::onDelete)
     }
@@ -55,11 +57,16 @@ class EditBowListFragment : EditableListFragmentBase<Bow, SimpleListAdapterBase<
     }
 
     @CallSuper
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bows, container, false)
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.addItemDecoration(
-                DividerItemDecoration(context!!, R.drawable.full_divider))
+            DividerItemDecoration(context!!, R.drawable.full_divider)
+        )
         adapter = BowAdapter(selector, this, this)
         binding.recyclerView.itemAnimator = SlideInItemAnimator()
         binding.recyclerView.adapter = adapter
@@ -69,8 +76,8 @@ class EditBowListFragment : EditableListFragmentBase<Bow, SimpleListAdapterBase<
             val bowType = bowTypeMap.get(itemId)
             val fab = binding.fabSpeedDial.getFabFromMenuId(itemId)
             navigationController.navigateToCreateBow(bowType)
-                    .fromFab(fab, R.color.fabBow, bowType.drawable)
-                    .start()
+                .fromFab(fab, R.color.fabBow, bowType.drawable)
+                .start()
             false
         }
 

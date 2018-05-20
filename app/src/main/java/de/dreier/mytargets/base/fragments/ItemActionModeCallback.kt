@@ -32,9 +32,9 @@ typealias DeleteCallback = (List<Long>) -> Unit
 typealias StatisticsCallback = (List<Long>) -> Unit
 
 class ItemActionModeCallback(
-        private val fragment: FragmentBase,
-        private val selector: MultiSelector,
-        @PluralsRes private val itemTitleRes: Int
+    private val fragment: FragmentBase,
+    private val selector: MultiSelector,
+    @PluralsRes private val itemTitleRes: Int
 ) : ActionMode.Callback {
 
     private var actionMode: ActionMode? = null
@@ -124,7 +124,8 @@ class ItemActionModeCallback(
         if (count == 0) {
             finish()
         } else {
-            actionMode!!.title = fragment.getResources().getQuantityString(itemTitleRes, count, count)
+            actionMode!!.title =
+                    fragment.getResources().getQuantityString(itemTitleRes, count, count)
             actionMode!!.invalidate()
         }
     }

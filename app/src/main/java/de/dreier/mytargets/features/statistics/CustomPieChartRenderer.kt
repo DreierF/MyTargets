@@ -36,7 +36,11 @@ import de.dreier.mytargets.shared.utils.Color
  *
  * Copied to implement https://stackoverflow.com/questions/38758885/border-around-pie-chart-in-mpchart#38775142
  */
-class CustomPieChartRenderer(chart: PieChart, animator: ChartAnimator, viewPortHandler: ViewPortHandler) : PieChartRenderer(chart, animator, viewPortHandler) {
+class CustomPieChartRenderer(
+    chart: PieChart,
+    animator: ChartAnimator,
+    viewPortHandler: ViewPortHandler
+) : PieChartRenderer(chart, animator, viewPortHandler) {
 
     /**
      * paint object for the stroke around the slices
@@ -71,7 +75,8 @@ class CustomPieChartRenderer(chart: PieChart, animator: ChartAnimator, viewPortH
         else
             0f
 
-        val visibleAngleCount = (0 until entryCount).count { // draw only if the value is greater than zero
+        val visibleAngleCount = (0 until entryCount).count {
+            // draw only if the value is greater than zero
             Math.abs(dataSet.getEntryForIndex(it).y) > Utils.FLOAT_EPSILON
         }
 
@@ -97,7 +102,8 @@ class CustomPieChartRenderer(chart: PieChart, animator: ChartAnimator, viewPortH
                         0f
                     else
                         sliceSpace / (Utils.FDEG2RAD * radius)
-                    val startAngleOuter = rotationAngle + (angle + sliceSpaceAngleOuter / 2f) * phaseY
+                    val startAngleOuter =
+                        rotationAngle + (angle + sliceSpaceAngleOuter / 2f) * phaseY
                     var sweepAngleOuter = (sliceAngle - sliceSpaceAngleOuter) * phaseY
                     if (sweepAngleOuter < 0f) {
                         sweepAngleOuter = 0f
@@ -105,8 +111,10 @@ class CustomPieChartRenderer(chart: PieChart, animator: ChartAnimator, viewPortH
 
                     mPathBuffer.reset()
 
-                    val arcStartPointX = center.x + radius * Math.cos((startAngleOuter * Utils.FDEG2RAD).toDouble()).toFloat()
-                    val arcStartPointY = center.y + radius * Math.sin((startAngleOuter * Utils.FDEG2RAD).toDouble()).toFloat()
+                    val arcStartPointX =
+                        center.x + radius * Math.cos((startAngleOuter * Utils.FDEG2RAD).toDouble()).toFloat()
+                    val arcStartPointY =
+                        center.y + radius * Math.sin((startAngleOuter * Utils.FDEG2RAD).toDouble()).toFloat()
 
                     if (sweepAngleOuter >= 360f && sweepAngleOuter % 360f <= Utils.FLOAT_EPSILON) {
                         // Android is doing "mod 360"
@@ -116,28 +124,30 @@ class CustomPieChartRenderer(chart: PieChart, animator: ChartAnimator, viewPortH
                         mPathBuffer.moveTo(arcStartPointX, arcStartPointY)
 
                         mPathBuffer.arcTo(
-                                circleBox,
-                                startAngleOuter,
-                                sweepAngleOuter
+                            circleBox,
+                            startAngleOuter,
+                            sweepAngleOuter
                         )
                     }
 
                     // API < 21 does not receive floats in addArc, but a RectF
                     mInnerRectBuffer.set(
-                            center.x - innerRadius,
-                            center.y - innerRadius,
-                            center.x + innerRadius,
-                            center.y + innerRadius)
+                        center.x - innerRadius,
+                        center.y - innerRadius,
+                        center.x + innerRadius,
+                        center.y + innerRadius
+                    )
 
                     if (drawInnerArc && (innerRadius > 0f || accountForSliceSpacing)) {
 
                         if (accountForSliceSpacing) {
                             var minSpacedRadius = calculateMinimumRadiusForSpacedSlice(
-                                    center, radius,
-                                    sliceAngle * phaseY,
-                                    arcStartPointX, arcStartPointY,
-                                    startAngleOuter,
-                                    sweepAngleOuter)
+                                center, radius,
+                                sliceAngle * phaseY,
+                                arcStartPointX, arcStartPointY,
+                                startAngleOuter,
+                                sweepAngleOuter
+                            )
 
                             if (minSpacedRadius < 0f) {
                                 minSpacedRadius = -minSpacedRadius
@@ -150,7 +160,8 @@ class CustomPieChartRenderer(chart: PieChart, animator: ChartAnimator, viewPortH
                             0f
                         else
                             sliceSpace / (Utils.FDEG2RAD * innerRadius)
-                        val startAngleInner = rotationAngle + (angle + sliceSpaceAngleInner / 2f) * phaseY
+                        val startAngleInner =
+                            rotationAngle + (angle + sliceSpaceAngleInner / 2f) * phaseY
                         var sweepAngleInner = (sliceAngle - sliceSpaceAngleInner) * phaseY
                         if (sweepAngleInner < 0f) {
                             sweepAngleInner = 0f
@@ -160,17 +171,18 @@ class CustomPieChartRenderer(chart: PieChart, animator: ChartAnimator, viewPortH
                         if (sweepAngleOuter >= 360f && sweepAngleOuter % 360f <= Utils.FLOAT_EPSILON) {
                             // Android is doing "mod 360"
                             mPathBuffer
-                                    .addCircle(center.x, center.y, innerRadius, Path.Direction.CCW)
+                                .addCircle(center.x, center.y, innerRadius, Path.Direction.CCW)
                         } else {
 
                             mPathBuffer.lineTo(
-                                    center.x + innerRadius * Math.cos((endAngleInner * Utils.FDEG2RAD).toDouble()).toFloat(),
-                                    center.y + innerRadius * Math.sin((endAngleInner * Utils.FDEG2RAD).toDouble()).toFloat())
+                                center.x + innerRadius * Math.cos((endAngleInner * Utils.FDEG2RAD).toDouble()).toFloat(),
+                                center.y + innerRadius * Math.sin((endAngleInner * Utils.FDEG2RAD).toDouble()).toFloat()
+                            )
 
                             mPathBuffer.arcTo(
-                                    mInnerRectBuffer,
-                                    endAngleInner,
-                                    -sweepAngleInner
+                                mInnerRectBuffer,
+                                endAngleInner,
+                                -sweepAngleInner
                             )
                         }
                     } else {
@@ -181,25 +193,30 @@ class CustomPieChartRenderer(chart: PieChart, animator: ChartAnimator, viewPortH
                                 val angleMiddle = startAngleOuter + sweepAngleOuter / 2f
 
                                 val sliceSpaceOffset = calculateMinimumRadiusForSpacedSlice(
-                                        center,
-                                        radius,
-                                        sliceAngle * phaseY,
-                                        arcStartPointX,
-                                        arcStartPointY,
-                                        startAngleOuter,
-                                        sweepAngleOuter)
+                                    center,
+                                    radius,
+                                    sliceAngle * phaseY,
+                                    arcStartPointX,
+                                    arcStartPointY,
+                                    startAngleOuter,
+                                    sweepAngleOuter
+                                )
 
-                                val arcEndPointX = center.x + sliceSpaceOffset * Math.cos((angleMiddle * Utils.FDEG2RAD).toDouble()).toFloat()
-                                val arcEndPointY = center.y + sliceSpaceOffset * Math.sin((angleMiddle * Utils.FDEG2RAD).toDouble()).toFloat()
+                                val arcEndPointX =
+                                    center.x + sliceSpaceOffset * Math.cos((angleMiddle * Utils.FDEG2RAD).toDouble()).toFloat()
+                                val arcEndPointY =
+                                    center.y + sliceSpaceOffset * Math.sin((angleMiddle * Utils.FDEG2RAD).toDouble()).toFloat()
 
                                 mPathBuffer.lineTo(
-                                        arcEndPointX,
-                                        arcEndPointY)
+                                    arcEndPointX,
+                                    arcEndPointY
+                                )
 
                             } else {
                                 mPathBuffer.lineTo(
-                                        center.x,
-                                        center.y)
+                                    center.x,
+                                    center.y
+                                )
                             }
                         }
 
@@ -255,8 +272,10 @@ class CustomPieChartRenderer(chart: PieChart, animator: ChartAnimator, viewPortH
             }
 
             val set = mChart.data
-                    .getDataSetByIndex(indices[i]
-                            .dataSetIndex)
+                .getDataSetByIndex(
+                    indices[i]
+                        .dataSetIndex
+                )
 
             if (set == null || !set.isHighlightEnabled) {
                 continue
@@ -318,33 +337,36 @@ class CustomPieChartRenderer(chart: PieChart, animator: ChartAnimator, viewPortH
             } else {
 
                 mPathBuffer.moveTo(
-                        center.x + highlightedRadius * Math.cos((startAngleShifted * Utils.FDEG2RAD).toDouble()).toFloat(),
-                        center.y + highlightedRadius * Math.sin((startAngleShifted * Utils.FDEG2RAD).toDouble()).toFloat())
+                    center.x + highlightedRadius * Math.cos((startAngleShifted * Utils.FDEG2RAD).toDouble()).toFloat(),
+                    center.y + highlightedRadius * Math.sin((startAngleShifted * Utils.FDEG2RAD).toDouble()).toFloat()
+                )
 
                 mPathBuffer.arcTo(
-                        highlightedCircleBox,
-                        startAngleShifted,
-                        sweepAngleShifted
+                    highlightedCircleBox,
+                    startAngleShifted,
+                    sweepAngleShifted
                 )
             }
 
             var sliceSpaceRadius = 0f
             if (accountForSliceSpacing) {
                 sliceSpaceRadius = calculateMinimumRadiusForSpacedSlice(
-                        center, radius,
-                        sliceAngle * phaseY,
-                        center.x + radius * Math.cos((startAngleOuter * Utils.FDEG2RAD).toDouble()).toFloat(),
-                        center.y + radius * Math.sin((startAngleOuter * Utils.FDEG2RAD).toDouble()).toFloat(),
-                        startAngleOuter,
-                        sweepAngleOuter)
+                    center, radius,
+                    sliceAngle * phaseY,
+                    center.x + radius * Math.cos((startAngleOuter * Utils.FDEG2RAD).toDouble()).toFloat(),
+                    center.y + radius * Math.sin((startAngleOuter * Utils.FDEG2RAD).toDouble()).toFloat(),
+                    startAngleOuter,
+                    sweepAngleOuter
+                )
             }
 
             // API < 21 does not receive floats in addArc, but a RectF
             mInnerRectBuffer.set(
-                    center.x - innerRadius,
-                    center.y - innerRadius,
-                    center.x + innerRadius,
-                    center.y + innerRadius)
+                center.x - innerRadius,
+                center.y - innerRadius,
+                center.x + innerRadius,
+                center.y + innerRadius
+            )
 
             if (drawInnerArc && (innerRadius > 0f || accountForSliceSpacing)) {
 
@@ -375,13 +397,14 @@ class CustomPieChartRenderer(chart: PieChart, animator: ChartAnimator, viewPortH
                 } else {
 
                     mPathBuffer.lineTo(
-                            center.x + innerRadius * Math.cos((endAngleInner * Utils.FDEG2RAD).toDouble()).toFloat(),
-                            center.y + innerRadius * Math.sin((endAngleInner * Utils.FDEG2RAD).toDouble()).toFloat())
+                        center.x + innerRadius * Math.cos((endAngleInner * Utils.FDEG2RAD).toDouble()).toFloat(),
+                        center.y + innerRadius * Math.sin((endAngleInner * Utils.FDEG2RAD).toDouble()).toFloat()
+                    )
 
                     mPathBuffer.arcTo(
-                            mInnerRectBuffer,
-                            endAngleInner,
-                            -sweepAngleInner
+                        mInnerRectBuffer,
+                        endAngleInner,
+                        -sweepAngleInner
                     )
                 }
             } else {
@@ -391,18 +414,22 @@ class CustomPieChartRenderer(chart: PieChart, animator: ChartAnimator, viewPortH
                     if (accountForSliceSpacing) {
                         val angleMiddle = startAngleOuter + sweepAngleOuter / 2f
 
-                        val arcEndPointX = center.x + sliceSpaceRadius * Math.cos((angleMiddle * Utils.FDEG2RAD).toDouble()).toFloat()
-                        val arcEndPointY = center.y + sliceSpaceRadius * Math.sin((angleMiddle * Utils.FDEG2RAD).toDouble()).toFloat()
+                        val arcEndPointX =
+                            center.x + sliceSpaceRadius * Math.cos((angleMiddle * Utils.FDEG2RAD).toDouble()).toFloat()
+                        val arcEndPointY =
+                            center.y + sliceSpaceRadius * Math.sin((angleMiddle * Utils.FDEG2RAD).toDouble()).toFloat()
 
                         mPathBuffer.lineTo(
-                                arcEndPointX,
-                                arcEndPointY)
+                            arcEndPointX,
+                            arcEndPointY
+                        )
 
                     } else {
 
                         mPathBuffer.lineTo(
-                                center.x,
-                                center.y)
+                            center.x,
+                            center.y
+                        )
                     }
 
                 }

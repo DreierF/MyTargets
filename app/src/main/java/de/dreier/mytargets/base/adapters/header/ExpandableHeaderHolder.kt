@@ -17,7 +17,10 @@ package de.dreier.mytargets.base.adapters.header
 
 import java.util.*
 
-class ExpandableHeaderHolder<P, C> internal constructor(parent: P, childComparator: Comparator<in C>) : HeaderListAdapterBase.HeaderHolder<P, C>(parent, childComparator) {
+class ExpandableHeaderHolder<P, C> internal constructor(
+    parent: P,
+    childComparator: Comparator<in C>
+) : HeaderListAdapterBase.HeaderHolder<P, C>(parent, childComparator) {
     internal var expanded = false
 
     override val totalItemCount: Int

@@ -27,7 +27,7 @@ import de.dreier.mytargets.features.training.overview.TrainingsViewModel
 internal class ViewModelFactory : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return when(modelClass) {
+        return when (modelClass) {
             EditArrowViewModel::class.java -> EditArrowViewModel(ApplicationInstance.instance) as T
             TrainingViewModel::class.java -> TrainingViewModel(ApplicationInstance.instance) as T
             TrainingsViewModel::class.java -> TrainingsViewModel(ApplicationInstance.instance) as T

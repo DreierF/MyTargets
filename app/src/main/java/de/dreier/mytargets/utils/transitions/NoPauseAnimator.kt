@@ -127,7 +127,10 @@ class NoPauseAnimator(private val animator: Animator) : Animator() {
         animator.start()
     }
 
-    private class AnimatorListenerWrapper(private val mAnimator: Animator, private val mListener: Animator.AnimatorListener) : Animator.AnimatorListener {
+    private class AnimatorListenerWrapper(
+        private val mAnimator: Animator,
+        private val mListener: Animator.AnimatorListener
+    ) : Animator.AnimatorListener {
 
         override fun onAnimationStart(animator: Animator) {
             mListener.onAnimationStart(mAnimator)

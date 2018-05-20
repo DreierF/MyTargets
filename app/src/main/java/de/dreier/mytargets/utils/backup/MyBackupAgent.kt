@@ -26,8 +26,13 @@ class MyBackupAgent : BackupAgentHelper() {
     override fun onCreate() {
         addHelper(PREFS_BACKUP_KEY, SharedPreferencesBackupHelper(this, PREFS))
         addHelper(SQLITE_BACKUP_KEY, DbBackupHelper(this))
-        addHelper(IMAGES_BACKUP_KEY,
-                FileBackupHelper(this, *ApplicationInstance.db.imageDAO().loadAllFileNames().toTypedArray()))
+        addHelper(
+            IMAGES_BACKUP_KEY,
+            FileBackupHelper(
+                this,
+                *ApplicationInstance.db.imageDAO().loadAllFileNames().toTypedArray()
+            )
+        )
     }
 
     companion object {

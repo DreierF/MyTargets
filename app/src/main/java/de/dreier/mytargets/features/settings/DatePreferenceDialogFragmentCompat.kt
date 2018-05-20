@@ -26,14 +26,17 @@ import android.widget.DatePicker
 
 import org.threeten.bp.LocalDate
 
-class DatePreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat(), DialogPreference.TargetFragment, DatePickerDialog.OnDateSetListener {
+class DatePreferenceDialogFragmentCompat : PreferenceDialogFragmentCompat(),
+    DialogPreference.TargetFragment, DatePickerDialog.OnDateSetListener {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val pref = preference as DatePreference
-        return DatePickerDialog(context!!, this,
-                pref.date.year,
-                pref.date.monthValue - 1,
-                pref.date.dayOfMonth)
+        return DatePickerDialog(
+            context!!, this,
+            pref.date.year,
+            pref.date.monthValue - 1,
+            pref.date.dayOfMonth
+        )
     }
 
     override fun onDialogClosed(b: Boolean) {

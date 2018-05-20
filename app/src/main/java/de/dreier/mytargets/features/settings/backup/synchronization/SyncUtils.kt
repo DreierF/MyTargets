@@ -40,8 +40,10 @@ object SyncUtils {
             val account = GenericAccountService.account
             ContentResolver.setSyncAutomatically(account, CONTENT_AUTHORITY, enabled)
             if (enabled) {
-                ContentResolver.addPeriodicSync(account, CONTENT_AUTHORITY,
-                        Bundle(), SettingsManager.backupInterval.days * ONE_DAY)
+                ContentResolver.addPeriodicSync(
+                    account, CONTENT_AUTHORITY,
+                    Bundle(), SettingsManager.backupInterval.days * ONE_DAY
+                )
             } else {
                 ContentResolver.removePeriodicSync(account, CONTENT_AUTHORITY, Bundle())
             }
@@ -84,8 +86,9 @@ object SyncUtils {
         b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true)
         b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)
         ContentResolver.requestSync(
-                GenericAccountService.account,
-                CONTENT_AUTHORITY,
-                b)
+            GenericAccountService.account,
+            CONTENT_AUTHORITY,
+            b
+        )
     }
 }

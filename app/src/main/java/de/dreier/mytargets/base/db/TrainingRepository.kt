@@ -24,14 +24,15 @@ import de.dreier.mytargets.shared.models.db.Signature
 import de.dreier.mytargets.shared.models.db.Training
 
 class TrainingRepository(
-        private val database: RoomDatabase,
-        private val trainingDAO: TrainingDAO,
-        private val roundDAO: RoundDAO,
-        private val roundRepository: RoundRepository,
-        private val signatureDAO: SignatureDAO
+    private val database: RoomDatabase,
+    private val trainingDAO: TrainingDAO,
+    private val roundDAO: RoundDAO,
+    private val roundRepository: RoundRepository,
+    private val signatureDAO: SignatureDAO
 ) {
 
-    fun loadAugmentedTraining(id: Long): AugmentedTraining = AugmentedTraining(trainingDAO.loadTraining(id), roundDAO.loadRounds(id)
+    fun loadAugmentedTraining(id: Long): AugmentedTraining =
+        AugmentedTraining(trainingDAO.loadTraining(id), roundDAO.loadRounds(id)
             .map { roundRepository.loadAugmentedRound(it) }
             .toMutableList())
 

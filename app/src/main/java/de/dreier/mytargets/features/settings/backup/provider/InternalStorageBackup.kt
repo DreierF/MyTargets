@@ -54,23 +54,28 @@ object InternalStorageBackup {
             val backupDir = File(Environment.getExternalStorageDirectory(), FOLDER_NAME)
             if (backupDir.isDirectory) {
                 val backups = backupDir.listFiles()
-                        .filter { isBackup(it) }
-                        .map {
-                            BackupEntry(it.absolutePath,
-                                    Date(it.lastModified()),
-                                    it.length())
-                        }
-                        .sortedByDescending { it.modifiedDate }
+                    .filter { isBackup(it) }
+                    .map {
+                        BackupEntry(
+                            it.absolutePath,
+                            Date(it.lastModified()),
+                            it.length()
+                        )
+                    }
+                    .sortedByDescending { it.modifiedDate }
                 listener.onLoadFinished(backups)
             }
         }
 
         private fun isBackup(file: File): Boolean {
             return file.isFile && file.name.contains("backup_") && file.name
-                    .endsWith(".zip")
+                .endsWith(".zip")
         }
 
-        override fun restoreBackup(backup: BackupEntry, listener: IAsyncBackupRestore.BackupStatusListener) {
+        override fun restoreBackup(
+            backup: BackupEntry,
+            listener: IAsyncBackupRestore.BackupStatusListener
+        ) {
             val file = File(backup.fileId)
             try {
                 BackupUtils.importZip(activity!!, FileInputStream(file))
@@ -82,7 +87,10 @@ object InternalStorageBackup {
 
         }
 
-        override fun deleteBackup(backup: BackupEntry, listener: IAsyncBackupRestore.BackupStatusListener) {
+        override fun deleteBackup(
+            backup: BackupEntry,
+            listener: IAsyncBackupRestore.BackupStatusListener
+        ) {
             if (File(backup.fileId).delete()) {
                 listener.onFinished()
             } else {
@@ -100,8 +108,10 @@ object InternalStorageBackup {
         @Throws(BackupException::class)
         override fun performBackup(context: Context) {
             try {
-                val backupDir = File(Environment.getExternalStorageDirectory(),
-                        FOLDER_NAME)
+                val backupDir = File(
+                    Environment.getExternalStorageDirectory(),
+                    FOLDER_NAME
+                )
                 createDirectory(backupDir)
                 val zipFile = File(backupDir, BackupUtils.backupName)
                 BackupUtils.zip(context, ApplicationInstance.db, FileOutputStream(zipFile))

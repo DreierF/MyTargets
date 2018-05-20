@@ -56,7 +56,11 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
 
     private val bowDAO = ApplicationInstance.db.bowDAO()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val rootView = super.onCreateView(inflater, container, savedInstanceState)
 
         contentBinding = FragmentEditBowBinding.inflate(inflater, binding.content, true)
@@ -64,7 +68,7 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
         contentBinding.moreFields.setOnClickListener { contentBinding.showAll = true }
 
         val bowType = EBowType
-                .valueOf(arguments!!.getString(BOW_TYPE, EBowType.RECURVE_BOW.name))
+            .valueOf(arguments!!.getString(BOW_TYPE, EBowType.RECURVE_BOW.name))
 
         if (savedInstanceState == null) {
             val bundle = arguments
@@ -157,13 +161,19 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
         return bow
     }
 
-    private inner class SightSettingHolder internal constructor(view: View) : DynamicItemHolder<SightMark>(view) {
+    private inner class SightSettingHolder internal constructor(view: View) :
+        DynamicItemHolder<SightMark>(view) {
 
         private val binding = ItemSightMarkBinding.bind(view)
 
         init {
             binding.sightSetting.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+                override fun beforeTextChanged(
+                    charSequence: CharSequence,
+                    i: Int,
+                    i1: Int,
+                    i2: Int
+                ) {
 
                 }
 
@@ -177,10 +187,19 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
             })
         }
 
-        override fun onBind(item: SightMark, position: Int, fragment: Fragment, removeListener: View.OnClickListener) {
+        override fun onBind(
+            item: SightMark,
+            position: Int,
+            fragment: Fragment,
+            removeListener: View.OnClickListener
+        ) {
             this.item = item
             binding.distance.setOnClickListener { selectedItem, index ->
-                navigationController.navigateToDistance(selectedItem!!, index, SimpleDistanceSelector.SIMPLE_DISTANCE_REQUEST_CODE)
+                navigationController.navigateToDistance(
+                    selectedItem!!,
+                    index,
+                    SimpleDistanceSelector.SIMPLE_DISTANCE_REQUEST_CODE
+                )
             }
             binding.distance.itemIndex = position
             binding.distance.setItem(item.distance)
@@ -189,9 +208,15 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
         }
     }
 
-    private inner class SightMarksAdapter internal constructor(fragment: Fragment, list: MutableList<SightMark>) : DynamicItemAdapter<SightMark>(fragment, list, R.string.sight_setting_removed) {
+    private inner class SightMarksAdapter internal constructor(
+        fragment: Fragment,
+        list: MutableList<SightMark>
+    ) : DynamicItemAdapter<SightMark>(fragment, list, R.string.sight_setting_removed) {
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DynamicItemHolder<SightMark> {
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int
+        ): DynamicItemHolder<SightMark> {
             val v = inflater.inflate(R.layout.item_sight_mark, parent, false)
             return SightSettingHolder(v)
         }

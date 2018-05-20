@@ -28,9 +28,18 @@ import de.dreier.mytargets.shared.models.Dimension
 
 class DistanceFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val binding = DataBindingUtil
-                .inflate<FragmentDistanceBinding>(inflater, R.layout.fragment_distance, container, false)
+            .inflate<FragmentDistanceBinding>(
+                inflater,
+                R.layout.fragment_distance,
+                container,
+                false
+            )
         val distance = arguments!!.getParcelable<Dimension>(ITEM)
         binding.viewPager.adapter = DistanceTabsFragmentPagerAdapter(activity!!, distance)
         binding.slidingTabs.setupWithViewPager(binding.viewPager)

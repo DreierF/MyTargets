@@ -51,10 +51,12 @@ class Locator(private val context: Context) : LocationListener {
         when (this.method) {
             Locator.Method.NETWORK, Locator.Method.NETWORK_THEN_GPS -> {
                 val networkLocation = locationManager
-                        .getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
                 if (networkLocation != null) {
-                    Timber.d("Last known location found for network provider : %s", networkLocation
-                            .toString())
+                    Timber.d(
+                        "Last known location found for network provider : %s", networkLocation
+                            .toString()
+                    )
                     this.callback!!.onLocationFound(networkLocation)
                 } else {
                     Timber.d("Request updates from network provider.")
@@ -63,10 +65,12 @@ class Locator(private val context: Context) : LocationListener {
             }
             Locator.Method.GPS -> {
                 val gpsLocation = this.locationManager
-                        .getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                    .getLastKnownLocation(LocationManager.GPS_PROVIDER)
                 if (gpsLocation != null) {
-                    Timber.d("Last known location found for GPS provider : %s", gpsLocation
-                            .toString())
+                    Timber.d(
+                        "Last known location found for GPS provider : %s", gpsLocation
+                            .toString()
+                    )
                     this.callback!!.onLocationFound(gpsLocation)
                 } else {
                     Timber.d("Request updates from GPS provider.")
@@ -80,14 +84,30 @@ class Locator(private val context: Context) : LocationListener {
     @RequiresPermission(anyOf = [ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION])
     private fun requestUpdates(provider: String) {
         if (locationManager.isProviderEnabled(provider)) {
-            if (provider.contentEquals(LocationManager.NETWORK_PROVIDER) && Connectivity.isConnected(this.context)) {
+            if (provider.contentEquals(LocationManager.NETWORK_PROVIDER) && Connectivity.isConnected(
+                    this.context
+                )
+            ) {
                 Timber.d("Network connected, start listening : %s", provider)
                 locationManager
-                        .requestLocationUpdates(provider, TIME_INTERVAL.toLong(), DISTANCE_INTERVAL.toFloat(), this)
-            } else if (provider.contentEquals(LocationManager.GPS_PROVIDER) && Connectivity.isConnectedMobile(this.context)) {
+                    .requestLocationUpdates(
+                        provider,
+                        TIME_INTERVAL.toLong(),
+                        DISTANCE_INTERVAL.toFloat(),
+                        this
+                    )
+            } else if (provider.contentEquals(LocationManager.GPS_PROVIDER) && Connectivity.isConnectedMobile(
+                    this.context
+                )
+            ) {
                 Timber.d("Mobile network connected, start listening : %s", provider)
                 locationManager
-                        .requestLocationUpdates(provider, TIME_INTERVAL.toLong(), DISTANCE_INTERVAL.toFloat(), this)
+                    .requestLocationUpdates(
+                        provider,
+                        TIME_INTERVAL.toLong(),
+                        DISTANCE_INTERVAL.toFloat(),
+                        this
+                    )
             } else {
                 Timber.d("Proper network not connected for provider : %s", provider)
                 onProviderDisabled(provider)
@@ -103,11 +123,13 @@ class Locator(private val context: Context) : LocationListener {
     }
 
     override fun onLocationChanged(location: Location) {
-        Timber.d("Location found : %f, %f%s", location.latitude, location
+        Timber.d(
+            "Location found : %f, %f%s", location.latitude, location
                 .longitude, if (location.hasAccuracy())
-            " : +- ${location.accuracy} meters"
-        else
-            "")
+                " : +- ${location.accuracy} meters"
+            else
+                ""
+        )
         locationManager.removeUpdates(this)
         callback!!.onLocationFound(location)
     }

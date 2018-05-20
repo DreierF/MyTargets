@@ -37,8 +37,8 @@ class TimerActivity : ChildActivityBase() {
             }
 
             fragmentManager.beginTransaction()
-                    .replace(android.R.id.content, childFragment, FRAGMENT_TAG)
-                    .commit()
+                .replace(android.R.id.content, childFragment, FRAGMENT_TAG)
+                .commit()
         }
     }
 

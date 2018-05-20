@@ -94,13 +94,17 @@ class FabSpeedDial : LinearLayout, View.OnClickListener, CoordinatorLayout.Attac
         init(context, attrs)
     }
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         init(context, attrs)
     }
 
     private fun init(context: Context, attrs: AttributeSet) {
         val typedArray = context.theme
-                .obtainStyledAttributes(attrs, R.styleable.FabSpeedDial, 0, 0)
+            .obtainStyledAttributes(attrs, R.styleable.FabSpeedDial, 0, 0)
         resolveCompulsoryAttributes(typedArray)
         resolveOptionalAttributes(typedArray)
         typedArray.recycle()
@@ -144,20 +148,20 @@ class FabSpeedDial : LinearLayout, View.OnClickListener, CoordinatorLayout.Attac
 
         if (typedArray.hasValue(R.styleable.FabSpeedDial_fabBackgroundTint)) {
             fabBackgroundTint = typedArray
-                    .getColorStateList(R.styleable.FabSpeedDial_fabBackgroundTint)
+                .getColorStateList(R.styleable.FabSpeedDial_fabBackgroundTint)
         }
 
         miniFabBackgroundTint = typedArray
-                .getColorStateList(R.styleable.FabSpeedDial_miniFabBackgroundTint)
+            .getColorStateList(R.styleable.FabSpeedDial_miniFabBackgroundTint)
         if (miniFabBackgroundTint == null) {
             miniFabBackgroundTint = getColorStateList(R.color.fab_background_tint)
         }
 
         if (typedArray.hasValue(R.styleable.FabSpeedDial_miniFabBackgroundTintList)) {
             val miniFabBackgroundTintListId = typedArray
-                    .getResourceId(R.styleable.FabSpeedDial_miniFabBackgroundTintList, 0)
+                .getResourceId(R.styleable.FabSpeedDial_miniFabBackgroundTintList, 0)
             val miniFabBackgroundTintRes = resources
-                    .obtainTypedArray(miniFabBackgroundTintListId)
+                .obtainTypedArray(miniFabBackgroundTintListId)
             miniFabBackgroundTintArray = IntArray(miniFabBackgroundTintRes.length())
             for (i in 0 until miniFabBackgroundTintRes.length()) {
                 miniFabBackgroundTintArray!![i] = miniFabBackgroundTintRes.getResourceId(i, 0)
@@ -166,29 +170,31 @@ class FabSpeedDial : LinearLayout, View.OnClickListener, CoordinatorLayout.Attac
         }
 
         miniFabDrawableTint = typedArray
-                .getColorStateList(R.styleable.FabSpeedDial_miniFabDrawableTint)
+            .getColorStateList(R.styleable.FabSpeedDial_miniFabDrawableTint)
         if (miniFabDrawableTint == null) {
             miniFabDrawableTint = getColorStateList(R.color.mini_fab_drawable_tint)
         }
 
         miniFabTitleBackgroundTint = typedArray
-                .getColorStateList(R.styleable.FabSpeedDial_miniFabTitleBackgroundTint)
+            .getColorStateList(R.styleable.FabSpeedDial_miniFabTitleBackgroundTint)
         if (miniFabTitleBackgroundTint == null) {
             miniFabTitleBackgroundTint = getColorStateList(R.color.mini_fab_title_background_tint)
         }
 
         miniFabTitlesEnabled = typedArray
-                .getBoolean(R.styleable.FabSpeedDial_miniFabTitlesEnabled, true)
+            .getBoolean(R.styleable.FabSpeedDial_miniFabTitlesEnabled, true)
 
 
-        miniFabTitleTextColor = typedArray.getColor(R.styleable.FabSpeedDial_miniFabTitleTextColor,
-                ContextCompat.getColor(context, R.color.title_text_color))
+        miniFabTitleTextColor = typedArray.getColor(
+            R.styleable.FabSpeedDial_miniFabTitleTextColor,
+            ContextCompat.getColor(context, R.color.title_text_color)
+        )
 
         if (typedArray.hasValue(R.styleable.FabSpeedDial_miniFabTitleTextColorList)) {
             val miniFabTitleTextColorListId = typedArray
-                    .getResourceId(R.styleable.FabSpeedDial_miniFabTitleTextColorList, 0)
+                .getResourceId(R.styleable.FabSpeedDial_miniFabTitleTextColorList, 0)
             val miniFabTitleTextColorTa = resources
-                    .obtainTypedArray(miniFabTitleTextColorListId)
+                .obtainTypedArray(miniFabTitleTextColorListId)
             miniFabTitleTextColorArray = IntArray(miniFabTitleTextColorTa.length())
             for (i in 0 until miniFabTitleTextColorTa.length()) {
                 miniFabTitleTextColorArray!![i] = miniFabTitleTextColorTa.getResourceId(i, 0)
@@ -204,9 +210,12 @@ class FabSpeedDial : LinearLayout, View.OnClickListener, CoordinatorLayout.Attac
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        val layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        val layoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         val coordinatorLayoutOffset = resources
-                .getDimensionPixelSize(R.dimen.coordinator_layout_offset)
+            .getDimensionPixelSize(R.dimen.coordinator_layout_offset)
         layoutParams.setMargins(0, 0, coordinatorLayoutOffset, 0)
         menuItemsLayout!!.layoutParams = layoutParams
 
@@ -254,9 +263,13 @@ class FabSpeedDial : LinearLayout, View.OnClickListener, CoordinatorLayout.Attac
                 parent.addView(touchGuard)
                 bringToFront()
             } else if (parent is RelativeLayout) {
-                parent.addView(touchGuard,
-                        RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.MATCH_PARENT))
+                parent.addView(
+                    touchGuard,
+                    RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    )
+                )
                 bringToFront()
             } else {
                 Timber.d("touchGuard requires that the parent of this FabSpeedDialer be a FrameLayout or RelativeLayout")
@@ -272,9 +285,9 @@ class FabSpeedDial : LinearLayout, View.OnClickListener, CoordinatorLayout.Attac
 
     fun getFabFromMenuId(@IdRes id: Int): FloatingActionButton {
         return fabMenuItemMap!!.entries
-                .filter { entry -> entry.value.itemId == id }
-                .map { it.key }
-                .first()
+            .filter { entry -> entry.value.itemId == id }
+            .map { it.key }
+            .first()
     }
 
     private fun newNavigationMenu() {
@@ -403,7 +416,7 @@ class FabSpeedDial : LinearLayout, View.OnClickListener, CoordinatorLayout.Attac
 
     private fun createFabMenuItem(menuItem: MenuItem): View {
         val fabMenuItem = LayoutInflater.from(context)
-                .inflate(R.layout.fab_menu_item_end, this, false) as ViewGroup
+            .inflate(R.layout.fab_menu_item_end, this, false) as ViewGroup
 
         val miniFab = fabMenuItem.findViewById<FloatingActionButton>(R.id.mini_fab)
         val cardView = fabMenuItem.findViewById<CardView>(R.id.card_view)
@@ -427,8 +440,12 @@ class FabSpeedDial : LinearLayout, View.OnClickListener, CoordinatorLayout.Attac
             titleView.setTextColor(miniFabTitleTextColor)
 
             if (miniFabTitleTextColorArray != null) {
-                titleView.setTextColor(ContextCompat.getColorStateList(context,
-                        miniFabTitleTextColorArray!![menuItem.order]))
+                titleView.setTextColor(
+                    ContextCompat.getColorStateList(
+                        context,
+                        miniFabTitleTextColorArray!![menuItem.order]
+                    )
+                )
             }
         } else {
             fabMenuItem.removeView(cardView)
@@ -437,8 +454,10 @@ class FabSpeedDial : LinearLayout, View.OnClickListener, CoordinatorLayout.Attac
         miniFab.backgroundTintList = miniFabBackgroundTint
 
         if (miniFabBackgroundTintArray != null) {
-            miniFab.backgroundTintList = ContextCompat.getColorStateList(context,
-                    miniFabBackgroundTintArray!![menuItem.order])
+            miniFab.backgroundTintList = ContextCompat.getColorStateList(
+                context,
+                miniFabBackgroundTintArray!![menuItem.order]
+            )
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -454,22 +473,22 @@ class FabSpeedDial : LinearLayout, View.OnClickListener, CoordinatorLayout.Attac
         }
 
         ViewCompat.animate(menuItemsLayout)
-                .setDuration(resources.getInteger(android.R.integer.config_shortAnimTime).toLong())
-                .alpha(0f)
-                .setInterpolator(FastOutLinearInInterpolator())
-                .setListener(object : ViewPropertyAnimatorListenerAdapter() {
-                    override fun onAnimationStart(view: View?) {
-                        super.onAnimationStart(view)
-                        isAnimating = true
-                    }
+            .setDuration(resources.getInteger(android.R.integer.config_shortAnimTime).toLong())
+            .alpha(0f)
+            .setInterpolator(FastOutLinearInInterpolator())
+            .setListener(object : ViewPropertyAnimatorListenerAdapter() {
+                override fun onAnimationStart(view: View?) {
+                    super.onAnimationStart(view)
+                    isAnimating = true
+                }
 
-                    override fun onAnimationEnd(view: View?) {
-                        super.onAnimationEnd(view)
-                        menuItemsLayout!!.removeAllViews()
-                        isAnimating = false
-                    }
-                })
-                .start()
+                override fun onAnimationEnd(view: View?) {
+                    super.onAnimationEnd(view)
+                    menuItemsLayout!!.removeAllViews()
+                    isAnimating = false
+                }
+            })
+            .start()
     }
 
     private fun animateFabMenuItemsIn() {
@@ -497,32 +516,33 @@ class FabSpeedDial : LinearLayout, View.OnClickListener, CoordinatorLayout.Attac
         view.y = view.y + offsetY
 
         ViewCompat.animate(view)
-                .setDuration(resources.getInteger(android.R.integer.config_shortAnimTime).toLong())
-                .scaleX(1f)
-                .scaleY(1f)
-                .translationYBy(-offsetY)
-                .alpha(1f)
-                .setStartDelay((4 * position * VSYNC_RHYTHM).toLong())
-                .setInterpolator(FastOutSlowInInterpolator())
-                .setListener(object : ViewPropertyAnimatorListenerAdapter() {
-                    override fun onAnimationStart(view: View?) {
-                        super.onAnimationStart(view)
-                        isAnimating = true
-                    }
+            .setDuration(resources.getInteger(android.R.integer.config_shortAnimTime).toLong())
+            .scaleX(1f)
+            .scaleY(1f)
+            .translationYBy(-offsetY)
+            .alpha(1f)
+            .setStartDelay((4 * position * VSYNC_RHYTHM).toLong())
+            .setInterpolator(FastOutSlowInInterpolator())
+            .setListener(object : ViewPropertyAnimatorListenerAdapter() {
+                override fun onAnimationStart(view: View?) {
+                    super.onAnimationStart(view)
+                    isAnimating = true
+                }
 
-                    override fun onAnimationEnd(view: View?) {
-                        super.onAnimationEnd(view)
-                        isAnimating = false
-                    }
-                })
-                .start()
+                override fun onAnimationEnd(view: View?) {
+                    super.onAnimationEnd(view)
+                    isAnimating = false
+                }
+            })
+            .start()
     }
 
     private fun getColorStateList(colorRes: Int): ColorStateList {
-        val states = arrayOf(intArrayOf(android.R.attr.state_enabled), // enabled
-                intArrayOf(-android.R.attr.state_enabled), // disabled
-                intArrayOf(-android.R.attr.state_checked), // unchecked
-                intArrayOf(android.R.attr.state_pressed)  // pressed
+        val states = arrayOf(
+            intArrayOf(android.R.attr.state_enabled), // enabled
+            intArrayOf(-android.R.attr.state_enabled), // disabled
+            intArrayOf(-android.R.attr.state_checked), // unchecked
+            intArrayOf(android.R.attr.state_pressed)  // pressed
         )
 
         val color = ContextCompat.getColor(context, colorRes)
@@ -533,9 +553,10 @@ class FabSpeedDial : LinearLayout, View.OnClickListener, CoordinatorLayout.Attac
 
     override fun dispatchKeyEventPreIme(event: KeyEvent): Boolean {
         if (isMenuOpen
-                && event.keyCode == KeyEvent.KEYCODE_BACK
-                && event.action == KeyEvent.ACTION_UP
-                && event.repeatCount == 0) {
+            && event.keyCode == KeyEvent.KEYCODE_BACK
+            && event.action == KeyEvent.ACTION_UP
+            && event.repeatCount == 0
+        ) {
             closeMenu()
             return true
         }

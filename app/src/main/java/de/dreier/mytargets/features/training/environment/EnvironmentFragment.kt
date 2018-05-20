@@ -38,9 +38,13 @@ class EnvironmentFragment : FragmentBase() {
     private lateinit var binding: FragmentEnvironmentBinding
     private var switchView: SwitchCompat? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil
-                .inflate(inflater, R.layout.fragment_environment, container, false)
+            .inflate(inflater, R.layout.fragment_environment, container, false)
 
         ToolbarUtils.setSupportActionBar(this, binding.toolbar)
         ToolbarUtils.showHomeAsUp(this)

@@ -32,11 +32,11 @@ import de.dreier.mytargets.shared.models.Score
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.TimerSettings
 import de.dreier.mytargets.shared.targets.scoringstyle.ArrowAwareScoringStyle
-import de.dreier.mytargets.utils.map
-import de.dreier.mytargets.utils.toSparseArray
 import de.dreier.mytargets.shared.views.TargetViewBase
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod.KEYBOARD
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod.PLOTTING
+import de.dreier.mytargets.utils.map
+import de.dreier.mytargets.utils.toSparseArray
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Period
 import org.threeten.bp.format.DateTimeFormatter
@@ -44,7 +44,7 @@ import org.threeten.bp.format.FormatStyle
 
 object SettingsManager {
     private val lastUsed = ApplicationInstance
-            .lastSharedPreferences
+        .lastSharedPreferences
     private val preferences = SharedApplicationInstance.sharedPreferences
 
     const val KEY_TIMER_WARN_TIME = "timer_warn_time"
@@ -97,9 +97,12 @@ object SettingsManager {
     private const val KEY_OVERVIEW_SHOT_SORTING = "overview_shot_sorting"
     private const val KEY_OVERVIEW_SHOT_SORTING_SPOT = "overview_shot_sorting_spot"
     const val KEY_LANGUAGE = "language"
-    const val KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE = "statistics_dispersion_pattern_file_type"
-    const val KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY = "statistics_dispersion_pattern_aggregation_strategy"
-    private const val KEY_STATISTICS_DISPERSION_PATTERN_MERGE_SPOT = "statistics_dispersion_pattern_merge_spot"
+    const val KEY_STATISTICS_DISPERSION_PATTERN_FILE_TYPE =
+        "statistics_dispersion_pattern_file_type"
+    const val KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY =
+        "statistics_dispersion_pattern_aggregation_strategy"
+    private const val KEY_STATISTICS_DISPERSION_PATTERN_MERGE_SPOT =
+        "statistics_dispersion_pattern_merge_spot"
 
     var standardRound: Long
         get() = lastUsed[KEY_STANDARD_ROUND, 32].toLong()
@@ -120,9 +123,9 @@ object SettingsManager {
             return Dimension.from(distance.toFloat(), unit)
         }
         set(value) = lastUsed.edit()
-                .putInt(KEY_DISTANCE_VALUE, value.value.toInt())
-                .putString(KEY_DISTANCE_UNIT, value.unit?.toString())
-                .apply()
+            .putInt(KEY_DISTANCE_VALUE, value.value.toInt())
+            .putString(KEY_DISTANCE_UNIT, value.unit?.toString())
+            .apply()
 
     var shotsPerEnd: Int
         get() = lastUsed[KEY_ARROWS_PER_END, 3]
@@ -138,11 +141,11 @@ object SettingsManager {
             return Target(targetId.toLong(), scoringStyle, diameter)
         }
         set(value) = lastUsed.edit()
-                .putInt(KEY_TARGET, value.id.toInt())
-                .putInt(KEY_SCORING_STYLE, value.scoringStyleIndex)
-                .putInt(KEY_TARGET_DIAMETER_VALUE, value.diameter.value.toInt())
-                .putString(KEY_TARGET_DIAMETER_UNIT, value.diameter.unit?.toString())
-                .apply()
+            .putInt(KEY_TARGET, value.id.toInt())
+            .putInt(KEY_SCORING_STYLE, value.scoringStyleIndex)
+            .putInt(KEY_TARGET_DIAMETER_VALUE, value.diameter.value.toInt())
+            .putString(KEY_TARGET_DIAMETER_UNIT, value.diameter.unit?.toString())
+            .apply()
 
     var timerEnabled: Boolean
         get() = lastUsed[KEY_TIMER, false]
@@ -170,13 +173,13 @@ object SettingsManager {
         set(value) {
             lastUsed[KEY_TIMER] = value.enabled
             preferences
-                    .edit()
-                    .putBoolean(KEY_TIMER_VIBRATE, value.vibrate)
-                    .putBoolean(KEY_TIMER_SOUND, value.sound)
-                    .putString(KEY_TIMER_WAIT_TIME, value.waitTime.toString())
-                    .putString(KEY_TIMER_SHOOT_TIME, value.shootTime.toString())
-                    .putString(KEY_TIMER_WARN_TIME, value.warnTime.toString())
-                    .apply()
+                .edit()
+                .putBoolean(KEY_TIMER_VIBRATE, value.vibrate)
+                .putBoolean(KEY_TIMER_SOUND, value.sound)
+                .putString(KEY_TIMER_WAIT_TIME, value.waitTime.toString())
+                .putString(KEY_TIMER_SHOOT_TIME, value.shootTime.toString())
+                .putString(KEY_TIMER_WARN_TIME, value.warnTime.toString())
+                .apply()
         }
 
     var arrowNumbersEnabled: Boolean
@@ -196,13 +199,17 @@ object SettingsManager {
         set(value) = preferences.set(KEY_INPUT_MODE, value == KEYBOARD)
 
     var showMode: ETrainingScope
-        get() = ETrainingScope.valueOf(preferences
-                .getString(KEY_SHOW_MODE, ETrainingScope.END.toString()))
+        get() = ETrainingScope.valueOf(
+            preferences
+                .getString(KEY_SHOW_MODE, ETrainingScope.END.toString())
+        )
         set(value) = preferences.set(KEY_SHOW_MODE, value.toString())
 
     var aggregationStrategy: EAggregationStrategy
-        get() = EAggregationStrategy.valueOf(preferences
-                .getString(KEY_AGGREGATION_STRATEGY, EAggregationStrategy.AVERAGE.toString()))
+        get() = EAggregationStrategy.valueOf(
+            preferences
+                .getString(KEY_AGGREGATION_STRATEGY, EAggregationStrategy.AVERAGE.toString())
+        )
         set(value) = preferences.set(KEY_AGGREGATION_STRATEGY, value.toString())
 
     var profileFirstName: String
@@ -265,7 +272,10 @@ object SettingsManager {
 
     var statisticsDispersionPatternAggregationStrategy: EAggregationStrategy
         get() = EAggregationStrategy.valueOf(preferences[KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY, EAggregationStrategy.AVERAGE.toString()])
-        set(value) = preferences.set(KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY, value.toString())
+        set(value) = preferences.set(
+            KEY_STATISTICS_DISPERSION_PATTERN_AGGREGATION_STRATEGY,
+            value.toString()
+        )
 
     var statisticsDispersionPatternMergeSpot: Boolean
         get() = preferences[KEY_STATISTICS_DISPERSION_PATTERN_MERGE_SPOT, false]
@@ -282,15 +292,15 @@ object SettingsManager {
     var standardRoundsLastUsed: LongSparseArray<Int>
         get() {
             return lastUsed[KEY_STANDARD_ROUNDS_LAST_USED, ""]
-                    .split(",")
-                    .filterNot { it.isEmpty() }
-                    .map { it.split(":") }
-                    .map { (a, b) -> Pair(a.toLong(), b.toInt()) }
-                    .toSparseArray()
+                .split(",")
+                .filterNot { it.isEmpty() }
+                .map { it.split(":") }
+                .map { (a, b) -> Pair(a.toLong(), b.toInt()) }
+                .toSparseArray()
         }
         set(value) = lastUsed.set(KEY_STANDARD_ROUNDS_LAST_USED, value
-                .map { (key, value) -> "$key:$value" }
-                .joinToString(","))
+            .map { (key, value) -> "$key:$value" }
+            .joinToString(","))
 
     var inputSummaryConfiguration: SummaryConfiguration
         get() {
@@ -299,17 +309,18 @@ object SettingsManager {
             config.showRound = preferences[KEY_INPUT_SUMMARY_SHOW_ROUND, true]
             config.showTraining = preferences[KEY_INPUT_SUMMARY_SHOW_TRAINING, false]
             config.showAverage = preferences[KEY_INPUT_SUMMARY_SHOW_AVERAGE, true]
-            config.averageScope = ETrainingScope.valueOf(preferences[KEY_INPUT_SUMMARY_AVERAGE_OF, "ROUND"])
+            config.averageScope =
+                    ETrainingScope.valueOf(preferences[KEY_INPUT_SUMMARY_AVERAGE_OF, "ROUND"])
             return config
         }
         set(value) {
             preferences.edit()
-                    .putBoolean(KEY_INPUT_SUMMARY_SHOW_END, value.showEnd)
-                    .putBoolean(KEY_INPUT_SUMMARY_SHOW_ROUND, value.showRound)
-                    .putBoolean(KEY_INPUT_SUMMARY_SHOW_TRAINING, value.showTraining)
-                    .putBoolean(KEY_INPUT_SUMMARY_SHOW_AVERAGE, value.showAverage)
-                    .putString(KEY_INPUT_SUMMARY_AVERAGE_OF, value.averageScope.name)
-                    .apply()
+                .putBoolean(KEY_INPUT_SUMMARY_SHOW_END, value.showEnd)
+                .putBoolean(KEY_INPUT_SUMMARY_SHOW_ROUND, value.showRound)
+                .putBoolean(KEY_INPUT_SUMMARY_SHOW_TRAINING, value.showTraining)
+                .putBoolean(KEY_INPUT_SUMMARY_SHOW_AVERAGE, value.showAverage)
+                .putString(KEY_INPUT_SUMMARY_AVERAGE_OF, value.averageScope.name)
+                .apply()
         }
 
     var scoreConfiguration: Score.Configuration
@@ -323,11 +334,11 @@ object SettingsManager {
         }
         set(value) {
             preferences.edit()
-                    .putBoolean(KEY_OVERVIEW_SHOW_REACHED_SCORE, value.showReachedScore)
-                    .putBoolean(KEY_OVERVIEW_SHOW_TOTAL_SCORE, value.showTotalScore)
-                    .putBoolean(KEY_OVERVIEW_SHOW_PERCENTAGE, value.showPercentage)
-                    .putBoolean(KEY_OVERVIEW_SHOW_ARROW_AVERAGE, value.showAverage)
-                    .apply()
+                .putBoolean(KEY_OVERVIEW_SHOW_REACHED_SCORE, value.showReachedScore)
+                .putBoolean(KEY_OVERVIEW_SHOW_TOTAL_SCORE, value.showTotalScore)
+                .putBoolean(KEY_OVERVIEW_SHOW_PERCENTAGE, value.showPercentage)
+                .putBoolean(KEY_OVERVIEW_SHOW_ARROW_AVERAGE, value.showAverage)
+                .apply()
         }
 
     val scoreboardConfiguration: ScoreboardConfiguration
@@ -361,7 +372,10 @@ object SettingsManager {
 
     fun shouldSortTarget(target: Target): Boolean {
         return preferences.getBoolean(KEY_OVERVIEW_SHOT_SORTING, true)
-                && (target.model.faceCount == 1 || preferences.getBoolean(KEY_OVERVIEW_SHOT_SORTING_SPOT, false))
+                && (target.model.faceCount == 1 || preferences.getBoolean(
+            KEY_OVERVIEW_SHOT_SORTING_SPOT,
+            false
+        ))
                 && target.getScoringStyle() !is ArrowAwareScoringStyle
     }
 }

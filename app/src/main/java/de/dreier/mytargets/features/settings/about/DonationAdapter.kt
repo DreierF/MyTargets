@@ -23,7 +23,8 @@ import android.view.ViewGroup
 import de.dreier.mytargets.R
 import de.dreier.mytargets.databinding.ItemDonationBinding
 
-class DonationAdapter(context: Context, private val listener: (Int) -> Unit) : RecyclerView.Adapter<DonationAdapter.DonationViewHolder>() {
+class DonationAdapter(context: Context, private val listener: (Int) -> Unit) :
+    RecyclerView.Adapter<DonationAdapter.DonationViewHolder>() {
 
     private val inflater = LayoutInflater.from(context)
 

@@ -17,14 +17,12 @@ package de.dreier.mytargets.base.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.annotation.CallSuper
 import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import android.support.v4.app.Fragment
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.AsyncTaskLoader
 import android.support.v4.content.Loader
-import com.evernote.android.state.StateSaver
 import de.dreier.mytargets.base.navigation.NavigationController
 
 

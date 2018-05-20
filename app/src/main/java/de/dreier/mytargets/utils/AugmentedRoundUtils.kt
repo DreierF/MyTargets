@@ -29,8 +29,10 @@ import de.dreier.mytargets.shared.models.db.Shot
 fun AugmentedRound.addEnd(): AugmentedEnd {
     val end = End(index = ends.size, roundId = round.id)
     val augmentedEnd = AugmentedEnd(end, (0 until round.shotsPerEnd)
-            .map { Shot(it) }.toMutableList(), mutableListOf())
-    ApplicationInstance.db.endDAO().saveCompleteEnd(augmentedEnd.end, augmentedEnd.images, augmentedEnd.shots)
+        .map { Shot(it) }.toMutableList(), mutableListOf()
+    )
+    ApplicationInstance.db.endDAO()
+        .saveCompleteEnd(augmentedEnd.end, augmentedEnd.images, augmentedEnd.shots)
     ends.add(augmentedEnd)
     return augmentedEnd
 }

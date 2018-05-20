@@ -23,8 +23,8 @@ class WeakHolderTracker {
 
     val trackedHolders: List<SelectableHolder>
         get() = (0 until holdersById.size())
-                .map { holdersById.keyAt(it) }
-                .mapNotNull { getHolder(it) }
+            .map { holdersById.keyAt(it) }
+            .mapNotNull { getHolder(it) }
 
     /**
      * Returns the holder with a given id.

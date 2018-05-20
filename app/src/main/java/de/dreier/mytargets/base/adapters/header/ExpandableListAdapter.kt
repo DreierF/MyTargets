@@ -25,19 +25,24 @@ import de.dreier.mytargets.utils.multiselector.ExpandableHeaderBindingHolder
 import de.dreier.mytargets.utils.multiselector.ItemBindingHolder
 
 typealias PartitionDelegate<PARENT, CHILD> = (CHILD) -> PARENT
+
 abstract class ExpandableListAdapter<P : IIdProvider, C : IIdProvider>(
-        partitionDelegate: PartitionDelegate<P, C>,
-        headerComparator: Comparator<P>, childComparator: Comparator<C>
-) : HeaderListAdapterBase<P, C, ExpandableHeaderHolder<P, C>>(partitionDelegate, headerComparator, childComparator) {
+    partitionDelegate: PartitionDelegate<P, C>,
+    headerComparator: Comparator<P>, childComparator: Comparator<C>
+) : HeaderListAdapterBase<P, C, ExpandableHeaderHolder<P, C>>(
+    partitionDelegate,
+    headerComparator,
+    childComparator
+) {
 
     var expandedIds: List<Long>
         get() = headersList
-                .filter { it.expanded }
-                .map { it.item.id }
+            .filter { it.expanded }
+            .map { it.item.id }
         set(expanded) {
             headersList.indices
-                    .map { headersList[it] }
-                    .forEach { it.expanded = expanded.contains(it.item.id) }
+                .map { headersList[it] }
+                .forEach { it.expanded = expanded.contains(it.item.id) }
         }
 
     override fun onBindViewHolder(viewHolder: ItemBindingHolder<IIdProvider>, position: Int) {
@@ -45,7 +50,10 @@ abstract class ExpandableListAdapter<P : IIdProvider, C : IIdProvider>(
         if (viewHolder is ExpandableHeaderBindingHolder<*>) {
             val header = getHeaderForPosition(position)
             (viewHolder as ExpandableHeaderBindingHolder<*>)
-                    .setExpandOnClickListener(View.OnClickListener { expandOrCollapse(header) }, header.expanded)
+                .setExpandOnClickListener(
+                    View.OnClickListener { expandOrCollapse(header) },
+                    header.expanded
+                )
         }
     }
 
@@ -117,17 +125,21 @@ abstract class ExpandableListAdapter<P : IIdProvider, C : IIdProvider>(
         return (0 until headerIndex).sumBy { headersList[it].totalItemCount }
     }
 
-    override fun getHeaderHolder(parent: P, childComparator: Comparator<C>): ExpandableHeaderHolder<P, C> {
+    override fun getHeaderHolder(
+        parent: P,
+        childComparator: Comparator<C>
+    ): ExpandableHeaderHolder<P, C> {
         return ExpandableHeaderHolder(parent, childComparator)
     }
 
     override fun getTopLevelViewHolder(parent: ViewGroup): HeaderViewHolder<P> {
         val itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_header_expandable, parent, false)
+            .inflate(R.layout.item_header_expandable, parent, false)
         return HeaderViewHolder(itemView)
     }
 
-    class HeaderViewHolder<P> internal constructor(itemView: View) : ExpandableHeaderBindingHolder<P>(itemView, R.id.expand_collapse) {
+    class HeaderViewHolder<P> internal constructor(itemView: View) :
+        ExpandableHeaderBindingHolder<P>(itemView, R.id.expand_collapse) {
         private val binding = ItemHeaderExpandableBinding.bind(itemView)
 
         override fun bindItem(item: P) {

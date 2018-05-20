@@ -17,8 +17,8 @@ package de.dreier.mytargets.features.training.overview
 import de.dreier.mytargets.shared.models.IIdProvider
 
 data class Header(
-        override val id: Long,
-        val title: String
+    override val id: Long,
+    val title: String
 ) : IIdProvider, Comparable<Header> {
 
     override fun toString(): String {

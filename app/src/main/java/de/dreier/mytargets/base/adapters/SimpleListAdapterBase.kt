@@ -24,7 +24,7 @@ import java.util.*
  * The list is automatically sorted in natural order.
  */
 abstract class SimpleListAdapterBase<T>(
-        private val comparator: Comparator<T>
+    private val comparator: Comparator<T>
 ) : ListAdapterBase<SelectableViewHolder<T>, T>() where T : IIdProvider {
 
     private var list: MutableList<T> = ArrayList()

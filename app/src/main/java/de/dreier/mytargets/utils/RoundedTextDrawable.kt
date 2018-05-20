@@ -21,7 +21,11 @@ import android.text.TextPaint
 import de.dreier.mytargets.features.statistics.ArrowStatistic
 import java.util.*
 
-class RoundedTextDrawable private constructor(private val text: String, bgColor: Int, textColor: Int) : Drawable() {
+class RoundedTextDrawable private constructor(
+    private val text: String,
+    bgColor: Int,
+    textColor: Int
+) : Drawable() {
     private val paint = Paint()
     private val rectF = RectF()
     private val textPaint = TextPaint()
@@ -35,14 +39,18 @@ class RoundedTextDrawable private constructor(private val text: String, bgColor:
         paint.color = bgColor
     }
 
-    constructor(item: ArrowStatistic) : this(String.format(Locale.US, "%.1f", item.totalScore.shotAverage),
-            item.appropriateBgColor,
-            item.appropriateTextColor)
+    constructor(item: ArrowStatistic) : this(
+        String.format(Locale.US, "%.1f", item.totalScore.shotAverage),
+        item.appropriateBgColor,
+        item.appropriateTextColor
+    )
 
     override fun draw(canvas: Canvas) {
         canvas.drawOval(rectF, paint)
-        canvas.drawText(text, rectF.centerX() - textBounds.width() / 2,
-                rectF.centerY() + textBounds.height() / 2, textPaint)
+        canvas.drawText(
+            text, rectF.centerX() - textBounds.width() / 2,
+            rectF.centerY() + textBounds.height() / 2, textPaint
+        )
     }
 
     override fun onBoundsChange(bounds: Rect) {

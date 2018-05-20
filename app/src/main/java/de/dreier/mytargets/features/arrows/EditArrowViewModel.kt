@@ -39,7 +39,8 @@ class EditArrowViewModel(app: ApplicationInstance) : AndroidViewModel(app) {
     val arrow: LiveData<Arrow?>
     var images: LiveData<List<ArrowImage>>
 
-    var name = ObservableField<String>(getApplication<ApplicationInstance>().getString(R.string.my_arrow))
+    var name =
+        ObservableField<String>(getApplication<ApplicationInstance>().getString(R.string.my_arrow))
     var maxArrowNumber = ObservableInt(12)
     var length = ObservableField<String>("")
     var material = ObservableField<String>("")
@@ -67,8 +68,8 @@ class EditArrowViewModel(app: ApplicationInstance) : AndroidViewModel(app) {
                 arrow
             }
         }
-        images = Transformations.map(arrowId, {
-            id -> if(id == null)
+        images = Transformations.map(arrowId, { id ->
+            if (id == null)
                 mutableListOf()
             else
                 arrowDAO.loadArrowImages(id)

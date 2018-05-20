@@ -16,8 +16,6 @@
 package de.dreier.mytargets.features.training.details
 
 import android.graphics.Typeface.BOLD
-import android.text.Spannable
-import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE

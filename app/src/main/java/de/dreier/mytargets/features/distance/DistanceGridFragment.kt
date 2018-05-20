@@ -35,14 +35,19 @@ import de.dreier.mytargets.shared.models.Dimension.Unit
 import de.dreier.mytargets.utils.SlideInItemAnimator
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 
-class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapterBase<Dimension>>(), DistanceInputDialog.OnClickListener {
+class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapterBase<Dimension>>(),
+    DistanceInputDialog.OnClickListener {
     private lateinit var binding: FragmentListBinding
     private lateinit var unit: Dimension.Unit
 
     private lateinit var viewModel: DistancesViewModel
     private val factory = ViewModelFactory()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false)
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.layoutManager = GridLayoutManager(activity, 3)
@@ -52,9 +57,9 @@ class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapter
         binding.recyclerView.adapter = adapter
         binding.fab.setOnClickListener {
             DistanceInputDialog.Builder(context!!)
-                    .setUnit(unit.toString())
-                    .setOnClickListener(this@DistanceGridFragment)
-                    .show()
+                .setUnit(unit.toString())
+                .setOnClickListener(this@DistanceGridFragment)
+                .show()
         }
         return binding.root
     }
@@ -81,15 +86,17 @@ class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapter
         })
     }
 
-    private inner class DistanceAdapter : SimpleListAdapterBase<Dimension>(compareBy(Dimension::value)) {
+    private inner class DistanceAdapter :
+        SimpleListAdapterBase<Dimension>(compareBy(Dimension::value)) {
         public override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
             val itemView = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_distance, parent, false)
+                .inflate(R.layout.item_distance, parent, false)
             return ViewHolder(itemView)
         }
     }
 
-    internal inner class ViewHolder(itemView: View) : SelectableViewHolder<Dimension>(itemView, selector, this@DistanceGridFragment) {
+    internal inner class ViewHolder(itemView: View) :
+        SelectableViewHolder<Dimension>(itemView, selector, this@DistanceGridFragment) {
         private val binding = ItemDistanceBinding.bind(itemView)
 
         override fun bindItem(item: Dimension) {

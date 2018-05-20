@@ -54,11 +54,15 @@ class HelpFragment : Fragment() {
         }
 
     @CallSuper
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_web, container, false)
         val prompt = helpHtmlPage
         binding.webView
-                .loadDataWithBaseURL("file:///android_asset/", prompt, "text/html", "utf-8", "")
+            .loadDataWithBaseURL("file:///android_asset/", prompt, "text/html", "utf-8", "")
         binding.webView.isHorizontalScrollBarEnabled = false
         return binding.root
     }
@@ -78,9 +82,9 @@ class HelpFragment : Fragment() {
         when (item.itemId) {
             R.id.action_version_info -> {
                 VersionInfoMDialog.Builder(context)
-                        .setCopyrightText(R.string.app_copyright)
-                        .setVersionPrefix(R.string.version_prefix)
-                        .show()
+                    .setCopyrightText(R.string.app_copyright)
+                    .setVersionPrefix(R.string.version_prefix)
+                    .show()
                 return true
             }
             R.id.action_open_source_licences -> {

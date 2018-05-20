@@ -27,9 +27,16 @@ import android.support.annotation.RequiresApi
 import java.io.FileOutputStream
 
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-class CustomPrintDocumentAdapter(private val pdfWriter: IPdfWriter, private val fileName: String) : PrintDocumentAdapter() {
+class CustomPrintDocumentAdapter(private val pdfWriter: IPdfWriter, private val fileName: String) :
+    PrintDocumentAdapter() {
 
-    override fun onLayout(oldAttributes: PrintAttributes, newAttributes: PrintAttributes, cancellationSignal: CancellationSignal, callback: PrintDocumentAdapter.LayoutResultCallback, extras: Bundle) {
+    override fun onLayout(
+        oldAttributes: PrintAttributes,
+        newAttributes: PrintAttributes,
+        cancellationSignal: CancellationSignal,
+        callback: PrintDocumentAdapter.LayoutResultCallback,
+        extras: Bundle
+    ) {
         if (cancellationSignal.isCanceled) {
             callback.onLayoutCancelled()
             return
@@ -40,14 +47,19 @@ class CustomPrintDocumentAdapter(private val pdfWriter: IPdfWriter, private val 
         val pageCount = pdfWriter.layoutPages(resolution, mediaSize)
 
         val pdi = PrintDocumentInfo.Builder(fileName)
-                .setContentType(PrintDocumentInfo.CONTENT_TYPE_DOCUMENT)
-                .setPageCount(pageCount)
-                .build()
+            .setContentType(PrintDocumentInfo.CONTENT_TYPE_DOCUMENT)
+            .setPageCount(pageCount)
+            .build()
 
         callback.onLayoutFinished(pdi, true)
     }
 
-    override fun onWrite(pages: Array<PageRange>, destination: ParcelFileDescriptor, cancellationSignal: CancellationSignal, callback: PrintDocumentAdapter.WriteResultCallback) {
+    override fun onWrite(
+        pages: Array<PageRange>,
+        destination: ParcelFileDescriptor,
+        cancellationSignal: CancellationSignal,
+        callback: PrintDocumentAdapter.WriteResultCallback
+    ) {
         val outputStream = FileOutputStream(destination.fileDescriptor)
 
         try {

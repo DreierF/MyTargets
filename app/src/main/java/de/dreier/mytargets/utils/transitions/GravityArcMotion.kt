@@ -186,7 +186,8 @@ class GravityArcMotion : ArcMotion() {
 
     companion object {
         private const val DEFAULT_MAX_ANGLE_DEGREES = 70f
-        private val DEFAULT_MAX_TANGENT = Math.tan(Math.toRadians((DEFAULT_MAX_ANGLE_DEGREES / 2).toDouble())).toFloat()
+        private val DEFAULT_MAX_TANGENT =
+            Math.tan(Math.toRadians((DEFAULT_MAX_ANGLE_DEGREES / 2).toDouble())).toFloat()
 
         private fun toTangent(arcInDegrees: Float): Float {
             if (arcInDegrees < 0 || arcInDegrees > 90) {

@@ -59,7 +59,7 @@ class ApplicationInstance : SharedApplicationInstance() {
         handleDatabaseImport()
         initRoomDb(this)
         wearableClient = MobileWearableClient(this)
-        StateSaver.setEnabledForAllActivitiesAndSupportFragments(this, true);
+        StateSaver.setEnabledForAllActivitiesAndSupportFragments(this, true)
     }
 
     private fun handleDatabaseImport() {
@@ -113,20 +113,24 @@ class ApplicationInstance : SharedApplicationInstance() {
             get() = SharedApplicationInstance.context.getSharedPreferences(MyBackupAgent.PREFS, 0)
 
         fun initRoomDb(context: Context) {
-            db = Room.databaseBuilder(context,
-                    AppDatabase::class.java, AppDatabase.DATABASE_FILE_NAME)
-                    .allowMainThreadQueries()
-                    .addCallback(RoomCreationCallback)
-                    .addMigrations(Migration2, Migration3, Migration4,
-                            Migration5, Migration6, Migration7,
-                            Migration8, Migration9, Migration10,
-                            Migration11, Migration12, Migration13,
-                            Migration14, Migration15, Migration16,
-                            Migration17, Migration18, Migration19,
-                            Migration20, Migration21, Migration22,
-                            Migration23, Migration24, Migration25,
-                            Migration26)
-                    .build()
+            db = Room.databaseBuilder(
+                context,
+                AppDatabase::class.java, AppDatabase.DATABASE_FILE_NAME
+            )
+                .allowMainThreadQueries()
+                .addCallback(RoomCreationCallback)
+                .addMigrations(
+                    Migration2, Migration3, Migration4,
+                    Migration5, Migration6, Migration7,
+                    Migration8, Migration9, Migration10,
+                    Migration11, Migration12, Migration13,
+                    Migration14, Migration15, Migration16,
+                    Migration17, Migration18, Migration19,
+                    Migration20, Migration21, Migration22,
+                    Migration23, Migration24, Migration25,
+                    Migration26
+                )
+                .build()
         }
     }
 

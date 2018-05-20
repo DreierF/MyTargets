@@ -27,7 +27,11 @@ import de.dreier.mytargets.shared.models.WindSpeed
 
 class WindSpeedListFragment : SelectPureListItemFragmentBase<WindSpeed>(compareBy(WindSpeed::id)) {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         adapter.setList(WindSpeed.getList(context!!))
         val windSpeed = arguments!!.getParcelable<WindSpeed>(ITEM)
@@ -37,5 +41,6 @@ class WindSpeedListFragment : SelectPureListItemFragmentBase<WindSpeed>(compareB
 
     override fun getName(item: WindSpeed) = item.name
 
-    override fun getDrawable(item: WindSpeed) = ContextCompat.getDrawable(context!!, item.drawable)!!
+    override fun getDrawable(item: WindSpeed) =
+        ContextCompat.getDrawable(context!!, item.drawable)!!
 }

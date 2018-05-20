@@ -33,9 +33,18 @@ object SpinnerBindingAdapters {
 
     @JvmStatic
     @BindingAdapter(value = ["selectedUnit", "selectedValueAttrChanged"], requireAll = false)
-    fun bindSpinnerData(pAppCompatSpinner: AppCompatSpinner, newSelectedValue: Dimension.Unit?, newTextAttrChanged: InverseBindingListener) {
+    fun bindSpinnerData(
+        pAppCompatSpinner: AppCompatSpinner,
+        newSelectedValue: Dimension.Unit?,
+        newTextAttrChanged: InverseBindingListener
+    ) {
         pAppCompatSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
                 newTextAttrChanged.onChange()
             }
 
@@ -49,9 +58,18 @@ object SpinnerBindingAdapters {
 
     @JvmStatic
     @BindingAdapter(value = ["selectedUnit", "selectedValueAttrChanged"], requireAll = false)
-    fun bindSpinnerData(pAppCompatSpinner: Spinner, newSelectedValue: Dimension.Unit?, newTextAttrChanged: InverseBindingListener) {
+    fun bindSpinnerData(
+        pAppCompatSpinner: Spinner,
+        newSelectedValue: Dimension.Unit?,
+        newTextAttrChanged: InverseBindingListener
+    ) {
         pAppCompatSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
                 newTextAttrChanged.onChange()
             }
 

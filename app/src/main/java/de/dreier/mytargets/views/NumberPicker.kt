@@ -35,7 +35,8 @@ import de.dreier.mytargets.databinding.LayoutNumberPickerBinding
  * @author Jeffrey F. Cole
  */
 
-class NumberPicker(context: Context, attributeSet: AttributeSet) : LinearLayout(context, attributeSet) {
+class NumberPicker(context: Context, attributeSet: AttributeSet) :
+    LinearLayout(context, attributeSet) {
 
     var minimum = 1
     var maximum = 30

@@ -22,7 +22,10 @@ class ProfileSettingsFragment : SettingsFragmentBase() {
     public override fun updateItemSummaries() {
         setSummary(SettingsManager.KEY_PROFILE_FIRST_NAME, SettingsManager.profileFirstName)
         setSummary(SettingsManager.KEY_PROFILE_LAST_NAME, SettingsManager.profileLastName)
-        setSummary(SettingsManager.KEY_PROFILE_BIRTHDAY, SettingsManager.profileBirthDayFormatted ?: "")
+        setSummary(
+            SettingsManager.KEY_PROFILE_BIRTHDAY,
+            SettingsManager.profileBirthDayFormatted ?: ""
+        )
         setSummary(SettingsManager.KEY_PROFILE_CLUB, SettingsManager.profileClub)
         setSummary(SettingsManager.KEY_PROFILE_LICENCE_NUMBER, SettingsManager.profileLicenceNumber)
     }
@@ -38,6 +41,7 @@ class ProfileSettingsFragment : SettingsFragmentBase() {
     }
 
     companion object {
-        private const val DIALOG_FRAGMENT_TAG = "android.support.v7.preference.PreferenceFragment.DIALOG"
+        private const val DIALOG_FRAGMENT_TAG =
+            "android.support.v7.preference.PreferenceFragment.DIALOG"
     }
 }

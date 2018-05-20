@@ -43,7 +43,8 @@ import android.view.View
  *
  * @see [https://github.com/kurtisnelson/](https://github.com/kurtisnelson/))
  */
-abstract class SelectableViewHolder<T> : ItemBindingHolder<T>, View.OnClickListener, View.OnLongClickListener {
+abstract class SelectableViewHolder<T> : ItemBindingHolder<T>, View.OnClickListener,
+    View.OnLongClickListener {
     private val selector: SelectorBase
     private var clickListener: OnItemClickListener<T>? = null
     private var longClickListener: OnItemLongClickListener<T>? = null
@@ -61,7 +62,9 @@ abstract class SelectableViewHolder<T> : ItemBindingHolder<T>, View.OnClickListe
      * @param itemView Item view for this ViewHolder
      * @param selector A selector set to bind this holder to
      */
-    constructor(itemView: View, selector: SingleSelector, listener: OnItemClickListener<T>) : super(itemView) {
+    constructor(itemView: View, selector: SingleSelector, listener: OnItemClickListener<T>) : super(
+        itemView
+    ) {
         this.selector = selector
         itemView.setOnClickListener(this)
         this.clickListener = listener
@@ -73,7 +76,12 @@ abstract class SelectableViewHolder<T> : ItemBindingHolder<T>, View.OnClickListe
      * @param itemView Item view for this ViewHolder
      * @param selector A selector set to bind this holder to
      */
-    constructor(itemView: View, selector: SingleSelector, listener: OnItemClickListener<T>, longClickListener: OnItemLongClickListener<T>) : super(itemView) {
+    constructor(
+        itemView: View,
+        selector: SingleSelector,
+        listener: OnItemClickListener<T>,
+        longClickListener: OnItemLongClickListener<T>
+    ) : super(itemView) {
         this.selector = selector
         itemView.isLongClickable = true
         itemView.setOnClickListener(this)
@@ -88,7 +96,12 @@ abstract class SelectableViewHolder<T> : ItemBindingHolder<T>, View.OnClickListe
      * @param itemView Item view for this ViewHolder
      * @param selector A selector set to bind this holder to
      */
-    constructor(itemView: View, selector: MultiSelector, clickListener: OnItemClickListener<T>, longClickListener: OnItemLongClickListener<T>) : super(itemView) {
+    constructor(
+        itemView: View,
+        selector: MultiSelector,
+        clickListener: OnItemClickListener<T>,
+        longClickListener: OnItemLongClickListener<T>
+    ) : super(itemView) {
         this.selector = selector
         itemView.isLongClickable = true
         itemView.setOnClickListener(this)

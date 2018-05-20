@@ -43,9 +43,11 @@ object ScoreboardUtils {
     private const val PAGE_WIDTH = 600
     private const val MARGIN = 50
 
-    fun getScoreboardView(context: Context, database: AppDatabase, locale: Locale,
-                          training: Training, rounds: List<Round>?,
-                          configuration: ScoreboardConfiguration): LinearLayout {
+    fun getScoreboardView(
+        context: Context, database: AppDatabase, locale: Locale,
+        training: Training, rounds: List<Round>?,
+        configuration: ScoreboardConfiguration
+    ): LinearLayout {
         val scoreboardLayout = DefaultScoreboardLayout(context, database, locale, configuration)
         val viewBuilder = ViewBuilder(context)
         scoreboardLayout.generateWithBuilder(viewBuilder, training, rounds!!)
@@ -56,9 +58,11 @@ object ScoreboardUtils {
     @Throws(IOException::class)
     fun generatePdf(content: LinearLayout, file: File) {
         val writer = ViewToPdfWriter(content)
-        writer.layoutPages(CustomPrintDocumentAdapter
+        writer.layoutPages(
+            CustomPrintDocumentAdapter
                 .DEFAULT_RESOLUTION, CustomPrintDocumentAdapter
-                .DEFAULT_MEDIA_SIZE)
+                .DEFAULT_MEDIA_SIZE
+        )
 
         val fileOutputStream = FileOutputStream(file)
         writer.writePdfDocument(arrayOf(PageRange.ALL_PAGES), fileOutputStream)
@@ -77,7 +81,8 @@ object ScoreboardUtils {
         val height = content.measuredHeight
         content.layout(0, 0, width, height)
 
-        val b = Bitmap.createBitmap(width + 2 * margin, height + 2 * margin, Bitmap.Config.ARGB_8888)
+        val b =
+            Bitmap.createBitmap(width + 2 * margin, height + 2 * margin, Bitmap.Config.ARGB_8888)
 
         val canvas = Canvas(b)
 

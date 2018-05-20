@@ -31,20 +31,21 @@ import de.dreier.mytargets.utils.multiselector.OnItemLongClickListener
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 
 internal class BowAdapter(
-        private val selector: MultiSelector,
-        private val clickListener: OnItemClickListener<Bow>,
-        private val longClickListener: OnItemLongClickListener<Bow>
+    private val selector: MultiSelector,
+    private val clickListener: OnItemClickListener<Bow>,
+    private val longClickListener: OnItemLongClickListener<Bow>
 ) : SimpleListAdapterBase<Bow>(compareBy(Bow::name, Bow::id)) {
 
     val bowDAO = ApplicationInstance.db.bowDAO()
 
     public override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_image_details, parent, false)
+            .inflate(R.layout.item_image_details, parent, false)
         return ViewHolder(itemView)
     }
 
-    internal inner class ViewHolder(itemView: View) : SelectableViewHolder<Bow>(itemView, selector, clickListener, longClickListener) {
+    internal inner class ViewHolder(itemView: View) :
+        SelectableViewHolder<Bow>(itemView, selector, clickListener, longClickListener) {
 
         val binding = ItemImageDetailsBinding.bind(itemView)
 

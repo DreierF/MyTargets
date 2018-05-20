@@ -36,21 +36,21 @@ class DistanceInputDialog {
         fun show() {
             val inflater = LayoutInflater.from(context)
             val binding = DataBindingUtil
-                    .inflate<DialogCommentBinding>(inflater, R.layout.dialog_comment, null, false)
+                .inflate<DialogCommentBinding>(inflater, R.layout.dialog_comment, null, false)
             binding.shotComment.inputType = InputType.TYPE_CLASS_NUMBER
             binding.unit.text = unit
             val shotComment = binding.shotComment
 
             AlertDialog.Builder(context)
-                    .setTitle(R.string.distance)
-                    .setView(binding.root)
-                    .setPositiveButton(android.R.string.ok) { dialog, _ ->
-                        val s = shotComment.text.toString()
-                        clickListener?.onOkClickListener(s)
-                        dialog.dismiss()
-                    }
-                    .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
-                    .show()
+                .setTitle(R.string.distance)
+                .setView(binding.root)
+                .setPositiveButton(android.R.string.ok) { dialog, _ ->
+                    val s = shotComment.text.toString()
+                    clickListener?.onOkClickListener(s)
+                    dialog.dismiss()
+                }
+                .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
+                .show()
         }
 
         fun setOnClickListener(listener: OnClickListener): Builder {

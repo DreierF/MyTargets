@@ -22,10 +22,12 @@ object Migration3 : Migration(2, 3) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("ALTER TABLE SHOOT ADD COLUMN x REAL")
         database.execSQL("ALTER TABLE SHOOT ADD COLUMN y REAL")
-        val cur = database.query("SELECT s._id, s.points, r.target " +
-                "FROM SHOOT s, PASSE p, ROUND r " +
-                "WHERE s.passe=p._id " +
-                "AND p.round=r._id")
+        val cur = database.query(
+            "SELECT s._id, s.points, r.target " +
+                    "FROM SHOOT s, PASSE p, ROUND r " +
+                    "WHERE s.passe=p._id " +
+                    "AND p.round=r._id"
+        )
         if (cur.moveToFirst()) {
             do {
                 val shoot = cur.getInt(0)

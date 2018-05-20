@@ -24,12 +24,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
-import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
-import de.dreier.mytargets.base.fragments.LoaderUICallback
-import de.dreier.mytargets.base.navigation.NavigationController
 import de.dreier.mytargets.base.viewmodel.ViewModelFactory
 import de.dreier.mytargets.databinding.FragmentArrowsBinding
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding
@@ -56,17 +53,22 @@ class EditArrowListFragment : EditableListFragmentBase<Arrow, SimpleListAdapterB
         super.onViewCreated(view, savedInstanceState)
         binding.fab.setOnClickListener {
             navigationController.navigateToCreateArrow()
-                    .fromFab(binding.fab)
-                    .start()
+                .fromFab(binding.fab)
+                .start()
         }
     }
 
     @CallSuper
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_arrows, container, false)
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.addItemDecoration(
-                DividerItemDecoration(context!!, R.drawable.full_divider))
+            DividerItemDecoration(context!!, R.drawable.full_divider)
+        )
         adapter = ArrowAdapter()
         binding.recyclerView.itemAnimator = SlideInItemAnimator()
         binding.recyclerView.adapter = adapter
@@ -79,32 +81,39 @@ class EditArrowListFragment : EditableListFragmentBase<Arrow, SimpleListAdapterB
         viewModel.arrows.observe(this, Observer { arrows ->
             if (arrows != null) {
                 adapter!!.setList(arrows)
-                binding.emptyState!!.root.visibility = if (arrows.isEmpty()) View.VISIBLE else View.GONE
+                binding.emptyState!!.root.visibility =
+                        if (arrows.isEmpty()) View.VISIBLE else View.GONE
             }
         })
     }
 
     private fun onEdit(itemId: Long) {
         navigationController.navigateToEditArrow(itemId)
-                .start()
+            .start()
     }
 
     override fun onSelected(item: Arrow) {
         navigationController.navigateToEditArrow(item.id)
-                .start()
+            .start()
     }
 
     override fun deleteItem(item: Arrow) = viewModel.deleteArrow(item)
 
-    private inner class ArrowAdapter : SimpleListAdapterBase<Arrow>(compareBy(Arrow::name, Arrow::id)) {
+    private inner class ArrowAdapter :
+        SimpleListAdapterBase<Arrow>(compareBy(Arrow::name, Arrow::id)) {
         public override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
             val itemView = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_image_details, parent, false)
+                .inflate(R.layout.item_image_details, parent, false)
             return ViewHolder(itemView)
         }
     }
 
-    internal inner class ViewHolder(itemView: View) : SelectableViewHolder<Arrow>(itemView, selector, this@EditArrowListFragment, this@EditArrowListFragment) {
+    internal inner class ViewHolder(itemView: View) : SelectableViewHolder<Arrow>(
+        itemView,
+        selector,
+        this@EditArrowListFragment,
+        this@EditArrowListFragment
+    ) {
         private val binding = ItemImageDetailsBinding.bind(itemView)
 
         override fun bindItem(item: Arrow) {

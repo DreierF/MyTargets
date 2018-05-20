@@ -76,9 +76,9 @@ class MainActivity : AppCompatActivity() {
         setupNavigationDrawer()
         if (savedInstanceState == null) {
             supportFragmentManager
-                    .beginTransaction()
-                    .add(R.id.content_frame, TrainingsFragment())
-                    .commit()
+                .beginTransaction()
+                .add(R.id.content_frame, TrainingsFragment())
+                .commit()
         }
     }
 
@@ -114,9 +114,9 @@ class MainActivity : AppCompatActivity() {
                 else -> throw IllegalStateException("Illegal action id")
             }
             supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.content_frame, fragment)
-                    .commit()
+                .beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .commit()
             true
         }
     }
@@ -137,11 +137,17 @@ class MainActivity : AppCompatActivity() {
             false
         }
 
-        drawerToggle = object : ActionBarDrawerToggle(this, binding.drawerLayout, binding.toolbar, R.string.drawer_open, R.string.drawer_close) {
+        drawerToggle = object : ActionBarDrawerToggle(
+            this,
+            binding.drawerLayout,
+            binding.toolbar,
+            R.string.drawer_open,
+            R.string.drawer_close
+        ) {
             override fun onDrawerClosed(drawerView: View) {
                 super.onDrawerClosed(drawerView)
                 if (onDrawerClosePendingAction != null) {
-                    when(onDrawerClosePendingAction) {
+                    when (onDrawerClosePendingAction) {
                         R.id.nav_timer -> navigationController.navigateToTimer(false)
                         R.id.nav_settings -> navigationController.navigateToSettings(MAIN)
                         R.id.nav_help_and_feedback -> navigationController.navigateToHelp()
@@ -199,6 +205,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val KEY_LANGUAGE = "language"
+
         init {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         }

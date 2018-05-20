@@ -81,8 +81,8 @@ object FabSpeedDialBehaviour : CoordinatorLayout.Behavior<FabSpeedDial>() {
 
         if (Math.abs(currentTransY - targetTransY) > fab.height * 0.667f) {
             fabTranslationYAnimator = fab.animate()
-                    .setInterpolator(FAST_OUT_SLOW_IN_INTERPOLATOR)
-                    .translationY(targetTransY)
+                .setInterpolator(FAST_OUT_SLOW_IN_INTERPOLATOR)
+                .translationY(targetTransY)
             fabTranslationYAnimator!!.start()
         } else {
             fab.translationY = targetTransY
@@ -97,8 +97,10 @@ object FabSpeedDialBehaviour : CoordinatorLayout.Behavior<FabSpeedDial>() {
         for (i in dependencies.indices) {
             val view = dependencies[i]
             if (view is Snackbar.SnackbarLayout && parent.doViewsOverlap(fab, view)) {
-                minOffset = Math.min(minOffset,
-                        view.getTranslationY() - view.getHeight())
+                minOffset = Math.min(
+                    minOffset,
+                    view.getTranslationY() - view.getHeight()
+                )
             }
         }
         return minOffset

@@ -30,7 +30,7 @@ import java.io.IOException
 import java.util.*
 
 object ExternalStorageBackup {
-    private const  val FOLDER_NAME = "MyTargets"
+    private const val FOLDER_NAME = "MyTargets"
 
     //If may get a full path that is not the right one, even if we don't have the SD Card there.
     //We just need the "/mnt/extSdCard/" i.e and check if it's writable
@@ -78,13 +78,15 @@ object ExternalStorageBackup {
             val backupDir = File(microSdCardPath, FOLDER_NAME)
             if (backupDir.isDirectory) {
                 val backups = backupDir.listFiles()
-                        .filter { isBackup(it) }
-                        .map {
-                            BackupEntry(it.absolutePath,
-                                    Date(it.lastModified()),
-                                    it.length())
-                        }
-                        .sortedByDescending { it.modifiedDate }
+                    .filter { isBackup(it) }
+                    .map {
+                        BackupEntry(
+                            it.absolutePath,
+                            Date(it.lastModified()),
+                            it.length()
+                        )
+                    }
+                    .sortedByDescending { it.modifiedDate }
                 listener.onLoadFinished(backups)
             }
         }
@@ -93,7 +95,10 @@ object ExternalStorageBackup {
             return file.isFile && file.name.contains("backup_") && file.name.endsWith(".zip")
         }
 
-        override fun restoreBackup(backup: BackupEntry, listener: IAsyncBackupRestore.BackupStatusListener) {
+        override fun restoreBackup(
+            backup: BackupEntry,
+            listener: IAsyncBackupRestore.BackupStatusListener
+        ) {
             val file = File(backup.fileId)
             try {
                 BackupUtils.importZip(activity!!, FileInputStream(file))
@@ -105,7 +110,10 @@ object ExternalStorageBackup {
 
         }
 
-        override fun deleteBackup(backup: BackupEntry, listener: IAsyncBackupRestore.BackupStatusListener) {
+        override fun deleteBackup(
+            backup: BackupEntry,
+            listener: IAsyncBackupRestore.BackupStatusListener
+        ) {
             if (File(backup.fileId).delete()) {
                 listener.onFinished()
             } else {

@@ -41,7 +41,6 @@ import com.evernote.android.state.State
 import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.activities.ChildActivityBase
-import de.dreier.mytargets.base.db.EndRepository
 import de.dreier.mytargets.base.db.RoundRepository
 import de.dreier.mytargets.base.db.TrainingRepository
 import de.dreier.mytargets.base.db.dao.ArrowDAO

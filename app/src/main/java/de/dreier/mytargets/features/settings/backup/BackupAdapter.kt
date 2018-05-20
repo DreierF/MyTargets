@@ -26,7 +26,11 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class BackupAdapter(context: Context, private val primaryActionListener: OnItemClickListener<BackupEntry>, private val secondaryActionListener: OnItemClickListener<BackupEntry>) : RecyclerView.Adapter<BackupAdapter.BackupViewHolder>() {
+class BackupAdapter(
+    context: Context,
+    private val primaryActionListener: OnItemClickListener<BackupEntry>,
+    private val secondaryActionListener: OnItemClickListener<BackupEntry>
+) : RecyclerView.Adapter<BackupAdapter.BackupViewHolder>() {
     private val inflater = LayoutInflater.from(context)
     private val formatDateTime = SimpleDateFormat.getDateInstance(DateFormat.LONG)
     private var backupEntries: MutableList<BackupEntry> = ArrayList()
@@ -46,9 +50,9 @@ class BackupAdapter(context: Context, private val primaryActionListener: OnItemC
         holder.binding.name.text = modified
         holder.binding.details.text = p.humanReadableSize
         holder.binding.primaryAction
-                .setOnClickListener { primaryActionListener.onItemClicked(p) }
+            .setOnClickListener { primaryActionListener.onItemClicked(p) }
         holder.binding.secondaryAction
-                .setOnClickListener { secondaryActionListener.onItemClicked(p) }
+            .setOnClickListener { secondaryActionListener.onItemClicked(p) }
     }
 
     override fun getItemId(position: Int): Long {

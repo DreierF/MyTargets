@@ -42,9 +42,13 @@ class EditRoundFragment : EditFragmentBase() {
     private val trainingDAO = ApplicationInstance.db.trainingDAO()
     private val roundDAO = ApplicationInstance.db.roundDAO()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil
-                .inflate(inflater, R.layout.fragment_edit_round, container, false)
+            .inflate(inflater, R.layout.fragment_edit_round, container, false)
 
         trainingId = arguments!!.getLong(ITEM_ID)
         if (arguments!!.containsKey(ROUND_ID)) {
@@ -55,8 +59,13 @@ class EditRoundFragment : EditFragmentBase() {
         ToolbarUtils.showUpAsX(this)
         setHasOptionsMenu(true)
 
-        binding.arrows.setOnProgressChangeListener(object : DiscreteSeekBar.OnProgressChangeListener {
-            override fun onProgressChanged(seekBar: DiscreteSeekBar, value: Int, fromUser: Boolean) {
+        binding.arrows.setOnProgressChangeListener(object :
+            DiscreteSeekBar.OnProgressChangeListener {
+            override fun onProgressChanged(
+                seekBar: DiscreteSeekBar,
+                value: Int,
+                fromUser: Boolean
+            ) {
                 updateArrowsLabel()
             }
 
@@ -67,11 +76,21 @@ class EditRoundFragment : EditFragmentBase() {
             override fun onStopTrackingTouch(seekBar: DiscreteSeekBar) {}
         })
         binding.target.setOnClickListener { selectedItem, index ->
-            val fixedType = if (roundId == null) TargetListFragment.EFixedType.NONE else TargetListFragment.EFixedType.TARGET
-            navigationController.navigateToTarget(selectedItem!!, index, TargetSelector.TARGET_REQUEST_CODE, fixedType)
+            val fixedType =
+                if (roundId == null) TargetListFragment.EFixedType.NONE else TargetListFragment.EFixedType.TARGET
+            navigationController.navigateToTarget(
+                selectedItem!!,
+                index,
+                TargetSelector.TARGET_REQUEST_CODE,
+                fixedType
+            )
         }
         binding.distance.setOnClickListener { selectedItem, index ->
-            navigationController.navigateToDistance(selectedItem!!, index, DistanceSelector.DISTANCE_REQUEST_CODE)
+            navigationController.navigateToDistance(
+                selectedItem!!,
+                index,
+                DistanceSelector.DISTANCE_REQUEST_CODE
+            )
         }
 
         if (roundId == null) {
@@ -100,8 +119,8 @@ class EditRoundFragment : EditFragmentBase() {
         if (roundId == null) {
             val round = onSaveRound()
             navigationController.navigateToRound(round!!)
-                    .noAnimation()
-                    .start()
+                .noAnimation()
+                .start()
             navigationController.navigateToCreateEnd(round)
         } else {
             onSaveRound()
@@ -134,8 +153,10 @@ class EditRoundFragment : EditFragmentBase() {
 
     private fun updateArrowsLabel() {
         binding.arrowsLabel.text = resources
-                .getQuantityString(R.plurals.arrow, binding.arrows.progress,
-                        binding.arrows.progress)
+            .getQuantityString(
+                R.plurals.arrow, binding.arrows.progress,
+                binding.arrows.progress
+            )
     }
 
     private fun loadRoundDefaultValues() {

@@ -33,11 +33,11 @@ import de.dreier.mytargets.databinding.ActivityArrowRankingDetailsBinding
 import de.dreier.mytargets.features.scoreboard.EFileType
 import de.dreier.mytargets.features.settings.ESettingsScreens
 import de.dreier.mytargets.features.settings.SettingsManager
-import de.dreier.mytargets.utils.toUri
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.utils.print.CustomPrintDocumentAdapter
 import de.dreier.mytargets.utils.print.DrawableToPdfWriter
+import de.dreier.mytargets.utils.toUri
 import java.io.File
 import java.io.IOException
 
@@ -48,14 +48,18 @@ class DispersionPatternActivity : ChildActivityBase() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil
-                .setContentView(this, R.layout.activity_arrow_ranking_details)
+            .setContentView(this, R.layout.activity_arrow_ranking_details)
 
         statistic = intent.getParcelableExtra(ITEM)
 
         ToolbarUtils.showHomeAsUp(this)
         if (statistic.arrowName != null) {
-            ToolbarUtils.setTitle(this, getString(R.string.arrow_number_x, statistic
-                    .arrowNumber))
+            ToolbarUtils.setTitle(
+                this, getString(
+                    R.string.arrow_number_x, statistic
+                        .arrowNumber
+                )
+            )
             ToolbarUtils.setSubtitle(this, statistic.arrowName!!)
         } else {
             ToolbarUtils.setTitle(this, R.string.dispersion_pattern)
@@ -77,7 +81,7 @@ class DispersionPatternActivity : ChildActivityBase() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_share -> shareImage()
-            R.id.action_print -> if(Utils.isKitKat) print()
+            R.id.action_print -> if (Utils.isKitKat) print()
             R.id.action_settings -> navigationController.navigateToSettings(ESettingsScreens.STATISTICS)
             else -> return super.onOptionsItemSelected(item)
         }
@@ -104,7 +108,7 @@ class DispersionPatternActivity : ChildActivityBase() {
             } catch (e: IOException) {
                 e.printStackTrace()
                 Snackbar.make(binding!!.root, R.string.sharing_failed, Snackbar.LENGTH_SHORT)
-                        .show()
+                    .show()
             }
         }.start()
     }

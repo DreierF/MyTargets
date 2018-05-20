@@ -78,17 +78,23 @@ class CsvExporter(private val context: Context, database: AppDatabase) {
         // Date
         csv.add(t.date.format(DateTimeFormatter.ISO_LOCAL_DATE))
         // StandardRound
-        csv.add(standardRoundDAO.loadStandardRoundOrNull(t.standardRoundId!!)?.name
-                ?: context.getString(R.string.practice))
+        csv.add(
+            standardRoundDAO.loadStandardRoundOrNull(t.standardRoundId!!)?.name
+                    ?: context.getString(R.string.practice)
+        )
         // Indoor
-        csv.add(if (t.environment.indoor) context.getString(R.string.indoor) else context.getString(R.string.outdoor))
+        csv.add(
+            if (t.environment.indoor) context.getString(R.string.indoor) else context.getString(
+                R.string.outdoor
+            )
+        )
         // Bow
         csv.add(if (t.bowId == null) "" else bowDAO.loadBow(t.bowId!!).name)
         // Arrow
         csv.add(if (t.arrowId == null) "" else arrowDAO.loadArrow(t.arrowId!!).name)
         roundDAO.loadRounds(t.id)
-                .filter { roundIds.contains(it.id) }
-                .forEach { addRound(csv, it) }
+            .filter { roundIds.contains(it.id) }
+            .forEach { addRound(csv, it) }
         csv.exitScope()
     }
 

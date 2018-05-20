@@ -45,17 +45,26 @@ class ViewToPdfWriter(private val content: LinearLayout) : IPdfWriter {
      * MUST be called before [.writePdfDocument].
      */
     @SuppressLint("Range")
-    override fun layoutPages(resolution: PrintAttributes.Resolution, mediaSize: PrintAttributes.MediaSize): Int {
-        fullPage = RectF(0f, 0f,
-                mediaSize.widthMils * resolution.horizontalDpi / 1000f,
-                mediaSize.heightMils * resolution.verticalDpi / 1000f)
+    override fun layoutPages(
+        resolution: PrintAttributes.Resolution,
+        mediaSize: PrintAttributes.MediaSize
+    ): Int {
+        fullPage = RectF(
+            0f, 0f,
+            mediaSize.widthMils * resolution.horizontalDpi / 1000f,
+            mediaSize.heightMils * resolution.verticalDpi / 1000f
+        )
 
         contentRect = RectF(fullPage)
-        contentRect.inset(resolution.horizontalDpi * MARGIN_HORIZONTAL,
-                resolution.verticalDpi * MARGIN_VERTICAL)
+        contentRect.inset(
+            resolution.horizontalDpi * MARGIN_HORIZONTAL,
+            resolution.verticalDpi * MARGIN_VERTICAL
+        )
 
-        content.measure(makeMeasureSpec(contentRect.width().toInt(), EXACTLY),
-                makeMeasureSpec(contentRect.height().toInt(), View.MeasureSpec.UNSPECIFIED))
+        content.measure(
+            makeMeasureSpec(contentRect.width().toInt(), EXACTLY),
+            makeMeasureSpec(contentRect.height().toInt(), View.MeasureSpec.UNSPECIFIED)
+        )
         content.layout(0, 0, contentRect.width().toInt(), contentRect.height().toInt())
 
         var sumHeight = 0
@@ -83,8 +92,10 @@ class ViewToPdfWriter(private val content: LinearLayout) : IPdfWriter {
         var topAnchor = 0
         var page: PdfDocument.Page? = null
         if (containsPage(pages, pageNumber)) {
-            val pageInfo = PdfDocument.PageInfo.Builder(fullPage
-                    .width().toInt(), fullPage.height().toInt(), pageNumber).create()
+            val pageInfo = PdfDocument.PageInfo.Builder(
+                fullPage
+                    .width().toInt(), fullPage.height().toInt(), pageNumber
+            ).create()
             page = document.startPage(pageInfo)
         }
 
@@ -102,8 +113,10 @@ class ViewToPdfWriter(private val content: LinearLayout) : IPdfWriter {
                 }
 
                 if (containsPage(pages, pageNumber)) {
-                    val pageInfo = PdfDocument.PageInfo.Builder(fullPage
-                            .width().toInt(), fullPage.height().toInt(), pageNumber).create()
+                    val pageInfo = PdfDocument.PageInfo.Builder(
+                        fullPage
+                            .width().toInt(), fullPage.height().toInt(), pageNumber
+                    ).create()
                     page = document.startPage(pageInfo)
                 }
             }

@@ -21,9 +21,11 @@ import android.arch.persistence.room.migration.Migration
 object Migration15 : Migration(14, 15) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("UPDATE SHOOT SET arrow = NULL WHERE arrow = '-1'")
-        database.execSQL("UPDATE PASSE SET exact = 1 WHERE _id IN (SELECT DISTINCT p._id " +
-                "FROM PASSE p, SHOOT s " +
-                "WHERE p._id = s.passe " +
-                "AND s.x != 0)")
+        database.execSQL(
+            "UPDATE PASSE SET exact = 1 WHERE _id IN (SELECT DISTINCT p._id " +
+                    "FROM PASSE p, SHOOT s " +
+                    "WHERE p._id = s.passe " +
+                    "AND s.x != 0)"
+        )
     }
 }
