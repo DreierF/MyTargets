@@ -33,12 +33,13 @@ import de.dreier.mytargets.utils.multiselector.SingleSelector
  *
  * @param <T> Model of the item which is managed within the fragment.
 </T> */
-abstract class SelectItemFragmentBase<T, U : ListAdapterBase<out ItemBindingHolder<*>, T>> : FragmentBase(), OnItemClickListener<T> where T : IIdProvider, T : Parcelable {
+abstract class SelectItemFragmentBase<T, U : ListAdapterBase<out ItemBindingHolder<*>, T>> :
+    FragmentBase(), OnItemClickListener<T> where T : IIdProvider, T : Parcelable {
 
     /**
      * Adapter for the fragment's RecyclerView
      */
-    protected var adapter: U? = null
+    protected lateinit var adapter: U
 
     /**
      * Selector which manages the item selection
@@ -73,7 +74,7 @@ abstract class SelectItemFragmentBase<T, U : ListAdapterBase<out ItemBindingHold
             val manager = recyclerView.layoutManager as LinearLayoutManager
             val first = manager.findFirstCompletelyVisibleItemPosition()
             val last = manager.findLastCompletelyVisibleItemPosition()
-            val position = adapter!!.getItemPosition(item)
+            val position = adapter.getItemPosition(item)
             if (first > position || last < position) {
                 recyclerView.scrollToPosition(position)
             }
@@ -105,6 +106,6 @@ abstract class SelectItemFragmentBase<T, U : ListAdapterBase<out ItemBindingHold
      * @return The selected item
      */
     protected open fun onSave(): T {
-        return adapter!!.getItemById(selector.getSelectedId()!!)!!
+        return adapter.getItemById(selector.getSelectedId()!!)!!
     }
 }

@@ -34,7 +34,8 @@ typealias LoaderUICallback = () -> Unit
  * Generic fragment class used as base for most fragments.
  * Has Icepick build in to save state on orientation change.
  */
-abstract class FragmentBase : Fragment(), LoaderManager.LoaderCallbacks<FragmentBase.LoaderUICallbackHelper> {
+abstract class FragmentBase : Fragment(),
+    LoaderManager.LoaderCallbacks<FragmentBase.LoaderUICallbackHelper> {
 
     protected lateinit var navigationController: NavigationController
 
@@ -63,7 +64,10 @@ abstract class FragmentBase : Fragment(), LoaderManager.LoaderCallbacks<Fragment
         return { }
     }
 
-    override fun onLoadFinished(loader: Loader<LoaderUICallbackHelper>, callback: LoaderUICallbackHelper) {
+    override fun onLoadFinished(
+        loader: Loader<LoaderUICallbackHelper>,
+        callback: LoaderUICallbackHelper
+    ) {
         callback.applyData()
     }
 

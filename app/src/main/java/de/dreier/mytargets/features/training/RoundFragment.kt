@@ -112,7 +112,7 @@ class RoundFragment : EditableListFragmentBase<AugmentedEnd, SimpleListAdapterBa
         val showFab = round!!.maxEndCount == null || ends.size < round!!.maxEndCount!!
 
         return {
-            adapter!!.setList(ends.toMutableList())
+            adapter!!.setList(ends)
             binding.fab.visibility = if (showFab) View.VISIBLE else View.GONE
 
             ToolbarUtils.setTitle(this@RoundFragment,

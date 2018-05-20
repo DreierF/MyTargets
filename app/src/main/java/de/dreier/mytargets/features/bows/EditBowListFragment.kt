@@ -80,7 +80,7 @@ class EditBowListFragment : EditableListFragmentBase<Bow, SimpleListAdapterBase<
     override fun onLoad(args: Bundle?): LoaderUICallback {
         val bows = bowDAO.loadBows()
         return {
-            adapter!!.setList(bows.toMutableList())
+            adapter!!.setList(bows)
             binding.emptyState!!.root.visibility = if (bows.isEmpty()) View.VISIBLE else View.GONE
         }
     }

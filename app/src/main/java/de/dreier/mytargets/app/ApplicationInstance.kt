@@ -110,7 +110,7 @@ class ApplicationInstance : SharedApplicationInstance() {
         lateinit var db: AppDatabase
 
         val lastSharedPreferences: SharedPreferences
-            get() = SharedApplicationInstance.Companion.context.getSharedPreferences(MyBackupAgent.PREFS, 0)
+            get() = SharedApplicationInstance.context.getSharedPreferences(MyBackupAgent.PREFS, 0)
 
         fun initRoomDb(context: Context) {
             db = Room.databaseBuilder(context,

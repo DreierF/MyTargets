@@ -28,7 +28,7 @@ class WindDirectionListFragment : SelectPureListItemFragmentBase<WindDirection>(
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        adapter!!.setList(WindDirection.getList(context!!).toMutableList())
+        adapter.setList(WindDirection.getList(context!!))
         val windDirection = arguments!!.getParcelable<WindDirection>(ITEM)
         selectItem(binding.recyclerView, windDirection!!)
         return binding.root

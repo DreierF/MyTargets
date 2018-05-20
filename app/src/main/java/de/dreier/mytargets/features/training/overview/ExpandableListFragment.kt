@@ -37,7 +37,7 @@ abstract class ExpandableListFragment<H : IIdProvider, C> : EditableListFragment
             }
             return
         }
-        adapter!!.setList(children.toMutableList())
+        adapter!!.setList(children)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -29,7 +29,7 @@ class WindSpeedListFragment : SelectPureListItemFragmentBase<WindSpeed>(compareB
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        adapter!!.setList(WindSpeed.getList(context!!).toMutableList())
+        adapter.setList(WindSpeed.getList(context!!))
         val windSpeed = arguments!!.getParcelable<WindSpeed>(ITEM)
         selectItem(binding.recyclerView, windSpeed!!)
         return binding.root

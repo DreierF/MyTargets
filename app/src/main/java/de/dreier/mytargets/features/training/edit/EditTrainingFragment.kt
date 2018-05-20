@@ -98,9 +98,13 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
             return round
         }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil
-                .inflate(inflater, R.layout.fragment_edit_training, container, false)
+            .inflate(inflater, R.layout.fragment_edit_training, container, false)
 
         trainingId = arguments.getLongOrNull(ITEM_ID)
         trainingType = if (activity?.intent?.action == CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION) {
@@ -113,8 +117,13 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
         ToolbarUtils.showUpAsX(this)
         setHasOptionsMenu(true)
 
-        binding.arrows.setOnProgressChangeListener(object : DiscreteSeekBar.OnProgressChangeListener {
-            override fun onProgressChanged(seekBar: DiscreteSeekBar, value: Int, fromUser: Boolean) {
+        binding.arrows.setOnProgressChangeListener(object :
+            DiscreteSeekBar.OnProgressChangeListener {
+            override fun onProgressChanged(
+                seekBar: DiscreteSeekBar,
+                value: Int,
+                fromUser: Boolean
+            ) {
                 updateArrowsLabel()
             }
 
@@ -137,22 +146,24 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
             roundTarget = item!!.roundTemplates[0].targetTemplate
         }
         binding.changeTargetFace.setOnClickListener {
-            navigationController.navigateToTarget(roundTarget!!,
-                    requestCode = SR_TARGET_REQUEST_CODE,
-                    fixedType = TargetListFragment.EFixedType.GROUP)
+            navigationController.navigateToTarget(
+                roundTarget!!,
+                requestCode = SR_TARGET_REQUEST_CODE,
+                fixedType = TargetListFragment.EFixedType.GROUP
+            )
         }
         binding.arrow.setOnAddClickListener {
             navigationController.navigateToCreateArrow()
-                    .forResult(ArrowSelector.ARROW_ADD_REQUEST_CODE)
-                    .start()
+                .forResult(ArrowSelector.ARROW_ADD_REQUEST_CODE)
+                .start()
         }
         binding.arrow.setOnClickListener { selectedItem, _ ->
             navigationController.navigateToArrowList(selectedItem!!)
         }
         binding.bow.setOnAddClickListener {
             navigationController.navigateToCreateBow(EBowType.RECURVE_BOW)
-                    .forResult(BowSelector.BOW_ADD_REQUEST_CODE)
-                    .start()
+                .forResult(BowSelector.BOW_ADD_REQUEST_CODE)
+                .start()
         }
         binding.bow.setOnClickListener { selectedItem, _ ->
             navigationController.navigateToBowList(selectedItem!!)
@@ -165,11 +176,14 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
 
         if (trainingId == null) {
             ToolbarUtils.setTitle(this, R.string.new_training)
-            binding.training.setText(getString(
+            binding.training.setText(
+                getString(
                     if (trainingType == ETrainingType.COMPETITION)
                         R.string.competition
                     else
-                        R.string.training))
+                        R.string.training
+                )
+            )
             setTrainingDate()
             loadRoundDefaultValues()
             binding.bow.setItemId(SettingsManager.bow)
@@ -193,7 +207,8 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
             binding.environment.setItem(train.environment)
             setTrainingDate()
             binding.notEditable.visibility = GONE
-            binding.changeTargetFace.visibility = if (train.standardRoundId != null) VISIBLE else GONE
+            binding.changeTargetFace.visibility =
+                    if (train.standardRoundId != null) VISIBLE else GONE
         }
         applyTrainingType()
         updateArrowsLabel()
@@ -203,7 +218,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
 
     private fun updateArrowsLabel() {
         binding.arrowsLabel.text = resources
-                .getQuantityString(R.plurals.arrow, binding.arrows.progress, binding.arrows.progress)
+            .getQuantityString(R.plurals.arrow, binding.arrows.progress, binding.arrows.progress)
     }
 
     private fun setScoringStyleForCompoundBow(bow: Bow?) {
@@ -225,17 +240,13 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
     }
 
     private fun applyTrainingType() {
-        val `in`: View
-        val out: View
         if (trainingType == FREE_TRAINING) {
-            `in` = binding.practiceLayout
-            out = binding.standardRound
+            binding.practiceLayout.visibility = VISIBLE
+            binding.standardRound.visibility = GONE
         } else {
-            out = binding.practiceLayout
-            `in` = binding.standardRound
+            binding.practiceLayout.visibility = GONE
+            binding.standardRound.visibility = VISIBLE
         }
-        `in`.visibility = VISIBLE
-        out.visibility = GONE
     }
 
     private fun onDateClick() {
@@ -244,7 +255,11 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
         datePickerDialog.show(activity!!.supportFragmentManager, "date_picker")
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
             binding.environment.onPermissionResult(activity!!, grantResults)
         }
@@ -256,7 +271,8 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
     }
 
     private fun setTrainingDate() {
-        binding.trainingDate.text = date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+        binding.trainingDate.text =
+                date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
     }
 
     override fun onSave() {
@@ -287,11 +303,11 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
             val round = rounds[0]
 
             navigationController.navigateToTraining(training)
-                    .noAnimation()
-                    .start()
+                .noAnimation()
+                .start()
             navigationController.navigateToRound(round)
-                    .noAnimation()
-                    .start()
+                .noAnimation()
+                .start()
             navigationController.navigateToCreateEnd(round)
         } else {
             // Edit training

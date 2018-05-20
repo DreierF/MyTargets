@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.base.db.dao
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.ArrowImage
@@ -23,6 +24,9 @@ import de.dreier.mytargets.shared.models.db.ArrowImage
 abstract class ArrowDAO {
     @Query("SELECT * FROM `Arrow`")
     abstract fun loadArrows(): List<Arrow>
+
+    @Query("SELECT * FROM `Arrow`")
+    abstract fun loadArrowsLive(): LiveData<List<Arrow>>
 
     @Query("SELECT * FROM `Arrow` WHERE `id` = (:id)")
     abstract fun loadArrow(id: Long): Arrow

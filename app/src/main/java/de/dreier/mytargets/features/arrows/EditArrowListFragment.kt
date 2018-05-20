@@ -15,6 +15,8 @@
 
 package de.dreier.mytargets.features.arrows
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.annotation.CallSuper
@@ -27,6 +29,8 @@ import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
 import de.dreier.mytargets.base.fragments.LoaderUICallback
+import de.dreier.mytargets.base.navigation.NavigationController
+import de.dreier.mytargets.base.viewmodel.ViewModelFactory
 import de.dreier.mytargets.databinding.FragmentArrowsBinding
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding
 import de.dreier.mytargets.shared.models.db.Arrow
@@ -37,7 +41,9 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 class EditArrowListFragment : EditableListFragmentBase<Arrow, SimpleListAdapterBase<Arrow>>() {
 
     private lateinit var binding: FragmentArrowsBinding
-    private val arrowDAO = ApplicationInstance.db.arrowDAO()
+
+    private lateinit var viewModel: ArrowListViewModel
+    private val factory = ViewModelFactory()
 
     init {
         itemTypeDelRes = R.plurals.arrow_deleted
@@ -67,12 +73,15 @@ class EditArrowListFragment : EditableListFragmentBase<Arrow, SimpleListAdapterB
         return binding.root
     }
 
-    override fun onLoad(args: Bundle?): LoaderUICallback {
-        val arrows = arrowDAO.loadArrows()
-        return {
-            adapter!!.setList(arrows.toMutableList())
-            binding.emptyState!!.root.visibility = if (arrows.isEmpty()) View.VISIBLE else View.GONE
-        }
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel = ViewModelProviders.of(this, factory).get(ArrowListViewModel::class.java)
+        viewModel.arrows.observe(this, Observer { arrows ->
+            if (arrows != null) {
+                adapter!!.setList(arrows)
+                binding.emptyState!!.root.visibility = if (arrows.isEmpty()) View.VISIBLE else View.GONE
+            }
+        })
     }
 
     private fun onEdit(itemId: Long) {
@@ -85,14 +94,7 @@ class EditArrowListFragment : EditableListFragmentBase<Arrow, SimpleListAdapterB
                 .start()
     }
 
-    override fun deleteItem(item: Arrow): () -> Arrow {
-        val images = arrowDAO.loadArrowImages(item.id)
-        arrowDAO.deleteArrow(item)
-        return {
-            arrowDAO.saveArrow(item, images)
-            item
-        }
-    }
+    override fun deleteItem(item: Arrow) = viewModel.deleteArrow(item)
 
     private inner class ArrowAdapter : SimpleListAdapterBase<Arrow>(compareBy(Arrow::name, Arrow::id)) {
         public override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {

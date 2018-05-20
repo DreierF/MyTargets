@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.base.db.dao
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Query
 import de.dreier.mytargets.shared.models.Dimension
@@ -30,5 +31,5 @@ interface DimensionDAO {
     @Query("SELECT distance FROM `SightMark` WHERE `distance` LIKE ('% ' || :unit)" +
             "UNION SELECT distance FROM `RoundTemplate` WHERE `distance` LIKE ('% ' || :unit)" +
             "UNION SELECT distance FROM `Round` WHERE `distance` LIKE ('% ' || :unit)")
-    fun getAll(unit: Dimension.Unit): List<Dimension>
+    fun getAll(unit: Dimension.Unit): LiveData<List<Dimension>>
 }
