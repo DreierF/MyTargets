@@ -31,6 +31,8 @@ import android.text.Html
 import android.text.Spanned
 import android.view.View
 import android.view.WindowManager
+import androidx.content.systemService
+import androidx.core.content.systemService
 import de.dreier.mytargets.features.main.MainActivity
 import de.dreier.mytargets.features.training.overview.Header
 import de.dreier.mytargets.utils.transitions.FabTransform
@@ -69,8 +71,8 @@ object Utils {
         val mPendingIntentId = 223344
         val mPendingIntent = PendingIntent
                 .getActivity(context, mPendingIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-        val mgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent)
+        context.systemService<AlarmManager>()
+            .set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent)
 
         // Kill the application
         Process.killProcess(Process.myPid())

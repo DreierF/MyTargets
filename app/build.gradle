@@ -126,6 +126,7 @@ dependencies {
     implementation dependencies.supportExifInterface
     implementation dependencies.recyclerView
     implementation dependencies.cardView
+    implementation dependencies.androidxCoreKtx
 
     implementation dependencies.playServicesDrive
     implementation dependencies.firebaseCore

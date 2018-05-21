@@ -24,6 +24,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.support.annotation.RequiresPermission
+import androidx.content.systemService
 import timber.log.Timber
 
 /**
@@ -32,7 +33,7 @@ import timber.log.Timber
  * @author emil http://stackoverflow.com/users/220710/emil
  */
 class Locator(private val context: Context) : LocationListener {
-    private val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    private val locationManager = context.systemService<LocationManager>()
     private var method: Locator.Method? = null
     private var callback: Locator.Listener? = null
 

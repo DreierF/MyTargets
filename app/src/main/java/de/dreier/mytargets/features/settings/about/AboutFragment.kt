@@ -23,6 +23,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.net.toUri
 import de.dreier.mytargets.BuildConfig
 import de.dreier.mytargets.R
 import mehdi.sakout.aboutpage.AboutPage
@@ -99,7 +100,7 @@ class AboutFragment : Fragment() {
             val intent = Intent()
             intent.action = Intent.ACTION_VIEW
             intent.addCategory(Intent.CATEGORY_BROWSABLE)
-            intent.data = Uri.parse(url)
+            intent.data = url.toUri()
             setIntent(intent)
         }
     }

@@ -22,6 +22,7 @@ import android.graphics.*
 import android.os.Parcelable
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.core.animation.addListener
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.db.Shot
 import kotlinx.android.parcel.IgnoredOnParcel
@@ -74,10 +75,8 @@ class EndRenderer(
                 currentAnimationProgress = valueAnimator.animatedValue as Float
                 parent!!.invalidate()
             }
-            selectionAnimator.addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    currentAnimationProgress = -1f
-                }
+            selectionAnimator.addListener(onEnd = {
+                currentAnimationProgress = -1f
             })
             return selectionAnimator
         }

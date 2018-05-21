@@ -36,6 +36,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
+import androidx.content.systemService
 import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.db.EndRepository
@@ -249,8 +250,7 @@ class ScoreboardFragment : FragmentBase() {
         val pda = CustomPrintDocumentAdapter(ViewToPdfWriter(content), fileName)
 
         // Create a print job with name and adapter instance
-        val printManager = context!!
-                .getSystemService(Context.PRINT_SERVICE) as PrintManager
+        val printManager = context!!.systemService<PrintManager>()
         printManager.print(jobName, pda, PrintAttributes.Builder().build())
     }
 

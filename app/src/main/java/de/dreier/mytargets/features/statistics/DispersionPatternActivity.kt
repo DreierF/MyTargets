@@ -26,6 +26,7 @@ import android.support.annotation.RequiresApi
 import android.support.design.widget.Snackbar
 import android.view.Menu
 import android.view.MenuItem
+import androidx.content.systemService
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.activities.ChildActivityBase
 import de.dreier.mytargets.databinding.ActivityArrowRankingDetailsBinding
@@ -115,7 +116,7 @@ class DispersionPatternActivity : ChildActivityBase() {
         val pda = CustomPrintDocumentAdapter(DrawableToPdfWriter(target), fileName)
 
         // Create a print job with name and adapter instance
-        val printManager = getSystemService(Context.PRINT_SERVICE) as PrintManager
+        val printManager = systemService<PrintManager>()
         val jobName = "Dispersion Pattern"
         printManager.print(jobName, pda, PrintAttributes.Builder().build())
     }
