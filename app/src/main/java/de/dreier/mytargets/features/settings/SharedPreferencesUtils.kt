@@ -15,7 +15,7 @@
 package de.dreier.mytargets.features.settings
 
 import android.content.SharedPreferences
-import androidx.content.edit
+import androidx.core.content.edit
 
 operator fun SharedPreferences.set(key: String, value: Any?) {
     when (value) {

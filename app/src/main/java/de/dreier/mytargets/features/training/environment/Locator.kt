@@ -24,7 +24,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.support.annotation.RequiresPermission
-import androidx.content.systemService
+import androidx.core.content.systemService
 import timber.log.Timber
 
 /**

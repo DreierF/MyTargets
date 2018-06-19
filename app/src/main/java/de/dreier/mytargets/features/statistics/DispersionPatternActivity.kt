@@ -26,7 +26,7 @@ import android.support.annotation.RequiresApi
 import android.support.design.widget.Snackbar
 import android.view.Menu
 import android.view.MenuItem
-import androidx.content.systemService
+import androidx.core.content.systemService
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.activities.ChildActivityBase
 import de.dreier.mytargets.databinding.ActivityArrowRankingDetailsBinding

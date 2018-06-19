@@ -18,7 +18,7 @@ package de.dreier.mytargets.features.training.environment
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
-import androidx.content.systemService
+import androidx.core.content.systemService
 
 internal object Connectivity {
 

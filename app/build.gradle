@@ -102,6 +102,7 @@ android {
         }
         screengrab {
             dimension "mode"
+            multiDexEnabled true
         }
     }
 }

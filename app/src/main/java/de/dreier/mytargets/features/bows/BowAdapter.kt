@@ -24,7 +24,6 @@ import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding
 import de.dreier.mytargets.features.training.details.SpannedInfoBuilder
 import de.dreier.mytargets.shared.models.db.Bow
-import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.utils.multiselector.MultiSelector
 import de.dreier.mytargets.utils.multiselector.OnItemClickListener
 import de.dreier.mytargets.utils.multiselector.OnItemLongClickListener
@@ -66,7 +65,7 @@ internal class BowAdapter(
             for ((_, _, distance, value) in sightMarks) {
                 info.addLine(distance.toString(), value!!)
             }
-            binding.details.text = Utils.fromHtml(info.toString())
+            binding.details.text = info.toSpanned()
         }
     }
 }

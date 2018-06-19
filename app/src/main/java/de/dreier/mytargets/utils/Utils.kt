@@ -31,7 +31,7 @@ import android.text.Html
 import android.text.Spanned
 import android.view.View
 import android.view.WindowManager
-import androidx.content.systemService
+import androidx.core.content.systemService
 import androidx.core.content.systemService
 import de.dreier.mytargets.features.main.MainActivity
 import de.dreier.mytargets.features.training.overview.Header
