@@ -20,7 +20,7 @@ import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.targets.models.WAFull
 import de.dreier.mytargets.test.base.UITestBase
 import de.dreier.mytargets.test.utils.actions.TargetViewActions
-import de.dreier.mytargets.test.utils.matchers.ViewMatcher
+import de.dreier.mytargets.test.utils.matchers.ViewMatcher.clickFabSpeedDialItem
 import de.dreier.mytargets.test.utils.rules.SimpleDbTestRule
 import org.hamcrest.Matchers
 import org.junit.Before
@@ -78,8 +78,7 @@ class ScreenshotTest : UITestBase() {
         Screengrab.screenshot("6_statistics")
         navigateUp()
         navigateUp()
-        onView(ViewMatcher.supportFab()).perform(click())
-        onView(withId(R.id.fab1)).perform(click())
+        clickFabSpeedDialItem(R.id.fab1)
         Screengrab.screenshot("2_enter_training")
         save()
         onView(isRoot()).perform(click())

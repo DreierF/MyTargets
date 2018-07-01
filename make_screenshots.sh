@@ -5,6 +5,7 @@ IMAGE="system-images;android-28;google_apis;x86"
 AVD_IMAGES=( "Pixel_API_28" "Nexus_7_API_28" "Pixel_C_API_28" )
 DEVICE_TYPES=( "phone" "sevenInch" "tenInch" )
 DEVICE_DEFINITIONS=( "pixel" "Nexus 7 2013" "pixel_c" )
+RESOLUTIONS=( "1080x1920" "1200x1920" "2560x1600" )
 
 # Install prerequisites
 sudo gem install fastlane
@@ -14,29 +15,30 @@ sdkmanager "emulator" "system-images;android-28;google_apis;x86"
 # Compile app
 ./gradlew assembleScreengrabDebug assembleScreengrabDebugAndroidTest
 
-# <android sdk>/tools/bin must be on the PATH
-for i in "${!AVD_IMAGES[@]}"
-do
-	echo no | avdmanager create avd -f -n ${AVD_IMAGES[$i]} -k $IMAGE -d ${DEVICE_DEFINITIONS[$i]}
-done
-
 # Disable emulator authentication
 touch "~/.emulator_console_auth_token"
 echo "" > "~/.emulator_console_auth_token"
 export DYLD_LIBRARY_PATH="$ANDROID_HOME/emulator/lib64:$ANDROID_HOME/emulator/lib64/qt/lib:$DYLD_LIBRARY_PATH"
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/tools/bin
 
 echo Killing all emulators first!
 { echo "kill"; echo "exit"; sleep 1; } | telnet localhost 5554
 
 for i in "${!AVD_IMAGES[@]}"
 do
-	# start emulator
-	emulator -netdelay none -netspeed full -avd ${AVD_IMAGES[$i]} &
+	# Create Emulator
+	echo no | avdmanager create avd -force --name ${AVD_IMAGES[$i]} --package $IMAGE --device ${DEVICE_DEFINITIONS[$i]}
+
+	# Start emulator
+	emulator -netdelay none -netspeed full -skin ${RESOLUTIONS[$i]} -avd ${AVD_IMAGES[$i]} &
 	echo Emulator started, waiting for boot
 	# wait until adb is connected to device, so that we can issue adb shell commands
 	adb wait-for-device
 
-	# wait until boot is completed (see http://ncona.com/2014/01/detect-when-android-emulator-is-ready/ )
+	# Wait until boot is completed (see http://ncona.com/2014/01/detect-when-android-emulator-is-ready/ )
 	output=""
 	while [[ ${output:0:7} != "stopped" ]]; do
 		output=`adb shell getprop init.svc.bootanim`
@@ -45,7 +47,7 @@ do
 	done
 
 	sleep 1
-	# unlock lockscreen
+	# Unlock lockscreen
 	adb shell input keyevent 82
 
 	# Disable system animations
