@@ -1,10 +1,7 @@
 #!/bin/bash
 
 # Configuration
-ABI="google_apis/x86"
 IMAGE="system-images;android-28;google_apis;x86"
-
-# Names of AVD images for phone, 7-inch, 10-inch devices
 AVD_IMAGES=( "Pixel_API_28" "Nexus_7_API_28" "Pixel_C_API_28" )
 DEVICE_TYPES=( "phone" "sevenInch" "tenInch" )
 DEVICE_DEFINITIONS=( "pixel" "Nexus 7 2013" "pixel_c" )
@@ -20,7 +17,7 @@ sdkmanager "emulator" "system-images;android-28;google_apis;x86"
 # <android sdk>/tools/bin must be on the PATH
 for i in "${!AVD_IMAGES[@]}"
 do
-	echo no | avdmanager create avd -f -n ${AVD_IMAGES[$i]} -b $ABI -k $IMAGE -d ${DEVICE_DEFINITIONS[$i]}
+	echo no | avdmanager create avd -f -n ${AVD_IMAGES[$i]} -k $IMAGE -d ${DEVICE_DEFINITIONS[$i]}
 done
 
 # Disable emulator authentication
