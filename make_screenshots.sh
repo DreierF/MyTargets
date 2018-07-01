@@ -9,7 +9,6 @@ RESOLUTIONS=( "1080x1920" "1200x1920" "2560x1600" )
 
 # Install prerequisites
 sudo gem install fastlane
-sudo gem install screengrab
 sdkmanager "emulator" "system-images;android-28;google_apis;x86"
 
 # Compile app
