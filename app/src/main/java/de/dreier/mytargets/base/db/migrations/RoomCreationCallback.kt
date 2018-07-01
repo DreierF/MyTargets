@@ -102,29 +102,66 @@ object RoomCreationCallback : RoomDatabase.Callback() {
         )
     }
 
-    fun createScoreTriggers(database: SupportSQLiteDatabase) {
-        database.execSQL(
-            "CREATE TRIGGER round_sum_score " +
-                    "AFTER UPDATE ON `End` " +
-                    "BEGIN " +
-                    "UPDATE `Round` SET " +
-                    "reachedPoints = (SELECT SUM(reachedPoints) FROM `End` WHERE roundId = NEW.roundId), " +
-                    "totalPoints = (SELECT SUM(totalPoints) FROM `End` WHERE roundId = NEW.roundId), " +
-                    "shotCount = (SELECT SUM(shotCount) FROM `End` WHERE roundId = NEW.roundId) " +
-                    "WHERE id = NEW.roundId;" +
-                    "END;"
-        )
+    private fun createScoreTriggers(database: SupportSQLiteDatabase) {
+        // Insert Triggers
+        database.execSQL(getInsertTrigger("Round", "End", "roundId"))
+        database.execSQL(getInsertTrigger("Training", "Round", "trainingId"))
 
-        database.execSQL(
-            "CREATE TRIGGER training_sum_score " +
-                    "AFTER UPDATE ON `Round` " +
-                    "BEGIN " +
-                    "UPDATE `Training` SET " +
-                    "reachedPoints = (SELECT SUM(reachedPoints) FROM `Round` WHERE trainingId = NEW.trainingId), " +
-                    "totalPoints = (SELECT SUM(totalPoints) FROM `Round` WHERE trainingId = NEW.trainingId), " +
-                    "shotCount = (SELECT SUM(shotCount) FROM `Round` WHERE trainingId = NEW.trainingId) " +
-                    "WHERE id = NEW.trainingId;" +
-                    "END;"
-        )
+        // Update Triggers
+        database.execSQL(getUpdateTrigger("Round", "End", "roundId"))
+        database.execSQL(getUpdateTrigger("Training", "Round", "trainingId"))
+
+        // Delete Triggers
+        database.execSQL(getDeleteTrigger("Round", "End", "roundId"))
+        database.execSQL(getDeleteTrigger("Training", "Round", "trainingId"))
+    }
+
+    private fun getInsertTrigger(
+        parentTable: String,
+        childTable: String,
+        joinColumn: String
+    ): String {
+        return "CREATE TRIGGER insert_${parentTable.toLowerCase()}_sum_score " +
+                "AFTER INSERT ON `$childTable` " +
+                "BEGIN " +
+                getUpdateQuery(parentTable, childTable, joinColumn, "NEW") +
+                "END;"
+    }
+
+    private fun getUpdateTrigger(
+        parentTable: String,
+        childTable: String,
+        joinColumn: String
+    ): String {
+        return "CREATE TRIGGER update_${parentTable.toLowerCase()}_sum_score " +
+                "AFTER UPDATE OF reachedPoints, totalPoints, shotCount ON `$childTable` " +
+                "BEGIN " +
+                getUpdateQuery(parentTable, childTable, joinColumn, "NEW") +
+                "END;"
+    }
+
+    private fun getDeleteTrigger(
+        parentTable: String,
+        childTable: String,
+        joinColumn: String
+    ): String {
+        return "CREATE TRIGGER delete_${parentTable.toLowerCase()}_sum_score " +
+                "AFTER DELETE ON `$childTable` " +
+                "BEGIN " +
+                getUpdateQuery(parentTable, childTable, joinColumn, "OLD") +
+                "END;"
+    }
+
+    private fun getUpdateQuery(
+        parentTable: String,
+        childTable: String,
+        joinColumn: String,
+        reference: String
+    ): String {
+        return "UPDATE `$parentTable` SET " +
+                "reachedPoints = (SELECT IFNULL(SUM(reachedPoints), 0) FROM `$childTable` WHERE $joinColumn = $reference.$joinColumn), " +
+                "totalPoints = (SELECT IFNULL(SUM(totalPoints), 0) FROM `$childTable` WHERE $joinColumn = $reference.$joinColumn), " +
+                "shotCount = (SELECT IFNULL(SUM(shotCount), 0) FROM `$childTable` WHERE $joinColumn = $reference.$joinColumn) " +
+                "WHERE id = $reference.$joinColumn;"
     }
 }

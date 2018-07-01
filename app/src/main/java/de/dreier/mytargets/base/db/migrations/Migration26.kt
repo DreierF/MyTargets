@@ -38,7 +38,7 @@ object Migration26 : Migration(25, 26) {
 
         recreateTablesWithNonNull(database)
 
-        RoomCreationCallback.createScoreTriggers(database)
+        createScoreTriggers(database)
 
         createIndices(database)
 
@@ -77,6 +77,69 @@ object Migration26 : Migration(25, 26) {
                 )
             }
         }
+    }
+
+    private fun createScoreTriggers(database: SupportSQLiteDatabase) {
+        // Insert Triggers
+        database.execSQL(getInsertTrigger("Round", "End", "roundId"))
+        database.execSQL(getInsertTrigger("Training", "Round", "trainingId"))
+
+        // Update Triggers
+        database.execSQL(getUpdateTrigger("Round", "End", "roundId"))
+        database.execSQL(getUpdateTrigger("Training", "Round", "trainingId"))
+
+        // Delete Triggers
+        database.execSQL(getDeleteTrigger("Round", "End", "roundId"))
+        database.execSQL(getDeleteTrigger("Training", "Round", "trainingId"))
+    }
+
+    private fun getInsertTrigger(
+        parentTable: String,
+        childTable: String,
+        joinColumn: String
+    ): String {
+        return "CREATE TRIGGER insert_${parentTable.toLowerCase()}_sum_score " +
+                "AFTER INSERT ON `$childTable` " +
+                "BEGIN " +
+                getUpdateQuery(parentTable, childTable, joinColumn, "NEW") +
+                "END;"
+    }
+
+    private fun getUpdateTrigger(
+        parentTable: String,
+        childTable: String,
+        joinColumn: String
+    ): String {
+        return "CREATE TRIGGER update_${parentTable.toLowerCase()}_sum_score " +
+                "AFTER UPDATE OF reachedPoints, totalPoints, shotCount ON `$childTable` " +
+                "BEGIN " +
+                getUpdateQuery(parentTable, childTable, joinColumn, "NEW") +
+                "END;"
+    }
+
+    private fun getDeleteTrigger(
+        parentTable: String,
+        childTable: String,
+        joinColumn: String
+    ): String {
+        return "CREATE TRIGGER delete_${parentTable.toLowerCase()}_sum_score " +
+                "AFTER DELETE ON `$childTable` " +
+                "BEGIN " +
+                getUpdateQuery(parentTable, childTable, joinColumn, "OLD") +
+                "END;"
+    }
+
+    private fun getUpdateQuery(
+        parentTable: String,
+        childTable: String,
+        joinColumn: String,
+        reference: String
+    ): String {
+        return "UPDATE `$parentTable` SET " +
+                "reachedPoints = (SELECT IFNULL(SUM(reachedPoints), 0) FROM `$childTable` WHERE $joinColumn = $reference.$joinColumn), " +
+                "totalPoints = (SELECT IFNULL(SUM(totalPoints), 0) FROM `$childTable` WHERE $joinColumn = $reference.$joinColumn), " +
+                "shotCount = (SELECT IFNULL(SUM(shotCount), 0) FROM `$childTable` WHERE $joinColumn = $reference.$joinColumn) " +
+                "WHERE id = $reference.$joinColumn;"
     }
 
     private fun createIndices(database: SupportSQLiteDatabase) {
