@@ -45,7 +45,7 @@ script:
 - echo -en 'travis_fold:end:script.build\\r'
 
 - echo -e '\033[0;33mUnit tests...\033[0m' && echo -en 'travis_fold:start:script.unittest\\r'
-- ./gradlew testRelease jacocoTestReport -PdisablePreDex
+- ./gradlew testRelease -PdisablePreDex
 - echo -en 'travis_fold:end:script.unittest\\r'
 
 # - echo -e '\033[0;33mUI tests...\033[0m' && echo -en 'travis_fold:start:script.uitest\\r'

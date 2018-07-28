@@ -71,9 +71,7 @@ import de.dreier.mytargets.views.selector.*
 
 class NavigationController(
     private val activity: AppCompatActivity,
-    private val fragment: Fragment? = null//,
-//        private val fragmentManager: FragmentManager,
-//        private val containerId: Int = R.id.container
+    private val fragment: Fragment? = null
 ) {
 
     constructor(fragment: Fragment) : this(fragment.activity as AppCompatActivity, fragment)
@@ -334,31 +332,6 @@ class NavigationController(
             }
         }
     }
-
-//    fun navigateToSearch() {
-//        val searchFragment = SearchFragment()
-//        fragmentManager.beginTransaction()
-//                .replace(containerId, searchFragment)
-//                .commitAllowingStateLoss()
-//    }
-//
-//    fun navigateToRepo(owner: String, name: String) {
-//        val fragment = RepoFragment.create(owner, name)
-//        val tag = "repo/$owner/$name"
-//        fragmentManager.beginTransaction()
-//                .replace(containerId, fragment, tag)
-//                .addToBackStack(null)
-//                .commitAllowingStateLoss()
-//    }
-//
-//    fun navigateToUser(login: String) {
-//        val tag = "user" + "/" + login
-//        val userFragment = UserFragment.create(login)
-//        fragmentManager.beginTransaction()
-//                .replace(containerId, userFragment, tag)
-//                .addToBackStack(null)
-//                .commitAllowingStateLoss()
-//    }
 
     companion object {
         const val ITEM = "item"

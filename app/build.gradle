@@ -107,7 +107,6 @@ android {
     }
 }
 
-//apply from: '../tools/script-codacy.gradle'
 apply from: '../tools/script-play-store.gradle'
 
 dependencies {
