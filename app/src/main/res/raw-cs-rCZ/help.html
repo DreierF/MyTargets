@@ -26,13 +26,13 @@
            
             <section> 
                 <h2>Organizace tréninků</h2>
-                <p>Trénink je rozdělen na jedno nebo více kol. Každé kolo může obsahovat libovolný počet sad, přičemž jedna sada obsahuje předem definovaný počet šípů.</p>
+                <p>Trénink je organizován do jednoho nebo více kol. Každé kolo může obsahovat libovolný počet sad, přičemž sada obsahuje předem definovaný počet vystřelených šípů.</p>
                 <details>
                     <summary>Vytvořte trénink</summary>
                     <p>Chcete-li vytvořit nový trénink, klepněte na oranžové kolečko v dolní části stránky tréninku. Nyní můžete vybírat z následujících možností:</p>
                     <ul>
                         <li><strong>Volný trénink</strong>: Lze libovolně nastavit vzdálenost, typ a průměr terče, stejně jako počet šípů vystřelených na sadu.</li>
-                        <li><strong>Trénink - standardní kolo</strong>: Umožňuje vybrat z obrovského počtu standardních kol. Můžete také vytvořit své vlastní, pokud žádné z předdefinovaných nevyhovuje vašim potřebám.</li>
+                        <li><strong>Trénink - Standardní kolo</strong>: Umožňuje si vybrat z velkého množství běžných standardních kol. Můžete také definovat své vlastní, pokud žádné z předdefinovaných nevyhovuje vašim potřebám.</li>
                     </ul>
                 </details>
                 <details>
@@ -45,11 +45,11 @@
                     <summary>WA spůsob bodování</summary>
                     <p>V následujících bodech jsou podrobněji popsány všechny styly bodování WA:</p>
                     <ul>
-                        <li><strong>Reflexní styl (X-1)</strong>: Nejvnitřnější žlutý kruh odpovídá 10 bodům, ale je označen jako X. Vnější žluté kruhy odpovídají 10 a 9 bodům. Skóre se s každým kroužkem snižuje o 1.</li>
+                        <li><strong>Reflexní styl (X-1)</strong>: Nejvnitřnější žlutý kruh odpovídá 10 bodům, ale je označen jako X. Vnější žluté kruhy odpovídají 10 a 9 bodům. Skóre se s každým kruhem snižuje o 1 bod.</li>
                         <li><strong>Reflexní styl (10-1)</strong>: Stejné jako předchozí, ale vnitřní dva žluté kroužky jsou zobrazeny jako jeden kruh za 10 bodů (bez X).</li>
-                        <li><strong>Kladkový styl</strong>: Pouze nejvnitřnější žlutý kruh je za 10 bodů. Okolní dva žluté kroužky jsou zobrazeny jako jeden za 9 bodů.</li>
-                        <li><strong>11, 10, 9, ..., 1</strong>: Vnitřní kroužek za 11 bodů. Skóre se s každým kroužkem snižuje o 1.</li>
-                        <li><strong>X, 5, 4, 3, 2, 1</strong>: Žluté skóre 5, červené 4, modré 3, černé 2 a bílé 1 bod. Nejvnitřnější žlutý kruh je zapsán jako X.</li>
+                        <li><strong>Kladkový styl</strong>: Pouze nejvnitřnější žlutý kruh získává 10 bodů. Vnější dva žluté kruhy jsou zobrazeny jako jeden se skóre 9 bodů.</li>
+                        <li><strong>11, 10, 9, ..., 1</strong>: Nejvnitřnější kruh je za 11 bodů. Skóre se s každým kruhem snižuje o 1 bod.</li>
+                        <li><strong>X, 5, 4, 3, 2, 1</strong>: Žlutá 5 bodů, červená 4, modrá 3, černá 2 a bílá 1 bod. Nejvnitřnější žlutý kruh je zaznamenán jako X.</li>
                         <li><strong>9, 7, 5, 3, 1</strong>: Žluté skóre 9, červené 7, modré 5, černé 3 a bílé 1 bod.</li>
                         <li><strong>FCFS Barvy (obráceně 10-1)</strong>: Hraje se bodový styl, kde bílé jsou 10 bodů, černé 8, modré 6, červené 4, vnější žlutá 2 a vnitřní dvě žluté 1. Obvykle se střílí se 6 šípů na sadu. Pouze jeden šíp se počítá na jednu barvu. Maximální dosažitelné skóre je 31 bodů na sadu, když každý šíp zasádne jinou barvu.</li>
                     </ul>
@@ -61,7 +61,7 @@
                 </details>
                 <details>
                     <summary>Co je standardní kolo?</summary>
-                    <p>Standardní kolo je přednastavená šablona výcviku, která specifikuje daný počet kol, sad a šípů vystřelených na sadu. Krom toho jsou vzdálenosti a terče fixní.</p>
+                    <p>Standardní kolo je předdefinovaná tréninková šablona, která určuje přesný počet kol, sad a šípů na sadu. Krom toho jsou vzdálenosti a cílové plochy fixní.</p>
                     <p>Aplikace vám nabízí řadu standardních kol, které jsou běžně používané.</p>
                 </details>
                 <details>
@@ -72,16 +72,16 @@
             </section>
             <section> 
                 <h2>Vstup</h2>
-                <p>MyTargets podporuje přesné zakreslení šípu a klávesnice, na základě vstupního režimu. Přepínání mezi nimi je možné přes nastavení.</p>
+                <p>MyTargets podporuje přesné zakreslení šípu a režim klávesnice. Přepínání mezi nimi je možné v nastavení.</p>
                 <details>
                     <summary>Přesné zakreslení šípu</summary>
-                    <p>Přesné zakreslení šípu je výchozí metoda zadávání. Chcete-li zadat zásah, klepněte na něj a podržte ho na cílové ploše, nastavte jeho polohu, dokud nebudete spokojeni s polohou šipky a potom uvolněte prst.</p>
+                    <p>Přesné zakreslení šípu je výchozí metoda zadávání. Chcete-li zadat zásah, klepněte na něj a podržte ho na ploše, nastavte jeho polohu, dokud nebudete spokojeni s polohou šípu a potom uvolněte prst.</p>
                     <img src="images/input_plotting.png"/>
                     <p><strong>Poznámka: </strong>Detekce skluzu prstu rozpozná neúmyslné pohyby při uvolnění prstu a ignoruje je.</p>
                 </details>
                 <details>
                     <summary>Režim klávesnice</summary>
-                    <p>Režim klávesnice, jako alternativa k výchozímu přesnému zadávání pozice. V režimu klávesnice zadáte pouze prstence zasažené šípem ale ne jejich přesnou pozici.</p>
+                    <p>Režim klávesnice je alternativa k výchozímu přesnému zakreslení šípu. V režimu klávesnice zadáte pouze kruh zasažený šípem a ne jeho přesnou polohu.</p>
                     <img src="images/input_keyboard.png"/>
                     <p>Nastavení levou rukou přenese klávesnici na levou stranu, aby bylo možné zadávat jednou rukou.</p>
                 </details>
@@ -97,7 +97,7 @@
                     <summary>Statistické prvky</summary>
                     <p>Níže jsou popsány hlavní komponenty uživatelského rozhraní:</p>
                     <ul>
-                        <li><strong>Linkový graf</strong>: Zobrazuje průměrné skóre šípů na sadu. Oranžové regresní čáry ukazují celkový trend. Graf lze zvětšit vodorovně dvěma prsty.</li>
+                        <li><strong>Linkový graf</strong>: Zobrazuje průměrné skóre šípů na sadu. Oranžová lineární čára ukazuje celkový trend. Graf může být zvětšen dvěma prsty horizontálně.</li>
                         <li><strong>Distribuční graf</strong>: Ukazuje rozložení šípů mezi dostupné kruhy. Není-li vybrán žádný segment, zobrazí se celkový počet zásahů a chyb. Klepnutím na segment se zobrazí přesný počet zásahů v této skupině.</li>
                         <li><strong>Rozptylový vzor</strong>: Zobrazuje všechny zásahy na jednom terči, dané spůsobem bodování (lze změnit v nastavení aplikace). Pokud klepnete na rozptylový vzor, získáte zvětšení rozptylového vzoru. Z obrazovky podrobnosti můžete také sdílet obrázek rozptylového vzoru, nebo ho vytisknout.</li>
                         <li><strong>Hodnocení šípu</strong>: Pokud jste použili funkci číslování šípů v jednom z vybraných tréninků, je tato tabulka zobrazena níže. Šípy s nejlepším průměrným skóre jsou umístěny v horní části seznamu. Klepnutím na číslo šípu se dostanete k rozptylovému vzoru, který zobrazuje pouze zásahy vybraného šípu.</li>
@@ -112,7 +112,7 @@
                 </details>
                 <details>
                     <summary>Používání filtrů</summary>
-                    <p>Můžete také použít filtry na vybrané údaje o tréninku. Filtrování je možné pomocí luků, šípů, vzdáleností a průměru terče.</p>
+                    <p>Můžete také použít filtry na vybrané údaje o tréninku. Filtrování je možné pomocí luku, šípu, vzdálenosti a průměru terče.</p>
                     <img src="images/statistics_filter.png" style="width:10%;"/>
                 </details>
                 <details>

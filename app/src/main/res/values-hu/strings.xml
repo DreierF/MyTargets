@@ -42,11 +42,11 @@
     <item quantity="other">%d íjak kiválasztása</item>
   </plurals>
   <plurals name="arrow_selected">
-    <item quantity="one">%d vesszõ kiválasztva</item>
+    <item quantity="one">%d. vesszõ kiválasztva</item>
     <item quantity="other">%d vesszõ kiválasztva</item>
   </plurals>
   <plurals name="passe_selected">
-    <item quantity="one">%d sorozat kiválasztva</item>
+    <item quantity="one">%d. sorozat kiválasztva</item>
     <item quantity="other">%d sorozatok kiválasztása</item>
   </plurals>
   <string name="edit">Szerkesztés</string>
@@ -54,7 +54,7 @@
   <string name="statistic">Statisztika</string>
   <!-- Share -->
   <string name="share">Megosztás</string>
-  <string name="dispersion_pattern">Szórás minta</string>
+  <string name="dispersion_pattern">Találatok eloszlása</string>
   <string name="sharing_failed">Megosztás nem sikerült!</string>
   <!-- Export -->
   <string name="send_exported">Mentett adatok küldése</string>
@@ -149,14 +149,14 @@
   <string name="environment">Környezet</string>
   <string name="wind_speed">Szélsebesség</string>
   <string name="wind_direction">Szél irány</string>
-  <string name="sight_setting_removed">Irányzék-bellítás törölve!</string>
+  <string name="sight_setting_removed">Irányzék-beállítás törölve!</string>
   <string name="metric">Metrikus</string>
   <string name="imperial">Angolszász</string>
   <string name="undo">Visszavonás</string>
   <string name="standard_rounds">A szabványos fordulók</string>
   <string name="expand_collapse">Kibontás/összecsukás</string>
   <string name="new_round_template">Új Sablon</string>
-  <string name="arrow_numbers">Vesszők számozása</string>
+  <string name="arrow_numbers">Kilőtt vesszők sorszámozása</string>
   <string name="round_removed">Forduló törölve!</string>
   <string name="custom_round">Egyéni forduló</string>
   <string name="filter">Szűrő</string>
@@ -181,7 +181,7 @@
     <item quantity="other">%d edzések törölve</item>
   </plurals>
   <plurals name="passe_deleted">
-    <item quantity="one">%d sorozat törölve</item>
+    <item quantity="one">%d. sorozat törölve</item>
     <item quantity="other">%d sorozatok törölve</item>
   </plurals>
   <plurals name="rounds">
@@ -204,7 +204,7 @@
   <string name="my_bow">Az íjam</string>
   <string name="my_arrow">Vesszőim</string>
   <string name="tip_weight">a hegy súlya</string>
-  <string name="arrow_ranking">Vessző rangsor</string>
+  <string name="arrow_ranking">Vesszők találati értéke</string>
   <string name="arrow_x_of_set_of_arrows">%2$s. nyíl a %1$s-ból</string>
   <string name="display">Megjelenítés</string>
   <string name="print">Nyomtatás</string>
@@ -246,7 +246,7 @@
   <string name="hits">Találatok</string>
   <string name="misses">Mellé</string>
   <string name="new_end">Új sorozat</string>
-  <string name="distribution">Találatok eloszlása</string>
+  <string name="distribution">Szóráskép</string>
   <string name="count">Számláló</string>
   <string name="diameter">Átmérő</string>
   <string name="input">Találatok rögzítése/megjelenítése</string>
@@ -329,7 +329,7 @@
   <string name="keyboard_enabled">Engedélyezett billentyűzet</string>
   <string name="sort_shots">Lövések sorbarendezése</string>
   <string name="sort_shots_for_spots">Lövések rendezése a szemafor-lőlap szerint</string>
-  <string name="target_captain">Lőlap kapitány</string>
+  <string name="target_captain">Lőlap vezető</string>
   <string name="language">Nyelv</string>
   <string name="warning_backup_experimental">Figyelmeztetés: Ez a szolgáltatás még kísérleti fázisban! Kérjük, ellenőrizze a rendszeres időközönként ha igazán sikeres volt, a biztonsági másolat!</string>
   <string name="drawer_open">Rögzítő megnyitása</string>
@@ -363,6 +363,7 @@
   <string name="settings_summary_statistics">Állítsa be a statisztika képernyőt</string>
   <string name="settings_statistics_spots_to_single_target">Összesített pontok egyetlen lőlapon</string>
   <string name="keep_above_lockscreen">Tartsa a zárolt képernyőn</string>
-  <string name="scoreboard_title_all_rounds">Minden fordulóban</string>
-  <string name="invalid_number">Invalid number</string>
+  <string name="scoreboard_title_all_rounds">Forduló összesítő</string>
+  <string name="permission_required">Engedély szükséges</string>
+  <string name="backup_permission_explanation"><![CDATA[Ahhoz, hogy egy biztonsági másolatot készíts az adatokról, az alkalmazásnak engedélyre van szüksége az eszköz belső tárterületéhez. A további használathoz engedélyezze a hozzáférést: Beállítások &gt; Alkalmazások &gt; MyTargets &gt; Engedélyek a \'Tárolóeszköz\ ".]]></string>
 </resources>

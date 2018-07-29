@@ -26,7 +26,7 @@
   <string name="cloudy">Înnorat</string>
   <string name="light_rain">Ploaie ușoară</string>
   <string name="rain">Ploios</string>
-  <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
+  <string name="round_desc">%1$s: %2$d &#215; %3$d săgeţi (tinta %4$s)</string>
   <string name="mini">Mini</string>
   <string name="small">Mică</string>
   <string name="medium">Medie</string>
@@ -56,9 +56,9 @@
   <string name="right_back">din spate dreapta</string>
   <string name="stop">STOP</string>
   <string name="end_n">Setul %d</string>
-  <string name="miss">Miss</string>
+  <string name="miss">Ratare</string>
   <string name="backspace">Backspace</string>
-  <string name="accessibility_description_shot_n_score">Shot %d: %s</string>
+  <string name="accessibility_description_shot_n_score">Tragerea %1$d: %2$s</string>
   <plurals name="rounds">
     <item quantity="one">%d runda</item>
     <item quantity="few">%d runde</item>
