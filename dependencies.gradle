@@ -40,7 +40,7 @@ ext {
             permissionsdispatcher     : '3.2.0',
             photoView                 : '2.1.3',
             picasso                   : '2.5.2',
-            playService               : '15.0.1',
+            playService               : '15.0.0',
             retrofit                  : '2.4.0',
             roundedImageView          : '2.3.0',
             screengrab                : '1.2.0',
@@ -150,7 +150,7 @@ ext {
 
             screengrab                    : "tools.fastlane:screengrab:$libraryVersion.screengrab",
 
-            kotlinStdlibJre7              : "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion",
+            kotlinStdlibJdk7              : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion",
             kotlinTest                    : "org.jetbrains.kotlin:kotlin-test:$kotlinVersion",
             kotlinTestJunit               : "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion",
 

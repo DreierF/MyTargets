@@ -28,22 +28,22 @@ import de.dreier.mytargets.shared.utils.Color.WHITE
 class NFAAIndoor5Spot : TargetModelBase(
         id = ID,
         nameRes = R.string.nfaa_indoor_5_spot,
-        zones = arrayOf(
+        zones = listOf(
                 CircularZone(0.25f, WHITE, DARK_GRAY, 2),
                 CircularZone(0.5f, WHITE, DARK_GRAY, 2),
                 CircularZone(0.75f, SAPPHIRE_BLUE, WHITE, 2),
                 CircularZone(1.0f, SAPPHIRE_BLUE, WHITE, 0)
         ),
-        scoringStyles = arrayOf(
+        scoringStyles = listOf(
                 ScoringStyle(true, 5, 5, 4, 4),
                 ScoringStyle(false, 6, 6, 5, 4),
                 ScoringStyle(false, 7, 6, 5, 4)
         ),
-        diameters = arrayOf(Dimension(40f, CENTIMETER))
+        diameters = listOf(Dimension(40f, CENTIMETER))
 ) {
     init {
         decorator = CenterMarkDecorator(DARK_GRAY, 25f, 9, true)
-        facePositions = arrayOf(
+        facePositions = listOf(
                 PointF(-0.6f, -0.6f),
                 PointF(0.6f, -0.6f),
                 PointF(0.0f, 0.0f),

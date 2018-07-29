@@ -79,5 +79,6 @@ dependencies {
     implementation dependencies.androidState
     kapt dependencies.androidStateProcessor
     implementation project(':shared')
-    implementation dependencies.kotlinStdlibJre7
+    implementation dependencies.kotlinStdlibJdk7
+    implementation "android.arch.lifecycle:livedata-core:$rootProject.ext.libraryVersion.architectureComponents"
 }

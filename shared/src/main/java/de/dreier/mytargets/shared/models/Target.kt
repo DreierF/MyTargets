@@ -42,7 +42,7 @@ data class Target(
 
     @IgnoredOnParcel
     @delegate:Ignore
-    val model: TargetModelBase by lazy { TargetFactory.getTarget(id.toInt()) }
+    val model: TargetModelBase by lazy { TargetFactory.getTarget(id) }
     @IgnoredOnParcel
     @delegate:Ignore
     val drawable: TargetDrawable by lazy { TargetDrawable(this) }

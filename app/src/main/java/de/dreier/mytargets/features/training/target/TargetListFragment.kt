@@ -160,7 +160,7 @@ class TargetListFragment :
         spinner.onItemSelectedListener = this
     }
 
-    private fun diameterToList(diameters: Array<Dimension>): List<String> {
+    private fun diameterToList(diameters: List<Dimension>): List<String> {
         return diameters.map { it.toString() }
     }
 

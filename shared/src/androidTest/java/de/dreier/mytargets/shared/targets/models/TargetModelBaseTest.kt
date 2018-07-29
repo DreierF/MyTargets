@@ -37,7 +37,7 @@ class TargetModelBaseTest {
     @Throws(Exception::class)
     fun trivialTargetRealSize() {
         for (id in NFAAField.ID..WAField3Spot.ID) {
-            val target = TargetFactory.getTarget(id.toInt())
+            val target = TargetFactory.getTarget(id)
             val diameter = Dimension(40f, Dimension.Unit.CENTIMETER)
             val realSize = target.getRealSize(diameter)
             Assert.assertEquals("Real size $realSize for target id $id does not match with expected value 40cm",
@@ -48,7 +48,7 @@ class TargetModelBaseTest {
     @Test
     @Throws(Exception::class)
     fun waFieldRealSize() {
-        val target = TargetFactory.getTarget(WAField.ID.toInt())
+        val target = TargetFactory.getTarget(WAField.ID)
         val diameter = Dimension(40f, Dimension.Unit.CENTIMETER)
         val realSize = target.getRealSize(diameter)
         Assert.assertEquals(realSize, Dimension(40f, Dimension.Unit.CENTIMETER))
@@ -57,7 +57,7 @@ class TargetModelBaseTest {
     @Test
     @Throws(Exception::class)
     fun waVertical3SpotRealSize() {
-        val target = TargetFactory.getTarget(WAVertical3Spot.ID.toInt())
+        val target = TargetFactory.getTarget(WAVertical3Spot.ID)
         val diameter = Dimension(40f, Dimension.Unit.CENTIMETER)
         val realSize = target.getRealSize(diameter)
         Assert.assertEquals(realSize, Dimension(20f, Dimension.Unit.CENTIMETER))
@@ -66,7 +66,7 @@ class TargetModelBaseTest {
     @Test
     @Throws(Exception::class)
     fun waFullRealSize() {
-        val target = TargetFactory.getTarget(WAFull.ID.toInt())
+        val target = TargetFactory.getTarget(WAFull.ID)
         val diameter = Dimension(40f, Dimension.Unit.CENTIMETER)
         val realSize = target.getRealSize(diameter)
         Assert.assertEquals(realSize, Dimension(40f, Dimension.Unit.CENTIMETER))
@@ -75,7 +75,7 @@ class TargetModelBaseTest {
     @Test
     @Throws(Exception::class)
     fun wa6RingRealSize() {
-        val target = TargetFactory.getTarget(WA6Ring.ID.toInt())
+        val target = TargetFactory.getTarget(WA6Ring.ID)
         val diameter = Dimension(40f, Dimension.Unit.CENTIMETER)
         val realSize = target.getRealSize(diameter)
         Assert.assertEquals(realSize, Dimension(24f, Dimension.Unit.CENTIMETER))
@@ -84,7 +84,7 @@ class TargetModelBaseTest {
     @Test
     @Throws(Exception::class)
     fun wa5RingRealSize() {
-        val target = TargetFactory.getTarget(WA5Ring.ID.toInt())
+        val target = TargetFactory.getTarget(WA5Ring.ID)
         val diameter = Dimension(40f, Dimension.Unit.CENTIMETER)
         val realSize = target.getRealSize(diameter)
         Assert.assertEquals(realSize, Dimension(20f, Dimension.Unit.CENTIMETER))
@@ -93,7 +93,7 @@ class TargetModelBaseTest {
     @Test
     @Throws(Exception::class)
     fun wa3RingRealSize() {
-        val target = TargetFactory.getTarget(WA3Ring.ID.toInt())
+        val target = TargetFactory.getTarget(WA3Ring.ID)
         val diameter = Dimension(40f, Dimension.Unit.CENTIMETER)
         val realSize = target.getRealSize(diameter)
         Assert.assertEquals(realSize, Dimension(12f, Dimension.Unit.CENTIMETER))

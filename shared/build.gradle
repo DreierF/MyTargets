@@ -66,5 +66,5 @@ dependencies {
     testImplementation dependencies.jUnit
     testImplementation dependencies.mockito
     androidTestImplementation dependencies.runner
-    implementation dependencies.kotlinStdlibJre7
+    implementation dependencies.kotlinStdlibJdk7
 }

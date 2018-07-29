@@ -112,7 +112,7 @@ apply from: '../tools/script-play-store.gradle'
 dependencies {
     Map<String, String> dependencies = rootProject.ext.dependencies
 
-    implementation dependencies.kotlinStdlibJre7
+    implementation dependencies.kotlinStdlibJdk7
 
     implementation dependencies.supportCompat
     implementation dependencies.supportCoreUtils

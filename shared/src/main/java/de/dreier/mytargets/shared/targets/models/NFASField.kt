@@ -29,13 +29,13 @@ import de.dreier.mytargets.shared.utils.Color.TURBO_YELLOW
 class NFASField : TargetModelBase(
         id = ID,
         nameRes = R.string.nfas_field,
-        diameters = arrayOf(Diameter.SMALL, Diameter.MEDIUM, Diameter.LARGE, Diameter.XLARGE),
-        zones = arrayOf(
+        diameters = listOf(Diameter.SMALL, Diameter.MEDIUM, Diameter.LARGE, Diameter.XLARGE),
+        zones = listOf(
                 CircularZone(0.162f, TURBO_YELLOW, BLACK, 5),
                 EllipseZone(1f, 0f, 0f, ORANGE, BLACK, 4),
                 CircularZone(1.0f, LIGHTER_GRAY, GRAY, 3)
         ),
-        scoringStyles = arrayOf(
+        scoringStyles = listOf(
                 ArrowAwareScoringStyle(false, arrayOf(intArrayOf(24, 20, 16), intArrayOf(14, 14, 10), intArrayOf(8, 8, 4)))
         ),
         type = ETargetType.FIELD

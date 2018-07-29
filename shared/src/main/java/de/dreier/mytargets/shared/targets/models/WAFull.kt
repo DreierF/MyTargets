@@ -31,7 +31,7 @@ import de.dreier.mytargets.shared.utils.Color.WHITE
 class WAFull : TargetModelBase(
         id = ID,
         nameRes = R.string.wa_full,
-        zones = arrayOf(
+        zones = listOf(
                 CircularZone(0.05f, LEMON_YELLOW, DARK_GRAY, 2),
                 CircularZone(0.1f, LEMON_YELLOW, DARK_GRAY, 2),
                 CircularZone(0.2f, LEMON_YELLOW, DARK_GRAY, 2),
@@ -44,7 +44,7 @@ class WAFull : TargetModelBase(
                 CircularZone(0.9f, WHITE, DARK_GRAY, 2),
                 CircularZone(1.0f, WHITE, DARK_GRAY, 2)
         ),
-        scoringStyles = arrayOf(
+        scoringStyles = listOf(
                 ScoringStyle(R.string.recurve_style_x_1, true, 10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1),
                 ScoringStyle(R.string.recurve_style_10_1, false, 10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1),
                 ScoringStyle(R.string.compound_style, false, 10, 9, 9, 8, 7, 6, 5, 4, 3, 2, 1),
@@ -53,7 +53,7 @@ class WAFull : TargetModelBase(
                 ScoringStyle(false, 9, 9, 9, 7, 7, 5, 5, 3, 3, 1, 1),
                 ColorScoringStyle(R.string.fcfs_color_reversed, 31, 1, 1, 2, 4, 4, 6, 6, 8, 8, 10, 10)
         ),
-        diameters = arrayOf(
+        diameters = listOf(
                 Dimension(40f, CENTIMETER),
                 Dimension(60f, CENTIMETER),
                 Dimension(80f, CENTIMETER),
