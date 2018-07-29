@@ -38,7 +38,7 @@ android {
     defaultConfig {
         applicationId 'de.dreier.mytargets'
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode gitVersionCode
         versionName gitVersionName
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'

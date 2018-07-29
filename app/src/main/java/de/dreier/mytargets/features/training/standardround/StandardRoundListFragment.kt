@@ -100,7 +100,7 @@ class StandardRoundListFragment :
             )
         }.toMutableList()
         return {
-            adapter!!.setList(data)
+            adapter.setList(data)
             selectItem(binding.recyclerView, currentSelection!!)
         }
     }

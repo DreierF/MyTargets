@@ -364,7 +364,7 @@ object SettingsManager {
 
     var language: String
         get() = preferences[KEY_LANGUAGE, ""]
-        set(value) = preferences.set(KEY_LANGUAGE, language)
+        set(value) = preferences.set(KEY_LANGUAGE, value)
 
     var shouldShowIntroActivity: Boolean
         get() = preferences[KEY_INTRO_SHOWED, true]

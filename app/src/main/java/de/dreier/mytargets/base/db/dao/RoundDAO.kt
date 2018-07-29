@@ -64,9 +64,12 @@ abstract class RoundDAO {
 
     @Transaction
     open fun deleteRound(round: Round) {
-        deleteRound(round)
+        deleteRoundWithoutIndexUpdate(round)
         decrementIndices(round.index)
     }
+
+    @Delete
+    abstract fun deleteRoundWithoutIndexUpdate(round: Round)
 
     @Query("UPDATE Round SET `index` = `index` - 1 WHERE `index` > :allAboveIndex")
     abstract fun decrementIndices(allAboveIndex: Int)

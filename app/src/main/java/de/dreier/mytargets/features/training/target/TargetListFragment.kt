@@ -113,7 +113,7 @@ class TargetListFragment :
     }
 
     override fun selectItem(recyclerView: RecyclerView, item: Target) {
-        adapter!!.ensureItemIsExpanded(item)
+        adapter.ensureItemIsExpanded(item)
         super.selectItem(recyclerView, item)
     }
 
@@ -128,7 +128,7 @@ class TargetListFragment :
 
     private fun updateSettings() {
         // Init scoring styles
-        val target = adapter!!.getItemById(selector.getSelectedId()!!)
+        val target = adapter.getItemById(selector.getSelectedId()!!)
         val styles = target!!.model.scoringStyles.map { it.toString() }
         updateAdapter(binding.scoringStyle, scoringStyleAdapter!!, styles)
 
