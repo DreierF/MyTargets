@@ -31,7 +31,7 @@ object TrainingInfoUtils {
         rounds: List<Round>,
         equals: BooleanArray
     ): Spanned {
-        val info = SpannedInfoBuilder()
+        val info = SpannedInfoBuilder(context)
         addStaticTrainingHeaderInfo(context, info, training)
         addDynamicTrainingHeaderInfo(rounds, equals, info)
         return info.toSpanned()
@@ -100,8 +100,8 @@ object TrainingInfoUtils {
         }
     }
 
-    fun getRoundInfo(round: Round, equals: BooleanArray): Spanned {
-        val info = SpannedInfoBuilder()
+    fun getRoundInfo(context: Context, round: Round, equals: BooleanArray): Spanned {
+        val info = SpannedInfoBuilder(context)
         if (!equals[0]) {
             info.addLine(R.string.distance, round.distance)
         }

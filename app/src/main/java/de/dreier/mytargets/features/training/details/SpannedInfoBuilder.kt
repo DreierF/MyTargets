@@ -15,18 +15,18 @@
 
 package de.dreier.mytargets.features.training.details
 
+import android.content.Context
 import android.graphics.Typeface.BOLD
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
 import android.text.style.StyleSpan
-import de.dreier.mytargets.shared.SharedApplicationInstance
 
-class SpannedInfoBuilder {
+class SpannedInfoBuilder(val context: Context) {
     private val info = SpannableStringBuilder()
 
     fun addLine(key: Int, value: Any) {
-        addLine(SharedApplicationInstance.getStr(key), value)
+        addLine(context.getString(key), value)
     }
 
     fun addLine(key: String, value: Any) {

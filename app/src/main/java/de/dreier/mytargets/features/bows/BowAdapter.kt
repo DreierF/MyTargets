@@ -53,7 +53,7 @@ internal class BowAdapter(
             binding.image.setImageDrawable(item.thumbnail!!.roundDrawable)
             binding.details.visibility = View.VISIBLE
 
-            val info = SpannedInfoBuilder()
+            val info = SpannedInfoBuilder(binding.root.context)
             info.addLine(R.string.bow_type, item.type!!)
             if (!item.brand!!.trim { it <= ' ' }.isEmpty()) {
                 info.addLine(R.string.brand, item.brand!!)

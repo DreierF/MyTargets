@@ -212,7 +212,7 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
                 R.plurals.rounds, item
                     .index + 1, item.index + 1
             )
-            binding.subtitle.text = TrainingInfoUtils.getRoundInfo(item, equals)
+            binding.subtitle.text = TrainingInfoUtils.getRoundInfo(binding.root.context, item, equals)
             if (binding.subtitle.text.isEmpty()) {
                 binding.subtitle.visibility = View.GONE
             } else {

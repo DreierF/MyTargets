@@ -43,6 +43,7 @@ class LanguagePreference(context: Context, attrs: AttributeSet?) : ListPreferenc
     companion object {
         private val SUPPORTED_LOCALES = setOf(
             "",
+            "ar",
             "ca",
             "zh-CN",
             "zh-TW",
@@ -64,6 +65,7 @@ class LanguagePreference(context: Context, attrs: AttributeSet?) : ListPreferenc
             "pl",
             "pt-PT",
             "pt-BR",
+            "ro",
             "ru",
             "sr",
             "sk",

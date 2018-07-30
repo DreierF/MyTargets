@@ -33,12 +33,12 @@ open class SharedApplicationInstance : Application() {
     }
 
     protected fun enableDebugLogging() {
-        StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
-                .detectDiskReads()
-                .detectDiskWrites()
-//                .detectAll()
-                .penaltyLog()
-                .build())
+//        StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
+//                .detectDiskReads()
+//                .detectDiskWrites()
+////                .detectAll()
+//                .penaltyLog()
+//                .build())
 //        StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder()
 //                .detectLeakedSqlLiteObjects()
 //                .detectLeakedClosableObjects()
