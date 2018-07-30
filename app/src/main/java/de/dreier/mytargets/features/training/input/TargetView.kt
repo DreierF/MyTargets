@@ -101,16 +101,14 @@ class TargetView : TargetViewBase {
     public override var inputMethod: TargetViewBase.EInputMethod
         get() = super.inputMethod
         set(mode) {
-            if (mode !== inputMethod) {
-                super.inputMethod = mode
-                targetDrawable!!.drawArrowsEnabled(inputMethod === PLOTTING)
-                targetDrawable!!.setAggregationStrategy(
-                    if (inputMethod === PLOTTING)
-                        aggregationStrategy
-                    else
-                        EAggregationStrategy.NONE
-                )
-            }
+            super.inputMethod = mode
+            targetDrawable!!.drawArrowsEnabled(inputMethod === PLOTTING)
+            targetDrawable!!.setAggregationStrategy(
+                if (inputMethod === PLOTTING)
+                    aggregationStrategy
+                else
+                    EAggregationStrategy.NONE
+            )
         }
 
     private val spotEndMatrix: Matrix
