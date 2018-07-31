@@ -89,6 +89,7 @@ abstract class EndDAO {
     open fun replaceImages(end: End, images: List<EndImage>) {
         deleteEndImages(end.id)
         for (image in images) {
+            image.endId = end.id
             image.id = insertEndImage(image)
         }
     }
