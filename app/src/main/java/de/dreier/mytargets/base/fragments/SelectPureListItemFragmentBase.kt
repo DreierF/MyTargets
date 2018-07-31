@@ -35,12 +35,16 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
  *
  */
 abstract class SelectPureListItemFragmentBase<T>(
-        private val comparator: Comparator<T>
+    private val comparator: Comparator<T>
 ) : SelectItemFragmentBase<T, SimpleListAdapterBase<T>>() where T : IIdProvider, T : Parcelable {
 
     protected lateinit var binding: FragmentListBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false)
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.itemAnimator = SlideInItemAnimator()
@@ -63,12 +67,16 @@ abstract class SelectPureListItemFragmentBase<T>(
         }
     }
 
-    protected fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): SelectableViewHolder<T> {
+    protected fun onCreateViewHolder(
+        inflater: LayoutInflater,
+        parent: ViewGroup
+    ): SelectableViewHolder<T> {
         return ViewHolder(inflater.inflate(R.layout.item_image_simple, parent, false))
     }
 
-    private inner class ViewHolder(itemView: View) : SelectableViewHolder<T>(itemView, selector, this@SelectPureListItemFragmentBase) {
-        internal var binding: ItemImageSimpleBinding = DataBindingUtil.bind(itemView)
+    private inner class ViewHolder(itemView: View) :
+        SelectableViewHolder<T>(itemView, selector, this@SelectPureListItemFragmentBase) {
+        internal var binding = ItemImageSimpleBinding.bind(itemView)
 
         override fun bindItem(item: T) {
             binding.name.text = getName(item)

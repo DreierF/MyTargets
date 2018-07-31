@@ -51,7 +51,10 @@ object DispersionPatternUtils {
         FileOutputStream(f).use { outputStream ->
             val target = targetFromArrowStatistics(statistic)
             val pdfWriter = DrawableToPdfWriter(target)
-            pdfWriter.layoutPages(CustomPrintDocumentAdapter.DEFAULT_RESOLUTION, CustomPrintDocumentAdapter.DEFAULT_MEDIA_SIZE)
+            pdfWriter.layoutPages(
+                CustomPrintDocumentAdapter.DEFAULT_RESOLUTION,
+                CustomPrintDocumentAdapter.DEFAULT_MEDIA_SIZE
+            )
             pdfWriter.writePdfDocument(arrayOf(PageRange(0, 0)), outputStream)
         }
     }

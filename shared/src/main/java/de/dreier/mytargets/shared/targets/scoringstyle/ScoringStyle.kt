@@ -89,7 +89,7 @@ open class ScoringStyle private constructor(
         return Score(reachedScore, maxScore)
     }
 
-    open fun getReachedScore(shots: MutableList<Shot>): Score {
+    open fun getReachedScore(shots: List<Shot>): Score {
         return shots.map { getReachedScore(it) }.sum()
     }
 

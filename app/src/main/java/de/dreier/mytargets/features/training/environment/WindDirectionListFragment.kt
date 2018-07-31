@@ -24,11 +24,16 @@ import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
 import de.dreier.mytargets.shared.models.WindDirection
 
-class WindDirectionListFragment : SelectPureListItemFragmentBase<WindDirection>(compareBy(WindDirection::id)) {
+class WindDirectionListFragment :
+    SelectPureListItemFragmentBase<WindDirection>(compareBy(WindDirection::id)) {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        adapter!!.setList(WindDirection.getList(context!!).toMutableList())
+        adapter.setList(WindDirection.getList(context!!))
         val windDirection = arguments!!.getParcelable<WindDirection>(ITEM)
         selectItem(binding.recyclerView, windDirection!!)
         return binding.root
@@ -36,5 +41,6 @@ class WindDirectionListFragment : SelectPureListItemFragmentBase<WindDirection>(
 
     override fun getName(item: WindDirection) = item.name
 
-    override fun getDrawable(item: WindDirection) = ContextCompat.getDrawable(context!!, item.drawable)!!
+    override fun getDrawable(item: WindDirection) =
+        ContextCompat.getDrawable(context!!, item.drawable)!!
 }

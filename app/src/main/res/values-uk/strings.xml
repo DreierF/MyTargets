@@ -177,9 +177,9 @@
   <string name="club">Клуб</string>
   <string name="target">Мішень</string>
   <string name="standard_round">Типовий раунд</string>
-  <string name="use_as_template">Use as template?</string>
+  <string name="use_as_template">Використати шаблон?</string>
   <string name="create_copy">Це типовий раунд! \ \n Створити копію замість редагування?</string>
-  <string name="practice">Practice</string>
+  <string name="practice">Тренування</string>
   <string name="edit_training">Редагувати тренінг</string>
   <string name="edit_standard_round">Змінити типовий раунд</string>
   <plurals name="arrow_deleted">
@@ -235,7 +235,7 @@
   <string name="arrow_ranking">Arrow ranking</string>
   <string name="arrow_x_of_set_of_arrows">Arrow %1$s of %2$s</string>
   <string name="display">Display</string>
-  <string name="print">Print</string>
+  <string name="print">Друкувати</string>
   <string name="table">Table</string>
   <string name="comments">Коментарі</string>
   <string name="show_points_colored">Show points colored</string>
@@ -245,11 +245,11 @@
   <string name="training_with_standard_round">Тренування у типовому раунді</string>
   <string name="free_training">Free Training</string>
   <string name="competition">Competition</string>
-  <string name="about">About</string>
+  <string name="about">Про додаток</string>
   <string name="general">General</string>
   <string name="contribute">Contribute</string>
   <string name="connect">Connect</string>
-  <string name="special_thanks_to">Special thanks to</string>
+  <string name="special_thanks_to">Особлива подяка</string>
   <string name="all_translators">All guys, who helped translating the app!</string>
   <string name="all_beta_testers">Everyone who joined the beta testers group and therefore helps to continuously improve the app.</string>
   <string name="test_beta">Test the latest beta version</string>
@@ -392,5 +392,6 @@
   <string name="settings_statistics_spots_to_single_target">Aggregate spots to single target</string>
   <string name="keep_above_lockscreen">Keep above lockscreen</string>
   <string name="scoreboard_title_all_rounds">All rounds</string>
-  <string name="invalid_number">Invalid number</string>
+  <string name="permission_required">Permission required</string>
+  <string name="backup_permission_explanation"><![CDATA[To be able to make a backup of your data, the app needs permission to access the internal storage of your phone. To use the backup feature go to system settings > Apps > MyTargets > Permissions and enable the entry \'Storage\'.]]></string>
 </resources>

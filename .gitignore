@@ -41,6 +41,7 @@ wearable/wearable.iml
 # User-specific stuff:
 .idea/**/workspace.xml
 .idea/**/tasks.xml
+.idea/caches/**
 
 # Gradle:
 .idea/**/gradle.xml

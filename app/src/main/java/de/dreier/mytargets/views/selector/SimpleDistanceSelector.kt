@@ -16,20 +16,23 @@
 package de.dreier.mytargets.views.selector
 
 import android.content.Context
-import android.databinding.DataBindingUtil
 import android.util.AttributeSet
 import de.dreier.mytargets.R
 import de.dreier.mytargets.databinding.SelectorItemSimpleTextBinding
 import de.dreier.mytargets.shared.models.Dimension
 
 class SimpleDistanceSelector @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null
-) : SelectorBase<Dimension>(context, attrs, R.layout.selector_item_simple_text, SIMPLE_DISTANCE_REQUEST_CODE) {
+    context: Context,
+    attrs: AttributeSet? = null
+) : SelectorBase<Dimension, SelectorItemSimpleTextBinding>(
+    context,
+    attrs,
+    R.layout.selector_item_simple_text,
+    SIMPLE_DISTANCE_REQUEST_CODE
+) {
 
     override fun bindView(item: Dimension) {
-        val binding = DataBindingUtil.bind<SelectorItemSimpleTextBinding>(view)
-        binding.text.text = item.toString()
+        view.text.text = item.toString()
     }
 
     companion object {

@@ -22,11 +22,11 @@
     <body>
         <main>
             <h1>Kezdjük el használni a MyTargets-t</h1>
-            <p>MyTargets lehetővé teszi, hogy minden íjász eredményt rögzíts, toll és papír használata nélkül. MyTargets három fő kategóriára tagolódik: Lövészet, Íj és Nyílvessző. A lövészetek alatt az edzések/versenyek összes rögzített információit tartalmazza. Az Íj szakaszban, az íjak tulajdonságait és beállításait rögzítheti, mint például az irányzék beállításait. Végül a Nyílvessző szakasz különböző típusú/számú nyílvesszők adatait tartalmazza.</p>
+            <p>MyTargets lehetővé teszi, hogy minden íjász eredményt rögzíts, írószer és papír használata nélkül. MyTargets három fő kategóriára tagolódik: Lövészet, Íj és Nyílvessző. A lövészetek alatt az edzések/versenyek összes rögzített információit tartalmazza. Az Íj szakaszban, az íjak tulajdonságait és beállításait rögzítheti, mint például az irányzék távolsági beállításait. Végül a Nyílvessző szakasz különböző típusú/számú nyílvesszők adatait tartalmazza.</p>
            
             <section> 
                 <h2>Lövészetek rendezése</h2>
-                <p>A Lövészet egy vagy több fordulóban van szervezve. Minden forduló egy tetszőleges számú sorozatot tartalmazhat, amely előre meghatározott számú sorozatot és nyílvesszőt kínál fel rögzítésre.</p>
+                <p>A lövészet egy vagy több fordulóra lehet állítani. Minden forduló tetszőleges számú sorozatra tagolható, a sorozatok pedig előre beállított mennyiségű vesszőt tartalmaznak.</p>
                 <details>
                     <summary>Lövészet kezdése</summary>
                     <p>Egy új lövészetet a jobbra lent lévő narancssárga + körrel kezdheti meg. Most rábökhet:</p>
@@ -48,10 +48,10 @@
                         <li><strong>Recurve style (X-1)</strong>: The innermost golden ring scores 10 points, but is marked as X. The outer golden rings score 10 and 9 accordingly. The score decreases with every ring by 1.</li>
                         <li><strong>Recurve style (10-1)</strong>: Same as previous, but the inner two golden rings are shown as one ring, rewarded with 10 points (no X).</li>
                         <li><strong>Compound style</strong>: Only the innermost golden ring scores 10 points. The outermost two golden rings are shown as one and score 9 points.</li>
-                        <li><strong>11, 10, 9,..., 1</strong>: a legbelső körértéke a 11. A pontszám 1-el csökken minden gyűrűnél.</li>
+                        <li><strong>11, 10, 9, ..., 1</strong>: A legbelső körértéke a 11. A pontszám 1-el csökken minden gyűrűnél.</li>
                         <li><strong>X, 5, 4, 3, 2, 1</strong>: Az sárga találat 5, a piros 4, a kék 3, fekete 2, a fehér 1 pontot ér. A legbelső sárga találatot X-el kell jelölni.</li>
                         <li><strong>9, 7, 5, 3, 1</strong>: Sárga kör értéke 9, piros 7, kék 5, fekete 3 és a fehér 1 pont.</li>
-                        <li><strong>FCFS Color (Reversed 10-1)</strong>: Play scoring style where white scores 10, black 8, blue 6, red 4, outer gold 2 and the inner two gold 1. Szokásos lövészet 6 vessző / sorozatonként. Színenként csak egy nyílvessző értékelve. The maximum achievable score is 31 points per end, when every arrow is shot into a distinct color.</li>
+                        <li><strong>FCFS Color (Reversed 10-1)</strong>: Play scoring style where white scores 10, black 8, blue 6, red 4, outer gold 2 and the inner two gold 1. Szabványos lövészet 6 vessző / sorozatonként. Színenként csak egy nyílvessző értékelve. The maximum achievable score is 31 points per end, when every arrow is shot into a distinct color.</li>
                     </ul>
                 </details>
                 <details>
@@ -66,16 +66,16 @@
                 </details>
                 <details>
                     <summary>Szabványos fordulóhoz hogy válthatom a lőlapot?</summary>
-                    <p>A standard round defines only which type of target should be used, but not which exact target face. So you can adjust the target face to that one you actually use. Csak érintse meg a "Lólap váltása" a szokásos forduló alatt.</p>
+                    <p>A standard round defines only which type of target should be used, but not which exact target face. So you can adjust the target face to that one you actually use. Csak érintse meg a "Lőlap váltása" a Szabványos forduló alatt.</p>
                     <img src="images/change_target_face.png" />
                 </details>
             </section>
             <section> 
                 <h2>Találatok rögzítése/megjelenítése</h2>
-                <p>MyTargets támogatja a találtatok pontos jelölését vagy a billentyűs bevitelt is. A beviteli módszer váltását a beállításokban teheti meg.</p>
+                <p>A MyTarteget támogatja a lövések pontos ábrázolását érintéssel vagy érték táblázat segítségével. A találatok rögzítési módja a beállításokban átváltható.</p>
                 <details>
                     <summary>Pontos nyílvessző ábrázolás</summary>
-                    <p>The exact arrow plotting is the default input method. To enter a shot tap and hold on the target face adjust the position until you are satisfied with the arrow position and then release the finger.</p>
+                    <p>Az érintéses találat jelölés az alapbeállítás. To enter a shot tap and hold on the target face adjust the position until you are satisfied with the arrow position and then release the finger.</p>
                     <img src="images/input_plotting.png"/>
                     <p><strong>Note: </strong>The finger slip detection will recognize unintended moves while releasing the finger and ignore them.</p>
                 </details>
@@ -112,7 +112,7 @@
                 </details>
                 <details>
                     <summary>Szűrők alkalmazása</summary>
-                    <p>You can also apply filters to your selected training data. Filtering is possible by bow, arrow, distance and target diameter.</p>
+                    <p>Különböző szűrőfeltételekkel elemezhető a lövészet eredménye. A szűrés elvégezhető az íj, vesszők, távolság vagy a lőlap szerint.</p>
                     <img src="images/statistics_filter.png" style="width:10%;"/>
                 </details>
                 <details>
@@ -130,7 +130,7 @@
                     <p>The size of the arrows is determined by the diameter specified in the arrow properties and the diameter of the selected target face. A vessző találati átmérője "valós" méretben történik. If you do not want the arrows to be drawn in realistic sizes, you can scale the arrows artificially. Lépjen a beállítások &gt; bemenet &gt; nyílra átmérőjű skála, és állítsa be a méretezés. In case you just want to have the arrow bigger, while placing the arrow on the target you can adjust the Target zoom level.</p>
                 </details>
                 <details>
-                    <summary>Hova tárolóbnak a mentéseim a Google Drive-on?</summary>
+                    <summary>A Google-Drive hol tárolja a mentéseim?</summary>
                     <p>A Google Drive-on a mentés az Application Data mappában tárolódik. Files stored there can only be accessed by the app, which created them. So you can only see the backups from inside the MyTargets app. The webapp of Google drive furthermore allows you to delete all your backup data (Settings > Manage Apps). When you install the app on another phone and log in with the your Google account you get access to all your backups again.</p>
                 </details>
             </section>

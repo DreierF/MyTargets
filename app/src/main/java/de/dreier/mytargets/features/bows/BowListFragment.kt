@@ -16,7 +16,7 @@
 package de.dreier.mytargets.features.bows
 
 import android.os.Bundle
-import de.dreier.mytargets.base.db.dao.BowDAO
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
@@ -24,10 +24,12 @@ import de.dreier.mytargets.shared.models.db.Bow
 
 class BowListFragment : SelectPureListItemFragmentBase<Bow>(compareBy(Bow::name, Bow::id)) {
 
+    private val bowDAO = ApplicationInstance.db.bowDAO()
+
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        val bows = BowDAO.loadBows()
+        val bows = bowDAO.loadBows().toMutableList()
         return {
-            adapter!!.setList(bows.toMutableList())
+            adapter.setList(bows)
             val bow = arguments!!.getParcelable<Bow>(ITEM)
             selectItem(binding.recyclerView, bow!!)
         }

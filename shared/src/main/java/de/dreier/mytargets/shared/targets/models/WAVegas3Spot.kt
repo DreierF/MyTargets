@@ -24,14 +24,14 @@ import de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER
 class WAVegas3Spot : WA5Ring(
         id = ID,
         nameRes = R.string.vegas_3_spot,
-        diameters = arrayOf(
+        diameters = listOf(
                 Dimension(40f, CENTIMETER),
                 Dimension(60f, CENTIMETER)
         )
 ) {
     init {
         faceRadius = 0.48f
-        facePositions = arrayOf(
+        facePositions = listOf(
                 PointF(-0.52f, 0.5f),
                 PointF(0.0f, -0.5f),
                 PointF(0.52f, 0.5f)

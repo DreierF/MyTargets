@@ -24,7 +24,7 @@ import java.util.*
  * The list is automatically sorted in natural order.
  */
 abstract class SimpleListAdapterBase<T>(
-        private val comparator: Comparator<T>
+    private val comparator: Comparator<T>
 ) : ListAdapterBase<SelectableViewHolder<T>, T>() where T : IIdProvider {
 
     private var list: MutableList<T> = ArrayList()
@@ -55,9 +55,8 @@ abstract class SimpleListAdapterBase<T>(
         viewHolder.internalBindItem(list[position])
     }
 
-    override fun setList(list: MutableList<T>) {
-        list.sortWith(comparator)
-        this.list = list
+    override fun setList(list: List<T>) {
+        this.list = list.sortedWith(comparator).toMutableList()
         notifyDataSetChanged()
     }
 

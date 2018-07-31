@@ -15,96 +15,76 @@
 
 package de.dreier.mytargets.shared.models.db
 
-import android.annotation.SuppressLint
+import android.arch.persistence.room.*
+import android.arch.persistence.room.ForeignKey.SET_NULL
 import android.os.Parcelable
-import com.raizlabs.android.dbflow.annotation.*
-import de.dreier.mytargets.shared.AppDatabase
-import de.dreier.mytargets.shared.models.EWeather
 import de.dreier.mytargets.shared.models.Environment
 import de.dreier.mytargets.shared.models.IIdSettable
 import de.dreier.mytargets.shared.models.Score
-import de.dreier.mytargets.shared.utils.typeconverters.EWeatherConverter
-import de.dreier.mytargets.shared.utils.typeconverters.LocalDateConverter
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
 
-@SuppressLint("ParcelCreator")
 @Parcelize
-@Table(database = AppDatabase::class)
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = Arrow::class,
+            parentColumns = ["id"],
+            childColumns = ["arrowId"],
+            onDelete = SET_NULL
+        ),
+        ForeignKey(
+            entity = Bow::class,
+            parentColumns = ["id"],
+            childColumns = ["bowId"],
+            onDelete = SET_NULL
+        ),
+        ForeignKey(
+            entity = StandardRound::class,
+            parentColumns = ["id"],
+            childColumns = ["standardRoundId"],
+            onDelete = SET_NULL
+        ),
+        ForeignKey(
+            entity = Signature::class,
+            parentColumns = ["id"],
+            childColumns = ["archerSignatureId"],
+            onDelete = SET_NULL
+        ),
+        ForeignKey(
+            entity = Signature::class,
+            parentColumns = ["id"],
+            childColumns = ["witnessSignatureId"],
+            onDelete = SET_NULL
+        )
+    ],
+    indices = [
+        Index(value = ["arrowId"]),
+        Index(value = ["bowId"]),
+        Index(value = ["standardRoundId"]),
+        Index(value = ["archerSignatureId"]),
+        Index(value = ["witnessSignatureId"])
+    ]
+)
 data class Training(
 
-        @Column(name = "_id")
-        @PrimaryKey(autoincrement = true)
-        override var id: Long = 0L,
-
-        @Column
-        var title: String = "",
-
-        @Column(typeConverter = LocalDateConverter::class)
-        var date: LocalDate = LocalDate.now(),
-
-        @ForeignKey(tableClass = StandardRound::class, references = [(ForeignKeyReference(columnName = "standardRound", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
-        var standardRoundId: Long? = null,
-
-        @ForeignKey(tableClass = Bow::class, references = [(ForeignKeyReference(columnName = "bow", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
-        var bowId: Long? = null,
-
-        @ForeignKey(tableClass = Arrow::class, references = [(ForeignKeyReference(columnName = "arrow", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
-        var arrowId: Long? = null,
-
-        @Column(getterName = "getArrowNumbering", setterName = "setArrowNumbering")
-        var arrowNumbering: Boolean = false,
-
-        @Column(getterName = "getIndoor", setterName = "setIndoor")
-        var indoor: Boolean = false,
-
-        @Column(typeConverter = EWeatherConverter::class)
-        var weather: EWeather = EWeather.SUNNY,
-
-        @Column
-        var windDirection: Int = 0,
-
-        @Column
-        var windSpeed: Int = 0,
-
-        @Column
-        var location: String = "",
-
-        @Column
-        var comment: String = "",
-
-        @ForeignKey(tableClass = Signature::class, references = [(ForeignKeyReference(columnName = "archerSignature", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
-        var archerSignatureId: Long? = null,
-
-        @ForeignKey(tableClass = Signature::class, references = [(ForeignKeyReference(columnName = "witnessSignature", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.SET_NULL)
-        var witnessSignatureId: Long? = null,
-
-        @Column
-        var scoreReachedPoints: Int = 0,
-
-        @Column
-        var scoreTotalPoints: Int = 0,
-
-        @Column
-        var scoreShotCount: Int = 0
+    @PrimaryKey(autoGenerate = true)
+    override var id: Long = 0L,
+    var title: String = "",
+    var date: LocalDate = LocalDate.now(),
+    var standardRoundId: Long? = null,
+    var bowId: Long? = null,
+    var arrowId: Long? = null,
+    var arrowNumbering: Boolean = false,
+    @Embedded var environment: Environment = Environment(),
+    var comment: String = "",
+    var archerSignatureId: Long? = null,
+    var witnessSignatureId: Long? = null,
+    @Embedded var score: Score = Score()
 
 ) : IIdSettable, Parcelable {
-
-    var environment: Environment
-        get() = Environment(indoor, weather, windSpeed, windDirection, location)
-        set(env) {
-            indoor = env.indoor
-            weather = env.weather
-            windDirection = env.windDirection
-            windSpeed = env.windSpeed
-            location = env.location
-        }
-
     val formattedDate: String
         get() = date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
-
-    val score: Score
-        get() = Score(scoreReachedPoints, scoreTotalPoints, scoreShotCount)
 }

@@ -16,7 +16,6 @@
 package de.dreier.mytargets.features.scoreboard
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
@@ -36,8 +35,11 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
+import androidx.core.content.systemService
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.db.dao.TrainingDAO
+import de.dreier.mytargets.app.ApplicationInstance
+import de.dreier.mytargets.base.db.RoundRepository
+import de.dreier.mytargets.base.db.TrainingRepository
 import de.dreier.mytargets.base.fragments.FragmentBase
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentScoreboardBinding
@@ -45,14 +47,15 @@ import de.dreier.mytargets.databinding.PartialScoreboardSignaturesBinding
 import de.dreier.mytargets.features.settings.ESettingsScreens
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.db.End
+import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Signature
 import de.dreier.mytargets.shared.models.db.Training
-import de.dreier.mytargets.shared.utils.toUri
 import de.dreier.mytargets.utils.MobileWearableClient
 import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
 import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.utils.print.CustomPrintDocumentAdapter
 import de.dreier.mytargets.utils.print.ViewToPdfWriter
+import de.dreier.mytargets.utils.toUri
 import org.threeten.bp.format.DateTimeFormatter
 import java.io.File
 import java.io.IOException
@@ -64,6 +67,19 @@ class ScoreboardFragment : FragmentBase() {
     private var roundId: Long = 0
     private var binding: FragmentScoreboardBinding? = null
     private var training: Training? = null
+    private lateinit var rounds: List<Round>
+
+    private val database = ApplicationInstance.db
+    private val trainingDAO = database.trainingDAO()
+    private val roundDAO = database.roundDAO()
+    private val roundRepository = RoundRepository(database)
+    private val trainingRepository = TrainingRepository(
+        database,
+        trainingDAO,
+        roundDAO,
+        roundRepository,
+        database.signatureDAO()
+    )
 
     private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
@@ -74,7 +90,11 @@ class ScoreboardFragment : FragmentBase() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentScoreboardBinding.inflate(inflater, container, false)
 
         val args = arguments
@@ -88,8 +108,10 @@ class ScoreboardFragment : FragmentBase() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        LocalBroadcastManager.getInstance(context!!).registerReceiver(updateReceiver,
-                IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE))
+        LocalBroadcastManager.getInstance(context!!).registerReceiver(
+            updateReceiver,
+            IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE)
+        )
     }
 
     override fun onDestroy() {
@@ -98,13 +120,24 @@ class ScoreboardFragment : FragmentBase() {
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        training = TrainingDAO.loadTraining(trainingId)
-        val archerSignature = TrainingDAO.getOrCreateArcherSignature(training!!)
-        val witnessSignature = TrainingDAO.getOrCreateWitnessSignature(training!!)
+        training = trainingDAO.loadTraining(trainingId)
+        val archerSignature = trainingRepository.getOrCreateArcherSignature(training!!)
+        val witnessSignature = trainingRepository.getOrCreateWitnessSignature(training!!)
 
+        rounds = if (roundId == -1L) {
+            roundDAO.loadRounds(training!!.id)
+        } else {
+            listOf(roundDAO.loadRound(roundId))
+        }
         val scoreboard = ScoreboardUtils
-                .getScoreboardView(context!!, Utils.getCurrentLocale(context!!),
-                        training!!, roundId, SettingsManager.scoreboardConfiguration)
+            .getScoreboardView(
+                context!!,
+                ApplicationInstance.db,
+                Utils.getCurrentLocale(context!!),
+                training!!,
+                rounds,
+                SettingsManager.scoreboardConfiguration
+            )
         return {
             binding!!.progressBar.visibility = GONE
             scoreboard.layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
@@ -122,12 +155,19 @@ class ScoreboardFragment : FragmentBase() {
                 val finalArcher = archer
 
                 signatures.editSignatureArcher
-                        .setOnClickListener { onSignatureClicked(archerSignature, finalArcher) }
+                    .setOnClickListener { onSignatureClicked(archerSignature, finalArcher) }
                 signatures.editSignatureWitness
-                        .setOnClickListener { onSignatureClicked(witnessSignature, getString(R.string.target_captain)) }
+                    .setOnClickListener {
+                        onSignatureClicked(
+                            witnessSignature,
+                            getString(R.string.target_captain)
+                        )
+                    }
 
-                signatures.archerSignaturePlaceholder.visibility = if (archerSignature.isSigned) GONE else VISIBLE
-                signatures.witnessSignaturePlaceholder.visibility = if (witnessSignature.isSigned) GONE else VISIBLE
+                signatures.archerSignaturePlaceholder.visibility =
+                        if (archerSignature.isSigned) GONE else VISIBLE
+                signatures.witnessSignaturePlaceholder.visibility =
+                        if (witnessSignature.isSigned) GONE else VISIBLE
             }
         }
     }
@@ -135,9 +175,11 @@ class ScoreboardFragment : FragmentBase() {
     private fun onSignatureClicked(signature: Signature, defaultName: String) {
         val fm = fragmentManager
         if (fm != null) {
-            val signatureDialogFragment = SignatureDialogFragment.newInstance(signature, defaultName)
+            val signatureDialogFragment =
+                SignatureDialogFragment.newInstance(signature, defaultName)
             signatureDialogFragment.show(fm, "signature")
-            fm.registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
+            fm.registerFragmentLifecycleCallbacks(object :
+                FragmentManager.FragmentLifecycleCallbacks() {
                 override fun onFragmentViewDestroyed(fm: FragmentManager?, f: Fragment?) {
                     fm!!.unregisterFragmentLifecycleCallbacks(this)
                     reloadData()
@@ -186,9 +228,14 @@ class ScoreboardFragment : FragmentBase() {
                 try {
                     val scoreboardFile = File(context!!.cacheDir, getDefaultFileName(fileType))
                     val content = ScoreboardUtils
-                            .getScoreboardView(context!!, Utils
-                                    .getCurrentLocale(context!!), training!!, roundId, SettingsManager
-                                    .scoreboardConfiguration)
+                        .getScoreboardView(
+                            context!!,
+                            ApplicationInstance.db,
+                            Utils.getCurrentLocale(context!!),
+                            training!!,
+                            rounds,
+                            SettingsManager.scoreboardConfiguration
+                        )
                     if (fileType === EFileType.PDF && Utils.isKitKat) {
                         ScoreboardUtils.generatePdf(content, scoreboardFile)
                     } else {
@@ -207,7 +254,7 @@ class ScoreboardFragment : FragmentBase() {
                 super.onPostExecute(uri)
                 if (uri == null) {
                     Snackbar.make(binding!!.root, R.string.sharing_failed, Snackbar.LENGTH_SHORT)
-                            .show()
+                        .show()
                 } else {
                     // Build and fire intent to ask for share provider
                     val shareIntent = Intent(Intent.ACTION_SEND)
@@ -224,16 +271,17 @@ class ScoreboardFragment : FragmentBase() {
     private fun print() {
         val fileName = getDefaultFileName(EFileType.PDF)
 
-        val content = ScoreboardUtils.getScoreboardView(context!!, Utils
-                .getCurrentLocale(context!!), training!!, roundId, SettingsManager
-                .scoreboardConfiguration)
+        val content = ScoreboardUtils.getScoreboardView(
+            context!!, ApplicationInstance.db, Utils
+                .getCurrentLocale(context!!), training!!, rounds, SettingsManager
+                .scoreboardConfiguration
+        )
 
         val jobName = getString(R.string.scoreboard) + " Document"
         val pda = CustomPrintDocumentAdapter(ViewToPdfWriter(content), fileName)
 
         // Create a print job with name and adapter instance
-        val printManager = context!!
-                .getSystemService(Context.PRINT_SERVICE) as PrintManager
+        val printManager = context!!.systemService<PrintManager>()
         printManager.print(jobName, pda, PrintAttributes.Builder().build())
     }
 

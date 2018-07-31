@@ -18,42 +18,54 @@ package de.dreier.mytargets.shared.utils
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
-import android.annotation.SuppressLint
 import android.graphics.*
 import android.os.Parcelable
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.core.animation.addListener
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.db.Shot
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 
-@SuppressLint("ParcelCreator")
 @Parcelize
 class EndRenderer(
-        private var shotList: List<Shot>? = null,
-        private var pressed: Int = NO_SELECTION,
-        internal var selected: Int = NO_SELECTION,
-        private var selectedPosition: PointF? = null,
-        private var selectedRadius: Int = 0,
-        private var oldCoordinate: Array<PointF?> = arrayOfNulls(0),
-        internal var currentAnimationProgress: Float = -1f,
-        private var ambientMode: Boolean = false
+    private var shotList: List<Shot>? = null,
+    private var pressed: Int = NO_SELECTION,
+    internal var selected: Int = NO_SELECTION,
+    private var selectedPosition: PointF? = null,
+    private var selectedRadius: Int = 0,
+    private var oldCoordinate: Array<PointF?> = arrayOfNulls(0),
+    internal var currentAnimationProgress: Float = -1f,
+    private var ambientMode: Boolean = false
 ) : Parcelable {
 
-    @IgnoredOnParcel private var circle: Circle? = null
-    @IgnoredOnParcel private var parent: View? = null
-    @IgnoredOnParcel private var rect: RectF? = null
-    @IgnoredOnParcel private var radius: Int = 0
-    @IgnoredOnParcel private var grayBackground = Paint()
-    @IgnoredOnParcel private var density: Float = 0.toFloat()
-    @IgnoredOnParcel private var shotsPerRow: Int = 0
-    @IgnoredOnParcel private var rowHeight: Float = 0.toFloat()
-    @IgnoredOnParcel private var columnWidth: Float = 0.toFloat()
-    @IgnoredOnParcel private var oldRadius: Int = 0
-    @IgnoredOnParcel private var oldSelected: Int = 0
-    @IgnoredOnParcel private var oldSelectedRadius: Int = 0
-    @IgnoredOnParcel private lateinit var target: Target
+    @IgnoredOnParcel
+    private var circle: Circle? = null
+    @IgnoredOnParcel
+    private var parent: View? = null
+    @IgnoredOnParcel
+    private var rect: RectF? = null
+    @IgnoredOnParcel
+    private var radius: Int = 0
+    @IgnoredOnParcel
+    private var grayBackground = Paint()
+    @IgnoredOnParcel
+    private var density: Float = 0.toFloat()
+    @IgnoredOnParcel
+    private var shotsPerRow: Int = 0
+    @IgnoredOnParcel
+    private var rowHeight: Float = 0.toFloat()
+    @IgnoredOnParcel
+    private var columnWidth: Float = 0.toFloat()
+    @IgnoredOnParcel
+    private var oldRadius: Int = 0
+    @IgnoredOnParcel
+    private var oldSelected: Int = 0
+    @IgnoredOnParcel
+    private var oldSelectedRadius: Int = 0
+    @IgnoredOnParcel
+    private lateinit var target: Target
 
     private val animator: ValueAnimator
         get() {
@@ -63,10 +75,8 @@ class EndRenderer(
                 currentAnimationProgress = valueAnimator.animatedValue as Float
                 parent!!.invalidate()
             }
-            selectionAnimator.addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    currentAnimationProgress = -1f
-                }
+            selectionAnimator.addListener(onEnd = {
+                currentAnimationProgress = -1f
             })
             return selectionAnimator
         }
@@ -92,8 +102,11 @@ class EndRenderer(
         var neededRows: Int
         var maxRows: Int
         do {
-            neededRows = Math.ceil((radius.toFloat() * 2f * density * shotList!!.size.toFloat() / rect.width()).toDouble()).toInt()
-            maxRows = Math.floor((rect.height() / (radius.toFloat() * 2f * density)).toDouble()).toInt()
+            neededRows =
+                    Math.ceil((radius.toFloat() * 2f * density * shotList!!.size.toFloat() / rect.width()).toDouble())
+                        .toInt()
+            maxRows = Math.floor((rect.height() / (radius.toFloat() * 2f * density)).toDouble())
+                .toInt()
             radius--
         } while (neededRows > maxRows)
         radius -= MIN_PADDING
@@ -129,14 +142,18 @@ class EndRenderer(
             if (radius > 0) {
                 // Draw touch feedback if arrow is pressed
                 if (pressed == shot.index) {
-                    canvas.drawRect(coordinate.x - radius, coordinate.y - radius,
-                            coordinate.x + radius, coordinate.y + radius, grayBackground)
+                    canvas.drawRect(
+                        coordinate.x - radius, coordinate.y - radius,
+                        coordinate.x + radius, coordinate.y + radius, grayBackground
+                    )
                 }
 
                 // Draw circle
-                circle!!.draw(canvas, coordinate.x, coordinate.y, shot.scoringRing, radius,
-                        shot.index,
-                        shot.arrowNumber, ambientMode, target)
+                circle!!.draw(
+                    canvas, coordinate.x, coordinate.y, shot.scoringRing, radius,
+                    shot.index,
+                    shot.arrowNumber, ambientMode, target
+                )
             }
         }
     }
@@ -181,7 +198,12 @@ class EndRenderer(
         }
     }
 
-    fun getAnimationToSelection(selectedShot: Int, c: PointF?, radius: Int, rect: RectF?): Animator? {
+    fun getAnimationToSelection(
+        selectedShot: Int,
+        c: PointF?,
+        radius: Int,
+        rect: RectF?
+    ): Animator? {
         if (rect == null) {
             setSelection(selectedShot, c, radius)
             return null
@@ -239,8 +261,10 @@ class EndRenderer(
     fun getBoundsForShot(index: Int): Rect {
         val position = getPosition(index, shotList!![index])
         val radius = getRadius(shotList!![index]) * density
-        return Rect((position.x - radius).toInt(), (position.y - radius).toInt(),
-                (position.x + radius).toInt(), (position.y + radius).toInt())
+        return Rect(
+            (position.x - radius).toInt(), (position.y - radius).toInt(),
+            (position.x + radius).toInt(), (position.y + radius).toInt()
+        )
     }
 
     companion object {

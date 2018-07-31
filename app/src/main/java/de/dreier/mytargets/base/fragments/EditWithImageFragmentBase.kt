@@ -32,11 +32,11 @@ import com.evernote.android.state.State
 import com.squareup.picasso.Picasso
 import de.dreier.mytargets.R
 import de.dreier.mytargets.databinding.FragmentEditImageBinding
-import de.dreier.mytargets.shared.models.Thumbnail
 import de.dreier.mytargets.shared.models.Image
-import de.dreier.mytargets.shared.utils.moveTo
+import de.dreier.mytargets.shared.models.Thumbnail
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils
+import de.dreier.mytargets.utils.moveTo
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
 import pl.aprilapps.easyphotopicker.DefaultCallback
@@ -46,7 +46,7 @@ import java.io.IOException
 
 @RuntimePermissions
 abstract class EditWithImageFragmentBase<T : Image> protected constructor(
-        private val defaultDrawable: Int
+    private val defaultDrawable: Int
 ) : EditFragmentBase() {
 
     protected lateinit var binding: FragmentEditImageBinding
@@ -85,7 +85,11 @@ abstract class EditWithImageFragmentBase<T : Image> protected constructor(
             Thumbnail.from(context!!, defaultDrawable)
         } else Thumbnail.from(imageFile!!)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit_image, container, false)
         ToolbarUtils.setSupportActionBar(this, binding.toolbar)
         ToolbarUtils.showUpAsX(this)
@@ -111,8 +115,10 @@ abstract class EditWithImageFragmentBase<T : Image> protected constructor(
                 if (hasFocus) {
                     val params = binding.appBarLayout.layoutParams as CoordinatorLayout.LayoutParams
                     val behavior = params.behavior as AppBarLayout.Behavior?
-                    behavior?.onNestedFling(binding.coordinatorLayout, binding.appBarLayout, v, 0f,
-                            v.bottom.toFloat(), true)
+                    behavior?.onNestedFling(
+                        binding.coordinatorLayout, binding.appBarLayout, v, 0f,
+                        v.bottom.toFloat(), true
+                    )
                 }
             }
         }
@@ -148,7 +154,11 @@ abstract class EditWithImageFragmentBase<T : Image> protected constructor(
     }
 
     @SuppressLint("NeedOnRequestPermissionsResult")
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         onRequestPermissionsResult(requestCode, grantResults)
     }
@@ -156,21 +166,26 @@ abstract class EditWithImageFragmentBase<T : Image> protected constructor(
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         EasyImage.handleActivityResult(requestCode, resultCode, data, activity,
-                object : DefaultCallback() {
+            object : DefaultCallback() {
 
-                    override fun onImagesPicked(imageFiles: List<File>, source: EasyImage.ImageSource, type: Int) {
-                        this@EditWithImageFragmentBase.oldImageFile = this@EditWithImageFragmentBase.imageFile
-                        loadImage(imageFiles[0])
-                    }
+                override fun onImagesPicked(
+                    imageFiles: List<File>,
+                    source: EasyImage.ImageSource,
+                    type: Int
+                ) {
+                    this@EditWithImageFragmentBase.oldImageFile =
+                            this@EditWithImageFragmentBase.imageFile
+                    loadImage(imageFiles[0])
+                }
 
-                    override fun onCanceled(source: EasyImage.ImageSource?, type: Int) {
-                        //Cancel handling, you might wanna remove taken photo if it was canceled
-                        if (source == EasyImage.ImageSource.CAMERA) {
-                            val photoFile = EasyImage.lastlyTakenButCanceledPhoto(context!!)
-                            photoFile?.delete()
-                        }
+                override fun onCanceled(source: EasyImage.ImageSource?, type: Int) {
+                    //Cancel handling, you might wanna remove taken photo if it was canceled
+                    if (source == EasyImage.ImageSource.CAMERA) {
+                        val photoFile = EasyImage.lastlyTakenButCanceledPhoto(context!!)
+                        photoFile?.delete()
                     }
-                })
+                }
+            })
     }
 
     protected fun loadImage(imageFile: File?) {
@@ -179,10 +194,10 @@ abstract class EditWithImageFragmentBase<T : Image> protected constructor(
             binding.imageView.setImageResource(defaultDrawable)
         } else {
             Picasso.with(context)
-                    .load(imageFile)
-                    .fit()
-                    .centerCrop()
-                    .into(binding.imageView)
+                .load(imageFile)
+                .fit()
+                .centerCrop()
+                .into(binding.imageView)
         }
     }
 
@@ -194,7 +209,7 @@ abstract class EditWithImageFragmentBase<T : Image> protected constructor(
             try {
                 oldImageFile = imageFile
                 imageFile = File
-                        .createTempFile("img", oldImageFile!!.name, context!!.filesDir)
+                    .createTempFile("img", oldImageFile!!.name, context!!.filesDir)
                 oldImageFile!!.moveTo(imageFile!!)
             } catch (e: IOException) {
                 e.printStackTrace()

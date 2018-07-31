@@ -29,6 +29,7 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ArrayAdapter
 import android.widget.GridView
+import androidx.core.graphics.toRect
 import de.dreier.mytargets.R
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.features.training.input.TargetView.EKeyboardType.LEFT
@@ -100,14 +101,14 @@ class TargetView : TargetViewBase {
     public override var inputMethod: TargetViewBase.EInputMethod
         get() = super.inputMethod
         set(mode) {
-            if (mode !== inputMethod) {
-                super.inputMethod = mode
-                targetDrawable!!.drawArrowsEnabled(inputMethod === PLOTTING)
-                targetDrawable!!.setAggregationStrategy(if (inputMethod === PLOTTING)
+            super.inputMethod = mode
+            targetDrawable!!.drawArrowsEnabled(inputMethod === PLOTTING)
+            targetDrawable!!.setAggregationStrategy(
+                if (inputMethod === PLOTTING)
                     aggregationStrategy
                 else
-                    EAggregationStrategy.NONE)
-            }
+                    EAggregationStrategy.NONE
+            )
         }
 
     private val spotEndMatrix: Matrix
@@ -133,7 +134,11 @@ class TargetView : TargetViewBase {
         init()
     }
 
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(
+        context,
+        attrs,
+        defStyle
+    ) {
         init()
     }
 
@@ -213,14 +218,16 @@ class TargetView : TargetViewBase {
             if (currentShotIndex == EndRenderer.NO_SELECTION || inputMethod === KEYBOARD) {
                 targetDrawable!!.spotMatrix = Matrix()
             } else {
-                targetDrawable!!.spotMatrix = spotMatrices!![currentShotIndex % target.model.faceCount]
+                targetDrawable!!.spotMatrix =
+                        spotMatrices!![currentShotIndex % target.model.faceCount]
             }
         }
         targetDrawable!!.draw(canvas)
     }
 
     override fun notifyTargetShotsChanged() {
-        val displayedShots = shots.filter { it.scoringRing != Shot.NOTHING_SELECTED && it.index != currentShotIndex }
+        val displayedShots =
+            shots.filter { it.scoringRing != Shot.NOTHING_SELECTED && it.index != currentShotIndex }
         targetDrawable!!.replaceShotsWith(displayedShots)
         super.notifyTargetShotsChanged()
         updateListener?.onEndUpdated(shots)
@@ -277,7 +284,7 @@ class TargetView : TargetViewBase {
         targetRectExt.inset(30 * density, 30 * density)
         fullExtendedMatrix = Matrix()
         fullExtendedMatrix!!
-                .setRectToRect(TargetDrawable.SRC_RECT, targetRectExt, Matrix.ScaleToFit.CENTER)
+            .setRectToRect(TargetDrawable.SRC_RECT, targetRectExt, Matrix.ScaleToFit.CENTER)
         fullExtendedMatrixInverse = Matrix()
         fullExtendedMatrix!!.invert(fullExtendedMatrixInverse)
 
@@ -320,7 +327,8 @@ class TargetView : TargetViewBase {
     override fun updateShotToPosition(shot: Shot, x: Float, y: Float): Boolean {
         if (inputMethod === KEYBOARD) {
             if (keyboardRect!!.contains(x, y)) {
-                var index = ((y - keyboardRect!!.top) * selectableZones.size / keyboardRect!!.height()).toInt()
+                var index =
+                    ((y - keyboardRect!!.top) * selectableZones.size / keyboardRect!!.height()).toInt()
                 index = Math.min(Math.max(0, index), selectableZones.size - 1)
                 shot.scoringRing = selectableZones[index].index
             } else {
@@ -366,10 +374,18 @@ class TargetView : TargetViewBase {
         }
         animations.add(inputAnimator)
 
-        animations.add(ObjectAnimator.ofObject(this, ANIMATED_FULL_TRANSFORM_PROPERTY,
-                MatrixEvaluator(), initFullMatrix, fullMatrix))
-        animations.add(ObjectAnimator.ofObject(this, ANIMATED_SPOT_TRANSFORM_PROPERTY,
-                MatrixEvaluator(), endMatrix))
+        animations.add(
+            ObjectAnimator.ofObject(
+                this, ANIMATED_FULL_TRANSFORM_PROPERTY,
+                MatrixEvaluator(), initFullMatrix, fullMatrix
+            )
+        )
+        animations.add(
+            ObjectAnimator.ofObject(
+                this, ANIMATED_SPOT_TRANSFORM_PROPERTY,
+                MatrixEvaluator(), endMatrix
+            )
+        )
         super.collectAnimations(animations)
     }
 
@@ -393,10 +409,10 @@ class TargetView : TargetViewBase {
 
             // Set grid view to alertDialog
             val dialog = AlertDialog.Builder(context)
-                    .setView(gridView)
-                    .setCancelable(false)
-                    .setTitle(R.string.arrow_numbers)
-                    .create()
+                .setView(gridView)
+                .setCancelable(false)
+                .setTitle(R.string.arrow_numbers)
+                .create()
 
             val numbers = (1..maxArrowNumber).map { it.toString() }
             gridView.adapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, numbers)
@@ -434,26 +450,28 @@ class TargetView : TargetViewBase {
 
             // For yellow and white background use black font color
             textPaint.color = zone.zone.textColor
-            canvas.drawText(zone.text, rect.centerX().toFloat(), rect.centerY() + 10 * density,
-                    textPaint)
+            canvas.drawText(
+                zone.text, rect.centerX().toFloat(), rect.centerY() + 10 * density,
+                textPaint
+            )
         }
     }
 
     override fun getSelectableZonePosition(i: Int): Rect {
-        val rect = Rect()
+        val rect = RectF()
         val singleZoneHeight = keyboardRect!!.height() / selectableZones.size
-        rect.top = (singleZoneHeight * i + density + keyboardRect!!.top).toInt()
-        rect.bottom = (singleZoneHeight * (i + 1) - density + keyboardRect!!.top).toInt()
-        rect.left = keyboardRect!!.left.toInt()
-        rect.right = keyboardRect!!.right.toInt()
+        rect.top = (singleZoneHeight * i + density + keyboardRect!!.top)
+        rect.bottom = (singleZoneHeight * (i + 1) - density + keyboardRect!!.top)
+        rect.left = keyboardRect!!.left
+        rect.right = keyboardRect!!.right
         val visibilityXOffset = (KEYBOARD_TOTAL_WIDTH_DP.toFloat() * (1 - keyboardVisibility) *
-                density).toInt()
+                density)
         if (keyboardType == LEFT) {
-            rect.offset(-visibilityXOffset, 0)
+            rect.offset(-visibilityXOffset, 0f)
         } else {
-            rect.offset(visibilityXOffset, 0)
+            rect.offset(visibilityXOffset, 0f)
         }
-        return rect
+        return rect.toRect()
     }
 
     override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
@@ -474,7 +492,7 @@ class TargetView : TargetViewBase {
         this.targetZoomFactor = SettingsManager.inputTargetZoom
         this.keyboardType = SettingsManager.inputKeyboardType
         targetDrawable!!
-                .setArrowDiameter(arrowDiameter!!, SettingsManager.inputArrowDiameterScale)
+            .setArrowDiameter(arrowDiameter!!, SettingsManager.inputArrowDiameterScale)
     }
 
     fun setTransparentShots(shotStream: List<Shot>) {
@@ -495,7 +513,8 @@ class TargetView : TargetViewBase {
          * This property is passed to ObjectAnimator when animating the spot matrix of TargetView
          */
         private val ANIMATED_SPOT_TRANSFORM_PROPERTY = object : Property<TargetView, Matrix>(
-                Matrix::class.java, "animatedSpotTransform") {
+            Matrix::class.java, "animatedSpotTransform"
+        ) {
 
             override fun set(targetView: TargetView, matrix: Matrix) {
                 targetView.targetDrawable!!.spotMatrix = matrix
@@ -511,7 +530,8 @@ class TargetView : TargetViewBase {
          * This property is passed to ObjectAnimator when animating the full matrix of TargetView
          */
         private val ANIMATED_FULL_TRANSFORM_PROPERTY = object : Property<TargetView, Matrix>(
-                Matrix::class.java, "animatedFullTransform") {
+            Matrix::class.java, "animatedFullTransform"
+        ) {
 
             override fun set(targetView: TargetView, matrix: Matrix) {
                 targetView.targetDrawable!!.setMatrix(matrix)

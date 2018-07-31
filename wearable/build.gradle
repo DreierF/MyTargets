@@ -29,7 +29,7 @@ android {
     defaultConfig {
         applicationId 'de.dreier.mytargets'
         minSdkVersion 23
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode gitVersionCode
         versionName gitVersionName
     }
@@ -71,17 +71,14 @@ android {
 
 dependencies {
     Map<String, String> dependencies = rootProject.ext.dependencies
-
-    kapt dependencies.databindingCompiler
-
     implementation dependencies.supportWearable
     compileOnly dependencies.wearable
     implementation dependencies.supportCompat
     implementation dependencies.supportWear
-
+    implementation dependencies.androidxCoreKtx
     implementation dependencies.androidState
     kapt dependencies.androidStateProcessor
-
     implementation project(':shared')
-    implementation dependencies.kotlinStdlibJre7
+    implementation dependencies.kotlinStdlibJdk7
+    implementation "android.arch.lifecycle:livedata-core:$rootProject.ext.libraryVersion.architectureComponents"
 }

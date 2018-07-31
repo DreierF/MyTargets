@@ -14,18 +14,17 @@
  */
 package de.dreier.mytargets.shared.models
 
-import android.annotation.SuppressLint
 import android.os.Parcelable
 import de.dreier.mytargets.shared.R
 import de.dreier.mytargets.shared.SharedApplicationInstance
 import kotlinx.android.parcel.Parcelize
 
-@SuppressLint("ParcelCreator")
 @Parcelize
-data class Dimension(val value: Float, val unit: Unit?) : IIdProvider, Comparable<Dimension>, Parcelable {
+data class Dimension(val value: Float, val unit: Unit?) : IIdProvider, Comparable<Dimension>,
+    Parcelable {
 
     override fun compareTo(other: Dimension) =
-            compareBy({ unit?.abbreviation }, Dimension::value).compare(this, other)
+        compareBy({ unit?.abbreviation }, Dimension::value).compare(this, other)
 
     override fun toString(): String {
         val context = SharedApplicationInstance.context
@@ -55,9 +54,11 @@ data class Dimension(val value: Float, val unit: Unit?) : IIdProvider, Comparabl
         return Dimension(newValue, unit)
     }
 
-    enum class Unit(internal val abbreviation: String,
-            /* factor <units> = 1 meter */
-                    internal val factor: Float) {
+    enum class Unit(
+        internal val abbreviation: String,
+        /* factor <units> = 1 meter */
+        internal val factor: Float
+    ) {
         CENTIMETER("cm", 100f),
         INCH("in", 39.3701f),
         METER("m", 1f),
@@ -70,7 +71,6 @@ data class Dimension(val value: Float, val unit: Unit?) : IIdProvider, Comparabl
         }
 
         companion object {
-
             fun from(unit: String?): Unit? {
                 return when (unit) {
                     "cm" -> CENTIMETER
@@ -81,10 +81,6 @@ data class Dimension(val value: Float, val unit: Unit?) : IIdProvider, Comparabl
                     "mm" -> MILLIMETER
                     else -> null
                 }
-            }
-
-            fun toStringHandleNull(unit: Unit?): String? {
-                return unit?.toString()
             }
         }
     }

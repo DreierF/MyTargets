@@ -15,6 +15,8 @@
 
 package de.dreier.mytargets.features.distance
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
@@ -23,10 +25,9 @@ import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
-import de.dreier.mytargets.base.db.dao.DimensionDAO
-import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.SelectItemFragmentBase
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
+import de.dreier.mytargets.base.viewmodel.ViewModelFactory
 import de.dreier.mytargets.databinding.FragmentListBinding
 import de.dreier.mytargets.databinding.ItemDistanceBinding
 import de.dreier.mytargets.shared.models.Dimension
@@ -34,17 +35,21 @@ import de.dreier.mytargets.shared.models.Dimension.Unit
 import de.dreier.mytargets.utils.SlideInItemAnimator
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 
-class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapterBase<Dimension>>(), DistanceInputDialog.OnClickListener {
+class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapterBase<Dimension>>(),
+    DistanceInputDialog.OnClickListener {
     private lateinit var binding: FragmentListBinding
-    private var distance: Dimension? = null
-    private var unit: Unit? = null
+    private lateinit var unit: Dimension.Unit
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    private lateinit var viewModel: DistancesViewModel
+    private val factory = ViewModelFactory()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false)
         binding.recyclerView.setHasFixedSize(true)
-        val bundle = arguments
-        distance = bundle!!.getParcelable(ITEM)
-        unit = Unit.from(bundle.getString(DISTANCE_UNIT))
         binding.recyclerView.layoutManager = GridLayoutManager(activity, 3)
         binding.recyclerView.addItemDecoration(DistanceItemDecorator(activity!!, 3))
         adapter = DistanceAdapter()
@@ -52,44 +57,47 @@ class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapter
         binding.recyclerView.adapter = adapter
         binding.fab.setOnClickListener {
             DistanceInputDialog.Builder(context!!)
-                    .setUnit(unit!!.toString())
-                    .setOnClickListener(this@DistanceGridFragment)
-                    .show()
+                .setUnit(unit.toString())
+                .setOnClickListener(this@DistanceGridFragment)
+                .show()
         }
         return binding.root
     }
 
     override fun onOkClickListener(input: String) {
-        var distance = this.distance
-        try {
-            val distanceVal = input.replace("[^0-9]".toRegex(), "").toInt()
-            distance = Dimension(distanceVal.toFloat(), unit)
-        } catch (e: NumberFormatException) {
-            // leave distance as it is
-        }
-        navigationController.setResultSuccess(distance!!)
+        val distance = viewModel.createDistanceFromInput(input)
+        navigationController.setResultSuccess(distance)
         navigationController.finish()
     }
 
-    override fun onLoad(args: Bundle?): LoaderUICallback {
-        val distances = DimensionDAO.getAll(distance!!, unit!!)
-        return {
-            adapter!!.setList(distances.toMutableList())
-            selectItem(binding.recyclerView, distance!!)
-        }
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel = ViewModelProviders.of(this, factory).get(DistancesViewModel::class.java)
+        val bundle = arguments!!
+        val distance: Dimension = bundle.getParcelable(ITEM)
+        unit = Unit.from(bundle.getString(DISTANCE_UNIT))!!
+        viewModel.setUnit(unit)
+        viewModel.setDistance(distance)
+        viewModel.distances.observe(this, Observer { distances ->
+            if (distances != null) {
+                adapter.setList(distances)
+                selectItem(binding.recyclerView, distance)
+            }
+        })
     }
 
-    private inner class DistanceAdapter : SimpleListAdapterBase<Dimension>(compareBy(Dimension::value)) {
+    private inner class DistanceAdapter :
+        SimpleListAdapterBase<Dimension>(compareBy(Dimension::value)) {
         public override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
             val itemView = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_distance, parent, false)
+                .inflate(R.layout.item_distance, parent, false)
             return ViewHolder(itemView)
         }
     }
 
-    internal inner class ViewHolder(itemView: View) : SelectableViewHolder<Dimension>(itemView, selector, this@DistanceGridFragment) {
-
-        private val binding: ItemDistanceBinding = DataBindingUtil.bind(itemView)
+    internal inner class ViewHolder(itemView: View) :
+        SelectableViewHolder<Dimension>(itemView, selector, this@DistanceGridFragment) {
+        private val binding = ItemDistanceBinding.bind(itemView)
 
         override fun bindItem(item: Dimension) {
             binding.distance.text = item.toString()

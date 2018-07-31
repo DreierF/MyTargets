@@ -16,26 +16,27 @@
 package de.dreier.mytargets.views.selector
 
 import android.content.Context
-import android.databinding.DataBindingUtil
 import android.util.AttributeSet
 import android.view.View
 import de.dreier.mytargets.R
 import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding
 import de.dreier.mytargets.shared.models.Target
 
-class TargetSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null)
-    : SelectorBase<Target>(context, attrs, R.layout.selector_item_image_details, TARGET_REQUEST_CODE) {
-
-    private lateinit var binding: SelectorItemImageDetailsBinding
+class TargetSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
+    SelectorBase<Target, SelectorItemImageDetailsBinding>(
+        context,
+        attrs,
+        R.layout.selector_item_image_details,
+        TARGET_REQUEST_CODE
+    ) {
 
     override fun bindView(item: Target) {
-        binding = DataBindingUtil.bind(view)
-        binding.name.text = item.name
-        binding.details.visibility = View.VISIBLE
-        binding.details.text = item.getDetails()
-        binding.image.setImageDrawable(item.drawable)
-        binding.title.visibility = View.VISIBLE
-        binding.title.setText(R.string.target_face)
+        view.name.text = item.name
+        view.details.visibility = View.VISIBLE
+        view.details.text = item.getDetails()
+        view.image.setImageDrawable(item.drawable)
+        view.title.visibility = View.VISIBLE
+        view.title.setText(R.string.target_face)
     }
 
     companion object {

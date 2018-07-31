@@ -26,8 +26,8 @@ import de.dreier.mytargets.shared.utils.Color.DARK_GRAY
 class Beursault : TargetModelBase(
         id = 23,
         nameRes = R.string.beursault,
-        diameters = arrayOf(Dimension(48f, CENTIMETER)),
-        zones = arrayOf(
+        diameters = listOf(Dimension(48f, CENTIMETER)),
+        zones = listOf(
                 CircularZone(0.062178f, WHITE, DARK_GRAY, 27, false),
                 CircularZone(0.13934599f, WHITE, DARK_GRAY, 6, false),
                 CircularZone(0.19715601f, WHITE, DARK_GRAY, 6, false),
@@ -37,7 +37,7 @@ class Beursault : TargetModelBase(
                 CircularZone(0.820678f, WHITE, DARK_GRAY, 6, false),
                 CircularZone(1.0f, WHITE, DARK_GRAY, 27, false)
         ),
-        scoringStyles = arrayOf(
+        scoringStyles = listOf(
                 ScoringStyle(false, 4, 4, 3, 3, 2, 2, 1, 1)
         )
 ) {

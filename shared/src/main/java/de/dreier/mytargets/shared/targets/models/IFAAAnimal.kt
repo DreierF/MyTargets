@@ -28,12 +28,12 @@ import de.dreier.mytargets.shared.utils.Color.ORANGE
 class IFAAAnimal : TargetModelBase(
         id = ID,
         nameRes = R.string.ifaa_animal,
-        diameters = arrayOf(Diameter.SMALL, Diameter.MEDIUM, Diameter.LARGE, Diameter.XLARGE),
-        zones = arrayOf(
+        diameters = listOf(Diameter.SMALL, Diameter.MEDIUM, Diameter.LARGE, Diameter.XLARGE),
+        zones = listOf(
                 EllipseZone(1.0f, 0.0f, 0.0f, ORANGE, BLACK, 4),
                 CircularZone(1.0f, LIGHTER_GRAY, GRAY, 3)
         ),
-        scoringStyles = arrayOf(
+        scoringStyles = listOf(
                 ArrowAwareScoringStyle(false, arrayOf(intArrayOf(20, 18), intArrayOf(16, 14), intArrayOf(12, 10))),
                 ArrowAwareScoringStyle(false, arrayOf(intArrayOf(20, 15), intArrayOf(15, 10))),
                 ArrowAwareScoringStyle(false, arrayOf(intArrayOf(20, 16), intArrayOf(14, 10), intArrayOf(8, 4))),

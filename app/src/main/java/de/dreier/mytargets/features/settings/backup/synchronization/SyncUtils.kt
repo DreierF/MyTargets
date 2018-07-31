@@ -19,6 +19,7 @@ import android.accounts.AccountManager
 import android.content.ContentResolver
 import android.content.Context
 import android.os.Bundle
+import androidx.core.content.systemService
 import de.dreier.mytargets.BuildConfig
 import de.dreier.mytargets.features.settings.SettingsManager
 
@@ -39,8 +40,10 @@ object SyncUtils {
             val account = GenericAccountService.account
             ContentResolver.setSyncAutomatically(account, CONTENT_AUTHORITY, enabled)
             if (enabled) {
-                ContentResolver.addPeriodicSync(account, CONTENT_AUTHORITY,
-                        Bundle(), SettingsManager.backupInterval.days * ONE_DAY)
+                ContentResolver.addPeriodicSync(
+                    account, CONTENT_AUTHORITY,
+                    Bundle(), SettingsManager.backupInterval.days * ONE_DAY
+                )
             } else {
                 ContentResolver.removePeriodicSync(account, CONTENT_AUTHORITY, Bundle())
             }
@@ -54,8 +57,7 @@ object SyncUtils {
     fun createSyncAccount(context: Context) {
         // Create account, if it's missing. (Either first run, or user has deleted account.)
         val account = GenericAccountService.account
-        val accountManager = context
-                .getSystemService(Context.ACCOUNT_SERVICE) as AccountManager
+        val accountManager = context.systemService<AccountManager>()
         if (accountManager.addAccountExplicitly(account, null, null)) {
             // Inform the system that this account supports sync
             ContentResolver.setIsSyncable(account, CONTENT_AUTHORITY, 1)
@@ -84,8 +86,9 @@ object SyncUtils {
         b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true)
         b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)
         ContentResolver.requestSync(
-                GenericAccountService.account,
-                CONTENT_AUTHORITY,
-                b)
+            GenericAccountService.account,
+            CONTENT_AUTHORITY,
+            b
+        )
     }
 }

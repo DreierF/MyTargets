@@ -18,13 +18,21 @@ package de.dreier.mytargets.base.viewmodel
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import de.dreier.mytargets.app.ApplicationInstance
+import de.dreier.mytargets.features.arrows.ArrowListViewModel
 import de.dreier.mytargets.features.arrows.EditArrowViewModel
+import de.dreier.mytargets.features.distance.DistancesViewModel
+import de.dreier.mytargets.features.training.details.TrainingViewModel
+import de.dreier.mytargets.features.training.overview.TrainingsViewModel
 
 internal class ViewModelFactory : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return when(modelClass) {
+        return when (modelClass) {
             EditArrowViewModel::class.java -> EditArrowViewModel(ApplicationInstance.instance) as T
+            TrainingViewModel::class.java -> TrainingViewModel(ApplicationInstance.instance) as T
+            TrainingsViewModel::class.java -> TrainingsViewModel(ApplicationInstance.instance) as T
+            ArrowListViewModel::class.java -> ArrowListViewModel(ApplicationInstance.instance) as T
+            DistancesViewModel::class.java -> DistancesViewModel(ApplicationInstance.instance) as T
             else -> throw Exception("No implementation for $modelClass provided")
         }
     }

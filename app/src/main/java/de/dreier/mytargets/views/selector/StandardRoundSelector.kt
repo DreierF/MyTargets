@@ -16,34 +16,44 @@
 package de.dreier.mytargets.views.selector
 
 import android.content.Context
-import android.databinding.DataBindingUtil
 import android.util.AttributeSet
 import android.view.View
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.db.dao.StandardRoundDAO
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding
 import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
 
-class StandardRoundSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null)
-    : SelectorBase<AugmentedStandardRound>(context, attrs, R.layout.selector_item_image_details, STANDARD_ROUND_REQUEST_CODE) {
+class StandardRoundSelector @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null
+) : SelectorBase<AugmentedStandardRound, SelectorItemImageDetailsBinding>(
+    context,
+    attrs,
+    R.layout.selector_item_image_details,
+    STANDARD_ROUND_REQUEST_CODE
+) {
 
-    private lateinit var binding: SelectorItemImageDetailsBinding
+    private val standardRoundDAO = ApplicationInstance.db.standardRoundDAO()
 
     override fun bindView(item: AugmentedStandardRound) {
-        binding = DataBindingUtil.bind(view)
-        binding.name.text = item.standardRound.name
-        binding.details.visibility = View.VISIBLE
-        binding.details.text = item.getDescription(context)
-        binding.image.setImageDrawable(item.targetDrawable)
+        view.name.text = item.standardRound.name
+        view.details.visibility = View.VISIBLE
+        view.details.text = item.getDescription(context)
+        view.image.setImageDrawable(item.targetDrawable)
     }
 
     fun setItemId(standardRoundId: Long?) {
-        var standardRound = StandardRoundDAO.loadStandardRoundOrNull(standardRoundId!!)
+        var standardRound = standardRoundDAO.loadStandardRoundOrNull(standardRoundId!!)
         // If the round has been removed, choose default one
-        if (standardRound == null || StandardRoundDAO.loadRoundTemplates(standardRound.id).isEmpty()) {
-            standardRound = StandardRoundDAO.loadStandardRound(32L)
+        if (standardRound == null || standardRoundDAO.loadRoundTemplates(standardRound.id).isEmpty()) {
+            standardRound = standardRoundDAO.loadStandardRound(32L)
         }
-        setItem(AugmentedStandardRound(standardRound, StandardRoundDAO.loadRoundTemplates(standardRound.id)))
+        setItem(
+            AugmentedStandardRound(
+                standardRound,
+                standardRoundDAO.loadRoundTemplates(standardRound.id).toMutableList()
+            )
+        )
     }
 
     companion object {

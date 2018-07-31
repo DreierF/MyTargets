@@ -29,12 +29,12 @@ import de.dreier.mytargets.shared.utils.Color.RED
 class IBO3D : Target3DBase(
         id = 17,
         nameRes = R.string.ibo_3d,
-        zones = arrayOf(
+        zones = listOf(
                 CircularZone(0.053396f, 0.12689404f, 0.15313196f, RED, BLACK, 3),
                 CircularZone(0.124f, 0.12689404f, 0.15313196f, RED, BLACK, 3),
                 CircularZone(0.417876f, 0.12875f, 0.15562597f, CERULEAN_BLUE, BLACK, 4),
                 HeartZone(1.0f, 0.0f, 0.0f, LIGHT_GRAY, BLACK, 3),
                 CircularZone(1.0f, 0.0f, 0.0f, BROWN, GRAY, 5)
         ),
-        scoringStyles = arrayOf(ScoringStyle(false, 11, 11, 10, 8, 5))
+        scoringStyles = listOf(ScoringStyle(false, 11, 11, 10, 8, 5))
 )

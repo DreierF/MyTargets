@@ -21,7 +21,7 @@ import de.dreier.mytargets.shared.R
 class WAField3Spot : WAField(ID, R.string.wa_field_3_spot) {
     init {
         faceRadius = 0.32f
-        facePositions = arrayOf(
+        facePositions = listOf(
                 PointF(0.0f, -0.68f),
                 PointF(0.0f, 0.0f),
                 PointF(0.0f, 0.68f)

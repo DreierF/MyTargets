@@ -40,18 +40,25 @@ class LicencesFragment : Fragment() {
         val homage = Homage(activity!!, R.raw.licences)
 
         // Adds a custom license definition to enable matching in your JSON list
-        homage.addLicense("epl", R.string.license_epl_name, R.string.license_epl_url,
-                R.string.license_epl_description)
+        homage.addLicense(
+            "epl", R.string.license_epl_name, R.string.license_epl_url,
+            R.string.license_epl_description
+        )
 
         homage.refreshLibraries()
 
         binding.recyclerView.addItemDecoration(
-                DividerItemDecoration(context!!, R.drawable.full_divider))
+            DividerItemDecoration(context!!, R.drawable.full_divider)
+        )
         binding.fab.visibility = View.GONE
         return HomageAdapter(homage, HomageView.ExtraInfoMode.EXPANDABLE, false)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentListBinding.inflate(inflater, container, false)
         binding.recyclerView.setHasFixedSize(true)
         val adapter = createAdapter()

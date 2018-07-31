@@ -27,7 +27,7 @@ import de.dreier.mytargets.shared.utils.Color.WHITE
 class NFAAField : TargetModelBase(
         id = ID,
         nameRes = R.string.nfaa_field,
-        zones = arrayOf(
+        zones = listOf(
                 CircularZone(0.1f, DARK_GRAY, WHITE, 4),
                 CircularZone(0.2f, DARK_GRAY, DARK_GRAY, 0),
                 CircularZone(0.4f, WHITE, DARK_GRAY, 4),
@@ -35,11 +35,11 @@ class NFAAField : TargetModelBase(
                 CircularZone(0.8f, DARK_GRAY, WHITE, 4),
                 CircularZone(1.0f, DARK_GRAY, DARK_GRAY, 0)
         ),
-        scoringStyles = arrayOf(
+        scoringStyles = listOf(
                 ScoringStyle(true, 5, 5, 4, 4, 3, 3),
                 ScoringStyle(false, 6, 5, 4, 4, 3, 3)
         ),
-        diameters = arrayOf(
+        diameters = listOf(
                 Dimension(20f, CENTIMETER),
                 Dimension(35f, CENTIMETER),
                 Dimension(50f, CENTIMETER),

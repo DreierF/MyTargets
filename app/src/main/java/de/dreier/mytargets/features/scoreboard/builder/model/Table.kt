@@ -21,9 +21,15 @@ sealed class Cell {
     var columnSpan = 1
 }
 
-data class TextCell(val content: String, var bold: Boolean = false, var wrapText: Boolean = false) : Cell()
+data class TextCell(val content: String, var bold: Boolean = false, var wrapText: Boolean = false) :
+    Cell()
 
-data class EndCell(val score: String, val fillColor: Int, val textColor: Int, val arrowNumber: String?) : Cell()
+data class EndCell(
+    val score: String,
+    val fillColor: Int,
+    val textColor: Int,
+    val arrowNumber: String?
+) : Cell()
 
 data class Table(val wrapContent: Boolean) : Cell() {
 

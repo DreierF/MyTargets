@@ -364,5 +364,6 @@
   <string name="settings_statistics_spots_to_single_target">Fasse Spots zu einer einzigen Zielscheibe zusammen</string>
   <string name="keep_above_lockscreen">Auf dem Sperrbildschirm anzeigen</string>
   <string name="scoreboard_title_all_rounds">Alle Runden</string>
-  <string name="invalid_number">Invalid number</string>
+  <string name="permission_required">Berechtigung erforderlich</string>
+  <string name="backup_permission_explanation"><![CDATA[Um ein Backup Ihrer Daten machen zu können, benötigt die App Zugriff auf den internen Speicher des Telefons. Um die Backup Funktion verwenden zu können gehe zu Systemeinstellungen > Apps > MyTargets > Berechtigungen und aktiviere den Eintrag \'Speicher\'.]]></string>
 </resources>

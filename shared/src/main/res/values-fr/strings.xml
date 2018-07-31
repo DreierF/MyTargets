@@ -55,20 +55,20 @@
   <string name="left_back">de l\'arrière gauche</string>
   <string name="right_back">de l\'arrière droit</string>
   <string name="stop">STOP</string>
-  <string name="end_n">End %d</string>
-  <string name="miss">Miss</string>
-  <string name="backspace">Backspace</string>
-  <string name="accessibility_description_shot_n_score">Shot %d: %s</string>
+  <string name="end_n">Volée %d</string>
+  <string name="miss">Manqué</string>
+  <string name="backspace">Retour en arrière</string>
+  <string name="accessibility_description_shot_n_score">Tir %d: %s</string>
   <plurals name="rounds">
-    <item quantity="one">%d round</item>
+    <item quantity="one">%d série</item>
     <item quantity="other">%d rounds</item>
   </plurals>
   <plurals name="ends_arrow">
-    <item quantity="one">%1$d \u00D7 %2$d arrow</item>
+    <item quantity="one">%1$d \u00D7 %2$d flèche</item>
     <item quantity="other">%1$d \u00D7 %2$d arrows</item>
   </plurals>
   <plurals name="arrows_per_end">
-    <item quantity="one">%d arrow per end</item>
+    <item quantity="one">%d flèche par volée</item>
     <item quantity="other">%d arrows per end</item>
   </plurals>
 </resources>

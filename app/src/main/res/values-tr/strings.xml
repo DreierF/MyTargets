@@ -266,7 +266,7 @@
   <string name="keyboard">Klavye</string>
   <string name="backup_drive_desc">Verilerinizi yedeklemek, telefonunuzu kaybettiğinizde veya değiştirdiğinizde tüm eğitimlerinizi geri yüklemenizi sağlar.</string>
   <string name="backup_now">Şimdi yedekle</string>
-  <string name="last_backup">Son yedekleme:% s</string>
+  <string name="last_backup">Son yedekleme: %s</string>
   <string name="recent_backups">Son yedeklemeler</string>
   <string name="dialog_restore_title">Önceki sürüme geri çevir</string>
   <string name="restore_desc">Verilerin geri yüklenmesi, var olan tüm verilerin yedekleme ile üzerine yazacaktır.</string>
@@ -364,5 +364,6 @@
   <string name="settings_statistics_spots_to_single_target">Noktaları tek hedefe topla</string>
   <string name="keep_above_lockscreen">Kilit ekranın üstünde tutun</string>
   <string name="scoreboard_title_all_rounds">All rounds</string>
-  <string name="invalid_number">Invalid number</string>
+  <string name="permission_required">Permission required</string>
+  <string name="backup_permission_explanation"><![CDATA[To be able to make a backup of your data, the app needs permission to access the internal storage of your phone. To use the backup feature go to system settings > Apps > MyTargets > Permissions and enable the entry \'Storage\'.]]></string>
 </resources>

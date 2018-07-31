@@ -24,6 +24,7 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.ResultCallback
 import com.google.android.gms.drive.*
 import com.google.android.gms.drive.query.*
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.features.settings.backup.BackupEntry
 import de.dreier.mytargets.features.settings.backup.BackupException
 import timber.log.Timber
@@ -43,103 +44,115 @@ object GoogleDriveBackup {
             this.activity = activity
             if (googleApiClient == null) {
                 googleApiClient = GoogleApiClient.Builder(activity)
-                        .addApi(Drive.API)
-                        .addScope(Drive.SCOPE_APPFOLDER)
-                        .addConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
-                            override fun onConnected(bundle: Bundle?) {
-                                Drive.DriveApi.requestSync(googleApiClient)
-                                        .setResultCallback { listener.onConnected() }
-                            }
-
-                            override fun onConnectionSuspended(cause: Int) {
-                                listener.onConnectionSuspended()
-                            }
-                        })
-                        .addOnConnectionFailedListener { result ->
-                            Timber.i("GoogleApiClient connection failed: %s", result.toString())
-                            if (!result.hasResolution()) {
-                                GoogleApiAvailability.getInstance()
-                                        .getErrorDialog(activity, result.errorCode, 0)
-                                        .show()
-                                listener.onConnectionSuspended()
-                                return@addOnConnectionFailedListener
-                            }
-                            try {
-                                result.startResolutionForResult(activity, REQUEST_CODE_RESOLUTION)
-                            } catch (e: IntentSender.SendIntentException) {
-                                Timber.e(e, "Exception while starting resolution activity")
-                            }
+                    .addApi(Drive.API)
+                    .addScope(Drive.SCOPE_APPFOLDER)
+                    .addConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
+                        override fun onConnected(bundle: Bundle?) {
+                            Drive.DriveApi.requestSync(googleApiClient)
+                                .setResultCallback { listener.onConnected() }
                         }
-                        .build()
+
+                        override fun onConnectionSuspended(cause: Int) {
+                            listener.onConnectionSuspended()
+                        }
+                    })
+                    .addOnConnectionFailedListener { result ->
+                        Timber.i("GoogleApiClient connection failed: %s", result.toString())
+                        if (!result.hasResolution()) {
+                            GoogleApiAvailability.getInstance()
+                                .getErrorDialog(activity, result.errorCode, 0)
+                                .show()
+                            listener.onConnectionSuspended()
+                            return@addOnConnectionFailedListener
+                        }
+                        try {
+                            result.startResolutionForResult(activity, REQUEST_CODE_RESOLUTION)
+                        } catch (e: IntentSender.SendIntentException) {
+                            Timber.e(e, "Exception while starting resolution activity")
+                        }
+                    }
+                    .build()
             }
             googleApiClient!!.connect()
         }
 
         override fun getBackups(listener: IAsyncBackupRestore.OnLoadFinishedListener) {
             val query = Query.Builder()
-                    .addFilter(Filters.eq(SearchableField.MIME_TYPE, MYTARGETS_MIME_TYPE))
-                    .addFilter(Filters.eq(SearchableField.TRASHED, false))
-                    .setSortOrder(SortOrder.Builder()
-                            .addSortDescending(SortableField.MODIFIED_DATE).build())
-                    .build()
-            Drive.DriveApi.getAppFolder(googleApiClient).queryChildren(googleApiClient, query)
-                    .setResultCallback(object : ResultCallback<DriveApi.MetadataBufferResult> {
+                .addFilter(Filters.eq(SearchableField.MIME_TYPE, MYTARGETS_MIME_TYPE))
+                .addFilter(Filters.eq(SearchableField.TRASHED, false))
+                .setSortOrder(
+                    SortOrder.Builder()
+                        .addSortDescending(SortableField.MODIFIED_DATE).build()
+                )
+                .build()
+            Drive.DriveApi.getAppFolder(googleApiClient)!!.queryChildren(googleApiClient, query)
+                .setResultCallback(object : ResultCallback<DriveApi.MetadataBufferResult> {
 
-                        private val backupsArray = ArrayList<BackupEntry>()
+                    private val backupsArray = ArrayList<BackupEntry>()
 
-                        override fun onResult(result: DriveApi.MetadataBufferResult) {
-                            val buffer = result.metadataBuffer
-                            val size = buffer.count
-                            for (i in 0 until size) {
-                                val metadata = buffer.get(i)
-                                val driveId = metadata.driveId
-                                val backupSize = metadata.fileSize
-                                backupsArray.add(BackupEntry(driveId.encodeToString(),
-                                        metadata.modifiedDate, backupSize))
-                            }
-                            listener.onLoadFinished(backupsArray)
-                            buffer.release()
+                    override fun onResult(result: DriveApi.MetadataBufferResult) {
+                        val buffer = result.metadataBuffer
+                        val size = buffer.count
+                        for (i in 0 until size) {
+                            val metadata = buffer.get(i)
+                            val driveId = metadata.driveId
+                            val backupSize = metadata.fileSize
+                            backupsArray.add(
+                                BackupEntry(
+                                    driveId.encodeToString(),
+                                    metadata.modifiedDate, backupSize
+                                )
+                            )
                         }
-                    })
+                        listener.onLoadFinished(backupsArray)
+                        buffer.release()
+                    }
+                })
         }
 
         /**
          * Restores the given backup and restarts the app if the restore was successful.
          */
-        override fun restoreBackup(backup: BackupEntry, listener: IAsyncBackupRestore.BackupStatusListener) {
+        override fun restoreBackup(
+            backup: BackupEntry,
+            listener: IAsyncBackupRestore.BackupStatusListener
+        ) {
             DriveId.decodeFromString(backup.fileId!!)
-                    .asDriveFile()
-                    .open(googleApiClient, DriveFile.MODE_READ_ONLY, null)
-                    .setResultCallback { result ->
-                        if (!result.status.isSuccess) {
-                            listener.onError(result.status.statusMessage!!)
-                            return@setResultCallback
-                        }
-
-                        // DriveContents object contains pointers to the actual byte stream
-                        val contents = result.driveContents
-                        val input = contents.inputStream
-                        try {
-                            BackupUtils.importZip(activity!!, input)
-                            listener.onFinished()
-                        } catch (e: IOException) {
-                            e.printStackTrace()
-                            listener.onError(e.localizedMessage)
-                        }
+                .asDriveFile()
+                .open(googleApiClient, DriveFile.MODE_READ_ONLY, null)
+                .setResultCallback { result ->
+                    if (!result.status.isSuccess) {
+                        listener.onError(result.status.statusMessage!!)
+                        return@setResultCallback
                     }
+
+                    // DriveContents object contains pointers to the actual byte stream
+                    val contents = result.driveContents
+                    val input = contents.inputStream
+                    try {
+                        BackupUtils.importZip(activity!!, input)
+                        listener.onFinished()
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                        listener.onError(e.localizedMessage)
+                    }
+                }
         }
 
-        override fun deleteBackup(backup: BackupEntry, listener: IAsyncBackupRestore.BackupStatusListener) {
+        override fun deleteBackup(
+            backup: BackupEntry,
+            listener: IAsyncBackupRestore.BackupStatusListener
+        ) {
             DriveId.decodeFromString(backup.fileId!!)
-                    .asDriveFile()
-                    .delete(googleApiClient)
-                    .setResultCallback { result ->
-                        if (result.status.isSuccess) {
-                            listener.onFinished()
-                        } else {
-                            listener.onError(result.status.statusMessage!!)
-                        }
+                .asDriveFile()
+                .delete(googleApiClient)
+                .setResultCallback { result ->
+                    if (result.status.isSuccess) {
+                        listener.onFinished()
+                    } else {
+                        listener.onError(result.status.statusMessage!!)
                     }
+                }
         }
 
         override fun stop() {
@@ -161,9 +174,9 @@ object GoogleDriveBackup {
         @Throws(BackupException::class)
         override fun performBackup(context: Context) {
             val googleApiClient = GoogleApiClient.Builder(context)
-                    .addApi(Drive.API)
-                    .addScope(Drive.SCOPE_APPFOLDER)
-                    .build()
+                .addApi(Drive.API)
+                .addScope(Drive.SCOPE_APPFOLDER)
+                .build()
             val connectionResult = googleApiClient.blockingConnect()
             if (!connectionResult.isSuccess) {
                 throw BackupException(connectionResult.errorMessage)
@@ -178,20 +191,20 @@ object GoogleDriveBackup {
             val outputStream = driveContents.outputStream
 
             try {
-                BackupUtils.zip(context, outputStream)
+                BackupUtils.zip(context, ApplicationInstance.db, outputStream)
             } catch (e: IOException) {
                 throw BackupException(e.localizedMessage, e)
             }
 
             val changeSet = MetadataChangeSet.Builder()
-                    .setTitle(BackupUtils.backupName)
-                    .setMimeType(MYTARGETS_MIME_TYPE)
-                    .setStarred(true)
-                    .build()
+                .setTitle(BackupUtils.backupName)
+                .setMimeType(MYTARGETS_MIME_TYPE)
+                .setStarred(true)
+                .build()
 
             // create a file in selected folder
-            val result1 = Drive.DriveApi.getAppFolder(googleApiClient)
-                    .createFile(googleApiClient, changeSet, driveContents).await()
+            val result1 = Drive.DriveApi.getAppFolder(googleApiClient)!!
+                .createFile(googleApiClient, changeSet, driveContents).await()
             if (!result1.status.isSuccess) {
                 throw BackupException(result1.status.statusMessage)
             }

@@ -15,84 +15,72 @@
 
 package de.dreier.mytargets.shared.models.db
 
+import android.arch.persistence.room.*
+import android.arch.persistence.room.ForeignKey.CASCADE
 import android.os.Parcel
 import android.os.Parcelable
-import com.raizlabs.android.dbflow.annotation.*
-import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.IIdSettable
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter
 
-@Table(database = AppDatabase::class)
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = StandardRound::class,
+            parentColumns = ["id"],
+            childColumns = ["standardRoundId"],
+            onDelete = CASCADE
+        )
+    ],
+    indices = [
+        Index(value = ["standardRoundId"])
+    ]
+)
 data class RoundTemplate(
-        @Column(name = "_id")
-        @PrimaryKey(autoincrement = true)
-        override var id: Long = 0,
+    @PrimaryKey(autoGenerate = true)
+    override var id: Long = 0,
 
-        @ForeignKey(tableClass = StandardRound::class, references = [(ForeignKeyReference(columnName = "standardRound", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
-        var standardRound: Long? = null,
+    var standardRoundId: Long? = null,
 
-        @Column
-        var index: Int = 0,
+    var index: Int = 0,
 
-        @Column
-        var shotsPerEnd: Int = 0,
+    var shotsPerEnd: Int = 0,
 
-        @Column
-        var endCount: Int = 0,
+    var endCount: Int = 0,
 
-        @Column(typeConverter = DimensionConverter::class)
-        var distance: Dimension = Dimension.UNKNOWN,
+    var distance: Dimension = Dimension.UNKNOWN,
 
-        @Column
-        var targetId: Int = 0,
-
-        @Column
-        var targetScoringStyle: Int = 0,
-
-        @Column(typeConverter = DimensionConverter::class)
-        var targetDiameter: Dimension = Dimension.UNKNOWN
+    @Embedded
+    var targetTemplate: Target = Target()
 ) : IIdSettable, Parcelable {
-    var targetTemplate: Target
-        get() = Target(targetId.toLong(), targetScoringStyle, targetDiameter)
-        set(targetTemplate) {
-            targetId = targetTemplate.id.toInt()
-            targetScoringStyle = targetTemplate.scoringStyleIndex
-            targetDiameter = targetTemplate.diameter
-        }
-
     constructor(source: Parcel) : this(
-            source.readLong(),
-            source.readValue(Long::class.java.classLoader) as Long?,
-            source.readInt(),
-            source.readInt(),
-            source.readInt(),
-            source.readParcelable<Dimension>(Dimension::class.java.classLoader),
-            source.readInt(),
-            source.readInt(),
-            source.readParcelable<Dimension>(Dimension::class.java.classLoader)
+        source.readLong(),
+        source.readValue(Long::class.java.classLoader) as Long?,
+        source.readInt(),
+        source.readInt(),
+        source.readInt(),
+        source.readParcelable<Dimension>(Dimension::class.java.classLoader),
+        source.readParcelable<Target>(Target::class.java.classLoader)
     )
 
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
         writeLong(id)
-        writeValue(standardRound)
+        writeValue(standardRoundId)
         writeInt(index)
         writeInt(shotsPerEnd)
         writeInt(endCount)
         writeParcelable(distance, 0)
-        writeInt(targetId)
-        writeInt(targetScoringStyle)
-        writeParcelable(targetDiameter, 0)
+        writeParcelable(targetTemplate, 0)
     }
 
     companion object {
         @JvmField
-        val CREATOR: Parcelable.Creator<RoundTemplate> = object : Parcelable.Creator<RoundTemplate> {
-            override fun createFromParcel(source: Parcel): RoundTemplate = RoundTemplate(source)
-            override fun newArray(size: Int): Array<RoundTemplate?> = arrayOfNulls(size)
-        }
+        val CREATOR: Parcelable.Creator<RoundTemplate> =
+            object : Parcelable.Creator<RoundTemplate> {
+                override fun createFromParcel(source: Parcel): RoundTemplate = RoundTemplate(source)
+                override fun newArray(size: Int): Array<RoundTemplate?> = arrayOfNulls(size)
+            }
     }
 }

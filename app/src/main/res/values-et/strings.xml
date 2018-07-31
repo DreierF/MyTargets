@@ -364,5 +364,6 @@
   <string name="settings_statistics_spots_to_single_target">Aggregate spots to single target</string>
   <string name="keep_above_lockscreen">Keep above lockscreen</string>
   <string name="scoreboard_title_all_rounds">All rounds</string>
-  <string name="invalid_number">Invalid number</string>
+  <string name="permission_required">Permission required</string>
+  <string name="backup_permission_explanation"><![CDATA[To be able to make a backup of your data, the app needs permission to access the internal storage of your phone. To use the backup feature go to system settings > Apps > MyTargets > Permissions and enable the entry \'Storage\'.]]></string>
 </resources>

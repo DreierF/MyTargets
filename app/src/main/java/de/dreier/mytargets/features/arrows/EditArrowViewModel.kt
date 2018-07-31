@@ -26,7 +26,6 @@ import android.databinding.ObservableInt
 import android.text.TextUtils
 import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
-import de.dreier.mytargets.base.db.dao.ArrowDAO
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Dimension.Unit.MILLIMETER
 import de.dreier.mytargets.shared.models.Thumbnail
@@ -40,7 +39,8 @@ class EditArrowViewModel(app: ApplicationInstance) : AndroidViewModel(app) {
     val arrow: LiveData<Arrow?>
     var images: LiveData<List<ArrowImage>>
 
-    var name = ObservableField<String>(getApplication<ApplicationInstance>().getString(R.string.my_arrow))
+    var name =
+        ObservableField<String>(getApplication<ApplicationInstance>().getString(R.string.my_arrow))
     var maxArrowNumber = ObservableInt(12)
     var length = ObservableField<String>("")
     var material = ObservableField<String>("")
@@ -56,7 +56,7 @@ class EditArrowViewModel(app: ApplicationInstance) : AndroidViewModel(app) {
     var showAll = ObservableBoolean(false)
     var diameterErrorText = ObservableField<String>("")
 
-    private val arrowDAO = ArrowDAO
+    private val arrowDAO = ApplicationInstance.db.arrowDAO()
 
     init {
         arrow = Transformations.map(arrowId) { id ->
@@ -68,8 +68,8 @@ class EditArrowViewModel(app: ApplicationInstance) : AndroidViewModel(app) {
                 arrow
             }
         }
-        images = Transformations.map(arrowId, {
-            id -> if(id == null)
+        images = Transformations.map(arrowId, { id ->
+            if (id == null)
                 mutableListOf()
             else
                 arrowDAO.loadArrowImages(id)
@@ -97,7 +97,7 @@ class EditArrowViewModel(app: ApplicationInstance) : AndroidViewModel(app) {
         }
         val arrow = Arrow()
         arrow.id = arrowId.value ?: 0
-        arrow.name = name.get()
+        arrow.name = name.get() ?: ""
         arrow.maxArrowNumber = maxArrowNumber.get()
         arrow.length = length.get()
         arrow.material = material.get()

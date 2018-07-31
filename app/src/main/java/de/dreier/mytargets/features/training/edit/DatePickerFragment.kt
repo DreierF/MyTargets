@@ -29,8 +29,10 @@ class DatePickerFragment : DialogFragment() {
 
         // Create a new instance of DatePickerDialog and return it
         val listener = targetFragment as DatePickerDialog.OnDateSetListener?
-        return DatePickerDialog(activity!!, listener, date.year,
-                date.monthValue - 1, date.dayOfMonth)
+        return DatePickerDialog(
+            activity!!, listener, date.year,
+            date.monthValue - 1, date.dayOfMonth
+        )
     }
 
     companion object {

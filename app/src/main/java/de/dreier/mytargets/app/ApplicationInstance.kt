@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.app
 
+import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
@@ -22,11 +23,10 @@ import android.support.multidex.MultiDex
 import android.util.Log
 import com.crashlytics.android.Crashlytics
 import com.evernote.android.state.StateSaver
-import com.raizlabs.android.dbflow.config.FlowConfig
-import com.raizlabs.android.dbflow.config.FlowManager
 import de.dreier.mytargets.BuildConfig
+import de.dreier.mytargets.base.db.AppDatabase
+import de.dreier.mytargets.base.db.migrations.*
 import de.dreier.mytargets.features.settings.SettingsManager
-import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.SharedApplicationInstance
 import de.dreier.mytargets.utils.MobileWearableClient
 import de.dreier.mytargets.utils.backup.MyBackupAgent
@@ -57,9 +57,9 @@ class ApplicationInstance : SharedApplicationInstance() {
         }
         super.onCreate()
         handleDatabaseImport()
-        initFlowManager(this)
+        initRoomDb(this)
         wearableClient = MobileWearableClient(this)
-        StateSaver.setEnabledForAllActivitiesAndSupportFragments(this, true);
+        StateSaver.setEnabledForAllActivitiesAndSupportFragments(this, true)
     }
 
     private fun handleDatabaseImport() {
@@ -79,7 +79,7 @@ class ApplicationInstance : SharedApplicationInstance() {
     }
 
     override fun onTerminate() {
-        FlowManager.destroy()
+        db.close()
         wearableClient.disconnect()
         super.onTerminate()
     }
@@ -107,12 +107,30 @@ class ApplicationInstance : SharedApplicationInstance() {
         lateinit var instance: ApplicationInstance
 
         lateinit var wearableClient: MobileWearableClient
+        lateinit var db: AppDatabase
 
         val lastSharedPreferences: SharedPreferences
-            get() = SharedApplicationInstance.Companion.context.getSharedPreferences(MyBackupAgent.PREFS, 0)
+            get() = SharedApplicationInstance.context.getSharedPreferences(MyBackupAgent.PREFS, 0)
 
-        fun initFlowManager(context: Context) {
-            FlowManager.init(FlowConfig.Builder(context).build())
+        fun initRoomDb(context: Context) {
+            db = Room.databaseBuilder(
+                context,
+                AppDatabase::class.java, AppDatabase.DATABASE_FILE_NAME
+            )
+                .allowMainThreadQueries()
+                .addCallback(RoomCreationCallback)
+                .addMigrations(
+                    Migration2, Migration3, Migration4,
+                    Migration5, Migration6, Migration7,
+                    Migration8, Migration9, Migration10,
+                    Migration11, Migration12, Migration13,
+                    Migration14, Migration15, Migration16,
+                    Migration17, Migration18, Migration19,
+                    Migration20, Migration21, Migration22,
+                    Migration23, Migration24, Migration25,
+                    Migration26
+                )
+                .build()
         }
     }
 

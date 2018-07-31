@@ -16,16 +16,15 @@
 package de.dreier.mytargets.features.settings.about
 
 import android.content.Context
-import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import de.dreier.mytargets.R
 import de.dreier.mytargets.databinding.ItemDonationBinding
 
-class DonationAdapter(context: Context, private val listener: (Int) -> Unit) : RecyclerView.Adapter<DonationAdapter.DonationViewHolder>() {
+class DonationAdapter(context: Context, private val listener: (Int) -> Unit) :
+    RecyclerView.Adapter<DonationAdapter.DonationViewHolder>() {
 
     private val inflater = LayoutInflater.from(context)
 
@@ -63,6 +62,6 @@ class DonationAdapter(context: Context, private val listener: (Int) -> Unit) : R
     }
 
     class DonationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var binding: ItemDonationBinding = DataBindingUtil.bind(itemView)
+        var binding = ItemDonationBinding.bind(itemView)
     }
 }

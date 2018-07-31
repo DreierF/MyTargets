@@ -24,7 +24,8 @@ import android.view.MenuItem
 import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase
 import de.dreier.mytargets.features.settings.ESettingsScreens.MAIN
 
-class SettingsActivity : SimpleFragmentActivityBase(), PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
+class SettingsActivity : SimpleFragmentActivityBase(),
+    PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 
     public override fun instantiateFragment(): Fragment {
         val key = intent.getStringExtra(ARG_PREFERENCE_ROOT)
@@ -39,14 +40,16 @@ class SettingsActivity : SimpleFragmentActivityBase(), PreferenceFragmentCompat.
             val manager = supportFragmentManager
             if (manager != null) {
                 val currFrag = manager
-                        .findFragmentById(android.R.id.content) as SettingsFragmentBase
+                    .findFragmentById(android.R.id.content) as SettingsFragmentBase
                 currFrag.onFragmentResume()
             }
         }
     }
 
-    override fun onPreferenceStartScreen(preferenceFragmentCompat: PreferenceFragmentCompat,
-                                         preferenceScreen: PreferenceScreen): Boolean {
+    override fun onPreferenceStartScreen(
+        preferenceFragmentCompat: PreferenceFragmentCompat,
+        preferenceScreen: PreferenceScreen
+    ): Boolean {
         val ft = supportFragmentManager.beginTransaction()
         val screen = ESettingsScreens.from(preferenceScreen.key)
         val fragment = screen.create()
@@ -71,7 +74,11 @@ class SettingsActivity : SimpleFragmentActivityBase(), PreferenceFragmentCompat.
                 } else {
                     intent.putExtra(ARG_PREFERENCE_ROOT, MAIN.key)
                     val ft = supportFragmentManager.beginTransaction()
-                    ft.replace(android.R.id.content, instantiateFragment(), SimpleFragmentActivityBase.Companion.FRAGMENT_TAG)
+                    ft.replace(
+                        android.R.id.content,
+                        instantiateFragment(),
+                        SimpleFragmentActivityBase.Companion.FRAGMENT_TAG
+                    )
                     ft.commit()
                 }
                 true

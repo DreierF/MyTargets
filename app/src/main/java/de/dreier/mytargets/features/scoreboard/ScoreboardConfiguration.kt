@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.features.scoreboard
 
-data class ScoreboardConfiguration (
+data class ScoreboardConfiguration(
     var showTitle: Boolean = false,
     var showProperties: Boolean = false,
     var showTable: Boolean = false,

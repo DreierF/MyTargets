@@ -23,8 +23,10 @@ class ScoreboardSettingsFragment : SettingsFragmentBase() {
         // Disable file type selection for pre-Kitkat, since they do not support PDF generation
         val shareCategory = preferenceManager.findPreference(KEY_SCOREBOARD_SHARE)
         shareCategory.isVisible = Utils.isKitKat
-        val shareFileType = preferenceManager.findPreference(SettingsManager
-                .KEY_SCOREBOARD_SHARE_FILE_TYPE)
+        val shareFileType = preferenceManager.findPreference(
+            SettingsManager
+                .KEY_SCOREBOARD_SHARE_FILE_TYPE
+        )
         shareFileType.isVisible = Utils.isKitKat
         if (Utils.isKitKat) {
             setDefaultSummary(SettingsManager.KEY_SCOREBOARD_SHARE_FILE_TYPE)

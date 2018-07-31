@@ -25,22 +25,24 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.gallery.HorizontalImageViewHolder
-import de.dreier.mytargets.shared.utils.ImageList
+import de.dreier.mytargets.utils.ImageList
 import java.io.File
 
-typealias OnItemClickListener  = (Int) -> Unit
+typealias OnItemClickListener = (Int) -> Unit
 
 class HorizontalListAdapters(
-        private val activity: Activity,
-        private val images: ImageList,
-        private val clickListener: OnItemClickListener
+    private val activity: Activity,
+    private val images: ImageList,
+    private val clickListener: OnItemClickListener
 ) : RecyclerView.Adapter<HorizontalImageViewHolder>() {
 
     private var selectedItem = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HorizontalImageViewHolder {
-        return HorizontalImageViewHolder(LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_image_horizontal, parent, false))
+        return HorizontalImageViewHolder(
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_image_horizontal, parent, false)
+        )
     }
 
     override fun onBindViewHolder(holder: HorizontalImageViewHolder, position: Int) {
@@ -51,9 +53,9 @@ class HorizontalListAdapters(
             holder.camera.visibility = View.GONE
             holder.image.visibility = View.VISIBLE
             Picasso.with(activity)
-                    .load(File(activity.filesDir, images[position].fileName))
-                    .fit()
-                    .into(holder.image)
+                .load(File(activity.filesDir, images[position].fileName))
+                .fit()
+                .into(holder.image)
             val matrix = ColorMatrix()
             if (selectedItem != position) {
                 matrix.setSaturation(0f)

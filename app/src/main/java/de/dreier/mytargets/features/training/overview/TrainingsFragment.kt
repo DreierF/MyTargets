@@ -15,19 +15,16 @@
 
 package de.dreier.mytargets.features.training.overview
 
-import android.content.BroadcastReceiver
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.content.LocalBroadcastManager
 import android.view.*
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.header.ExpandableListAdapter
-import de.dreier.mytargets.base.db.dao.TrainingDAO
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
-import de.dreier.mytargets.base.fragments.LoaderUICallback
+import de.dreier.mytargets.base.viewmodel.ViewModelFactory
 import de.dreier.mytargets.databinding.FragmentTrainingsBinding
 import de.dreier.mytargets.databinding.ItemTrainingBinding
 import de.dreier.mytargets.features.settings.SettingsManager
@@ -35,8 +32,6 @@ import de.dreier.mytargets.features.training.edit.EditTrainingFragment.Companion
 import de.dreier.mytargets.features.training.edit.EditTrainingFragment.Companion.CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.utils.DividerItemDecoration
-import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_CREATE_TRAINING_FROM_REMOTE
-import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
 import de.dreier.mytargets.utils.SlideInItemAnimator
 import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
@@ -44,20 +39,19 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 /**
  * Shows an overview over all training days
  */
-open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
+class TrainingsFragment : ExpandableListFragment<Header, Training>() {
 
     private lateinit var binding: FragmentTrainingsBinding
 
-    private val updateReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            reloadData()
-        }
-    }
+    private lateinit var viewModel: TrainingsViewModel
+    private val factory = ViewModelFactory()
 
     init {
         itemTypeDelRes = R.plurals.training_deleted
-        actionModeCallback = ItemActionModeCallback(this, selector,
-                R.plurals.training_selected)
+        actionModeCallback = ItemActionModeCallback(
+            this, selector,
+            R.plurals.training_selected
+        )
         actionModeCallback?.setEditCallback(this::onEdit)
         actionModeCallback?.setDeleteCallback(this::onDelete)
         actionModeCallback?.setStatisticsCallback(this::onStatistics)
@@ -68,48 +62,58 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
         binding.fabSpeedDial.closeMenu()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val filter = IntentFilter()
-        filter.addAction(BROADCAST_UPDATE_TRAINING_FROM_REMOTE)
-        filter.addAction(BROADCAST_CREATE_TRAINING_FROM_REMOTE)
-        LocalBroadcastManager.getInstance(context!!).registerReceiver(updateReceiver, filter)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        LocalBroadcastManager.getInstance(context!!).unregisterReceiver(updateReceiver)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_trainings, container, false)
         binding.recyclerView.setHasFixedSize(true)
         adapter = TrainingAdapter(context!!)
         binding.recyclerView.itemAnimator = SlideInItemAnimator()
         binding.recyclerView.adapter = adapter
         binding.recyclerView.addItemDecoration(
-                DividerItemDecoration(context!!, R.drawable.full_divider))
+            DividerItemDecoration(context!!, R.drawable.full_divider)
+        )
         binding.fabSpeedDial.setMenuListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.fab1 -> navigationController
-                        .navigateToCreateTraining(CREATE_FREE_TRAINING_ACTION)
-                        .fromFab(binding.fabSpeedDial
-                                .getFabFromMenuId(R.id.fab1), R.color.fabFreeTraining,
-                                R.drawable.fab_trending_up_white_24dp)
-                        .start()
+                    .navigateToCreateTraining(CREATE_FREE_TRAINING_ACTION)
+                    .fromFab(
+                        binding.fabSpeedDial
+                            .getFabFromMenuId(R.id.fab1), R.color.fabFreeTraining,
+                        R.drawable.fab_trending_up_white_24dp
+                    )
+                    .start()
                 R.id.fab2 -> navigationController
-                        .navigateToCreateTraining(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)
-                        .fromFab(binding.fabSpeedDial
-                                .getFabFromMenuId(R.id.fab2), R.color.fabTrainingWithStandardRound,
-                                R.drawable.fab_album_24dp)
-                        .start()
+                    .navigateToCreateTraining(CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION)
+                    .fromFab(
+                        binding.fabSpeedDial
+                            .getFabFromMenuId(R.id.fab2), R.color.fabTrainingWithStandardRound,
+                        R.drawable.fab_album_24dp
+                    )
+                    .start()
                 else -> {
                 }
             }
             false
         }
-        setHasOptionsMenu(true)
         return binding.root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        setHasOptionsMenu(true)
+
+        viewModel = ViewModelProviders.of(this, factory).get(TrainingsViewModel::class.java)
+        viewModel.trainings.observe(this, Observer { trainings ->
+            if (trainings != null) {
+                this@TrainingsFragment.setList(trainings, false)
+                activity?.invalidateOptionsMenu()
+                binding.emptyState!!.root.visibility =
+                        if (trainings.isEmpty()) View.VISIBLE else View.GONE
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
@@ -125,9 +129,7 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_statistics -> {
-                navigationController.navigateToStatistics(TrainingDAO.loadTrainings()
-                        .flatMap { training -> TrainingDAO.loadRounds(training.id) }
-                        .map { it.id })
+                navigationController.navigateToStatistics(viewModel.getAllRoundIds())
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -136,59 +138,50 @@ open class TrainingsFragment : ExpandableListFragment<Header, Training>() {
 
     public override fun onSelected(item: Training) {
         navigationController.navigateToTraining(item)
-                .start()
+            .start()
     }
 
     private fun onStatistics(ids: List<Long>) {
-        navigationController.navigateToStatistics(ids
-                .map { TrainingDAO.loadTraining(it) }
-                .flatMap { t -> TrainingDAO.loadRounds(t.id) }
-                .map { it.id })
+        navigationController.navigateToStatistics(viewModel.getRoundIds(ids))
     }
 
     private fun onEdit(itemId: Long) {
         navigationController.navigateToEditTraining(itemId)
     }
 
-    override fun deleteItem(item: Training): () -> Training {
-        val training = TrainingDAO.loadAugmentedTraining(item.id)
-        TrainingDAO.deleteTraining(item)
-        return {
-            TrainingDAO.insertTraining(training)
-            item
-        }
-    }
+    override fun deleteItem(item: Training) = viewModel.deleteTraining(item)
 
-    override fun onLoad(args: Bundle?): LoaderUICallback {
-        val trainings = TrainingDAO.loadTrainings()
-        return {
-            this@TrainingsFragment.setList(trainings, false)
-            activity?.invalidateOptionsMenu()
-            binding.emptyState!!.root.visibility = if (trainings.isEmpty()) View.VISIBLE else View.GONE
-        }
-    }
-
-    private inner class TrainingAdapter internal constructor(context: Context
-    ) : ExpandableListAdapter<Header, Training>({ child ->
-        Utils.getMonthHeader(context, child.date)
-    }, compareByDescending(Header::id),
-            compareByDescending(Training::date).thenByDescending(Training::id)) {
+    private inner class TrainingAdapter internal constructor(
+        context: Context
+    ) : ExpandableListAdapter<Header, Training>(
+        { child ->
+            Utils.getMonthHeader(context, child.date)
+        }, compareByDescending(Header::id),
+        compareByDescending(Training::date).thenByDescending(Training::id)
+    ) {
 
         override fun getSecondLevelViewHolder(parent: ViewGroup): ViewHolder {
             val itemView = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_training, parent, false)
+                .inflate(R.layout.item_training, parent, false)
             return ViewHolder(itemView)
         }
     }
 
-    private inner class ViewHolder(itemView: View) : SelectableViewHolder<Training>(itemView, selector, this@TrainingsFragment, this@TrainingsFragment) {
-        internal var binding: ItemTrainingBinding = DataBindingUtil.bind(itemView)
+    private inner class ViewHolder(itemView: View) : SelectableViewHolder<Training>(
+        itemView,
+        selector,
+        this@TrainingsFragment,
+        this@TrainingsFragment
+    ) {
+        internal var binding = ItemTrainingBinding.bind(itemView)
 
         override fun bindItem(item: Training) {
             binding.training.text = item.title
             binding.trainingDate.text = item.formattedDate
-            binding.gesTraining.text = item.score.format(Utils.getCurrentLocale(context!!),
-                    SettingsManager.scoreConfiguration)
+            binding.gesTraining.text = item.score.format(
+                Utils.getCurrentLocale(context!!),
+                SettingsManager.scoreConfiguration
+            )
         }
     }
 }

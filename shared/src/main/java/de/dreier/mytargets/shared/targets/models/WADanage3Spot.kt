@@ -24,14 +24,14 @@ import de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER
 class WADanage3Spot : WA3Ring(
         id = ID,
         nameRes = R.string.wa_danage_3_spot,
-        diameters = arrayOf(
+        diameters = listOf(
                 Dimension(40f, CENTIMETER),
                 Dimension(60f, CENTIMETER)
         )
 ) {
     init {
         faceRadius = 0.54556f
-        facePositions = arrayOf(
+        facePositions = listOf(
                 PointF(0.0f, -0.39356598f),
                 PointF(-0.45444f, 0.39756605f),
                 PointF(0.45443994f, 0.39756605f)

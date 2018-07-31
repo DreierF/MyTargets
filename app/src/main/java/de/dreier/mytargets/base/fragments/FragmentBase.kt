@@ -17,14 +17,12 @@ package de.dreier.mytargets.base.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.annotation.CallSuper
 import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import android.support.v4.app.Fragment
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.AsyncTaskLoader
 import android.support.v4.content.Loader
-import com.evernote.android.state.StateSaver
 import de.dreier.mytargets.base.navigation.NavigationController
 
 
@@ -34,7 +32,8 @@ typealias LoaderUICallback = () -> Unit
  * Generic fragment class used as base for most fragments.
  * Has Icepick build in to save state on orientation change.
  */
-abstract class FragmentBase : Fragment(), LoaderManager.LoaderCallbacks<FragmentBase.LoaderUICallbackHelper> {
+abstract class FragmentBase : Fragment(),
+    LoaderManager.LoaderCallbacks<FragmentBase.LoaderUICallbackHelper> {
 
     protected lateinit var navigationController: NavigationController
 
@@ -63,7 +62,10 @@ abstract class FragmentBase : Fragment(), LoaderManager.LoaderCallbacks<Fragment
         return { }
     }
 
-    override fun onLoadFinished(loader: Loader<LoaderUICallbackHelper>, callback: LoaderUICallbackHelper) {
+    override fun onLoadFinished(
+        loader: Loader<LoaderUICallbackHelper>,
+        callback: LoaderUICallbackHelper
+    ) {
         callback.applyData()
     }
 

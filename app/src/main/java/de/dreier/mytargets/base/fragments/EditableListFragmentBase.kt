@@ -27,7 +27,8 @@ import de.dreier.mytargets.utils.multiselector.OnItemClickListener
 import de.dreier.mytargets.utils.multiselector.OnItemLongClickListener
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 
-abstract class EditableListFragmentBase<T, U : ListAdapterBase<*, T>> : FragmentBase(), OnItemClickListener<T>, OnItemLongClickListener<T> where T : IIdSettable {
+abstract class EditableListFragmentBase<T, U : ListAdapterBase<*, T>> : FragmentBase(),
+    OnItemClickListener<T>, OnItemLongClickListener<T> where T : IIdSettable {
 
     /**
      * Adapter for the fragment's RecyclerView
@@ -48,9 +49,9 @@ abstract class EditableListFragmentBase<T, U : ListAdapterBase<*, T>> : Fragment
         super.onCreate(savedInstanceState)
 
         // Restore action mode after fragment recreation
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             selector.restoreSelectionStates(savedInstanceState.getBundle(KEY_SELECTOR)!!)
-            if(selector.selectable) {
+            if (selector.selectable) {
                 actionModeCallback?.restartActionMode()
             }
         }
@@ -72,18 +73,18 @@ abstract class EditableListFragmentBase<T, U : ListAdapterBase<*, T>> : Fragment
         val message = resources.getQuantityString(itemTypeDelRes, deletedIds.size, deletedIds.size)
         val coordinatorLayout = view!!.findViewById<View>(R.id.coordinatorLayout)
         Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG)
-                .setAction(R.string.undo) {
-                    undoDeletion(undoDeletions)
-                }
-                .show()
+            .setAction(R.string.undo) {
+                undoDeletion(undoDeletions)
+            }
+            .show()
     }
 
     private fun deleteItems(deletedIds: List<Long>): MutableList<() -> T> {
         val deleted = deletedIds
-                .map { id -> adapter!!.getItemById(id) }
-                .filter { item -> item != null }
-                .map { it!! }
-                .toMutableList()
+            .map { id -> adapter!!.getItemById(id) }
+            .filter { item -> item != null }
+            .map { it!! }
+            .toMutableList()
         val undoActions = mutableListOf<() -> T>()
         for (item in deleted) {
             adapter!!.removeItem(item)
@@ -98,7 +99,7 @@ abstract class EditableListFragmentBase<T, U : ListAdapterBase<*, T>> : Fragment
 
     private fun undoDeletion(deleted: MutableList<() -> T>) {
         deleted.map { it.invoke() }
-                .forEach { adapter!!.addItem(it) }
+            .forEach { adapter!!.addItem(it) }
         reloadData()
         deleted.clear()
     }

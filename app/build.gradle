@@ -18,7 +18,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.github.triplet.play'
-apply plugin: 'jacoco-android'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'io.fabric'
 
@@ -39,12 +38,22 @@ android {
     defaultConfig {
         applicationId 'de.dreier.mytargets'
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode gitVersionCode
         versionName gitVersionName
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary true
         playAccountConfig = playAccountConfigs.defaultAccountConfig
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
+    }
+
+    // used by Room, to test migrations
+    sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
 
     dataBinding {
@@ -93,36 +102,17 @@ android {
         }
         screengrab {
             dimension "mode"
+            multiDexEnabled true
         }
     }
 }
 
-project.afterEvaluate {
-    android.applicationVariants.all { variant ->
-        def realVariantName = variant.name
-        def variantName = variant.name.capitalize()
-
-        def task = project.tasks["jacocoTest${variantName}UnitTestReport"]
-        def defaultExcludes = task.classDirectories.excludes
-
-        def excludes = defaultExcludes
-
-        def kotlinDebugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${realVariantName}", excludes: excludes)
-
-        task.classDirectories.excludes = excludes
-        task.classDirectories += kotlinDebugTree
-    }
-}
-
-apply from: '../tools/script-codacy.gradle'
 apply from: '../tools/script-play-store.gradle'
 
 dependencies {
     Map<String, String> dependencies = rootProject.ext.dependencies
 
-    kapt dependencies.databindingCompiler
-
-    implementation dependencies.kotlinStdlibJre7
+    implementation dependencies.kotlinStdlibJdk7
 
     implementation dependencies.supportCompat
     implementation dependencies.supportCoreUtils
@@ -136,6 +126,7 @@ dependencies {
     implementation dependencies.supportExifInterface
     implementation dependencies.recyclerView
     implementation dependencies.cardView
+    implementation dependencies.androidxCoreKtx
 
     implementation dependencies.playServicesDrive
     implementation dependencies.firebaseCore
@@ -178,11 +169,6 @@ dependencies {
 
     implementation dependencies.materialIntroScreen
 
-    kapt dependencies.dbFlowProcessor
-    implementation dependencies.dbFlowCore
-    implementation dependencies.dbFlow
-    implementation dependencies.dbFlowKotlinExtensions
-
     implementation dependencies.photoView
 
     implementation dependencies.androidLanguages
@@ -193,6 +179,8 @@ dependencies {
 
     implementation dependencies.archLifecycleExtensions
     kapt dependencies.archLifecycleCompiler
+    implementation dependencies.archRoomRuntime
+    kapt dependencies.archRoomCompiler
 
     implementation project(':shared')
     wearApp project(':wearable')
@@ -220,6 +208,7 @@ dependencies {
 
     implementation dependencies.espressoIdlingResource
     androidTestScreengrabImplementation dependencies.screengrab
+    androidTestImplementation dependencies.archRoomTesting
 
     implementation dependencies.multiDex
 }

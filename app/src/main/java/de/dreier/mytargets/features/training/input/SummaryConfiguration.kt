@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.features.training.input
 
-data class SummaryConfiguration (
+data class SummaryConfiguration(
     var showEnd: Boolean = false,
     var showRound: Boolean = false,
     var showTraining: Boolean = false,

@@ -46,29 +46,39 @@ object ScoreUtils {
     /**
      * Compound 9ers are already collapsed to one SelectableZone.
      */
-    fun getSortedScoreDistribution(rounds: List<Round>): List<Map.Entry<SelectableZone, Int>> {
-        return getRoundScores(rounds).entries.sortedBy { it.key }
+    fun getSortedScoreDistribution(
+        roundDAO: RoundDAO,
+        endDAO: EndDAO,
+        rounds: List<Round>
+    ): List<Map.Entry<SelectableZone, Int>> {
+        return getRoundScores(roundDAO, endDAO, rounds).entries.sortedBy { it.key }
     }
 
-    private fun getRoundScores(rounds: List<Round>): Map<SelectableZone, Int> {
+    private fun getRoundScores(
+        roundDAO: RoundDAO,
+        endDAO: EndDAO,
+        rounds: List<Round>
+    ): Map<SelectableZone, Int> {
         val t = rounds[0].target
         val scoreCount = getAllPossibleZones(t)
-        rounds.flatMap { RoundDAO.loadEnds(it.id) }
-                .forEach {
-                    EndDAO.loadShots(it.id).forEach { s ->
-                        if (s.scoringRing != Shot.NOTHING_SELECTED) {
-                            val tuple = SelectableZone(s.scoringRing,
-                                    t.model.getZone(s.scoringRing),
-                                    t.zoneToString(s.scoringRing, s.index),
-                                    t.getScoreByZone(s.scoringRing, s.index))
-                            val integer = scoreCount[tuple]
-                            if (integer != null) {
-                                val count = integer + 1
-                                scoreCount[tuple] = count
-                            }
+        rounds.flatMap { roundDAO.loadEnds(it.id) }
+            .forEach {
+                endDAO.loadShots(it.id).forEach { s ->
+                    if (s.scoringRing != Shot.NOTHING_SELECTED) {
+                        val tuple = SelectableZone(
+                            s.scoringRing,
+                            t.model.getZone(s.scoringRing),
+                            t.zoneToString(s.scoringRing, s.index),
+                            t.getScoreByZone(s.scoringRing, s.index)
+                        )
+                        val integer = scoreCount[tuple]
+                        if (integer != null) {
+                            val count = integer + 1
+                            scoreCount[tuple] = count
                         }
                     }
                 }
+            }
         return scoreCount
     }
 

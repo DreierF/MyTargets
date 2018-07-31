@@ -15,56 +15,43 @@
 
 package de.dreier.mytargets.shared.models.db
 
-import android.annotation.SuppressLint
+import android.arch.persistence.room.*
+import android.arch.persistence.room.ForeignKey.CASCADE
 import android.os.Parcelable
-import com.raizlabs.android.dbflow.annotation.*
-import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.IIdSettable
 import de.dreier.mytargets.shared.models.Score
-import de.dreier.mytargets.shared.utils.typeconverters.LocalTimeConverter
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.LocalTime
 
-@SuppressLint("ParcelCreator")
 @Parcelize
-@Table(database = AppDatabase::class)
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = Round::class,
+            parentColumns = ["id"],
+            childColumns = ["roundId"],
+            onDelete = CASCADE
+        )
+    ],
+    indices = [
+        Index(value = ["roundId"])
+    ]
+)
 data class End(
 
-        @Column(name = "_id")
-        @PrimaryKey(autoincrement = true)
-        override var id: Long = 0,
+    @PrimaryKey(autoGenerate = true)
+    override var id: Long = 0,
 
-        @Column
-        var index: Int = 0,
+    var index: Int = 0,
 
-        @ForeignKey(tableClass = Round::class, references = [(ForeignKeyReference(columnName = "round", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
-        var roundId: Long? = null,
+    var roundId: Long? = null,
 
-        @Column(getterName = "getExact", setterName = "setExact")
-        var exact: Boolean = false,
+    var exact: Boolean = false,
 
-        @Column(typeConverter = LocalTimeConverter::class)
-        var saveTime: LocalTime? = null,
+    var saveTime: LocalTime? = null,
 
-        @Column
-        var comment: String = "",
+    var comment: String = "",
 
-        @Column
-        var scoreReachedPoints: Int = 0,
-
-        @Column
-        var scoreTotalPoints: Int = 0,
-
-        @Column
-        var scoreShotCount: Int = 0
-) : IIdSettable, Parcelable {
-
-    var score: Score
-        get() = Score(scoreReachedPoints, scoreTotalPoints, scoreShotCount)
-        set(value) {
-            scoreReachedPoints = value.reachedPoints
-            scoreTotalPoints = value.totalPoints
-            scoreShotCount = value.shotCount
-        }
-
-}
+    @Embedded
+    var score: Score = Score()
+) : IIdSettable, Parcelable

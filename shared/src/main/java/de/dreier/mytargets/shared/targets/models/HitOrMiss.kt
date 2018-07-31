@@ -26,12 +26,12 @@ import de.dreier.mytargets.shared.utils.Color.YELLOW
 
 class HitOrMiss : TargetModelBase(id = 14,
         nameRes = R.string.hit_or_miss,
-        zones = arrayOf(
+        zones = listOf(
                 CircularZone(0.25f, YELLOW, DARK_GRAY, 3),
                 CircularZone(1.0f, RED_MISS, DARK_GRAY, 3)
         ),
-        scoringStyles = arrayOf(ScoringStyle(false, 1, 0)),
-        diameters = arrayOf(Dimension(30f, CENTIMETER), Dimension(96f, CENTIMETER))
+        scoringStyles = listOf(ScoringStyle(false, 1, 0)),
+        diameters = listOf(Dimension(30f, CENTIMETER), Dimension(96f, CENTIMETER))
 ) {
     init {
         decorator = CenterMarkDecorator(DARK_GRAY, 4.188f, 4, false)

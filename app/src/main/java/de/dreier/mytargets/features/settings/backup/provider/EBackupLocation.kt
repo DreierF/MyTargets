@@ -23,11 +23,12 @@ import de.dreier.mytargets.shared.models.IIdProvider
 import java.util.*
 
 enum class EBackupLocation constructor(
-        override var id: Long = 0,
-        @StringRes
-        private var nameRes: Int,
-        @DrawableRes
-        var drawableRes: Int) : IIdProvider {
+    override var id: Long = 0,
+    @StringRes
+    private var nameRes: Int,
+    @DrawableRes
+    var drawableRes: Int
+) : IIdProvider {
     INTERNAL_STORAGE(1, R.string.internal_storage, R.drawable.ic_phone_android_grey600_24dp),
     EXTERNAL_STORAGE(2, R.string.external_storage, R.drawable.ic_micro_sd_card_grey600_24dp),
     GOOGLE_DRIVE(3, R.string.google_drive, R.drawable.ic_google_drive_grey600_24dp);

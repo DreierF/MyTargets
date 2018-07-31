@@ -16,24 +16,26 @@
 package de.dreier.mytargets.views.selector
 
 import android.content.Context
-import android.databinding.DataBindingUtil
 import android.util.AttributeSet
 import android.view.View
 import de.dreier.mytargets.R
 import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding
 import de.dreier.mytargets.shared.models.WindDirection
 
-class WindDirectionSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null
-) : SelectorBase<WindDirection>(context, attrs, R.layout.selector_item_image_details, WIND_DIRECTION_REQUEST_CODE) {
-
-    private lateinit var binding: SelectorItemImageDetailsBinding
+class WindDirectionSelector @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet? = null
+) : SelectorBase<WindDirection, SelectorItemImageDetailsBinding>(
+    context,
+    attrs,
+    R.layout.selector_item_image_details,
+    WIND_DIRECTION_REQUEST_CODE
+) {
 
     override fun bindView(item: WindDirection) {
-        binding = DataBindingUtil.bind(view)
-        binding.name.text = item.name
-        binding.image.setImageResource(item.drawable)
-        binding.title.visibility = View.VISIBLE
-        binding.title.setText(R.string.wind_direction)
+        view.name.text = item.name
+        view.image.setImageResource(item.drawable)
+        view.title.visibility = View.VISIBLE
+        view.title.setText(R.string.wind_direction)
     }
 
     fun setItemId(direction: Long) {

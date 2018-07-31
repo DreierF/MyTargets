@@ -22,7 +22,11 @@ import android.view.View
 import android.view.ViewGroup
 import java.util.*
 
-class ChipGroup @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ViewGroup(context, attrs, defStyleAttr) {
+class ChipGroup @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : ViewGroup(context, attrs, defStyleAttr) {
     private var tagList: MutableList<Tag> = ArrayList()
 
     private val horizontalSpacing = dp2px(8.0f).toInt()
@@ -109,8 +113,10 @@ class ChipGroup @JvmOverloads constructor(context: Context, attrs: AttributeSet?
             width = widthSize
         }
 
-        setMeasuredDimension(if (widthMode == View.MeasureSpec.EXACTLY) widthSize else width,
-                if (heightMode == View.MeasureSpec.EXACTLY) heightSize else height)
+        setMeasuredDimension(
+            if (widthMode == View.MeasureSpec.EXACTLY) widthSize else width,
+            if (heightMode == View.MeasureSpec.EXACTLY) heightSize else height
+        )
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
@@ -167,8 +173,10 @@ class ChipGroup @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     }
 
     private fun dp2px(dp: Float): Float {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-                resources.displayMetrics)
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, dp,
+            resources.displayMetrics
+        )
     }
 
     override fun generateLayoutParams(attrs: AttributeSet): ViewGroup.LayoutParams {

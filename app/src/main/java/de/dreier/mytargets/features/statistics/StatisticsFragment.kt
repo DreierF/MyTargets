@@ -34,9 +34,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.renderer.LineChartRenderer
 import com.github.mikephil.charting.utils.ColorTemplate
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.db.dao.EndDAO
-import de.dreier.mytargets.base.db.dao.RoundDAO
-import de.dreier.mytargets.base.db.dao.TrainingDAO
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.fragments.FragmentBase
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentStatisticsBinding
@@ -66,6 +64,11 @@ class StatisticsFragment : FragmentBase() {
     private var target: Target? = null
     private var animate: Boolean = false
 
+    private val database = ApplicationInstance.db
+    private val trainingDAO = database.trainingDAO()
+    private val roundDAO = database.roundDAO()
+    private val endDAO = database.endDAO()
+
     private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
         override fun onUpdate(trainingId: Long, roundId: Long, end: End) {
@@ -78,15 +81,19 @@ class StatisticsFragment : FragmentBase() {
     private val hitMissText: String
         get() {
             val shots = rounds!!
-                    .flatMap { r -> RoundDAO.loadEnds(r.id) }
-                    .flatMap { EndDAO.loadShots(it.id) }
-                    .filter { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }
-            val missCount = shots.filter { (_, _, _, _, _, scoringRing) -> scoringRing == Shot.MISS }.count().toLong()
+                .flatMap { r -> roundDAO.loadEnds(r.id) }
+                .flatMap { endDAO.loadShots(it.id) }
+                .filter { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }
+            val missCount =
+                shots.filter { (_, _, _, _, _, scoringRing) -> scoringRing == Shot.MISS }.count()
+                    .toLong()
             val hitCount = shots.size - missCount
 
-            return String.format(Locale.US, PIE_CHART_CENTER_TEXT_FORMAT,
-                    getString(R.string.hits), hitCount.toString(),
-                    getString(R.string.misses), missCount)
+            return String.format(
+                Locale.US, PIE_CHART_CENTER_TEXT_FORMAT,
+                getString(R.string.hits), hitCount.toString(),
+                getString(R.string.misses), missCount
+            )
         }
 
     private// Without regression line
@@ -115,16 +122,16 @@ class StatisticsFragment : FragmentBase() {
 
     private fun getDataPointsForLineChart(isSingleTraining: Boolean): List<Pair<Float, LocalDateTime>>? {
         val trainingsMap = rounds!!
-                .map { it.trainingId!! }
-                .distinct()
-                .map { TrainingDAO.loadTraining(it) }
-                .map { Pair(it.id, it) }
-                .toMap()
+            .map { it.trainingId!! }
+            .distinct()
+            .map { trainingDAO.loadTraining(it) }
+            .map { Pair(it.id, it) }
+            .toMap()
 
         val values: List<Pair<Float, LocalDateTime>>
         if (isSingleTraining) {
             val trainingDate = trainingsMap.values.toList()[0].date
-            val ends = rounds!!.sortedBy { it.index }.map { RoundDAO.loadEnds(it.id) }
+            val ends = rounds!!.sortedBy { it.index }.map { roundDAO.loadEnds(it.id) }
             val firstRound = ends[0]
             if (firstRound.isEmpty()) {
                 return null
@@ -132,31 +139,38 @@ class StatisticsFragment : FragmentBase() {
             var firstEndTime = firstRound[0].saveTime
             var dayShift = 0L
             values = ends.flatMap { it }
-                    .map { end ->
-                        if (end.saveTime!!.isBefore(firstEndTime)) {
-                            dayShift += 1
-                            firstEndTime = end.saveTime
-                        }
-                        val dateTime = LocalDateTime.of(trainingDate, end.saveTime).plusDays(dayShift)
-                        Pair(end.score.shotAverage, dateTime)
+                .map { end ->
+                    if (end.saveTime!!.isBefore(firstEndTime)) {
+                        dayShift += 1
+                        firstEndTime = end.saveTime
                     }
-                    .sortedBy { (_, date) -> date }
+                    val dateTime = LocalDateTime.of(trainingDate, end.saveTime).plusDays(dayShift)
+                    Pair(end.score.shotAverage, dateTime)
+                }
+                .sortedBy { (_, date) -> date }
         } else {
             values = rounds!!
-                    .map { r -> Pair(trainingsMap[r.trainingId]!!.date, r) }
-                    .flatMap { (date, round) ->
-                        RoundDAO.loadEnds(round.id).map { end -> Pair(end, date) }
-                    }
-                    .map { (end, date) -> Pair(end.score.shotAverage, LocalDateTime.of(date, end.saveTime!!)) }
-                    .sortedBy { (_, date) -> date }
+                .map { r -> Pair(trainingsMap[r.trainingId]!!.date, r) }
+                .flatMap { (date, round) ->
+                    roundDAO.loadEnds(round.id).map { end -> Pair(end, date) }
+                }
+                .map { (end, date) ->
+                    Pair(
+                        end.score.shotAverage,
+                        LocalDateTime.of(date, end.saveTime!!)
+                    )
+                }
+                .sortedBy { (_, date) -> date }
         }
         return values
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        LocalBroadcastManager.getInstance(context!!).registerReceiver(updateReceiver,
-                IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE))
+        LocalBroadcastManager.getInstance(context!!).registerReceiver(
+            updateReceiver,
+            IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE)
+        )
     }
 
     override fun onDestroy() {
@@ -164,7 +178,11 @@ class StatisticsFragment : FragmentBase() {
         LocalBroadcastManager.getInstance(context!!).unregisterReceiver(updateReceiver)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_statistics, container, false)
 
         val target = arguments!!.getParcelable<Target>(ARG_TARGET)
@@ -186,9 +204,9 @@ class StatisticsFragment : FragmentBase() {
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        rounds = RoundDAO.loadRounds(roundIds!!)
+        rounds = roundDAO.loadRounds(roundIds!!)
         val data = ArrowStatistic.getAll(target!!, rounds!!)
-                .sortedWith(compareByDescending { it.totalScore.shotAverage })
+            .sortedWith(compareByDescending { it.totalScore.shotAverage })
 
         return {
             showLineChart()
@@ -204,11 +222,11 @@ class StatisticsFragment : FragmentBase() {
 
     private fun showDispersionView() {
         val exactShots = rounds!!
-                .flatMap { RoundDAO.loadEnds(it.id) }
-                .filter { (_, _, _, exact) -> exact }
-                .flatMap { EndDAO.loadShots(it.id) }
-                .filter { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }
-                .toList()
+            .flatMap { roundDAO.loadEnds(it.id) }
+            .filter { it.exact }
+            .flatMap { endDAO.loadShots(it.id) }
+            .filter { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }
+            .toList()
         if (exactShots.isEmpty()) {
             binding.dispersionPatternLayout.visibility = View.GONE
             return
@@ -217,15 +235,15 @@ class StatisticsFragment : FragmentBase() {
         stats.arrowDiameter = Dimension(5f, Dimension.Unit.MILLIMETER)
 
         val trainingsIds = rounds!!
-                .map { it.trainingId!! }
-                .distinct()
+            .map { it.trainingId!! }
+            .distinct()
         if (trainingsIds.size == 1) {
-            val training = TrainingDAO.loadTraining(trainingsIds[0])
+            val training = trainingDAO.loadTraining(trainingsIds[0])
             val date = training.date.format(DateTimeFormatter.ISO_LOCAL_DATE)
             val round = if (rounds!!.size == 1) {
                 val index = rounds!![0].index + 1
                 "-" + resources.getQuantityString(R.plurals.rounds, index, index)
-                        .replace(' ', '-')
+                    .replace(' ', '-')
             } else ""
             stats.exportFileName = "$date-${training.title}$round"
         } else {
@@ -259,8 +277,10 @@ class StatisticsFragment : FragmentBase() {
         if (animate) {
             binding.chartView.animateXY(2000, 2000)
         }
-        binding.chartView.renderer = object : LineChartRenderer(binding.chartView, binding.chartView.animator,
-                binding.chartView.viewPortHandler) {
+        binding.chartView.renderer = object : LineChartRenderer(
+            binding.chartView, binding.chartView.animator,
+            binding.chartView.viewPortHandler
+        ) {
             override fun drawHighlighted(canvas: Canvas, indices: Array<Highlight>) {
                 mRenderPaint.style = Paint.Style.FILL
 
@@ -276,10 +296,11 @@ class StatisticsFragment : FragmentBase() {
                     val circleRadius = dataSet.circleRadius
 
                     canvas.drawCircle(
-                            highlight.drawX,
-                            highlight.drawY,
-                            circleRadius,
-                            mRenderPaint)
+                        highlight.drawX,
+                        highlight.drawY,
+                        circleRadius,
+                        mRenderPaint
+                    )
                     colorIndex = (colorIndex + 1) % dataSet.circleColorCount
                 }
 
@@ -292,7 +313,12 @@ class StatisticsFragment : FragmentBase() {
     private fun showPieChart() {
         // enable hole and configure
         binding.distributionChart.transparentCircleRadius = 15f
-        binding.distributionChart.setHoleColor(ContextCompat.getColor(context!!, R.color.md_grey_50))
+        binding.distributionChart.setHoleColor(
+            ContextCompat.getColor(
+                context!!,
+                R.color.md_grey_50
+            )
+        )
         binding.distributionChart.legend.isEnabled = false
         binding.distributionChart.description = EMPTY_DESCRIPTION
 
@@ -302,13 +328,18 @@ class StatisticsFragment : FragmentBase() {
 
         binding.distributionChart.setUsePercentValues(false)
         binding.distributionChart.highlightValues(null)
-        binding.distributionChart.setBackgroundColor(ContextCompat.getColor(context!!, R.color.md_grey_50))
+        binding.distributionChart.setBackgroundColor(
+            ContextCompat.getColor(
+                context!!,
+                R.color.md_grey_50
+            )
+        )
         binding.distributionChart.invalidate()
         addPieData()
     }
 
     private fun addPieData() {
-        val scores = ScoreUtils.getSortedScoreDistribution(rounds!!)
+        val scores = ScoreUtils.getSortedScoreDistribution(roundDAO, endDAO, rounds!!)
 
         val yValues = ArrayList<PieEntry>()
         val colors = ArrayList<Int>()
@@ -343,20 +374,22 @@ class StatisticsFragment : FragmentBase() {
         binding.distributionChart.centerText = Utils.fromHtml(hitMissText)
 
         binding.distributionChart
-                .setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
-                    override fun onValueSelected(e: Entry, h: Highlight) {
-                        val selectableZone = e.data as SelectableZone
-                        val s = String.format(Locale.US,
-                                PIE_CHART_CENTER_TEXT_FORMAT,
-                                getString(R.string.points), selectableZone.text,
-                                getString(R.string.count), e.y.toInt())
-                        binding.distributionChart.centerText = Utils.fromHtml(s)
-                    }
+            .setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+                override fun onValueSelected(e: Entry, h: Highlight) {
+                    val selectableZone = e.data as SelectableZone
+                    val s = String.format(
+                        Locale.US,
+                        PIE_CHART_CENTER_TEXT_FORMAT,
+                        getString(R.string.points), selectableZone.text,
+                        getString(R.string.count), e.y.toInt()
+                    )
+                    binding.distributionChart.centerText = Utils.fromHtml(s)
+                }
 
-                    override fun onNothingSelected() {
-                        binding.distributionChart.centerText = Utils.fromHtml(hitMissText)
-                    }
-                })
+                override fun onNothingSelected() {
+                    binding.distributionChart.centerText = Utils.fromHtml(hitMissText)
+                }
+            })
     }
 
     override fun onResume() {
@@ -364,7 +397,10 @@ class StatisticsFragment : FragmentBase() {
         reloadData()
     }
 
-    private fun getEntryEvaluator(values: List<Pair<Float, LocalDateTime>>, singleTraining: Boolean): Evaluator {
+    private fun getEntryEvaluator(
+        values: List<Pair<Float, LocalDateTime>>,
+        singleTraining: Boolean
+    ): Evaluator {
 
         val eval: Evaluator
         if (singleTraining) {
@@ -397,8 +433,16 @@ class StatisticsFragment : FragmentBase() {
         return eval
     }
 
-    private fun convertToLineData(values: List<Pair<Float, LocalDateTime>>, evaluator: Evaluator): LineDataSet {
-        val seriesEntries = values.indices.map { Entry(evaluator.getXValue(values, it).toFloat(), values[it].first) }
+    private fun convertToLineData(
+        values: List<Pair<Float, LocalDateTime>>,
+        evaluator: Evaluator
+    ): LineDataSet {
+        val seriesEntries = values.indices.map {
+            Entry(
+                evaluator.getXValue(values, it).toFloat(),
+                values[it].first
+            )
+        }
 
         val series = LineDataSet(seriesEntries, "")
         val color = ContextCompat.getColor(context!!, R.color.colorPrimary)
@@ -419,7 +463,10 @@ class StatisticsFragment : FragmentBase() {
     /**
      * @param values Must not be empty
      */
-    private fun generateLinearRegressionLine(values: List<Pair<Float, LocalDateTime>>, eval: Evaluator): ILineDataSet {
+    private fun generateLinearRegressionLine(
+        values: List<Pair<Float, LocalDateTime>>,
+        eval: Evaluator
+    ): ILineDataSet {
         val dataSetSize = values.size
         val x = DoubleArray(dataSetSize)
         val y = DoubleArray(dataSetSize)
@@ -481,7 +528,7 @@ class StatisticsFragment : FragmentBase() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val itemView = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_image_simple, parent, false)
+                .inflate(R.layout.item_image_simple, parent, false)
             return ViewHolder(itemView)
         }
 
@@ -506,7 +553,7 @@ class StatisticsFragment : FragmentBase() {
 
         init {
             itemView.isClickable = true
-            binding = DataBindingUtil.bind(itemView)
+            binding = ItemImageSimpleBinding.bind(itemView)
             binding.content.setOnClickListener { onItemClicked() }
         }
 
@@ -516,8 +563,10 @@ class StatisticsFragment : FragmentBase() {
 
         fun bindItem(item: ArrowStatistic) {
             mItem = item
-            binding.name.text = getString(R.string.arrow_x_of_set_of_arrows, item.arrowNumber, item
-                    .arrowName)
+            binding.name.text = getString(
+                R.string.arrow_x_of_set_of_arrows, item.arrowNumber, item
+                    .arrowName
+            )
             binding.image.setImageDrawable(RoundedTextDrawable(item))
         }
     }

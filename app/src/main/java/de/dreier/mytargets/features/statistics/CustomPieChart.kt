@@ -21,7 +21,7 @@ import android.util.AttributeSet
 import com.github.mikephil.charting.charts.PieChart
 
 class CustomPieChart @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : PieChart(context, attrs, defStyleAttr) {
     init {
         renderer = CustomPieChartRenderer(this, mAnimator, mViewPortHandler)

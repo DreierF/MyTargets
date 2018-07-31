@@ -27,18 +27,13 @@ import android.view.Menu
 import android.view.MenuItem
 import com.afollestad.materialdialogs.MaterialDialog
 import com.evernote.android.state.State
-import com.evernote.android.state.StateSaver
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.activities.ChildActivityBase
 import de.dreier.mytargets.base.gallery.adapters.HorizontalListAdapters
 import de.dreier.mytargets.base.gallery.adapters.ViewPagerAdapter
 import de.dreier.mytargets.base.navigation.NavigationController
 import de.dreier.mytargets.databinding.ActivityGalleryBinding
-import de.dreier.mytargets.shared.utils.ImageList
-import de.dreier.mytargets.shared.utils.moveTo
-import de.dreier.mytargets.shared.utils.toUri
-import de.dreier.mytargets.utils.ToolbarUtils
-import de.dreier.mytargets.utils.Utils
+import de.dreier.mytargets.utils.*
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
 import pl.aprilapps.easyphotopicker.DefaultCallback
@@ -85,7 +80,12 @@ class GalleryActivity : ChildActivityBase() {
         previewAdapter.notifyDataSetChanged()
 
         binding.pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+            }
 
             override fun onPageSelected(position: Int) {
                 binding.imagesHorizontalList.smoothScrollToPosition(position)
@@ -150,21 +150,21 @@ class GalleryActivity : ChildActivityBase() {
 
     private fun deleteImage(currentItem: Int) {
         MaterialDialog.Builder(this)
-                .content(R.string.delete_image)
-                .negativeText(android.R.string.cancel)
-                .negativeColorRes(R.color.md_grey_500)
-                .positiveText(R.string.delete)
-                .positiveColorRes(R.color.md_red_500)
-                .onPositive { _, _ ->
-                    imageList.remove(currentItem)
-                    updateResult()
-                    invalidateOptionsMenu()
-                    adapter!!.notifyDataSetChanged()
-                    val nextItem = Math.min(imageList.size() - 1, currentItem)
-                    previewAdapter.setSelectedItem(nextItem)
-                    binding.pager.currentItem = nextItem
-                }
-                .show()
+            .content(R.string.delete_image)
+            .negativeText(android.R.string.cancel)
+            .negativeColorRes(R.color.md_grey_500)
+            .positiveText(R.string.delete)
+            .positiveColorRes(R.color.md_red_500)
+            .onPositive { _, _ ->
+                imageList.remove(currentItem)
+                updateResult()
+                invalidateOptionsMenu()
+                adapter!!.notifyDataSetChanged()
+                val nextItem = Math.min(imageList.size() - 1, currentItem)
+                previewAdapter.setSelectedItem(nextItem)
+                binding.pager.currentItem = nextItem
+            }
+            .show()
     }
 
     private fun updateResult() {
@@ -182,7 +182,11 @@ class GalleryActivity : ChildActivityBase() {
     }
 
     @SuppressLint("NeedOnRequestPermissionsResult")
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         onRequestPermissionsResult(requestCode, grantResults)
     }
@@ -190,21 +194,25 @@ class GalleryActivity : ChildActivityBase() {
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         EasyImage.handleActivityResult(requestCode, resultCode, data, this,
-                object : DefaultCallback() {
+            object : DefaultCallback() {
 
-                    override fun onImagesPicked(imageFiles: List<File>, source: EasyImage.ImageSource, type: Int) {
-                        loadImages(imageFiles)
-                    }
+                override fun onImagesPicked(
+                    imageFiles: List<File>,
+                    source: EasyImage.ImageSource,
+                    type: Int
+                ) {
+                    loadImages(imageFiles)
+                }
 
-                    override fun onCanceled(source: EasyImage.ImageSource?, type: Int) {
-                        //Cancel handling, you might wanna remove taken photo if it was canceled
-                        if (source == EasyImage.ImageSource.CAMERA) {
-                            val photoFile = EasyImage
-                                    .lastlyTakenButCanceledPhoto(applicationContext)
-                            photoFile?.delete()
-                        }
+                override fun onCanceled(source: EasyImage.ImageSource?, type: Int) {
+                    //Cancel handling, you might wanna remove taken photo if it was canceled
+                    if (source == EasyImage.ImageSource.CAMERA) {
+                        val photoFile = EasyImage
+                            .lastlyTakenButCanceledPhoto(applicationContext)
+                        photoFile?.delete()
                     }
-                })
+                }
+            })
     }
 
     private fun loadImages(imageFile: List<File>) {

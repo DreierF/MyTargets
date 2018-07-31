@@ -1,0 +1,825 @@
+{
+  "database": {
+    "entities": [
+      {
+        "createSql": "CREATE TABLE IF NOT EXISTS `BowImage`(`_id` INTEGER PRIMARY KEY AUTOINCREMENT, `fileName` TEXT, `bow` INTEGER, FOREIGN KEY(`bow`) REFERENCES `Bow`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE)",
+        "fields": [
+          {
+            "affinity": "INTEGER",
+            "columnName": "_id",
+            "fieldPath": "_id",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "fileName",
+            "fieldPath": "fileName",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "bow",
+            "fieldPath": "bow",
+            "notNull": false
+          }
+        ],
+        "foreignKeys": [
+          {
+            "columns": [
+              "bow"
+            ],
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "referencedColumns": [
+              "_id"
+            ],
+            "table": "Bow"
+          }
+        ],
+        "indices": [],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "tableName": "BowImage"
+      },
+      {
+        "createSql": "CREATE TABLE IF NOT EXISTS `EndImage`(`_id` INTEGER PRIMARY KEY AUTOINCREMENT, `fileName` TEXT, `end` INTEGER, FOREIGN KEY(`end`) REFERENCES `End`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE)",
+        "fields": [
+          {
+            "affinity": "INTEGER",
+            "columnName": "_id",
+            "fieldPath": "_id",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "fileName",
+            "fieldPath": "fileName",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "end",
+            "fieldPath": "end",
+            "notNull": false
+          }
+        ],
+        "foreignKeys": [
+          {
+            "columns": [
+              "end"
+            ],
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "referencedColumns": [
+              "_id"
+            ],
+            "table": "End"
+          }
+        ],
+        "indices": [],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "tableName": "EndImage"
+      },
+      {
+        "createSql": "CREATE TABLE IF NOT EXISTS `Signature`(`_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `bitmap` BLOB)",
+        "fields": [
+          {
+            "affinity": "INTEGER",
+            "columnName": "_id",
+            "fieldPath": "_id",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "name",
+            "fieldPath": "name",
+            "notNull": false
+          },
+          {
+            "affinity": "BLOB",
+            "columnName": "bitmap",
+            "fieldPath": "bitmap",
+            "notNull": false
+          }
+        ],
+        "foreignKeys": [],
+        "indices": [],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "tableName": "Signature"
+      },
+      {
+        "createSql": "CREATE TABLE IF NOT EXISTS `ArrowImage`(`_id` INTEGER PRIMARY KEY AUTOINCREMENT, `fileName` TEXT, `arrow` INTEGER, FOREIGN KEY(`arrow`) REFERENCES `Arrow`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE)",
+        "fields": [
+          {
+            "affinity": "INTEGER",
+            "columnName": "_id",
+            "fieldPath": "_id",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "fileName",
+            "fieldPath": "fileName",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "arrow",
+            "fieldPath": "arrow",
+            "notNull": false
+          }
+        ],
+        "foreignKeys": [
+          {
+            "columns": [
+              "arrow"
+            ],
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "referencedColumns": [
+              "_id"
+            ],
+            "table": "Arrow"
+          }
+        ],
+        "indices": [],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "tableName": "ArrowImage"
+      },
+      {
+        "createSql": "CREATE TABLE IF NOT EXISTS `Arrow`( `_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `length` TEXT, `material` TEXT, `spine` TEXT, `weight` TEXT, `tipWeight` TEXT, `vanes` TEXT, `nock` TEXT, `comment` TEXT, `diameter` TEXT, `thumbnail` BLOB )",
+        "fields": [
+          {
+            "affinity": "INTEGER",
+            "columnName": "_id",
+            "fieldPath": "_id",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "name",
+            "fieldPath": "name",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "length",
+            "fieldPath": "length",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "material",
+            "fieldPath": "material",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "spine",
+            "fieldPath": "spine",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "weight",
+            "fieldPath": "weight",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "tipWeight",
+            "fieldPath": "tipWeight",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "vanes",
+            "fieldPath": "vanes",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "nock",
+            "fieldPath": "nock",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "comment",
+            "fieldPath": "comment",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "diameter",
+            "fieldPath": "diameter",
+            "notNull": false
+          },
+          {
+            "affinity": "BLOB",
+            "columnName": "thumbnail",
+            "fieldPath": "thumbnail",
+            "notNull": false
+          }
+        ],
+        "foreignKeys": [],
+        "indices": [],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "tableName": "Arrow"
+      },
+      {
+        "createSql": "CREATE TABLE IF NOT EXISTS `Bow`( `_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `type` INTEGER, `brand` TEXT, `size` TEXT, `braceHeight` TEXT, `tiller` TEXT, `limbs` TEXT, `sight` TEXT, `drawWeight` TEXT, `stabilizer` TEXT, `clicker` TEXT, `button` TEXT, `string` TEXT, `nockingPoint` TEXT, `letoffWeight` TEXT, `arrowRest` TEXT, `restHorizontalPosition` TEXT, `restVerticalPosition` TEXT, `restStiffness` TEXT, `camSetting` TEXT, `scopeMagnification` TEXT, `description` TEXT, `thumbnail` BLOB )",
+        "fields": [
+          {
+            "affinity": "INTEGER",
+            "columnName": "_id",
+            "fieldPath": "_id",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "name",
+            "fieldPath": "name",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "type",
+            "fieldPath": "type",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "brand",
+            "fieldPath": "brand",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "size",
+            "fieldPath": "size",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "braceHeight",
+            "fieldPath": "braceHeight",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "tiller",
+            "fieldPath": "tiller",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "limbs",
+            "fieldPath": "limbs",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "sight",
+            "fieldPath": "sight",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "drawWeight",
+            "fieldPath": "drawWeight",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "stabilizer",
+            "fieldPath": "stabilizer",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "clicker",
+            "fieldPath": "clicker",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "button",
+            "fieldPath": "button",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "string",
+            "fieldPath": "string",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "nockingPoint",
+            "fieldPath": "nockingPoint",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "letoffWeight",
+            "fieldPath": "letoffWeight",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "arrowRest",
+            "fieldPath": "arrowRest",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "restHorizontalPosition",
+            "fieldPath": "restHorizontalPosition",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "restVerticalPosition",
+            "fieldPath": "restVerticalPosition",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "restStiffness",
+            "fieldPath": "restStiffness",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "camSetting",
+            "fieldPath": "camSetting",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "scopeMagnification",
+            "fieldPath": "scopeMagnification",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "description",
+            "fieldPath": "description",
+            "notNull": false
+          },
+          {
+            "affinity": "BLOB",
+            "columnName": "thumbnail",
+            "fieldPath": "thumbnail",
+            "notNull": false
+          }
+        ],
+        "foreignKeys": [],
+        "indices": [],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "tableName": "Bow"
+      },
+      {
+        "createSql": "CREATE TABLE IF NOT EXISTS `StandardRound`( `_id` INTEGER PRIMARY KEY AUTOINCREMENT, `club` INTEGER, `name` TEXT )",
+        "fields": [
+          {
+            "affinity": "INTEGER",
+            "columnName": "_id",
+            "fieldPath": "_id",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "club",
+            "fieldPath": "club",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "name",
+            "fieldPath": "name",
+            "notNull": false
+          }
+        ],
+        "foreignKeys": [],
+        "indices": [],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "tableName": "StandardRound"
+      },
+      {
+        "createSql": "CREATE TABLE IF NOT EXISTS `RoundTemplate`( `_id` INTEGER PRIMARY KEY AUTOINCREMENT, `standardRound` INTEGER, `index` INTEGER, `shotsPerEnd` INTEGER, `endCount` INTEGER, `distance` TEXT, `targetId` INTEGER, `targetScoringStyle` INTEGER, `targetDiameter` TEXT, FOREIGN KEY(`standardRound`) REFERENCES StandardRound(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "affinity": "INTEGER",
+            "columnName": "_id",
+            "fieldPath": "_id",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "standardRound",
+            "fieldPath": "standardRound",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "index",
+            "fieldPath": "index",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "shotsPerEnd",
+            "fieldPath": "shotsPerEnd",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "endCount",
+            "fieldPath": "endCount",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "distance",
+            "fieldPath": "distance",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "targetId",
+            "fieldPath": "targetId",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "targetScoringStyle",
+            "fieldPath": "targetScoringStyle",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "targetDiameter",
+            "fieldPath": "targetDiameter",
+            "notNull": false
+          }
+        ],
+        "foreignKeys": [],
+        "indices": [],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "tableName": "RoundTemplate"
+      },
+      {
+        "createSql": "CREATE TABLE IF NOT EXISTS `Training`( `_id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `date` INTEGER, `standardRound` INTEGER, `bow` INTEGER, `arrow` INTEGER, `arrowNumbering` INTEGER, `indoor` INTEGER, `weather` INTEGER, `windDirection` INTEGER, `windSpeed` INTEGER, `location` TEXT, FOREIGN KEY(`standardRound`) REFERENCES StandardRound(`_id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY(`bow`) REFERENCES Bow(`_id`) ON UPDATE NO ACTION ON DELETE SET NULL, FOREIGN KEY(`arrow`) REFERENCES Arrow(`_id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "fields": [
+          {
+            "affinity": "INTEGER",
+            "columnName": "_id",
+            "fieldPath": "_id",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "title",
+            "fieldPath": "title",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "date",
+            "fieldPath": "date",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "standardRound",
+            "fieldPath": "standardRound",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "bow",
+            "fieldPath": "bow",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "arrow",
+            "fieldPath": "arrow",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "arrowNumbering",
+            "fieldPath": "arrowNumbering",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "indoor",
+            "fieldPath": "indoor",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "weather",
+            "fieldPath": "weather",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "windDirection",
+            "fieldPath": "windDirection",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "windSpeed",
+            "fieldPath": "windSpeed",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "location",
+            "fieldPath": "location",
+            "notNull": false
+          }
+        ],
+        "foreignKeys": [],
+        "indices": [],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "tableName": "Training"
+      },
+      {
+        "createSql": "CREATE TABLE IF NOT EXISTS `Round`( `_id` INTEGER PRIMARY KEY AUTOINCREMENT, `training` INTEGER, `index` INTEGER, `shotsPerEnd` INTEGER, `maxEndCount` INTEGER, `distance` TEXT, `comment` TEXT, `targetId` INTEGER, `targetScoringStyle` INTEGER, `targetDiameter` TEXT, FOREIGN KEY(`training`) REFERENCES Training(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "affinity": "INTEGER",
+            "columnName": "_id",
+            "fieldPath": "_id",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "training",
+            "fieldPath": "training",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "index",
+            "fieldPath": "index",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "shotsPerEnd",
+            "fieldPath": "shotsPerEnd",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "maxEndCount",
+            "fieldPath": "maxEndCount",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "distance",
+            "fieldPath": "distance",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "comment",
+            "fieldPath": "comment",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "targetId",
+            "fieldPath": "targetId",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "targetScoringStyle",
+            "fieldPath": "targetScoringStyle",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "targetDiameter",
+            "fieldPath": "targetDiameter",
+            "notNull": false
+          }
+        ],
+        "foreignKeys": [],
+        "indices": [],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "tableName": "Round"
+      },
+      {
+        "createSql": "CREATE TABLE IF NOT EXISTS `End`( `_id` INTEGER PRIMARY KEY AUTOINCREMENT, `index` INTEGER, `round` INTEGER, `exact` INTEGER, `saveTime` INTEGER, FOREIGN KEY(`round`) REFERENCES Round(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "affinity": "INTEGER",
+            "columnName": "_id",
+            "fieldPath": "_id",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "index",
+            "fieldPath": "index",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "round",
+            "fieldPath": "round",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "exact",
+            "fieldPath": "exact",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "saveTime",
+            "fieldPath": "saveTime",
+            "notNull": false
+          }
+        ],
+        "foreignKeys": [],
+        "indices": [],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "tableName": "End"
+      },
+      {
+        "createSql": "CREATE TABLE IF NOT EXISTS `Shot`( `_id` INTEGER PRIMARY KEY AUTOINCREMENT, `index` INTEGER, `end` INTEGER, `x` REAL, `y` REAL, `scoringRing` INTEGER, `comment` TEXT, `arrowNumber` TEXT, FOREIGN KEY(`end`) REFERENCES End(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "affinity": "INTEGER",
+            "columnName": "_id",
+            "fieldPath": "_id",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "index",
+            "fieldPath": "index",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "end",
+            "fieldPath": "end",
+            "notNull": false
+          },
+          {
+            "affinity": "REAL",
+            "columnName": "x",
+            "fieldPath": "x",
+            "notNull": false
+          },
+          {
+            "affinity": "REAL",
+            "columnName": "y",
+            "fieldPath": "y",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "scoringRing",
+            "fieldPath": "scoringRing",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "comment",
+            "fieldPath": "comment",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "arrowNumber",
+            "fieldPath": "arrowNumber",
+            "notNull": false
+          }
+        ],
+        "foreignKeys": [],
+        "indices": [],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "tableName": "Shot"
+      },
+      {
+        "createSql": "CREATE TABLE IF NOT EXISTS `SightMark`( `_id` INTEGER PRIMARY KEY AUTOINCREMENT, `bow` INTEGER, `distance` TEXT, `value` TEXT, FOREIGN KEY(`bow`) REFERENCES Bow(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "affinity": "INTEGER",
+            "columnName": "_id",
+            "fieldPath": "_id",
+            "notNull": false
+          },
+          {
+            "affinity": "INTEGER",
+            "columnName": "bow",
+            "fieldPath": "bow",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "distance",
+            "fieldPath": "distance",
+            "notNull": false
+          },
+          {
+            "affinity": "TEXT",
+            "columnName": "value",
+            "fieldPath": "value",
+            "notNull": false
+          }
+        ],
+        "foreignKeys": [],
+        "indices": [],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "tableName": "SightMark"
+      }
+    ],
+    "identityHash": "b6b98474875167708d8af9a67e3e0f04",
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"b6b98474875167708d8af9a67e3e0f04\")"
+    ],
+    "version": 20
+  },
+  "formatVersion": 1
+}

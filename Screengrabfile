@@ -3,8 +3,8 @@ use_tests_in_packages ['de.dreier.mytargets.screengrab']
 
 output_directory 'build/screengrab'
 
-app_apk_path 'app/build/outputs/apk/app-screengrab-debug.apk'
-tests_apk_path 'app/build/outputs/apk/app-screengrab-debug-androidTest.apk'
+app_apk_path 'app/build/outputs/apk/screengrab/debug/app-screengrab-debug.apk'
+tests_apk_path 'app/build/outputs/apk/androidTest/screengrab/debug/app-screengrab-debug-androidTest.apk'
 
 locales ['ca-ES', 'cs-CZ', 'da-DK', 'de-DE', 'en-US', 'es-ES', 'fr-FR', 'hu-HU', 'id-ID', 'it-IT', 'iw-IL', 'ja-JP', 'nl-NL', 'no-NO', 'pl-PL', 'pt-BR', 'pt-PT', 'ru-RU', 'sk-SK', 'sl-SI', 'sv-SE', 'tr-TR', 'zh-CN', 'zh-TW']
 

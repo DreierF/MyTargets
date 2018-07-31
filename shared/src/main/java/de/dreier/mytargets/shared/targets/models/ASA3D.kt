@@ -29,7 +29,7 @@ import de.dreier.mytargets.shared.utils.Color.TURBO_YELLOW
 class ASA3D : Target3DBase(
         id = 15,
         nameRes = R.string.asa_3d,
-        zones = arrayOf(
+        zones = listOf(
                 CircularZone(0.053396f, 0.274396f, -0.089198f, TURBO_YELLOW, BLACK, 3),
                 CircularZone(0.053396f, -0.017104004f, 0.399802f, TURBO_YELLOW, BLACK, 3),
                 CircularZone(0.124f, 0.274396f, -0.089198f, TURBO_YELLOW, BLACK, 3),
@@ -38,7 +38,7 @@ class ASA3D : Target3DBase(
                 HeartZone(1.0f, 0.0f, 0.0f, LIGHT_GRAY, BLACK, 3),
                 CircularZone(1.0f, 0.0f, 0.0f, BROWN, GRAY, 5)
         ),
-        scoringStyles = arrayOf(
+        scoringStyles = listOf(
                 ScoringStyle(false, 12, 12, 12, 12, 10, 8, 5)
         )
 )

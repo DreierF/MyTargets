@@ -35,7 +35,11 @@ class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrow
     private lateinit var viewModel: EditArrowViewModel
     private val factory = ViewModelFactory()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val rootView = super.onCreateView(inflater, container, savedInstanceState)
         contentBinding = FragmentEditArrowBinding.inflate(inflater, binding.content, true)
         return rootView
@@ -62,7 +66,7 @@ class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrow
             }
         })
     }
-    
+
     override fun wrapImage(imageFile: String): List<ArrowImage> {
         return listOf(ArrowImage(fileName = imageFile))
     }

@@ -15,4 +15,5 @@
 
 package de.dreier.mytargets.features.settings.backup
 
-class BackupException @JvmOverloads constructor(message: String?, e: Exception? = null) : Exception(message, e)
+class BackupException @JvmOverloads constructor(message: String?, e: Exception? = null) :
+    Exception(message, e)

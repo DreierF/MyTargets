@@ -27,7 +27,10 @@ interface IPdfWriter {
      * MUST be called before [.writePdfDocument].
      */
     @SuppressLint("Range")
-    fun layoutPages(resolution: PrintAttributes.Resolution, mediaSize: PrintAttributes.MediaSize): Int
+    fun layoutPages(
+        resolution: PrintAttributes.Resolution,
+        mediaSize: PrintAttributes.MediaSize
+    ): Int
 
     /**
      * Writes the given pages as PDF to the output stream.

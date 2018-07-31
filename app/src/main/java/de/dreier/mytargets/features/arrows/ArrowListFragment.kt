@@ -15,22 +15,29 @@
 
 package de.dreier.mytargets.features.arrows
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import de.dreier.mytargets.base.db.dao.ArrowDAO
-import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase
 import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
+import de.dreier.mytargets.base.viewmodel.ViewModelFactory
 import de.dreier.mytargets.shared.models.db.Arrow
 
 class ArrowListFragment : SelectPureListItemFragmentBase<Arrow>(compareBy(Arrow::name, Arrow::id)) {
 
-    override fun onLoad(args: Bundle?): LoaderUICallback {
-        val arrows = ArrowDAO.loadArrows()
-        return {
-            adapter!!.setList(arrows.toMutableList())
-            val arrow = arguments!!.getParcelable<Arrow>(ITEM)
-            selectItem(binding.recyclerView, arrow!!)
-        }
+    private lateinit var viewModel: ArrowListViewModel
+    private val factory = ViewModelFactory()
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel = ViewModelProviders.of(this, factory).get(ArrowListViewModel::class.java)
+        viewModel.arrows.observe(this, Observer { arrows ->
+            if (arrows != null) {
+                adapter.setList(arrows)
+                val arrow = arguments!!.getParcelable<Arrow>(ITEM)
+                selectItem(binding.recyclerView, arrow!!)
+            }
+        })
     }
 
     override fun getName(item: Arrow) = item.name

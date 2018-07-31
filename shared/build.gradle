@@ -17,7 +17,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'jacoco-android'
 
 android {
     compileOptions {
@@ -29,7 +28,7 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary true
     }
@@ -55,10 +54,8 @@ dependencies {
     api dependencies.supportAnnotations
     api dependencies.threeTenABP
 
-    kapt dependencies.dbFlowProcessor
-    implementation dependencies.dbFlowCore
-    implementation dependencies.dbFlow
-    implementation dependencies.dbFlowKotlinExtensions
+    implementation dependencies.archRoomRuntime
+    implementation dependencies.androidxCoreKtx
 
     implementation dependencies.androidState
     kapt dependencies.androidStateProcessor
@@ -69,5 +66,5 @@ dependencies {
     testImplementation dependencies.jUnit
     testImplementation dependencies.mockito
     androidTestImplementation dependencies.runner
-    implementation dependencies.kotlinStdlibJre7
+    implementation dependencies.kotlinStdlibJdk7
 }

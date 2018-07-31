@@ -15,59 +15,33 @@
 
 package de.dreier.mytargets.shared.models.db
 
-import android.annotation.SuppressLint
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
-import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.IIdSettable
 import de.dreier.mytargets.shared.models.Thumbnail
-import de.dreier.mytargets.shared.utils.typeconverters.DimensionConverter
-import de.dreier.mytargets.shared.utils.typeconverters.ThumbnailConverter
 import kotlinx.android.parcel.Parcelize
 
-@SuppressLint("ParcelCreator")
 @Parcelize
-@Table(database = AppDatabase::class)
+@Entity
 data class Arrow(
-        @Column(name = "_id")
-        @PrimaryKey(autoincrement = true)
-        override var id: Long = 0,
+    @PrimaryKey(autoGenerate = true)
+    override var id: Long = 0,
 
-        @Column
-        var name: String = "",
+    var name: String = "",
+    var maxArrowNumber: Int = 12,
+    var length: String? = "",
+    var material: String? = "",
+    var spine: String? = "",
+    var weight: String? = "",
+    var tipWeight: String? = "",
+    var vanes: String? = "",
+    var nock: String? = "",
+    var comment: String? = "",
+    var diameter: Dimension = Dimension(5f, Dimension.Unit.MILLIMETER),
 
-        @Column
-        var maxArrowNumber: Int = 12,
-
-        @Column
-        var length: String? = "",
-
-        @Column
-        var material: String? = "",
-
-        @Column
-        var spine: String? = "",
-
-        @Column
-        var weight: String? = "",
-
-        @Column
-        var tipWeight: String? = "",
-
-        @Column
-        var vanes: String? = "",
-
-        @Column
-        var nock: String? = "",
-
-        @Column
-        var comment: String? = "",
-
-        @Column(typeConverter = DimensionConverter::class)
-        var diameter: Dimension = Dimension(5f, Dimension.Unit.MILLIMETER),
-
-        @Column(typeConverter = ThumbnailConverter::class)
-        var thumbnail: Thumbnail? = null) : IIdSettable, Parcelable
+    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
+    var thumbnail: Thumbnail? = null
+) : IIdSettable, Parcelable
