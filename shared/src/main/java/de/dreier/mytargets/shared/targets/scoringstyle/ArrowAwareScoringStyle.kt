@@ -15,6 +15,10 @@
 
 package de.dreier.mytargets.shared.targets.scoringstyle
 
+import de.dreier.mytargets.shared.models.Score
+import de.dreier.mytargets.shared.models.db.Shot
+import kotlin.math.min
+
 /**
  * Scoring style used for 3D targets, where the score is dependant on the arrow's index.
  * @param points Describes the scoring schema.
@@ -22,9 +26,17 @@ package de.dreier.mytargets.shared.targets.scoringstyle
  * The first arrow scores 20 points in the inner zone and 18 in the outer zone.
  * The second arrow 16 and 14 respectively.
  */
-class ArrowAwareScoringStyle(showAsX: Boolean, points: Array<IntArray>) : ScoringStyle(showAsX, points) {
+class ArrowAwareScoringStyle(showAsX: Boolean, points: Array<IntArray>) :
+    ScoringStyle(showAsX, points) {
 
     override fun getPoints(zone: Int, arrow: Int): Int {
-        return points[if (arrow < points.size) arrow else points.size - 1][zone]
+        return points[min(arrow, points.size - 1)][zone]
+    }
+
+    override fun getReachedScore(shots: List<Shot>): Score {
+        val reachedScore = shots
+            .map { s -> getPointsByScoringRing(s.scoringRing, s.index) }
+            .firstOrNull { it > 0 } ?: 0
+        return Score(reachedScore, getMaxPointsPerShot(0), shots.size)
     }
 }

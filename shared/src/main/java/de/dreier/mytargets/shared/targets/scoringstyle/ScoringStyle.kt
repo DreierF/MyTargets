@@ -80,13 +80,17 @@ open class ScoringStyle private constructor(
     }
 
     fun getReachedScore(shot: Shot): Score {
-        val i = if (shot.index < maxScorePerShot.size) shot.index else maxScorePerShot.size - 1
-        val maxScore = maxScorePerShot[i]
+        val maxScore = getMaxPointsPerShot(shot.index)
         if (shot.scoringRing == Shot.NOTHING_SELECTED) {
             return Score(maxScore)
         }
         val reachedScore = getPointsByScoringRing(shot.scoringRing, shot.index)
         return Score(reachedScore, maxScore)
+    }
+
+    open fun getMaxPointsPerShot(index: Int): Int {
+        val i = if (index < maxScorePerShot.size) index else maxScorePerShot.size - 1
+        return maxScorePerShot[i]
     }
 
     open fun getReachedScore(shots: List<Shot>): Score {
