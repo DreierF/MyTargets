@@ -55,20 +55,16 @@ abstract class BowDAO {
     @Transaction
     open fun saveBow(bow: Bow, images: List<BowImage>, sightMarks: List<SightMark>) {
         bow.id = insertBow(bow)
-        // deleteBowImages(bow.id) TODO test
         for (image in images) {
             image.bowId = bow.id
         }
         insertBowImages(images)
-        // deleteSightMarks(bow.id) TODO
         for (sightMark in sightMarks) {
             sightMark.bowId = bow.id
         }
         insertSightMarks(sightMarks)
     }
 
-    //    deleteSightMarks(bow.id) // TODO
-    //    deleteBowImages(bow.id)
     @Delete
     abstract fun deleteBow(bow: Bow)
 }
