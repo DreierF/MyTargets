@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -14,7 +14,6 @@
  */
 package de.dreier.mytargets.features.training.input
 
-
 import android.content.Intent
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.Espresso.pressBack
@@ -24,9 +23,9 @@ import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.support.test.uiautomator.UiObjectNotFoundException
 import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.db.Round
-import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.views.TargetViewBase
 import de.dreier.mytargets.test.base.UITestBase
 import de.dreier.mytargets.test.utils.actions.TargetViewActions
@@ -49,22 +48,22 @@ class InputActivityTest : UITestBase() {
             InputActivity::class.java, true, false)
 
     @get:Rule
-    val rule = RuleChain.outerRule(object : DbTestRuleBase() {
+    val rule: RuleChain = RuleChain.outerRule(object : DbTestRuleBase() {
         override fun addDatabaseContent() {
             val generator = Random(3435)
-            val standardRound = StandardRound[32L]
+            val standardRound = ApplicationInstance.db.standardRoundDAO().loadStandardRoundOrNull(32L)
 
             val (id) = saveDefaultTraining(standardRound!!.id, generator)
 
-            round = Round(standardRound.loadRounds()[0])
+            round = Round(ApplicationInstance.db.standardRoundDAO().loadRoundTemplates(standardRound.id)[0])
             round.trainingId = id
             round.comment = ""
-            round.save()
+            ApplicationInstance.db.roundDAO().insertRound(round)
 
-            val round2 = Round(standardRound.loadRounds()[1])
+            val round2 = Round(ApplicationInstance.db.standardRoundDAO().loadRoundTemplates(standardRound.id)[1])
             round2.trainingId = id
             round2.comment = ""
-            round2.save()
+            ApplicationInstance.db.roundDAO().insertRound(round2)
         }
     }).around(activityTestRule)
 

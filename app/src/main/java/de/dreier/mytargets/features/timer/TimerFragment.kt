@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -38,7 +38,11 @@ class TimerFragment : TimerFragmentBase() {
 
     private lateinit var binding: FragmentTimerBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_timer, container, false)
         return binding.root
     }

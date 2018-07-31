@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -15,8 +15,6 @@
 
 package de.dreier.mytargets.base.adapters.header
 
-
-import android.databinding.DataBindingUtil
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,22 +23,26 @@ import de.dreier.mytargets.databinding.ItemHeaderExpandableBinding
 import de.dreier.mytargets.shared.models.IIdProvider
 import de.dreier.mytargets.utils.multiselector.ExpandableHeaderBindingHolder
 import de.dreier.mytargets.utils.multiselector.ItemBindingHolder
-import java.util.*
 
 typealias PartitionDelegate<PARENT, CHILD> = (CHILD) -> PARENT
+
 abstract class ExpandableListAdapter<P : IIdProvider, C : IIdProvider>(
-        partitionDelegate: PartitionDelegate<P, C>,
-        headerComparator: Comparator<P>, childComparator: Comparator<C>
-) : HeaderListAdapterBase<P, C, ExpandableHeaderHolder<P, C>>(partitionDelegate, headerComparator, childComparator) {
+    partitionDelegate: PartitionDelegate<P, C>,
+    headerComparator: Comparator<P>, childComparator: Comparator<C>
+) : HeaderListAdapterBase<P, C, ExpandableHeaderHolder<P, C>>(
+    partitionDelegate,
+    headerComparator,
+    childComparator
+) {
 
     var expandedIds: List<Long>
         get() = headersList
-                .filter { it.expanded }
-                .map { it.item.id }
+            .filter { it.expanded }
+            .map { it.item.id }
         set(expanded) {
             headersList.indices
-                    .map { headersList[it] }
-                    .forEach { it.expanded = expanded.contains(it.item.id) }
+                .map { headersList[it] }
+                .forEach { it.expanded = expanded.contains(it.item.id) }
         }
 
     override fun onBindViewHolder(viewHolder: ItemBindingHolder<IIdProvider>, position: Int) {
@@ -48,7 +50,10 @@ abstract class ExpandableListAdapter<P : IIdProvider, C : IIdProvider>(
         if (viewHolder is ExpandableHeaderBindingHolder<*>) {
             val header = getHeaderForPosition(position)
             (viewHolder as ExpandableHeaderBindingHolder<*>)
-                    .setExpandOnClickListener(View.OnClickListener { expandOrCollapse(header) }, header.expanded)
+                .setExpandOnClickListener(
+                    View.OnClickListener { expandOrCollapse(header) },
+                    header.expanded
+                )
         }
     }
 
@@ -90,7 +95,7 @@ abstract class ExpandableListAdapter<P : IIdProvider, C : IIdProvider>(
         header.expanded = !header.expanded
     }
 
-    override fun setList(list: MutableList<C>) {
+    override fun setList(list: List<C>) {
         val oldExpanded = expandedIds
         fillChildMap(list)
         expandedIds = oldExpanded
@@ -120,18 +125,22 @@ abstract class ExpandableListAdapter<P : IIdProvider, C : IIdProvider>(
         return (0 until headerIndex).sumBy { headersList[it].totalItemCount }
     }
 
-    override fun getHeaderHolder(parent: P, childComparator: Comparator<C>): ExpandableHeaderHolder<P, C> {
+    override fun getHeaderHolder(
+        parent: P,
+        childComparator: Comparator<C>
+    ): ExpandableHeaderHolder<P, C> {
         return ExpandableHeaderHolder(parent, childComparator)
     }
 
     override fun getTopLevelViewHolder(parent: ViewGroup): HeaderViewHolder<P> {
         val itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_header_expandable, parent, false)
+            .inflate(R.layout.item_header_expandable, parent, false)
         return HeaderViewHolder(itemView)
     }
 
-    class HeaderViewHolder<P> internal constructor(itemView: View) : ExpandableHeaderBindingHolder<P>(itemView, R.id.expand_collapse) {
-        private val binding: ItemHeaderExpandableBinding = DataBindingUtil.bind(itemView)
+    class HeaderViewHolder<P> internal constructor(itemView: View) :
+        ExpandableHeaderBindingHolder<P>(itemView, R.id.expand_collapse) {
+        private val binding = ItemHeaderExpandableBinding.bind(itemView)
 
         override fun bindItem(item: P) {
             binding.header.text = item.toString()

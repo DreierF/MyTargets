@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -94,7 +94,7 @@ class ViewBuilder(private val context: Context) : ScoreboardBuilder {
         }
 
         table.rows.map { createTableRow(it) }
-                .forEach { tableLayout.addView(it) }
+            .forEach { tableLayout.addView(it) }
         return tableLayout
     }
 
@@ -118,7 +118,7 @@ class ViewBuilder(private val context: Context) : ScoreboardBuilder {
                 params.weight = 1f
                 params.span = cell.columnSpan
             }
-            if(cell is TextCell && cell.wrapText) {
+            if (cell is TextCell && cell.wrapText) {
                 params.width = WRAP_CONTENT
                 params.weight = 1f
             }
@@ -135,8 +135,12 @@ class ViewBuilder(private val context: Context) : ScoreboardBuilder {
         imageView.minimumHeight = dp(20)
         imageView.setPadding(dp(4), dp(4), dp(4), dp(4))
         imageView.scaleType = ImageView.ScaleType.FIT_CENTER
-        imageView.setImageDrawable(CircleDrawable(density, endCell.score, endCell
-                        .arrowNumber, endCell.fillColor, endCell.textColor))
+        imageView.setImageDrawable(
+            CircleDrawable(
+                density, endCell.score, endCell
+                    .arrowNumber, endCell.fillColor, endCell.textColor
+            )
+        )
         return imageView
     }
 
@@ -149,7 +153,7 @@ class ViewBuilder(private val context: Context) : ScoreboardBuilder {
         textView.setTextColor(-0x1000000)
         textView.setPadding(dp(4), dp(4), dp(4), dp(4))
         textView.text = textCell.content
-        if(textCell.wrapText) {
+        if (textCell.wrapText) {
             textView.maxLines = 8
         }
 
@@ -166,7 +170,8 @@ class ViewBuilder(private val context: Context) : ScoreboardBuilder {
         }
         val targetCaptain = context.getString(R.string.target_captain)
 
-        val v = LayoutInflater.from(context).inflate(R.layout.partial_scoreboard_signatures, container, true)
+        val v = LayoutInflater.from(context)
+            .inflate(R.layout.partial_scoreboard_signatures, container, true)
         val archerDescriptionView = v.findViewById<TextView>(R.id.archer_description)
         archerDescriptionView.text = archerSignature.getName(archer)
         val witnessDescriptionView = v.findViewById<TextView>(R.id.witness_description)

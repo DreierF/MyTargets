@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -14,11 +14,9 @@
  */
 package de.dreier.mytargets.base.fragments
 
-import android.app.Activity
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-
 import de.dreier.mytargets.R
 
 abstract class EditFragmentBase : FragmentBase() {
@@ -29,7 +27,7 @@ abstract class EditFragmentBase : FragmentBase() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_save) {
-            activity!!.setResult(Activity.RESULT_OK)
+            navigationController.setResultSuccess()
             onSave()
             return true
         }

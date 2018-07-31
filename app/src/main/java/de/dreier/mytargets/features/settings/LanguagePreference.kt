@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -27,8 +27,8 @@ class LanguagePreference(context: Context, attrs: AttributeSet?) : ListPreferenc
 
     init {
         val pairList = LanguageList.getHumanReadable().zip(LanguageList.getMachineReadable())
-                .filter { pair -> SUPPORTED_LOCALES.contains(pair.component2()) }
-                .toList()
+            .filter { pair -> SUPPORTED_LOCALES.contains(pair.component2()) }
+            .toList()
 
         // use the list of human-readable language names for the displayed list
         entries = pairList.map { it.component1() }.toTypedArray()
@@ -42,36 +42,38 @@ class LanguagePreference(context: Context, attrs: AttributeSet?) : ListPreferenc
 
     companion object {
         private val SUPPORTED_LOCALES = setOf(
-                "",
-                "ca",
-                "zh-CN",
-                "zh-TW",
-                "cs",
-                "da",
-                "nl",
-                "et",
-                "en",
-                "fi",
-                "fr",
-                "de",
-                "he",
-                "hu",
-                "id",
-                "in",
-                "it",
-                "ja",
-                "no",
-                "pl",
-                "pt-PT",
-                "pt-BR",
-                "ru",
-                "sr",
-                "sk",
-                "sl",
-                "es",
-                "sv",
-                "tr",
-                "uk"
+            "",
+            "ar",
+            "ca",
+            "zh-CN",
+            "zh-TW",
+            "cs",
+            "da",
+            "nl",
+            "et",
+            "en",
+            "fi",
+            "fr",
+            "de",
+            "he",
+            "hu",
+            "id",
+            "in",
+            "it",
+            "ja",
+            "no",
+            "pl",
+            "pt-PT",
+            "pt-BR",
+            "ro",
+            "ru",
+            "sr",
+            "sk",
+            "sl",
+            "es",
+            "sv",
+            "tr",
+            "uk"
         )
     }
 }

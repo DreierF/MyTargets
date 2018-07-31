@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -17,52 +17,25 @@ package de.dreier.mytargets.base.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.annotation.CallSuper
 import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import android.support.v4.app.Fragment
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.AsyncTaskLoader
 import android.support.v4.content.Loader
-import com.evernote.android.state.StateSaver
-import de.dreier.mytargets.R
 import de.dreier.mytargets.base.navigation.NavigationController
-import de.dreier.mytargets.utils.Utils
 
 
 typealias LoaderUICallback = () -> Unit
 
 /**
  * Generic fragment class used as base for most fragments.
- * Has Icepick build in to save state on orientation change
- * and animates activity when #finish gets called.
+ * Has Icepick build in to save state on orientation change.
  */
-abstract class FragmentBase : Fragment(), LoaderManager.LoaderCallbacks<FragmentBase.LoaderUICallbackHelper> {
+abstract class FragmentBase : Fragment(),
+    LoaderManager.LoaderCallbacks<FragmentBase.LoaderUICallbackHelper> {
 
     protected lateinit var navigationController: NavigationController
-
-    @CallSuper
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        StateSaver.restoreInstanceState(this, savedInstanceState)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        StateSaver.saveInstanceState(this, outState)
-    }
-
-    protected fun finish() {
-        val activity = activity
-        if (activity != null) {
-            if (Utils.isLollipop) {
-                activity.finishAfterTransition()
-            } else {
-                activity.finish()
-                activity.overridePendingTransition(R.anim.left_in, R.anim.right_out)
-            }
-        }
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -71,10 +44,10 @@ abstract class FragmentBase : Fragment(), LoaderManager.LoaderCallbacks<Fragment
     }
 
     @SuppressLint("StaticFieldLeak")
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<LoaderUICallbackHelper>? {
-        val callback = onLoad(args)
-        return  object : AsyncTaskLoader<LoaderUICallbackHelper>(context!!) {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<LoaderUICallbackHelper> {
+        return object : AsyncTaskLoader<LoaderUICallbackHelper>(context!!) {
             override fun loadInBackground(): LoaderUICallbackHelper? {
+                val callback = onLoad(args)
                 return object : LoaderUICallbackHelper {
                     override fun applyData() {
                         callback.invoke()
@@ -89,7 +62,10 @@ abstract class FragmentBase : Fragment(), LoaderManager.LoaderCallbacks<Fragment
         return { }
     }
 
-    override fun onLoadFinished(loader: Loader<LoaderUICallbackHelper>, callback: LoaderUICallbackHelper) {
+    override fun onLoadFinished(
+        loader: Loader<LoaderUICallbackHelper>,
+        callback: LoaderUICallbackHelper
+    ) {
         callback.applyData()
     }
 

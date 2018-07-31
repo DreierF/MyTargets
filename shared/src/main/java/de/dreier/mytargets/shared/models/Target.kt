@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -15,14 +15,12 @@
 
 package de.dreier.mytargets.shared.models
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.drawable.Drawable
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Ignore
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.targets.TargetFactory
 import de.dreier.mytargets.shared.targets.drawable.TargetDrawable
-import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable
 import de.dreier.mytargets.shared.targets.models.TargetModelBase
 import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle
 import kotlinx.android.parcel.IgnoredOnParcel
@@ -32,28 +30,29 @@ import kotlinx.android.parcel.Parcelize
  * Represents a target face, which is in contrast to a [TargetModelBase] bound to a specific
  * scoring style and diameter.
  */
-@SuppressLint("ParcelCreator")
 @Parcelize
 data class Target(
+        @ColumnInfo(name = "targetId")
         override var id: Long = 0,
+        @ColumnInfo(name = "targetScoringStyleIndex")
         var scoringStyleIndex: Int = 0,
+        @ColumnInfo(name = "targetDiameter")
         var diameter: Dimension = Dimension.UNKNOWN
-) : IIdProvider, IImageProvider, IDetailProvider, Comparable<Target>, Parcelable {
+) : IIdProvider, Comparable<Target>, Parcelable {
 
     @IgnoredOnParcel
-    val model: TargetModelBase by lazy { TargetFactory.getTarget(id.toInt()) }
+    @delegate:Ignore
+    val model: TargetModelBase by lazy { TargetFactory.getTarget(id) }
     @IgnoredOnParcel
+    @delegate:Ignore
     val drawable: TargetDrawable by lazy { TargetDrawable(this) }
-    @IgnoredOnParcel
-    val impactAggregationDrawable: TargetImpactAggregationDrawable by lazy {
-        TargetImpactAggregationDrawable(this)
-    }
 
+    @Ignore
     constructor(target: Long, scoringStyle: Int) : this(target, scoringStyle, Dimension.UNKNOWN) {
         this.diameter = model.diameters[0]
     }
 
-    override val name: String
+    val name: String
         get() = String.format("%s (%s)", toString(), diameter.toString())
 
     fun zoneToString(zone: Int, arrow: Int): String {
@@ -64,11 +63,7 @@ data class Target(
         return getScoringStyle().getPointsByScoringRing(zone, arrow)
     }
 
-    override fun getDrawable(context: Context): Drawable {
-        return drawable
-    }
-
-    override fun getDetails(context: Context): String {
+    fun getDetails(): String {
         return model.scoringStyles[scoringStyleIndex].toString()
     }
 
@@ -80,7 +75,7 @@ data class Target(
         return model.getScoringStyle(scoringStyleIndex)
     }
 
-    fun getReachedScore(shots: MutableList<Shot>): Score {
+    fun getReachedScore(shots: List<Shot>): Score {
         return getScoringStyle().getReachedScore(shots)
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -26,8 +26,8 @@ import android.view.animation.AccelerateDecelerateInterpolator
  * @param expand_collapse Expand/Collapse ImageView's resource id
  */
 abstract class ExpandableHeaderBindingHolder<T>(
-        itemView: View,
-        @IdRes expand_collapse: Int
+    itemView: View,
+    @IdRes expand_collapse: Int
 ) : HeaderBindingHolder<T>(itemView) {
 
     private var expandCollapseView: View
@@ -43,9 +43,9 @@ abstract class ExpandableHeaderBindingHolder<T>(
         if (expandListener != null) {
             expandListener!!.onClick(v)
             expandCollapseView.animate()
-                    .rotation(if (expanded) 0f else 180f)
-                    .setInterpolator(AccelerateDecelerateInterpolator())
-                    .start()
+                .rotation(if (expanded) 0f else 180f)
+                .setInterpolator(AccelerateDecelerateInterpolator())
+                .start()
             expanded = !expanded
         }
     }

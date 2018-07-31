@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -19,6 +19,8 @@ import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.WearableListenerService
 import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
+import de.dreier.mytargets.base.db.RoundRepository
+import de.dreier.mytargets.base.db.TrainingRepository
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.Environment
 import de.dreier.mytargets.shared.models.TimerSettings
@@ -30,7 +32,6 @@ import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.utils.unmarshall
 import de.dreier.mytargets.shared.wearable.WearableClientBase
 import org.threeten.bp.LocalDate
-import java.util.*
 
 /**
  * Listens for incoming connections of wearable devices.
@@ -38,6 +39,20 @@ import java.util.*
  * adding an end to an existing training.
  */
 class MobileWearableListener : WearableListenerService() {
+
+    private val database = ApplicationInstance.db
+    private val trainingDAO = database.trainingDAO()
+    private val roundDAO = database.roundDAO()
+    private val endDAO = database.endDAO()
+    private val standardRoundDAO = database.standardRoundDAO()
+    private val roundRepository = RoundRepository(database)
+    private val trainingRepository = TrainingRepository(
+        database,
+        trainingDAO,
+        roundDAO,
+        roundRepository,
+        database.signatureDAO()
+    )
 
     override fun onMessageReceived(messageEvent: MessageEvent) {
         super.onMessageReceived(messageEvent)
@@ -52,16 +67,17 @@ class MobileWearableListener : WearableListenerService() {
     }
 
     private fun timerSettings(messageEvent: MessageEvent) {
-        val data = messageEvent.data
-        val settings = data.unmarshall(TimerSettings.CREATOR)
+        val settings = messageEvent.data.unmarshall(TimerSettings.CREATOR)
         SettingsManager.timerSettings = settings
         ApplicationInstance.wearableClient.sendTimerSettingsFromRemote()
     }
 
     private fun trainingTemplate() {
-        val lastTraining = Training.all.minWith(Collections.reverseOrder())
+        val lastTraining = trainingDAO.loadTrainings()
+            .minWith(compareByDescending(Training::date).thenByDescending(Training::id))
         if (lastTraining != null && lastTraining.date.isEqual(LocalDate.now())) {
-            ApplicationInstance.wearableClient.updateTraining(AugmentedTraining(lastTraining))
+            val training = trainingRepository.loadAugmentedTraining(lastTraining.id)
+            ApplicationInstance.wearableClient.updateTraining(training)
         } else {
             val training = Training()
             training.title = getString(R.string.training)
@@ -70,7 +86,7 @@ class MobileWearableListener : WearableListenerService() {
             training.bowId = SettingsManager.bow
             training.arrowId = SettingsManager.arrow
             training.arrowNumbering = false
-            val aTraining = AugmentedTraining(training)
+            val aTraining = AugmentedTraining(training, mutableListOf())
 
             val freeTraining = lastTraining?.standardRoundId == null
             if (freeTraining) {
@@ -79,36 +95,41 @@ class MobileWearableListener : WearableListenerService() {
                 round.shotsPerEnd = SettingsManager.shotsPerEnd
                 round.maxEndCount = null
                 round.distance = SettingsManager.distance
-                aTraining.rounds = ArrayList()
-                aTraining.rounds.add(AugmentedRound(round))
+                aTraining.rounds = mutableListOf(AugmentedRound(round, mutableListOf()))
             } else {
-                aTraining.initRoundsFromTemplate(lastTraining!!.standardRound!!)
+                aTraining.rounds = standardRoundDAO
+                    .loadAugmentedStandardRound(lastTraining!!.standardRoundId!!)
+                    .createRoundsFromTemplate()
+                    .map { AugmentedRound(it, mutableListOf()) }
+                    .toMutableList()
             }
             ApplicationInstance.wearableClient.sendTrainingTemplate(aTraining)
         }
     }
 
     private fun createTraining(messageEvent: MessageEvent) {
-        val data = messageEvent.data
-        val augmentedTraining = data.unmarshall(AugmentedTraining.CREATOR)
-        val training = augmentedTraining.toTraining()
-        training.save()
-        ApplicationInstance.wearableClient.updateTraining(AugmentedTraining(training))
+        val augmentedTraining = messageEvent.data.unmarshall(AugmentedTraining.CREATOR)
+        trainingDAO.saveTraining(
+            augmentedTraining.training,
+            augmentedTraining.rounds.map { it.round })
+        ApplicationInstance.wearableClient.updateTraining(augmentedTraining)
         ApplicationInstance.wearableClient.sendCreateTrainingFromRemoteBroadcast()
     }
 
     private fun endUpdated(messageEvent: MessageEvent) {
-        val data = messageEvent.data
-        val (end, shots) = data.unmarshall(AugmentedEnd.CREATOR)
-        val round = AugmentedRound(Round[end.roundId!!]!!)
+        val (end, shots) = messageEvent.data.unmarshall(AugmentedEnd.CREATOR)
+        val round = roundRepository.loadAugmentedRound(end.roundId!!)
         val newEnd = getLastEmptyOrCreateNewEnd(round)
         newEnd.end.exact = false
         newEnd.shots = shots
-        newEnd.toEnd().save()
+        endDAO.saveCompleteEnd(newEnd.end, newEnd.images, newEnd.shots)
 
-        ApplicationInstance.wearableClient.sendUpdateTrainingFromRemoteBroadcast(round.round, newEnd.end)
+        ApplicationInstance.wearableClient.sendUpdateTrainingFromRemoteBroadcast(
+            round.round,
+            newEnd.end
+        )
         ApplicationInstance.wearableClient
-                .sendUpdateTrainingFromLocalBroadcast(AugmentedTraining(Training[round.round.trainingId!!]!!))
+            .sendUpdateTrainingFromLocalBroadcast(trainingRepository.loadAugmentedTraining(round.round.trainingId!!))
     }
 
     private fun getLastEmptyOrCreateNewEnd(round: AugmentedRound): AugmentedEnd {

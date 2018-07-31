@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -28,7 +28,7 @@ import de.dreier.mytargets.shared.utils.Color.LEMON_YELLOW
 class WA6Ring : TargetModelBase(
         id = ID,
         nameRes = R.string.wa_6_ring,
-        zones = arrayOf(
+        zones = listOf(
                 CircularZone(0.084f, LEMON_YELLOW, DARK_GRAY, 3),
                 CircularZone(0.166f, LEMON_YELLOW, DARK_GRAY, 3),
                 CircularZone(0.334f, LEMON_YELLOW, DARK_GRAY, 3),
@@ -37,7 +37,7 @@ class WA6Ring : TargetModelBase(
                 CircularZone(0.834f, CERULEAN_BLUE, DARK_GRAY, 3),
                 CircularZone(1.0f, CERULEAN_BLUE, DARK_GRAY, 3)
         ),
-        scoringStyles = arrayOf(
+        scoringStyles = listOf(
                 ScoringStyle(R.string.recurve_style_x_5, true, 10, 10, 9, 8, 7, 6, 5),
                 ScoringStyle(R.string.recurve_style_10_5, false, 10, 10, 9, 8, 7, 6, 5),
                 ScoringStyle(R.string.compound_style, false, 10, 9, 9, 8, 7, 6, 5),
@@ -45,7 +45,7 @@ class WA6Ring : TargetModelBase(
                 ScoringStyle(true, 5, 5, 5, 4, 4, 3, 3),
                 ScoringStyle(false, 9, 9, 9, 7, 7, 5, 5)
         ),
-        diameters = arrayOf(
+        diameters = listOf(
                 Dimension(40f, CENTIMETER),
                 Dimension(60f, CENTIMETER),
                 Dimension(80f, CENTIMETER),

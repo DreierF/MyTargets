@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -43,7 +43,7 @@ data class TrainingInfo(
             context.resources
                     .getQuantityString(R.plurals.rounds, roundCount, roundCount)
         } else {
-            round.reachedScore.toString()
+            round.round.score.toString()
         }
     }
 

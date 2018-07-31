@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -41,8 +41,10 @@ class MobileWearableClient(context: Context) : WearableClientBase(context) {
     }
 
     init {
-        LocalBroadcastManager.getInstance(context).registerReceiver(updateReceiver,
-                IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_LOCAL))
+        LocalBroadcastManager.getInstance(context).registerReceiver(
+            updateReceiver,
+            IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_LOCAL)
+        )
     }
 
     override fun disconnect() {
@@ -76,22 +78,26 @@ class MobileWearableClient(context: Context) : WearableClientBase(context) {
             return
         }
         val round = rounds
-                .firstOrNull { it.round.maxEndCount != null && it.ends.size < it.round.maxEndCount!! }
+            .firstOrNull { it.round.maxEndCount != null && it.ends.size < it.round.maxEndCount!! }
                 ?: rounds.last()
 
         val target = round.round.target
         val roundCopy = round.copy(ends = round.ends.toMutableList()
-                .filter { (_, shots) ->
-                    shots.all { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }
+            .filter { (_, shots) ->
+                shots.all { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }
+            }
+            .map { end ->
+                if (!SettingsManager.shouldSortTarget(target)) {
+                    end
+                } else {
+                    AugmentedEnd(
+                        end.end,
+                        end.shots.toMutableList().sorted().toMutableList(),
+                        end.images
+                    )
                 }
-                .map { end ->
-                    if (!SettingsManager.shouldSortTarget(target)) {
-                        end
-                    } else {
-                        AugmentedEnd(end.end, end.shots.toMutableList().sorted().toMutableList(), end.images)
-                    }
-                }
-                .toMutableList())
+            }
+            .toMutableList())
         val trainingInfo = TrainingInfo(training, roundCopy)
         sendTrainingInfo(trainingInfo)
         sendTimerSettings(SettingsManager.timerSettings)

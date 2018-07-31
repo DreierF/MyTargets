@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -26,9 +26,9 @@ import android.support.test.runner.AndroidJUnit4
 import android.support.v4.util.LongSparseArray
 import android.support.v7.widget.RecyclerView
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.activities.ItemSelectActivity
+import de.dreier.mytargets.app.ApplicationInstance
+import de.dreier.mytargets.base.navigation.NavigationController
 import de.dreier.mytargets.features.settings.SettingsManager
-import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.test.base.UITestBase
 import de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher.Companion.withRecyclerView
 import org.junit.Before
@@ -56,7 +56,7 @@ class StandardRoundActivityTest : UITestBase() {
     @Test
     fun searchTest() {
         val i = Intent()
-        i.putExtra(ItemSelectActivity.ITEM, StandardRound[32L]!!)
+        i.putExtra(NavigationController.ITEM, ApplicationInstance.db.standardRoundDAO().loadStandardRoundOrNull(32L)!!)
         activityTestRule.launchActivity(i)
 
         clickActionBarItem(R.id.action_search, R.string.search)
@@ -76,7 +76,7 @@ class StandardRoundActivityTest : UITestBase() {
     @Test
     fun recentlyUsedTest() {
         val i = Intent()
-        i.putExtra(ItemSelectActivity.ITEM, StandardRound[32L]!!)
+        i.putExtra(NavigationController.ITEM, ApplicationInstance.db.standardRoundDAO().loadStandardRoundOrNull(32L)!!)
         activityTestRule.launchActivity(i)
 
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))

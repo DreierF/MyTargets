@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -25,12 +25,13 @@ import android.print.PageRange
 import android.support.annotation.RequiresApi
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
+import de.dreier.mytargets.base.db.AppDatabase
 import de.dreier.mytargets.features.scoreboard.builder.ViewBuilder
 import de.dreier.mytargets.features.scoreboard.layout.DefaultScoreboardLayout
-import de.dreier.mytargets.features.scoreboard.pdf.ViewPrintDocumentAdapter
-import de.dreier.mytargets.features.scoreboard.pdf.ViewToPdfWriter
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
+import de.dreier.mytargets.utils.print.CustomPrintDocumentAdapter
+import de.dreier.mytargets.utils.print.ViewToPdfWriter
 import de.dreier.mytargets.utils.writeToJPGFile
 import java.io.File
 import java.io.FileOutputStream
@@ -42,14 +43,12 @@ object ScoreboardUtils {
     private const val PAGE_WIDTH = 600
     private const val MARGIN = 50
 
-    fun getScoreboardView(context: Context, locale: Locale, training: Training, roundId: Long, configuration: ScoreboardConfiguration): LinearLayout {
-        val rounds: List<Round>? = if (roundId == -1L) {
-            training.loadRounds()
-        } else {
-            listOf(Round[roundId]!!)
-        }
-
-        val scoreboardLayout = DefaultScoreboardLayout(context, locale, configuration)
+    fun getScoreboardView(
+        context: Context, database: AppDatabase, locale: Locale,
+        training: Training, rounds: List<Round>?,
+        configuration: ScoreboardConfiguration
+    ): LinearLayout {
+        val scoreboardLayout = DefaultScoreboardLayout(context, database, locale, configuration)
         val viewBuilder = ViewBuilder(context)
         scoreboardLayout.generateWithBuilder(viewBuilder, training, rounds!!)
         return viewBuilder.build()
@@ -59,9 +58,11 @@ object ScoreboardUtils {
     @Throws(IOException::class)
     fun generatePdf(content: LinearLayout, file: File) {
         val writer = ViewToPdfWriter(content)
-        writer.layoutPages(ViewPrintDocumentAdapter
-                .DEFAULT_RESOLUTION, ViewPrintDocumentAdapter
-                .DEFAULT_MEDIA_SIZE)
+        writer.layoutPages(
+            CustomPrintDocumentAdapter
+                .DEFAULT_RESOLUTION, CustomPrintDocumentAdapter
+                .DEFAULT_MEDIA_SIZE
+        )
 
         val fileOutputStream = FileOutputStream(file)
         writer.writePdfDocument(arrayOf(PageRange.ALL_PAGES), fileOutputStream)
@@ -80,7 +81,8 @@ object ScoreboardUtils {
         val height = content.measuredHeight
         content.layout(0, 0, width, height)
 
-        val b = Bitmap.createBitmap(width + 2 * margin, height + 2 * margin, Bitmap.Config.ARGB_8888)
+        val b =
+            Bitmap.createBitmap(width + 2 * margin, height + 2 * margin, Bitmap.Config.ARGB_8888)
 
         val canvas = Canvas(b)
 

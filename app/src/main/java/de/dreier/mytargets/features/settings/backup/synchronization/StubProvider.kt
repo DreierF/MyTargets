@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -41,11 +41,12 @@ class StubProvider : ContentProvider() {
      *
      */
     override fun query(
-            uri: Uri,
-            projection: Array<String>?,
-            selection: String?,
-            selectionArgs: Array<String>?,
-            sortOrder: String?): Cursor? = null
+        uri: Uri,
+        projection: Array<String>?,
+        selection: String?,
+        selectionArgs: Array<String>?,
+        sortOrder: String?
+    ): Cursor? = null
 
     /*
      * insert() always returns null (no URI)
@@ -60,5 +61,10 @@ class StubProvider : ContentProvider() {
     /*
      * update() always returns "no rows affected" (0)
      */
-    override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<String>?): Int = 0
+    override fun update(
+        uri: Uri,
+        values: ContentValues?,
+        selection: String?,
+        selectionArgs: Array<String>?
+    ): Int = 0
 }

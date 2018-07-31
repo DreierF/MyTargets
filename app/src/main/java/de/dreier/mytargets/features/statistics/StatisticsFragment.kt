@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -34,6 +34,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.renderer.LineChartRenderer
 import com.github.mikephil.charting.utils.ColorTemplate
 import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.fragments.FragmentBase
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentStatisticsBinding
@@ -45,16 +46,10 @@ import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
-import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.utils.Color
-import de.dreier.mytargets.shared.utils.SharedUtils
-import de.dreier.mytargets.utils.MobileWearableClient
+import de.dreier.mytargets.utils.*
 import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
-import de.dreier.mytargets.utils.RoundedTextDrawable
-import de.dreier.mytargets.utils.ToolbarUtils
-import de.dreier.mytargets.utils.Utils
 import org.threeten.bp.Duration
-import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
@@ -69,10 +64,15 @@ class StatisticsFragment : FragmentBase() {
     private var target: Target? = null
     private var animate: Boolean = false
 
+    private val database = ApplicationInstance.db
+    private val trainingDAO = database.trainingDAO()
+    private val roundDAO = database.roundDAO()
+    private val endDAO = database.endDAO()
+
     private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
         override fun onUpdate(trainingId: Long, roundId: Long, end: End) {
-            if (roundIds!!.any { r -> SharedUtils.equals(r, roundId) }) {
+            if (roundIds!!.contains(roundId)) {
                 reloadData()
             }
         }
@@ -81,57 +81,96 @@ class StatisticsFragment : FragmentBase() {
     private val hitMissText: String
         get() {
             val shots = rounds!!
-                    .flatMap { r -> r.loadEnds() }
-                    .flatMap { p -> p.loadShots() }
-                    .filter { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }
-            val missCount = shots.filter { (_, _, _, _, _, scoringRing) -> scoringRing == Shot.MISS }.count().toLong()
+                .flatMap { r -> roundDAO.loadEnds(r.id) }
+                .flatMap { endDAO.loadShots(it.id) }
+                .filter { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }
+            val missCount =
+                shots.filter { (_, _, _, _, _, scoringRing) -> scoringRing == Shot.MISS }.count()
+                    .toLong()
             val hitCount = shots.size - missCount
 
-            return String.format(Locale.US, PIE_CHART_CENTER_TEXT_FORMAT,
-                    getString(R.string.hits), hitCount.toString(),
-                    getString(R.string.misses), missCount)
+            return String.format(
+                Locale.US, PIE_CHART_CENTER_TEXT_FORMAT,
+                getString(R.string.hits), hitCount.toString(),
+                getString(R.string.misses), missCount
+            )
         }
 
     private// Without regression line
     val lineChartDataSet: LineData?
         get() {
-            val trainingsMap = rounds!!
-                    .map { it.trainingId!! }
-                    .distinct()
-                    .map { Training[it]!! }
-                    .map { Pair(it.id, it) }
-                    .toMap()
+            val isSingleTraining = rounds!!.distinctBy(Round::trainingId).count() == 1
 
-            val values = rounds!!
-                    .map { r -> Pair(trainingsMap[r.trainingId]!!.date, r) }
-                    .flatMap { roundIdPair ->
-                        roundIdPair.second.loadEnds()
-                                .map { end -> Pair(roundIdPair.first, end) }
-                    }
-                    .map { endPair -> getPairEndSummary(target!!, endPair.second, endPair.first) }
-                    .sortedBy { pair -> pair.second }
-            if (values.isEmpty()) {
+            val values = getDataPointsForLineChart(isSingleTraining)
+            if (values?.isEmpty() != false) {
                 return null
             }
 
-            val eval = getEntryEvaluator(values)
+            val eval = getEntryEvaluator(values, isSingleTraining)
             binding.chartView.xAxis.setValueFormatter { value, _ -> eval.getXValueFormatted(value) }
 
             val data: LineData
             if (values.size < 2) {
                 data = LineData(convertToLineData(values, eval))
             } else {
-                data = LineData(generateLinearRegressionLine(values, eval)!!)
+                data = LineData(generateLinearRegressionLine(values, eval))
                 data.addDataSet(convertToLineData(values, eval))
             }
             data.setDrawValues(false)
             return data
         }
 
+    private fun getDataPointsForLineChart(isSingleTraining: Boolean): List<Pair<Float, LocalDateTime>>? {
+        val trainingsMap = rounds!!
+            .map { it.trainingId!! }
+            .distinct()
+            .map { trainingDAO.loadTraining(it) }
+            .map { Pair(it.id, it) }
+            .toMap()
+
+        val values: List<Pair<Float, LocalDateTime>>
+        if (isSingleTraining) {
+            val trainingDate = trainingsMap.values.toList()[0].date
+            val ends = rounds!!.sortedBy { it.index }.map { roundDAO.loadEnds(it.id) }
+            val firstRound = ends[0]
+            if (firstRound.isEmpty()) {
+                return null
+            }
+            var firstEndTime = firstRound[0].saveTime
+            var dayShift = 0L
+            values = ends.flatMap { it }
+                .map { end ->
+                    if (end.saveTime!!.isBefore(firstEndTime)) {
+                        dayShift += 1
+                        firstEndTime = end.saveTime
+                    }
+                    val dateTime = LocalDateTime.of(trainingDate, end.saveTime).plusDays(dayShift)
+                    Pair(end.score.shotAverage, dateTime)
+                }
+                .sortedBy { (_, date) -> date }
+        } else {
+            values = rounds!!
+                .map { r -> Pair(trainingsMap[r.trainingId]!!.date, r) }
+                .flatMap { (date, round) ->
+                    roundDAO.loadEnds(round.id).map { end -> Pair(end, date) }
+                }
+                .map { (end, date) ->
+                    Pair(
+                        end.score.shotAverage,
+                        LocalDateTime.of(date, end.saveTime!!)
+                    )
+                }
+                .sortedBy { (_, date) -> date }
+        }
+        return values
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        LocalBroadcastManager.getInstance(context!!).registerReceiver(updateReceiver,
-                IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE))
+        LocalBroadcastManager.getInstance(context!!).registerReceiver(
+            updateReceiver,
+            IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE)
+        )
     }
 
     override fun onDestroy() {
@@ -139,7 +178,11 @@ class StatisticsFragment : FragmentBase() {
         LocalBroadcastManager.getInstance(context!!).unregisterReceiver(updateReceiver)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_statistics, container, false)
 
         val target = arguments!!.getParcelable<Target>(ARG_TARGET)
@@ -161,11 +204,9 @@ class StatisticsFragment : FragmentBase() {
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        rounds = roundIds!!
-                .map { Round[it] }
-                .filterNotNull()
-
+        rounds = roundDAO.loadRounds(roundIds!!)
         val data = ArrowStatistic.getAll(target!!, rounds!!)
+            .sortedWith(compareByDescending { it.totalScore.shotAverage })
 
         return {
             showLineChart()
@@ -175,18 +216,17 @@ class StatisticsFragment : FragmentBase() {
             binding.chartView.invalidate()
 
             binding.arrowRankingLabel.visibility = if (data.isEmpty()) View.GONE else View.VISIBLE
-            Collections.sort(data)
             adapter!!.setData(data)
         }
     }
 
     private fun showDispersionView() {
         val exactShots = rounds!!
-                .flatMap { r -> r.loadEnds() }
-                .filter { (_, _, _, exact) -> exact }
-                .flatMap { p -> p.loadShots() }
-                .filter { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }
-                .toList()
+            .flatMap { roundDAO.loadEnds(it.id) }
+            .filter { it.exact }
+            .flatMap { endDAO.loadShots(it.id) }
+            .filter { (_, _, _, _, _, scoringRing) -> scoringRing != Shot.NOTHING_SELECTED }
+            .toList()
         if (exactShots.isEmpty()) {
             binding.dispersionPatternLayout.visibility = View.GONE
             return
@@ -195,26 +235,22 @@ class StatisticsFragment : FragmentBase() {
         stats.arrowDiameter = Dimension(5f, Dimension.Unit.MILLIMETER)
 
         val trainingsIds = rounds!!
-                .map { it.trainingId!! }
-                .distinct()
+            .map { it.trainingId!! }
+            .distinct()
         if (trainingsIds.size == 1) {
-            val training = Training[trainingsIds[0]]!!
+            val training = trainingDAO.loadTraining(trainingsIds[0])
             val date = training.date.format(DateTimeFormatter.ISO_LOCAL_DATE)
             val round = if (rounds!!.size == 1) {
                 val index = rounds!![0].index + 1
                 "-" + resources.getQuantityString(R.plurals.rounds, index, index)
-                        .replace(' ', '-')
+                    .replace(' ', '-')
             } else ""
             stats.exportFileName = "$date-${training.title}$round"
         } else {
             stats.exportFileName = ""
         }
 
-        val strategy = SettingsManager.statisticsDispersionPatternAggregationStrategy
-        val drawable = stats.target.impactAggregationDrawable
-        drawable.setAggregationStrategy(strategy)
-        drawable.replaceShotsWith(stats.shots)
-        drawable.setArrowDiameter(stats.arrowDiameter, SettingsManager.inputArrowDiameterScale)
+        val drawable = DispersionPatternUtils.targetFromArrowStatistics(stats)
         binding.dispersionView.setImageDrawable(drawable)
 
         binding.dispersionViewOverlay.setOnClickListener {
@@ -241,8 +277,10 @@ class StatisticsFragment : FragmentBase() {
         if (animate) {
             binding.chartView.animateXY(2000, 2000)
         }
-        binding.chartView.renderer = object : LineChartRenderer(binding.chartView, binding.chartView.animator,
-                binding.chartView.viewPortHandler) {
+        binding.chartView.renderer = object : LineChartRenderer(
+            binding.chartView, binding.chartView.animator,
+            binding.chartView.viewPortHandler
+        ) {
             override fun drawHighlighted(canvas: Canvas, indices: Array<Highlight>) {
                 mRenderPaint.style = Paint.Style.FILL
 
@@ -258,11 +296,12 @@ class StatisticsFragment : FragmentBase() {
                     val circleRadius = dataSet.circleRadius
 
                     canvas.drawCircle(
-                            highlight.drawX,
-                            highlight.drawY,
-                            circleRadius,
-                            mRenderPaint)
-                    colorIndex = colorIndex + 1 % dataSet.circleColorCount
+                        highlight.drawX,
+                        highlight.drawY,
+                        circleRadius,
+                        mRenderPaint
+                    )
+                    colorIndex = (colorIndex + 1) % dataSet.circleColorCount
                 }
 
                 // draws highlight lines (if enabled)
@@ -274,7 +313,12 @@ class StatisticsFragment : FragmentBase() {
     private fun showPieChart() {
         // enable hole and configure
         binding.distributionChart.transparentCircleRadius = 15f
-        binding.distributionChart.setHoleColor(ContextCompat.getColor(context!!, R.color.md_grey_50))
+        binding.distributionChart.setHoleColor(
+            ContextCompat.getColor(
+                context!!,
+                R.color.md_grey_50
+            )
+        )
         binding.distributionChart.legend.isEnabled = false
         binding.distributionChart.description = EMPTY_DESCRIPTION
 
@@ -284,14 +328,18 @@ class StatisticsFragment : FragmentBase() {
 
         binding.distributionChart.setUsePercentValues(false)
         binding.distributionChart.highlightValues(null)
-        binding.distributionChart.setBackgroundColor(ContextCompat.getColor(context!!, R.color.md_grey_50))
+        binding.distributionChart.setBackgroundColor(
+            ContextCompat.getColor(
+                context!!,
+                R.color.md_grey_50
+            )
+        )
         binding.distributionChart.invalidate()
         addPieData()
     }
 
     private fun addPieData() {
-        val scores = End
-                .getSortedScoreDistribution(rounds!!)
+        val scores = ScoreUtils.getSortedScoreDistribution(roundDAO, endDAO, rounds!!)
 
         val yValues = ArrayList<PieEntry>()
         val colors = ArrayList<Int>()
@@ -326,20 +374,22 @@ class StatisticsFragment : FragmentBase() {
         binding.distributionChart.centerText = Utils.fromHtml(hitMissText)
 
         binding.distributionChart
-                .setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
-                    override fun onValueSelected(e: Entry, h: Highlight) {
-                        val selectableZone = e.data as SelectableZone
-                        val s = String.format(Locale.US,
-                                PIE_CHART_CENTER_TEXT_FORMAT,
-                                getString(R.string.points), selectableZone.text,
-                                getString(R.string.count), e.y.toInt())
-                        binding.distributionChart.centerText = Utils.fromHtml(s)
-                    }
+            .setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+                override fun onValueSelected(e: Entry, h: Highlight) {
+                    val selectableZone = e.data as SelectableZone
+                    val s = String.format(
+                        Locale.US,
+                        PIE_CHART_CENTER_TEXT_FORMAT,
+                        getString(R.string.points), selectableZone.text,
+                        getString(R.string.count), e.y.toInt()
+                    )
+                    binding.distributionChart.centerText = Utils.fromHtml(s)
+                }
 
-                    override fun onNothingSelected() {
-                        binding.distributionChart.centerText = Utils.fromHtml(hitMissText)
-                    }
-                })
+                override fun onNothingSelected() {
+                    binding.distributionChart.centerText = Utils.fromHtml(hitMissText)
+                }
+            })
     }
 
     override fun onResume() {
@@ -347,8 +397,10 @@ class StatisticsFragment : FragmentBase() {
         reloadData()
     }
 
-    private fun getEntryEvaluator(values: List<Pair<Float, LocalDateTime>>): Evaluator {
-        val singleTraining = rounds!!.groupBy { (_, trainingId) -> trainingId }.count() == 1
+    private fun getEntryEvaluator(
+        values: List<Pair<Float, LocalDateTime>>,
+        singleTraining: Boolean
+    ): Evaluator {
 
         val eval: Evaluator
         if (singleTraining) {
@@ -381,16 +433,15 @@ class StatisticsFragment : FragmentBase() {
         return eval
     }
 
-    private fun getPairEndSummary(target: Target, end: End, trainingDate: LocalDate): Pair<Float, LocalDateTime> {
-        val reachedScore = target.getReachedScore(end.loadShots())
-        return Pair(reachedScore.shotAverage,
-                LocalDateTime.of(trainingDate, end.saveTime!!))
-    }
-
-    private fun convertToLineData(values: List<Pair<Float, LocalDateTime>>, evaluator: Evaluator): LineDataSet {
-        val seriesEntries = ArrayList<Entry>()
-        for (i in values.indices) {
-            seriesEntries.add(Entry(evaluator.getXValue(values, i).toFloat(), values[i].first))
+    private fun convertToLineData(
+        values: List<Pair<Float, LocalDateTime>>,
+        evaluator: Evaluator
+    ): LineDataSet {
+        val seriesEntries = values.indices.map {
+            Entry(
+                evaluator.getXValue(values, it).toFloat(),
+                values[it].first
+            )
         }
 
         val series = LineDataSet(seriesEntries, "")
@@ -409,7 +460,13 @@ class StatisticsFragment : FragmentBase() {
         return series
     }
 
-    private fun generateLinearRegressionLine(values: List<Pair<Float, LocalDateTime>>, eval: Evaluator): ILineDataSet? {
+    /**
+     * @param values Must not be empty
+     */
+    private fun generateLinearRegressionLine(
+        values: List<Pair<Float, LocalDateTime>>,
+        eval: Evaluator
+    ): ILineDataSet {
         val dataSetSize = values.size
         val x = DoubleArray(dataSetSize)
         val y = DoubleArray(dataSetSize)
@@ -417,8 +474,8 @@ class StatisticsFragment : FragmentBase() {
         var n = 0
         var sumX = 0.0
         var sumY = 0.0
-        var minX = java.lang.Long.MAX_VALUE
-        var maxX = java.lang.Long.MIN_VALUE
+        var minX = Long.MAX_VALUE
+        var maxX = Long.MIN_VALUE
         for (i in 0 until dataSetSize) {
             x[n] = eval.getXValue(values, i).toDouble()
             y[n] = values[i].first.toDouble()
@@ -432,9 +489,7 @@ class StatisticsFragment : FragmentBase() {
             }
             n++
         }
-        if (n < 1) {
-            return null
-        }
+
         val xBar = sumX / n
         val yBar = sumY / n
 
@@ -473,7 +528,7 @@ class StatisticsFragment : FragmentBase() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val itemView = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_image_simple, parent, false)
+                .inflate(R.layout.item_image_simple, parent, false)
             return ViewHolder(itemView)
         }
 
@@ -498,7 +553,7 @@ class StatisticsFragment : FragmentBase() {
 
         init {
             itemView.isClickable = true
-            binding = DataBindingUtil.bind(itemView)
+            binding = ItemImageSimpleBinding.bind(itemView)
             binding.content.setOnClickListener { onItemClicked() }
         }
 
@@ -508,8 +563,10 @@ class StatisticsFragment : FragmentBase() {
 
         fun bindItem(item: ArrowStatistic) {
             mItem = item
-            binding.name.text = getString(R.string.arrow_x_of_set_of_arrows, item.arrowNumber, item
-                    .arrowName)
+            binding.name.text = getString(
+                R.string.arrow_x_of_set_of_arrows, item.arrowNumber, item
+                    .arrowName
+            )
             binding.image.setImageDrawable(RoundedTextDrawable(item))
         }
     }

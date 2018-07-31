@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -22,5 +22,10 @@ import android.view.View
 abstract class DynamicItemHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
     protected var item: T? = null
 
-    abstract fun onBind(item: T, position: Int, fragment: Fragment, removeListener: View.OnClickListener)
+    abstract fun onBind(
+        item: T,
+        position: Int,
+        fragment: Fragment,
+        removeListener: View.OnClickListener
+    )
 }

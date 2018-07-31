@@ -1,4 +1,19 @@
 <!DOCTYPE html>
+<!--
+  ~ Copyright (C) 2018 Florian Dreier
+  ~
+  ~ This file is part of MyTargets.
+  ~
+  ~ MyTargets is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License version 2
+  ~ as published by the Free Software Foundation.
+  ~
+  ~ MyTargets is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  -->
+
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -22,21 +37,21 @@
                 </details>
                 <details>
                     <summary>Pilih wajah target</summary>
-                    <p>Anda dapat memilih dari berbagai wajah target (3). Beberapa wajah target memiliki gaya skor <strong> yang berbeda </ 0> (1). Gaya skor menggambarkan skor yang terkait dengan area tertentu dari wajah target. Selain itu diameter wajah target bisa ditentukan (2). </p>
+                    <p>Anda dapat memilih dari berbagai wajah target (3). Beberapa wajah target memiliki gaya skor <strong>yang berbeda</strong> (1). Gaya skor menggambarkan skor yang terkait dengan area tertentu dari wajah target. Selain itu diameter wajah target bisa ditentukan (2). </p>
                     <img src="images/target_face_selection.png" />
-                    <p><strong> Catatan: </ 0> Diameter wajah target spot relatif terhadap target wajah target penuh. Misalnya, WA 5 Ring Spot dengan diameter 80cm di app mewakili titik di dalamnya yang sebenarnya hanya 40cm di kehidupan nyata, karena wajah WA target penuh akan memiliki 80cm.</p>
+                    <p><strong>Catatan:</strong> Diameter wajah target spot relatif terhadap target wajah target penuh. Misalnya, WA 5 Ring Spot dengan diameter 80cm di app mewakili titik di dalamnya yang sebenarnya hanya 40cm di kehidupan nyata, karena wajah WA target penuh akan memiliki 80cm.</p>
                 </details>
                 <details>
                     <summary>Gaya penilaian WA</summary>
                     <p>Berikut ini semua gaya penilaian WA dijelaskan secara lebih rinci:</p>
                     <ul>
-                        <li><strong> Gaya recurve (X-1) </ 0> : Cincin emas terdalam memiliki 10 poin, namun ditandai sebagai X. Cincin emas luar memiliki skor 10 dan 9. Skor menurun dengan setiap ring dengan 1.</li>
-                        <li><strong> Gaya recurve (10-1) </ 0> : Sama seperti sebelumnya, tapi dua cincin emas bagian dalam ditampilkan sebagai satu cincin, diberi hadiah dengan 10 poin (tidak ada X).</li>
-                        <li><strong> Gaya gabungan </ 0> : Hanya cincin emas terdalam yang nilainya 10 poin. Cincin emas terluar terbawah ditampilkan sebagai satu dan mendapat nilai 9 poin.</li>
-                        <li><strong> 11, 10, 9, ..., 1 </ 0> : Cincin terdalam skor 11. Skor menurun dengan setiap cincin dengan 1.</li>
-                        <li><strong> X, 5, 4, 3, 2, 1 </ 0> : Nilai emas 5, merah 4, biru 3, hitam 2 dan putih 1 poin. Cincin emas paling dalam dicatat sebagai X.</li>
-                        <li><strong> 9, 7, 5, 3, 1 </ 0> : Gold skor 9, merah 7, biru 5, hitam dan putih 3 1 poin.</li>
-                        <li><strong> Warna FCFS (Terbalik 10-1) </ 0> : Mainkan gaya skor di mana nilai putih 10, hitam 8, biru 6, merah 4, emas luar 2 dan emas dua bagian 1. Biasanya ditembak dengan 6 panah per ujungnya. Hanya satu panah yang dihitung per warna. Skor maksimum yang dapat dicapai adalah 31 poin per akhir, saat setiap panah ditembak menjadi warna yang berbeda.</li>
+                        <li><strong>Gaya recurve (X-1)</strong>: Cincin emas terdalam memiliki 10 poin, namun ditandai sebagai X. Cincin emas luar memiliki skor 10 dan 9. Skor menurun dengan setiap ring dengan 1.</li>
+                        <li><strong>Gaya recurve (10-1)</strong>: Sama seperti sebelumnya, tapi dua cincin emas bagian dalam ditampilkan sebagai satu cincin, diberi hadiah dengan 10 poin (tidak ada X).</li>
+                        <li><strong>Gaya gabungan</strong>: Hanya cincin emas terdalam yang nilainya 10 poin. Cincin emas terluar terbawah ditampilkan sebagai satu dan mendapat nilai 9 poin.</li>
+                        <li><strong>11, 10, 9, ..., 1</strong>: Cincin terdalam skor 11. Skor menurun dengan setiap cincin dengan 1.</li>
+                        <li><strong>X, 5, 4, 3, 2, 1</strong>: Nilai emas 5, merah 4, biru 3, hitam 2 dan putih 1 poin. Cincin emas paling dalam dicatat sebagai X.</li>
+                        <li><strong>9, 7, 5, 3, 1</strong>: Gold skor 9, merah 7, biru 5, hitam dan putih 3 1 poin.</li>
+                        <li><strong>Warna FCFS (Terbalik 10-1)</strong>: Mainkan gaya skor di mana nilai putih 10, hitam 8, biru 6, merah 4, emas luar 2 dan emas dua bagian 1. Biasanya ditembak dengan 6 panah per ujungnya. Hanya satu panah yang dihitung per warna. Skor maksimum yang dapat dicapai adalah 31 poin per akhir, saat setiap panah ditembak menjadi warna yang berbeda.</li>
                     </ul>
                 </details>
                 <details>
@@ -62,7 +77,7 @@
                     <summary>Panah panah tepat</summary>
                     <p>Plot panah yang tepat adalah metode input default. Untuk memasukkan ketuk tekan dan tahan pada wajah target sesuaikan posisi sampai Anda puas dengan posisi panah dan lepaskan jari.</p>
                     <img src="images/input_plotting.png"/>
-                    <p><strong> Catatan: </ 0> Deteksi slip jari akan mengenali gerakan yang tidak diinginkan saat melepaskan jari dan mengabaikannya.</p>
+                    <p><strong>Catatan: </strong>Deteksi slip jari akan mengenali gerakan yang tidak diinginkan saat melepaskan jari dan mengabaikannya.</p>
                 </details>
                 <details>
                     <summary>Jenis keyboard</summary>
@@ -82,10 +97,10 @@
                     <summary>Elemen statistik</summary>
                     <p>Berikut komponen UI utama yang dijelaskan:</p>
                     <ul>
-                        <li><strong> Diagram garis </ 0> : Menunjukkan nilai rata-rata per panah per akhir. Garis regresi linier oranye menunjukkan keseluruhan tren. Bagan dapat diperbesar dengan mencubit dua jari secara horizontal.</li>
-                        <li><strong> Bagan distribusi </ 0> : Menampilkan distribusi panah di antara dering yang tersedia. Jika tidak ada segmen yang dipilih, jumlah keseluruhan hit dan rindu ditampilkan. Dengan mengetuk segmen, jumlah tembakan yang tepat dalam kategori ini akan ditampilkan.</li>
-                        <li><strong> Pola dispersi </ 0> : Menampilkan semua gambar pada satu wajah target termasuk metode pengelompokan yang dipilih (dapat diubah di setelan aplikasi). Jika Anda menyentuh pola dispersi, Anda mendapatkan versi pola dispersi yang lebih besar. Dari layar detail Anda juga bisa berbagi gambar pola dispersi atau mencetaknya.</li>
-                        <li><strong> Peringkat panah </ 0> : Jika Anda telah menggunakan fitur penomoran panah di salah satu pelatihan yang dipilih, peringkat panah ditunjukkan di bawah ini. The arrows with the best average score are placed at the top of the list. Mengetuk nomor panah akan membawa Anda ke pola dispersi, yang hanya menampilkan gambar panah yang dipilih.</li>
+                        <li><strong>Diagram garis</strong>: Menunjukkan nilai rata-rata per panah per akhir. Garis regresi linier oranye menunjukkan keseluruhan tren. Bagan dapat diperbesar dengan mencubit dua jari secara horizontal.</li>
+                        <li><strong>Bagan distribusi</strong>: Menampilkan distribusi panah di antara dering yang tersedia. Jika tidak ada segmen yang dipilih, jumlah keseluruhan hit dan rindu ditampilkan. Dengan mengetuk segmen, jumlah tembakan yang tepat dalam kategori ini akan ditampilkan.</li>
+                        <li><strong>Pola dispersi</strong>: Menampilkan semua gambar pada satu wajah target termasuk metode pengelompokan yang dipilih (dapat diubah di setelan aplikasi). Jika Anda menyentuh pola dispersi, Anda mendapatkan versi pola dispersi yang lebih besar. Dari layar detail Anda juga bisa berbagi gambar pola dispersi atau mencetaknya.</li>
+                        <li><strong>Peringkat panah</strong>: Jika Anda telah menggunakan fitur penomoran panah di salah satu pelatihan yang dipilih, peringkat panah ditunjukkan di bawah ini. The arrows with the best average score are placed at the top of the list. Mengetuk nomor panah akan membawa Anda ke pola dispersi, yang hanya menampilkan gambar panah yang dipilih.</li>
                     </ul>
                 </details>
                 <details>
@@ -104,7 +119,7 @@
                     <summary>Mengekspor data</summary>
                     <p>Anda dapat mengekspor data yang dipilih ke file * .csv, yang dapat dibuka dalam aplikasi spreadsheet seperti Excel. Kolom x dan y menggambarkan koordinat tembakan dimana asal 0, 0 adalah pusat target dan batas luar target berjarak 1 unit.</p>
                     <img src="images/statistics_export.png" style="width:10%;"/>
-                    <p><strong> Catatan </ 0> : Anda dapat <strong> tidak </ 0> mengimpor data pelatihan ke dalam aplikasi. Untuk membuat cadangan data Anda, Anda harus menggunakan fungsi backup dan restore dalam pengaturan.</p>
+                    <p><strong>Catatan</strong>: Anda dapat <strong>tidak</strong> mengimpor data pelatihan ke dalam aplikasi. Untuk membuat cadangan data Anda, Anda harus menggunakan fungsi backup dan restore dalam pengaturan.</p>
                 </details>
             </section>
             <section> 

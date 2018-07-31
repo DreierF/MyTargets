@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -24,6 +24,7 @@ import android.os.CountDownTimer
 import android.os.Vibrator
 import android.view.View
 import android.view.WindowManager
+import androidx.core.content.systemService
 import de.dreier.mytargets.shared.R
 import de.dreier.mytargets.shared.base.fragment.ETimerState.*
 import de.dreier.mytargets.shared.models.TimerSettings
@@ -144,7 +145,7 @@ abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
             }
             if (settings.vibrate) {
                 val pattern = LongArray(1 + n * 2)
-                val v = activity.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                val v = activity.systemService<Vibrator>()
                 pattern[0] = 150
                 for (i in 0 until n) {
                     pattern[i * 2 + 1] = 400

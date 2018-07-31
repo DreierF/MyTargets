@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -18,6 +18,8 @@ package de.dreier.mytargets.views.selector
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.databinding.DataBindingUtil
+import android.databinding.ViewDataBinding
 import android.os.Parcelable
 import android.support.annotation.LayoutRes
 import android.util.AttributeSet
@@ -27,35 +29,33 @@ import android.widget.Button
 import android.widget.LinearLayout
 import com.evernote.android.state.State
 import com.evernote.android.state.StateSaver
-import de.dreier.mytargets.R
-import de.dreier.mytargets.base.activities.ItemSelectActivity
-import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
+import de.dreier.mytargets.base.navigation.NavigationController.Companion.INTENT
+import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
+import de.dreier.mytargets.databinding.SelectorItemProcessBinding
 
 typealias OnUpdateListener<T> = (T?) -> Unit
 
-abstract class SelectorBase<T : Parcelable>(
-        context: Context, attrs: AttributeSet?,
-        @LayoutRes private val layout: Int,
-        protected var requestCode: Int
+abstract class SelectorBase<T : Parcelable, V : ViewDataBinding>(
+    context: Context, attrs: AttributeSet?,
+    @LayoutRes private val layout: Int,
+    protected var requestCode: Int
 ) : LinearLayout(context, attrs) {
 
-    protected lateinit var view: View
+    protected lateinit var view: V
 
     @State
     open var selectedItem: T? = null
     private var addButton: Button? = null
     private var progress: View? = null
     private var updateListener: OnUpdateListener<T>? = null
-    private var index = -1
+    var itemIndex = -1
 
     override fun onFinishInflate() {
         super.onFinishInflate()
         addButton = getChildAt(0) as Button?
         val inflater = LayoutInflater.from(context)
-        progress = inflater.inflate(R.layout.selector_item_process, this, false)
-        view = inflater.inflate(layout, this, false)
-        addView(progress)
-        addView(view)
+        progress = SelectorItemProcessBinding.inflate(inflater, this, true).root
+        view = DataBindingUtil.inflate(inflater, layout, this, true)
         updateView()
     }
 
@@ -63,12 +63,8 @@ abstract class SelectorBase<T : Parcelable>(
         val displayProgress = selectedItem == null && addButton == null
         addButton?.visibility = if (selectedItem == null) View.VISIBLE else View.GONE
         progress!!.visibility = if (displayProgress) View.VISIBLE else View.GONE
-        view.visibility = if (selectedItem != null) View.VISIBLE else View.GONE
+        view.root.visibility = if (selectedItem != null) View.VISIBLE else View.GONE
         selectedItem?.let { bindView(it) }
-    }
-
-    fun setItemIndex(index: Int) {
-        this.index = index
     }
 
     protected abstract fun bindView(item: T)
@@ -88,13 +84,13 @@ abstract class SelectorBase<T : Parcelable>(
     }
 
     fun setOnClickListener(clickListener: (T?, Int) -> Unit) {
-        view.setOnClickListener { clickListener.invoke(selectedItem, index) }
+        view.root.setOnClickListener { clickListener.invoke(selectedItem, itemIndex) }
     }
 
     open fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == this.requestCode && data != null) {
-            val intentData = data.getBundleExtra(ItemSelectActivity.INTENT)
-            if (index == -1 || intentData != null && intentData.getInt(INDEX) == index) {
+            val intentData = data.getBundleExtra(INTENT)
+            if (itemIndex == -1 || intentData != null && intentData.getInt(INDEX) == itemIndex) {
                 setItem(data.getParcelableExtra(ITEM))
             }
         }
@@ -109,6 +105,6 @@ abstract class SelectorBase<T : Parcelable>(
     }
 
     companion object {
-        const val INDEX = "index"
+        const val INDEX = "itemIndex"
     }
 }

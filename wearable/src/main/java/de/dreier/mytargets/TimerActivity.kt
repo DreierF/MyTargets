@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -110,7 +110,7 @@ class TimerActivity : WearableActivity(), MenuItem.OnMenuItemClickListener {
         private lateinit var binding: FragmentTimerBinding
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_timer, container, false)
+            binding = FragmentTimerBinding.inflate(inflater, container, false)
             binding.startTimer.setOnClickListener(this)
             return binding.root
         }

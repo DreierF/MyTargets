@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -21,8 +21,11 @@ import de.dreier.mytargets.shared.models.Score
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.models.sum
 
-open class ScoringStyle private constructor(title: String?, private val showAsX: Boolean, protected val points: Array<IntArray>) {
-    private val title: String = title ?: descriptionString
+open class ScoringStyle private constructor(
+        val title: String?,
+        private val showAsX: Boolean,
+        protected val points: Array<IntArray>
+) {
     private val maxScorePerShot: List<Int> by lazy { points.map { it.max() ?: 0 } }
 
     internal constructor(showAsX: Boolean, points: Array<IntArray>) : this(null, showAsX, points)
@@ -48,8 +51,8 @@ open class ScoringStyle private constructor(title: String?, private val showAsX:
         }
 
     constructor(showAsX: Boolean, vararg points: Int) : this(showAsX, arrayOf<IntArray>(points))
-
-    override fun toString() = title
+    
+    override fun toString() = title ?: descriptionString
 
     fun zoneToString(zone: Int, arrow: Int): String {
         return if (isOutOfRange(zone)) {
@@ -77,8 +80,7 @@ open class ScoringStyle private constructor(title: String?, private val showAsX:
     }
 
     fun getReachedScore(shot: Shot): Score {
-        val i = if (shot.index < maxScorePerShot.size) shot.index else maxScorePerShot.size - 1
-        val maxScore = maxScorePerShot[i]
+        val maxScore = getMaxPointsPerShot(shot.index)
         if (shot.scoringRing == Shot.NOTHING_SELECTED) {
             return Score(maxScore)
         }
@@ -86,7 +88,12 @@ open class ScoringStyle private constructor(title: String?, private val showAsX:
         return Score(reachedScore, maxScore)
     }
 
-    open fun getReachedScore(shots: MutableList<Shot>): Score {
+    open fun getMaxPointsPerShot(index: Int): Int {
+        val i = if (index < maxScorePerShot.size) index else maxScorePerShot.size - 1
+        return maxScorePerShot[i]
+    }
+
+    open fun getReachedScore(shots: List<Shot>): Score {
         return shots.map { getReachedScore(it) }.sum()
     }
 

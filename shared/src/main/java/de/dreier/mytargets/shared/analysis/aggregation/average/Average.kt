@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.shared.analysis.aggregation.average
 
-import android.annotation.SuppressLint
 import android.graphics.PointF
 import android.graphics.RectF
 import android.os.Parcelable
@@ -23,14 +22,15 @@ import android.os.Parcelable
 import de.dreier.mytargets.shared.models.db.Shot
 import kotlinx.android.parcel.Parcelize
 
-@SuppressLint("ParcelCreator")
 @Parcelize
-class Average constructor(var dataPointCount: Int = 0,
-                          var average: PointF = PointF(0.0f, 0.0f),
-                          var weightedAverage: PointF = PointF(0.0f, 0.0f),
-                          var nonUniformStdDev: RectF = RectF(-1.0f, -1.0f, -1.0f, -1.0f),
-                          private var stdDevX: Double = -1.0,
-                          private var stdDevY: Double = -1.0) : Parcelable {
+class Average constructor(
+    var dataPointCount: Int = 0,
+    var average: PointF = PointF(0.0f, 0.0f),
+    var weightedAverage: PointF = PointF(0.0f, 0.0f),
+    var nonUniformStdDev: RectF = RectF(-1.0f, -1.0f, -1.0f, -1.0f),
+    private var stdDevX: Double = -1.0,
+    private var stdDevY: Double = -1.0
+) : Parcelable {
 
     val stdDev: Double
         get() = (stdDevX + stdDevY) / 2.0
@@ -89,24 +89,26 @@ class Average constructor(var dataPointCount: Int = 0,
             }
         }
 
-        nonUniformStdDev.set(Math.sqrt(negSquaredXError / negCountX.toDouble()).toFloat(),
-                Math.sqrt(posSquaredYError / posCountY.toDouble()).toFloat(),
-                Math.sqrt(posSquaredXError / posCountX.toDouble()).toFloat(),
-                Math.sqrt(negSquaredYError / negCountY.toDouble()).toFloat())
+        nonUniformStdDev.set(
+            Math.sqrt(negSquaredXError / negCountX.toDouble()).toFloat(),
+            Math.sqrt(posSquaredYError / posCountY.toDouble()).toFloat(),
+            Math.sqrt(posSquaredXError / posCountX.toDouble()).toFloat(),
+            Math.sqrt(negSquaredYError / negCountY.toDouble()).toFloat()
+        )
     }
 
     fun computeStdDevX(data: List<Shot>) {
         val sumSquaredXError = data
-                .map { (it.x - average.x).toDouble() }
-                .sumByDouble { it * it }
+            .map { (it.x - average.x).toDouble() }
+            .sumByDouble { it * it }
 
         stdDevX = Math.sqrt(sumSquaredXError / data.size.toDouble())
     }
 
     fun computeStdDevY(data: List<Shot>) {
         val sumSquaredYError = data
-                .map { (it.y - average.y).toDouble() }
-                .sumByDouble { it * it }
+            .map { (it.y - average.y).toDouble() }
+            .sumByDouble { it * it }
 
         stdDevY = Math.sqrt(sumSquaredYError / data.size.toDouble())
     }
@@ -120,6 +122,9 @@ class Average constructor(var dataPointCount: Int = 0,
             sumY += point.y.toDouble()
         }
 
-        average.set((sumX / data.size.toDouble()).toFloat(), (sumY / data.size.toDouble()).toFloat())
+        average.set(
+            (sumX / data.size.toDouble()).toFloat(),
+            (sumY / data.size.toDouble()).toFloat()
+        )
     }
 }

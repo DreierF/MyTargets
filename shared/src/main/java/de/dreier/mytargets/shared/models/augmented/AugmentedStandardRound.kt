@@ -15,21 +15,45 @@
 
 package de.dreier.mytargets.shared.models.augmented
 
+import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Parcel
 import android.os.Parcelable
+import de.dreier.mytargets.shared.R
+import de.dreier.mytargets.shared.models.IIdProvider
+import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.RoundTemplate
 import de.dreier.mytargets.shared.models.db.StandardRound
+import de.dreier.mytargets.shared.targets.drawable.CombinedSpot
 
 data class AugmentedStandardRound(
         val standardRound: StandardRound,
         var roundTemplates: MutableList<RoundTemplate>
-) : Parcelable {
+) : Parcelable, IIdProvider {
 
-    constructor(standardRound: StandardRound) : this(standardRound, standardRound.loadRounds())
+    override val id: Long
+        get() = standardRound.id
 
-    fun toStandardRound(): StandardRound {
-        standardRound.rounds = roundTemplates
-        return standardRound
+    val targetDrawable: Drawable
+        get() {
+            val targets = roundTemplates.map { it.targetTemplate.drawable }
+            return CombinedSpot(targets)
+        }
+
+    fun getDescription(context: Context): String {
+        var desc = ""
+        for (r in roundTemplates) {
+            if (!desc.isEmpty()) {
+                desc += "\n"
+            }
+            desc += context.getString(R.string.round_desc, r.distance, r.endCount,
+                    r.shotsPerEnd, r.targetTemplate.diameter)
+        }
+        return desc
+    }
+
+    fun createRoundsFromTemplate(): MutableList<Round> {
+        return roundTemplates.map { Round(it) }.toMutableList()
     }
 
     constructor(source: Parcel) : this(

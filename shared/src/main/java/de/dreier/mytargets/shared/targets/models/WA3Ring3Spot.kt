@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -24,14 +24,14 @@ import de.dreier.mytargets.shared.models.Dimension.Unit.CENTIMETER
 class WA3Ring3Spot : WA3Ring(
         id = ID,
         nameRes = R.string.wa_3_ring_3_spot,
-        diameters = arrayOf(
+        diameters = listOf(
                 Dimension(40f, CENTIMETER),
                 Dimension(60f, CENTIMETER)
         )
 ) {
     init {
         faceRadius = 0.48f
-        facePositions = arrayOf(
+        facePositions = listOf(
                 PointF(-0.52f, 0.5f),
                 PointF(0.0f, -0.5f),
                 PointF(0.52f, 0.5f)

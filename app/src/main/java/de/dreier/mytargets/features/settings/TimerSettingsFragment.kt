@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -35,8 +35,10 @@ class TimerSettingsFragment : SettingsFragmentBase() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        LocalBroadcastManager.getInstance(context!!).registerReceiver(timerReceiver,
-                IntentFilter(BROADCAST_TIMER_SETTINGS_FROM_REMOTE))
+        LocalBroadcastManager.getInstance(context!!).registerReceiver(
+            timerReceiver,
+            IntentFilter(BROADCAST_TIMER_SETTINGS_FROM_REMOTE)
+        )
     }
 
     override fun onDestroy() {

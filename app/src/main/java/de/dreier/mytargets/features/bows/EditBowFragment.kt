@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -17,7 +17,6 @@ package de.dreier.mytargets.features.bows
 
 import android.app.Activity
 import android.content.Intent
-import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
@@ -27,10 +26,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.evernote.android.state.State
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.activities.ItemSelectActivity
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemAdapter
 import de.dreier.mytargets.base.adapters.dynamicitem.DynamicItemHolder
 import de.dreier.mytargets.base.fragments.EditWithImageFragmentBase
+import de.dreier.mytargets.base.navigation.NavigationController.Companion.INTENT
+import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
 import de.dreier.mytargets.databinding.FragmentEditBowBinding
 import de.dreier.mytargets.databinding.ItemSightMarkBinding
 import de.dreier.mytargets.shared.models.Dimension
@@ -53,7 +54,13 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
     private lateinit var contentBinding: FragmentEditBowBinding
     private lateinit var adapter: SightMarksAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    private val bowDAO = ApplicationInstance.db.bowDAO()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val rootView = super.onCreateView(inflater, container, savedInstanceState)
 
         contentBinding = FragmentEditBowBinding.inflate(inflater, binding.content, true)
@@ -61,22 +68,23 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
         contentBinding.moreFields.setOnClickListener { contentBinding.showAll = true }
 
         val bowType = EBowType
-                .valueOf(arguments!!.getString(BOW_TYPE, EBowType.RECURVE_BOW.name))
+            .valueOf(arguments!!.getString(BOW_TYPE, EBowType.RECURVE_BOW.name))
 
         if (savedInstanceState == null) {
             val bundle = arguments
             if (bundle != null && bundle.containsKey(BOW_ID)) {
                 // Load data from database
-                bow = Bow[bundle.getLong(BOW_ID)]!!
-                sightMarks = bow.loadSightMarks()
+                bow = bowDAO.loadBow(bundle.getLong(BOW_ID))
+                sightMarks = ArrayList(bowDAO.loadSightMarks(bow.id).sortedBy { it.distance })
+                imageFiles = bowDAO.loadBowImages(bow.id)
             } else {
                 // Set to default values
                 bow = Bow()
                 bow.name = getString(R.string.my_bow)
                 bow.type = bowType
                 sightMarks.add(SightMark())
+                imageFiles = emptyList()
             }
-            imageFiles = bow.loadImages()
         }
         ToolbarUtils.setTitle(this, bow.name)
         contentBinding.bow = bow
@@ -112,9 +120,9 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == SimpleDistanceSelector.SIMPLE_DISTANCE_REQUEST_CODE && data != null) {
-            val intentData = data.getBundleExtra(ItemSelectActivity.INTENT)
+            val intentData = data.getBundleExtra(INTENT)
             val index = intentData.getInt(SelectorBase.INDEX)
-            val parcelable = data.getParcelableExtra<Dimension>(ItemSelectActivity.ITEM)
+            val parcelable = data.getParcelableExtra<Dimension>(ITEM)
             sightMarks[index].distance = parcelable
             adapter.notifyItemChanged(index)
         }
@@ -122,8 +130,9 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
 
     public override fun onSave() {
         super.onSave()
-        buildBow().save()
-        finish()
+        buildBow()
+        bowDAO.saveBow(bow, imageFiles, sightMarks)
+        navigationController.finish()
     }
 
     private fun buildBow(): Bow {
@@ -148,19 +157,23 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
         bow.restStiffness = contentBinding.restStiffness.text.toString()
         bow.camSetting = contentBinding.cam.text.toString()
         bow.scopeMagnification = contentBinding.scopeMagnification.text.toString()
-        bow.images = imageFiles
         bow.thumbnail = thumbnail
-        bow.sightMarks = sightMarks
         return bow
     }
 
-    private inner class SightSettingHolder internal constructor(view: View) : DynamicItemHolder<SightMark>(view) {
+    private inner class SightSettingHolder internal constructor(view: View) :
+        DynamicItemHolder<SightMark>(view) {
 
-        private val binding: ItemSightMarkBinding = DataBindingUtil.bind(view)
+        private val binding = ItemSightMarkBinding.bind(view)
 
         init {
             binding.sightSetting.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+                override fun beforeTextChanged(
+                    charSequence: CharSequence,
+                    i: Int,
+                    i1: Int,
+                    i2: Int
+                ) {
 
                 }
 
@@ -174,21 +187,36 @@ class EditBowFragment : EditWithImageFragmentBase<BowImage>(R.drawable.recurve_b
             })
         }
 
-        override fun onBind(item: SightMark, position: Int, fragment: Fragment, removeListener: View.OnClickListener) {
+        override fun onBind(
+            item: SightMark,
+            position: Int,
+            fragment: Fragment,
+            removeListener: View.OnClickListener
+        ) {
             this.item = item
             binding.distance.setOnClickListener { selectedItem, index ->
-                navigationController.navigateToDistance(selectedItem!!, index, SimpleDistanceSelector.SIMPLE_DISTANCE_REQUEST_CODE)
+                navigationController.navigateToDistance(
+                    selectedItem!!,
+                    index,
+                    SimpleDistanceSelector.SIMPLE_DISTANCE_REQUEST_CODE
+                )
             }
-            binding.distance.setItemIndex(position)
+            binding.distance.itemIndex = position
             binding.distance.setItem(item.distance)
             binding.sightSetting.setText(item.value)
             binding.removeSightSetting.setOnClickListener(removeListener)
         }
     }
 
-    private inner class SightMarksAdapter internal constructor(fragment: Fragment, list: MutableList<SightMark>) : DynamicItemAdapter<SightMark>(fragment, list, R.string.sight_setting_removed) {
+    private inner class SightMarksAdapter internal constructor(
+        fragment: Fragment,
+        list: MutableList<SightMark>
+    ) : DynamicItemAdapter<SightMark>(fragment, list, R.string.sight_setting_removed) {
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DynamicItemHolder<SightMark> {
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int
+        ): DynamicItemHolder<SightMark> {
             val v = inflater.inflate(R.layout.item_sight_mark, parent, false)
             return SightSettingHolder(v)
         }

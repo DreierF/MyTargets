@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -24,12 +24,12 @@ import de.dreier.mytargets.shared.targets.zone.ZoneBase
 abstract class Target3DBase protected constructor(
         id: Long,
         @StringRes nameRes: Int,
-        zones: Array<ZoneBase>,
-        scoringStyles: Array<ScoringStyle>
+        zones: List<ZoneBase>,
+        scoringStyles: List<ScoringStyle>
 ) : TargetModelBase(
         id = id,
         nameRes = nameRes,
-        diameters = arrayOf(Diameter.MINI, Diameter.SMALL, Diameter.MEDIUM, Diameter.LARGE, Diameter.XLARGE),
+        diameters = listOf(Diameter.MINI, Diameter.SMALL, Diameter.MEDIUM, Diameter.LARGE, Diameter.XLARGE),
         type = ETargetType.THREE_D,
         zones = zones,
         scoringStyles = scoringStyles

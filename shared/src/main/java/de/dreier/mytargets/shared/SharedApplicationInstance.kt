@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -18,6 +18,7 @@ package de.dreier.mytargets.shared
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.StrictMode
 import android.preference.PreferenceManager
 import android.support.annotation.StringRes
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -33,7 +34,9 @@ open class SharedApplicationInstance : Application() {
 
     protected fun enableDebugLogging() {
 //        StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
-//                .detectAll()
+//                .detectDiskReads()
+//                .detectDiskWrites()
+////                .detectAll()
 //                .penaltyLog()
 //                .build())
 //        StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder()
@@ -47,7 +50,7 @@ open class SharedApplicationInstance : Application() {
     companion object {
 
         lateinit var context: Context
-            protected set
+            internal set
 
         fun getStr(@StringRes string: Int): String {
             return context.getString(string)

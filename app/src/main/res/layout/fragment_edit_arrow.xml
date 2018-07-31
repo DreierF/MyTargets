@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (C) 2017 Florian Dreier
+  ~ Copyright (C) 2018 Florian Dreier
   ~
   ~ This file is part of MyTargets.
   ~
@@ -22,11 +22,7 @@
 
         <variable
             name="arrow"
-            type="de.dreier.mytargets.shared.models.db.Arrow"/>
-
-        <variable
-            name="showAll"
-            type="boolean"/>
+            type="de.dreier.mytargets.features.arrows.EditArrowViewModel"/>
 
     </data>
 
@@ -54,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/name"
                     android:inputType="textNoSuggestions"
-                    android:text="@{arrow.name}"/>
+                    android:text="@={arrow.name}"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -77,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/max_arrow_number"
                     android:inputType="number"
-                    android:text="@{String.valueOf(arrow.maxArrowNumber)}"/>
+                    android:text="@={`` + arrow.maxArrowNumber}"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -86,7 +82,7 @@
         <FrameLayout
             style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
-            app:propertyShowAll="@{showAll}"
+            app:propertyShowAll="@{arrow.showAll}"
             app:propertyValue="@{arrow.length}">
 
             <ImageView
@@ -102,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/length"
                     android:inputType="textNoSuggestions"
-                    android:text="@{arrow.length}"/>
+                    android:text="@={arrow.length}"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -111,7 +107,7 @@
         <FrameLayout
             style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
-            app:propertyShowAll="@{showAll}"
+            app:propertyShowAll="@{arrow.showAll}"
             app:propertyValue="@{arrow.material}">
 
             <ImageView
@@ -127,7 +123,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/material"
                     android:inputType="textNoSuggestions"
-                    android:text="@{arrow.material}"/>
+                    android:text="@={arrow.material}"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -136,7 +132,7 @@
         <FrameLayout
             style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
-            app:propertyShowAll="@{showAll}"
+            app:propertyShowAll="@{arrow.showAll}"
             app:propertyValue="@{arrow.spine}">
 
             <ImageView
@@ -152,7 +148,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/spine"
                     android:inputType="textNoSuggestions"
-                    android:text="@{arrow.spine}"/>
+                    android:text="@={arrow.spine}"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -175,7 +171,8 @@
                     android:id="@+id/diameterTextInputLayout"
                     style="@style/propertyTextInputLayout"
                     android:layout_toLeftOf="@+id/diameterUnit"
-                    android:layout_toStartOf="@+id/diameterUnit">
+                    android:layout_toStartOf="@+id/diameterUnit"
+                    app:errorText="@{arrow.diameterErrorText}">
 
                     <de.dreier.mytargets.views.TextInputEditText
                         android:id="@+id/diameter"
@@ -183,7 +180,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/diameter"
                         android:inputType="numberDecimal"
-                        android:text="@{String.valueOf(arrow.diameter.value)}"/>
+                        android:text="@={``+arrow.diameterValue}"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -195,7 +192,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:drawSelectorOnTop="true"
-                    android:entries="@array/arrow_diameter_units"/>
+                    android:entries="@array/arrow_diameter_units"
+                    app:selectedUnit="@={arrow.diameterUnit}"/>
 
             </RelativeLayout>
 
@@ -204,7 +202,7 @@
         <FrameLayout
             style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
-            app:propertyShowAll="@{showAll}"
+            app:propertyShowAll="@{arrow.showAll}"
             app:propertyValue="@{arrow.weight}">
 
             <ImageView
@@ -220,7 +218,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/weight"
                     android:inputType="textNoSuggestions"
-                    android:text="@{arrow.weight}"/>
+                    android:text="@={arrow.weight}"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -229,7 +227,7 @@
         <FrameLayout
             style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
-            app:propertyShowAll="@{showAll}"
+            app:propertyShowAll="@{arrow.showAll}"
             app:propertyValue="@{arrow.tipWeight}">
 
             <ImageView
@@ -245,7 +243,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/tip_weight"
                     android:inputType="textNoSuggestions"
-                    android:text="@{arrow.tipWeight}"/>
+                    android:text="@={arrow.tipWeight}"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -254,7 +252,7 @@
         <FrameLayout
             style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
-            app:propertyShowAll="@{showAll}"
+            app:propertyShowAll="@{arrow.showAll}"
             app:propertyValue="@{arrow.vanes}">
 
             <ImageView
@@ -270,7 +268,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/vanes"
                     android:inputType="textNoSuggestions"
-                    android:text="@{arrow.vanes}"/>
+                    android:text="@={arrow.vanes}"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -279,7 +277,7 @@
         <FrameLayout
             style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
-            app:propertyShowAll="@{showAll}"
+            app:propertyShowAll="@{arrow.showAll}"
             app:propertyValue="@{arrow.nock}">
 
             <ImageView
@@ -295,7 +293,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/nock"
                     android:inputType="textNoSuggestions"
-                    android:text="@{arrow.nock}"/>
+                    android:text="@={arrow.nock}"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -304,7 +302,7 @@
         <FrameLayout
             style="@style/propertyFrameLayout"
             app:propertyShouldShow="@{true}"
-            app:propertyShowAll="@{showAll}"
+            app:propertyShowAll="@{arrow.showAll}"
             app:propertyValue="@{arrow.comment}">
 
             <ImageView
@@ -320,7 +318,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/comment"
                     android:inputType="textMultiLine"
-                    android:text="@{arrow.comment}"/>
+                    android:text="@={arrow.comment}"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -330,7 +328,7 @@
             android:id="@+id/moreFields"
             style="@style/propertyAddButton"
             android:text="@string/more_fields"
-            android:visibility="@{showAll || arrow.areAllPropertiesSet ? View.GONE : View.VISIBLE}"/>
+            android:visibility="@{arrow.showAll || arrow.areAllPropertiesSet ? View.GONE : View.VISIBLE}"/>
 
     </LinearLayout>
 

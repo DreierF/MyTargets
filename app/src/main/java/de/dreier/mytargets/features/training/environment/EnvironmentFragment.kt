@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -14,7 +14,6 @@
  */
 package de.dreier.mytargets.features.training.environment
 
-import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -22,45 +21,44 @@ import android.support.v7.widget.SwitchCompat
 import android.view.*
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.widget.ImageButton
 import com.evernote.android.state.State
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
 import de.dreier.mytargets.base.fragments.FragmentBase
-import de.dreier.mytargets.base.fragments.ListFragmentBase
+import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
 import de.dreier.mytargets.databinding.FragmentEnvironmentBinding
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.EWeather
 import de.dreier.mytargets.shared.models.Environment
 import de.dreier.mytargets.utils.ToolbarUtils
-import junit.framework.Assert
 
 class EnvironmentFragment : FragmentBase() {
 
-    private var listener: ListFragmentBase.OnItemSelectedListener? = null
     @State
     var environment: Environment? = null
     private lateinit var binding: FragmentEnvironmentBinding
     private var switchView: SwitchCompat? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil
-                .inflate(inflater, R.layout.fragment_environment, container, false)
+            .inflate(inflater, R.layout.fragment_environment, container, false)
 
         ToolbarUtils.setSupportActionBar(this, binding.toolbar)
         ToolbarUtils.showHomeAsUp(this)
         setHasOptionsMenu(true)
 
         // Weather
-        setOnClickWeather(binding.sunny, EWeather.SUNNY)
-        setOnClickWeather(binding.partlyCloudy, EWeather.PARTLY_CLOUDY)
-        setOnClickWeather(binding.cloudy, EWeather.CLOUDY)
-        setOnClickWeather(binding.lightRain, EWeather.LIGHT_RAIN)
-        setOnClickWeather(binding.rain, EWeather.RAIN)
+        binding.sunny.setOnClickListener { setWeather(EWeather.SUNNY) }
+        binding.partlyCloudy.setOnClickListener { setWeather(EWeather.PARTLY_CLOUDY) }
+        binding.cloudy.setOnClickListener { setWeather(EWeather.CLOUDY) }
+        binding.lightRain.setOnClickListener { setWeather(EWeather.LIGHT_RAIN) }
+        binding.rain.setOnClickListener { setWeather(EWeather.RAIN) }
 
         if (savedInstanceState == null) {
-            val i = arguments!!
-            environment = i.getParcelable(ITEM)
+            environment = arguments!!.getParcelable(ITEM)
         }
         setWeather(environment!!.weather)
         binding.windSpeed.setItemId(environment!!.windSpeed.toLong())
@@ -75,10 +73,6 @@ class EnvironmentFragment : FragmentBase() {
         }
 
         return binding.root
-    }
-
-    private fun setOnClickWeather(b: ImageButton, w: EWeather) {
-        b.setOnClickListener { setWeather(w) }
     }
 
     private fun setWeather(weather: EWeather) {
@@ -110,19 +104,11 @@ class EnvironmentFragment : FragmentBase() {
         super.onSaveInstanceState(outState)
     }
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        if (context is ListFragmentBase.OnItemSelectedListener) {
-            listener = context
-        }
-        Assert.assertNotNull(listener)
-    }
-
     fun onSave() {
         val e = saveItem()
-        listener?.onItemSelected(e)
-        finish()
         SettingsManager.indoor = e.indoor
+        navigationController.setResultSuccess(e)
+        navigationController.finish()
     }
 
     private fun saveItem(): Environment {

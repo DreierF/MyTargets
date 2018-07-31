@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.base.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v7.widget.LinearLayoutManager
@@ -25,19 +24,22 @@ import de.dreier.mytargets.base.adapters.ListAdapterBase
 import de.dreier.mytargets.shared.models.IIdProvider
 import de.dreier.mytargets.utils.SingleSelectorBundler
 import de.dreier.mytargets.utils.multiselector.ItemBindingHolder
+import de.dreier.mytargets.utils.multiselector.OnItemClickListener
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 import de.dreier.mytargets.utils.multiselector.SingleSelector
-import junit.framework.Assert
 
 /**
  * Base class for handling single item selection
  *
- *
- * Parent activity must implement [OnItemSelectedListener].
- *
  * @param <T> Model of the item which is managed within the fragment.
 </T> */
-abstract class SelectItemFragmentBase<T, U : ListAdapterBase<out ItemBindingHolder<*>, T>> : ListFragmentBase<T, U>() where T : IIdProvider, T : Comparable<T>, T : Parcelable {
+abstract class SelectItemFragmentBase<T, U : ListAdapterBase<out ItemBindingHolder<*>, T>> :
+    FragmentBase(), OnItemClickListener<T> where T : IIdProvider, T : Parcelable {
+
+    /**
+     * Adapter for the fragment's RecyclerView
+     */
+    protected lateinit var adapter: U
 
     /**
      * Selector which manages the item selection
@@ -72,19 +74,11 @@ abstract class SelectItemFragmentBase<T, U : ListAdapterBase<out ItemBindingHold
             val manager = recyclerView.layoutManager as LinearLayoutManager
             val first = manager.findFirstCompletelyVisibleItemPosition()
             val last = manager.findLastCompletelyVisibleItemPosition()
-            val position = adapter!!.getItemPosition(item)
+            val position = adapter.getItemPosition(item)
             if (first > position || last < position) {
                 recyclerView.scrollToPosition(position)
             }
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        Assert.assertNotNull(listener)
     }
 
     /**
@@ -95,7 +89,7 @@ abstract class SelectItemFragmentBase<T, U : ListAdapterBase<out ItemBindingHold
         selector.setSelected(holder, true)
         if (alreadySelected || !useDoubleClickSelection) {
             saveItem()
-            finish()
+            navigationController.finish()
         }
     }
 
@@ -103,7 +97,7 @@ abstract class SelectItemFragmentBase<T, U : ListAdapterBase<out ItemBindingHold
      * Returns the selected item to the calling activity. The item is retrieved by calling onSave().
      */
     protected fun saveItem() {
-        listener!!.onItemSelected(onSave())
+        navigationController.setResultSuccess(onSave())
     }
 
     /**
@@ -112,6 +106,6 @@ abstract class SelectItemFragmentBase<T, U : ListAdapterBase<out ItemBindingHold
      * @return The selected item
      */
     protected open fun onSave(): T {
-        return adapter!!.getItemById(selector.getSelectedId()!!)!!
+        return adapter.getItemById(selector.getSelectedId()!!)!!
     }
 }

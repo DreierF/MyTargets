@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -22,15 +22,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
+import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
 import de.dreier.mytargets.databinding.FragmentDistanceBinding
 import de.dreier.mytargets.shared.models.Dimension
 
 class DistanceFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val binding = DataBindingUtil
-                .inflate<FragmentDistanceBinding>(inflater, R.layout.fragment_distance, container, false)
+            .inflate<FragmentDistanceBinding>(
+                inflater,
+                R.layout.fragment_distance,
+                container,
+                false
+            )
         val distance = arguments!!.getParcelable<Dimension>(ITEM)
         binding.viewPager.adapter = DistanceTabsFragmentPagerAdapter(activity!!, distance)
         binding.slidingTabs.setupWithViewPager(binding.viewPager)

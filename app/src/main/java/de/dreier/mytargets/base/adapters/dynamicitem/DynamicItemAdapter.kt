@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -24,9 +24,10 @@ import android.view.View
 import de.dreier.mytargets.R
 
 
-abstract class DynamicItemAdapter<T>(private val fragment: Fragment,
-                                     private var list: MutableList<T>,
-                                     @StringRes private val undoString: Int
+abstract class DynamicItemAdapter<T>(
+    private val fragment: Fragment,
+    private var list: MutableList<T>,
+    @StringRes private val undoString: Int
 ) : RecyclerView.Adapter<DynamicItemHolder<T>>() {
 
     protected val inflater = LayoutInflater.from(fragment.context)!!
@@ -43,10 +44,10 @@ abstract class DynamicItemAdapter<T>(private val fragment: Fragment,
             notifyDataSetChanged()
 
             Snackbar.make(fragment.view!!, undoString, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.undo) {
-                        list.add(currentPosition, item)
-                        notifyItemInserted(position)
-                    }.show()
+                .setAction(R.string.undo) {
+                    list.add(currentPosition, item)
+                    notifyItemInserted(position)
+                }.show()
         })
     }
 

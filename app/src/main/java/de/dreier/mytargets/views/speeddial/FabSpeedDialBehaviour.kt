@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -15,40 +15,48 @@
 
 package de.dreier.mytargets.views.speeddial
 
-import android.content.Context
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
 import android.support.v4.view.animation.FastOutSlowInInterpolator
-import android.util.AttributeSet
 import android.view.View
 import android.view.ViewPropertyAnimator
 
-class FabSpeedDialBehaviour : CoordinatorLayout.Behavior<FabSpeedDial> {
+object FabSpeedDialBehaviour : CoordinatorLayout.Behavior<FabSpeedDial>() {
+
+    private val FAST_OUT_SLOW_IN_INTERPOLATOR = FastOutSlowInInterpolator()
 
     private var fabTranslationYAnimator: ViewPropertyAnimator? = null
     private var fabTranslationY: Float = 0.toFloat()
 
-    constructor()
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
-
-    override fun layoutDependsOn(parent: CoordinatorLayout?, child: FabSpeedDial?, dependency: View?): Boolean {
+    override fun layoutDependsOn(
+        parent: CoordinatorLayout,
+        child: FabSpeedDial,
+        dependency: View
+    ): Boolean {
         return dependency is Snackbar.SnackbarLayout
     }
 
-    override fun onDependentViewRemoved(parent: CoordinatorLayout?, fab: FabSpeedDial, dependency: View?) {
-        super.onDependentViewRemoved(parent, fab, dependency)
+    override fun onDependentViewRemoved(
+        parent: CoordinatorLayout,
+        child: FabSpeedDial,
+        dependency: View
+    ) {
+        super.onDependentViewRemoved(parent, child, dependency)
 
         // Make sure that any current animation is cancelled
         if (fabTranslationYAnimator != null) {
             fabTranslationYAnimator!!.cancel()
         }
 
-        fab.translationY = 0f
+        child.translationY = 0f
         fabTranslationY = 0f
     }
 
-    override fun onDependentViewChanged(parent: CoordinatorLayout, child: FabSpeedDial, dependency: View?): Boolean {
+    override fun onDependentViewChanged(
+        parent: CoordinatorLayout,
+        child: FabSpeedDial,
+        dependency: View
+    ): Boolean {
         if (dependency is Snackbar.SnackbarLayout) {
             updateFabTranslationForSnackbar(parent, child)
         }
@@ -73,8 +81,8 @@ class FabSpeedDialBehaviour : CoordinatorLayout.Behavior<FabSpeedDial> {
 
         if (Math.abs(currentTransY - targetTransY) > fab.height * 0.667f) {
             fabTranslationYAnimator = fab.animate()
-                    .setInterpolator(FAST_OUT_SLOW_IN_INTERPOLATOR)
-                    .translationY(targetTransY)
+                .setInterpolator(FAST_OUT_SLOW_IN_INTERPOLATOR)
+                .translationY(targetTransY)
             fabTranslationYAnimator!!.start()
         } else {
             fab.translationY = targetTransY
@@ -89,14 +97,12 @@ class FabSpeedDialBehaviour : CoordinatorLayout.Behavior<FabSpeedDial> {
         for (i in dependencies.indices) {
             val view = dependencies[i]
             if (view is Snackbar.SnackbarLayout && parent.doViewsOverlap(fab, view)) {
-                minOffset = Math.min(minOffset,
-                        view.getTranslationY() - view.getHeight())
+                minOffset = Math.min(
+                    minOffset,
+                    view.getTranslationY() - view.getHeight()
+                )
             }
         }
         return minOffset
-    }
-
-    companion object {
-        private val FAST_OUT_SLOW_IN_INTERPOLATOR = FastOutSlowInInterpolator()
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -19,9 +19,27 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.AttributeSet
+import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
+import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding
 import de.dreier.mytargets.shared.models.db.Arrow
 
-class ArrowSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ImageSelectorBase<Arrow>(context, attrs, ARROW_REQUEST_CODE) {
+class ArrowSelector @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null
+) : SelectorBase<Arrow, SelectorItemImageDetailsBinding>(
+    context,
+    attrs,
+    R.layout.selector_item_image_details,
+    ARROW_REQUEST_CODE
+) {
+
+    private val arrowDAO = ApplicationInstance.db.arrowDAO()
+
+    override fun bindView(item: Arrow) {
+        view.name.text = item.name
+        view.image.setImageDrawable(item.thumbnail!!.roundDrawable)
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -33,10 +51,10 @@ class ArrowSelector @JvmOverloads constructor(context: Context, attrs: Attribute
     fun setItemId(arrowId: Long?) {
         var item: Arrow? = null
         if (arrowId != null) {
-            item = Arrow[arrowId]
+            item = arrowDAO.loadArrowOrNull(arrowId)
         }
         if (item == null) {
-            val all = Arrow.all
+            val all = arrowDAO.loadArrows()
             if (all.isNotEmpty()) {
                 item = all[0]
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.features.scoreboard
 
-data class ScoreboardConfiguration (
+data class ScoreboardConfiguration(
     var showTitle: Boolean = false,
     var showProperties: Boolean = false,
     var showTable: Boolean = false,

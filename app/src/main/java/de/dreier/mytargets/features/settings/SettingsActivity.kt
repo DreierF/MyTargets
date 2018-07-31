@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -24,7 +24,8 @@ import android.view.MenuItem
 import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase
 import de.dreier.mytargets.features.settings.ESettingsScreens.MAIN
 
-class SettingsActivity : SimpleFragmentActivityBase(), PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
+class SettingsActivity : SimpleFragmentActivityBase(),
+    PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 
     public override fun instantiateFragment(): Fragment {
         val key = intent.getStringExtra(ARG_PREFERENCE_ROOT)
@@ -39,14 +40,16 @@ class SettingsActivity : SimpleFragmentActivityBase(), PreferenceFragmentCompat.
             val manager = supportFragmentManager
             if (manager != null) {
                 val currFrag = manager
-                        .findFragmentById(android.R.id.content) as SettingsFragmentBase
+                    .findFragmentById(android.R.id.content) as SettingsFragmentBase
                 currFrag.onFragmentResume()
             }
         }
     }
 
-    override fun onPreferenceStartScreen(preferenceFragmentCompat: PreferenceFragmentCompat,
-                                         preferenceScreen: PreferenceScreen): Boolean {
+    override fun onPreferenceStartScreen(
+        preferenceFragmentCompat: PreferenceFragmentCompat,
+        preferenceScreen: PreferenceScreen
+    ): Boolean {
         val ft = supportFragmentManager.beginTransaction()
         val screen = ESettingsScreens.from(preferenceScreen.key)
         val fragment = screen.create()
@@ -60,19 +63,22 @@ class SettingsActivity : SimpleFragmentActivityBase(), PreferenceFragmentCompat.
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        overridePendingTransition(0, 0)
+        navigationController.finish(animate = false)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
                 if (childFragment is MainSettingsFragment) {
-                    onBackPressed()
+                    navigationController.finish(animate = false)
                 } else {
                     intent.putExtra(ARG_PREFERENCE_ROOT, MAIN.key)
                     val ft = supportFragmentManager.beginTransaction()
-                    ft.replace(android.R.id.content, instantiateFragment(), SimpleFragmentActivityBase.Companion.FRAGMENT_TAG)
+                    ft.replace(
+                        android.R.id.content,
+                        instantiateFragment(),
+                        SimpleFragmentActivityBase.Companion.FRAGMENT_TAG
+                    )
                     ft.commit()
                 }
                 true

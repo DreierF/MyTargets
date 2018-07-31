@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -16,6 +16,7 @@
 package de.dreier.mytargets.base.fragments
 
 import android.databinding.DataBindingUtil
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -26,7 +27,6 @@ import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
 import de.dreier.mytargets.databinding.FragmentListBinding
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding
 import de.dreier.mytargets.shared.models.IIdProvider
-import de.dreier.mytargets.shared.models.IImageProvider
 import de.dreier.mytargets.utils.SlideInItemAnimator
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
@@ -34,11 +34,17 @@ import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 /**
  *
  */
-abstract class SelectPureListItemFragmentBase<T> : SelectItemFragmentBase<T, SimpleListAdapterBase<T>>() where T : IIdProvider, T: Comparable<T>, T : IImageProvider, T: Parcelable {
+abstract class SelectPureListItemFragmentBase<T>(
+    private val comparator: Comparator<T>
+) : SelectItemFragmentBase<T, SimpleListAdapterBase<T>>() where T : IIdProvider, T : Parcelable {
 
     protected lateinit var binding: FragmentListBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false)
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.itemAnimator = SlideInItemAnimator()
@@ -49,7 +55,11 @@ abstract class SelectPureListItemFragmentBase<T> : SelectItemFragmentBase<T, Sim
         return binding.root
     }
 
-    private inner class ListAdapter : SimpleListAdapterBase<T>() {
+    abstract fun getName(item: T): String
+
+    abstract fun getDrawable(item: T): Drawable
+
+    private inner class ListAdapter : SimpleListAdapterBase<T>(comparator) {
 
         public override fun onCreateViewHolder(parent: ViewGroup): SelectableViewHolder<T> {
             val inflater = LayoutInflater.from(parent.context)
@@ -57,16 +67,20 @@ abstract class SelectPureListItemFragmentBase<T> : SelectItemFragmentBase<T, Sim
         }
     }
 
-    protected fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): SelectableViewHolder<T> {
+    protected fun onCreateViewHolder(
+        inflater: LayoutInflater,
+        parent: ViewGroup
+    ): SelectableViewHolder<T> {
         return ViewHolder(inflater.inflate(R.layout.item_image_simple, parent, false))
     }
 
-    private inner class ViewHolder(itemView: View) : SelectableViewHolder<T>(itemView, selector, this@SelectPureListItemFragmentBase) {
-        internal var binding: ItemImageSimpleBinding = DataBindingUtil.bind(itemView)
+    private inner class ViewHolder(itemView: View) :
+        SelectableViewHolder<T>(itemView, selector, this@SelectPureListItemFragmentBase) {
+        internal var binding = ItemImageSimpleBinding.bind(itemView)
 
         override fun bindItem(item: T) {
-            binding.name.text = item.name
-            binding.image.setImageDrawable(item.getDrawable(context!!))
+            binding.name.text = getName(item)
+            binding.image.setImageDrawable(getDrawable(item))
         }
     }
 }

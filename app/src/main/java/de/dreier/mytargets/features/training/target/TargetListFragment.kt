@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -26,10 +26,10 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
 import de.dreier.mytargets.base.adapters.header.ExpandableListAdapter
 import de.dreier.mytargets.base.adapters.header.HeaderListAdapter
 import de.dreier.mytargets.base.fragments.SelectItemFragmentBase
+import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
 import de.dreier.mytargets.databinding.FragmentTargetSelectBinding
 import de.dreier.mytargets.databinding.ItemImageSimpleBinding
 import de.dreier.mytargets.features.training.target.TargetListFragment.EFixedType.*
@@ -39,37 +39,43 @@ import de.dreier.mytargets.shared.targets.TargetFactory
 import de.dreier.mytargets.utils.SlideInItemAnimator
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
-import junit.framework.Assert
 import java.util.*
 
-class TargetListFragment : SelectItemFragmentBase<Target, ExpandableListAdapter<HeaderListAdapter.SimpleHeader, Target>>(), AdapterView.OnItemSelectedListener {
-    private var binding: FragmentTargetSelectBinding? = null
+class TargetListFragment :
+    SelectItemFragmentBase<Target, ExpandableListAdapter<HeaderListAdapter.SimpleHeader, Target>>(),
+    AdapterView.OnItemSelectedListener {
+    private lateinit var binding: FragmentTargetSelectBinding
     private var scoringStyleAdapter: ArrayAdapter<String>? = null
     private var targetSizeAdapter: ArrayAdapter<String>? = null
 
     private val themedSpinnerAdapter: ArrayAdapter<String>
         get() {
-            val actionBar = (activity as AppCompatActivity).supportActionBar
-            Assert.assertNotNull(actionBar)
-            val themedContext = actionBar!!.themedContext
-            val spinnerAdapter = ArrayAdapter(themedContext,
-                    android.R.layout.simple_spinner_item, ArrayList<String>())
+            val actionBar = (activity as AppCompatActivity).supportActionBar!!
+            val themedContext = actionBar.themedContext
+            val spinnerAdapter = ArrayAdapter(
+                themedContext,
+                android.R.layout.simple_spinner_item, ArrayList<String>()
+            )
             spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             return spinnerAdapter
         }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil
-                .inflate(inflater, R.layout.fragment_target_select, container, false)
+            .inflate(inflater, R.layout.fragment_target_select, container, false)
         adapter = TargetAdapter()
-        binding!!.recyclerView.itemAnimator = SlideInItemAnimator()
-        binding!!.recyclerView.adapter = adapter
+        binding.recyclerView.itemAnimator = SlideInItemAnimator()
+        binding.recyclerView.adapter = adapter
 
         useDoubleClickSelection = true
-        ToolbarUtils.setSupportActionBar(this, binding!!.toolbar)
+        ToolbarUtils.setSupportActionBar(this, binding.toolbar)
         ToolbarUtils.showHomeAsUp(this)
         setHasOptionsMenu(true)
-        return binding!!.root
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -77,24 +83,24 @@ class TargetListFragment : SelectItemFragmentBase<Target, ExpandableListAdapter<
 
         // Needs activity context
         scoringStyleAdapter = themedSpinnerAdapter
-        binding!!.scoringStyle.adapter = scoringStyleAdapter
+        binding.scoringStyle.adapter = scoringStyleAdapter
         targetSizeAdapter = themedSpinnerAdapter
-        binding!!.targetSize.adapter = targetSizeAdapter
+        binding.targetSize.adapter = targetSizeAdapter
 
         // Process passed arguments
-        val target = arguments!!.getParcelable<Target>(ITEM)
+        val target = arguments!!.getParcelable<Target>(ITEM)!!
         val fixedType = EFixedType
-                .valueOf(arguments!!.getString(FIXED_TYPE, NONE.name))
+            .valueOf(arguments!!.getString(FIXED_TYPE, NONE.name))
         val list = when (fixedType) {
             NONE -> TargetFactory.getList()
-            TARGET -> listOf(target!!.model)
-            GROUP -> TargetFactory.getList(target!!)
+            TARGET -> listOf(target.model)
+            GROUP -> TargetFactory.getList(target)
         }
         val targets = list
-                .map { value -> Target(value.id, 0) }
-                .toMutableList()
-        adapter!!.setList(targets)
-        selectItem(binding!!.recyclerView, target!!)
+            .map { value -> Target(value.id, 0) }
+            .toMutableList()
+        adapter.setList(targets)
+        selectItem(binding.recyclerView, target)
 
         updateSettings()
 
@@ -102,12 +108,12 @@ class TargetListFragment : SelectItemFragmentBase<Target, ExpandableListAdapter<
         val diameters = target.model.diameters
         val diameterIndex = diameters.indices.firstOrNull { diameters[it] == target.diameter } ?: -1
 
-        setSelectionWithoutEvent(binding!!.scoringStyle, target.scoringStyleIndex)
-        setSelectionWithoutEvent(binding!!.targetSize, diameterIndex)
+        setSelectionWithoutEvent(binding.scoringStyle, target.scoringStyleIndex)
+        setSelectionWithoutEvent(binding.targetSize, diameterIndex)
     }
 
     override fun selectItem(recyclerView: RecyclerView, item: Target) {
-        adapter!!.ensureItemIsExpanded(item)
+        adapter.ensureItemIsExpanded(item)
         super.selectItem(recyclerView, item)
     }
 
@@ -122,21 +128,25 @@ class TargetListFragment : SelectItemFragmentBase<Target, ExpandableListAdapter<
 
     private fun updateSettings() {
         // Init scoring styles
-        val target = adapter!!.getItemById(selector.getSelectedId()!!)
+        val target = adapter.getItemById(selector.getSelectedId()!!)
         val styles = target!!.model.scoringStyles.map { it.toString() }
-        updateAdapter(binding!!.scoringStyle, scoringStyleAdapter!!, styles)
+        updateAdapter(binding.scoringStyle, scoringStyleAdapter!!, styles)
 
         // Init target size spinner
         val diameters = diameterToList(target.model.diameters)
-        updateAdapter(binding!!.targetSize, targetSizeAdapter!!, diameters)
+        updateAdapter(binding.targetSize, targetSizeAdapter!!, diameters)
         if (diameters.size > 1) {
-            binding!!.targetSize.visibility = View.VISIBLE
+            binding.targetSize.visibility = View.VISIBLE
         } else {
-            binding!!.targetSize.visibility = View.GONE
+            binding.targetSize.visibility = View.GONE
         }
     }
 
-    private fun updateAdapter(spinner: Spinner, spinnerAdapter: ArrayAdapter<String>, strings: List<String>) {
+    private fun updateAdapter(
+        spinner: Spinner,
+        spinnerAdapter: ArrayAdapter<String>,
+        strings: List<String>
+    ) {
         val lastSelection = spinner.selectedItemPosition
         spinnerAdapter.clear()
         spinnerAdapter.addAll(strings)
@@ -150,15 +160,15 @@ class TargetListFragment : SelectItemFragmentBase<Target, ExpandableListAdapter<
         spinner.onItemSelectedListener = this
     }
 
-    private fun diameterToList(diameters: Array<Dimension>): List<String> {
+    private fun diameterToList(diameters: List<Dimension>): List<String> {
         return diameters.map { it.toString() }
     }
 
     override fun onSave(): Target {
         val target = super.onSave()
-        target.scoringStyleIndex = binding!!.scoringStyle.selectedItemPosition
+        target.scoringStyleIndex = binding.scoringStyle.selectedItemPosition
         val diameters = target.model.diameters
-        target.diameter = diameters[binding!!.targetSize.selectedItemPosition]
+        target.diameter = diameters[binding.targetSize.selectedItemPosition]
         arguments!!.putParcelable(ITEM, target)
         return target
     }
@@ -190,20 +200,22 @@ class TargetListFragment : SelectItemFragmentBase<Target, ExpandableListAdapter<
         TARGET
     }
 
-    private inner class TargetAdapter internal constructor() : ExpandableListAdapter<HeaderListAdapter.SimpleHeader, Target>({ child ->
-        val type = child.model.type
-        HeaderListAdapter.SimpleHeader(type.ordinal.toLong(), type.toString())
-    }, compareBy { it }, TargetFactory.comparator) {
+    private inner class TargetAdapter internal constructor() :
+        ExpandableListAdapter<HeaderListAdapter.SimpleHeader, Target>({ child ->
+            val type = child.model.type
+            HeaderListAdapter.SimpleHeader(type.ordinal.toLong(), type.toString())
+        }, compareBy { it }, TargetFactory.comparator) {
 
         override fun getSecondLevelViewHolder(parent: ViewGroup): ViewHolder {
             val itemView = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_image_simple, parent, false)
+                .inflate(R.layout.item_image_simple, parent, false)
             return ViewHolder(itemView)
         }
     }
 
-    private inner class ViewHolder(itemView: View) : SelectableViewHolder<Target>(itemView, selector, this@TargetListFragment) {
-        private val binding: ItemImageSimpleBinding = DataBindingUtil.bind(itemView)
+    private inner class ViewHolder(itemView: View) :
+        SelectableViewHolder<Target>(itemView, selector, this@TargetListFragment) {
+        private val binding = ItemImageSimpleBinding.bind(itemView)
 
         override fun bindItem(item: Target) {
             binding.name.text = item.model.toString()

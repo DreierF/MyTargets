@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -51,6 +51,7 @@ import de.dreier.mytargets.features.settings.backup.synchronization.SyncUtils
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils
 import permissions.dispatcher.NeedsPermission
+import permissions.dispatcher.OnNeverAskAgain
 import permissions.dispatcher.OnPermissionDenied
 import permissions.dispatcher.RuntimePermissions
 import java.io.FileNotFoundException
@@ -64,6 +65,8 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
     private var adapter: BackupAdapter? = null
     private lateinit var binding: FragmentBackupBinding
     private var updateLabelTimer: Timer? = null
+    private var isLeaving = false
+
     /**
      * Handle to a SyncObserver. The ProgressBar element is visible until the SyncObserver reports
      * that the sync is complete.
@@ -117,7 +120,11 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
         * but in this case we want to show our own UI. */
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_backup, container, false)
         ToolbarUtils.showHomeAsUp(this)
 
@@ -127,7 +134,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
 
         binding.backupIntervalPreference!!.root.setOnClickListener { onBackupIntervalClicked() }
         binding.backupIntervalPreference!!.image
-                .setImageResource(R.drawable.ic_query_builder_grey600_24dp)
+            .setImageResource(R.drawable.ic_query_builder_grey600_24dp)
         binding.backupIntervalPreference!!.name.setText(R.string.backup_interval)
         updateInterval()
 
@@ -135,7 +142,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
 
         binding.recentBackupsList.isNestedScrollingEnabled = false
         binding.recentBackupsList
-                .addItemDecoration(DividerItemDecoration(context!!, VERTICAL))
+            .addItemDecoration(DividerItemDecoration(context!!, VERTICAL))
 
         setHasOptionsMenu(true)
         return binding.root
@@ -156,21 +163,20 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
 
     override fun onResume() {
         super.onResume()
-        internalApplyBackupLocationWithPermissionCheck(SettingsManager.backupLocation)
-        updateAutomaticBackupSwitch()
+        if (!isLeaving) {
+            internalApplyBackupLocationWithPermissionCheck(SettingsManager.backupLocation)
+            updateAutomaticBackupSwitch()
+        }
 
         syncStatusObserver.onStatusChanged(0)
         syncObserverHandle = ContentResolver.addStatusChangeListener(
-                SYNC_OBSERVER_TYPE_PENDING or SYNC_OBSERVER_TYPE_ACTIVE, syncStatusObserver)
+            SYNC_OBSERVER_TYPE_PENDING or SYNC_OBSERVER_TYPE_ACTIVE, syncStatusObserver
+        )
     }
 
     override fun onPause() {
-        if (backup != null) {
-            backup!!.stop()
-        }
-        if (updateLabelTimer != null) {
-            updateLabelTimer!!.cancel()
-        }
+        backup?.stop()
+        updateLabelTimer?.cancel()
         if (syncObserverHandle != null) {
             ContentResolver.removeStatusChangeListener(syncObserverHandle)
             syncObserverHandle = null
@@ -202,16 +208,16 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
     private fun onBackupIntervalClicked() {
         val backupIntervals = Arrays.asList(*EBackupInterval.values())
         MaterialDialog.Builder(context!!)
-                .title(R.string.backup_interval)
-                .items(backupIntervals)
-                .itemsCallbackSingleChoice(
-                        backupIntervals.indexOf(SettingsManager.backupInterval)
-                ) { _, _, index, _ ->
-                    SettingsManager.backupInterval = EBackupInterval.values()[index]
-                    updateInterval()
-                    true
-                }
-                .show()
+            .title(R.string.backup_interval)
+            .items(backupIntervals)
+            .itemsCallbackSingleChoice(
+                backupIntervals.indexOf(SettingsManager.backupInterval)
+            ) { _, _, index, _ ->
+                SettingsManager.backupInterval = EBackupInterval.values()[index]
+                updateInterval()
+                true
+            }
+            .show()
     }
 
     private fun updateInterval() {
@@ -223,18 +229,19 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
     private fun onBackupLocationClicked() {
         val item = SettingsManager.backupLocation
         MaterialDialog.Builder(context!!)
-                .title(R.string.backup_location)
-                .items(EBackupLocation.list)
-                .itemsCallbackSingleChoice(EBackupLocation.list.indexOf(item)
-                ) { _, _, index, _ ->
-                    val location = EBackupLocation.list[index]
-                    if (backup != null) {
-                        backup!!.stop()
-                    }
-                    internalApplyBackupLocationWithPermissionCheck(location)
-                    true
+            .title(R.string.backup_location)
+            .items(EBackupLocation.list)
+            .itemsCallbackSingleChoice(
+                EBackupLocation.list.indexOf(item)
+            ) { _, _, index, _ ->
+                val location = EBackupLocation.list[index]
+                if (backup != null) {
+                    backup!!.stop()
                 }
-                .show()
+                internalApplyBackupLocationWithPermissionCheck(location)
+                true
+            }
+            .show()
     }
 
     private fun updateBackupLocation() {
@@ -289,17 +296,17 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
         binding.recentBackupsList.visibility = VISIBLE
         adapter!!.setList(list.toMutableList())
         binding.lastBackupLabel.visibility = if (list.isNotEmpty()) VISIBLE else GONE
-        if (updateLabelTimer != null) {
-            updateLabelTimer!!.cancel()
-        }
+        updateLabelTimer?.cancel()
         if (list.isNotEmpty()) {
             val time = list[0].modifiedDate!!.time
             updateLabelTimer = Timer()
             val timerTask = object : TimerTask() {
                 override fun run() {
                     activity!!.runOnUiThread {
-                        binding.lastBackupLabel.text = getString(R.string.last_backup, DateUtils
-                                .getRelativeTimeSpanString(time))
+                        binding.lastBackupLabel.text = getString(
+                            R.string.last_backup, DateUtils
+                                .getRelativeTimeSpanString(time)
+                        )
                     }
                 }
             }
@@ -309,53 +316,54 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
 
     private fun showError(@StringRes title: Int, message: String) {
         MaterialDialog.Builder(context!!)
-                .title(title)
-                .content(message)
-                .positiveText(android.R.string.ok)
-                .show()
+            .title(title)
+            .content(message)
+            .positiveText(android.R.string.ok)
+            .show()
     }
 
     private fun showRestoreProgressDialog(): MaterialDialog {
         return MaterialDialog.Builder(context!!)
-                .content(R.string.restoring)
-                .progress(true, 0)
-                .show()
+            .content(R.string.restoring)
+            .progress(true, 0)
+            .show()
     }
 
     private fun showBackupDetails(item: BackupEntry) {
-        val html = String.format(Locale.US,
-                "%s<br><br><b>%s</b><br>%s<br>%s",
-                getString(R.string.restore_desc),
-                getString(R.string.backup_details),
-                SimpleDateFormat.getDateTimeInstance()
-                        .format(item.modifiedDate),
-                item.humanReadableSize
+        val html = String.format(
+            Locale.US,
+            "%s<br><br><b>%s</b><br>%s<br>%s",
+            getString(R.string.restore_desc),
+            getString(R.string.backup_details),
+            SimpleDateFormat.getDateTimeInstance()
+                .format(item.modifiedDate),
+            item.humanReadableSize
         )
         MaterialDialog.Builder(context!!)
-                .title(R.string.dialog_restore_title)
-                .content(Utils.fromHtml(html))
-                .positiveText(R.string.restore)
-                .negativeText(android.R.string.cancel)
-                .positiveColor(-0x1ac6cb)
-                .negativeColor(-0x78000000)
-                .onPositive { _, _ -> restoreBackup(item) }
-                .show()
+            .title(R.string.dialog_restore_title)
+            .content(Utils.fromHtml(html))
+            .positiveText(R.string.restore)
+            .negativeText(android.R.string.cancel)
+            .positiveColor(-0x1ac6cb)
+            .negativeColor(-0x78000000)
+            .onPositive { _, _ -> restoreBackup(item) }
+            .show()
     }
 
     private fun restoreBackup(item: BackupEntry) {
         val progress = showRestoreProgressDialog()
         backup!!.restoreBackup(item,
-                object : IAsyncBackupRestore.BackupStatusListener {
-                    override fun onFinished() {
-                        progress.dismiss()
-                        Utils.doRestart(context!!)
-                    }
+            object : IAsyncBackupRestore.BackupStatusListener {
+                override fun onFinished() {
+                    progress.dismiss()
+                    Utils.doRestart(context!!)
+                }
 
-                    override fun onError(message: String) {
-                        progress.dismiss()
-                        showError(R.string.restore_failed, message)
-                    }
-                })
+                override fun onError(message: String) {
+                    progress.dismiss()
+                    showError(R.string.restore_failed, message)
+                }
+            })
     }
 
     private fun deleteBackup(backupEntry: BackupEntry) {
@@ -380,18 +388,34 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
         startActivityForResult(intent, IMPORT_FROM_URI)
     }
 
+    @OnNeverAskAgain(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    fun neverAskAgainForWritePermission() {
+        isLeaving = true
+        MaterialDialog.Builder(context!!)
+            .title(R.string.permission_required)
+            .content(R.string.backup_permission_explanation)
+            .positiveText(android.R.string.ok)
+            .onPositive { _, _ -> leaveBackupSettings() }
+            .show()
+    }
+
     @OnPermissionDenied(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     internal fun showDeniedForWrite() {
         leaveBackupSettings()
     }
 
     private fun leaveBackupSettings() {
+        isLeaving = true
         val h = Handler()
         h.post { activity!!.supportFragmentManager.popBackStack() }
     }
 
     @SuppressLint("NeedOnRequestPermissionsResult")
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         onRequestPermissionsResult(requestCode, grantResults)
     }

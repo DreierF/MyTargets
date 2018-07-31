@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -23,11 +23,16 @@ import de.dreier.mytargets.utils.multiselector.ItemBindingHolder
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 import java.util.*
 
-abstract class HeaderListAdapterBase<P : IIdProvider, C : IIdProvider, H : HeaderListAdapterBase.HeaderHolder<P, C>>(private val partitionDelegate: PartitionDelegate<P, C>, private val headerComparator: Comparator<P>, private val childComparator: Comparator<C>) : ListAdapterBase<ItemBindingHolder<IIdProvider>, C>() {
+abstract class HeaderListAdapterBase<P : IIdProvider, C : IIdProvider, H : HeaderListAdapterBase.HeaderHolder<P, C>>(
+    private val partitionDelegate: PartitionDelegate<P, C>,
+    private val headerComparator: Comparator<P>,
+    private val childComparator: Comparator<C>
+) : ListAdapterBase<ItemBindingHolder<IIdProvider>, C>() {
+
     protected var headersList: MutableList<H> = ArrayList()
 
     init {
-        setHasStableIds(true)
+        super.setHasStableIds(true)
     }
 
     override fun getItem(position: Int): C? {
@@ -56,7 +61,11 @@ abstract class HeaderListAdapterBase<P : IIdProvider, C : IIdProvider, H : Heade
         return if (getHeaderRelativePosition(position) == 0) HEADER_TYPE else ITEM_TYPE
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemBindingHolder<IIdProvider> {
+    @Suppress("UNCHECKED_CAST")
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ItemBindingHolder<IIdProvider> {
         return if (viewType == HEADER_TYPE) {
             getTopLevelViewHolder(parent) as ItemBindingHolder<IIdProvider>
         } else {
@@ -119,7 +128,7 @@ abstract class HeaderListAdapterBase<P : IIdProvider, C : IIdProvider, H : Heade
         }
     }
 
-    override fun setList(list: MutableList<C>) {
+    override fun setList(list: List<C>) {
         fillChildMap(list)
         notifyDataSetChanged()
     }
@@ -151,16 +160,20 @@ abstract class HeaderListAdapterBase<P : IIdProvider, C : IIdProvider, H : Heade
 
     override fun getItemById(id: Long): C? {
         return headersList
-                .flatMap { it.children }
-                .firstOrNull { it.id == id }
+            .flatMap { it.children }
+            .firstOrNull { it.id == id }
     }
 
     internal fun getHeaderIndex(h: H): Int {
-        return Collections.binarySearch(headersList, h
+        return Collections.binarySearch(
+            headersList, h
         ) { holder1, holder2 -> headerComparator.compare(holder1.item, holder2.item) }
     }
 
-    open class HeaderHolder<HEADER, CHILD> internal constructor(internal var item: HEADER, private val childComparator: Comparator<in CHILD>) {
+    open class HeaderHolder<HEADER, CHILD> internal constructor(
+        internal var item: HEADER,
+        private val childComparator: Comparator<in CHILD>
+    ) {
         internal var children: MutableList<CHILD> = mutableListOf()
 
         /**
@@ -171,7 +184,7 @@ abstract class HeaderListAdapterBase<P : IIdProvider, C : IIdProvider, H : Heade
             get() = 1 + children.size
 
         fun add(item: CHILD) {
-            val pos = Collections.binarySearch(children, item, childComparator)
+            val pos = children.binarySearch(item, childComparator)
             if (pos < 0) {
                 children.add(-pos - 1, item)
             } else {

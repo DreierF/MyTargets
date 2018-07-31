@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -17,6 +17,7 @@ package de.dreier.mytargets.features.statistics
 
 import android.content.Context
 import de.dreier.mytargets.R
+import de.dreier.mytargets.base.db.AppDatabase
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import org.threeten.bp.format.DateTimeFormatter
@@ -26,7 +27,14 @@ import java.io.IOException
 import java.io.Writer
 import java.util.*
 
-class CsvExporter(private val context: Context) {
+class CsvExporter(private val context: Context, database: AppDatabase) {
+
+    private val trainingDAO = database.trainingDAO()
+    private val roundDAO = database.roundDAO()
+    private val endDAO = database.endDAO()
+    private val bowDAO = database.bowDAO()
+    private val arrowDAO = database.arrowDAO()
+    private val standardRoundDAO = database.standardRoundDAO()
 
     @Throws(IOException::class)
     fun exportAll(file: File, roundIds: List<Long>) {
@@ -54,7 +62,7 @@ class CsvExporter(private val context: Context) {
         csv.add("y")
         csv.newLine()
         csv.exitScope()
-        for (t in Training.all) {
+        for (t in trainingDAO.loadTrainings()) {
             addTraining(csv, t, roundIds)
         }
 
@@ -70,16 +78,23 @@ class CsvExporter(private val context: Context) {
         // Date
         csv.add(t.date.format(DateTimeFormatter.ISO_LOCAL_DATE))
         // StandardRound
-        csv.add(t.standardRound?.name ?: context.getString(R.string.practice))
+        csv.add(
+            standardRoundDAO.loadStandardRoundOrNull(t.standardRoundId!!)?.name
+                    ?: context.getString(R.string.practice)
+        )
         // Indoor
-        csv.add(if (t.indoor) context.getString(R.string.indoor) else context.getString(R.string.outdoor))
+        csv.add(
+            if (t.environment.indoor) context.getString(R.string.indoor) else context.getString(
+                R.string.outdoor
+            )
+        )
         // Bow
-        csv.add(if (t.bow == null) "" else t.bow!!.name)
+        csv.add(if (t.bowId == null) "" else bowDAO.loadBow(t.bowId!!).name)
         // Arrow
-        csv.add(if (t.arrow == null) "" else t.arrow!!.name)
-        t.loadRounds()
-                .filter { roundIds.contains(it.id) }
-                .forEach { addRound(csv, it) }
+        csv.add(if (t.arrowId == null) "" else arrowDAO.loadArrow(t.arrowId!!).name)
+        roundDAO.loadRounds(t.id)
+            .filter { roundIds.contains(it.id) }
+            .forEach { addRound(csv, it) }
         csv.exitScope()
     }
 
@@ -93,13 +108,13 @@ class CsvExporter(private val context: Context) {
         // Target
         val target = r.target
         csv.add("${target.model} (${target.diameter})")
-        for (e in r.loadEnds()) {
+        for (e in roundDAO.loadEnds(r.id)) {
             csv.enterScope()
             // End
             csv.add((e.index + 1).toString())
             // Timestamp
             csv.add(e.saveTime!!.format(DateTimeFormatter.ISO_LOCAL_TIME))
-            for ((_, index, _, x, y, scoringRing) in e.loadShots()) {
+            for ((_, index, _, x, y, scoringRing) in endDAO.loadShots(e.id)) {
                 csv.enterScope()
                 // Score
                 csv.add(target.zoneToString(scoringRing, index))

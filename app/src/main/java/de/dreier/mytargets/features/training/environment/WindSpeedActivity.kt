@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -16,10 +16,9 @@
 package de.dreier.mytargets.features.training.environment
 
 import android.support.v4.app.Fragment
+import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase
 
-import de.dreier.mytargets.base.activities.ItemSelectActivity
-
-class WindSpeedActivity : ItemSelectActivity() {
+class WindSpeedActivity : SimpleFragmentActivityBase() {
     override fun instantiateFragment(): Fragment {
         return WindSpeedListFragment()
     }

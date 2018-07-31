@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -37,8 +37,8 @@ class TimerActivity : ChildActivityBase() {
             }
 
             fragmentManager.beginTransaction()
-                    .replace(android.R.id.content, childFragment, FRAGMENT_TAG)
-                    .commit()
+                .replace(android.R.id.content, childFragment, FRAGMENT_TAG)
+                .commit()
         }
     }
 

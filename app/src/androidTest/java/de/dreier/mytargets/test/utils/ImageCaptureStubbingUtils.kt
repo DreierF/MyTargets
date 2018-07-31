@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -22,7 +22,6 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
 import android.support.test.runner.intent.IntentStubberRegistry
-import de.dreier.mytargets.shared.utils.FileUtils
 import java.io.IOException
 
 object ImageCaptureStubbingUtils {
@@ -46,11 +45,11 @@ object ImageCaptureStubbingUtils {
 
     private fun saveMockToUri(context: Context, mockedImage: Int, uriToSaveImage: Uri) {
         try {
-            val testRes = context.resources
-            val ts = testRes.openRawResource(mockedImage)
-            val stream = context.contentResolver
+            val testResources = context.resources
+            val inputStream = testResources.openRawResource(mockedImage)
+            val outputStream = context.contentResolver
                     .openOutputStream(uriToSaveImage)
-            FileUtils.copy(ts, stream!!)
+            inputStream.copyTo(outputStream)
         } catch (e: IOException) {
             e.printStackTrace()
         }

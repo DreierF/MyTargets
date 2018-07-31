@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -23,13 +23,19 @@ import android.view.View
 import de.dreier.mytargets.R
 
 
-class DistanceItemDecorator(context: Context, private val gridSize: Int) : RecyclerView.ItemDecoration() {
+class DistanceItemDecorator(context: Context, private val gridSize: Int) :
+    RecyclerView.ItemDecoration() {
     private val spaceHorizontal: Int = context.resources
-            .getDimension(R.dimen.card_padding_horizontal).toInt()
+        .getDimension(R.dimen.card_padding_horizontal).toInt()
     private val spaceVertical: Int = context.resources
-            .getDimension(R.dimen.card_padding_vertical).toInt()
+        .getDimension(R.dimen.card_padding_vertical).toInt()
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
+    override fun getItemOffsets(
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: RecyclerView.State?
+    ) {
         val position = parent.getChildAdapterPosition(view)
         if (position % gridSize == 0) {
             outRect.left = spaceHorizontal

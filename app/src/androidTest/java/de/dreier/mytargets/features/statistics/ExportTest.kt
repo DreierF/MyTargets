@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -18,7 +18,7 @@ package de.dreier.mytargets.features.statistics
 import android.support.test.InstrumentationRegistry.getInstrumentation
 import android.support.test.filters.SmallTest
 import android.support.test.runner.AndroidJUnit4
-import de.dreier.mytargets.shared.models.db.Training
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.test.base.InstrumentedTestBase
 import de.dreier.mytargets.test.utils.rules.MiniDbTestRule
 import org.junit.Assert
@@ -38,13 +38,13 @@ class ExportTest : InstrumentedTestBase() {
     @Throws(IOException::class)
     fun testDataExport() {
         val writer = StringWriter()
-        val roundIds = Training.all
-                .flatMap { it.loadRounds() }
+        val roundIds = ApplicationInstance.db.trainingDAO().loadTrainings()
+                .flatMap { ApplicationInstance.db.roundDAO().loadRounds(it.id) }
                 .map { it.id }
                 .sorted()
                 .toMutableList()
         roundIds.removeAt(0)
-        CsvExporter(getInstrumentation().targetContext)
+        CsvExporter(getInstrumentation().targetContext, ApplicationInstance.db)
                 .writeExportData(writer, roundIds)
         Assert.assertEquals(EXPECTED, writer.toString())
     }

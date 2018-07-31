@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -19,6 +19,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import androidx.core.content.systemService
 import de.dreier.mytargets.shared.SharedApplicationInstance
 import de.dreier.mytargets.utils.WearWearableClient
 
@@ -41,9 +42,8 @@ class ApplicationInstance : SharedApplicationInstance() {
         if (Build.VERSION.SDK_INT < 26) {
             return
         }
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channel = NotificationChannel(DEFAULT_CHANNEL_ID, getString(R.string.notification_channel_default), NotificationManager.IMPORTANCE_DEFAULT)
-        notificationManager.createNotificationChannel(channel)
+        context.systemService<NotificationManager>().createNotificationChannel(channel)
     }
 
     override fun onTerminate() {

@@ -23,4 +23,4 @@ If you don't have a concrete idea, there a few issues in the backlog with some r
 If you want to help improve the translations of the app you can do so at https://crowdin.com/project/mytargets
 
 ## Licence ##
-Released under GNU GLP V2
+Released under GNU GPL V2

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -17,7 +17,6 @@ package de.dreier.mytargets.base.gallery
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.AsyncTask
@@ -28,17 +27,13 @@ import android.view.Menu
 import android.view.MenuItem
 import com.afollestad.materialdialogs.MaterialDialog
 import com.evernote.android.state.State
-import com.evernote.android.state.StateSaver
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.activities.ChildActivityBase
 import de.dreier.mytargets.base.gallery.adapters.HorizontalListAdapters
 import de.dreier.mytargets.base.gallery.adapters.ViewPagerAdapter
+import de.dreier.mytargets.base.navigation.NavigationController
 import de.dreier.mytargets.databinding.ActivityGalleryBinding
-import de.dreier.mytargets.shared.utils.FileUtils
-import de.dreier.mytargets.shared.utils.ImageList
-import de.dreier.mytargets.shared.utils.toUri
-import de.dreier.mytargets.utils.ToolbarUtils
-import de.dreier.mytargets.utils.Utils
+import de.dreier.mytargets.utils.*
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
 import pl.aprilapps.easyphotopicker.DefaultCallback
@@ -52,10 +47,10 @@ class GalleryActivity : ChildActivityBase() {
 
     internal var adapter: ViewPagerAdapter? = null
     internal var layoutManager: LinearLayoutManager? = null
-    internal var previewAdapter: HorizontalListAdapters? = null
+    internal lateinit var previewAdapter: HorizontalListAdapters
 
     @State
-    var imageList: ImageList? = null
+    lateinit var imageList: ImageList
 
     private lateinit var binding: ActivityGalleryBinding
 
@@ -66,8 +61,6 @@ class GalleryActivity : ChildActivityBase() {
         val title = intent.getStringExtra(EXTRA_TITLE)
         if (savedInstanceState == null) {
             imageList = intent.getParcelableExtra(EXTRA_IMAGES)
-        } else {
-            StateSaver.restoreInstanceState(this, savedInstanceState)
         }
 
         setSupportActionBar(binding.toolbar)
@@ -79,19 +72,24 @@ class GalleryActivity : ChildActivityBase() {
         layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.imagesHorizontalList.layoutManager = layoutManager
 
-        adapter = ViewPagerAdapter(this, imageList!!, binding.toolbar, binding.imagesHorizontalList)
+        adapter = ViewPagerAdapter(this, imageList, binding.toolbar, binding.imagesHorizontalList)
         binding.pager.adapter = adapter
 
-        previewAdapter = HorizontalListAdapters(this, imageList!!, { this.goToImage(it) })
+        previewAdapter = HorizontalListAdapters(this, imageList, { this.goToImage(it) })
         binding.imagesHorizontalList.adapter = previewAdapter
-        previewAdapter!!.notifyDataSetChanged()
+        previewAdapter.notifyDataSetChanged()
 
         binding.pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+            }
 
             override fun onPageSelected(position: Int) {
                 binding.imagesHorizontalList.smoothScrollToPosition(position)
-                previewAdapter!!.setSelectedItem(position)
+                previewAdapter.setSelectedItem(position)
             }
 
             override fun onPageScrollStateChanged(state: Int) {
@@ -100,10 +98,10 @@ class GalleryActivity : ChildActivityBase() {
         })
 
         val currentPos = 0
-        previewAdapter!!.setSelectedItem(currentPos)
+        previewAdapter.setSelectedItem(currentPos)
         binding.pager.currentItem = currentPos
 
-        if (imageList!!.size() == 0 && savedInstanceState == null) {
+        if (imageList.size() == 0 && savedInstanceState == null) {
             onTakePictureWithPermissionCheck()
         }
     }
@@ -115,8 +113,8 @@ class GalleryActivity : ChildActivityBase() {
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         super.onPrepareOptionsMenu(menu)
-        menu.findItem(R.id.action_share).isVisible = !imageList!!.isEmpty
-        menu.findItem(R.id.action_delete).isVisible = !imageList!!.isEmpty
+        menu.findItem(R.id.action_share).isVisible = !imageList.isEmpty
+        menu.findItem(R.id.action_delete).isVisible = !imageList.isEmpty
         return true
     }
 
@@ -133,7 +131,7 @@ class GalleryActivity : ChildActivityBase() {
                 return true
             }
             android.R.id.home -> {
-                onBackPressed()
+                navigationController.finish()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -141,7 +139,7 @@ class GalleryActivity : ChildActivityBase() {
     }
 
     private fun shareImage(currentItem: Int) {
-        val currentImage = imageList!![currentItem]
+        val currentImage = imageList[currentItem]
         val file = File(filesDir, currentImage.fileName)
         val uri = file.toUri(this)
         val shareIntent = Intent(Intent.ACTION_SEND)
@@ -152,36 +150,25 @@ class GalleryActivity : ChildActivityBase() {
 
     private fun deleteImage(currentItem: Int) {
         MaterialDialog.Builder(this)
-                .content(R.string.delete_image)
-                .negativeText(android.R.string.cancel)
-                .negativeColorRes(R.color.md_grey_500)
-                .positiveText(R.string.delete)
-                .positiveColorRes(R.color.md_red_500)
-                .onPositive { _, _ ->
-                    imageList!!.remove(currentItem)
-                    updateResult()
-                    invalidateOptionsMenu()
-                    adapter!!.notifyDataSetChanged()
-                    val nextItem = Math.min(imageList!!.size() - 1, currentItem)
-                    previewAdapter!!.setSelectedItem(nextItem)
-                    binding.pager.currentItem = nextItem
-                }
-                .show()
+            .content(R.string.delete_image)
+            .negativeText(android.R.string.cancel)
+            .negativeColorRes(R.color.md_grey_500)
+            .positiveText(R.string.delete)
+            .positiveColorRes(R.color.md_red_500)
+            .onPositive { _, _ ->
+                imageList.remove(currentItem)
+                updateResult()
+                invalidateOptionsMenu()
+                adapter!!.notifyDataSetChanged()
+                val nextItem = Math.min(imageList.size() - 1, currentItem)
+                previewAdapter.setSelectedItem(nextItem)
+                binding.pager.currentItem = nextItem
+            }
+            .show()
     }
 
     private fun updateResult() {
-        setResult(Activity.RESULT_OK, wrap(imageList!!))
-    }
-
-    private fun wrap(imageList: ImageList): Intent {
-        val i = Intent()
-        i.putExtra(RESULT_IMAGES, imageList)
-        return i
-    }
-
-    public override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-        StateSaver.saveInstanceState(this, outState!!)
+        navigationController.setResultSuccess(imageList)
     }
 
     @NeedsPermission(Manifest.permission.CAMERA)
@@ -195,7 +182,11 @@ class GalleryActivity : ChildActivityBase() {
     }
 
     @SuppressLint("NeedOnRequestPermissionsResult")
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         onRequestPermissionsResult(requestCode, grantResults)
     }
@@ -203,21 +194,25 @@ class GalleryActivity : ChildActivityBase() {
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         EasyImage.handleActivityResult(requestCode, resultCode, data, this,
-                object : DefaultCallback() {
+            object : DefaultCallback() {
 
-                    override fun onImagesPicked(imageFiles: List<File>, source: EasyImage.ImageSource, type: Int) {
-                        loadImages(imageFiles)
-                    }
+                override fun onImagesPicked(
+                    imageFiles: List<File>,
+                    source: EasyImage.ImageSource,
+                    type: Int
+                ) {
+                    loadImages(imageFiles)
+                }
 
-                    override fun onCanceled(source: EasyImage.ImageSource?, type: Int) {
-                        //Cancel handling, you might wanna remove taken photo if it was canceled
-                        if (source == EasyImage.ImageSource.CAMERA) {
-                            val photoFile = EasyImage
-                                    .lastlyTakenButCanceledPhoto(applicationContext)
-                            photoFile?.delete()
-                        }
+                override fun onCanceled(source: EasyImage.ImageSource?, type: Int) {
+                    //Cancel handling, you might wanna remove taken photo if it was canceled
+                    if (source == EasyImage.ImageSource.CAMERA) {
+                        val photoFile = EasyImage
+                            .lastlyTakenButCanceledPhoto(applicationContext)
+                        photoFile?.delete()
                     }
-                })
+                }
+            })
     }
 
     private fun loadImages(imageFile: List<File>) {
@@ -229,7 +224,7 @@ class GalleryActivity : ChildActivityBase() {
                     try {
                         val internal = File.createTempFile("img", file.name, filesDir)
                         internalFiles.add(internal.name)
-                        FileUtils.move(file, internal)
+                        file.moveTo(internal)
                     } catch (e: IOException) {
                         e.printStackTrace()
                     }
@@ -240,20 +235,20 @@ class GalleryActivity : ChildActivityBase() {
 
             override fun onPostExecute(files: List<String>) {
                 super.onPostExecute(files)
-                imageList!!.addAll(files)
+                imageList.addAll(files)
                 updateResult()
                 invalidateOptionsMenu()
-                previewAdapter!!.notifyDataSetChanged()
+                previewAdapter.notifyDataSetChanged()
                 adapter!!.notifyDataSetChanged()
-                val currentPos = imageList!!.size() - 1
-                previewAdapter!!.setSelectedItem(currentPos)
+                val currentPos = imageList.size() - 1
+                previewAdapter.setSelectedItem(currentPos)
                 binding.pager.currentItem = currentPos
             }
         }.execute()
     }
 
     private fun goToImage(pos: Int) {
-        if (imageList!!.size() == pos) {
+        if (imageList.size() == pos) {
             onTakePictureWithPermissionCheck()
         } else {
             binding.pager.setCurrentItem(pos, true)
@@ -261,12 +256,11 @@ class GalleryActivity : ChildActivityBase() {
     }
 
     companion object {
-        const val RESULT_IMAGES = "images"
         const val EXTRA_IMAGES = "images"
         const val EXTRA_TITLE = "title"
 
         fun getResult(data: Intent): ImageList {
-            return data.getParcelableExtra(RESULT_IMAGES)
+            return data.getParcelableExtra(NavigationController.ITEM)
         }
     }
 }

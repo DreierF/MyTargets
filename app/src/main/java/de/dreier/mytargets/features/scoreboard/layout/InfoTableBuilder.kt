@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -38,7 +38,11 @@ class InfoTableBuilder {
         row.addCell(key).addBoldCell(value.toString(), wrap)
     }
 
-    private fun getKeyValueLine(row: Table.Row, @StringRes key: Int, value: Any, wrap: Boolean = false) {
+    private fun getKeyValueLine(
+        row: Table.Row, @StringRes key: Int,
+        value: Any,
+        wrap: Boolean = false
+    ) {
         getKeyValueLine(row, SharedApplicationInstance.getStr(key), value, wrap)
     }
 

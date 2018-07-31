@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -22,15 +22,18 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.ListAdapterBase
 import de.dreier.mytargets.shared.models.IIdSettable
-import de.dreier.mytargets.shared.models.IRecursiveModel
 import de.dreier.mytargets.utils.multiselector.MultiSelector
+import de.dreier.mytargets.utils.multiselector.OnItemClickListener
 import de.dreier.mytargets.utils.multiselector.OnItemLongClickListener
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 
-/**
- * @param <T> Model of the item which is managed within the fragment.
-</T> */
-abstract class EditableListFragmentBase<T, U : ListAdapterBase<*, T>> : ListFragmentBase<T, U>(), OnItemLongClickListener<T> where T : IIdSettable, T : IRecursiveModel {
+abstract class EditableListFragmentBase<T, U : ListAdapterBase<*, T>> : FragmentBase(),
+    OnItemClickListener<T>, OnItemLongClickListener<T> where T : IIdSettable {
+
+    /**
+     * Adapter for the fragment's RecyclerView
+     */
+    protected var adapter: U? = null
 
     var selector = MultiSelector()
 
@@ -46,12 +49,17 @@ abstract class EditableListFragmentBase<T, U : ListAdapterBase<*, T>> : ListFrag
         super.onCreate(savedInstanceState)
 
         // Restore action mode after fragment recreation
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             selector.restoreSelectionStates(savedInstanceState.getBundle(KEY_SELECTOR)!!)
-            if(selector.selectable) {
+            if (selector.selectable) {
                 actionModeCallback?.restartActionMode()
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBundle(KEY_SELECTOR, selector.saveSelectionStates())
     }
 
     override fun onResume() {
@@ -61,40 +69,37 @@ abstract class EditableListFragmentBase<T, U : ListAdapterBase<*, T>> : ListFrag
 
     fun onDelete(deletedIds: List<Long>) {
         FirebaseAnalytics.getInstance(context!!).logEvent("delete", null)
-        val deleted = deleteItems(deletedIds)
-        val message = resources.getQuantityString(itemTypeDelRes, deleted.size, deleted.size)
+        val undoDeletions = deleteItems(deletedIds)
+        val message = resources.getQuantityString(itemTypeDelRes, deletedIds.size, deletedIds.size)
         val coordinatorLayout = view!!.findViewById<View>(R.id.coordinatorLayout)
         Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG)
-                .setAction(R.string.undo) { undoDeletion(deleted) }
-                .show()
+            .setAction(R.string.undo) {
+                undoDeletion(undoDeletions)
+            }
+            .show()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putBundle(KEY_SELECTOR, selector.saveSelectionStates())
-
-    }
-
-    private fun deleteItems(deletedIds: List<Long>): MutableList<T> {
+    private fun deleteItems(deletedIds: List<Long>): MutableList<() -> T> {
         val deleted = deletedIds
-                .map { id -> adapter!!.getItemById(id) }
-                .filter { item -> item != null }
-                .map { it!! }
-                .toMutableList()
+            .map { id -> adapter!!.getItemById(id) }
+            .filter { item -> item != null }
+            .map { it!! }
+            .toMutableList()
+        val undoActions = mutableListOf<() -> T>()
         for (item in deleted) {
             adapter!!.removeItem(item)
-            item.delete()
+            undoActions.add(deleteItem(item))
         }
         adapter!!.notifyDataSetChanged()
         reloadData()
-        return deleted
+        return undoActions
     }
 
-    private fun undoDeletion(deleted: MutableList<T>) {
-        for (item in deleted) {
-            item.saveRecursively()
-            adapter!!.addItem(item)
-        }
+    protected abstract fun deleteItem(item: T): () -> T
+
+    private fun undoDeletion(deleted: MutableList<() -> T>) {
+        deleted.map { it.invoke() }
+            .forEach { adapter!!.addItem(it) }
         reloadData()
         deleted.clear()
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.support.v4.app.NotificationCompat
+import androidx.core.content.systemService
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.WearableListenerService
 import de.dreier.mytargets.shared.models.TimerSettings
@@ -74,7 +75,7 @@ class WearWearableListener : WearableListenerService() {
                 .extend(NotificationCompat.WearableExtender().setBackground(image))
 
         // Build the notification and show it
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = systemService<NotificationManager>()
         notificationManager.cancel(NOTIFICATION_ID)
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
     }

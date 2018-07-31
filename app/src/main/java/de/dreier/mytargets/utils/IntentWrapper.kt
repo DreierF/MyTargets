@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -29,9 +29,9 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.utils.transitions.FabTransform
 
 class IntentWrapper(
-        private var activity: Activity,
-        var fragment: Fragment? = null,
-        intentTargetClass: Class<*>
+    private var activity: Activity,
+    var fragment: Fragment? = null,
+    intentTargetClass: Class<*>
 ) {
 
     private val intent = Intent(activity, intentTargetClass)
@@ -76,13 +76,18 @@ class IntentWrapper(
 
     @SuppressLint("NewApi")
     @JvmOverloads
-    fun fromFab(fab: View, @ColorRes color: Int = R.color.colorAccent, icon: Int = R.drawable.ic_add_white_24dp): IntentWrapper {
+    fun fromFab(
+        fab: View, @ColorRes color: Int = R.color.colorAccent,
+        icon: Int = R.drawable.ic_add_white_24dp
+    ): IntentWrapper {
         if (Utils.isLollipop) {
             fab.transitionName = fab.context.getString(R.string.transition_root_view)
             FabTransform.addExtras(intent, color, icon)
             val options = ActivityOptions
-                    .makeSceneTransitionAnimation(getActivity(fab), fab,
-                            fab.context.getString(R.string.transition_root_view))
+                .makeSceneTransitionAnimation(
+                    getActivity(fab), fab,
+                    fab.context.getString(R.string.transition_root_view)
+                )
             this.options = options.toBundle()
         }
         return this
@@ -111,8 +116,10 @@ class IntentWrapper(
     }
 
     fun clearTopSingleTop(): IntentWrapper {
-        intent.addFlags(intent.flags or Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        intent.addFlags(
+            intent.flags or Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                    Intent.FLAG_ACTIVITY_SINGLE_TOP
+        )
         return this
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -42,7 +42,8 @@ internal class SyncAdapter
 /**
  * Constructor. Obtains handle to content resolver for later use.
  */
-(context: Context, autoInitialize: Boolean) : AbstractThreadedSyncAdapter(context, autoInitialize) {
+    (context: Context, autoInitialize: Boolean) :
+    AbstractThreadedSyncAdapter(context, autoInitialize) {
 
     /**
      * Called by the Android system in response to a request to run the sync adapter. The work
@@ -63,8 +64,10 @@ internal class SyncAdapter
      * The syncResult argument allows you to pass information back to the method that triggered
      * the sync.
      */
-    override fun onPerformSync(account: Account, extras: Bundle, authority: String,
-                               provider: ContentProviderClient, syncResult: SyncResult) {
+    override fun onPerformSync(
+        account: Account, extras: Bundle, authority: String,
+        provider: ContentProviderClient, syncResult: SyncResult
+    ) {
         Timber.e("Beginning network synchronization")
         val backup = SettingsManager.backupLocation.createBackup()
         try {

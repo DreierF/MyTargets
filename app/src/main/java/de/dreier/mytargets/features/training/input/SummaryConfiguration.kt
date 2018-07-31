@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.features.training.input
 
-data class SummaryConfiguration (
+data class SummaryConfiguration(
     var showEnd: Boolean = false,
     var showRound: Boolean = false,
     var showTraining: Boolean = false,

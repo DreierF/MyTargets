@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -23,12 +23,14 @@ import java.util.*
 /**
  * The list is automatically sorted in natural order.
  */
-abstract class SimpleListAdapterBase<T> : ListAdapterBase<SelectableViewHolder<T>, T>() where T : IIdProvider, T : Comparable<T> {
+abstract class SimpleListAdapterBase<T>(
+    private val comparator: Comparator<T>
+) : ListAdapterBase<SelectableViewHolder<T>, T>() where T : IIdProvider {
 
     private var list: MutableList<T> = ArrayList()
 
     init {
-        setHasStableIds(true)
+        super.setHasStableIds(true)
     }
 
     override fun getItemId(position: Int): Long {
@@ -53,9 +55,8 @@ abstract class SimpleListAdapterBase<T> : ListAdapterBase<SelectableViewHolder<T
         viewHolder.internalBindItem(list[position])
     }
 
-    override fun setList(list: MutableList<T>) {
-        Collections.sort(list)
-        this.list = list
+    override fun setList(list: List<T>) {
+        this.list = list.sortedWith(comparator).toMutableList()
         notifyDataSetChanged()
     }
 
@@ -64,7 +65,7 @@ abstract class SimpleListAdapterBase<T> : ListAdapterBase<SelectableViewHolder<T
     }
 
     override fun addItem(item: T) {
-        val pos = Collections.binarySearch(list, item)
+        val pos = list.binarySearch(item, comparator)
         if (pos < 0) {
             list.add(-pos - 1, item)
             notifyItemInserted(-pos - 1)
@@ -75,7 +76,7 @@ abstract class SimpleListAdapterBase<T> : ListAdapterBase<SelectableViewHolder<T
     }
 
     override fun getItemPosition(item: T): Int {
-        val pos = Collections.binarySearch(list, item)
+        val pos = list.binarySearch(item, comparator)
         return if (pos >= 0) {
             pos
         } else {
@@ -84,7 +85,7 @@ abstract class SimpleListAdapterBase<T> : ListAdapterBase<SelectableViewHolder<T
     }
 
     override fun removeItem(item: T) {
-        val pos = Collections.binarySearch(list, item)
+        val pos = list.binarySearch(item, comparator)
         if (pos < 0) {
             throw IllegalArgumentException("Item has already been removed!")
         }
@@ -93,11 +94,6 @@ abstract class SimpleListAdapterBase<T> : ListAdapterBase<SelectableViewHolder<T
     }
 
     override fun getItemById(id: Long): T? {
-        for (item in list) {
-            if (item.id == id) {
-                return item
-            }
-        }
-        return null
+        return list.firstOrNull { it.id == id }
     }
 }

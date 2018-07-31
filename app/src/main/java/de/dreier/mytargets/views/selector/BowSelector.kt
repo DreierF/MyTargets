@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -19,9 +19,28 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.AttributeSet
+import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
+import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding
 import de.dreier.mytargets.shared.models.db.Bow
 
-class BowSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ImageSelectorBase<Bow>(context, attrs, BOW_REQUEST_CODE) {
+class BowSelector @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null
+) : SelectorBase<Bow, SelectorItemImageDetailsBinding>(
+    context,
+    attrs,
+    R.layout.selector_item_image_details,
+    BOW_REQUEST_CODE
+) {
+
+    private val database = ApplicationInstance.db
+    private val bowDAO = database.bowDAO()
+
+    override fun bindView(item: Bow) {
+        view.name.text = item.name
+        view.image.setImageDrawable(item.thumbnail!!.roundDrawable)
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -33,10 +52,10 @@ class BowSelector @JvmOverloads constructor(context: Context, attrs: AttributeSe
     fun setItemId(bow: Long?) {
         var item: Bow? = null
         if (bow != null) {
-            item = Bow[bow]
+            item = bowDAO.loadBowOrNull(bow)
         }
         if (item == null) {
-            item = Bow.all.firstOrNull()
+            item = bowDAO.loadBows().firstOrNull()
         }
         setItem(item)
     }

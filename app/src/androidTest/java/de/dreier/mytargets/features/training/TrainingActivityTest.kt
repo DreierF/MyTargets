@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.features.training
 
-
 import android.content.Intent
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.assertion.ViewAssertions.matches
@@ -24,8 +23,8 @@ import android.support.test.espresso.matcher.ViewMatchers.hasDescendant
 import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.runner.AndroidJUnit4
 import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase
-import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.test.base.UITestBase
 import de.dreier.mytargets.test.utils.matchers.RecyclerViewMatcher.Companion.withRecyclerView
 import de.dreier.mytargets.test.utils.rules.SimpleDbTestRule
@@ -42,14 +41,15 @@ import java.util.*
 class TrainingActivityTest : UITestBase() {
 
     private val activityTestRule = IntentsTestRule(
-            TrainingActivity::class.java, true, false)
+        TrainingActivity::class.java, true, false
+    )
     @get:Rule
     val rule = RuleChain.outerRule(SimpleDbTestRule())
-            .around(activityTestRule)
+        .around(activityTestRule)
 
     @Test
     fun navigation() {
-        val trainings = Training.all
+        val trainings = ApplicationInstance.db.trainingDAO().loadTrainings()
         Collections.sort(trainings, Collections.reverseOrder())
         val training = trainings[0]
         val i = Intent()
@@ -60,12 +60,12 @@ class TrainingActivityTest : UITestBase() {
         //                .respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
 
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
-                .check(matches(hasDescendant(withText(containsString("50m")))))
-                .check(matches(hasDescendant(withText("212/360"))))
+            .check(matches(hasDescendant(withText(containsString("50m")))))
+            .check(matches(hasDescendant(withText("212/360"))))
 
         onView(withRecyclerView(R.id.recyclerView).atPosition(1))
-                .check(matches(hasDescendant(withText(containsString("30m")))))
-                .check(matches(hasDescendant(withText("203/360"))))
+            .check(matches(hasDescendant(withText(containsString("30m")))))
+            .check(matches(hasDescendant(withText("203/360"))))
 
         //        onView(withRecyclerView(R.id.recyclerView).atPosition(1))
         //                .perform(click());

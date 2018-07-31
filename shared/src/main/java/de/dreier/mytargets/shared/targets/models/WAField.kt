@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -28,7 +28,7 @@ import de.dreier.mytargets.shared.utils.Color.LEMON_YELLOW
 open class WAField internal constructor(id: Long, nameRes: Int) : TargetModelBase(
         id = id,
         nameRes = nameRes,
-        zones = arrayOf(
+        zones = listOf(
                 CircularZone(0.1f, LEMON_YELLOW, DARK_GRAY, 4),
                 CircularZone(0.2f, LEMON_YELLOW, DARK_GRAY, 4),
                 CircularZone(0.4f, DARK_GRAY, WHITE, 4),
@@ -36,11 +36,11 @@ open class WAField internal constructor(id: Long, nameRes: Int) : TargetModelBas
                 CircularZone(0.8f, DARK_GRAY, WHITE, 4),
                 CircularZone(1.0f, DARK_GRAY, WHITE, 4)
         ),
-        scoringStyles = arrayOf(
+        scoringStyles = listOf(
                 ScoringStyle(true, 5, 5, 4, 3, 2, 1),
                 ScoringStyle(false, 6, 5, 4, 3, 2, 1)
         ),
-        diameters = arrayOf(
+        diameters = listOf(
                 Dimension(20f, CENTIMETER),
                 Dimension(40f, CENTIMETER),
                 Dimension(60f, CENTIMETER),

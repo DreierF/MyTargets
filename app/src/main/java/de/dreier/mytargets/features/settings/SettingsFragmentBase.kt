@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -26,7 +26,8 @@ import de.dreier.mytargets.R
 import de.dreier.mytargets.shared.SharedApplicationInstance
 import de.dreier.mytargets.utils.ToolbarUtils
 
-abstract class SettingsFragmentBase : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+abstract class SettingsFragmentBase : PreferenceFragmentCompat(),
+    SharedPreferences.OnSharedPreferenceChangeListener {
 
     private var rootKey = "main"
 
@@ -46,7 +47,8 @@ abstract class SettingsFragmentBase : PreferenceFragmentCompat(), SharedPreferen
 
         // Set the default white background in the view so as to avoid transparency
         view.setBackgroundColor(
-                ContextCompat.getColor(context!!, R.color.background_material_light))
+            ContextCompat.getColor(context!!, R.color.background_material_light)
+        )
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
@@ -66,7 +68,7 @@ abstract class SettingsFragmentBase : PreferenceFragmentCompat(), SharedPreferen
         super.onResume()
         onFragmentResume()
         SharedApplicationInstance.sharedPreferences
-                .registerOnSharedPreferenceChangeListener(this)
+            .registerOnSharedPreferenceChangeListener(this)
     }
 
     protected open fun setActivityTitle() {
@@ -76,7 +78,7 @@ abstract class SettingsFragmentBase : PreferenceFragmentCompat(), SharedPreferen
     override fun onPause() {
         super.onPause()
         SharedApplicationInstance.sharedPreferences
-                .unregisterOnSharedPreferenceChangeListener(this)
+            .unregisterOnSharedPreferenceChangeListener(this)
     }
 
     protected fun setDefaultSummary(key: String) {

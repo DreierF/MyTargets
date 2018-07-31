@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -32,9 +32,9 @@ typealias DeleteCallback = (List<Long>) -> Unit
 typealias StatisticsCallback = (List<Long>) -> Unit
 
 class ItemActionModeCallback(
-        private val fragment: ListFragmentBase<*, *>,
-        private val selector: MultiSelector,
-        @PluralsRes private val itemTitleRes: Int
+    private val fragment: FragmentBase,
+    private val selector: MultiSelector,
+    @PluralsRes private val itemTitleRes: Int
 ) : ActionMode.Callback {
 
     private var actionMode: ActionMode? = null
@@ -92,7 +92,7 @@ class ItemActionModeCallback(
 
     fun longClick(holder: SelectableViewHolder<*>) {
         if (actionMode == null) {
-            val activity = fragment.getActivity() as AppCompatActivity?
+            val activity = fragment.activity as AppCompatActivity?
             activity!!.startSupportActionMode(this)
         }
         selector.setSelected(holder, true)
@@ -124,7 +124,8 @@ class ItemActionModeCallback(
         if (count == 0) {
             finish()
         } else {
-            actionMode!!.title = fragment.getResources().getQuantityString(itemTitleRes, count, count)
+            actionMode!!.title =
+                    fragment.getResources().getQuantityString(itemTitleRes, count, count)
             actionMode!!.invalidate()
         }
     }

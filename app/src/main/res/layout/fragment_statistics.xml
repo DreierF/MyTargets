@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (C) 2017 Florian Dreier
+  ~ Copyright (C) 2018 Florian Dreier
   ~
   ~ This file is part of MyTargets.
   ~
@@ -45,7 +45,7 @@
                     android:paddingTop="16dp"
                     android:text="@string/distribution"/>
 
-                <com.github.mikephil.charting.charts.PieChart
+                <de.dreier.mytargets.features.statistics.CustomPieChart
                     android:id="@+id/distributionChart"
                     android:layout_width="250dp"
                     android:layout_height="250dp"

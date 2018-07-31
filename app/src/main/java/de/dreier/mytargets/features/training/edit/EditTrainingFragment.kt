@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -26,9 +26,10 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.DatePicker
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.activities.ItemSelectActivity
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.fragments.EditFragmentBase
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase.Companion.ITEM_ID
+import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
 import de.dreier.mytargets.databinding.FragmentEditTrainingBinding
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.features.training.ETrainingType
@@ -37,21 +38,19 @@ import de.dreier.mytargets.features.training.ETrainingType.TRAINING_WITH_STANDAR
 import de.dreier.mytargets.features.training.target.TargetListFragment
 import de.dreier.mytargets.shared.models.EBowType
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.models.augmented.AugmentedRound
-import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
 import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.targets.models.WA3Ring3Spot
 import de.dreier.mytargets.utils.ToolbarUtils
 import de.dreier.mytargets.utils.Utils
+import de.dreier.mytargets.utils.getLongOrNull
 import de.dreier.mytargets.views.selector.ArrowSelector
 import de.dreier.mytargets.views.selector.BowSelector
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
-import java.util.*
 
 class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListener {
 
@@ -61,33 +60,27 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
     private lateinit var binding: FragmentEditTrainingBinding
     private var roundTarget: Target? = null
 
+    private val database = ApplicationInstance.db
+    private val trainingDAO = database.trainingDAO()
+
     private val training: Training
         get() {
             val training = if (trainingId == null) {
                 Training()
             } else {
-                Training[trainingId!!]!!
+                trainingDAO.loadTraining(trainingId!!)
             }
             training.title = binding.training.text.toString()
             training.date = date
             training.environment = binding.environment.selectedItem!!
-            training.bowId = if (binding.bow.selectedItem == null)
-                null
-            else
-                binding.bow
-                        .selectedItem!!
-                        .id
-            training.arrowId = if (binding.arrow.selectedItem == null)
-                null
-            else
-                binding.arrow
-                        .selectedItem!!.id
+            training.bowId = binding.bow.selectedItem?.id
+            training.arrowId = binding.arrow.selectedItem?.id
             training.arrowNumbering = binding.numberArrows.isChecked
 
             SettingsManager.bow = training.bowId
             SettingsManager.arrow = training.arrowId
             SettingsManager.arrowNumbersEnabled = training.arrowNumbering
-            SettingsManager.indoor = training.indoor
+            SettingsManager.indoor = training.environment.indoor
             return training
         }
 
@@ -105,14 +98,15 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
             return round
         }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil
-                .inflate(inflater, R.layout.fragment_edit_training, container, false)
+            .inflate(inflater, R.layout.fragment_edit_training, container, false)
 
-        val arguments = arguments
-        if (arguments != null && arguments.containsKey(ITEM_ID)) {
-            trainingId = arguments.getLong(ITEM_ID)
-        }
+        trainingId = arguments.getLongOrNull(ITEM_ID)
         trainingType = if (activity?.intent?.action == CREATE_TRAINING_WITH_STANDARD_ROUND_ACTION) {
             TRAINING_WITH_STANDARD_ROUND
         } else {
@@ -123,8 +117,13 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
         ToolbarUtils.showUpAsX(this)
         setHasOptionsMenu(true)
 
-        binding.arrows.setOnProgressChangeListener(object : DiscreteSeekBar.OnProgressChangeListener {
-            override fun onProgressChanged(seekBar: DiscreteSeekBar, value: Int, fromUser: Boolean) {
+        binding.arrows.setOnProgressChangeListener(object :
+            DiscreteSeekBar.OnProgressChangeListener {
+            override fun onProgressChanged(
+                seekBar: DiscreteSeekBar,
+                value: Int,
+                fromUser: Boolean
+            ) {
                 updateArrowsLabel()
             }
 
@@ -144,25 +143,27 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
             navigationController.navigateToStandardRoundList(selectedItem!!)
         }
         binding.standardRound.setOnUpdateListener { item ->
-            roundTarget = item!!.loadRounds()[0].targetTemplate
+            roundTarget = item!!.roundTemplates[0].targetTemplate
         }
         binding.changeTargetFace.setOnClickListener {
-            navigationController.navigateToTarget(roundTarget!!,
-                    requestCode = SR_TARGET_REQUEST_CODE,
-                    fixedType = TargetListFragment.EFixedType.GROUP)
+            navigationController.navigateToTarget(
+                roundTarget!!,
+                requestCode = SR_TARGET_REQUEST_CODE,
+                fixedType = TargetListFragment.EFixedType.GROUP
+            )
         }
         binding.arrow.setOnAddClickListener {
             navigationController.navigateToCreateArrow()
-                    .forResult(ArrowSelector.ARROW_ADD_REQUEST_CODE)
-                    .start()
+                .forResult(ArrowSelector.ARROW_ADD_REQUEST_CODE)
+                .start()
         }
         binding.arrow.setOnClickListener { selectedItem, _ ->
             navigationController.navigateToArrowList(selectedItem!!)
         }
         binding.bow.setOnAddClickListener {
             navigationController.navigateToCreateBow(EBowType.RECURVE_BOW)
-                    .forResult(BowSelector.BOW_ADD_REQUEST_CODE)
-                    .start()
+                .forResult(BowSelector.BOW_ADD_REQUEST_CODE)
+                .start()
         }
         binding.bow.setOnClickListener { selectedItem, _ ->
             navigationController.navigateToBowList(selectedItem!!)
@@ -175,11 +176,14 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
 
         if (trainingId == null) {
             ToolbarUtils.setTitle(this, R.string.new_training)
-            binding.training.setText(getString(
+            binding.training.setText(
+                getString(
                     if (trainingType == ETrainingType.COMPETITION)
                         R.string.competition
                     else
-                        R.string.training))
+                        R.string.training
+                )
+            )
             setTrainingDate()
             loadRoundDefaultValues()
             binding.bow.setItemId(SettingsManager.bow)
@@ -195,7 +199,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
                 GONE
         } else {
             ToolbarUtils.setTitle(this, R.string.edit_training)
-            val train = Training[trainingId!!]!!
+            val train = trainingDAO.loadTraining(trainingId!!)
             binding.training.setText(train.title)
             date = train.date
             binding.bow.setItemId(train.bowId)
@@ -203,7 +207,8 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
             binding.environment.setItem(train.environment)
             setTrainingDate()
             binding.notEditable.visibility = GONE
-            binding.changeTargetFace.visibility = if (train.standardRoundId != null) VISIBLE else GONE
+            binding.changeTargetFace.visibility =
+                    if (train.standardRoundId != null) VISIBLE else GONE
         }
         applyTrainingType()
         updateArrowsLabel()
@@ -213,7 +218,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
 
     private fun updateArrowsLabel() {
         binding.arrowsLabel.text = resources
-                .getQuantityString(R.plurals.arrow, binding.arrows.progress, binding.arrows.progress)
+            .getQuantityString(R.plurals.arrow, binding.arrows.progress, binding.arrows.progress)
     }
 
     private fun setScoringStyleForCompoundBow(bow: Bow?) {
@@ -235,17 +240,13 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
     }
 
     private fun applyTrainingType() {
-        val `in`: View
-        val out: View
         if (trainingType == FREE_TRAINING) {
-            `in` = binding.practiceLayout
-            out = binding.standardRound
+            binding.practiceLayout.visibility = VISIBLE
+            binding.standardRound.visibility = GONE
         } else {
-            out = binding.practiceLayout
-            `in` = binding.standardRound
+            binding.practiceLayout.visibility = GONE
+            binding.standardRound.visibility = VISIBLE
         }
-        `in`.visibility = VISIBLE
-        out.visibility = GONE
     }
 
     private fun onDateClick() {
@@ -254,7 +255,11 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
         datePickerDialog.show(activity!!.supportFragmentManager, "date_picker")
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
             binding.environment.onPermissionResult(activity!!, grantResults)
         }
@@ -266,44 +271,47 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
     }
 
     private fun setTrainingDate() {
-        binding.trainingDate.text = date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+        binding.trainingDate.text =
+                date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
     }
 
     override fun onSave() {
-        val training = AugmentedTraining(training)
-        finish()
+        navigationController.finish()
+
+        val training = training
 
         if (trainingId == null) {
+            val rounds: MutableList<Round>
             if (trainingType == FREE_TRAINING) {
-                training.training.standardRoundId = null
-                training.rounds = ArrayList()
-                training.rounds.add(AugmentedRound(round))
+                training.standardRoundId = null
+                rounds = mutableListOf(round)
             } else {
-                val standardRound = binding.standardRound.selectedItem
-                SettingsManager.standardRound = standardRound!!.id
-                if (standardRound.id == 0L) {
-                    standardRound.save()
+                val standardRound = binding.standardRound.selectedItem!!
+                if (standardRound.standardRound.id == 0L) {
+                    throw IllegalStateException("I assumed the standard round would have already been saved")
+                    //StandardRoundDAO.saveStandardRound(standardRound.standardRound, standardRound.roundTemplates)
                 }
-                training.training.standardRoundId = standardRound.id
-                training.initRoundsFromTemplate(standardRound)
-                for (round in training.rounds) {
-                    round.round.target = roundTarget!!
+                SettingsManager.standardRound = standardRound.standardRound.id
+                training.standardRoundId = standardRound.standardRound.id
+                rounds = standardRound.createRoundsFromTemplate()
+                for (round in rounds) {
+                    round.target = roundTarget!!
                 }
             }
-            training.toTraining().save()
+            trainingDAO.saveTraining(training, rounds)
 
-            val round = training.rounds[0]
+            val round = rounds[0]
 
-            navigationController.navigateToTraining(training.training)
-                    .noAnimation()
-                    .start()
-            navigationController.navigateToRound(round.round)
-                    .noAnimation()
-                    .start()
-            navigationController.navigateToCreateEnd(round.round)
+            navigationController.navigateToTraining(training)
+                .noAnimation()
+                .start()
+            navigationController.navigateToRound(round)
+                .noAnimation()
+                .start()
+            navigationController.navigateToCreateEnd(round)
         } else {
             // Edit training
-            training.toTraining().update()
+            trainingDAO.updateTraining(training)
             activity!!.overridePendingTransition(R.anim.left_in, R.anim.right_out)
         }
     }
@@ -317,9 +325,9 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
         binding.bow.onActivityResult(requestCode, resultCode, data)
         binding.environment.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == SR_TARGET_REQUEST_CODE && data != null) {
-            val target = data.getParcelableExtra<Target>(ItemSelectActivity.ITEM)
+            val target = data.getParcelableExtra<Target>(ITEM)
             val item = binding.standardRound.selectedItem
-            item!!.loadRounds().forEach { it.targetTemplate = target }
+            item!!.roundTemplates.forEach { it.targetTemplate = target }
             binding.standardRound.setItem(item)
         }
     }

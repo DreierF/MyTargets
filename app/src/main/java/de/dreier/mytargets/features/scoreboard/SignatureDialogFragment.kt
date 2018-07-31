@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -25,12 +25,19 @@ import android.view.View
 import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog
 import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.databinding.FragmentSignatureBinding
 import de.dreier.mytargets.shared.models.db.Signature
 
 class SignatureDialogFragment : DialogFragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    private val signatureDAO = ApplicationInstance.db.signatureDAO()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val binding = FragmentSignatureBinding.inflate(inflater, container, false)
         val args = arguments
         val signature = args!!.getParcelable<Signature>(ARG_SIGNATURE)
@@ -41,15 +48,15 @@ class SignatureDialogFragment : DialogFragment() {
         }
         binding.editName.setOnClickListener {
             MaterialDialog.Builder(context!!)
-                    .title(R.string.name)
-                    .inputType(InputType.TYPE_CLASS_TEXT)
-                    .input(defaultName, signature.name) { _, input ->
-                        signature.name = input.toString()
-                        signature.save()
-                        binding.signer.text = signature.name
-                    }
-                    .negativeText(android.R.string.cancel)
-                    .show()
+                .title(R.string.name)
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input(defaultName, signature.name) { _, input ->
+                    signature.name = input.toString()
+                    signatureDAO.updateSignature(signature)
+                    binding.signer.text = signature.name
+                }
+                .negativeText(android.R.string.cancel)
+                .show()
         }
         binding.signer.text = signature.getName(defaultName!!)
         binding.save.setOnClickListener {
@@ -58,7 +65,7 @@ class SignatureDialogFragment : DialogFragment() {
                 bitmap = binding.signatureView.transparentSignatureBitmap
             }
             signature.bitmap = bitmap
-            signature.save()
+            signatureDAO.updateSignature(signature)
             dismiss()
         }
         binding.clear.setOnClickListener { binding.signatureView.clear() }

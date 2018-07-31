@@ -70,10 +70,6 @@
 #DBFlow
 -keep class * extends com.raizlabs.android.dbflow.config.DatabaseHolder { *; }
 
-#Parcelize (Kotlin)
--keep class kotlin.internal.annotations.AvoidUninitializedObjectCopyingCheck { *; }
--dontwarn kotlin.internal.annotations.AvoidUninitializedObjectCopyingCheck
-
 #Serializeable (e.g.ThreeTenABP's LocalDate)
 -keepnames class * implements java.io.Serializable
 -keepclassmembers class * implements java.io.Serializable {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -16,11 +16,7 @@
 package de.dreier.mytargets.features.settings.backup.provider
 
 import android.content.Context
-import com.raizlabs.android.dbflow.sql.language.SQLite
-import de.dreier.mytargets.shared.AppDatabase
-import de.dreier.mytargets.shared.models.db.ArrowImage
-import de.dreier.mytargets.shared.models.db.BowImage
-import de.dreier.mytargets.shared.models.db.EndImage
+import de.dreier.mytargets.base.db.AppDatabase
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -36,42 +32,6 @@ object BackupUtils {
             return "MyTargets_backup_" + format.format(Date()) + ".zip"
         }
 
-    /**
-     * Returns a list of file names, which are implicitly placed in the ../files/ folder of the app.
-     */
-    val images: Array<String>
-        get() {
-            val list = ArrayList<String>()
-            list.addAll(SQLite.select()
-                    .from(BowImage::class.java)
-                    .queryList()
-                    .map { (_, fileName) -> fileName })
-            list.addAll(SQLite.select()
-                    .from(EndImage::class.java)
-                    .queryList()
-                    .map { (_, fileName) -> fileName }
-            )
-            list.addAll(SQLite.select()
-                    .from(ArrowImage::class.java)
-                    .queryList()
-                    .map { (_, fileName) -> fileName }
-            )
-            return list.toTypedArray()
-        }
-
-    @Throws(IOException::class)
-    fun copy(src: File, dst: File) {
-        src.copyTo(dst)
-    }
-
-    @Throws(IOException::class)
-    fun copy(`in`: InputStream, out: OutputStream) {
-        `in`.copyTo(out)
-        out.flush()
-        `in`.close()
-        out.close()
-    }
-
     @Throws(IOException::class)
     fun importZip(context: Context, `in`: InputStream) {
         // Unzip all images and database
@@ -82,20 +42,23 @@ object BackupUtils {
     }
 
     @Throws(IOException::class)
-    fun zip(context: Context, dest: OutputStream) {
+    fun zip(context: Context, database: AppDatabase, dest: OutputStream) {
+        val imageFiles = database.imageDAO().loadAllFileNames().map { File(context.filesDir, it) }
+        zip(context, dest, imageFiles)
+    }
+
+    @Throws(IOException::class)
+    private fun zip(context: Context, dest: OutputStream, imageFiles: List<File>) {
         ZipOutputStream(BufferedOutputStream(dest)).use { out ->
             val db = context.getDatabasePath(AppDatabase.DATABASE_FILE_NAME)
 
-            var entry = ZipEntry("/data.db")
-            out.putNextEntry(entry)
+            out.putNextEntry(ZipEntry("/data.db"))
             FileInputStream(db).use { it.copyTo(out) }
 
-            val files = images
-            for (file in files) {
+            for (file in imageFiles) {
                 try {
-                    entry = ZipEntry("/" + file)
-                    out.putNextEntry(entry)
-                    FileInputStream(File(context.filesDir, file)).use {
+                    out.putNextEntry(ZipEntry("/" + file.name))
+                    FileInputStream(file).use {
                         it.copyTo(out)
                     }
                 } catch (e: FileNotFoundException) {
@@ -105,22 +68,11 @@ object BackupUtils {
         }
     }
 
-    private fun safeCloseClosable(closeable: Closeable?) {
-        try {
-            closeable?.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-    }
-
     @Throws(IOException::class)
     private fun unzip(context: Context, `in`: InputStream): File? {
-        val tmpDb: File?
+        val tmpDb = File.createTempFile("import", ".db")
         var dbFiles = 0
-        try {
-            tmpDb = File.createTempFile("import", ".db")
-
+        `in`.use {
             val zin = ZipInputStream(`in`)
             var sourceEntry: ZipEntry?
             while (true) {
@@ -148,19 +100,15 @@ object BackupUtils {
                     fOut = context.openFileOutput(name, Context.MODE_PRIVATE)
                 }
 
-                try {
+                fOut.use {
                     zin.copyTo(fOut)
                     fOut.flush()
-                } finally {
-                    safeCloseClosable(fOut)
                 }
                 zin.closeEntry()
             }
-        } finally {
-            safeCloseClosable(`in`)
         }
         if (dbFiles != 1) {
-            throw IllegalStateException("Input file is not a valid backup")
+            throw IOException("Input file is not a valid backup")
         }
         return tmpDb
     }

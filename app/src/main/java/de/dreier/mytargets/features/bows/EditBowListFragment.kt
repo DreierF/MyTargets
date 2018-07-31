@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -23,7 +23,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
-import de.dreier.mytargets.base.fragments.EditableListFragment
+import de.dreier.mytargets.app.ApplicationInstance
+import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
+import de.dreier.mytargets.base.fragments.EditableListFragmentBase
 import de.dreier.mytargets.base.fragments.ItemActionModeCallback
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.databinding.FragmentBowsBinding
@@ -33,14 +35,18 @@ import de.dreier.mytargets.shared.models.db.Bow
 import de.dreier.mytargets.utils.DividerItemDecoration
 import de.dreier.mytargets.utils.SlideInItemAnimator
 
-class EditBowListFragment : EditableListFragment<Bow>() {
+class EditBowListFragment : EditableListFragmentBase<Bow, SimpleListAdapterBase<Bow>>() {
 
     private lateinit var binding: FragmentBowsBinding
 
+    private val bowDAO = ApplicationInstance.db.bowDAO()
+
     init {
         itemTypeDelRes = R.plurals.bow_deleted
-        actionModeCallback = ItemActionModeCallback(this, selector,
-                R.plurals.bow_selected)
+        actionModeCallback = ItemActionModeCallback(
+            this, selector,
+            R.plurals.bow_selected
+        )
         actionModeCallback?.setEditCallback(this::onEdit)
         actionModeCallback?.setDeleteCallback(this::onDelete)
     }
@@ -51,11 +57,16 @@ class EditBowListFragment : EditableListFragment<Bow>() {
     }
 
     @CallSuper
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bows, container, false)
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.addItemDecoration(
-                DividerItemDecoration(context!!, R.drawable.full_divider))
+            DividerItemDecoration(context!!, R.drawable.full_divider)
+        )
         adapter = BowAdapter(selector, this, this)
         binding.recyclerView.itemAnimator = SlideInItemAnimator()
         binding.recyclerView.adapter = adapter
@@ -65,8 +76,8 @@ class EditBowListFragment : EditableListFragment<Bow>() {
             val bowType = bowTypeMap.get(itemId)
             val fab = binding.fabSpeedDial.getFabFromMenuId(itemId)
             navigationController.navigateToCreateBow(bowType)
-                    .fromFab(fab, R.color.fabBow, bowType.drawable)
-                    .start()
+                .fromFab(fab, R.color.fabBow, bowType.drawable)
+                .start()
             false
         }
 
@@ -74,9 +85,9 @@ class EditBowListFragment : EditableListFragment<Bow>() {
     }
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        val bows = Bow.all
+        val bows = bowDAO.loadBows()
         return {
-            adapter!!.setList(bows.toMutableList())
+            adapter!!.setList(bows)
             binding.emptyState!!.root.visibility = if (bows.isEmpty()) View.VISIBLE else View.GONE
         }
     }
@@ -85,8 +96,18 @@ class EditBowListFragment : EditableListFragment<Bow>() {
         navigationController.navigateToEditBow(itemId)
     }
 
-    override fun onItemSelected(item: Bow) {
+    override fun onSelected(item: Bow) {
         navigationController.navigateToEditBow(item.id)
+    }
+
+    override fun deleteItem(item: Bow): () -> Bow {
+        val images = bowDAO.loadBowImages(item.id)
+        val sightMarks = bowDAO.loadSightMarks(item.id)
+        bowDAO.deleteBow(item)
+        return {
+            bowDAO.saveBow(item, images, sightMarks)
+            item
+        }
     }
 
     companion object {

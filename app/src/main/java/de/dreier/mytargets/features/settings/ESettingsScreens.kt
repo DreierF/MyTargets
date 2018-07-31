@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -36,7 +36,7 @@ enum class ESettingsScreens {
         get() = name.toLowerCase(Locale.US)
 
     fun create(): SettingsFragmentBase {
-        return when(this) {
+        return when (this) {
             MAIN -> MainSettingsFragment()
             PROFILE -> ProfileSettingsFragment()
             OVERVIEW -> OverviewSettingsFragment()

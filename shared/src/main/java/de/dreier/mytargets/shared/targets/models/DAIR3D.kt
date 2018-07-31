@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -31,7 +31,7 @@ import de.dreier.mytargets.shared.utils.Color.TURBO_YELLOW
 class DAIR3D : Target3DBase(
         id = ID,
         nameRes = R.string.dair_3d,
-        zones = arrayOf(
+        zones = listOf(
                 CircularZone(0.053396f, -0.631104f, -0.49886402f, GREEN, BLACK, 3),
                 CircularZone(0.124f, -0.631104f, -0.49886402f, GREEN, BLACK, 3),
                 CircularZone(0.053396f, 0.274396f, -0.089198f, TURBO_YELLOW, BLACK, 3),
@@ -44,7 +44,7 @@ class DAIR3D : Target3DBase(
                 HeartZone(1.0f, 0.0f, 0.0f, LIGHT_GRAY, BLACK, 3),
                 CircularZone(1.0f, 0.0f, 0.0f, BROWN, GRAY, 5)
         ),
-        scoringStyles = arrayOf(
+        scoringStyles = listOf(
                 ScoringStyle(false, 8, 8, 12, 12, 12, 12, 11, 11, 10, 8, 0),
                 ScoringStyle(false, 14, 14, 12, 12, 12, 12, 11, 11, 10, 8, 0),
                 ScoringStyle(false, 8, 8, 12, 12, 12, 12, 10, 10, 10, 8, 0),

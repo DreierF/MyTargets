@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -23,13 +23,14 @@ import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Dimension.Unit.*
 
 class DistanceTabsFragmentPagerAdapter(
-        private val context: FragmentActivity,
-        distance: Dimension) : FragmentPagerAdapter(context.supportFragmentManager) {
+    private val context: FragmentActivity,
+    distance: Dimension
+) : FragmentPagerAdapter(context.supportFragmentManager) {
 
     private val fragments = arrayOf(
-            DistanceGridFragment.newInstance(distance, UNITS[0]),
-            DistanceGridFragment.newInstance(distance, UNITS[1]),
-            DistanceGridFragment.newInstance(distance, UNITS[2])
+        DistanceGridFragment.newInstance(distance, UNITS[0]),
+        DistanceGridFragment.newInstance(distance, UNITS[1]),
+        DistanceGridFragment.newInstance(distance, UNITS[2])
     )
 
     override fun getItem(position: Int): Fragment {

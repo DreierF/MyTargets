@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -68,13 +68,13 @@ class DonateActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
         }
 
         MaterialDialog.Builder(this)
-                .title(R.string.donate)
-                .adapter(DonationAdapter(this, this::onDonate), LinearLayoutManager(this))
-                .dismissListener {
-                    finish()
-                    overridePendingTransition(0, 0)
-                }
-                .show()
+            .title(R.string.donate)
+            .adapter(DonationAdapter(this, this::onDonate), LinearLayoutManager(this))
+            .dismissListener {
+                finish()
+                overridePendingTransition(0, 0)
+            }
+            .show()
     }
 
     fun onDonate(position: Int) {
@@ -92,11 +92,11 @@ class DonateActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
         SettingsManager.donated = true
 
         AlertDialog.Builder(this)
-                .setMessage(getString(R.string.donation_thank))
-                .setNeutralButton(android.R.string.ok, null)
-                .setCancelable(false)
-                .create()
-                .show()
+            .setMessage(getString(R.string.donation_thank))
+            .setNeutralButton(android.R.string.ok, null)
+            .setCancelable(false)
+            .create()
+            .show()
     }
 
     override fun onBillingError(errorCode: Int, error: Throwable?) {

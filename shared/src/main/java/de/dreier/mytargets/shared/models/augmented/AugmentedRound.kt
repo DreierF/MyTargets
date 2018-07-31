@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -17,42 +17,12 @@ package de.dreier.mytargets.shared.models.augmented
 
 import android.os.Parcel
 import android.os.Parcelable
-import de.dreier.mytargets.shared.models.Score
-import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
-import de.dreier.mytargets.shared.models.sum
 
 data class AugmentedRound(
         val round: Round,
         var ends: MutableList<AugmentedEnd>
 ) : Parcelable {
-    constructor(round: Round) : this(round, round.loadEnds()
-            .map { AugmentedEnd(it) }
-            .toMutableList())
-
-    val reachedScore: Score
-        get() {
-            val target = round.target
-            return ends.map { target.getReachedScore(it.shots) }.sum()
-        }
-
-    fun toRound(): Round {
-        round.ends = ends.map { it.toEnd() }.toMutableList()
-        return round
-    }
-
-    /**
-     * Adds a new end to the internal list of ends, but does not yet save it.
-     *
-     * @return Returns the newly created end
-     */
-    fun addEnd(): AugmentedEnd {
-        val end = AugmentedEnd(End(round.shotsPerEnd, ends.size))
-        end.end.roundId = round.id
-        end.end.save()
-        ends.add(end)
-        return end
-    }
 
     constructor(source: Parcel) : this(
             source.readParcelable<Round>(Round::class.java.classLoader),

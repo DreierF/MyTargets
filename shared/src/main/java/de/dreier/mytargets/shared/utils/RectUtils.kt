@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -16,6 +16,7 @@
 package de.dreier.mytargets.shared.utils
 
 import android.graphics.Rect
+import android.graphics.RectF
 
 object RectUtils {
     fun fitRectWithin(inner: Rect, outer: Rect): Rect {
@@ -34,4 +35,8 @@ object RectUtils {
 
         return Rect(newLeft.toInt(), newTop.toInt(), (newWidth + newLeft).toInt(), (newHeight + newTop).toInt())
     }
+}
+
+fun RectF.toClosestRect(): Rect {
+    return Rect(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
 }

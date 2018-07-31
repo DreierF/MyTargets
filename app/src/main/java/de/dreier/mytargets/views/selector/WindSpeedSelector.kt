@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -17,11 +17,26 @@ package de.dreier.mytargets.views.selector
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import de.dreier.mytargets.R
+import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding
 import de.dreier.mytargets.shared.models.WindSpeed
 
-class WindSpeedSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null
-) : ImageSelectorBase<WindSpeed>(context, attrs, WIND_SPEED_REQUEST_CODE, R.string.wind_speed) {
+class WindSpeedSelector @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet? = null
+) : SelectorBase<WindSpeed, SelectorItemImageDetailsBinding>(
+    context,
+    attrs,
+    R.layout.selector_item_image_details,
+    WIND_SPEED_REQUEST_CODE
+) {
+
+    override fun bindView(item: WindSpeed) {
+        view.name.text = item.name
+        view.image.setImageResource(item.drawable)
+        view.title.visibility = View.VISIBLE
+        view.title.setText(R.string.wind_speed)
+    }
 
     fun setItemId(speed: Long) {
         setItem(WindSpeed.getList(context)[speed.toInt()])

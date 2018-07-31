@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -31,6 +31,8 @@ import android.text.Html
 import android.text.Spanned
 import android.view.View
 import android.view.WindowManager
+import androidx.core.content.systemService
+import androidx.core.content.systemService
 import de.dreier.mytargets.features.main.MainActivity
 import de.dreier.mytargets.features.training.overview.Header
 import de.dreier.mytargets.utils.transitions.FabTransform
@@ -69,8 +71,8 @@ object Utils {
         val mPendingIntentId = 223344
         val mPendingIntent = PendingIntent
                 .getActivity(context, mPendingIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-        val mgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent)
+        context.systemService<AlarmManager>()
+            .set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent)
 
         // Kill the application
         Process.killProcess(Process.myPid())
@@ -83,7 +85,12 @@ object Utils {
         }
         val exp = (Math.log(bytes.toDouble()) / Math.log(unit.toDouble())).toInt()
         val pre = (if (si) "kMGTPE" else "KMGTPE")[exp - 1] + if (si) "" else "i"
-        return String.format(Locale.US, "%.1f %sB", bytes / Math.pow(unit.toDouble(), exp.toDouble()), pre)
+        return String.format(
+            Locale.US,
+            "%.1f %sB",
+            bytes / Math.pow(unit.toDouble(), exp.toDouble()),
+            pre
+        )
     }
 
     fun hasCameraHardware(context: Context): Boolean {
@@ -153,7 +160,7 @@ object Utils {
 
 fun Bitmap.writeToJPGFile(file: File) {
     val fileOutputStream = FileOutputStream(file)
-    compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+    compress(Bitmap.CompressFormat.JPEG, 99, fileOutputStream)
     fileOutputStream.flush()
     fileOutputStream.close()
     recycle()

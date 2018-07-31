@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -18,7 +18,9 @@ package de.dreier.mytargets.utils.multiselector
 import android.support.v7.widget.RebindReportingHolder
 import android.view.View
 
-abstract class ItemBindingHolder<T> internal constructor(itemView: View) : RebindReportingHolder(itemView), SelectableHolder, View.OnClickListener, View.OnLongClickListener {
+abstract class ItemBindingHolder<T> internal constructor(itemView: View) :
+    RebindReportingHolder(itemView), SelectableHolder, View.OnClickListener,
+    View.OnLongClickListener {
     var item: T? = null
         protected set
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -15,11 +15,11 @@
 
 package de.dreier.mytargets.test.utils.rules
 
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Target
-import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
-import de.dreier.mytargets.shared.models.db.StandardRound
+import de.dreier.mytargets.shared.models.augmented.AugmentedRound
 import de.dreier.mytargets.shared.targets.models.WAFull
 import de.dreier.mytargets.shared.views.TargetViewBase
 import java.util.*
@@ -39,21 +39,20 @@ class MiniDbTestRule : DbTestRuleBase() {
 
     private fun addRandomTraining(seed: Int) {
         val generator = Random(seed.toLong())
-        val standardRound = StandardRound[32L]
+        val standardRound = ApplicationInstance.db.standardRoundDAO().loadAugmentedStandardRound(32L)
 
-        val training = saveDefaultTraining(standardRound!!.id, generator)
-        val at = AugmentedTraining(training)
-        at.initRoundsFromTemplate(standardRound)
-        at.toTraining().save()
+        val training = saveDefaultTraining(standardRound.id, generator)
+        val rounds = standardRound.createRoundsFromTemplate()
+        ApplicationInstance.db.trainingDAO().saveTraining(training, rounds)
 
-        val round1 = at.rounds[0]
-        val round2 = at.rounds[1]
+        val round1 = AugmentedRound(rounds[0], mutableListOf())
+        val round2 = AugmentedRound(rounds[1], mutableListOf())
 
-        randomEnd(round1, 6, generator).toEnd().save()
-        randomEnd(round1, 6, generator).toEnd().save()
+        randomEnd(round1, 6, generator)
+        randomEnd(round1, 6, generator)
 
-        randomEnd(round2, 6, generator).toEnd().save()
-        randomEnd(round2, 6, generator).toEnd().save()
+        randomEnd(round2, 6, generator)
+        randomEnd(round2, 6, generator)
     }
 
 }

@@ -225,6 +225,9 @@
             </rules>
           </arrangement>
         </codeStyleSettings>
+        <codeStyleSettings language="kotlin">
+          <option name="CODE_STYLE_DEFAULTS" value="KOTLIN_OFFICIAL" />
+        </codeStyleSettings>
       </value>
     </option>
     <option name="USE_PER_PROJECT_SETTINGS" value="true" />

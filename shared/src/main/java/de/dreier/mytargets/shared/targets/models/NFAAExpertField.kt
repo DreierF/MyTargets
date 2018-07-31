@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -27,7 +27,7 @@ import de.dreier.mytargets.shared.utils.Color.WHITE
 class NFAAExpertField : TargetModelBase(
         id = ID,
         nameRes = R.string.nfaa_expert_field,
-        zones = arrayOf(
+        zones = listOf(
                 CircularZone(0.1f, DARK_GRAY, WHITE, 4),
                 CircularZone(0.2f, DARK_GRAY, DARK_GRAY, 0),
                 CircularZone(0.4f, WHITE, DARK_GRAY, 4),
@@ -35,8 +35,8 @@ class NFAAExpertField : TargetModelBase(
                 CircularZone(0.8f, DARK_GRAY, WHITE, 4),
                 CircularZone(1.0f, DARK_GRAY, DARK_GRAY, 0)
         ),
-        scoringStyles = arrayOf(ScoringStyle(true, 6, 5, 4, 3, 2, 1)),
-        diameters = arrayOf(
+        scoringStyles = listOf(ScoringStyle(true, 6, 5, 4, 3, 2, 1)),
+        diameters = listOf(
                 Dimension(20f, CENTIMETER),
                 Dimension(35f, CENTIMETER),
                 Dimension(50f, CENTIMETER),

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -15,36 +15,48 @@
 
 package de.dreier.mytargets.shared.models.db
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.ForeignKey
+import android.arch.persistence.room.ForeignKey.CASCADE
+import android.arch.persistence.room.Index
+import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
-import com.raizlabs.android.dbflow.annotation.*
-import com.raizlabs.android.dbflow.structure.BaseModel
-import de.dreier.mytargets.shared.AppDatabase
+import de.dreier.mytargets.shared.models.Image
 
-@Table(database = AppDatabase::class)
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = End::class,
+            parentColumns = ["id"],
+            childColumns = ["endId"],
+            onDelete = CASCADE
+        )
+    ],
+    indices = [
+        Index(value = ["endId"])
+    ]
+)
 data class EndImage(
-        @Column(name = "_id")
-        @PrimaryKey(autoincrement = true)
-        var _id: Long = 0,
+    @PrimaryKey(autoGenerate = true)
+    var id: Long = 0,
 
-        @Column
-        override var fileName: String = "",
+    override var fileName: String = "",
 
-        @ForeignKey(tableClass = End::class, references = [(ForeignKeyReference(columnName = "end", foreignKeyColumnName = "_id"))], onDelete = ForeignKeyAction.CASCADE)
-        var endId: Long? = null
-) : BaseModel(), Image, Parcelable {
+    var endId: Long? = null
+) : Image, Parcelable {
     constructor(imageFile: String) : this(fileName = imageFile)
 
     constructor(source: Parcel) : this(
-            source.readLong(),
-            source.readString(),
-            source.readValue(Long::class.java.classLoader) as Long?
+        source.readLong(),
+        source.readString(),
+        source.readValue(Long::class.java.classLoader) as Long?
     )
 
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
-        writeLong(_id)
+        writeLong(id)
         writeString(fileName)
         writeValue(endId)
     }

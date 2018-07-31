@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -16,20 +16,27 @@
 package de.dreier.mytargets.features.bows
 
 import android.os.Bundle
-import de.dreier.mytargets.base.activities.ItemSelectActivity.Companion.ITEM
-import de.dreier.mytargets.base.fragments.FragmentBase
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.fragments.LoaderUICallback
 import de.dreier.mytargets.base.fragments.SelectPureListItemFragmentBase
+import de.dreier.mytargets.base.navigation.NavigationController.Companion.ITEM
 import de.dreier.mytargets.shared.models.db.Bow
 
-class BowListFragment : SelectPureListItemFragmentBase<Bow>() {
+class BowListFragment : SelectPureListItemFragmentBase<Bow>(compareBy(Bow::name, Bow::id)) {
+
+    private val bowDAO = ApplicationInstance.db.bowDAO()
 
     override fun onLoad(args: Bundle?): LoaderUICallback {
-        val bows = Bow.all
+        val bows = bowDAO.loadBows().toMutableList()
         return {
-            adapter!!.setList(bows.toMutableList())
+            adapter.setList(bows)
             val bow = arguments!!.getParcelable<Bow>(ITEM)
             selectItem(binding.recyclerView, bow!!)
         }
     }
+
+    override fun getName(item: Bow) = item.name
+
+    override fun getDrawable(item: Bow) = item.thumbnail!!.roundDrawable
+
 }

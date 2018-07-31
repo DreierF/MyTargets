@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -27,13 +27,13 @@ import de.dreier.mytargets.shared.utils.Color.DBSC_YELLOW
 class DBSCBlowpipe : TargetModelBase(
         id = ID,
         nameRes = R.string.dbsc_blowpipe,
-        diameters = arrayOf(Dimension(18f, CENTIMETER)),
-        zones = arrayOf(
+        diameters = listOf(Dimension(18f, CENTIMETER)),
+        zones = listOf(
                 CircularZone(0.3333f, DBSC_YELLOW, DARK_GRAY, 8),
                 CircularZone(0.6666f, DBSC_RED, DARK_GRAY, 8),
                 CircularZone(1f, DBSC_BLUE, DARK_GRAY, 8)
         ),
-        scoringStyles = arrayOf(ScoringStyle(false, 7, 5, 3))
+        scoringStyles = listOf(ScoringStyle(false, 7, 5, 3))
 ) {
     companion object {
         const val ID = 28L

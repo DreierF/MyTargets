@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -21,24 +21,34 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.location.Location
 import android.support.annotation.RequiresPermission
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
+import android.view.View
 import de.dreier.mytargets.R
+import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.features.training.environment.CurrentWeather
-import de.dreier.mytargets.features.training.environment.EnvironmentActivity
 import de.dreier.mytargets.features.training.environment.Locator
 import de.dreier.mytargets.features.training.environment.WeatherService
 import de.dreier.mytargets.shared.models.Environment
+import de.dreier.mytargets.utils.Utils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.IOException
 
-class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null
-) : ImageSelectorBase<Environment>(context, attrs, ENVIRONMENT_REQUEST_CODE, R.string.environment) {
+class EnvironmentSelector @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet? = null
+) : SelectorBase<Environment, SelectorItemImageDetailsBinding>(
+    context,
+    attrs,
+    R.layout.selector_item_image_details,
+    ENVIRONMENT_REQUEST_CODE
+) {
 
     override var selectedItem: Environment?
         get() = if (super.selectedItem == null) {
@@ -48,17 +58,53 @@ class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: Att
             super.selectedItem = value
         }
 
-    fun queryWeather(fragment: Fragment, request_code: Int) {
+    override fun bindView(item: Environment) {
+        if (item.indoor) {
+            view.name.setText(de.dreier.mytargets.shared.R.string.indoor)
+            view.image.setImageResource(R.drawable.ic_house_24dp)
+        } else {
+            view.name.text = item.weather.getName()
+            view.image.setImageResource(item.weather.drawable)
+        }
+        view.details.visibility = View.VISIBLE
+        view.details.text = getDetails(context, item)
+        view.title.visibility = View.VISIBLE
+        view.title.setText(R.string.environment)
+    }
+
+    private fun getDetails(context: Context, item: Environment): String {
+        var description: String
+        if (item.indoor) {
+            description = ""
+            if (!item.location.isEmpty()) {
+                description += "${context.getString(de.dreier.mytargets.shared.R.string.location)}: ${item.location}"
+            }
+        } else {
+            description =
+                    "${context.getString(de.dreier.mytargets.shared.R.string.wind)}: ${item.getWindSpeed(
+                        context
+                    )}"
+            if (!item.location.isEmpty()) {
+                description += "\n${context.getString(de.dreier.mytargets.shared.R.string.location)}: ${item.location}"
+            }
+        }
+        return description
+    }
+
+    fun queryWeather(fragment: Fragment, requestCode: Int) {
         if (isTestMode) {
             setDefaultWeather()
             return
         }
-        if (ContextCompat.checkSelfPermission(fragment.context!!, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                fragment.context!!,
+                ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             setDefaultWeather()
-            fragment.requestPermissions(arrayOf(ACCESS_FINE_LOCATION),
-                    request_code)
+            fragment.requestPermissions(arrayOf(ACCESS_FINE_LOCATION), requestCode)
         } else {
-            queryWeatherInfo(fragment.context)
+            queryWeatherInfo(fragment.context!!)
         }
     }
 
@@ -72,19 +118,29 @@ class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: Att
     }
 
     // Start getting weather for current location
-    @SuppressLint("MissingPermission")
+    @SuppressLint("MissingPermission", "SupportAnnotationUsage")
     @RequiresPermission(anyOf = [ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION])
-    private fun queryWeatherInfo(context: Context?) {
+    private fun queryWeatherInfo(context: Context) {
         setItem(null)
-        Locator(context!!).getLocation(Locator.Method.NETWORK_THEN_GPS, object : Locator.Listener {
-            override fun onLocationFound(location: Location?) {
+        Locator(context).getLocation(Locator.Method.NETWORK_THEN_GPS, object : Locator.Listener {
+            override fun onLocationFound(location: Location) {
+                val locationStr = getAddressFromLocation(location.latitude, location.longitude)
                 val weatherService = WeatherService()
                 val weatherCall = weatherService
-                        .fetchCurrentWeather(location!!.longitude, location.latitude)
+                    .fetchCurrentWeather(location.longitude, location.latitude)
                 weatherCall.enqueue(object : Callback<CurrentWeather> {
-                    override fun onResponse(call: Call<CurrentWeather>, response: Response<CurrentWeather>) {
+                    override fun onResponse(
+                        call: Call<CurrentWeather>,
+                        response: Response<CurrentWeather>
+                    ) {
                         if (response.isSuccessful && response.body()!!.httpCode == 200) {
-                            setItem(response.body()!!.toEnvironment())
+                            val toEnvironment = response.body()!!.toEnvironment()
+                            setItem(
+                                toEnvironment.copy(
+                                    location = locationStr
+                                            ?: toEnvironment.location
+                                )
+                            )
                         } else {
                             setDefaultWeather()
                         }
@@ -100,6 +156,29 @@ class EnvironmentSelector @JvmOverloads constructor(context: Context, attrs: Att
                 setDefaultWeather()
             }
         })
+    }
+
+    private fun getAddressFromLocation(latitude: Double, longitude: Double): String? {
+        val geoCoder = Geocoder(context, Utils.getCurrentLocale(context))
+
+        return try {
+            val addresses = geoCoder.getFromLocation(latitude, longitude, 1)
+
+            if (addresses.size > 0) {
+                val fetchedAddress = addresses[0]
+                var address = fetchedAddress.locality
+                if (fetchedAddress.subLocality != null) {
+                    address += ", ${fetchedAddress.subLocality}"
+                }
+                address
+            } else {
+                null
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
+
     }
 
     private fun setDefaultWeather() {

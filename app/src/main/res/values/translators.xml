@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2017 Florian Dreier
+  ~ Copyright (C) 2018 Florian Dreier
   ~
   ~ This file is part of MyTargets.
   ~
@@ -16,30 +16,32 @@
 
 <resources>
     <string name="translators" translatable="false"><![CDATA[
+Arabic - Abdullah Alhussainan\n
 Catalan - Miguel Perez Arroyo\n
 Chinese - Bronya Po\n
-Chinese Simplified - Zhulin\n
-Czech / Slovak - Gizmo Sk, hswn\n
+Chinese Simplified - Zhulin, renault1912\n
+Czech - Gizmo Sk, hswn\n
 Danish - Claus Pedersen\n
 Danish - magnus_bager, Dk_archer\n
 Dutch - Robbin Haasnoot, Meikk99, Double Crownman\n
 Estonian - Martti Siitsman\n
 Finnish - Urs Ganse\n
-French - Frédéric Mazoyer, Adrien Garandel\n
+French - Frédéric Mazoyer, Adrien Garandel, Luc Van Huysse, piitaya\n
 Hebrew - gbyx, Ficell\n
 Hungarian - Ladover István, Róbert Kökény\n
-Italian - Jaco Lamborghin, Pehilj, Francesco Ambrosini, zecoh\n
+Italian - Jaco Lamborghin, Pehilj, Francesco Ambrosini, zecoh, Gabriele Manfrè\n
 Indonesian - Ario Fitrianto, Yos.dikuta\n
 Japanese - Dominic Schmidt\n
-Norwegian - Joakim Klingsheim\n
+Norwegian - Joakim Klingsheim, Fredrik Andersson\n
 Polish - Krzysztof Szymanski, Roxy Kot, corvus89\n
 Portuguese - André Morais, Brum Jose Alves Neto, Fabio Passeto, Pétala Loli, Telmo Thadeu Fonseca, Lucas Corato\n
+Romanian - Andrei Avram\n
 Russian - Dmitry Berezovsky, Лиля Костенко\n
-Slovak - Erik Summer, Iveta Ježíková, Eduard Kirchner\n
+Slovak - Erik Summer, Iveta Ježíková, Eduard Kirchner, Gizmo Sk\n
 Slovenian - Jakob Krapez\n
-Spanish - Zonio de Mena, Risck, Alejandro Guirao Rodríguez\n
-Swedish - Bojan Motoh, Tobias Nilsson, Stefan Björk\n
-Turkish - ahmetozgen, Cengiz kılıç, Mesut Albayrak, Ömer Faruk, sebenli, Ali Kömesöğütlü, SteemKALVAS\n
+Spanish - Zonio de Mena, Risck, Alejandro Guirao Rodríguez, José Soriano, Joshep Hilltower\n
+Swedish - Bojan Motoh, Tobias Nilsson, Stefan Björk, Isak Kallini\n
+Turkish - ahmetozgen, Cengiz kılıç, Mesut Albayrak, Ömer Faruk, sebenli, Ali Kömesöğütlü, SteemKALVAS, Yos.dikuta\n
 Ukrainian - Kostiantyn Zablotskiy
 ]]>
 </string>

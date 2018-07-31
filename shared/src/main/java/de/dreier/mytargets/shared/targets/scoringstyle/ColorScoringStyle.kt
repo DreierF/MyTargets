@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -21,7 +21,7 @@ import de.dreier.mytargets.shared.models.db.Shot
 
 class ColorScoringStyle(@StringRes title: Int, private val maxEndPoints: Int, vararg points: Int) : ScoringStyle(title, false, *points) {
 
-    override fun getReachedScore(shots: MutableList<Shot>): Score {
+    override fun getReachedScore(shots: List<Shot>): Score {
         val reachedScore = shots
                 .map { s -> getPointsByScoringRing(s.scoringRing, s.index) }
                 .distinct()

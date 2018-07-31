@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -26,17 +26,17 @@ import de.dreier.mytargets.shared.utils.Color.WHITE
 class Worcester : TargetModelBase(
         id = ID,
         nameRes = R.string.worcester_face,
-        zones = arrayOf(
+        zones = listOf(
                 CircularZone(0.2f, WHITE, WHITE, 4),
                 CircularZone(0.4f, DARK_GRAY, WHITE, 4),
                 CircularZone(0.6f, DARK_GRAY, WHITE, 4),
                 CircularZone(0.8f, DARK_GRAY, WHITE, 4),
                 CircularZone(1.0f, DARK_GRAY, WHITE, 0)
         ),
-        scoringStyles = arrayOf(
+        scoringStyles = listOf(
                 ScoringStyle(false, 5, 4, 3, 2, 1)
         ),
-        diameters = arrayOf(Dimension(16f, INCH))
+        diameters = listOf(Dimension(16f, INCH))
 ) {
     init {
         decorator = CenterMarkDecorator(DARK_GRAY, 10.5f, 4, false)

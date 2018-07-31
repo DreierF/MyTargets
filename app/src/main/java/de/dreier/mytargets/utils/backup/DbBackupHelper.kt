@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -18,6 +18,7 @@ package de.dreier.mytargets.utils.backup
 import android.app.backup.FileBackupHelper
 import android.content.Context
 
-import de.dreier.mytargets.shared.AppDatabase
+import de.dreier.mytargets.base.db.AppDatabase
 
-internal class DbBackupHelper(ctx: Context) : FileBackupHelper(ctx, ctx.getDatabasePath(AppDatabase.DATABASE_FILE_NAME).absolutePath)
+internal class DbBackupHelper(ctx: Context) :
+    FileBackupHelper(ctx, ctx.getDatabasePath(AppDatabase.DATABASE_FILE_NAME).absolutePath)

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -38,35 +38,35 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import com.afollestad.materialdialogs.MaterialDialog
 import com.evernote.android.state.State
-import com.evernote.android.state.StateSaver
 import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.activities.ChildActivityBase
+import de.dreier.mytargets.base.db.RoundRepository
+import de.dreier.mytargets.base.db.TrainingRepository
+import de.dreier.mytargets.base.db.dao.ArrowDAO
+import de.dreier.mytargets.base.db.dao.BowDAO
+import de.dreier.mytargets.base.db.dao.StandardRoundDAO
 import de.dreier.mytargets.base.gallery.GalleryActivity
 import de.dreier.mytargets.databinding.ActivityInputBinding
 import de.dreier.mytargets.features.settings.ESettingsScreens
 import de.dreier.mytargets.features.settings.SettingsManager
-import de.dreier.mytargets.shared.models.augmented.AugmentedTraining
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 import de.dreier.mytargets.shared.models.db.Shot
-import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.shared.models.sum
-import de.dreier.mytargets.shared.utils.ImageList
-import de.dreier.mytargets.shared.utils.SharedUtils
 import de.dreier.mytargets.shared.views.TargetViewBase
 import de.dreier.mytargets.shared.views.TargetViewBase.EInputMethod
 import de.dreier.mytargets.shared.wearable.WearableClientBase.Companion.BROADCAST_TIMER_SETTINGS_FROM_REMOTE
-import de.dreier.mytargets.utils.MobileWearableClient
+import de.dreier.mytargets.utils.*
 import de.dreier.mytargets.utils.MobileWearableClient.Companion.BROADCAST_UPDATE_TRAINING_FROM_REMOTE
-import de.dreier.mytargets.utils.ToolbarUtils
-import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.utils.Utils.getCurrentLocale
 import de.dreier.mytargets.utils.transitions.FabTransform
 import de.dreier.mytargets.utils.transitions.TransitionAdapter
+import org.threeten.bp.LocalTime
 import java.io.File
 
-class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener, TargetView.OnEndUpdatedListener, LoaderManager.LoaderCallbacks<LoaderResult> {
+class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
+    TargetView.OnEndUpdatedListener, LoaderManager.LoaderCallbacks<LoaderResult> {
 
     @State
     var data: LoaderResult? = null
@@ -75,6 +75,22 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     private var transitionFinished = true
     private var summaryShowScope = ETrainingScope.END
     private var targetView: TargetView? = null
+
+    private val database = ApplicationInstance.db
+    private val trainingDAO = database.trainingDAO()
+    private val roundDAO = database.roundDAO()
+    private val endDAO = database.endDAO()
+    private val bowDAO = database.bowDAO()
+    private val arrowDAO = database.arrowDAO()
+    private val standardRoundDAO = database.standardRoundDAO()
+    private val roundRepository = RoundRepository(database)
+    private val trainingRepository = TrainingRepository(
+        database,
+        trainingDAO,
+        roundDAO,
+        roundRepository,
+        database.signatureDAO()
+    )
 
     private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
@@ -106,14 +122,17 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
 
         updateSummaryVisibility()
 
-        StateSaver.restoreInstanceState(this, savedInstanceState)
         if (data == null) {
             supportLoaderManager.initLoader(0, intent.extras, this).forceLoad()
         }
-        LocalBroadcastManager.getInstance(this).registerReceiver(updateReceiver,
-                IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE))
-        LocalBroadcastManager.getInstance(this).registerReceiver(timerReceiver,
-                IntentFilter(BROADCAST_TIMER_SETTINGS_FROM_REMOTE))
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            updateReceiver,
+            IntentFilter(BROADCAST_UPDATE_TRAINING_FROM_REMOTE)
+        )
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            timerReceiver,
+            IntentFilter(BROADCAST_TIMER_SETTINGS_FROM_REMOTE)
+        )
     }
 
     override fun onResume() {
@@ -129,14 +148,25 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             val imageList = GalleryActivity.getResult(data)
-            this.data!!.currentEnd.images = imageList.toEndImageList()
+            val currentEnd = this.data!!.currentEnd
+            currentEnd.images = imageList.toEndImageList()
             for (image in imageList.removedImages) {
                 File(filesDir, image).delete()
             }
-            this.data!!.currentEnd.toEnd().save()
+            endDAO.replaceImages(currentEnd.end, currentEnd.images)
             updateEnd()
             invalidateOptionsMenu()
         }
+    }
+
+    private fun saveCurrentEnd() {
+        val currentEnd = data!!.currentEnd
+        if (currentEnd.end.saveTime == null) {
+            currentEnd.end.saveTime = LocalTime.now()
+        }
+        currentEnd.end.score = data!!.currentRound.round.target.getReachedScore(currentEnd.shots)
+        endDAO.updateEnd(currentEnd.end)
+        endDAO.updateShots(currentEnd.shots)
     }
 
     override fun onDestroy() {
@@ -157,7 +187,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private fun setupTransitionListener() {
         val sharedElementEnterTransition = window
-                .sharedElementEnterTransition
+            .sharedElementEnterTransition
         if (sharedElementEnterTransition != null && sharedElementEnterTransition is FabTransform) {
             transitionFinished = false
             window.sharedElementEnterTransition.addListener(object : TransitionAdapter() {
@@ -184,18 +214,22 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
             newRound.isVisible = false
         } else {
             takePicture.isVisible = Utils.hasCameraHardware(this)
-            timer.setIcon(if (SettingsManager.timerEnabled)
-                R.drawable.ic_timer_off_white_24dp
-            else
-                R.drawable.ic_timer_white_24dp)
+            timer.setIcon(
+                if (SettingsManager.timerEnabled)
+                    R.drawable.ic_timer_off_white_24dp
+                else
+                    R.drawable.ic_timer_white_24dp
+            )
             timer.isVisible = true
             timer.isChecked = SettingsManager.timerEnabled
             newRound.isVisible = data!!.training.training.standardRoundId == null
             takePicture.isVisible = Utils.hasCameraHardware(this)
-            takePicture.setIcon(if (data!!.currentEnd.images.isEmpty())
-                R.drawable.ic_photo_camera_white_24dp
-            else
-                R.drawable.ic_image_white_24dp)
+            takePicture.setIcon(
+                if (data!!.currentEnd.images.isEmpty())
+                    R.drawable.ic_photo_camera_white_24dp
+                else
+                    R.drawable.ic_image_white_24dp
+            )
         }
         return true
     }
@@ -209,36 +243,47 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
             }
             R.id.action_comment -> {
                 MaterialDialog.Builder(this)
-                        .title(R.string.comment)
-                        .inputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
-                        .input("", data!!.currentEnd.end.comment) { _, input ->
-                            data!!.currentEnd.end.comment = input.toString()
-                            data!!.currentEnd.toEnd().save()
-                        }
-                        .negativeText(android.R.string.cancel)
-                        .show()
+                    .title(R.string.comment)
+                    .inputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
+                    .input("", data!!.currentEnd.end.comment) { _, input ->
+                        data!!.currentEnd.end.comment = input.toString()
+                        endDAO.updateEnd(data!!.currentEnd.end)
+                    }
+                    .negativeText(android.R.string.cancel)
+                    .show()
             }
             R.id.action_timer -> {
                 val timerEnabled = !SettingsManager.timerEnabled
                 SettingsManager.timerEnabled = timerEnabled
-                ApplicationInstance.wearableClient
-                        .sendTimerSettingsFromLocal(SettingsManager.timerSettings)
+                ApplicationInstance.wearableClient.sendTimerSettingsFromLocal(SettingsManager.timerSettings)
                 openTimer()
                 item.isChecked = timerEnabled
                 invalidateOptionsMenu()
             }
             R.id.action_settings -> navigationController.navigateToSettings(ESettingsScreens.INPUT)
-            R.id.action_new_round -> navigationController.navigateToCreateRound(data!!.training.training)
+            R.id.action_new_round -> navigationController.navigateToCreateRound(trainingId = data!!.training.training.id)
             else -> return super.onOptionsItemSelected(item)
         }
         return true
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<LoaderResult> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<LoaderResult> {
+        if (args == null) {
+            throw IllegalArgumentException("Bundle expected")
+        }
         val trainingId = args.getLong(TRAINING_ID)
         val roundId = args.getLong(ROUND_ID)
         val endIndex = args.getInt(END_INDEX)
-        return UITaskAsyncTaskLoader(this, trainingId, roundId, endIndex)
+        return UITaskAsyncTaskLoader(
+            this,
+            trainingId,
+            roundId,
+            endIndex,
+            trainingRepository,
+            standardRoundDAO,
+            arrowDAO,
+            bowDAO
+        )
     }
 
     override fun onLoadFinished(loader: Loader<LoaderResult>, data: LoaderResult) {
@@ -250,12 +295,14 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     private fun onDataLoadFinished() {
         title = data!!.training.training.title
         if (!binding.targetViewStub.isInflated) {
-            binding.targetViewStub.viewStub.inflate()
+            binding.targetViewStub.viewStub?.inflate()
         }
-        targetView = binding.targetViewStub.binding.root as TargetView
+        targetView = binding.targetViewStub.binding?.root as TargetView
         targetView!!.initWithTarget(data!!.currentRound.round.target)
-        targetView!!.setArrow(data!!.arrowDiameter, data!!.training.training.arrowNumbering, data!!
-                .maxArrowNumber)
+        targetView!!.setArrow(
+            data!!.arrowDiameter, data!!.training.training.arrowNumbering, data!!
+                .maxArrowNumber
+        )
         targetView!!.setOnTargetSetListener(this@InputActivity)
         targetView!!.setUpdateListener(this@InputActivity)
         targetView!!.reloadSettings()
@@ -290,10 +337,10 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
         val shotShowScope = SettingsManager.showMode
         val data = this.data
         val shots = data!!.training.rounds
-                .filter { r -> shouldShowRound(r.round, shotShowScope, currentRoundId) }
-                .flatMap { r -> r.ends }
-                .filter { end -> shouldShowEnd(end.end, currentEndId) }
-                .flatMap { (_, shots) -> shots }
+            .filter { r -> shouldShowRound(r.round, shotShowScope, currentRoundId) }
+            .flatMap { r -> r.ends }
+            .filter { end -> shouldShowEnd(end.end, currentEndId) }
+            .flatMap { (_, shots) -> shots }
         targetView!!.setTransparentShots(shots)
     }
 
@@ -318,16 +365,17 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     }
 
     private fun updateEnd() {
-        targetView?.replaceWithEnd(data!!.currentEnd.toEnd())
+        targetView?.replaceWithEnd(data!!.currentEnd.shots, data!!.currentEnd.end.exact)
         val totalEnds = if (data!!.currentRound.round.maxEndCount == null)
             data!!.ends.size
         else
             data!!.currentRound.round.maxEndCount
         binding.endTitle.text = getString(R.string.end_x_of_y, data!!.endIndex + 1, totalEnds)
         binding.roundTitle.text = getString(
-                R.string.round_x_of_y,
-                data!!.currentRound.round.index + 1,
-                data!!.training.rounds.size)
+            R.string.round_x_of_y,
+            data!!.currentRound.round.index + 1,
+            data!!.training.rounds.size
+        )
         updateNavigationButtons()
         updateWearNotification()
     }
@@ -387,73 +435,82 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     private fun openRound(round: Round, endIndex: Int) {
         finish()
         navigationController.navigateToRound(round)
-                .noAnimation()
-                .start()
+            .noAnimation()
+            .start()
         navigationController.navigateToEditEnd(round, endIndex)
-                .start()
+            .start()
     }
 
     override fun onEndUpdated(shots: List<Shot>) {
         data!!.currentEnd.shots = shots.toMutableList()
-        data!!.currentEnd.toEnd().save()
+        saveCurrentEnd()
 
         // Set current end score
         val reachedEndScore = data!!.currentRound.round.target
-                .getReachedScore(data!!.currentEnd.shots)
+            .getReachedScore(data!!.currentEnd.shots)
         binding.endScore.text = reachedEndScore.toString()
 
         // Set current round score
         val reachedRoundScore = data!!.ends
-                .map { end -> data!!.currentRound.round.target.getReachedScore(end.shots) }
-                .sum()
+            .map { end -> data!!.currentRound.round.target.getReachedScore(end.shots) }
+            .sum()
         binding.roundScore.text = reachedRoundScore.toString()
 
         // Set current training score
         val reachedTrainingScore = data!!.training.rounds
-                .flatMap { r -> r.ends.map { end -> r.round.target.getReachedScore(end.shots) } }
-                .sum()
+            .flatMap { r -> r.ends.map { end -> r.round.target.getReachedScore(end.shots) } }
+            .sum()
         binding.trainingScore.text = reachedTrainingScore.toString()
 
         when (summaryShowScope) {
-            ETrainingScope.END -> binding.averageScore.text = reachedEndScore.getShotAverageFormatted(getCurrentLocale(this))
-            ETrainingScope.ROUND -> binding.averageScore.text = reachedRoundScore.getShotAverageFormatted(getCurrentLocale(this))
+            ETrainingScope.END -> binding.averageScore.text =
+                    reachedEndScore.getShotAverageFormatted(getCurrentLocale(this))
+            ETrainingScope.ROUND -> binding.averageScore.text =
+                    reachedRoundScore.getShotAverageFormatted(getCurrentLocale(this))
             ETrainingScope.TRAINING -> binding.averageScore.text = reachedTrainingScore
-                    .getShotAverageFormatted(getCurrentLocale(this))
+                .getShotAverageFormatted(getCurrentLocale(this))
         }
     }
 
     override fun onEndFinished(shotList: List<Shot>) {
         data!!.currentEnd.shots = shotList.toMutableList()
         data!!.currentEnd.end.exact = targetView!!.inputMode === EInputMethod.PLOTTING
-        data!!.currentEnd.toEnd().save()
+        saveCurrentEnd()
 
         updateWearNotification()
         updateNavigationButtons()
         invalidateOptionsMenu()
     }
 
-    public override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-        StateSaver.saveInstanceState(this, outState!!)
-    }
-
-    private class UITaskAsyncTaskLoader(context: Context, private val trainingId: Long, private val roundId: Long, private val endIndex: Int) : AsyncTaskLoader<LoaderResult>(context) {
+    private class UITaskAsyncTaskLoader(
+        context: Context,
+        private val trainingId: Long,
+        private val roundId: Long,
+        private val endIndex: Int,
+        val trainingRepository: TrainingRepository,
+        val standardRoundDAO: StandardRoundDAO,
+        val arrowDAO: ArrowDAO,
+        val bowDAO: BowDAO
+    ) : AsyncTaskLoader<LoaderResult>(context) {
 
         override fun loadInBackground(): LoaderResult? {
-            val training = Training[trainingId]
-            val result = LoaderResult(AugmentedTraining(training!!))
+            val training = trainingRepository.loadAugmentedTraining(trainingId)
+            val standardRound =
+                if (training.training.standardRoundId == null) null else standardRoundDAO.loadStandardRound(
+                    training.training.standardRoundId!!
+                )
+            val result = LoaderResult(training, standardRound)
             result.setRoundId(roundId)
             result.setAdjustEndIndex(endIndex)
 
-            if (training.arrowId != null) {
-                val arrow = training.arrow
-                if (arrow != null) {
-                    result.setArrow(arrow)
-                }
+            if (training.training.arrowId != null) {
+                val arrow = arrowDAO.loadArrow(training.training.arrowId!!)
+                result.maxArrowNumber = arrow.maxArrowNumber
+                result.arrowDiameter = arrow.diameter
             }
-            val bow = training.bow
-            if (bow != null) {
-                result.sightMark = bow.loadSightSetting(result.distance!!)
+            if (training.training.bowId != null) {
+                result.sightMark = bowDAO.loadSightMarks(training.training.bowId!!)
+                    .firstOrNull { it.distance == result.distance!! }
             }
             return result
         }
@@ -465,13 +522,16 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
         internal const val END_INDEX = "end_ind"
         internal const val GALLERY_REQUEST_CODE = 1
 
-        private fun shouldShowRound(r: Round, shotShowScope: ETrainingScope, roundId: Long?): Boolean {
+        private fun shouldShowRound(
+            r: Round,
+            shotShowScope: ETrainingScope,
+            roundId: Long?
+        ): Boolean {
             return shotShowScope !== ETrainingScope.END && (shotShowScope === ETrainingScope.TRAINING || r.id == roundId)
         }
 
         private fun shouldShowEnd(end: End, currentEndId: Long?): Boolean {
-            return !SharedUtils.equals(end.id, currentEndId) && end.exact
+            return end.id != currentEndId && end.exact
         }
     }
-
 }

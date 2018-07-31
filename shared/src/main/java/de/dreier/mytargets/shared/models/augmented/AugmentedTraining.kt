@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -17,33 +17,12 @@ package de.dreier.mytargets.shared.models.augmented
 
 import android.os.Parcel
 import android.os.Parcelable
-import de.dreier.mytargets.shared.models.db.Round
-import de.dreier.mytargets.shared.models.db.StandardRound
 import de.dreier.mytargets.shared.models.db.Training
 
 data class AugmentedTraining(
         val training: Training,
         var rounds: MutableList<AugmentedRound>
 ) : Parcelable {
-    constructor(training: Training) : this(training, training.loadRounds()
-            .map { AugmentedRound(it) }
-            .toMutableList())
-
-    fun toTraining(): Training {
-        training.rounds = rounds.map { it.toRound() }.toMutableList()
-        return training
-    }
-
-    fun initRoundsFromTemplate(standardRound: StandardRound) {
-        rounds = mutableListOf()
-        for (template in standardRound.loadRounds()) {
-            val round = AugmentedRound(Round(template))
-            round.round.trainingId = training.id
-            round.round.target = template.targetTemplate
-            round.round.comment = ""
-            rounds.add(round)
-        }
-    }
 
     constructor(source: Parcel) : this(
             source.readParcelable<Training>(Training::class.java.classLoader),

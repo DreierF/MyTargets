@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -17,18 +17,43 @@ package de.dreier.mytargets.views.selector
 
 import android.content.Context
 import android.util.AttributeSet
-import de.dreier.mytargets.shared.models.db.StandardRound
+import android.view.View
+import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
+import de.dreier.mytargets.databinding.SelectorItemImageDetailsBinding
+import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
 
-class StandardRoundSelector @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null)
-    : ImageSelectorBase<StandardRound>(context, attrs, STANDARD_ROUND_REQUEST_CODE) {
+class StandardRoundSelector @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null
+) : SelectorBase<AugmentedStandardRound, SelectorItemImageDetailsBinding>(
+    context,
+    attrs,
+    R.layout.selector_item_image_details,
+    STANDARD_ROUND_REQUEST_CODE
+) {
+
+    private val standardRoundDAO = ApplicationInstance.db.standardRoundDAO()
+
+    override fun bindView(item: AugmentedStandardRound) {
+        view.name.text = item.standardRound.name
+        view.details.visibility = View.VISIBLE
+        view.details.text = item.getDescription(context)
+        view.image.setImageDrawable(item.targetDrawable)
+    }
 
     fun setItemId(standardRoundId: Long?) {
-        var standardRound = StandardRound[standardRoundId!!]
+        var standardRound = standardRoundDAO.loadStandardRoundOrNull(standardRoundId!!)
         // If the round has been removed, choose default one
-        if (standardRound == null || standardRound.loadRounds().isEmpty()) {
-            standardRound = StandardRound[32L]
+        if (standardRound == null || standardRoundDAO.loadRoundTemplates(standardRound.id).isEmpty()) {
+            standardRound = standardRoundDAO.loadStandardRound(32L)
         }
-        setItem(standardRound)
+        setItem(
+            AugmentedStandardRound(
+                standardRound,
+                standardRoundDAO.loadRoundTemplates(standardRound.id).toMutableList()
+            )
+        )
     }
 
     companion object {

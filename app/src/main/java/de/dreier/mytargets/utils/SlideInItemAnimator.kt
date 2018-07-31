@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -29,7 +29,10 @@ import java.util.*
  * A [RecyclerView.ItemAnimator] that fades & slides newly added items in from a given
  * direction.
  */
-class SlideInItemAnimator @JvmOverloads constructor(slideFromEdge: Int = Gravity.BOTTOM, layoutDirection: Int = -1) : DefaultItemAnimator() {
+class SlideInItemAnimator @JvmOverloads constructor(
+    slideFromEdge: Int = Gravity.BOTTOM,
+    layoutDirection: Int = -1
+) : DefaultItemAnimator() {
 
     private val pendingAdds = ArrayList<RecyclerView.ViewHolder>()
     private val slideFromEdge: Int = Gravity.getAbsoluteGravity(slideFromEdge, layoutDirection)
@@ -60,8 +63,9 @@ class SlideInItemAnimator @JvmOverloads constructor(slideFromEdge: Int = Gravity
         if (!pendingAdds.isEmpty()) {
             for (i in pendingAdds.indices.reversed()) {
                 val holder = pendingAdds[i]
-                Handler().postDelayed({
-                    holder.itemView.animate()
+                Handler().postDelayed(
+                    {
+                        holder.itemView.animate()
                             .alpha(1f)
                             .translationX(0f)
                             .translationY(0f)
@@ -81,8 +85,9 @@ class SlideInItemAnimator @JvmOverloads constructor(slideFromEdge: Int = Gravity
                                     clearAnimatedValues(holder.itemView)
                                 }
                             }).interpolator = LinearOutSlowInInterpolator()
-                },
-                        (holder.adapterPosition * 30).toLong())
+                    },
+                    (holder.adapterPosition * 30).toLong()
+                )
                 pendingAdds.removeAt(i)
             }
             useDefaultAnimator = true

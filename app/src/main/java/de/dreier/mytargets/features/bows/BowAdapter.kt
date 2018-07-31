@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -15,39 +15,45 @@
 
 package de.dreier.mytargets.features.bows
 
-import android.databinding.DataBindingUtil
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
 import de.dreier.mytargets.databinding.ItemImageDetailsBinding
-import de.dreier.mytargets.features.training.details.HtmlInfoBuilder
+import de.dreier.mytargets.features.training.details.SpannedInfoBuilder
 import de.dreier.mytargets.shared.models.db.Bow
-import de.dreier.mytargets.utils.Utils
 import de.dreier.mytargets.utils.multiselector.MultiSelector
 import de.dreier.mytargets.utils.multiselector.OnItemClickListener
 import de.dreier.mytargets.utils.multiselector.OnItemLongClickListener
 import de.dreier.mytargets.utils.multiselector.SelectableViewHolder
 
-internal class BowAdapter(private val selector: MultiSelector, private val clickListener: OnItemClickListener<Bow>, private val longClickListener: OnItemLongClickListener<Bow>) : SimpleListAdapterBase<Bow>() {
+internal class BowAdapter(
+    private val selector: MultiSelector,
+    private val clickListener: OnItemClickListener<Bow>,
+    private val longClickListener: OnItemLongClickListener<Bow>
+) : SimpleListAdapterBase<Bow>(compareBy(Bow::name, Bow::id)) {
+
+    val bowDAO = ApplicationInstance.db.bowDAO()
 
     public override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_image_details, parent, false)
+            .inflate(R.layout.item_image_details, parent, false)
         return ViewHolder(itemView)
     }
 
-    internal inner class ViewHolder(itemView: View) : SelectableViewHolder<Bow>(itemView, selector, clickListener, longClickListener) {
+    internal inner class ViewHolder(itemView: View) :
+        SelectableViewHolder<Bow>(itemView, selector, clickListener, longClickListener) {
 
-        val binding: ItemImageDetailsBinding = DataBindingUtil.bind(itemView)
+        val binding = ItemImageDetailsBinding.bind(itemView)
 
         override fun bindItem(item: Bow) {
             binding.name.text = item.name
-            binding.image.setImageDrawable(item.drawable)
+            binding.image.setImageDrawable(item.thumbnail!!.roundDrawable)
             binding.details.visibility = View.VISIBLE
 
-            val info = HtmlInfoBuilder()
+            val info = SpannedInfoBuilder(binding.root.context)
             info.addLine(R.string.bow_type, item.type!!)
             if (!item.brand!!.trim { it <= ' ' }.isEmpty()) {
                 info.addLine(R.string.brand, item.brand!!)
@@ -55,10 +61,11 @@ internal class BowAdapter(private val selector: MultiSelector, private val click
             if (!item.size!!.trim { it <= ' ' }.isEmpty()) {
                 info.addLine(R.string.size, item.size!!)
             }
-            for ((_, _, distance, value) in item.loadSightMarks()) {
+            val sightMarks = bowDAO.loadSightMarks(item.id).sortedBy { it.distance }
+            for ((_, _, distance, value) in sightMarks) {
                 info.addLine(distance.toString(), value!!)
             }
-            binding.details.text = Utils.fromHtml(info.toString())
+            binding.details.text = info.toSpanned()
         }
     }
 }

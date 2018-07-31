@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -15,14 +15,13 @@
 
 package de.dreier.mytargets
 
-import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.os.Vibrator
 import android.support.wearable.activity.ConfirmationActivity
 import android.support.wearable.activity.WearableActivity
 import android.view.View
+import androidx.core.content.systemService
 import de.dreier.mytargets.databinding.ActivityInputBinding
 import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
 import de.dreier.mytargets.shared.models.augmented.AugmentedRound
@@ -50,7 +49,8 @@ class InputActivity : WearableActivity(), TargetViewBase.OnEndFinishedListener {
 
         // Set up target view
         binding.target.initWithTarget(round.round.target)
-        binding.target.replaceWithEnd(End(round.round.shotsPerEnd, 0))
+        binding.target.replaceWithEnd((0 until round.round.shotsPerEnd)
+                .map { Shot(it) }.toMutableList(), false)
         binding.target.setOnTargetSetListener(this)
 
         // Ensure Moto 360 is not cut off at the bottom
@@ -96,12 +96,9 @@ class InputActivity : WearableActivity(), TargetViewBase.OnEndFinishedListener {
             intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, this@InputActivity
                     .getString(R.string.saved))
             this@InputActivity.startActivity(intent)
-            val v = this@InputActivity
-                    .getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            VibratorCompat.vibrate(v, 200)
+            VibratorCompat.vibrate(systemService(), 200)
             this@InputActivity.finish()
-            val end = End(round.round.shotsPerEnd, 0)
-            end.roundId = round.round.id
+            val end = End(index = 0, roundId = round.round.id)
             val ae = AugmentedEnd(end, shotList.toMutableList(), mutableListOf())
             ApplicationInstance.wearableClient.sendEndUpdate(ae)
         }

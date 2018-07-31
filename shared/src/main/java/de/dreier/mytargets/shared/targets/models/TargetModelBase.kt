@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -34,13 +34,13 @@ import java.util.*
 open class TargetModelBase protected constructor(
         override val id: Long,
         @StringRes private val nameRes: Int,
-        val diameters: Array<Dimension>,
+        val diameters: List<Dimension>,
         val type: ETargetType = ETargetType.TARGET,
-        val zones: Array<ZoneBase>,
-        val scoringStyles: Array<ScoringStyle>
+        val zones: List<ZoneBase>,
+        val scoringStyles: List<ScoringStyle>
 ) : IIdProvider {
     var faceRadius: Float = 0f
-    var facePositions: Array<PointF>
+    var facePositions: List<PointF>
     var decorator: TargetDecorator? = null
         protected set
 
@@ -62,7 +62,7 @@ open class TargetModelBase protected constructor(
 
     init {
         this.faceRadius = 1f
-        this.facePositions = arrayOf(PointF(0f, 0f))
+        this.facePositions = listOf(PointF(0f, 0f))
     }
 
     override fun toString(): String {
@@ -81,10 +81,6 @@ open class TargetModelBase protected constructor(
 
     fun getScoringStyle(scoringStyle: Int): ScoringStyle {
         return scoringStyles[scoringStyle]
-    }
-
-    open fun dependsOnArrowIndex(): Boolean {
-        return false
     }
 
     open fun shouldDrawZone(zone: Int, scoringStyle: Int): Boolean {

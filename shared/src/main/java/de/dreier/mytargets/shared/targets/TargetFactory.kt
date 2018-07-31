@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -22,10 +22,10 @@ object TargetFactory {
 
     private val list: MutableList<TargetModelBase>
 
-    private var idIndexLookup: Array<Int?>
+    private var idIndexLookup = mutableMapOf<Long, Int>()
 
     val comparator: Comparator<Target>
-        get() = compareBy { idIndexLookup[(it.id).toInt()]!! }
+        get() = compareBy { idIndexLookup[it.id]!! }
 
     init {
         list = ArrayList()
@@ -61,9 +61,8 @@ object TargetFactory {
     }
 
     init {
-        idIndexLookup = arrayOfNulls(list.size)
         for (i in list.indices) {
-            idIndexLookup[list[i].id.toInt()] = i
+            idIndexLookup[list[i].id] = i
         }
     }
 
@@ -82,12 +81,12 @@ object TargetFactory {
             out.add(NFAAIndoor())
             out.add(NFAAIndoor5Spot())
         } else {
-            out.add(list[idIndexLookup[(target.id).toInt()]!!])
+            out.add(list[idIndexLookup[target.id]!!])
         }
         return out
     }
 
-    fun getTarget(id: Int): TargetModelBase {
+    fun getTarget(id: Long): TargetModelBase {
         return list[idIndexLookup[id]!!]
     }
 }

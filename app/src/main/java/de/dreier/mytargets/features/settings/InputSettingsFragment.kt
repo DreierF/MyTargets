@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -34,17 +34,27 @@ class InputSettingsFragment : SettingsFragmentBase() {
 
     override fun updateItemSummaries() {
         setSummary(SettingsManager.KEY_INPUT_SUMMARY_AVERAGE_OF, averageOf)
-        setSummary(SettingsManager.KEY_INPUT_ARROW_DIAMETER_SCALE, String.format(Utils
-                .getCurrentLocale(context!!), "%.1fx", SettingsManager
-                .inputArrowDiameterScale))
-        setSummary(SettingsManager.KEY_INPUT_TARGET_ZOOM, String.format(Utils
-                .getCurrentLocale(context!!), "%.1fx", SettingsManager
-                .inputTargetZoom))
-        setSummary(SettingsManager.KEY_INPUT_KEYBOARD_TYPE,
-                if (SettingsManager.inputKeyboardType == LEFT)
-                    getString(R.string.left_handed)
-                else
-                    getString(R.string.right_handed))
+        setSummary(
+            SettingsManager.KEY_INPUT_ARROW_DIAMETER_SCALE, String.format(
+                Utils
+                    .getCurrentLocale(context!!), "%.1fx", SettingsManager
+                    .inputArrowDiameterScale
+            )
+        )
+        setSummary(
+            SettingsManager.KEY_INPUT_TARGET_ZOOM, String.format(
+                Utils
+                    .getCurrentLocale(context!!), "%.1fx", SettingsManager
+                    .inputTargetZoom
+            )
+        )
+        setSummary(
+            SettingsManager.KEY_INPUT_KEYBOARD_TYPE,
+            if (SettingsManager.inputKeyboardType == LEFT)
+                getString(R.string.left_handed)
+            else
+                getString(R.string.right_handed)
+        )
         setDefaultSummary(SettingsManager.KEY_AGGREGATION_STRATEGY)
         setDefaultSummary(SettingsManager.KEY_SHOW_MODE)
     }

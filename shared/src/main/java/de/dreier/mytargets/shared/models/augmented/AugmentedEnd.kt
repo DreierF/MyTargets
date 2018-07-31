@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -17,6 +17,7 @@ package de.dreier.mytargets.shared.models.augmented
 
 import android.os.Parcel
 import android.os.Parcelable
+import de.dreier.mytargets.shared.models.IIdSettable
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.EndImage
 import de.dreier.mytargets.shared.models.db.Shot
@@ -25,14 +26,12 @@ data class AugmentedEnd(
         val end: End,
         var shots: MutableList<Shot>,
         var images: MutableList<EndImage>
-) : Parcelable {
-    constructor(end: End) : this(end, end.loadShots().toMutableList(), end.loadImages().toMutableList())
-
-    fun toEnd(): End {
-        end.shots = shots
-        end.images = images
-        return end
-    }
+) : Parcelable, IIdSettable {
+    override var id: Long
+        get() = end.id
+        set(value) {
+            end.id = value
+        }
 
     val isEmpty: Boolean
         get() = shots.any { it.scoringRing == Shot.NOTHING_SELECTED } && images.isEmpty()

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -15,8 +15,8 @@
 package de.dreier.mytargets.shared.targets.models
 
 import de.dreier.mytargets.shared.R
+import de.dreier.mytargets.shared.models.Diameter
 import de.dreier.mytargets.shared.models.ETargetType
-import de.dreier.mytargets.shared.targets.TargetOvalBase
 import de.dreier.mytargets.shared.targets.scoringstyle.ArrowAwareScoringStyle
 import de.dreier.mytargets.shared.targets.zone.CircularZone
 import de.dreier.mytargets.shared.targets.zone.EllipseZone
@@ -25,14 +25,15 @@ import de.dreier.mytargets.shared.utils.Color.GRAY
 import de.dreier.mytargets.shared.utils.Color.LIGHTER_GRAY
 import de.dreier.mytargets.shared.utils.Color.ORANGE
 
-class IFAAAnimal : TargetOvalBase(
+class IFAAAnimal : TargetModelBase(
         id = ID,
         nameRes = R.string.ifaa_animal,
-        zones = arrayOf(
+        diameters = listOf(Diameter.SMALL, Diameter.MEDIUM, Diameter.LARGE, Diameter.XLARGE),
+        zones = listOf(
                 EllipseZone(1.0f, 0.0f, 0.0f, ORANGE, BLACK, 4),
                 CircularZone(1.0f, LIGHTER_GRAY, GRAY, 3)
         ),
-        scoringStyles = arrayOf(
+        scoringStyles = listOf(
                 ArrowAwareScoringStyle(false, arrayOf(intArrayOf(20, 18), intArrayOf(16, 14), intArrayOf(12, 10))),
                 ArrowAwareScoringStyle(false, arrayOf(intArrayOf(20, 15), intArrayOf(15, 10))),
                 ArrowAwareScoringStyle(false, arrayOf(intArrayOf(20, 16), intArrayOf(14, 10), intArrayOf(8, 4))),

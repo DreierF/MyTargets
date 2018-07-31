@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -19,12 +19,12 @@ import de.dreier.mytargets.base.adapters.header.ExpandableListAdapter
 import de.dreier.mytargets.base.fragments.EditableListFragmentBase
 import de.dreier.mytargets.shared.models.IIdProvider
 import de.dreier.mytargets.shared.models.IIdSettable
-import de.dreier.mytargets.shared.models.IRecursiveModel
 
 /**
  * Shows all rounds of one training day
  */
-abstract class ExpandableListFragment<H : IIdProvider, C> : EditableListFragmentBase<C, ExpandableListAdapter<H, C>>() where C : IIdSettable, C : IRecursiveModel {
+abstract class ExpandableListFragment<H : IIdProvider, C> :
+    EditableListFragmentBase<C, ExpandableListAdapter<H, C>>() where C : IIdSettable {
 
     private var savedInstanceState: Bundle? = null
 
@@ -38,7 +38,7 @@ abstract class ExpandableListFragment<H : IIdProvider, C> : EditableListFragment
             }
             return
         }
-        adapter!!.setList(children.toMutableList())
+        adapter!!.setList(children)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

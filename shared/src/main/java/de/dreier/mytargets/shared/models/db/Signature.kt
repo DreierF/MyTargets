@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Florian Dreier
+ * Copyright (C) 2018 Florian Dreier
  *
  * This file is part of MyTargets.
  *
@@ -15,32 +15,26 @@
 
 package de.dreier.mytargets.shared.models.db
 
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import android.graphics.Bitmap
 import android.os.Parcel
 import android.os.Parcelable
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
-import com.raizlabs.android.dbflow.sql.language.SQLite
-import com.raizlabs.android.dbflow.structure.BaseModel
-import de.dreier.mytargets.shared.AppDatabase
 import de.dreier.mytargets.shared.utils.readBitmap
-import de.dreier.mytargets.shared.utils.typeconverters.BitmapConverter
 import de.dreier.mytargets.shared.utils.writeBitmap
 
-@Table(database = AppDatabase::class)
+@Entity
 data class Signature(
-        @Column(name = "_id")
-        @PrimaryKey(autoincrement = true)
+        @PrimaryKey(autoGenerate = true)
         var id: Long = 0,
 
-        @Column
         var name: String = "",
 
         /** A bitmap of the signature or null if no signature has been set. */
-        @Column(typeConverter = BitmapConverter::class)
+        @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
         var bitmap: Bitmap? = null
-) : BaseModel(), Parcelable {
+) : Parcelable {
 
     val isSigned: Boolean
         get() = bitmap != null
@@ -68,13 +62,6 @@ data class Signature(
             }
 
             override fun newArray(size: Int) = arrayOfNulls<Signature>(size)
-        }
-
-        operator fun get(signatureId: Long): Signature? {
-            return SQLite.select()
-                    .from(Signature::class.java)
-                    .where(Signature_Table._id.eq(signatureId))
-                    .querySingle()
         }
     }
 }
