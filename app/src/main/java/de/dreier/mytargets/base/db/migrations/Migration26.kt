@@ -532,7 +532,7 @@ class TableMigrationBuilder(val tableName: String) {
 
     fun copyData(database: SupportSQLiteDatabase) {
         database.execSQL("INSERT INTO `$newTableName` (" + fieldMigrations.joinToString(separator = ", ") { it.name } + ") "
-                + "SELECT " + fieldMigrations.joinToString(separator = ", ") { it.columnName }
+                + "SELECT " + fieldMigrations.joinToString(separator = ", ") { it.selector() }
                 + " FROM `$tableName`")
     }
 
@@ -558,5 +558,19 @@ data class FieldMigration(
 
     fun referenceToString(): String {
         return "FOREIGN KEY($name) REFERENCES `$refTable`(`$refColumn`) ON UPDATE $onUpdate ON DELETE $onDelete"
+    }
+
+    fun selector(): String {
+        if (notNull) {
+            return "CASE WHEN $columnName IS NULL THEN ${getDefault()} ELSE $columnName END"
+        }
+        return columnName
+    }
+
+    private fun getDefault(): String {
+        return when (affinity) {
+            "TEXT" -> "\"\""
+            else -> "0"
+        }
     }
 }
