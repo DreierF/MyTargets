@@ -15,7 +15,6 @@
 package de.dreier.mytargets.features.settings
 
 import android.content.SharedPreferences
-import androidx.core.content.edit
 
 operator fun SharedPreferences.set(key: String, value: Any?) {
     when (value) {
@@ -64,4 +63,12 @@ inline operator fun <reified T : Any> SharedPreferences.get(key: String, default
         Long::class -> getLong(key, defaultValue as Long) as T
         else -> throw UnsupportedOperationException("Not yet implemented")
     }
+}
+
+inline fun SharedPreferences.edit(
+    action: SharedPreferences.Editor.() -> Unit
+) {
+    val editor = edit()
+    action(editor)
+    editor.apply()
 }

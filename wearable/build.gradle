@@ -75,7 +75,7 @@ dependencies {
     compileOnly dependencies.wearable
     implementation dependencies.supportCompat
     implementation dependencies.supportWear
-    implementation dependencies.androidxCoreKtx
+//    implementation dependencies.androidxCoreKtx
     implementation dependencies.androidState
     kapt dependencies.androidStateProcessor
     implementation project(':shared')

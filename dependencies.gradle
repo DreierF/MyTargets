@@ -74,7 +74,7 @@ ext {
             supportWearable               : "com.google.android.support:wearable:$libraryVersion.supportWearable",
             wearable                      : "com.google.android.wearable:wearable:$libraryVersion.supportWearable",
 
-            androidxCoreKtx               : 'androidx.core:core-ktx:0.3',
+//            androidxCoreKtx               : 'androidx.core:core-ktx:0.3',
 
             archLifecycleExtensions       : "android.arch.lifecycle:extensions:$libraryVersion.architectureComponents",
             archLifecycleCompiler         : "android.arch.lifecycle:compiler:$libraryVersion.architectureComponents",
