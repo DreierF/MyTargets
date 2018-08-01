@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.utils
 
-import android.support.v4.util.Pair
+import androidx.core.util.Pair
 import de.dreier.mytargets.base.db.dao.EndDAO
 import de.dreier.mytargets.base.db.dao.RoundDAO
 import de.dreier.mytargets.shared.models.SelectableZone

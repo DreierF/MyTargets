@@ -16,19 +16,20 @@
 package de.dreier.mytargets.test.base
 
 import android.os.Environment
-import android.support.annotation.IdRes
-import android.support.annotation.StringRes
-import android.support.test.InstrumentationRegistry
-import android.support.test.InstrumentationRegistry.getInstrumentation
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
-import android.support.test.espresso.ViewAction
-import android.support.test.espresso.action.ViewActions
-import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.action.ViewActions.pressBack
-import android.support.test.espresso.contrib.PickerActions
-import android.support.test.espresso.matcher.ViewMatchers.*
-import android.support.test.uiautomator.UiDevice
+import androidx.annotation.IdRes
+import androidx.annotation.StringRes
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
+import androidx.test.espresso.ViewAction
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.pressBack
+import androidx.test.espresso.contrib.PickerActions
+import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.uiautomator.UiDevice
 import android.widget.DatePicker
 import de.dreier.mytargets.R
 import de.dreier.mytargets.features.settings.SettingsManager
@@ -62,10 +63,10 @@ abstract class UITestBase : InstrumentedTestBase() {
             val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
             val filename = (description!!.className.replace(".*\\.([^.]+)".toRegex(), "$1")
                     + "-" + description.methodName)
-            device.takeScreenshot(File(path, filename + ".png"))
+            device.takeScreenshot(File(path, "$filename.png"))
 
             try {
-                device.dumpWindowHierarchy(File(path, filename + ".txt"))
+                device.dumpWindowHierarchy(File(path, "$filename.txt"))
             } catch (e1: IOException) {
                 e1.printStackTrace()
             }
@@ -74,7 +75,7 @@ abstract class UITestBase : InstrumentedTestBase() {
     }
 
     protected fun clickActionBarItem(@IdRes menuItem: Int, @StringRes title: Int) {
-        onView(withId(menuItem)).withFailureHandler { _, _ ->
+        Espresso.onView(withId(menuItem)).withFailureHandler { _, _ ->
             openActionBarOverflowOrOptionsMenu(getInstrumentation().targetContext)
             onView(withText(title)).perform(click())
         }.perform(click())
@@ -101,7 +102,7 @@ abstract class UITestBase : InstrumentedTestBase() {
 
 
     protected fun getString(@StringRes resString: Int): String {
-        return InstrumentationRegistry.getTargetContext().getString(resString)
+        return InstrumentationRegistry.getInstrumentation().targetContext.getString(resString)
     }
 
     protected fun navigateUp() {

@@ -15,15 +15,15 @@
 
 package de.dreier.mytargets.test.utils.matchers
 
-import android.support.annotation.IdRes
-import android.support.annotation.StringRes
+import androidx.annotation.IdRes
+import androidx.annotation.StringRes
 import android.support.design.widget.FloatingActionButton
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.contrib.RecyclerViewActions.actionOnItem
-import android.support.test.espresso.matcher.ViewMatchers.*
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItem
+import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.Toolbar
 import android.view.View
 import de.dreier.mytargets.R
 import de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isOnForegroundFragment

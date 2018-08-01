@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.features.settings
 
-import android.support.v7.preference.Preference
+import androidx.preference.Preference
 
 class ProfileSettingsFragment : SettingsFragmentBase() {
 
@@ -42,6 +42,6 @@ class ProfileSettingsFragment : SettingsFragmentBase() {
 
     companion object {
         private const val DIALOG_FRAGMENT_TAG =
-            "android.support.v7.preference.PreferenceFragment.DIALOG"
+            "androidx.preference.PreferenceFragment.DIALOG"
     }
 }

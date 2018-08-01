@@ -16,7 +16,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.wear.widget.drawer.WearableDrawerLayout
+    <androidx.wear.widget.drawer.WearableDrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -88,7 +88,7 @@
 
         </LinearLayout>
 
-        <android.support.wear.widget.drawer.WearableDrawerView
+        <androidx.wear.widget.drawer.WearableDrawerView
             android:id="@+id/wearableDrawerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -113,12 +113,12 @@
 
             </LinearLayout>
 
-        </android.support.wear.widget.drawer.WearableDrawerView>
+        </androidx.wear.widget.drawer.WearableDrawerView>
 
         <include
             android:id="@+id/clock"
             layout="@layout/layout_clock"/>
 
-    </android.support.wear.widget.drawer.WearableDrawerLayout>
+    </androidx.wear.widget.drawer.WearableDrawerLayout>
 
 </layout>

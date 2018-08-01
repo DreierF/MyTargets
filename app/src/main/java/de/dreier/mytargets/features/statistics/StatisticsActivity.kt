@@ -20,15 +20,15 @@ import android.app.LoaderManager
 import android.content.AsyncTaskLoader
 import android.content.Intent
 import android.content.Loader
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.view.GravityCompat.END
+import com.google.android.material.snackbar.Snackbar
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.core.view.GravityCompat.END
 import android.view.Menu
 import android.view.MenuItem
 import com.afollestad.materialdialogs.MaterialDialog
@@ -101,7 +101,7 @@ class StatisticsActivity : ChildActivityBase(),
                     .distinct()
                     .map { id -> Pair(id, trainingDAO.loadTraining(id)) }
                     .toSparseArray()
-                return rounds.map { round -> Pair(trainingsMap.get(round.trainingId!!), round) }
+                return rounds.map { round -> Pair(trainingsMap.get(round.trainingId!!)!!, round) }
             }
         }
     }

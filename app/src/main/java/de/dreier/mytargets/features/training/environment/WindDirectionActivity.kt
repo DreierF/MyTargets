@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.features.training.environment
 
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase
 
 class WindDirectionActivity : SimpleFragmentActivityBase() {

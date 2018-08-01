@@ -15,10 +15,10 @@
 
 package de.dreier.mytargets.test.utils.assertions
 
-import android.support.annotation.StringRes
-import android.support.test.espresso.ViewAssertion
-import android.support.test.espresso.matcher.ViewMatchers.assertThat
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.StringRes
+import androidx.test.espresso.ViewAssertion
+import androidx.test.espresso.matcher.ViewMatchers.assertThat
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.View.FIND_VIEWS_WITH_TEXT
 import android.widget.TextView

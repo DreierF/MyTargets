@@ -21,7 +21,7 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.os.Build
 import android.print.PageRange
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.targets.drawable.TargetImpactAggregationDrawable
 import de.dreier.mytargets.utils.print.CustomPrintDocumentAdapter

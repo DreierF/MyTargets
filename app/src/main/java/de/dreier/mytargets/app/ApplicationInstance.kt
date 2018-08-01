@@ -15,13 +15,13 @@
 
 package de.dreier.mytargets.app
 
-import android.arch.persistence.room.Room
-import android.arch.persistence.room.RoomDatabase
+import androidx.room.Room
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
-import android.support.multidex.MultiDex
+import androidx.multidex.MultiDex
 import android.util.Log
+import androidx.room.RoomDatabase
 import com.crashlytics.android.Crashlytics
 import com.evernote.android.state.StateSaver
 import de.dreier.mytargets.BuildConfig

@@ -15,7 +15,7 @@
   -->
 <layout>
 
-    <android.support.wear.widget.drawer.WearableDrawerLayout
+    <androidx.wear.widget.drawer.WearableDrawerLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-        <android.support.wear.widget.drawer.WearableDrawerView
+        <androidx.wear.widget.drawer.WearableDrawerView
             android:id="@+id/wearableDrawerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <android.support.wear.widget.drawer.WearableActionDrawerView
+                <androidx.wear.widget.drawer.WearableActionDrawerView
                     android:id="@+id/bottom_action_drawer"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -72,8 +72,8 @@
 
             </LinearLayout>
 
-        </android.support.wear.widget.drawer.WearableDrawerView>
+        </androidx.wear.widget.drawer.WearableDrawerView>
 
-    </android.support.wear.widget.drawer.WearableDrawerLayout>
+    </androidx.wear.widget.drawer.WearableDrawerLayout>
 
 </layout>

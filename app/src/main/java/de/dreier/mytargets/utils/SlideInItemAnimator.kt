@@ -18,9 +18,9 @@ package de.dreier.mytargets.utils
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Handler
-import android.support.v4.view.animation.LinearOutSlowInInterpolator
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.RecyclerView
+import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.RecyclerView
 import android.view.Gravity
 import android.view.View
 import java.util.*

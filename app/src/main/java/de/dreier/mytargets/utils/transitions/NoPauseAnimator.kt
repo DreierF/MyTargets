@@ -18,8 +18,8 @@ package de.dreier.mytargets.utils.transitions
 import android.animation.Animator
 import android.animation.TimeInterpolator
 import android.os.Build
-import android.support.annotation.RequiresApi
-import android.support.v4.util.ArrayMap
+import androidx.annotation.RequiresApi
+import androidx.collection.ArrayMap
 import java.util.*
 
 /**

@@ -15,11 +15,11 @@
 
 package de.dreier.mytargets.views.speeddial
 
-import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.Snackbar
-import android.support.v4.view.animation.FastOutSlowInInterpolator
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import android.view.View
 import android.view.ViewPropertyAnimator
+import com.google.android.material.snackbar.Snackbar
 
 object FabSpeedDialBehaviour : CoordinatorLayout.Behavior<FabSpeedDial>() {
 

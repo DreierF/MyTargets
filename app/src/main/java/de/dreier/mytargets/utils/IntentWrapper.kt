@@ -22,8 +22,8 @@ import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.annotation.ColorRes
-import android.support.v4.app.Fragment
+import androidx.annotation.ColorRes
+import androidx.fragment.app.Fragment
 import android.view.View
 import de.dreier.mytargets.R
 import de.dreier.mytargets.utils.transitions.FabTransform

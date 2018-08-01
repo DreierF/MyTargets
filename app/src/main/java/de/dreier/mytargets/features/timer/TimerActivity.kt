@@ -15,8 +15,8 @@
 
 package de.dreier.mytargets.features.timer
 
-import android.app.Fragment
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import de.dreier.mytargets.base.activities.ChildActivityBase
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.utils.Utils
@@ -30,14 +30,14 @@ class TimerActivity : ChildActivityBase() {
         if (savedInstanceState == null) {
             // Create the fragment only when the activity is created for the first time.
             // ie. not after orientation changes
-            childFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG)
+            childFragment = supportFragmentManager.findFragmentByTag(FRAGMENT_TAG)
             if (childFragment == null) {
                 childFragment = instantiateFragment()
                 childFragment?.arguments = intent?.extras
             }
 
-            fragmentManager.beginTransaction()
-                .replace(android.R.id.content, childFragment, FRAGMENT_TAG)
+            supportFragmentManager.beginTransaction()
+                .replace(android.R.id.content, childFragment!!, FRAGMENT_TAG)
                 .commit()
         }
     }

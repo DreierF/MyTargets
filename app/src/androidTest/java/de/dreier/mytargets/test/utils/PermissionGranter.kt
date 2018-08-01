@@ -18,11 +18,11 @@ package de.dreier.mytargets.test.utils
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Build
-import android.support.test.InstrumentationRegistry.getInstrumentation
-import android.support.test.uiautomator.UiDevice
-import android.support.test.uiautomator.UiObjectNotFoundException
-import android.support.test.uiautomator.UiSelector
-import android.support.v4.content.ContextCompat
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiObjectNotFoundException
+import androidx.test.uiautomator.UiSelector
+import androidx.core.content.ContextCompat
 
 object PermissionGranter {
 

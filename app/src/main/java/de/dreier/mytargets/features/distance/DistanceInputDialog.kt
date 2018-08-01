@@ -17,7 +17,7 @@ package de.dreier.mytargets.features.distance
 
 import android.app.AlertDialog
 import android.content.Context
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.text.InputType
 import android.view.LayoutInflater
 import de.dreier.mytargets.R

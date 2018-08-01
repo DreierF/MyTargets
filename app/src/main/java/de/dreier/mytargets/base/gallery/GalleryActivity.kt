@@ -18,13 +18,13 @@ package de.dreier.mytargets.base.gallery
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.databinding.DataBindingUtil
 import android.os.AsyncTask
 import android.os.Bundle
-import android.support.v4.view.ViewPager
-import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager.widget.ViewPager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.evernote.android.state.State
 import de.dreier.mytargets.R
@@ -173,7 +173,7 @@ class GalleryActivity : ChildActivityBase() {
 
     @NeedsPermission(Manifest.permission.CAMERA)
     internal fun onTakePicture() {
-        EasyImage.openCamera(this, 0)
+        EasyImage.openCameraForImage(this, 0)
     }
 
     @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -206,7 +206,7 @@ class GalleryActivity : ChildActivityBase() {
 
                 override fun onCanceled(source: EasyImage.ImageSource?, type: Int) {
                     //Cancel handling, you might wanna remove taken photo if it was canceled
-                    if (source == EasyImage.ImageSource.CAMERA) {
+                    if (source == EasyImage.ImageSource.CAMERA_IMAGE) {
                         val photoFile = EasyImage
                             .lastlyTakenButCanceledPhoto(applicationContext)
                         photoFile?.delete()

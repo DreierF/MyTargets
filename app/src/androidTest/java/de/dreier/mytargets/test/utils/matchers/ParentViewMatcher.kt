@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.test.utils.matchers
 
-import android.support.annotation.IdRes
+import androidx.annotation.IdRes
 import android.view.View
 import android.view.ViewGroup
 import de.dreier.mytargets.views.speeddial.FabSpeedDial

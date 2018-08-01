@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.features.settings
 
-import android.support.v4.util.LongSparseArray
+import androidx.collection.LongSparseArray
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.features.scoreboard.EFileType
 import de.dreier.mytargets.features.scoreboard.ScoreboardConfiguration
@@ -158,7 +158,7 @@ object SettingsManager {
     var timerSettings: TimerSettings
         get() {
             fun getPrefTime(key: String, def: Int): Int {
-                return preferences.getString(key, def.toString()).toIntOrNull() ?: def
+                return preferences.getString(key, def.toString())?.toIntOrNull() ?: def
             }
 
             val settings = TimerSettings()
@@ -201,14 +201,14 @@ object SettingsManager {
     var showMode: ETrainingScope
         get() = ETrainingScope.valueOf(
             preferences
-                .getString(KEY_SHOW_MODE, ETrainingScope.END.toString())
+                .getString(KEY_SHOW_MODE, ETrainingScope.END.toString())!!
         )
         set(value) = preferences.set(KEY_SHOW_MODE, value.toString())
 
     var aggregationStrategy: EAggregationStrategy
         get() = EAggregationStrategy.valueOf(
             preferences
-                .getString(KEY_AGGREGATION_STRATEGY, EAggregationStrategy.AVERAGE.toString())
+                .getString(KEY_AGGREGATION_STRATEGY, EAggregationStrategy.AVERAGE.toString())!!
         )
         set(value) = preferences.set(KEY_AGGREGATION_STRATEGY, value.toString())
 
@@ -221,7 +221,7 @@ object SettingsManager {
         set(value) = preferences.set(KEY_PROFILE_LAST_NAME, value)
 
     val profileFullName: String
-        get() = "%s %s".format(profileFirstName, profileLastName).trim()
+        get() = "$profileFirstName $profileLastName".trim()
 
     var profileClub: String
         get() = preferences[KEY_PROFILE_CLUB, ""]

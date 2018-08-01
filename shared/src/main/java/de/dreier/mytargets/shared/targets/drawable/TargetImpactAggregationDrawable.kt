@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.shared.targets.drawable
 
-import android.support.annotation.ColorInt
+import androidx.annotation.ColorInt
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy
 import de.dreier.mytargets.shared.analysis.aggregation.EAggregationStrategy.NONE
 import de.dreier.mytargets.shared.analysis.aggregation.IAggregationStrategy

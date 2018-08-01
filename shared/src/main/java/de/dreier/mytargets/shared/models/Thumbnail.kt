@@ -21,7 +21,7 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.media.ThumbnailUtils
 import android.os.Parcelable
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import de.dreier.mytargets.shared.utils.RoundedAvatarDrawable
 import de.dreier.mytargets.shared.utils.toByteArray
 import kotlinx.android.parcel.IgnoredOnParcel

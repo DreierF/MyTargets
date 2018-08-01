@@ -16,7 +16,7 @@
 package de.dreier.mytargets.shared.targets.models
 
 import android.graphics.PointF
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import de.dreier.mytargets.shared.SharedApplicationInstance
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.ETargetType

@@ -78,15 +78,13 @@ object GoogleDriveBackup {
 
         override fun getBackups(listener: IAsyncBackupRestore.OnLoadFinishedListener) {
             val query = Query.Builder()
-                .addFilter(Filters.eq(SearchableField.MIME_TYPE, MYTARGETS_MIME_TYPE))
-                .addFilter(Filters.eq(SearchableField.TRASHED, false))
-                .setSortOrder(
-                    SortOrder.Builder()
-                        .addSortDescending(SortableField.MODIFIED_DATE).build()
-                )
-                .build()
+                    .addFilter(Filters.eq(SearchableField.MIME_TYPE, MYTARGETS_MIME_TYPE))
+                    .addFilter(Filters.eq(SearchableField.TRASHED, false))
+                    .setSortOrder(SortOrder.Builder()
+                            .addSortDescending(SortableField.MODIFIED_DATE).build())
+                    .build()
             Drive.DriveApi.getAppFolder(googleApiClient)!!.queryChildren(googleApiClient, query)
-                .setResultCallback(object : ResultCallback<DriveApi.MetadataBufferResult> {
+                    .setResultCallback(object : ResultCallback<DriveApi.MetadataBufferResult> {
 
                     private val backupsArray = ArrayList<BackupEntry>()
 
@@ -204,7 +202,7 @@ object GoogleDriveBackup {
 
             // create a file in selected folder
             val result1 = Drive.DriveApi.getAppFolder(googleApiClient)!!
-                .createFile(googleApiClient, changeSet, driveContents).await()
+                    .createFile(googleApiClient, changeSet, driveContents).await()
             if (!result1.status.isSuccess) {
                 throw BackupException(result1.status.statusMessage)
             }

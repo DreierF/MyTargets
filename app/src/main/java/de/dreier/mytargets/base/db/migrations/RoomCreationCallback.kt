@@ -15,8 +15,8 @@
 
 package de.dreier.mytargets.base.db.migrations
 
-import android.arch.persistence.db.SupportSQLiteDatabase
-import android.arch.persistence.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.room.RoomDatabase
 import de.dreier.mytargets.base.db.StandardRoundFactory
 import de.dreier.mytargets.shared.models.db.RoundTemplate
 import de.dreier.mytargets.shared.models.db.StandardRound

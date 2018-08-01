@@ -21,7 +21,7 @@ import android.graphics.pdf.PdfDocument
 import android.os.Build
 import android.print.PageRange
 import android.print.PrintAttributes
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import android.view.View
 import android.view.View.MeasureSpec.EXACTLY
 import android.view.View.MeasureSpec.makeMeasureSpec

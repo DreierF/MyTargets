@@ -14,7 +14,7 @@
  */
 package de.dreier.mytargets
 
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.wearable.activity.WearableActivity
 import android.view.LayoutInflater

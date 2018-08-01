@@ -16,8 +16,8 @@
 package de.dreier.mytargets.shared.analysis.aggregation.cluster
 
 import android.os.AsyncTask
-import android.support.annotation.CallSuper
-import android.support.annotation.WorkerThread
+import androidx.annotation.CallSuper
+import androidx.annotation.WorkerThread
 
 import de.dreier.mytargets.shared.analysis.aggregation.IAggregationResultRenderer
 import de.dreier.mytargets.shared.analysis.aggregation.IAggregationStrategy

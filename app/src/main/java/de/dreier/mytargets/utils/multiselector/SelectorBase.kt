@@ -16,7 +16,7 @@
 package de.dreier.mytargets.utils.multiselector
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 
 abstract class SelectorBase {
     protected var tracker = WeakHolderTracker()

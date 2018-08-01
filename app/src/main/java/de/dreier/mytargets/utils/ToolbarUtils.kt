@@ -15,14 +15,11 @@
 
 package de.dreier.mytargets.utils
 
-import android.support.annotation.StringRes
-import android.support.v4.app.Fragment
-import android.support.v4.view.ViewCompat
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
-import android.widget.TextView
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import de.dreier.mytargets.R
-
 
 object ToolbarUtils {
 
@@ -48,18 +45,6 @@ object ToolbarUtils {
     fun setSupportActionBar(fragment: Fragment, toolbar: Toolbar) {
         val activity = fragment.activity as AppCompatActivity?
         activity!!.setSupportActionBar(toolbar)
-    }
-
-    fun setToolbarTransitionName(toolbar: Toolbar) {
-        var textViewTitle: TextView? = null
-        for (i in 0 until toolbar.childCount) {
-            val view = toolbar.getChildAt(i)
-            if (view is TextView) {
-                textViewTitle = view
-                break
-            }
-        }
-        ViewCompat.setTransitionName(textViewTitle, "title")
     }
 
     fun setTitle(fragment: Fragment, @StringRes title: Int) {

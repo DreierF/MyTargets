@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.base.db
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import de.dreier.mytargets.base.db.dao.*
 import de.dreier.mytargets.base.db.typeconverters.*
 import de.dreier.mytargets.shared.models.db.*

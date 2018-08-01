@@ -16,9 +16,9 @@
 package de.dreier.mytargets.views
 
 import android.content.Context
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.os.Handler
-import android.support.annotation.PluralsRes
+import androidx.annotation.PluralsRes
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent

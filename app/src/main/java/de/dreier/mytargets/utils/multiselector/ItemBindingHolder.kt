@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.utils.multiselector
 
-import android.support.v7.widget.RebindReportingHolder
+import androidx.recyclerview.widget.RebindReportingHolder
 import android.view.View
 
 abstract class ItemBindingHolder<T> internal constructor(itemView: View) :

@@ -15,8 +15,8 @@
 
 package de.dreier.mytargets.features.settings.backup.provider
 
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import de.dreier.mytargets.R
 import de.dreier.mytargets.shared.SharedApplicationInstance
 import de.dreier.mytargets.shared.models.IIdProvider

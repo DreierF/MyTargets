@@ -15,10 +15,10 @@
 
 package de.dreier.mytargets.features.timer
 
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,9 +61,9 @@ class TimerFragment : TimerFragmentBase() {
     override fun applyStatus(status: ETimerState) {
         binding.root.setBackgroundResource(status.color)
         if (Utils.isLollipop && activity != null) {
-            val window = activity.window
+            val window = activity!!.window
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = ContextCompat.getColor(activity, status.color)
+            window.statusBarColor = ContextCompat.getColor(activity!!, status.color)
         }
         binding.timerStatus.setText(getStatusText(status))
 

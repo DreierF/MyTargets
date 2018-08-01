@@ -16,9 +16,9 @@
 package de.dreier.mytargets.test.utils.matchers
 
 import android.content.Intent
-import android.support.test.espresso.intent.matcher.ComponentNameMatchers.hasClassName
-import android.support.test.espresso.intent.matcher.ComponentNameMatchers.hasMyPackageName
-import android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.intent.matcher.ComponentNameMatchers.hasClassName
+import androidx.test.espresso.intent.matcher.ComponentNameMatchers.hasMyPackageName
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Description
 import org.hamcrest.Matcher

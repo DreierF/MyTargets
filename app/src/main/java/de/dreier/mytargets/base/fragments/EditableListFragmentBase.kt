@@ -15,8 +15,8 @@
 package de.dreier.mytargets.base.fragments
 
 import android.os.Bundle
-import android.support.annotation.PluralsRes
-import android.support.design.widget.Snackbar
+import androidx.annotation.PluralsRes
+import com.google.android.material.snackbar.Snackbar
 import android.view.View
 import com.google.firebase.analytics.FirebaseAnalytics
 import de.dreier.mytargets.R

@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.test.utils.assertions
 
-import android.support.test.espresso.ViewAssertion
+import androidx.test.espresso.ViewAssertion
 import de.dreier.mytargets.features.training.input.TargetView
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull

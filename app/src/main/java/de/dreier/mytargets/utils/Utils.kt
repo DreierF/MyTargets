@@ -26,13 +26,12 @@ import android.graphics.Color
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Process
-import android.support.media.ExifInterface
+import androidx.exifinterface.media.ExifInterface
 import android.text.Html
 import android.text.Spanned
 import android.view.View
 import android.view.WindowManager
-import androidx.core.content.systemService
-import androidx.core.content.systemService
+import androidx.core.content.getSystemService
 import de.dreier.mytargets.features.main.MainActivity
 import de.dreier.mytargets.features.training.overview.Header
 import de.dreier.mytargets.utils.transitions.FabTransform
@@ -71,7 +70,7 @@ object Utils {
         val mPendingIntentId = 223344
         val mPendingIntent = PendingIntent
                 .getActivity(context, mPendingIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-        context.systemService<AlarmManager>()
+        context.getSystemService<AlarmManager>()!!
             .set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent)
 
         // Kill the application

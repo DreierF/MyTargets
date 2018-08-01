@@ -15,8 +15,8 @@
 
 package de.dreier.mytargets.base.adapters.dynamicitem
 
-import android.support.v4.app.Fragment
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 
 abstract class DynamicItemHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {

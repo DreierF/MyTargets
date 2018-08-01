@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.base.db.typeconverters
 
-import android.arch.persistence.room.TypeConverter
+import androidx.room.TypeConverter
 import de.dreier.mytargets.shared.models.EBowType
 
 class EBowTypeConverters {
