@@ -20,6 +20,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.github.triplet.play'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'io.fabric'
+apply plugin: 'androidx.navigation.safeargs'
 
 android {
     compileOptions {
@@ -122,19 +123,23 @@ dependencies {
 
     implementation dependencies.kotlinStdlibJdk7
 
-    implementation dependencies.supportCompat
-    implementation dependencies.supportCoreUtils
-    implementation dependencies.supportCoreUi
-    implementation dependencies.supportFragment
-    implementation dependencies.supportV13
+    implementation dependencies.androidxCore
+    implementation dependencies.androidxCoreUtils
+    implementation dependencies.androidxCoreUi
+    implementation dependencies.androidxFragment
+    implementation dependencies.androidxV13
     implementation dependencies.appCompat
-    implementation dependencies.supportDesign
-    implementation dependencies.supportAnnotations
-    implementation dependencies.supportPreference
-    implementation dependencies.supportExifInterface
+    implementation dependencies.androidxDesign
+    implementation dependencies.androidxAnnotations
+    implementation dependencies.androidxPreference
+    implementation dependencies.androidxExifInterface
     implementation dependencies.recyclerView
     implementation dependencies.cardView
-//    implementation dependencies.androidxCoreKtx
+
+    implementation dependencies.androidxCoreKtx
+    implementation dependencies.androidFragmentKtx
+
+    implementation dependencies.timber
 
     implementation dependencies.playServicesDrive
     implementation dependencies.firebaseCore
@@ -189,6 +194,8 @@ dependencies {
     kapt dependencies.archLifecycleCompiler
     implementation dependencies.archRoomRuntime
     kapt dependencies.archRoomCompiler
+    implementation dependencies.archNavigationFragment
+    implementation dependencies.archNavigationUi
 
     implementation project(':shared')
     wearApp project(':wearable')
@@ -198,25 +205,17 @@ dependencies {
     testImplementation dependencies.kotlinTestJunit
 
     androidTestImplementation dependencies.truth
-    androidTestImplementation dependencies.jsr305
     androidTestImplementation dependencies.runner
     androidTestImplementation dependencies.rules
     androidTestImplementation dependencies.uiAutomator
-    androidTestImplementation(dependencies.espressoCore, {
-        exclude group: 'com.android.support'
-    })
-    androidTestImplementation(dependencies.espressoContrib, {
-        exclude group: 'com.android.support'
-    })
-    androidTestImplementation(dependencies.espressoIntents, {
-        exclude group: 'com.android.support', module: 'appcompat'
-        exclude group: 'com.android.support', module: 'support-v4'
-        exclude module: 'recyclerview-v7'
-    })
+    androidTestImplementation dependencies.espressoCore
+    androidTestImplementation dependencies.espressoContrib
+    androidTestImplementation dependencies.espressoIntents
 
     implementation dependencies.espressoIdlingResource
     androidTestScreengrabImplementation dependencies.screengrab
     androidTestImplementation dependencies.archRoomTesting
+    androidTestImplementation dependencies.androidxTestExt
 
     implementation dependencies.multiDex
 }

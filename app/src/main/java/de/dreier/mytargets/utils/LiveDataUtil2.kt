@@ -15,9 +15,9 @@
 
 package de.dreier.mytargets.utils
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
-import android.support.annotation.MainThread
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.annotation.MainThread
 
 class LiveDataUtil2<A, B, Y> {
 

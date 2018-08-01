@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.base.db
 
+import androidx.room.RoomDatabase
 import de.dreier.mytargets.base.db.dao.EndDAO
 import de.dreier.mytargets.base.db.dao.RoundDAO
 import de.dreier.mytargets.shared.models.augmented.AugmentedRound

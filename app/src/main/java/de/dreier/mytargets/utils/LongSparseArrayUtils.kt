@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.utils
 
-import android.support.v4.util.LongSparseArray
+import androidx.collection.LongSparseArray
 
 inline fun <reified T> List<Pair<Long, T>>.toSparseArray(): LongSparseArray<T> {
     val array = LongSparseArray<T>(size)
@@ -29,7 +29,7 @@ inline fun <reified T, R> LongSparseArray<T>.map(transform: (Pair<Long, T>) -> R
     val list = ArrayList<R>(size())
     for (i in 0 until size()) {
         val key = keyAt(i)
-        val value = get(key)
+        val value = get(key)!!
         list.add(transform.invoke(Pair(key, value)))
     }
     return list

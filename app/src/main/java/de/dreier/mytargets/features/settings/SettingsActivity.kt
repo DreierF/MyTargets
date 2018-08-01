@@ -16,11 +16,12 @@
 package de.dreier.mytargets.features.settings
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.preference.PreferenceFragmentCompat
-import android.support.v7.preference.PreferenceFragmentCompat.ARG_PREFERENCE_ROOT
-import android.support.v7.preference.PreferenceScreen
+import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceFragmentCompat.ARG_PREFERENCE_ROOT
+import androidx.preference.PreferenceScreen
 import android.view.MenuItem
+import androidx.fragment.app.transaction
 import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase
 import de.dreier.mytargets.features.settings.ESettingsScreens.MAIN
 
@@ -50,15 +51,15 @@ class SettingsActivity : SimpleFragmentActivityBase(),
         preferenceFragmentCompat: PreferenceFragmentCompat,
         preferenceScreen: PreferenceScreen
     ): Boolean {
-        val ft = supportFragmentManager.beginTransaction()
         val screen = ESettingsScreens.from(preferenceScreen.key)
         val fragment = screen.create()
         val args = Bundle()
         args.putString(ARG_PREFERENCE_ROOT, preferenceScreen.key)
         fragment.arguments = args
-        ft.add(android.R.id.content, fragment, preferenceScreen.key)
-        ft.addToBackStack(preferenceScreen.key)
-        ft.commit()
+        supportFragmentManager.transaction {
+            add(android.R.id.content, fragment, preferenceScreen.key)
+            addToBackStack(preferenceScreen.key)
+        }
         return true
     }
 
@@ -77,7 +78,7 @@ class SettingsActivity : SimpleFragmentActivityBase(),
                     ft.replace(
                         android.R.id.content,
                         instantiateFragment(),
-                        SimpleFragmentActivityBase.Companion.FRAGMENT_TAG
+                        SimpleFragmentActivityBase.FRAGMENT_TAG
                     )
                     ft.commit()
                 }

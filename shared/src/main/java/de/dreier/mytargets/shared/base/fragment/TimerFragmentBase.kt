@@ -16,7 +16,6 @@
 package de.dreier.mytargets.shared.base.fragment
 
 import android.app.Activity
-import android.app.Fragment
 import android.content.Context
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -24,7 +23,8 @@ import android.os.CountDownTimer
 import android.os.Vibrator
 import android.view.View
 import android.view.WindowManager
-import androidx.core.content.systemService
+import androidx.core.content.getSystemService
+import androidx.fragment.app.Fragment
 import de.dreier.mytargets.shared.R
 import de.dreier.mytargets.shared.base.fragment.ETimerState.*
 import de.dreier.mytargets.shared.models.TimerSettings
@@ -51,13 +51,13 @@ abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        settings = arguments.getParcelable(ARG_TIMER_SETTINGS)!!
-        exitAfterStop = arguments.getBoolean(ARG_EXIT_AFTER_STOP)
+        settings = arguments!!.getParcelable(ARG_TIMER_SETTINGS)!!
+        exitAfterStop = arguments!!.getBoolean(ARG_EXIT_AFTER_STOP)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        activity.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        activity!!.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -145,7 +145,7 @@ abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
             }
             if (settings.vibrate) {
                 val pattern = LongArray(1 + n * 2)
-                val v = activity.systemService<Vibrator>()
+                val v = activity!!.getSystemService<Vibrator>()!!
                 pattern[0] = 150
                 for (i in 0 until n) {
                     pattern[i * 2 + 1] = 400

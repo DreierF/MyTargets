@@ -16,10 +16,10 @@
 package de.dreier.mytargets.features.help
 
 import android.content.Intent
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.v4.app.Fragment
+import androidx.annotation.CallSuper
+import androidx.fragment.app.Fragment
 import android.view.*
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.navigation.NavigationController

@@ -22,7 +22,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.os.Build
 import android.print.PageRange
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
 import de.dreier.mytargets.base.db.AppDatabase

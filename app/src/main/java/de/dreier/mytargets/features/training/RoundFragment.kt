@@ -16,9 +16,9 @@
 package de.dreier.mytargets.features.training
 
 import android.content.IntentFilter
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.content.LocalBroadcastManager
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.text.InputType
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
@@ -102,7 +102,7 @@ class RoundFragment :
         binding.fab.visibility = View.GONE
         binding.fab.setOnClickListener {
             navigationController
-                .navigateToEditEnd(round!!, binding.recyclerView.adapter.itemCount)
+                .navigateToEditEnd(round!!, binding.recyclerView.adapter!!.itemCount)
                 .fromFab(binding.fab)
                 .start()
         }

@@ -16,8 +16,8 @@
 package de.dreier.mytargets.features.training.overview
 
 import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.db.RoundRepository
 import de.dreier.mytargets.base.db.TrainingRepository

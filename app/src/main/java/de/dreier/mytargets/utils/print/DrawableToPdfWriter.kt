@@ -23,7 +23,7 @@ import android.graphics.pdf.PdfDocument
 import android.os.Build
 import android.print.PageRange
 import android.print.PrintAttributes
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import de.dreier.mytargets.shared.utils.RectUtils
 import de.dreier.mytargets.shared.utils.toClosestRect
 import java.io.IOException

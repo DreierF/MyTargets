@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.shared.analysis.aggregation
 
-import android.support.annotation.UiThread
+import androidx.annotation.UiThread
 
 import de.dreier.mytargets.shared.models.db.Shot
 

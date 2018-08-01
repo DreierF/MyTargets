@@ -23,8 +23,8 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
-import android.support.annotation.RequiresPermission
-import androidx.core.content.systemService
+import androidx.annotation.RequiresPermission
+import androidx.core.content.getSystemService
 import timber.log.Timber
 
 /**
@@ -33,7 +33,7 @@ import timber.log.Timber
  * @author emil http://stackoverflow.com/users/220710/emil
  */
 class Locator(private val context: Context) : LocationListener {
-    private val locationManager = context.systemService<LocationManager>()
+    private val locationManager = context.getSystemService<LocationManager>()!!
     private var method: Locator.Method? = null
     private var callback: Locator.Listener? = null
 
@@ -50,8 +50,8 @@ class Locator(private val context: Context) : LocationListener {
         this.callback = callback
         when (this.method) {
             Locator.Method.NETWORK, Locator.Method.NETWORK_THEN_GPS -> {
-                val networkLocation = locationManager
-                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+                val networkLocation =
+                    locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
                 if (networkLocation != null) {
                     Timber.d(
                         "Last known location found for network provider : %s", networkLocation

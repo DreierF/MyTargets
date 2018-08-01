@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.shared.base.fragment
 
-import android.support.annotation.ColorRes
+import androidx.annotation.ColorRes
 
 import de.dreier.mytargets.shared.R
 

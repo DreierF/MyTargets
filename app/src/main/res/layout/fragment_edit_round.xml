@@ -25,7 +25,7 @@
         android:transitionName="@string/transition_root_view"
         tools:targetApi="lollipop">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"

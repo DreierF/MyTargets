@@ -19,7 +19,7 @@ import android.accounts.AccountManager
 import android.content.ContentResolver
 import android.content.Context
 import android.os.Bundle
-import androidx.core.content.systemService
+import androidx.core.content.getSystemService
 import de.dreier.mytargets.BuildConfig
 import de.dreier.mytargets.features.settings.SettingsManager
 
@@ -57,7 +57,7 @@ object SyncUtils {
     fun createSyncAccount(context: Context) {
         // Create account, if it's missing. (Either first run, or user has deleted account.)
         val account = GenericAccountService.account
-        val accountManager = context.systemService<AccountManager>()
+        val accountManager = context.getSystemService<AccountManager>()!!
         if (accountManager.addAccountExplicitly(account, null, null)) {
             // Inform the system that this account supports sync
             ContentResolver.setIsSyncable(account, CONTENT_AUTHORITY, 1)

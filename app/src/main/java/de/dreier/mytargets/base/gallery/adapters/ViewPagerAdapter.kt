@@ -16,9 +16,9 @@
 package de.dreier.mytargets.base.gallery.adapters
 
 import android.app.Activity
-import android.support.v4.view.PagerAdapter
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import androidx.viewpager.widget.PagerAdapter
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

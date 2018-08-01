@@ -19,7 +19,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.support.v4.content.LocalBroadcastManager
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.gms.wearable.Node
 import com.google.android.gms.wearable.Wearable
 import de.dreier.mytargets.shared.models.TimerSettings

@@ -24,7 +24,7 @@
         android:transitionName="@string/transition_root_view"
         tools:targetApi="lollipop">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -33,7 +33,7 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -154,7 +154,7 @@
 
             </LinearLayout>
 
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
         <FrameLayout
             android:layout_width="match_parent"

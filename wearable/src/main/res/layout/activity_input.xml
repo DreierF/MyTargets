@@ -25,7 +25,7 @@
             android:layout_height="match_parent"
             android:background="@color/md_wear_green_lighter_background"/>
 
-        <android.support.wear.widget.CircularProgressLayout
+        <androidx.wear.widget.CircularProgressLayout
             android:id="@+id/circularProgress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
                 android:padding="8dp"
                 android:src="@drawable/ic_close_white_18dp"/>
 
-        </android.support.wear.widget.CircularProgressLayout>
+        </androidx.wear.widget.CircularProgressLayout>
 
         <include
             android:id="@+id/clock"

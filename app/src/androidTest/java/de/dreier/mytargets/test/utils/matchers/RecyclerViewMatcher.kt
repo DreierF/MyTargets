@@ -16,8 +16,8 @@
 package de.dreier.mytargets.test.utils.matchers
 
 import android.content.res.Resources
-import android.support.test.espresso.matcher.ViewMatchers.*
-import android.support.v7.widget.RecyclerView
+import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Description

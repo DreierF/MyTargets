@@ -15,8 +15,8 @@
 
 package de.dreier.mytargets.shared.models
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Ignore
+import androidx.room.ColumnInfo
+import androidx.room.Ignore
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.db.Shot
 import de.dreier.mytargets.shared.targets.TargetFactory

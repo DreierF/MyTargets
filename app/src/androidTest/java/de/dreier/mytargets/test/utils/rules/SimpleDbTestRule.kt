@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.test.utils.rules
 
-import android.support.test.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry
 import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.features.settings.SettingsManager

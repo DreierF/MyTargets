@@ -17,12 +17,12 @@ package de.dreier.mytargets.test.utils.actions
 
 import android.graphics.Matrix
 import android.graphics.RectF
-import android.support.test.InstrumentationRegistry
-import android.support.test.espresso.UiController
-import android.support.test.espresso.ViewAction
-import android.support.test.espresso.action.MotionEvents
-import android.support.test.espresso.action.Press
-import android.support.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
+import androidx.test.espresso.action.MotionEvents
+import androidx.test.espresso.action.Press
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import android.view.MotionEvent
 import android.view.View
 import de.dreier.mytargets.shared.targets.drawable.TargetDrawable

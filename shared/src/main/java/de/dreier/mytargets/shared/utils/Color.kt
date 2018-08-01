@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.shared.utils
 
-import android.support.annotation.ColorInt
+import androidx.annotation.ColorInt
 
 object Color {
     @ColorInt

@@ -15,10 +15,10 @@
 
 package de.dreier.mytargets.utils.databinding
 
-import android.databinding.BindingAdapter
-import android.support.design.widget.TextInputLayout
+import androidx.databinding.BindingAdapter
 import android.view.View
 import android.widget.ImageView
+import com.google.android.material.textfield.TextInputLayout
 
 object DataBindingAdapters {
 

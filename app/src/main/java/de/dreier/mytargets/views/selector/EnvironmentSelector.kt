@@ -23,9 +23,9 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
-import android.support.annotation.RequiresPermission
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
+import androidx.annotation.RequiresPermission
+import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
 import android.util.AttributeSet
 import android.view.View
 import de.dreier.mytargets.R

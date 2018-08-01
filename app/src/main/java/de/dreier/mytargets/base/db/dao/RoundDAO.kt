@@ -15,8 +15,8 @@
 
 package de.dreier.mytargets.base.db.dao
 
-import android.arch.lifecycle.LiveData
-import android.arch.persistence.room.*
+import androidx.lifecycle.LiveData
+import androidx.room.*
 import de.dreier.mytargets.shared.models.db.End
 import de.dreier.mytargets.shared.models.db.Round
 

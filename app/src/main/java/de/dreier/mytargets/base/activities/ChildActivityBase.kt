@@ -16,8 +16,8 @@
 package de.dreier.mytargets.base.activities
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import android.view.MenuItem
 import com.google.firebase.analytics.FirebaseAnalytics
 import de.dreier.mytargets.base.navigation.NavigationController

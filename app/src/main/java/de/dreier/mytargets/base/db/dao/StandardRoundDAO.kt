@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.base.db.dao
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import de.dreier.mytargets.shared.models.augmented.AugmentedStandardRound
 import de.dreier.mytargets.shared.models.db.RoundTemplate
 import de.dreier.mytargets.shared.models.db.StandardRound

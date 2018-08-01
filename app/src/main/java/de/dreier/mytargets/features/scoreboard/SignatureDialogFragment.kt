@@ -18,7 +18,7 @@ package de.dreier.mytargets.features.scoreboard
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View

@@ -16,7 +16,7 @@
 package de.dreier.mytargets
 
 import android.content.Intent
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.wearable.activity.ConfirmationActivity
 import android.support.wearable.activity.WearableActivity

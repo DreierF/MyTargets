@@ -18,10 +18,10 @@ package de.dreier.mytargets.views.selector
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.databinding.DataBindingUtil
-import android.databinding.ViewDataBinding
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import android.os.Parcelable
-import android.support.annotation.LayoutRes
+import androidx.annotation.LayoutRes
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View

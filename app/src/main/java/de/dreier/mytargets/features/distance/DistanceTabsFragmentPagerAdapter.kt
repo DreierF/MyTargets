@@ -15,9 +15,9 @@
 
 package de.dreier.mytargets.features.distance
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentPagerAdapter
 import de.dreier.mytargets.R
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Dimension.Unit.*

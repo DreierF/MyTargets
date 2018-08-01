@@ -17,12 +17,12 @@ package de.dreier.mytargets.base.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 
 abstract class SimpleFragmentActivityBase : ChildActivityBase() {
 
     val childFragment: Fragment
-        get() = supportFragmentManager.findFragmentByTag(FRAGMENT_TAG)
+        get() = supportFragmentManager.findFragmentByTag(FRAGMENT_TAG)!!
 
     protected abstract fun instantiateFragment(): Fragment
 
@@ -54,7 +54,7 @@ abstract class SimpleFragmentActivityBase : ChildActivityBase() {
         }
 
         supportFragmentManager.beginTransaction()
-            .replace(android.R.id.content, childFragment, FRAGMENT_TAG)
+            .replace(android.R.id.content, childFragment!!, FRAGMENT_TAG)
             .commit()
     }
 

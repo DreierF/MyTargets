@@ -17,8 +17,8 @@ package de.dreier.mytargets.base.fragments
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.evernote.android.state.State
 import de.dreier.mytargets.base.adapters.ListAdapterBase
 import de.dreier.mytargets.shared.models.IIdProvider

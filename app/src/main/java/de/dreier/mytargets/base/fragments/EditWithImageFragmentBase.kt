@@ -18,17 +18,17 @@ package de.dreier.mytargets.base.fragments
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.CoordinatorLayout
-import android.support.v7.widget.PopupMenu
+import androidx.annotation.CallSuper
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.appcompat.widget.PopupMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import com.evernote.android.state.State
+import com.google.android.material.appbar.AppBarLayout
 import com.squareup.picasso.Picasso
 import de.dreier.mytargets.R
 import de.dreier.mytargets.databinding.FragmentEditImageBinding
@@ -145,7 +145,7 @@ abstract class EditWithImageFragmentBase<T : Image> protected constructor(
 
     @NeedsPermission(Manifest.permission.CAMERA)
     internal fun onTakePicture() {
-        EasyImage.openCamera(this, 0)
+        EasyImage.openCameraForImage(this, 0)
     }
 
     @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -180,7 +180,7 @@ abstract class EditWithImageFragmentBase<T : Image> protected constructor(
 
                 override fun onCanceled(source: EasyImage.ImageSource?, type: Int) {
                     //Cancel handling, you might wanna remove taken photo if it was canceled
-                    if (source == EasyImage.ImageSource.CAMERA) {
+                    if (source == EasyImage.ImageSource.CAMERA_IMAGE) {
                         val photoFile = EasyImage.lastlyTakenButCanceledPhoto(context!!)
                         photoFile?.delete()
                     }

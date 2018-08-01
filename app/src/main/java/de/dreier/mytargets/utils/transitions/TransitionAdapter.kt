@@ -16,7 +16,7 @@
 package de.dreier.mytargets.utils.transitions
 
 import android.os.Build
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import android.transition.Transition
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

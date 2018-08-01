@@ -16,7 +16,7 @@
 package de.dreier.mytargets.features.scoreboard
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import de.dreier.mytargets.base.activities.SimpleFragmentActivityBase
 import de.dreier.mytargets.utils.ToolbarUtils
 

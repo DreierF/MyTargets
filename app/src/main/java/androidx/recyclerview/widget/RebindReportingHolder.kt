@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  */
 
-package android.support.v7.widget
+package androidx.recyclerview.widget
 
 import android.view.View
 
@@ -58,11 +58,13 @@ abstract class RebindReportingHolder(itemView: View) : RecyclerView.ViewHolder(i
      * @return
      */
     private fun isRelevantFlagSet(flag: Int): Boolean {
-        return intArrayOf(RecyclerView.ViewHolder.FLAG_BOUND,
-                RecyclerView.ViewHolder.FLAG_INVALID,
-                RecyclerView.ViewHolder.FLAG_UPDATE,
-                RecyclerView.ViewHolder.FLAG_RETURNED_FROM_SCRAP)
-                .any { (flag and it) == it }
+        return intArrayOf(
+            RecyclerView.ViewHolder.FLAG_BOUND,
+            RecyclerView.ViewHolder.FLAG_INVALID,
+            RecyclerView.ViewHolder.FLAG_UPDATE,
+            RecyclerView.ViewHolder.FLAG_RETURNED_FROM_SCRAP
+        )
+            .any { (flag and it) == it }
     }
 
     internal override fun offsetPosition(offset: Int, applyToPreLayout: Boolean) {

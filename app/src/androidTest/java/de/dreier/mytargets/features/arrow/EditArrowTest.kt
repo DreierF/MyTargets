@@ -16,13 +16,13 @@
 package de.dreier.mytargets.features.arrow
 
 
-import android.support.test.espresso.Espresso.onData
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.*
-import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.Espresso.onData
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import de.dreier.mytargets.R
 import de.dreier.mytargets.features.main.MainActivity
 import de.dreier.mytargets.test.base.UITestBase

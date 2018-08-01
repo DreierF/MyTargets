@@ -17,9 +17,8 @@ package de.dreier.mytargets.features.distance
 
 import android.content.Context
 import android.graphics.Rect
-import android.support.v7.widget.RecyclerView
 import android.view.View
-
+import androidx.recyclerview.widget.RecyclerView
 import de.dreier.mytargets.R
 
 
@@ -34,7 +33,7 @@ class DistanceItemDecorator(context: Context, private val gridSize: Int) :
         outRect: Rect,
         view: View,
         parent: RecyclerView,
-        state: RecyclerView.State?
+        state: RecyclerView.State
     ) {
         val position = parent.getChildAdapterPosition(view)
         if (position % gridSize == 0) {

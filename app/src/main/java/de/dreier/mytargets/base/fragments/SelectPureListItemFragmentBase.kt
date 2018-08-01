@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.base.fragments
 
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Parcelable

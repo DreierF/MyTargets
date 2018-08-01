@@ -17,16 +17,16 @@ package de.dreier.mytargets.features.training
 
 
 import android.content.Intent
-import android.support.test.espresso.Espresso.*
-import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.action.ViewActions.replaceText
-import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.contrib.RecyclerViewActions.actionOnItem
-import android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
-import android.support.test.espresso.intent.rule.IntentsTestRule
-import android.support.test.espresso.matcher.ViewMatchers.*
-import android.support.test.runner.AndroidJUnit4
-import android.support.v7.widget.RecyclerView
+import androidx.test.espresso.Espresso.*
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.replaceText
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItem
+import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
+import androidx.test.espresso.intent.rule.IntentsTestRule
+import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.recyclerview.widget.RecyclerView
 import de.dreier.mytargets.R
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.features.training.edit.EditTrainingActivity

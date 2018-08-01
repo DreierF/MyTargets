@@ -23,7 +23,7 @@ import android.print.PageRange
 import android.print.PrintAttributes
 import android.print.PrintDocumentAdapter
 import android.print.PrintDocumentInfo
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import java.io.FileOutputStream
 
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)

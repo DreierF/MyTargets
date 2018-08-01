@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.features.scoreboard.layout
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import de.dreier.mytargets.features.scoreboard.builder.model.Table
 import de.dreier.mytargets.shared.SharedApplicationInstance
 

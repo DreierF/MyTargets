@@ -17,8 +17,9 @@ package de.dreier.mytargets.features.training.environment
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.NetworkInfo
-import androidx.core.content.systemService
+import androidx.core.content.getSystemService
 
 internal object Connectivity {
 
@@ -26,7 +27,7 @@ internal object Connectivity {
      * Get the network info
      */
     private fun getNetworkInfo(context: Context): NetworkInfo? {
-        return context.systemService<ConnectivityManager>().activeNetworkInfo
+        return context.getSystemService<ConnectivityManager>()?.activeNetworkInfo
     }
 
     /**

@@ -15,14 +15,14 @@
 
 package de.dreier.mytargets.app
 
-import android.arch.persistence.db.SupportSQLiteDatabase
-import android.arch.persistence.room.Room
-import android.arch.persistence.room.testing.MigrationTestHelper
 import android.content.Context
-import android.support.test.InstrumentationRegistry
-import android.support.test.InstrumentationRegistry.getTargetContext
-import android.support.test.filters.SmallTest
-import android.support.test.runner.AndroidJUnit4
+import androidx.room.Room
+import androidx.room.testing.MigrationTestHelper
+import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SmallTest
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import com.google.common.truth.Truth.assertThat
 import de.dreier.mytargets.base.db.AppDatabase
 import de.dreier.mytargets.base.db.migrations.*
@@ -58,7 +58,7 @@ class MigrationTest : InstrumentedTestBase() {
     @Throws(IOException::class)
     fun setUp() {
         // Create artificial image file to ensure the according database entry is not deleted (Migration23)
-        getTargetContext()
+        getInstrumentation().targetContext
             .openFileOutput(
                 "img175420839671886584-0f61-43a6-bc1e-dbcd8526056c794370927.jpg",
                 Context.MODE_PRIVATE
@@ -217,7 +217,7 @@ class MigrationTest : InstrumentedTestBase() {
 
     private fun getMigratedRoomDatabase(): AppDatabase {
         val database = Room.databaseBuilder(
-            InstrumentationRegistry.getTargetContext(),
+            getInstrumentation().targetContext,
             AppDatabase::class.java, TEST_DB_NAME
         ).addMigrations(
             Migration17, Migration18, Migration19,

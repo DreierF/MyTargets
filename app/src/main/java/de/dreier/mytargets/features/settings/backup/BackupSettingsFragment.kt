@@ -24,15 +24,15 @@ import android.content.ContentResolver.SYNC_OBSERVER_TYPE_PENDING
 import android.content.Context
 import android.content.Intent
 import android.content.SyncStatusObserver
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
-import android.support.annotation.StringRes
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.DividerItemDecoration.VERTICAL
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
 import android.text.format.DateUtils
 import android.view.*
 import android.view.View.GONE
@@ -131,7 +131,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
 
         binding.backupIntervalPreference.root.setOnClickListener { onBackupIntervalClicked() }
         binding.backupIntervalPreference.image
-            .setImageResource(R.drawable.ic_query_builder_grey600_24dp)
+                .setImageResource(R.drawable.ic_query_builder_grey600_24dp)
         binding.backupIntervalPreference.name.setText(R.string.backup_interval)
         updateInterval()
 
