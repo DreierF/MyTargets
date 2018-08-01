@@ -79,8 +79,8 @@ class CsvExporter(private val context: Context, database: AppDatabase) {
         csv.add(t.date.format(DateTimeFormatter.ISO_LOCAL_DATE))
         // StandardRound
         csv.add(
-            standardRoundDAO.loadStandardRoundOrNull(t.standardRoundId!!)?.name
-                    ?: context.getString(R.string.practice)
+            t.standardRoundId?.let { standardRoundDAO.loadStandardRoundOrNull(it) }?.name
+                ?: context.getString(R.string.practice)
         )
         // Indoor
         csv.add(

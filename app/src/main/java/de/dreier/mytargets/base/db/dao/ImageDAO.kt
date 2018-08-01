@@ -24,9 +24,9 @@ interface ImageDAO {
      * Returns a list of file names, which are implicitly placed in the ../files/ folder of the app.
      */
     @Query(
-        "SELECT fileName FROM `BowImage` " +
-                "UNION SELECT fileName FROM `EndImage` " +
-                "UNION SELECT fileName FROM `ArrowImage`"
+        "SELECT `fileName` FROM `BowImage` " +
+                "UNION SELECT `fileName` FROM `EndImage` " +
+                "UNION SELECT `fileName` FROM `ArrowImage`"
     )
     fun loadAllFileNames(): List<String>
 }

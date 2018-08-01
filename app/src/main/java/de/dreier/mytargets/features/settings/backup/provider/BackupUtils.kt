@@ -38,7 +38,7 @@ object BackupUtils {
         val file = unzip(context, `in`)
 
         // Replace database file
-        file!!.copyTo(context.getDatabasePath(AppDatabase.DATABASE_IMPORT_FILE_NAME))
+        file!!.copyTo(context.getDatabasePath(AppDatabase.DATABASE_IMPORT_FILE_NAME), overwrite = true)
     }
 
     @Throws(IOException::class)
