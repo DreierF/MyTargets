@@ -157,7 +157,7 @@ class EditStandardRoundFragment : EditFragmentBase() {
         SettingsManager.target = round.targetTemplate
         SettingsManager.distance = round.distance
 
-        navigationController.setResultSuccess(standardRound!!.standardRound)
+        navigationController.setResultSuccess(standardRound!!)
         navigationController.finish()
     }
 
