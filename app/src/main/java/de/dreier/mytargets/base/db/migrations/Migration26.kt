@@ -17,6 +17,7 @@ package de.dreier.mytargets.base.db.migrations
 
 import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.migration.Migration
+import android.database.Cursor
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.db.Shot
@@ -42,41 +43,37 @@ object Migration26 : Migration(25, 26) {
 
         createIndices(database)
 
-        val rounds =
-            database.query("SELECT `id`, `targetId`, `targetScoringStyleIndex`, `targetDiameter` FROM `Round`")
+        database.query("SELECT `id`, `targetId`, `targetScoringStyleIndex`, `targetDiameter` FROM `Round`")
+            .useEach { round ->
+                val diameter = Dimension.parse(round.getString(3))
+                val target = Target(round.getLong(1), round.getInt(2), diameter)
+                val roundId = round.getLong(0)
 
-        while (rounds.moveToNext()) {
-            val diameterData = rounds.getString(3)
-            val index = diameterData.indexOf(' ')
-            val value = diameterData.substring(0, index)
-            val unit = diameterData.substring(index + 1)
-            val diameter = Dimension.from(value.toFloat(), unit)
-            val target = Target(rounds.getLong(1), rounds.getInt(2), diameter)
-            val roundId = rounds.getLong(0)
+                database.query("SELECT `id` FROM `End` WHERE `roundId` = $roundId")
+                    .useEach { end ->
+                        val endId = end.getLong(0)
 
-            val ends = database.query("SELECT `id` FROM `End` WHERE `roundId` = $roundId")
-            while (ends.moveToNext()) {
-                val endId = ends.getLong(0)
+                        val shots = mutableListOf<Shot>()
+                        database.query("SELECT `index`, `scoringRing` FROM `Shot` WHERE `endId` = $endId ORDER BY `index`")
+                            .useEach { shotCursor ->
+                                shots.add(
+                                    Shot(
+                                        index = shotCursor.getInt(0),
+                                        scoringRing = shotCursor.getInt(1)
+                                    )
+                                )
+                            }
 
-                val shotsCursor =
-                    database.query("SELECT `index`, `scoringRing` FROM `Shot` WHERE `endId` = $endId ORDER BY `index`")
-                val shots = mutableListOf<Shot>()
-                while (shotsCursor.moveToNext()) {
-                    val shot =
-                        Shot(index = shotsCursor.getInt(0), scoringRing = shotsCursor.getInt(1))
-                    shots.add(shot)
-                }
-
-                val score = target.getReachedScore(shots)
-                database.execSQL(
-                    "UPDATE `End` SET " +
-                            "`reachedPoints` = ${score.reachedPoints}, " +
-                            "`totalPoints` = ${score.totalPoints}, " +
-                            "`shotCount` = ${score.shotCount} " +
-                            "WHERE `id` = $endId"
-                )
+                        val score = target.getReachedScore(shots)
+                        database.execSQL(
+                            "UPDATE `End` SET " +
+                                    "`reachedPoints` = ${score.reachedPoints}, " +
+                                    "`totalPoints` = ${score.totalPoints}, " +
+                                    "`shotCount` = ${score.shotCount} " +
+                                    "WHERE `id` = $endId"
+                        )
+                    }
             }
-        }
     }
 
     private fun createScoreTriggers(database: SupportSQLiteDatabase) {
@@ -571,6 +568,14 @@ data class FieldMigration(
         return when (affinity) {
             "TEXT" -> "\"\""
             else -> "0"
+        }
+    }
+}
+
+inline fun Cursor.useEach(callback: (Cursor) -> Unit) {
+    use {
+        while (moveToNext()) {
+            callback(this)
         }
     }
 }

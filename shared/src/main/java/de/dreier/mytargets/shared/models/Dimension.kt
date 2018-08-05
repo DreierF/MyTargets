@@ -95,6 +95,13 @@ data class Dimension(val value: Float, val unit: Unit?) : IIdProvider, Comparabl
         fun from(value: Float, unit: String?): Dimension {
             return from(value, Unit.from(unit))
         }
+
+        fun parse(dimensionString: String): Dimension {
+            val index = dimensionString.indexOf(' ')
+            val value = dimensionString.substring(0, index)
+            val unit = dimensionString.substring(index + 1)
+            return Dimension.from(value.toFloat(), unit)
+        }
     }
 }
 
