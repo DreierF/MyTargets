@@ -71,10 +71,10 @@ object BackupUtils {
     }
 
     @Throws(IOException::class)
-    private fun unzip(context: Context, `in`: InputStream): File? {
+    private fun unzip(context: Context, input: InputStream): File? {
         val tmpDb = File.createTempFile("import", ".db")
         var dbFiles = 0
-        `in`.use {
+        input.use { `in` ->
             val zin = ZipInputStream(`in`)
             var sourceEntry: ZipEntry?
             while (true) {

@@ -269,11 +269,14 @@ class ScoreboardFragment : FragmentBase() {
     @SuppressLint("StaticFieldLeak")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private fun print() {
+        val context = context ?: return
+        val training = training ?: return
+
         val fileName = getDefaultFileName(EFileType.PDF)
 
         val content = ScoreboardUtils.getScoreboardView(
-            context!!, ApplicationInstance.db, Utils
-                .getCurrentLocale(context!!), training!!, rounds, SettingsManager
+            context, ApplicationInstance.db, Utils
+                .getCurrentLocale(context), training, rounds, SettingsManager
                 .scoreboardConfiguration
         )
 
@@ -281,7 +284,7 @@ class ScoreboardFragment : FragmentBase() {
         val pda = CustomPrintDocumentAdapter(ViewToPdfWriter(content), fileName)
 
         // Create a print job with name and adapter instance
-        val printManager = context!!.systemService<PrintManager>()
+        val printManager = context.systemService<PrintManager>()
         printManager.print(jobName, pda, PrintAttributes.Builder().build())
     }
 
