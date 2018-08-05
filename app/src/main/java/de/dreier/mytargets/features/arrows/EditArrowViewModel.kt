@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.features.arrows
 
+import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
@@ -33,7 +34,7 @@ import de.dreier.mytargets.shared.models.db.Arrow
 import de.dreier.mytargets.shared.models.db.ArrowImage
 
 
-class EditArrowViewModel(app: ApplicationInstance) : AndroidViewModel(app) {
+class EditArrowViewModel(app: Application) : AndroidViewModel(app) {
     val arrowId = MutableLiveData<Long?>()
 
     val arrow: LiveData<Arrow?>
@@ -68,12 +69,12 @@ class EditArrowViewModel(app: ApplicationInstance) : AndroidViewModel(app) {
                 arrow
             }
         }
-        images = Transformations.map(arrowId, { id ->
+        images = Transformations.map(arrowId) { id ->
             if (id == null)
                 mutableListOf()
             else
                 arrowDAO.loadArrowImages(id)
-        })
+        }
     }
 
     private fun setFromArrow(arrow: Arrow) {

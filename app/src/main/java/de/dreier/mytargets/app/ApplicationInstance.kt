@@ -48,7 +48,6 @@ class ApplicationInstance : SharedApplicationInstance() {
     }
 
     override fun onCreate() {
-        instance = this
         Language.setFromPreference(this, SettingsManager.KEY_LANGUAGE)
         if (BuildConfig.DEBUG) {
             enableDebugLogging()
@@ -103,8 +102,6 @@ class ApplicationInstance : SharedApplicationInstance() {
     }
 
     companion object {
-
-        lateinit var instance: ApplicationInstance
 
         lateinit var wearableClient: MobileWearableClient
         lateinit var db: AppDatabase

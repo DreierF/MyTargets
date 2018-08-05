@@ -44,7 +44,6 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
     private var trainingId: Long = 0
 
     private lateinit var viewModel: TrainingViewModel
-    private val factory = ViewModelFactory()
 
     init {
         itemTypeDelRes = R.plurals.round_deleted
@@ -87,6 +86,7 @@ open class TrainingFragment : EditableListFragmentBase<Round, SimpleListAdapterB
         ToolbarUtils.showHomeAsUp(this)
         setHasOptionsMenu(true)
 
+        val factory = ViewModelFactory(activity!!.application!!)
         viewModel = ViewModelProviders.of(this, factory).get(TrainingViewModel::class.java)
         trainingId = arguments.getLongOrNull(EditableListFragmentBase.ITEM_ID)!!
         viewModel.setTrainingId(trainingId)

@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.settings.backup.provider
 
 import android.content.Context
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.db.AppDatabase
 import java.io.*
 import java.text.SimpleDateFormat
@@ -49,6 +50,7 @@ object BackupUtils {
 
     @Throws(IOException::class)
     private fun zip(context: Context, dest: OutputStream, imageFiles: List<File>) {
+        ApplicationInstance.db.rawDAO().fullWriteAheadLogCheckpoint()
         ZipOutputStream(BufferedOutputStream(dest)).use { out ->
             val db = context.getDatabasePath(AppDatabase.DATABASE_FILE_NAME)
 

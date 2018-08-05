@@ -41,7 +41,6 @@ class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapter
     private lateinit var unit: Dimension.Unit
 
     private lateinit var viewModel: DistancesViewModel
-    private val factory = ViewModelFactory()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,6 +71,7 @@ class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapter
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        val factory = ViewModelFactory(activity!!.application!!)
         viewModel = ViewModelProviders.of(this, factory).get(DistancesViewModel::class.java)
         val bundle = arguments!!
         val distance: Dimension = bundle.getParcelable(ITEM)

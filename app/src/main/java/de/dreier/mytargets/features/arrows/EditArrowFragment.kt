@@ -33,7 +33,6 @@ class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrow
 
     private lateinit var contentBinding: FragmentEditArrowBinding
     private lateinit var viewModel: EditArrowViewModel
-    private val factory = ViewModelFactory()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,6 +46,7 @@ class EditArrowFragment : EditWithImageFragmentBase<ArrowImage>(R.drawable.arrow
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        val factory = ViewModelFactory(activity!!.application!!)
         viewModel = ViewModelProviders.of(this, factory).get(EditArrowViewModel::class.java)
         viewModel.setArrowId(arguments.getLongOrNull(ARROW_ID))
         contentBinding.arrow = viewModel

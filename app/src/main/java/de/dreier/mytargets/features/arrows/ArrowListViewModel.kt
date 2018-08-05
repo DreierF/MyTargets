@@ -15,11 +15,12 @@
 
 package de.dreier.mytargets.features.arrows
 
+import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.shared.models.db.Arrow
 
-class ArrowListViewModel(app: ApplicationInstance) : AndroidViewModel(app) {
+class ArrowListViewModel(app: Application) : AndroidViewModel(app) {
 
     private val arrowDAO = ApplicationInstance.db.arrowDAO()
     val arrows = arrowDAO.loadArrowsLive()

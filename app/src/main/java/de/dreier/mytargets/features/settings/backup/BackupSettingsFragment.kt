@@ -54,6 +54,7 @@ import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.OnNeverAskAgain
 import permissions.dispatcher.OnPermissionDenied
 import permissions.dispatcher.RuntimePermissions
+import timber.log.Timber
 import java.io.FileNotFoundException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -70,8 +71,6 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
     /**
      * Handle to a SyncObserver. The ProgressBar element is visible until the SyncObserver reports
      * that the sync is complete.
-     *
-     *
      *
      * This allows us to delete our SyncObserver once the application is no longer in the
      * foreground.
@@ -103,8 +102,6 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
     /**
      * Create SyncAccount at launch, if needed.
      *
-     *
-     *
      * This will create a new account with the system for our application and register our
      * [de.dreier.mytargets.features.settings.backup.synchronization.SyncService] with it.
      */
@@ -132,13 +129,13 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
 
         binding.automaticBackupSwitch.setOnClickListener { onAutomaticBackupChanged() }
 
-        binding.backupIntervalPreference!!.root.setOnClickListener { onBackupIntervalClicked() }
-        binding.backupIntervalPreference!!.image
+        binding.backupIntervalPreference.root.setOnClickListener { onBackupIntervalClicked() }
+        binding.backupIntervalPreference.image
             .setImageResource(R.drawable.ic_query_builder_grey600_24dp)
-        binding.backupIntervalPreference!!.name.setText(R.string.backup_interval)
+        binding.backupIntervalPreference.name.setText(R.string.backup_interval)
         updateInterval()
 
-        binding.backupLocation!!.root.setOnClickListener { onBackupLocationClicked() }
+        binding.backupLocation.root.setOnClickListener { onBackupLocationClicked() }
 
         binding.recentBackupsList.isNestedScrollingEnabled = false
         binding.recentBackupsList
@@ -223,7 +220,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
     private fun updateInterval() {
         val autoBackupEnabled = SyncUtils.isSyncAutomaticallyEnabled
         binding.backupIntervalLayout.visibility = if (autoBackupEnabled) VISIBLE else GONE
-        binding.backupIntervalPreference!!.summary.text = SettingsManager.backupInterval.toString()
+        binding.backupIntervalPreference.summary.text = SettingsManager.backupInterval.toString()
     }
 
     private fun onBackupLocationClicked() {
@@ -246,9 +243,9 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
 
     private fun updateBackupLocation() {
         val backupLocation = SettingsManager.backupLocation
-        binding.backupLocation!!.image.setImageResource(backupLocation.drawableRes)
-        binding.backupLocation!!.name.setText(R.string.backup_location)
-        binding.backupLocation!!.summary.text = backupLocation.toString()
+        binding.backupLocation.image.setImageResource(backupLocation.drawableRes)
+        binding.backupLocation.name.setText(R.string.backup_location)
+        binding.backupLocation.summary.text = backupLocation.toString()
     }
 
     private fun internalApplyBackupLocationWithPermissionCheck(item: EBackupLocation) {
@@ -425,6 +422,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
         object : AsyncTask<Void, Void, String>() {
             override fun doInBackground(vararg params: Void): String? {
                 return try {
+                    Timber.i("Importing backup from $uri")
                     val st = context!!.contentResolver.openInputStream(uri)
                     BackupUtils.importZip(context!!, st!!)
                     null

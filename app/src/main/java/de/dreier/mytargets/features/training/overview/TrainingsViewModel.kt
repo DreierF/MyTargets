@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.features.training.overview
 
+import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import de.dreier.mytargets.app.ApplicationInstance
@@ -23,7 +24,7 @@ import de.dreier.mytargets.base.db.TrainingRepository
 import de.dreier.mytargets.shared.models.db.Training
 
 
-class TrainingsViewModel(app: ApplicationInstance) : AndroidViewModel(app) {
+class TrainingsViewModel(app: Application) : AndroidViewModel(app) {
 
     val trainings: LiveData<List<Training>>
 

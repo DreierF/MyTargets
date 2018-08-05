@@ -44,7 +44,6 @@ class TrainingsFragment : ExpandableListFragment<Header, Training>() {
     private lateinit var binding: FragmentTrainingsBinding
 
     private lateinit var viewModel: TrainingsViewModel
-    private val factory = ViewModelFactory()
 
     init {
         itemTypeDelRes = R.plurals.training_deleted
@@ -105,12 +104,13 @@ class TrainingsFragment : ExpandableListFragment<Header, Training>() {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
 
+        val factory = ViewModelFactory(activity!!.application!!)
         viewModel = ViewModelProviders.of(this, factory).get(TrainingsViewModel::class.java)
         viewModel.trainings.observe(this, Observer { trainings ->
             if (trainings != null) {
                 this@TrainingsFragment.setList(trainings, false)
                 activity?.invalidateOptionsMenu()
-                binding.emptyState!!.root.visibility =
+                binding.emptyState.root.visibility =
                         if (trainings.isEmpty()) View.VISIBLE else View.GONE
             }
         })

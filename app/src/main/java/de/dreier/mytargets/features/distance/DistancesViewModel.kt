@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.features.distance
 
+import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
@@ -22,7 +23,7 @@ import android.arch.lifecycle.Transformations
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.shared.models.Dimension
 
-class DistancesViewModel(app: ApplicationInstance) : AndroidViewModel(app) {
+class DistancesViewModel(app: Application) : AndroidViewModel(app) {
 
     private val unit = MutableLiveData<Dimension.Unit>()
     private var distance = MutableLiveData<Dimension?>()

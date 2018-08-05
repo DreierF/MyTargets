@@ -26,10 +26,10 @@ import de.dreier.mytargets.shared.models.db.Arrow
 class ArrowListFragment : SelectPureListItemFragmentBase<Arrow>(compareBy(Arrow::name, Arrow::id)) {
 
     private lateinit var viewModel: ArrowListViewModel
-    private val factory = ViewModelFactory()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        val factory = ViewModelFactory(activity!!.application!!)
         viewModel = ViewModelProviders.of(this, factory).get(ArrowListViewModel::class.java)
         viewModel.arrows.observe(this, Observer { arrows ->
             if (arrows != null) {

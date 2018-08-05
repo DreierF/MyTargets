@@ -21,9 +21,12 @@ import android.database.Cursor
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.db.Shot
+import timber.log.Timber
 
 object Migration26 : Migration(25, 26) {
+
     override fun migrate(database: SupportSQLiteDatabase) {
+        Timber.i("Migrating DB from version 25 to 26")
 
         database.execSQL("ALTER TABLE `Training` ADD COLUMN `reachedPoints` INTEGER DEFAULT 0;")
         database.execSQL("ALTER TABLE `Training` ADD COLUMN `totalPoints` INTEGER DEFAULT 0;")

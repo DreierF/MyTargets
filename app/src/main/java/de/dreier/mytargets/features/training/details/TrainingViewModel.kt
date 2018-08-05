@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.features.training.details
 
+import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
@@ -26,7 +27,7 @@ import de.dreier.mytargets.shared.models.db.Training
 import de.dreier.mytargets.utils.LiveDataUtil2
 
 
-class TrainingViewModel(app: ApplicationInstance) : AndroidViewModel(app) {
+class TrainingViewModel(app: Application) : AndroidViewModel(app) {
     val trainingId = MutableLiveData<Long?>()
 
     val training: LiveData<Training>
