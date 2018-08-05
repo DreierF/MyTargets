@@ -58,7 +58,7 @@
   <string name="end_n">%d sorozat</string>
   <string name="miss">Mellé</string>
   <string name="backspace">Visszatörlés</string>
-  <string name="accessibility_description_shot_n_score">%d lövés a %s-ból</string>
+  <string name="accessibility_description_shot_n_score">%1$d lövés a %2$s-ból</string>
   <plurals name="rounds">
     <item quantity="one">%d. forduló</item>
     <item quantity="other">%d. forduló</item>

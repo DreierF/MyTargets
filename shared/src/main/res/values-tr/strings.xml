@@ -58,7 +58,7 @@
   <string name="end_n">Bitiş %d</string>
   <string name="miss">Iska</string>
   <string name="backspace">Geri al tuşu</string>
-  <string name="accessibility_description_shot_n_score">Atış %d %s</string>
+  <string name="accessibility_description_shot_n_score">Atış %1$d %2$s</string>
   <plurals name="rounds">
     <item quantity="one">%d tur</item>
     <item quantity="other">%d turlar</item>
