@@ -62,12 +62,4 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun signatureDAO(): SignatureDAO
     abstract fun standardRoundDAO(): StandardRoundDAO
     abstract fun trainingDAO(): TrainingDAO
-    abstract fun rawDAO(): RawDAO
-}
-
-@Dao
-abstract class RawDAO {
-
-    @Query("PRAGMA wal_checkpoint(FULL)")
-    abstract fun fullWriteAheadLogCheckpoint()
 }
