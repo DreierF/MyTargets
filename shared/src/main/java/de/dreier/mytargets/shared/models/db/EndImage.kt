@@ -49,7 +49,7 @@ data class EndImage(
 
     constructor(source: Parcel) : this(
         source.readLong(),
-        source.readString(),
+        source.readString()!!,
         source.readValue(Long::class.java.classLoader) as Long?
     )
 

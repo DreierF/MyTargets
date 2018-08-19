@@ -59,8 +59,8 @@ data class RoundTemplate(
         source.readInt(),
         source.readInt(),
         source.readInt(),
-        source.readParcelable<Dimension>(Dimension::class.java.classLoader),
-        source.readParcelable<Target>(Target::class.java.classLoader)
+        source.readParcelable<Dimension>(Dimension::class.java.classLoader)!!,
+        source.readParcelable<Target>(Target::class.java.classLoader)!!
     )
 
     override fun describeContents() = 0

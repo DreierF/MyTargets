@@ -43,7 +43,7 @@ data class Signature(
         return if (name.isEmpty()) defaultName else name
     }
 
-    override fun describeContents() = 1
+    override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeLong(id)
@@ -56,7 +56,7 @@ data class Signature(
         val CREATOR = object : Parcelable.Creator<Signature> {
             override fun createFromParcel(source: Parcel): Signature {
                 val id = source.readLong()
-                val name = source.readString()
+                val name = source.readString()!!
                 val bitmap = source.readBitmap()
                 return Signature(id, name, bitmap)
             }

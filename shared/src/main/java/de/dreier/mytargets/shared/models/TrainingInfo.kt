@@ -35,7 +35,7 @@ data class TrainingInfo(
     constructor(source: Parcel) : this(
             source.readString(),
             source.readInt(),
-            source.readParcelable<AugmentedRound>(AugmentedRound::class.java.classLoader)
+            source.readParcelable<AugmentedRound>(AugmentedRound::class.java.classLoader)!!
     )
 
     fun getRoundDetails(context: Context): String {

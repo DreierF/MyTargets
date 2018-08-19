@@ -25,8 +25,8 @@ data class AugmentedRound(
 ) : Parcelable {
 
     constructor(source: Parcel) : this(
-            source.readParcelable<Round>(Round::class.java.classLoader),
-            source.createTypedArrayList(AugmentedEnd.CREATOR)
+            source.readParcelable<Round>(Round::class.java.classLoader)!!,
+            source.createTypedArrayList(AugmentedEnd.CREATOR)!!
     )
 
     override fun describeContents() = 0

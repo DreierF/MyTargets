@@ -88,7 +88,7 @@ class EditBowListFragment : EditableListFragmentBase<Bow, SimpleListAdapterBase<
         val bows = bowDAO.loadBows()
         return {
             adapter!!.setList(bows)
-            binding.emptyState!!.root.visibility = if (bows.isEmpty()) View.VISIBLE else View.GONE
+            binding.emptyState.root.visibility = if (bows.isEmpty()) View.VISIBLE else View.GONE
         }
     }
 

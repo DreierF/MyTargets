@@ -57,8 +57,8 @@ data class AugmentedStandardRound(
     }
 
     constructor(source: Parcel) : this(
-            source.readParcelable<StandardRound>(StandardRound::class.java.classLoader),
-            source.createTypedArrayList(RoundTemplate.CREATOR)
+            source.readParcelable<StandardRound>(StandardRound::class.java.classLoader)!!,
+            source.createTypedArrayList(RoundTemplate.CREATOR)!!
     )
 
     override fun describeContents() = 0

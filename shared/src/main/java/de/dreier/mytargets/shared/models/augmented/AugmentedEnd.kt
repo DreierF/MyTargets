@@ -37,9 +37,9 @@ data class AugmentedEnd(
         get() = shots.any { it.scoringRing == Shot.NOTHING_SELECTED } && images.isEmpty()
 
     constructor(source: Parcel) : this(
-            source.readParcelable<End>(End::class.java.classLoader),
-            source.createTypedArrayList(Shot.CREATOR),
-            source.createTypedArrayList(EndImage.CREATOR)
+            source.readParcelable<End>(End::class.java.classLoader)!!,
+            source.createTypedArrayList(Shot.CREATOR)!!,
+            source.createTypedArrayList(EndImage.CREATOR)!!
     )
 
     override fun describeContents() = 0

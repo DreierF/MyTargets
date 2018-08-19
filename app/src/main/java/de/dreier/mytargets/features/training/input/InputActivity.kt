@@ -95,7 +95,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
     private val updateReceiver = object : MobileWearableClient.EndUpdateReceiver() {
 
         override fun onUpdate(trainingId: Long, roundId: Long, end: End) {
-            val extras = intent.extras
+            val extras = intent.extras!!
             extras.putLong(TRAINING_ID, trainingId)
             extras.putLong(ROUND_ID, roundId)
             extras.putInt(END_INDEX, end.index)

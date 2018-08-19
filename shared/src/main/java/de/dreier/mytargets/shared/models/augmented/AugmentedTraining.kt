@@ -25,8 +25,8 @@ data class AugmentedTraining(
 ) : Parcelable {
 
     constructor(source: Parcel) : this(
-            source.readParcelable<Training>(Training::class.java.classLoader),
-            source.createTypedArrayList(AugmentedRound.CREATOR)
+            source.readParcelable<Training>(Training::class.java.classLoader)!!,
+            source.createTypedArrayList(AugmentedRound.CREATOR)!!
     )
 
     override fun describeContents() = 0
