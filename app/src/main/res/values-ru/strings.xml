@@ -36,7 +36,7 @@
   <plurals name="training_selected">
     <item quantity="one">%d тренировка выбрана</item>
     <item quantity="few">%d тренировки выбраны</item>
-    <item quantity="many">%d trainings selected</item>
+    <item quantity="many">%d тренировок выбраны</item>
     <item quantity="other">%d тренировки выбраны</item>
   </plurals>
   <plurals name="bow_selected">
@@ -48,13 +48,13 @@
   <plurals name="arrow_selected">
     <item quantity="one">%d стрела выбрана</item>
     <item quantity="few">%d стрелы выбраны</item>
-    <item quantity="many">%d arrows selected</item>
+    <item quantity="many">%d стрел выбраны</item>
     <item quantity="other">%d стрелы выбраны</item>
   </plurals>
   <plurals name="passe_selected">
     <item quantity="one">%d серия выбрана</item>
     <item quantity="few">%d серии выбраны</item>
-    <item quantity="many">%d ends selected</item>
+    <item quantity="many">%d серий выбраны</item>
     <item quantity="other">%d серии выбраны</item>
   </plurals>
   <string name="edit">Редактировать</string>
@@ -106,7 +106,7 @@
   <plurals name="arrow">
     <item quantity="one">%d стрела</item>
     <item quantity="few">%d стрелы</item>
-    <item quantity="many">%d arrows</item>
+    <item quantity="many">%d стрел</item>
     <item quantity="other">%d стрелы</item>
   </plurals>
   <string name="target_face">Вид мишени</string>
@@ -154,8 +154,8 @@
   <plurals name="second">
     <item quantity="one">%d секунда</item>
     <item quantity="few">%d секунд</item>
-    <item quantity="many">%d seconds</item>
-    <item quantity="other">%d секунд</item>
+    <item quantity="many">%d секунд</item>
+    <item quantity="other">%d секунды</item>
   </plurals>
   <string name="info">Информация</string>
   <string name="data">Данные</string>
@@ -203,25 +203,25 @@
   <plurals name="passe_deleted">
     <item quantity="one">%d серия удалена</item>
     <item quantity="few">%d серии удалены</item>
-    <item quantity="many">%d ends deleted</item>
+    <item quantity="many">%d серий удалены</item>
     <item quantity="other">%d серии удалены</item>
   </plurals>
   <plurals name="rounds">
     <item quantity="one">Раунд %d</item>
     <item quantity="few">Раунд %d</item>
-    <item quantity="many">Round %d</item>
+    <item quantity="many">Раунд %d</item>
     <item quantity="other">Раунд %d</item>
   </plurals>
   <plurals name="round_selected">
     <item quantity="one">%d раунд выбран</item>
     <item quantity="few">%d раунда выбраны</item>
-    <item quantity="many">%d rounds selected</item>
+    <item quantity="many">%d раундов выбраны</item>
     <item quantity="other">%d раунда выбраны</item>
   </plurals>
   <plurals name="round_deleted">
     <item quantity="one">%d раунд удален</item>
     <item quantity="few">%d раунда удалены</item>
-    <item quantity="many">%d rounds deleted</item>
+    <item quantity="many">%d раундов удалены</item>
     <item quantity="other">%d раунда удалены</item>
   </plurals>
   <string name="date">Дата</string>
@@ -353,13 +353,13 @@
   <string name="show_arrow_average">Показать среднее значение за выстрел</string>
   <string name="image_deleted">Изображение удалено</string>
   <string name="delete_image">Удалить изображение?</string>
-  <string name="keyboard_type">Keyboard type</string>
-  <string name="keyboard_enabled">Keyboard enabled</string>
-  <string name="sort_shots">Sort shots</string>
-  <string name="sort_shots_for_spots">Sort shots for spot target faces</string>
-  <string name="target_captain">Target captain</string>
+  <string name="keyboard_type">Режим ввода с клавиатуры</string>
+  <string name="keyboard_enabled">Клавиатура включена</string>
+  <string name="sort_shots">Сортировать выстрелы</string>
+  <string name="sort_shots_for_spots">Сортировать выстрелы по месту попадания в мишень</string>
+  <string name="target_captain">Капитан мишени</string>
   <string name="language">Язык</string>
-  <string name="warning_backup_experimental">Warning: This feature is still experimental! Please check in regular intervals if the backup was really successful!</string>
+  <string name="warning_backup_experimental">Предупреждение: Эта функция все еще является экспериментальной! Пожалуйста, проверьте было ли недавно выполнено резервное копирование данных!</string>
   <string name="drawer_open">Открыть</string>
   <string name="drawer_close">Закрыть</string>
   <string name="help">Помощь</string>
@@ -391,7 +391,7 @@
   <string name="settings_summary_statistics">Настроить экран статистики</string>
   <string name="settings_statistics_spots_to_single_target">Соединить пятна к одной мишени</string>
   <string name="keep_above_lockscreen">Оставить на экране блокировки</string>
-  <string name="scoreboard_title_all_rounds">All rounds</string>
+  <string name="scoreboard_title_all_rounds">Все раунды</string>
   <string name="permission_required">Требуется разрешение</string>
   <string name="backup_permission_explanation"><![CDATA[Для сохранения резервной копии данных приложению нужно разрешение на доступ к внутреннему хранилищу вашего устройства. Для использования возможностей резервного копирования перейдите > system settings > Apps > MyTargets > Permissions and enable the entry \'Storage\'.]]></string>
 </resources>

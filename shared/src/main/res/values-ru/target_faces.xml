@@ -51,13 +51,13 @@
   <string name="dbsc_blowpipe">DBSC (3 кольца, значения 3,5,7)</string>
   <!-- Scoring styles -->
   <string name="fcfs_color_reversed">FCFS цветной (обратные значения 10-1)</string>
-  <string name="recurve_style_x_1">Recurve style (X–1)</string>
-  <string name="recurve_style_10_1">Recurve style (10–1)</string>
-  <string name="recurve_style_x_5">Recurve style (X–5)</string>
-  <string name="recurve_style_10_5">Recurve style (10–5)</string>
-  <string name="recurve_style_x_6">Recurve style (X–6)</string>
-  <string name="recurve_style_10_6">Recurve style (10–6)</string>
-  <string name="recurve_style_x_8">Recurve style (X–8)</string>
-  <string name="recurve_style_10_8">Recurve style (10–8)</string>
+  <string name="recurve_style_x_1">Классический стиль (Х-1)</string>
+  <string name="recurve_style_10_1">Классический стиль (10-1)</string>
+  <string name="recurve_style_x_5">Классический стиль (Х-5)</string>
+  <string name="recurve_style_10_5">Классический стиль (10-5)</string>
+  <string name="recurve_style_x_6">Классический стиль (Х-6)</string>
+  <string name="recurve_style_10_6">Классический стиль (10-6)</string>
+  <string name="recurve_style_x_8">Классический стиль (Х-8)</string>
+  <string name="recurve_style_10_8">Классический стиль (10-8)</string>
   <string name="compound_style">Стиль блочного лука</string>
 </resources>

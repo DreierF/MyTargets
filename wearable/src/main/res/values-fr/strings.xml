@@ -16,7 +16,7 @@
   -->
 <resources>
   <string name="saved">Enregistré</string>
-  <string name="start_phone_app">Start the app on your phone to continue…</string>
+  <string name="start_phone_app">Démarrez l’application sur votre téléphone pour continuer…</string>
   <string name="add_end">Ajouter une volée</string>
   <string name="toggle_timer">Activer/désactiver le timer</string>
   <string name="start_timer">Démarrer le timer</string>

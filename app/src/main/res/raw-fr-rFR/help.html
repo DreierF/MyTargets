@@ -21,17 +21,17 @@
     </head>
     <body>
         <main>
-            <h1>Get started with MyTargets</h1>
-            <p>MyTargets allows you to record all results of you archery training rendering pen and paper obsolete. MyTargets is divided into three main categories: Trainings, bows and arrows. Trainings contains all the information you have collected during your training sessions. The bows section is the place to document your equipment properties and settings e.g. your sight marks. And the arrows section contains information about different arrow types.</p>
+            <h1>Démarrer avec MyTargets</h1>
+            <p>MyTargets vous permet d'enregistrer tous les résultats de votre entraînement au tir à l'arc, ce qui rend le crayon et le papier obsolètes. MyTargets est divisé en trois grandes catégories : Entraînements, arcs et flèches. Les entraînements contiennent toutes les informations que vous avez recueillies au cours de vos sessions d'entraînements. La section arcs est l'endroit pour documenter les propriétés et les réglages de votre équipement, par exemple vos réglages de viseur. Et la section des flèches contient des informations sur les différents types de flèches.</p>
            
             <section> 
-                <h2>Organize trainings</h2>
+                <h2>Organiser des entraînements</h2>
                 <p>A training is organized into one or multiple rounds. Each round may contain an arbitrary number of ends, whereby an end contains up to predefined number of shot arrows.</p>
                 <details>
-                    <summary>Create a training</summary>
+                    <summary>Créer un entrainement</summary>
                     <p>To create a new training tap the orange circle at the bottom of the trainings page. Now you can select out of:</p>
                     <ul>
-                        <li><strong>Free Training</strong>: Allows you to freely set distance, target face type and diameter as well as the number of arrows you want to shot per end.</li>
+                        <li><strong>Entraînement libre</strong> : Permet de régler librement la distance, le type et le diamètre de la cible ainsi que le nombre de flèches que vous voulez tirer par extrémité.</li>
                         <li><strong>Training with Standard Round</strong>: Allows you to select from a huge number of common standard rounds. You can also define your own if none of the predefined ones fits your needs.</li>
                     </ul>
                 </details>
@@ -55,7 +55,7 @@
                     </ul>
                 </details>
                 <details>
-                    <summary>Arrow numbering</summary>
+                    <summary>Numérotation de flèche</summary>
                     <p>Besides documenting the arrows used in a particular training, you may also annotate individual shots with the number of the arrow. You can enable the behaviour on a per-training basis. When you create the training you have to set the option accordingly:</p>
                     <img src="images/arrow_numbers.png" />
                 </details>
@@ -71,7 +71,7 @@
                 </details>
             </section>
             <section> 
-                <h2>Input</h2>
+                <h2>Saisie</h2>
                 <p>MyTargets supports an exact arrow plotting and a keyboard based input mode. Switching between them is possible via the settings.</p>
                 <details>
                     <summary>Exact arrow plotting</summary>
@@ -91,10 +91,10 @@
                 </details>
             </section>
             <section> 
-                <h2>Statistics</h2>
-                <p>The statistics allow you to get an aggregated view on your training data.</p>
+                <h2>Statistiques</h2>
+                <p>Les statistiques vous permettent d’obtenir une vue agrégée sur vos données d’entraînement.</p>
                 <details>
-                    <summary>Statistics elements</summary>
+                    <summary>Éléments statistiques</summary>
                     <p>In the following the main UI components are described:</p>
                     <ul>
                         <li><strong>Line chart</strong>: Shows the average score per arrow per end. The orange linear regression line shows the overall trend. The chart can be zoomed by pinching two fingers horizontally.</li>
@@ -104,34 +104,34 @@
                     </ul>
                 </details>
                 <details>
-                    <summary>Analysis scope</summary>
-                    <p>The scope being analyzed in the statistics depends on the screen from which you open it. Invoked from the main screen all available training data is considered. In the training and round detail views the whole training or round is considered accoridingly.</p>
+                    <summary>Champ d'analyse</summary>
+                    <p>Le périmètre analysé dans les statistiques dépend de l'écran à partir duquel vous l'ouvrez. A partir de l'écran principal, toutes les données des entraînements existants sont prises en compte. Dans les vues détaillées de l'entraînement et des séries, l'ensemble de l'entraînement ou de la série est pris en compte.</p>
                     <img src="images/statistics_icon.png" style="width:10%;"/>
                     <p>You can also use multi-selection to e.g. select two or more trainings.</p>
                     <img src="images/statistics_multiselect.png"/>
                 </details>
                 <details>
-                    <summary>Applying filters</summary>
+                    <summary>Appliquer des filtres</summary>
                     <p>You can also apply filters to your selected training data. Filtering is possible by bow, arrow, distance and target diameter.</p>
                     <img src="images/statistics_filter.png" style="width:10%;"/>
                 </details>
                 <details>
-                    <summary>Exporting data</summary>
-                    <p>You can export the selected data to a *.csv file, which can be opened in a spreadsheet application like Excel. The x and y columns describe the coordinates of the shots whereby the origin 0, 0 is the center of the target and the outer border of the target is 1 unit away.</p>
+                    <summary>Exporter les données</summary>
+                    <p>Vous pouvez exporter les données sélectionnées dans un fichier *.csv, qui peut être ouvert dans un tableur comme Excel. Les colonnes x et y décrivent les coordonnées des tirs où l'origine 0, 0 est le centre de la cible et le bord extérieur de la cible est à 1 unité de distance.</p>
                     <img src="images/statistics_export.png" style="width:10%;"/>
-                    <p><strong>Note</strong>: You can <strong>not</strong> import training data into the app. To create a backup of your data you have to use the backup and restore functionality in the settings.</p>
+                    <p><strong>Note</strong> : Vous pouvez <strong>pas</strong>importer les données de formation dans l'application. Pour créer une sauvegarde de vos données, vous devez utiliser la fonctionnalité de sauvegarde et de restauration dans les paramètres.</p>
                 </details>
             </section>
             <section> 
-                <h2>Miscellaneous</h2>
+                <h2>Divers</h2>
                 <p></p>
                 <details>
-                    <summary>Why are my arrows drawn so small?</summary>
-                    <p>The size of the arrows is determined by the diameter specified in the arrow properties and the diameter of the selected target face. The arrow size is drawn in "real" size. If you do not want the arrows to be drawn in realistic sizes, you can scale the arrows artificially. Go to Settings > Input > Arrow diameter scale and adjust the scaling. In case you just want to have the arrow bigger, while placing the arrow on the target you can adjust the Target zoom level.</p>
+                    <summary>Pourquoi mes flèches sont dessinées si petites ?</summary>
+                    <p>La taille des flèches est déterminée par le diamètre spécifié dans les propriétés des flèches et le diamètre de la cible sélectionnée. La taille de la flèche est dessinée en taille "réelle". Si vous ne voulez pas que les flèches soient dessinées dans des dimensions réalistes, vous pouvez les redimensionner artificiellement. Allez dans Paramètres > Entrée > Échelle de diamètre de flèche et ajustez l'échelle. Dans le cas où vous voulez juste avoir la flèche plus grande, tout en plaçant la flèche sur la cible, vous pouvez ajuster le niveau de zoom de la cible.</p>
                 </details>
                 <details>
-                    <summary>Where are my backups saved in Google drive?</summary>
-                    <p>Backups made on Google drive are stored in the Application data folder. Files stored there can only be accessed by the app, which created them. So you can only see the backups from inside the MyTargets app. The webapp of Google drive furthermore allows you to delete all your backup data (Settings > Manage Apps). When you install the app on another phone and log in with the your Google account you get access to all your backups again.</p>
+                    <summary>Où sont mes sauvegardes enregistrées dans Google drive ?</summary>
+                    <p>Les sauvegardes effectuées sur Google drive sont stockées dans le dossier de données de l'application. Les fichiers qui y sont stockées sont accessibles uniquement par l’application, qui les a créés. Si vous ne pouvez voir que les sauvegardes de l’application MyTargets. L’application Web de Google drive en outre vous permet de supprimer toutes vos données de sauvegarde (paramètres > gérer les applications). Lorsque vous installez l’application sur un autre téléphone et ouvrez une session dans avec le votre compte Google vous avez accès à toutes vos sauvegardes à nouveau.</p>
                 </details>
             </section>
         </main>
