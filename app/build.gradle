@@ -105,6 +105,14 @@ android {
             multiDexEnabled true
         }
     }
+
+    bundle {
+        language {
+            // Splitting by language is disabled to preserve the app's internal language selection
+            // See LanguagePreference
+            enableSplit = false
+        }
+    }
 }
 
 apply from: '../tools/script-play-store.gradle'
