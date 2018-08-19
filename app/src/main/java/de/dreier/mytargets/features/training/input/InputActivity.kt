@@ -186,8 +186,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private fun setupTransitionListener() {
-        val sharedElementEnterTransition = window
-            .sharedElementEnterTransition
+        val sharedElementEnterTransition = window.sharedElementEnterTransition
         if (sharedElementEnterTransition != null && sharedElementEnterTransition is FabTransform) {
             transitionFinished = false
             window.sharedElementEnterTransition.addListener(object : TransitionAdapter() {
@@ -366,10 +365,7 @@ class InputActivity : ChildActivityBase(), TargetViewBase.OnEndFinishedListener,
 
     private fun updateEnd() {
         targetView?.replaceWithEnd(data!!.currentEnd.shots, data!!.currentEnd.end.exact)
-        val totalEnds = if (data!!.currentRound.round.maxEndCount == null)
-            data!!.ends.size
-        else
-            data!!.currentRound.round.maxEndCount
+        val totalEnds = data!!.currentRound.round.maxEndCount ?: data!!.ends.size
         binding.endTitle.text = getString(R.string.end_x_of_y, data!!.endIndex + 1, totalEnds)
         binding.roundTitle.text = getString(
             R.string.round_x_of_y,
