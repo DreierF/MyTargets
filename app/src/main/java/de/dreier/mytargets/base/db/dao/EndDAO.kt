@@ -33,7 +33,7 @@ abstract class EndDAO {
     abstract fun loadShots(id: Long): List<Shot>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun saveEnd(end: End): Long
+    abstract fun insertEnd(end: End): Long
 
     @Update
     abstract fun updateEnd(end: End)
@@ -44,7 +44,7 @@ abstract class EndDAO {
     @Transaction
     open fun insertEnd(end: End, images: List<EndImage>, shots: List<Shot>) {
         incrementIndices(end.index)
-        saveCompleteEnd(end, images, shots)
+        insertCompleteEnd(end, images, shots)
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -57,8 +57,8 @@ abstract class EndDAO {
     abstract fun deleteEndImages(endId: Long)
 
     @Transaction
-    open fun saveCompleteEnd(end: End, images: List<EndImage>, shots: List<Shot>) {
-        end.id = saveEnd(end)
+    open fun insertCompleteEnd(end: End, images: List<EndImage>, shots: List<Shot>) {
+        end.id = insertEnd(end)
         for (image in images) {
             image.endId = end.id
             image.id = insertEndImage(image)

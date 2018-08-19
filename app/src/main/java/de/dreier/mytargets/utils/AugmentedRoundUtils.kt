@@ -32,7 +32,7 @@ fun AugmentedRound.addEnd(): AugmentedEnd {
         .map { Shot(it) }.toMutableList(), mutableListOf()
     )
     ApplicationInstance.db.endDAO()
-        .saveCompleteEnd(augmentedEnd.end, augmentedEnd.images, augmentedEnd.shots)
+        .insertCompleteEnd(augmentedEnd.end, augmentedEnd.images, augmentedEnd.shots)
     ends.add(augmentedEnd)
     return augmentedEnd
 }

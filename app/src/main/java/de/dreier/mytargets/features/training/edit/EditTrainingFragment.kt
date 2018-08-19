@@ -289,7 +289,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
                 val standardRound = binding.standardRound.selectedItem!!
                 if (standardRound.standardRound.id == 0L) {
                     throw IllegalStateException("I assumed the standard round would have already been saved")
-                    //StandardRoundDAO.saveStandardRound(standardRound.standardRound, standardRound.roundTemplates)
+                    //StandardRoundDAO.insertStandardRound(standardRound.standardRound, standardRound.roundTemplates)
                 }
                 SettingsManager.standardRound = standardRound.standardRound.id
                 training.standardRoundId = standardRound.standardRound.id
@@ -298,7 +298,7 @@ class EditTrainingFragment : EditFragmentBase(), DatePickerDialog.OnDateSetListe
                     round.target = roundTarget!!
                 }
             }
-            trainingDAO.saveTraining(training, rounds)
+            trainingDAO.insertTraining(training, rounds)
 
             val round = rounds[0]
 

@@ -109,7 +109,7 @@ class MobileWearableListener : WearableListenerService() {
 
     private fun createTraining(messageEvent: MessageEvent) {
         val augmentedTraining = messageEvent.data.unmarshall(AugmentedTraining.CREATOR)
-        trainingDAO.saveTraining(
+        trainingDAO.insertTraining(
             augmentedTraining.training,
             augmentedTraining.rounds.map { it.round })
         ApplicationInstance.wearableClient.updateTraining(augmentedTraining)
@@ -122,7 +122,7 @@ class MobileWearableListener : WearableListenerService() {
         val newEnd = getLastEmptyOrCreateNewEnd(round)
         newEnd.end.exact = false
         newEnd.shots = shots
-        endDAO.saveCompleteEnd(newEnd.end, newEnd.images, newEnd.shots)
+        endDAO.insertCompleteEnd(newEnd.end, newEnd.images, newEnd.shots)
 
         ApplicationInstance.wearableClient.sendUpdateTrainingFromRemoteBroadcast(
             round.round,

@@ -40,6 +40,9 @@ abstract class ArrowDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertArrow(arrow: Arrow): Long
 
+    @Update
+    abstract fun updateArrow(arrow: Arrow)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertArrowImages(images: List<ArrowImage>)
 
@@ -48,7 +51,12 @@ abstract class ArrowDAO {
 
     @Transaction
     open fun saveArrow(arrow: Arrow, images: List<ArrowImage>) {
-        arrow.id = insertArrow(arrow)
+        if (arrow.id > 0) {
+            updateArrow(arrow)
+        } else {
+            arrow.id = insertArrow(arrow)
+        }
+        deleteArrowImages(arrow.id)
         for (image in images) {
             image.arrowId = arrow.id
         }

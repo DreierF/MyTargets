@@ -64,7 +64,7 @@ abstract class DbTestRuleBase : TestRule {
             end.shots[i].scoringRing = shots[i]
         }
         end.end.score = round.round.target.getReachedScore(end.shots)
-        ApplicationInstance.db.endDAO().saveCompleteEnd(end.end, end.images, end.shots)
+        ApplicationInstance.db.endDAO().insertCompleteEnd(end.end, end.images, end.shots)
     }
 
     protected fun randomEnd(round: AugmentedRound, arrowsPerEnd: Int, gen: Random) {
@@ -79,7 +79,7 @@ abstract class DbTestRuleBase : TestRule {
         }
         end.end.score = round.round.target.getReachedScore(end.shots)
         end.end.saveTime = LocalTime.of(14, gen.nextInt(59), gen.nextInt(59), 0)
-        ApplicationInstance.db.endDAO().saveCompleteEnd(end.end, end.images, end.shots)
+        ApplicationInstance.db.endDAO().insertCompleteEnd(end.end, end.images, end.shots)
     }
 
     private fun gaussianRand(gen: Random): Float {

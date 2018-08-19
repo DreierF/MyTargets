@@ -40,6 +40,9 @@ abstract class BowDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertBow(bow: Bow): Long
 
+    @Update
+    abstract fun updateBow(bow: Bow)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertBowImages(images: List<BowImage>)
 
@@ -54,14 +57,20 @@ abstract class BowDAO {
 
     @Transaction
     open fun saveBow(bow: Bow, images: List<BowImage>, sightMarks: List<SightMark>) {
-        bow.id = insertBow(bow)
+        if (bow.id > 0) {
+            updateBow(bow)
+        } else {
+            bow.id = insertBow(bow)
+        }
         for (image in images) {
             image.bowId = bow.id
         }
+        deleteBowImages(bow.id)
         insertBowImages(images)
         for (sightMark in sightMarks) {
             sightMark.bowId = bow.id
         }
+        deleteSightMarks(bow.id)
         insertSightMarks(sightMarks)
     }
 

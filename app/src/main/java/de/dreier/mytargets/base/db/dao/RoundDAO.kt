@@ -53,7 +53,7 @@ abstract class RoundDAO {
     abstract fun deleteEnds(id: Long)
 
     @Transaction
-    open fun saveRound(round: Round, ends: List<End>) {
+    open fun addRound(round: Round, ends: List<End>) {
         round.id = insertRound(round)
         deleteEnds(round.id)
         for (end in ends) {
@@ -80,6 +80,6 @@ abstract class RoundDAO {
     @Transaction
     open fun insertRound(round: Round, ends: List<End>) {
         incrementIndices(round.index)
-        saveRound(round, ends)
+        addRound(round, ends)
     }
 }

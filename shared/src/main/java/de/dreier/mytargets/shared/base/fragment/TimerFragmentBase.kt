@@ -51,7 +51,7 @@ abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        settings = arguments.getParcelable(ARG_TIMER_SETTINGS)
+        settings = arguments.getParcelable(ARG_TIMER_SETTINGS)!!
         exitAfterStop = arguments.getBoolean(ARG_EXIT_AFTER_STOP)
     }
 
@@ -157,7 +157,7 @@ abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
     }
 
     private fun playHorn(n: Int) {
-        if(!horn.isPlaying && !isDetached) {
+        if (!horn.isPlaying && !isDetached) {
             horn.start()
             horn.setOnCompletionListener {
                 if (n > 1) {

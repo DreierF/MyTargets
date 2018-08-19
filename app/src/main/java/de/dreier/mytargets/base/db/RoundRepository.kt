@@ -20,30 +20,24 @@ import de.dreier.mytargets.base.db.dao.RoundDAO
 import de.dreier.mytargets.shared.models.augmented.AugmentedRound
 import de.dreier.mytargets.shared.models.db.Round
 
-class RoundRepository(database: AppDatabase) {
+class RoundRepository(val database: AppDatabase) {
 
     private val roundDAO: RoundDAO = database.roundDAO()
     private val endDAO: EndDAO = database.endDAO()
     private val endRepository = EndRepository(endDAO)
 
     fun loadAugmentedRound(id: Long) =
-        AugmentedRound(roundDAO.loadRound(id), endRepository.loadAugmentedEnds(id).toMutableList())
+        AugmentedRound(roundDAO.loadRound(id), endRepository.loadAugmentedEnds(id))
 
     fun loadAugmentedRound(round: Round) =
-        AugmentedRound(round, endRepository.loadAugmentedEnds(round.id).toMutableList())
+        AugmentedRound(round, endRepository.loadAugmentedEnds(round.id))
 
     fun insertRound(round: AugmentedRound) {
-        roundDAO.insertRound(round.round, round.ends.map { it.end })
-        round.ends.forEach {
-            endDAO.saveCompleteEnd(it.end, it.images, it.shots)
-        }
-    }
-
-    fun saveRound(round: AugmentedRound) {
-        roundDAO.insertRound(round.round)
-        for (end in round.ends) {
-            end.end.roundId = round.round.id
-            endDAO.saveCompleteEnd(end.end, end.images, end.shots)
+        database.runInTransaction {
+            roundDAO.insertRound(round.round, round.ends.map { it.end })
+            round.ends.forEach {
+                endDAO.insertCompleteEnd(it.end, it.images, it.shots)
+            }
         }
     }
 }

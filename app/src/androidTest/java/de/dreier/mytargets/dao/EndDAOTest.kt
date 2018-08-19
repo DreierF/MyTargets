@@ -38,7 +38,7 @@ open class EndDAOTest : DAOTestBase() {
     @Test
     fun saveCompleteEndSavesData() {
         val endToInsert = EndFactory.makeSimpleEnd(1)
-        appDatabase.endDAO().saveCompleteEnd(endToInsert.end, endToInsert.images, endToInsert.shots)
+        appDatabase.endDAO().insertCompleteEnd(endToInsert.end, endToInsert.images, endToInsert.shots)
         assertThat(endToInsert.id).isGreaterThan(0)
 
         val ends = appDatabase.endDAO().loadEnds(1)
@@ -64,7 +64,7 @@ open class EndDAOTest : DAOTestBase() {
     @Test
     fun insertEndUpdatesIndicesWhenInsertedAtFront() {
         val firstEnd = EndFactory.makeSimpleEnd(1)
-        appDatabase.endDAO().saveCompleteEnd(firstEnd.end, firstEnd.images, firstEnd.shots)
+        appDatabase.endDAO().insertCompleteEnd(firstEnd.end, firstEnd.images, firstEnd.shots)
 
         val insertedEnd = EndFactory.makeSimpleEnd(1)
         appDatabase.endDAO().insertEnd(insertedEnd.end, insertedEnd.images, insertedEnd.shots)
@@ -78,7 +78,7 @@ open class EndDAOTest : DAOTestBase() {
     @Test
     fun insertEndUpdatesIndicesWhenInsertedAtBack() {
         val firstEnd = EndFactory.makeSimpleEnd(1)
-        appDatabase.endDAO().saveCompleteEnd(firstEnd.end, firstEnd.images, firstEnd.shots)
+        appDatabase.endDAO().insertCompleteEnd(firstEnd.end, firstEnd.images, firstEnd.shots)
 
         val insertedEnd = EndFactory.makeSimpleEnd(1)
         insertedEnd.end.comment = "second"
@@ -96,12 +96,12 @@ open class EndDAOTest : DAOTestBase() {
     @Test
     fun deleteEndUpdatesIndices() {
         val firstEnd = EndFactory.makeSimpleEnd(1)
-        appDatabase.endDAO().saveCompleteEnd(firstEnd.end, firstEnd.images, firstEnd.shots)
+        appDatabase.endDAO().insertCompleteEnd(firstEnd.end, firstEnd.images, firstEnd.shots)
 
         val insertedEnd = EndFactory.makeSimpleEnd(1)
         insertedEnd.end.comment = "second"
         insertedEnd.end.index = 1
-        appDatabase.endDAO().saveCompleteEnd(insertedEnd.end, insertedEnd.images, insertedEnd.shots)
+        appDatabase.endDAO().insertCompleteEnd(insertedEnd.end, insertedEnd.images, insertedEnd.shots)
 
         appDatabase.endDAO().deleteEnd(firstEnd.end)
 

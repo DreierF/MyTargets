@@ -43,7 +43,7 @@ class MiniDbTestRule : DbTestRuleBase() {
 
         val training = saveDefaultTraining(standardRound.id, generator)
         val rounds = standardRound.createRoundsFromTemplate()
-        ApplicationInstance.db.trainingDAO().saveTraining(training, rounds)
+        ApplicationInstance.db.trainingDAO().insertTraining(training, rounds)
 
         val round1 = AugmentedRound(rounds[0], mutableListOf())
         val round2 = AugmentedRound(rounds[1], mutableListOf())

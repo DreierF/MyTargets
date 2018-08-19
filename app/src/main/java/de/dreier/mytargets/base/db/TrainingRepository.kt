@@ -41,7 +41,7 @@ class TrainingRepository(
             training.training.id = trainingDAO.insertTraining(training.training)
             training.rounds.forEach { round ->
                 round.round.trainingId = training.training.id
-                roundRepository.saveRound(round)
+                roundRepository.insertRound(round)
             }
         }
     }

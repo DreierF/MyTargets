@@ -44,7 +44,7 @@ abstract class TrainingDAO {
     abstract fun updateComment(trainingId: Long, comment: String)
 
     @Transaction
-    open fun saveTraining(training: Training, rounds: List<Round>) {
+    open fun insertTraining(training: Training, rounds: List<Round>) {
         training.id = insertTraining(training)
         for (round in rounds) {
             round.trainingId = training.id

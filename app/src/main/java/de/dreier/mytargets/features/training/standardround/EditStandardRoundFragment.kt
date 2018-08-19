@@ -146,7 +146,7 @@ class EditStandardRoundFragment : EditFragmentBase() {
     override fun onSave() {
         standardRound!!.standardRound.club = StandardRoundFactory.CUSTOM
         standardRound!!.standardRound.name = binding.name.text.toString()
-        standardRoundDAO.saveStandardRound(
+        standardRoundDAO.insertStandardRound(
             standardRound!!.standardRound,
             standardRound!!.roundTemplates
         )
