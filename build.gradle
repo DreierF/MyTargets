@@ -14,7 +14,7 @@
  */
 
 buildscript {
-    ext.kotlinVersion = '1.2.60'
+    ext.kotlinVersion = '1.2.61'
     repositories {
         jcenter()
         google()
@@ -23,7 +23,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0-beta05'
+        classpath 'com.android.tools.build:gradle:3.2.0-rc02'
         classpath 'com.github.triplet.gradle:play-publisher:1.2.2'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.3'
         classpath 'com.google.gms:google-services:4.0.2'
