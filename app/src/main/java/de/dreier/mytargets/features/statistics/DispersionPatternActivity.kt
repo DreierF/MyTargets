@@ -15,7 +15,6 @@
 
 package de.dreier.mytargets.features.statistics
 
-import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Build

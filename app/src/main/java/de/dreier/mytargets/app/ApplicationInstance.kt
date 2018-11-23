@@ -116,6 +116,7 @@ class ApplicationInstance : SharedApplicationInstance() {
             )
                 .allowMainThreadQueries()
                 .addCallback(RoomCreationCallback)
+                .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
                 .addMigrations(
                     Migration2, Migration3, Migration4,
                     Migration5, Migration6, Migration7,
