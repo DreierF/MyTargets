@@ -38,6 +38,8 @@ import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
 import pl.aprilapps.easyphotopicker.DefaultCallback
 import pl.aprilapps.easyphotopicker.EasyImage
+import pl.aprilapps.easyphotopicker.MediaFile
+import pl.aprilapps.easyphotopicker.MediaSource
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -54,6 +56,8 @@ class GalleryActivity : ChildActivityBase() {
 
     private lateinit var binding: ActivityGalleryBinding
 
+    private lateinit var easyImage: EasyImage
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_gallery)
@@ -68,6 +72,8 @@ class GalleryActivity : ChildActivityBase() {
         ToolbarUtils.showHomeAsUp(this)
         ToolbarUtils.setTitle(this, title)
         Utils.showSystemUI(this)
+
+        easyImage = EasyImage.Builder(this).build()
 
         layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.imagesHorizontalList.layoutManager = layoutManager
@@ -173,12 +179,12 @@ class GalleryActivity : ChildActivityBase() {
 
     @NeedsPermission(Manifest.permission.CAMERA)
     internal fun onTakePicture() {
-        EasyImage.openCameraForImage(this, 0)
+        easyImage.openCameraForImage(this)
     }
 
     @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
     internal fun onSelectImage() {
-        EasyImage.openGallery(this, 0)
+        easyImage.openGallery(this)
     }
 
     @SuppressLint("NeedOnRequestPermissionsResult")
@@ -193,24 +199,11 @@ class GalleryActivity : ChildActivityBase() {
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        EasyImage.handleActivityResult(requestCode, resultCode, data, this,
+        easyImage.handleActivityResult(requestCode, resultCode, data, this,
             object : DefaultCallback() {
 
-                override fun onImagesPicked(
-                    imageFiles: List<File>,
-                    source: EasyImage.ImageSource,
-                    type: Int
-                ) {
-                    loadImages(imageFiles)
-                }
-
-                override fun onCanceled(source: EasyImage.ImageSource?, type: Int) {
-                    //Cancel handling, you might wanna remove taken photo if it was canceled
-                    if (source == EasyImage.ImageSource.CAMERA_IMAGE) {
-                        val photoFile = EasyImage
-                            .lastlyTakenButCanceledPhoto(applicationContext)
-                        photoFile?.delete()
-                    }
+                override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
+                    loadImages(imageFiles.map { it.file })
                 }
             })
     }

@@ -21,7 +21,7 @@ ext {
             androidLanguages           : 'v1.0.1',
             androidState               : '1.4.1',
             discreteSeekbar            : '1.0.1',
-            easyImage                  : '2.1.0',
+            easyImage                  : '3.0.1',
             espresso                   : '3.1.1',
             gson                       : '2.8.5',
             homage                     : '0.2.0',

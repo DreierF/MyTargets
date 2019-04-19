@@ -17,16 +17,17 @@ package de.dreier.mytargets.base.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import androidx.annotation.CallSuper
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.appcompat.widget.PopupMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.annotation.CallSuper
+import androidx.appcompat.widget.PopupMenu
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.databinding.DataBindingUtil
 import com.evernote.android.state.State
 import com.google.android.material.appbar.AppBarLayout
 import com.squareup.picasso.Picasso
@@ -41,6 +42,9 @@ import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
 import pl.aprilapps.easyphotopicker.DefaultCallback
 import pl.aprilapps.easyphotopicker.EasyImage
+import pl.aprilapps.easyphotopicker.MediaFile
+import pl.aprilapps.easyphotopicker.MediaSource
+import timber.log.Timber
 import java.io.File
 import java.io.IOException
 
@@ -56,6 +60,8 @@ abstract class EditWithImageFragmentBase<T : Image> protected constructor(
 
     @State
     var oldImageFile: File? = null
+
+    private lateinit var easyImage: EasyImage
 
     protected var imageFiles: List<T>
         get() {
@@ -84,6 +90,11 @@ abstract class EditWithImageFragmentBase<T : Image> protected constructor(
         get() = if (imageFile == null) {
             Thumbnail.from(context!!, defaultDrawable)
         } else Thumbnail.from(imageFile!!)
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        easyImage = EasyImage.Builder(context).build()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -145,12 +156,12 @@ abstract class EditWithImageFragmentBase<T : Image> protected constructor(
 
     @NeedsPermission(Manifest.permission.CAMERA)
     internal fun onTakePicture() {
-        EasyImage.openCameraForImage(this, 0)
+        easyImage.openCameraForImage(this)
     }
 
     @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
     internal fun onSelectImage() {
-        EasyImage.openGallery(this, 0)
+        easyImage.openGallery(this)
     }
 
     @SuppressLint("NeedOnRequestPermissionsResult")
@@ -165,26 +176,17 @@ abstract class EditWithImageFragmentBase<T : Image> protected constructor(
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        EasyImage.handleActivityResult(requestCode, resultCode, data, activity,
+        easyImage.handleActivityResult(requestCode, resultCode, data, activity!!,
             object : DefaultCallback() {
-
-                override fun onImagesPicked(
-                    imageFiles: List<File>,
-                    source: EasyImage.ImageSource,
-                    type: Int
-                ) {
+                override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
                     this@EditWithImageFragmentBase.oldImageFile =
-                            this@EditWithImageFragmentBase.imageFile
-                    loadImage(imageFiles[0])
+                        this@EditWithImageFragmentBase.imageFile
+                    loadImage(imageFiles[0].file)
                 }
 
-                override fun onCanceled(source: EasyImage.ImageSource?, type: Int) {
-                    //Cancel handling, you might wanna remove taken photo if it was canceled
-                    if (source == EasyImage.ImageSource.CAMERA_IMAGE) {
-                        val photoFile = EasyImage.lastlyTakenButCanceledPhoto(context!!)
-                        photoFile?.delete()
-                    }
-                }
+                override fun onImagePickerError(error: Throwable, source: MediaSource) =
+                    Timber.e(error)
+
             })
     }
 
