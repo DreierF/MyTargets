@@ -39,7 +39,7 @@ class DistancesViewModel(app: Application) : AndroidViewModel(app) {
             val distances = mutableSetOf(de.dreier.mytargets.shared.models.Dimension.UNKNOWN)
 
             // Add currently selected distance to list
-            if (this.distance.value?.unit == unit) {
+            if (this.distance.value?.unit == unit.value) {
                 distances.add(this.distance.value!!)
             }
             distances.addAll(filteredDistances)

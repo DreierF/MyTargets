@@ -116,7 +116,7 @@ class EditArrowViewModel(app: Application) : AndroidViewModel(app) {
 
     private fun validateInput(): Boolean {
         if (diameterUnit.get() == MILLIMETER) {
-            if (diameterValue.get() !in 1..20) {
+            if (diameterValue.get() !in 1f..20f) {
                 diameterErrorText.set(getApplication<ApplicationInstance>().getString(R.string.not_within_expected_range_mm))
                 return false
             }

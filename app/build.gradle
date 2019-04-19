@@ -12,13 +12,15 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
+plugins {
+    id 'com.android.application'
+    id 'com.github.triplet.play' version '2.2.0'
+    id 'com.getkeepsafe.dexcount'
+}
 
-apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.github.triplet.play'
-apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'io.fabric'
 apply plugin: 'androidx.navigation.safeargs'
 
@@ -30,12 +32,6 @@ android {
 
     compileSdkVersion compileSdkVersionCode
 
-    playAccountConfigs {
-        defaultAccountConfig {
-            jsonFile = file('../googlePlayAndroidDeveloper.json')
-        }
-    }
-
     defaultConfig {
         applicationId 'de.dreier.mytargets'
         minSdkVersion 16
@@ -44,7 +40,6 @@ android {
         versionName gitVersionName
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary true
-        playAccountConfig = playAccountConfigs.defaultAccountConfig
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
@@ -114,6 +109,10 @@ android {
             enableSplit = false
         }
     }
+}
+
+play {
+    serviceAccountCredentials  = file('../googlePlayAndroidDeveloper.json')
 }
 
 apply from: '../tools/script-play-store.gradle'
