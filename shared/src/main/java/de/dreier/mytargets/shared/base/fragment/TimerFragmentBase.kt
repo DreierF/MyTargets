@@ -107,10 +107,10 @@ abstract class TimerFragmentBase : Fragment(), View.OnClickListener {
                 applyTime("")
             } else {
                 val offset = getOffset(status)
-                countdown = object : CountDownTimer((getDuration(status) * 1000).toLong(), 100) {
+                countdown = object : CountDownTimer((getDuration(status) * 1000).toLong(), 1000) {
                     override fun onTick(millisUntilFinished: Long) {
-                        val text = (millisUntilFinished / 1000 + offset).toString()
-                        applyTime(text)
+                        val countdown = offset + Math.ceil(millisUntilFinished / 1000.0).toInt()
+                        applyTime(countdown.toString())
                     }
 
                     override fun onFinish() {
