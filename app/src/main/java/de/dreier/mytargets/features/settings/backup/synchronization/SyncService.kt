@@ -18,21 +18,16 @@ package de.dreier.mytargets.features.settings.backup.synchronization
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+
 import timber.log.Timber
 
 /**
  * Service to handle sync requests.
  *
- *
- *
  * This service is invoked in response to Intents with action android.content.SyncAdapter, and
  * returns a Binder connection to SyncAdapter.
  *
- *
- *
  * For performance, only one sync adapter will be initialized within this application's context.
- *
- *
  *
  * Note: The SyncService itself is not notified when a new sync occurs. It's role is to
  * manage the lifecycle of our [SyncAdapter] and provide a handle to said SyncAdapter to the
@@ -46,9 +41,9 @@ class SyncService : Service() {
     override fun onCreate() {
         super.onCreate()
         Timber.i("Service created")
-        synchronized(sSyncAdapterLock) {
-            if (sSyncAdapter == null) {
-                sSyncAdapter = SyncAdapter(applicationContext, true)
+        synchronized(syncAdapterLock) {
+            if (syncAdapter == null) {
+                syncAdapter = SyncAdapter(applicationContext, true)
             }
         }
     }
@@ -58,13 +53,11 @@ class SyncService : Service() {
      */
     override fun onDestroy() {
         super.onDestroy()
-        Timber.i("Service destroyed")
+        Timber.i("Sync Service destroyed")
     }
 
     /**
      * Return Binder handle for IPC communication with [SyncAdapter].
-     *
-     *
      *
      * New sync requests will be sent directly to the SyncAdapter using this channel.
      *
@@ -72,11 +65,11 @@ class SyncService : Service() {
      * @return Binder handle for [SyncAdapter]
      */
     override fun onBind(intent: Intent): IBinder? {
-        return sSyncAdapter!!.syncAdapterBinder
+        return syncAdapter!!.syncAdapterBinder
     }
 
     companion object {
-        private val sSyncAdapterLock = Any()
-        private var sSyncAdapter: SyncAdapter? = null
+        private val syncAdapterLock = Any()
+        private var syncAdapter: SyncAdapter? = null
     }
 }

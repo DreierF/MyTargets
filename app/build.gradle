@@ -47,7 +47,6 @@ android {
         }
     }
 
-    // used by Room, to test migrations
     sourceSets {
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
@@ -62,6 +61,10 @@ android {
 
     signingConfigs {
         debug {
+            storeFile file('../debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
         }
 
         release {
@@ -109,10 +112,21 @@ android {
             enableSplit = false
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+    }
 }
 
 play {
-    serviceAccountCredentials  = file('../googlePlayAndroidDeveloper.json')
+    serviceAccountCredentials = file('../googlePlayAndroidDeveloper.json')
 }
 
 apply from: '../tools/script-play-store.gradle'
@@ -140,10 +154,20 @@ dependencies {
 
     implementation dependencies.timber
 
-    implementation dependencies.playServicesDrive
     implementation dependencies.firebaseCore
-    implementation(dependencies.firebaseCrashlytics) {
-        transitive = true
+    implementation dependencies.firebaseCrashlytics
+
+    implementation dependencies.playServicesAuth
+    implementation(dependencies.googleHttpClientAuth) {
+//        exclude: group: 'com.google.http-client:google-http-client-apache'
+    }
+    implementation(dependencies.googleApiClientAndroid) {
+        exclude group: 'org.apache.httpcomponents'
+        exclude group: 'com.google.http-client', module: 'google-http-client-apache'
+    }
+    implementation(dependencies.googleApiServicesDrive) {
+        exclude group: 'org.apache.httpcomponents'
+        exclude group: 'com.google.http-client', module: 'google-http-client-apache'
     }
 
     implementation dependencies.gson
@@ -222,4 +246,6 @@ dependencies {
 // Must be at the bottom
 if (HAS_GMS_SECRET) {
     apply plugin: 'com.google.gms.google-services'
+} else {
+    println 'GMS secret is missing!'
 }

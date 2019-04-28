@@ -98,7 +98,7 @@ class StandardRoundListFragment :
                 it,
                 standardRoundDAO.loadRoundTemplates(it.id).toMutableList()
             )
-        }.toMutableList()
+        }
         return {
             adapter.setList(data)
             selectItem(binding.recyclerView, currentSelection!!)

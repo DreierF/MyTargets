@@ -21,10 +21,13 @@ MyTargets is a free and even open source archery app, which helps you manage you
 The app is already available in over 20 languages. If your language is not yet supported or you spotted some mistakes in your translation, you can easily translate the app yourself on the following website
 https://crowdin.com/project/mytargets
 
-<b>Community and Beta Test</b>
-If you want to participate in discussions regarding the future development of the app, you can join our G+ Community.
-Members of the group also have the option to try out the latest beta versions of the app. Therefore if you can't wait to try out new features this is the place for you :)
-https://plus.google.com/communities/102686119334423317437
+<b>Beta Test</b>
+The app also has a beta track that you can join directly via the play store.
+If you can't wait to try out new features this is the place for you :)
+https://join.slack.com/t/mytargets/shared_invite/enQtNjIwMjA5OTIxMTA4LWU2ZGIzMDE3ZjUyZDU4YzZkODcxNjYwZDQ2NTkwZTE0OWI0YzZiZGU2M2U0MzBkOTc4ZjQyZmE1NzQ5MTdlODE
+
+<b>Community</b>
+If you want to participate in discussions regarding the future development of the app, you can join our Slack channel.
 
 <b>Problems</b>
 If you find any bugs or you have ideas for new features you can either contact me directly via Mail or use the following ticket tracking system https://github.com/DreierF/MyTargets/issues

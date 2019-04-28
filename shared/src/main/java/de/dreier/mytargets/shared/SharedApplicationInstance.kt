@@ -18,7 +18,6 @@ package de.dreier.mytargets.shared
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.StrictMode
 import android.preference.PreferenceManager
 import androidx.annotation.StringRes
 import com.jakewharton.threetenabp.AndroidThreeTen

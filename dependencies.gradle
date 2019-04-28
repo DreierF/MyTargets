@@ -36,7 +36,7 @@ ext {
             permissionsdispatcher      : '4.3.1',
             photoView                  : '2.1.3',
             picasso                    : '2.5.2',
-            playService                : '16.1.0',
+            playService                : '16.0.1',
             retrofit                   : '2.5.0',
             roundedImageView           : '2.3.0',
             screengrab                 : '1.2.0',
@@ -85,8 +85,13 @@ ext {
             archNavigationFragment        : 'android.arch.navigation:navigation-fragment-ktx:1.0.0',
             archNavigationUi              : 'android.arch.navigation:navigation-ui-ktx:1.0.0',
 
-            playServicesDrive             : "com.google.android.gms:play-services-drive:16.1.0",
+            playServicesAuth              : "com.google.android.gms:play-services-auth:16.0.1",
             playServicesWearable          : "com.google.android.gms:play-services-wearable:16.0.1",
+
+            googleHttpClientAuth          : 'com.google.http-client:google-http-client-gson:1.29.1',
+            googleApiClientAndroid        : 'com.google.api-client:google-api-client-android:1.26.0',
+            googleApiServicesDrive        : 'com.google.apis:google-api-services-drive:v3-rev20190416-1.28.0',
+
             firebaseCore                  : 'com.google.firebase:firebase-core:16.0.8',
             firebaseCrashlytics           : 'com.crashlytics.sdk.android:crashlytics:2.9.9',
 
@@ -150,7 +155,7 @@ ext {
             espressoIntents               : "androidx.test.espresso:espresso-intents:$libraryVersion.espresso",
             espressoIdlingResource        : "androidx.test.espresso:espresso-idling-resource:$libraryVersion.espresso",
 
-            screengrab                    : "tools.fastlane:screengrab:$libraryVersion.screengrab",
+            screengrab                    : 'tools.fastlane:screengrab:1.2.0',
 
             kotlinStdlibJdk7              : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion",
             kotlinTest                    : "org.jetbrains.kotlin:kotlin-test:$kotlinVersion",

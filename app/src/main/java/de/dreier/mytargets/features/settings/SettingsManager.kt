@@ -66,6 +66,7 @@ object SettingsManager {
     private const val KEY_INPUT_SUMMARY_SHOW_AVERAGE = "input_summary_show_average"
     const val KEY_SCOREBOARD_SHARE_FILE_TYPE = "scoreboard_share_file_type"
     private const val KEY_BACKUP_INTERVAL = "backup_interval"
+    private const val KEY_GOOGLE_BACKUP_PATH = "backup_path"
     private const val KEY_DONATED = "donated"
     private const val KEY_TIMER_KEEP_ABOVE_LOCKSCREEN = "timer_keep_above_lockscreen"
     private const val KEY_TIMER_VIBRATE = "timer_vibrate"
@@ -289,6 +290,10 @@ object SettingsManager {
         get() = EBackupInterval.valueOf(preferences[KEY_BACKUP_INTERVAL, EBackupInterval.WEEKLY.name])
         set(value) = preferences.set(KEY_BACKUP_INTERVAL, value.name)
 
+    var backupPathGoogleDrive: String
+        get() = preferences[KEY_GOOGLE_BACKUP_PATH, "root"]
+        set(value) = preferences.set(KEY_GOOGLE_BACKUP_PATH, value)
+
     var standardRoundsLastUsed: LongSparseArray<Int>
         get() {
             return lastUsed[KEY_STANDARD_ROUNDS_LAST_USED, ""]
@@ -310,7 +315,7 @@ object SettingsManager {
             config.showTraining = preferences[KEY_INPUT_SUMMARY_SHOW_TRAINING, false]
             config.showAverage = preferences[KEY_INPUT_SUMMARY_SHOW_AVERAGE, true]
             config.averageScope =
-                    ETrainingScope.valueOf(preferences[KEY_INPUT_SUMMARY_AVERAGE_OF, "ROUND"])
+                ETrainingScope.valueOf(preferences[KEY_INPUT_SUMMARY_AVERAGE_OF, "ROUND"])
             return config
         }
         set(value) {
