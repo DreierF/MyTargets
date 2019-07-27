@@ -21,16 +21,25 @@ android:
     - extra-google-m2repository
     - extra-android-m2repository
   # - sys-img-armeabi-v7a-android-$EMULATOR_API_LEVEL
+  licenses:
+    - 'android-sdk-preview-license-52d11cd2'
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
 before_install:
   - openssl aes-256-cbc -K $encrypted_143bf53fc355_key -iv $encrypted_143bf53fc355_iv -in services.tar.enc -out services.tar -d
   - tar xvf services.tar
   - wget https://raw.githubusercontent.com/JakeWharton/pidcat/master/pidcat.py
   - touch ~/.android/repositories.cfg
-  - yes | sdkmanager "platforms;android-27"
+  - yes | sdkmanager "platforms;android-28"
+  - yes | sdkmanager "build-tools;29.0.1"
   - mkdir -p "$ANDROID_HOME/licenses"
   - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
   - echo -e "\nd56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
   - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
+  - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+  - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
+  - yes | sdkmanager --update
+  - yes | sdkmanager --licenses
 install:
   # Converts the shallow clone to a full clone
   # This is necessary in order to determine the current app version code
