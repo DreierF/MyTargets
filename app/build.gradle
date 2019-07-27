@@ -125,10 +125,6 @@ android {
     }
 }
 
-play {
-    serviceAccountCredentials = file('../googlePlayAndroidDeveloper.json')
-}
-
 apply from: '../tools/script-play-store.gradle'
 
 dependencies {

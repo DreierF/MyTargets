@@ -14,7 +14,7 @@
  */
 
 buildscript {
-    ext.kotlinVersion = '1.3.31'
+    ext.kotlinVersion = '1.3.41'
     repositories {
         jcenter()
         google()
@@ -23,12 +23,12 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.0'
+        classpath 'com.android.tools.build:gradle:3.5.0-rc01'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.6'
-        classpath 'com.google.gms:google-services:4.2.0'
-        classpath 'com.google.firebase:firebase-plugins:1.2.0'
+        classpath 'com.google.gms:google-services:4.3.0'
+        classpath 'com.google.firebase:firebase-plugins:2.0.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath 'io.fabric.tools:gradle:1.28.1'
+        classpath 'io.fabric.tools:gradle:1.31.0'
         classpath 'android.arch.navigation:navigation-safe-args-gradle-plugin:1.0.0'
     }
 }

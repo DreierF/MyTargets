@@ -14,7 +14,7 @@
  */
 
 ext {
-    HAS_PLAY_STORE_SECRET = new File('googlePlayAndroidDeveloper.json').exists()
+    HAS_PLAY_STORE_SECRET = file('../googlePlayAndroidDeveloper.json').exists()
     HAS_GMS_SECRET = file('src/release/google-services.json').exists()
 }
 
@@ -31,9 +31,8 @@ if (hasProperty('CROWDIN_API_KEY')) {
 
     if (HAS_PLAY_STORE_SECRET) {
         play {
-            track 'beta'
-            untrackOld true
-            // uploadImages true
+            serviceAccountCredentials = file('../googlePlayAndroidDeveloper.json')
+            track = 'beta'
         }
     }
 }
