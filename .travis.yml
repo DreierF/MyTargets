@@ -1,52 +1,52 @@
 language: android
 jdk:
-- oraclejdk8
+  - oraclejdk8
 env:
   global:
-  # - ADB_INSTALL_TIMEOUT=8
-  - ANDROID_API_LEVEL=27
-  - ANDROID_BUILD_TOOLS_VERSION=27.0.2
-  # - ANDROID_ABI=armeabi-v7a
-  # - EMULATOR_API_LEVEL=21
-  - PWD=`pwd`
+    # - ADB_INSTALL_TIMEOUT=8
+    - ANDROID_API_LEVEL=27
+    - ANDROID_BUILD_TOOLS_VERSION=27.0.2
+    # - ANDROID_ABI=armeabi-v7a
+    # - EMULATOR_API_LEVEL=21
+    - PWD=`pwd`
 android:
   components:
-  - tools
-  - platform-tools
-  - tools
-  - build-tools-$ANDROID_BUILD_TOOLS_VERSION
-  - android-$ANDROID_API_LEVEL
-  # - android-$EMULATOR_API_LEVEL
-  - extra-google-google_play_services
-  - extra-google-m2repository
-  - extra-android-m2repository
+    - tools
+    - platform-tools
+    - tools
+    - build-tools-$ANDROID_BUILD_TOOLS_VERSION
+    - android-$ANDROID_API_LEVEL
+    # - android-$EMULATOR_API_LEVEL
+    - extra-google-google_play_services
+    - extra-google-m2repository
+    - extra-android-m2repository
   # - sys-img-armeabi-v7a-android-$EMULATOR_API_LEVEL
 before_install:
-- openssl aes-256-cbc -K $encrypted_143bf53fc355_key -iv $encrypted_143bf53fc355_iv -in services.tar.enc -out services.tar -d
-- tar xvf services.tar
-- wget https://raw.githubusercontent.com/JakeWharton/pidcat/master/pidcat.py
-- touch ~/.android/repositories.cfg
-- yes | sdkmanager "platforms;android-27"
-- mkdir -p "$ANDROID_HOME/licenses"
-- echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
-- echo -e "\nd56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
-- echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
+  - openssl aes-256-cbc -K $encrypted_143bf53fc355_key -iv $encrypted_143bf53fc355_iv -in services.tar.enc -out services.tar -d
+  - tar xvf services.tar
+  - wget https://raw.githubusercontent.com/JakeWharton/pidcat/master/pidcat.py
+  - touch ~/.android/repositories.cfg
+  - yes | sdkmanager "platforms;android-27"
+  - mkdir -p "$ANDROID_HOME/licenses"
+  - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+  - echo -e "\nd56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
+  - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
 install:
-# Converts the shallow clone to a full clone
-# This is necessary in order to determine the current app version code
-- git fetch --unshallow --tags
+  # Converts the shallow clone to a full clone
+  # This is necessary in order to determine the current app version code
+  - git fetch --unshallow --tags
 before_script:
-# - echo no | android create avd -f -n test -t "android-"$EMULATOR_API_LEVEL --abi $ANDROID_ABI -s WVGA800 -c 128M
-# - emulator -avd test -no-audio -no-window &
-- ./gradlew clean
+  # - echo no | android create avd -f -n test -t "android-"$EMULATOR_API_LEVEL --abi $ANDROID_ABI -s WVGA800 -c 128M
+  # - emulator -avd test -no-audio -no-window &
+  - ./gradlew clean
 script:
-- echo -e '\033[0;33mBuilding...\033[0m' && echo -en 'travis_fold:start:script.build\\r'
-- ./gradlew assembleRegularRelease -PdisablePreDex
-- echo -en 'travis_fold:end:script.build\\r'
+  - echo -e '\033[0;33mBuilding...\033[0m' && echo -en 'travis_fold:start:script.build\\r'
+  - ./gradlew assembleRegularRelease -PdisablePreDex
+  - echo -en 'travis_fold:end:script.build\\r'
 
-- echo -e '\033[0;33mUnit tests...\033[0m' && echo -en 'travis_fold:start:script.unittest\\r'
-- ./gradlew testRelease -PdisablePreDex
-- echo -en 'travis_fold:end:script.unittest\\r'
+  - echo -e '\033[0;33mUnit tests...\033[0m' && echo -en 'travis_fold:start:script.unittest\\r'
+  - ./gradlew testRelease -PdisablePreDex
+  - echo -en 'travis_fold:end:script.unittest\\r'
 
 # - echo -e '\033[0;33mUI tests...\033[0m' && echo -en 'travis_fold:start:script.uitest\\r'
 # - ./gradlew :app:assembleDevDebug :app:assembleDevDebugAndroidTest -PdisablePreDex
@@ -60,13 +60,13 @@ script:
 # - echo -en 'travis_fold:end:script.uitest\\r'
 
 after_success:
-- |
-  if [[ "$TRAVIS_TAG" ]]; then
-    ./gradlew bootstrapRegularReleasePlayResources publishRegularRelease
-    ./gradlew -PFirebaseServiceAccountFilePath=$PWD/firebase-crashreporting.json :app:firebaseUploadRegularReleaseProguardMapping
-    ./dropbox_uploader.sh upload app/build/outputs/apk/regular/release/app-regular-release.apk /Release/$TRAVIS_TAG/MyTargets.apk
-    ./dropbox_uploader.sh upload app/build/outputs/mapping/regular/release/mapping.txt /Release/$TRAVIS_TAG/mapping.txt
-  fi
+  - |
+    if [[ "$TRAVIS_TAG" ]]; then
+      ./gradlew bootstrapRegularReleasePlayResources publishRegularRelease
+      ./gradlew -PFirebaseServiceAccountFilePath=$PWD/firebase-crashreporting.json :app:firebaseUploadRegularReleaseProguardMapping
+      ./dropbox_uploader.sh upload app/build/outputs/apk/regular/release/app-regular-release.apk /Release/$TRAVIS_TAG/MyTargets.apk
+      ./dropbox_uploader.sh upload app/build/outputs/mapping/regular/release/mapping.txt /Release/$TRAVIS_TAG/mapping.txt
+    fi
 # - bash <(curl -s https://codecov.io/bash)
 # - ./gradlew sendCoverageToCodacy -PdisablePreDex
 after_failure:
