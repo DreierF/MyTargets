@@ -15,60 +15,60 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <string name="recurve_bow">Recurve boog</string>
-  <string name="compound_bow">Compound boog</string>
-  <string name="bare_bow">Kale boog</string>
-  <string name="long_bow">Longbow</string>
-  <string name="horse_bow">Ruiter boog</string>
-  <string name="yumi">Yumi</string>
-  <string name="sunny">Zonnig</string>
-  <string name="partly_cloudy">Halfbewolkt</string>
-  <string name="cloudy">Bewolkt</string>
-  <string name="light_rain">Lichte regen</string>
-  <string name="rain">Regen</string>
-  <string name="round_desc">%1$s: %2$d &#215; %3$d pijlen (%4$s blazoen)</string>
-  <string name="mini">Mini</string>
-  <string name="small">Klein</string>
-  <string name="medium">Middelgroot</string>
-  <string name="large">Groot</string>
-  <string name="xlarge">Extra groot</string>
-  <string name="unknown">Onbekend</string>
-  <string name="indoor">Binnen</string>
-  <string name="wind">Wind</string>
-  <string name="location">Locatie</string>
-  <string name="bft_0">0 Bft: windstil</string>
-  <string name="bft_1">1 Bft: bladeren bewegen niet</string>
-  <string name="bft_2">2 Bft: bladeren beginnen te bewegen</string>
-  <string name="bft_3">3 Bft: vlaggen beginnen te bewegen</string>
-  <string name="bft_4">4 Bft: kleine takken beginnen te bewegen</string>
-  <string name="bft_5">5 Bft: kleine bomen bewegen</string>
-  <string name="bft_6">6 Bft: grote takken bewegen</string>
-  <string name="bft_7">7 Bft: Complete bomen bewegen</string>
-  <string name="bft_8">8 Bft: kleine takken breken</string>
-  <string name="bft_9">9 Bft: Storm schade</string>
-  <string name="front">van voren</string>
-  <string name="back">van achteren</string>
-  <string name="left">van links</string>
-  <string name="right">van rechts</string>
-  <string name="left_front">van linksvoor</string>
-  <string name="right_front">van rechtsvoor</string>
-  <string name="left_back">van linksachter</string>
-  <string name="right_back">van rechtsachter</string>
-  <string name="stop">STOP</string>
-  <string name="end_n">Beurt %d</string>
-  <string name="miss">Miss</string>
-  <string name="backspace">Backspace</string>
-  <string name="accessibility_description_shot_n_score">Shot %1$d: %2$s</string>
-  <plurals name="rounds">
-    <item quantity="one">%d ronde</item>
-    <item quantity="other">%d rondes</item>
-  </plurals>
-  <plurals name="ends_arrow">
-    <item quantity="one">%1$d \u00D7 %2$d pijl</item>
-    <item quantity="other">%1$d \u00D7 %2$d pijlen</item>
-  </plurals>
-  <plurals name="arrows_per_end">
-    <item quantity="one">%d pijl per beurt</item>
-    <item quantity="other">%d pijlen per beurt</item>
-  </plurals>
+    <string name="recurve_bow">Recurve boog</string>
+    <string name="compound_bow">Compound boog</string>
+    <string name="bare_bow">Kale boog</string>
+    <string name="long_bow">Longbow</string>
+    <string name="horse_bow">Ruiter boog</string>
+    <string name="yumi">Yumi</string>
+    <string name="sunny">Zonnig</string>
+    <string name="partly_cloudy">Halfbewolkt</string>
+    <string name="cloudy">Bewolkt</string>
+    <string name="light_rain">Lichte regen</string>
+    <string name="rain">Regen</string>
+    <string name="round_desc">%1$s: %2$d &#215; %3$d pijlen (%4$s blazoen)</string>
+    <string name="mini">Mini</string>
+    <string name="small">Klein</string>
+    <string name="medium">Middelgroot</string>
+    <string name="large">Groot</string>
+    <string name="xlarge">Extra groot</string>
+    <string name="unknown">Onbekend</string>
+    <string name="indoor">Binnen</string>
+    <string name="wind">Wind</string>
+    <string name="location">Locatie</string>
+    <string name="bft_0">0 Bft: windstil</string>
+    <string name="bft_1">1 Bft: bladeren bewegen niet</string>
+    <string name="bft_2">2 Bft: bladeren beginnen te bewegen</string>
+    <string name="bft_3">3 Bft: vlaggen beginnen te bewegen</string>
+    <string name="bft_4">4 Bft: kleine takken beginnen te bewegen</string>
+    <string name="bft_5">5 Bft: kleine bomen bewegen</string>
+    <string name="bft_6">6 Bft: grote takken bewegen</string>
+    <string name="bft_7">7 Bft: Complete bomen bewegen</string>
+    <string name="bft_8">8 Bft: kleine takken breken</string>
+    <string name="bft_9">9 Bft: Storm schade</string>
+    <string name="front">van voren</string>
+    <string name="back">van achteren</string>
+    <string name="left">van links</string>
+    <string name="right">van rechts</string>
+    <string name="left_front">van linksvoor</string>
+    <string name="right_front">van rechtsvoor</string>
+    <string name="left_back">van linksachter</string>
+    <string name="right_back">van rechtsachter</string>
+    <string name="stop">STOP</string>
+    <string name="end_n">Beurt %d</string>
+    <string name="miss">Miss</string>
+    <string name="backspace">Backspace</string>
+    <string name="accessibility_description_shot_n_score">Shot %1$d: %2$s</string>
+    <plurals name="rounds">
+        <item quantity="one">%d ronde</item>
+        <item quantity="other">%d rondes</item>
+    </plurals>
+    <plurals name="ends_arrow">
+        <item quantity="one">%1$d \u00D7 %2$d pijl</item>
+        <item quantity="other">%1$d \u00D7 %2$d pijlen</item>
+    </plurals>
+    <plurals name="arrows_per_end">
+        <item quantity="one">%d pijl per beurt</item>
+        <item quantity="other">%d pijlen per beurt</item>
+    </plurals>
 </resources>

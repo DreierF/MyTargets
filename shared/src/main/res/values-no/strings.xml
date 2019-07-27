@@ -15,60 +15,60 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <string name="recurve_bow">Recurve</string>
-  <string name="compound_bow">Compound</string>
-  <string name="bare_bow">Bare bow</string>
-  <string name="long_bow">Lang bue</string>
-  <string name="horse_bow">Rytter bue</string>
-  <string name="yumi">Yumi</string>
-  <string name="sunny">Sol</string>
-  <string name="partly_cloudy">Delvis skyet</string>
-  <string name="cloudy">Overskyet</string>
-  <string name="light_rain">Lett regn</string>
-  <string name="rain">Regnfullt</string>
-  <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
-  <string name="mini">Mini</string>
-  <string name="small">Liten</string>
-  <string name="medium">Medium</string>
-  <string name="large">Stor</string>
-  <string name="xlarge">XStor</string>
-  <string name="unknown">Ukjent</string>
-  <string name="indoor">Innendørs</string>
-  <string name="wind">Vind</string>
-  <string name="location">Sted</string>
-  <string name="bft_0">0 Bft: vindstille</string>
-  <string name="bft_1">1 Bft: bladene beveger seg ikke</string>
-  <string name="bft_2">2 Bft: Bladene begynner å bevege seg</string>
-  <string name="bft_3">3 Bft: Lette flagg begynner å bevege seg</string>
-  <string name="bft_4">4 Bft: Små greiner begynner å bevege seg</string>
-  <string name="bft_5">5 Bft: Små trær beveger seg</string>
-  <string name="bft_6">6 Bft: Store grener beveger seg</string>
-  <string name="bft_7">5 Bft: Trær beveger seg</string>
-  <string name="bft_8">8 Bft: Små greiner Knekker</string>
-  <string name="bft_9">9 Bft: Storm styrke</string>
-  <string name="front">forfra</string>
-  <string name="back">bakfra</string>
-  <string name="left">fra venstre</string>
-  <string name="right">fra høyre</string>
-  <string name="left_front">fra foran til venstre</string>
-  <string name="right_front">fra foran til høyre</string>
-  <string name="left_back">fra bak til venstre</string>
-  <string name="right_back">fra bak til høyre</string>
-  <string name="stop">STOPP</string>
-  <string name="end_n">End %d</string>
-  <string name="miss">Miss</string>
-  <string name="backspace">Backspace</string>
-  <string name="accessibility_description_shot_n_score">Shot %1$d: %2$s</string>
-  <plurals name="rounds">
-    <item quantity="one">%d round</item>
-    <item quantity="other">%d rounds</item>
-  </plurals>
-  <plurals name="ends_arrow">
-    <item quantity="one">%1$d \u00D7 %2$d arrow</item>
-    <item quantity="other">%1$d \u00D7 %2$d arrows</item>
-  </plurals>
-  <plurals name="arrows_per_end">
-    <item quantity="one">%d arrow per end</item>
-    <item quantity="other">%d arrows per end</item>
-  </plurals>
+    <string name="recurve_bow">Recurve</string>
+    <string name="compound_bow">Compound</string>
+    <string name="bare_bow">Bare bow</string>
+    <string name="long_bow">Lang bue</string>
+    <string name="horse_bow">Rytter bue</string>
+    <string name="yumi">Yumi</string>
+    <string name="sunny">Sol</string>
+    <string name="partly_cloudy">Delvis skyet</string>
+    <string name="cloudy">Overskyet</string>
+    <string name="light_rain">Lett regn</string>
+    <string name="rain">Regnfullt</string>
+    <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
+    <string name="mini">Mini</string>
+    <string name="small">Liten</string>
+    <string name="medium">Medium</string>
+    <string name="large">Stor</string>
+    <string name="xlarge">XStor</string>
+    <string name="unknown">Ukjent</string>
+    <string name="indoor">Innendørs</string>
+    <string name="wind">Vind</string>
+    <string name="location">Sted</string>
+    <string name="bft_0">0 Bft: vindstille</string>
+    <string name="bft_1">1 Bft: bladene beveger seg ikke</string>
+    <string name="bft_2">2 Bft: Bladene begynner å bevege seg</string>
+    <string name="bft_3">3 Bft: Lette flagg begynner å bevege seg</string>
+    <string name="bft_4">4 Bft: Små greiner begynner å bevege seg</string>
+    <string name="bft_5">5 Bft: Små trær beveger seg</string>
+    <string name="bft_6">6 Bft: Store grener beveger seg</string>
+    <string name="bft_7">5 Bft: Trær beveger seg</string>
+    <string name="bft_8">8 Bft: Små greiner Knekker</string>
+    <string name="bft_9">9 Bft: Storm styrke</string>
+    <string name="front">forfra</string>
+    <string name="back">bakfra</string>
+    <string name="left">fra venstre</string>
+    <string name="right">fra høyre</string>
+    <string name="left_front">fra foran til venstre</string>
+    <string name="right_front">fra foran til høyre</string>
+    <string name="left_back">fra bak til venstre</string>
+    <string name="right_back">fra bak til høyre</string>
+    <string name="stop">STOPP</string>
+    <string name="end_n">End %d</string>
+    <string name="miss">Miss</string>
+    <string name="backspace">Backspace</string>
+    <string name="accessibility_description_shot_n_score">Shot %1$d: %2$s</string>
+    <plurals name="rounds">
+        <item quantity="one">%d round</item>
+        <item quantity="other">%d rounds</item>
+    </plurals>
+    <plurals name="ends_arrow">
+        <item quantity="one">%1$d \u00D7 %2$d arrow</item>
+        <item quantity="other">%1$d \u00D7 %2$d arrows</item>
+    </plurals>
+    <plurals name="arrows_per_end">
+        <item quantity="one">%d arrow per end</item>
+        <item quantity="other">%d arrows per end</item>
+    </plurals>
 </resources>

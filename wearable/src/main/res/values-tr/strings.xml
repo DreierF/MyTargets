@@ -15,13 +15,13 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <string name="saved">Kaydedildi</string>
-  <string name="start_phone_app">Devam etmek için telefonunuzdaki uygulamayı başlatın…</string>
-  <string name="add_end">Son ekle</string>
-  <string name="toggle_timer">Zamanlayıcıyı aç / kapat</string>
-  <string name="start_timer">Zamanlayıcıyı başlat</string>
-  <string name="vibration">Titreşim</string>
-  <string name="sound">Ses</string>
-  <string name="today">bugün</string>
-  <string name="notification_channel_default">Default</string>
+    <string name="saved">Kaydedildi</string>
+    <string name="start_phone_app">Devam etmek için telefonunuzdaki uygulamayı başlatın…</string>
+    <string name="add_end">Son ekle</string>
+    <string name="toggle_timer">Zamanlayıcıyı aç / kapat</string>
+    <string name="start_timer">Zamanlayıcıyı başlat</string>
+    <string name="vibration">Titreşim</string>
+    <string name="sound">Ses</string>
+    <string name="today">bugün</string>
+    <string name="notification_channel_default">Default</string>
 </resources>

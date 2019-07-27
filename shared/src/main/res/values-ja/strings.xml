@@ -15,57 +15,57 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <string name="recurve_bow">リカーブボウ</string>
-  <string name="compound_bow">コンパウンドボウ</string>
-  <string name="bare_bow">ベアボウ</string>
-  <string name="long_bow">ロング ボウ</string>
-  <string name="horse_bow">ホースボウ</string>
-  <string name="yumi">和弓</string>
-  <string name="sunny">晴れ</string>
-  <string name="partly_cloudy">曇り時々晴れ</string>
-  <string name="cloudy">曇り</string>
-  <string name="light_rain">時々雨</string>
-  <string name="rain">雨</string>
-  <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
-  <string name="mini">ミニ</string>
-  <string name="small">スモール</string>
-  <string name="medium">ミディアム</string>
-  <string name="large">ラージ</string>
-  <string name="xlarge">エクストララージ</string>
-  <string name="unknown">不明</string>
-  <string name="indoor">Indoor</string>
-  <string name="wind">Wind</string>
-  <string name="location">Location</string>
-  <string name="bft_0">0 Bft: Windless</string>
-  <string name="bft_1">1 Bft: Leaves do not move</string>
-  <string name="bft_2">2 Bft: Leaves begin to move</string>
-  <string name="bft_3">3 Bft: Light flags begin to move</string>
-  <string name="bft_4">4 Bft: Small branches begin to move</string>
-  <string name="bft_5">5 Bft: Small trees move</string>
-  <string name="bft_6">6 Bft: Big branches move</string>
-  <string name="bft_7">7 Bft: Complete trees move</string>
-  <string name="bft_8">8 Bft: Small branches break</string>
-  <string name="bft_9">9 Bft: Storm damage</string>
-  <string name="front">from front</string>
-  <string name="back">from back</string>
-  <string name="left">from left</string>
-  <string name="right">from right</string>
-  <string name="left_front">from front left</string>
-  <string name="right_front">from front right</string>
-  <string name="left_back">from back left</string>
-  <string name="right_back">from back right</string>
-  <string name="stop">STOP</string>
-  <string name="end_n">End %d</string>
-  <string name="miss">Miss</string>
-  <string name="backspace">Backspace</string>
-  <string name="accessibility_description_shot_n_score">Shot %1$d: %2$s</string>
-  <plurals name="rounds">
-    <item quantity="other">%d rounds</item>
-  </plurals>
-  <plurals name="ends_arrow">
-    <item quantity="other">%1$d \u00D7 %2$d arrows</item>
-  </plurals>
-  <plurals name="arrows_per_end">
-    <item quantity="other">%d arrows per end</item>
-  </plurals>
+    <string name="recurve_bow">リカーブボウ</string>
+    <string name="compound_bow">コンパウンドボウ</string>
+    <string name="bare_bow">ベアボウ</string>
+    <string name="long_bow">ロング ボウ</string>
+    <string name="horse_bow">ホースボウ</string>
+    <string name="yumi">和弓</string>
+    <string name="sunny">晴れ</string>
+    <string name="partly_cloudy">曇り時々晴れ</string>
+    <string name="cloudy">曇り</string>
+    <string name="light_rain">時々雨</string>
+    <string name="rain">雨</string>
+    <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
+    <string name="mini">ミニ</string>
+    <string name="small">スモール</string>
+    <string name="medium">ミディアム</string>
+    <string name="large">ラージ</string>
+    <string name="xlarge">エクストララージ</string>
+    <string name="unknown">不明</string>
+    <string name="indoor">Indoor</string>
+    <string name="wind">Wind</string>
+    <string name="location">Location</string>
+    <string name="bft_0">0 Bft: Windless</string>
+    <string name="bft_1">1 Bft: Leaves do not move</string>
+    <string name="bft_2">2 Bft: Leaves begin to move</string>
+    <string name="bft_3">3 Bft: Light flags begin to move</string>
+    <string name="bft_4">4 Bft: Small branches begin to move</string>
+    <string name="bft_5">5 Bft: Small trees move</string>
+    <string name="bft_6">6 Bft: Big branches move</string>
+    <string name="bft_7">7 Bft: Complete trees move</string>
+    <string name="bft_8">8 Bft: Small branches break</string>
+    <string name="bft_9">9 Bft: Storm damage</string>
+    <string name="front">from front</string>
+    <string name="back">from back</string>
+    <string name="left">from left</string>
+    <string name="right">from right</string>
+    <string name="left_front">from front left</string>
+    <string name="right_front">from front right</string>
+    <string name="left_back">from back left</string>
+    <string name="right_back">from back right</string>
+    <string name="stop">STOP</string>
+    <string name="end_n">End %d</string>
+    <string name="miss">Miss</string>
+    <string name="backspace">Backspace</string>
+    <string name="accessibility_description_shot_n_score">Shot %1$d: %2$s</string>
+    <plurals name="rounds">
+        <item quantity="other">%d rounds</item>
+    </plurals>
+    <plurals name="ends_arrow">
+        <item quantity="other">%1$d \u00D7 %2$d arrows</item>
+    </plurals>
+    <plurals name="arrows_per_end">
+        <item quantity="other">%d arrows per end</item>
+    </plurals>
 </resources>

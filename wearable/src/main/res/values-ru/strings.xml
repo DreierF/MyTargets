@@ -15,13 +15,13 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <string name="saved">Сохранено</string>
-  <string name="start_phone_app">Запустите приложение на своем телефоне, чтобы продолжить…</string>
-  <string name="add_end">Добавить серию</string>
-  <string name="toggle_timer">Сбросить таймер</string>
-  <string name="start_timer">Запустить таймер</string>
-  <string name="vibration">Вибрация</string>
-  <string name="sound">Со звуком</string>
-  <string name="today">сегодня</string>
-  <string name="notification_channel_default">По умолчанию</string>
+    <string name="saved">Сохранено</string>
+    <string name="start_phone_app">Запустите приложение на своем телефоне, чтобы продолжить…</string>
+    <string name="add_end">Добавить серию</string>
+    <string name="toggle_timer">Сбросить таймер</string>
+    <string name="start_timer">Запустить таймер</string>
+    <string name="vibration">Вибрация</string>
+    <string name="sound">Со звуком</string>
+    <string name="today">сегодня</string>
+    <string name="notification_channel_default">По умолчанию</string>
 </resources>

@@ -15,13 +15,13 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <string name="saved">Gemt</string>
-  <string name="start_phone_app">Start the app on your phone to continue…</string>
-  <string name="add_end">Add end</string>
-  <string name="toggle_timer">Toggle timer</string>
-  <string name="start_timer">Start timer</string>
-  <string name="vibration">Vibration</string>
-  <string name="sound">Sound</string>
-  <string name="today">today</string>
-  <string name="notification_channel_default">Default</string>
+    <string name="saved">Gemt</string>
+    <string name="start_phone_app">Start the app on your phone to continue…</string>
+    <string name="add_end">Add end</string>
+    <string name="toggle_timer">Toggle timer</string>
+    <string name="start_timer">Start timer</string>
+    <string name="vibration">Vibration</string>
+    <string name="sound">Sound</string>
+    <string name="today">today</string>
+    <string name="notification_channel_default">Default</string>
 </resources>

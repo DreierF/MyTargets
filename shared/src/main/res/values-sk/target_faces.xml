@@ -15,49 +15,49 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <!-- Target groups -->
-  <string name="target_type_target_archery">Štandardné</string>
-  <string name="target_type_field_archery">Terénne</string>
-  <string name="target_type_3d_archery">3D</string>
-  <!-- Target names -->
-  <string name="wa_full">WA úplný</string>
-  <string name="wa_6_ring">WA 6 kruh</string>
-  <string name="wa_5_ring">WA 5 kruh</string>
-  <string name="wa_3_ring">WA 3 kruh</string>
-  <string name="vegas_3_spot">Vegas 3 terč</string>
-  <string name="vertical_3_spot">WA vertikálny 3 terč</string>
-  <string name="wa_3_ring_3_spot">WA 3 kruh 3 terč</string>
-  <string name="nfaa_field">NFAA terénny</string>
-  <string name="nfaa_expert_field">NFAA terénny Expert</string>
-  <string name="nfaa_hunter">NFAA lovec</string>
-  <string name="nfaa_indoor">NFAA halový</string>
-  <string name="nfaa_indoor_5_spot">NFAA halový 5 terč</string>
-  <string name="worcester_face">Worcester</string>
-  <string name="wa_field">WA terénny</string>
-  <string name="hit_or_miss">Traf alebo miň</string>
-  <string name="asa_3d">3D ASA</string>
-  <string name="asa_3d_14">3D ASA 14</string>
-  <string name="ibo_3d">3D IBO</string>
-  <string name="nfas_3d">3D NFAS</string>
-  <string name="dair_3d">3D Dair</string>
-  <string name="ifaa_animal">IFAA zvieratá</string>
-  <string name="nfaa_animal">NFAA zvieratá</string>
-  <string name="nfas_field">NFAS terénny</string>
-  <string name="beursault">Beursault</string>
-  <string name="sca_period">SCA bodka</string>
-  <string name="wa_field_3_spot">WA terénny 3 terč</string>
-  <string name="wa_danage_3_spot">WA Danage 3 terč</string>
-  <string name="wa_danage_6_spot">WA Danage 6 terč</string>
-  <string name="dbsc_blowpipe">DBSC pre Fúkaciu tyč</string>
-  <!-- Scoring styles -->
-  <string name="fcfs_color_reversed">FCFS farebný (opačný 10–1)</string>
-  <string name="recurve_style_x_1">Reflexný štýl (X-1)</string>
-  <string name="recurve_style_10_1">Reflexný štýl (10–1)</string>
-  <string name="recurve_style_x_5">Reflexný štýl (X–5)</string>
-  <string name="recurve_style_10_5">Reflexný štýl (10–5)</string>
-  <string name="recurve_style_x_6">Reflexný štýl (X-6)</string>
-  <string name="recurve_style_10_6">Reflexný štýl (10–6)</string>
-  <string name="recurve_style_x_8">Reflexný štýl (X-8)</string>
-  <string name="recurve_style_10_8">Reflexný štýl (10–8)</string>
-  <string name="compound_style">Kladkový štýl</string>
+    <!-- Target groups -->
+    <string name="target_type_target_archery">Štandardné</string>
+    <string name="target_type_field_archery">Terénne</string>
+    <string name="target_type_3d_archery">3D</string>
+    <!-- Target names -->
+    <string name="wa_full">WA úplný</string>
+    <string name="wa_6_ring">WA 6 kruh</string>
+    <string name="wa_5_ring">WA 5 kruh</string>
+    <string name="wa_3_ring">WA 3 kruh</string>
+    <string name="vegas_3_spot">Vegas 3 terč</string>
+    <string name="vertical_3_spot">WA vertikálny 3 terč</string>
+    <string name="wa_3_ring_3_spot">WA 3 kruh 3 terč</string>
+    <string name="nfaa_field">NFAA terénny</string>
+    <string name="nfaa_expert_field">NFAA terénny Expert</string>
+    <string name="nfaa_hunter">NFAA lovec</string>
+    <string name="nfaa_indoor">NFAA halový</string>
+    <string name="nfaa_indoor_5_spot">NFAA halový 5 terč</string>
+    <string name="worcester_face">Worcester</string>
+    <string name="wa_field">WA terénny</string>
+    <string name="hit_or_miss">Traf alebo miň</string>
+    <string name="asa_3d">3D ASA</string>
+    <string name="asa_3d_14">3D ASA 14</string>
+    <string name="ibo_3d">3D IBO</string>
+    <string name="nfas_3d">3D NFAS</string>
+    <string name="dair_3d">3D Dair</string>
+    <string name="ifaa_animal">IFAA zvieratá</string>
+    <string name="nfaa_animal">NFAA zvieratá</string>
+    <string name="nfas_field">NFAS terénny</string>
+    <string name="beursault">Beursault</string>
+    <string name="sca_period">SCA bodka</string>
+    <string name="wa_field_3_spot">WA terénny 3 terč</string>
+    <string name="wa_danage_3_spot">WA Danage 3 terč</string>
+    <string name="wa_danage_6_spot">WA Danage 6 terč</string>
+    <string name="dbsc_blowpipe">DBSC pre Fúkaciu tyč</string>
+    <!-- Scoring styles -->
+    <string name="fcfs_color_reversed">FCFS farebný (opačný 10–1)</string>
+    <string name="recurve_style_x_1">Reflexný štýl (X-1)</string>
+    <string name="recurve_style_10_1">Reflexný štýl (10–1)</string>
+    <string name="recurve_style_x_5">Reflexný štýl (X–5)</string>
+    <string name="recurve_style_10_5">Reflexný štýl (10–5)</string>
+    <string name="recurve_style_x_6">Reflexný štýl (X-6)</string>
+    <string name="recurve_style_10_6">Reflexný štýl (10–6)</string>
+    <string name="recurve_style_x_8">Reflexný štýl (X-8)</string>
+    <string name="recurve_style_10_8">Reflexný štýl (10–8)</string>
+    <string name="compound_style">Kladkový štýl</string>
 </resources>

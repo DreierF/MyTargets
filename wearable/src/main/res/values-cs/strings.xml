@@ -15,13 +15,13 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <string name="saved">Uloženo</string>
-  <string name="start_phone_app">Spusťte aplikaci ve svém telefonu...</string>
-  <string name="add_end">Přidat sadu</string>
-  <string name="toggle_timer">Přepnout časomíru</string>
-  <string name="start_timer">Spustit časomíru</string>
-  <string name="vibration">Vibrace</string>
-  <string name="sound">Zvuk</string>
-  <string name="today">dnes</string>
-  <string name="notification_channel_default">Výchozí</string>
+    <string name="saved">Uloženo</string>
+    <string name="start_phone_app">Spusťte aplikaci ve svém telefonu...</string>
+    <string name="add_end">Přidat sadu</string>
+    <string name="toggle_timer">Přepnout časomíru</string>
+    <string name="start_timer">Spustit časomíru</string>
+    <string name="vibration">Vibrace</string>
+    <string name="sound">Zvuk</string>
+    <string name="today">dnes</string>
+    <string name="notification_channel_default">Výchozí</string>
 </resources>

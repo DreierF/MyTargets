@@ -15,57 +15,57 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <string name="recurve_bow">Recurve bow</string>
-  <string name="compound_bow">Compound bow</string>
-  <string name="bare_bow">Bare bow</string>
-  <string name="long_bow">Long bow</string>
-  <string name="horse_bow">Horse bow</string>
-  <string name="yumi">Yumi</string>
-  <string name="sunny">Cerah</string>
-  <string name="partly_cloudy">Cerah berawan</string>
-  <string name="cloudy">Berawan</string>
-  <string name="light_rain">Hujan ringan</string>
-  <string name="rain">Hujan</string>
-  <string name="round_desc">%1$s: %2$d &#215; %3$d panah (%4$s wajah)</string>
-  <string name="mini">Mini</string>
-  <string name="small">Kecil</string>
-  <string name="medium">Sedang</string>
-  <string name="large">Besar</string>
-  <string name="xlarge">XBesar</string>
-  <string name="unknown">Tidak diketahui</string>
-  <string name="indoor">Indoor</string>
-  <string name="wind">Angin</string>
-  <string name="location">Lokasi</string>
-  <string name="bft_0">0 Bft: Tidak berangin</string>
-  <string name="bft_1">1 Bft: Daun tidak bergerak</string>
-  <string name="bft_2">2 Bft: Daun mulai bergerak</string>
-  <string name="bft_3">3 Bft: Bendera kecil mulai bergerak</string>
-  <string name="bft_4">4 Bft: Ranting mulai bergerak</string>
-  <string name="bft_5">5 Bft: Pohon kecil bergerak</string>
-  <string name="bft_6">6 Bft: Dahan bergerak</string>
-  <string name="bft_7">7 Bft: Seluruh pohon bergerak</string>
-  <string name="bft_8">8 Bft: Dahan kecil patah</string>
-  <string name="bft_9">9 Bft: Badai</string>
-  <string name="front">dari depan</string>
-  <string name="back">dari belakang</string>
-  <string name="left">dari kiri</string>
-  <string name="right">dari kanan</string>
-  <string name="left_front">dari depan kiri</string>
-  <string name="right_front">dari depan kanan</string>
-  <string name="left_back">dari belakang kiri</string>
-  <string name="right_back">dari belakang kanan</string>
-  <string name="stop">BERHENTI</string>
-  <string name="end_n">Akhir %d</string>
-  <string name="miss">Kehilangan</string>
-  <string name="backspace">Menghapus</string>
-  <string name="accessibility_description_shot_n_score">Tembakan %1$d: %2$s</string>
-  <plurals name="rounds">
-    <item quantity="other">%d putaran</item>
-  </plurals>
-  <plurals name="ends_arrow">
-    <item quantity="other">% 1 $ d \ u00D7 % 2 $ d panah</item>
-  </plurals>
-  <plurals name="arrows_per_end">
-    <item quantity="other">%d panah per akhir</item>
-  </plurals>
+    <string name="recurve_bow">Recurve bow</string>
+    <string name="compound_bow">Compound bow</string>
+    <string name="bare_bow">Bare bow</string>
+    <string name="long_bow">Long bow</string>
+    <string name="horse_bow">Horse bow</string>
+    <string name="yumi">Yumi</string>
+    <string name="sunny">Cerah</string>
+    <string name="partly_cloudy">Cerah berawan</string>
+    <string name="cloudy">Berawan</string>
+    <string name="light_rain">Hujan ringan</string>
+    <string name="rain">Hujan</string>
+    <string name="round_desc">%1$s: %2$d &#215; %3$d panah (%4$s wajah)</string>
+    <string name="mini">Mini</string>
+    <string name="small">Kecil</string>
+    <string name="medium">Sedang</string>
+    <string name="large">Besar</string>
+    <string name="xlarge">XBesar</string>
+    <string name="unknown">Tidak diketahui</string>
+    <string name="indoor">Indoor</string>
+    <string name="wind">Angin</string>
+    <string name="location">Lokasi</string>
+    <string name="bft_0">0 Bft: Tidak berangin</string>
+    <string name="bft_1">1 Bft: Daun tidak bergerak</string>
+    <string name="bft_2">2 Bft: Daun mulai bergerak</string>
+    <string name="bft_3">3 Bft: Bendera kecil mulai bergerak</string>
+    <string name="bft_4">4 Bft: Ranting mulai bergerak</string>
+    <string name="bft_5">5 Bft: Pohon kecil bergerak</string>
+    <string name="bft_6">6 Bft: Dahan bergerak</string>
+    <string name="bft_7">7 Bft: Seluruh pohon bergerak</string>
+    <string name="bft_8">8 Bft: Dahan kecil patah</string>
+    <string name="bft_9">9 Bft: Badai</string>
+    <string name="front">dari depan</string>
+    <string name="back">dari belakang</string>
+    <string name="left">dari kiri</string>
+    <string name="right">dari kanan</string>
+    <string name="left_front">dari depan kiri</string>
+    <string name="right_front">dari depan kanan</string>
+    <string name="left_back">dari belakang kiri</string>
+    <string name="right_back">dari belakang kanan</string>
+    <string name="stop">BERHENTI</string>
+    <string name="end_n">Akhir %d</string>
+    <string name="miss">Kehilangan</string>
+    <string name="backspace">Menghapus</string>
+    <string name="accessibility_description_shot_n_score">Tembakan %1$d: %2$s</string>
+    <plurals name="rounds">
+        <item quantity="other">%d putaran</item>
+    </plurals>
+    <plurals name="ends_arrow">
+        <item quantity="other">% 1 $ d \ u00D7 % 2 $ d panah</item>
+    </plurals>
+    <plurals name="arrows_per_end">
+        <item quantity="other">%d panah per akhir</item>
+    </plurals>
 </resources>

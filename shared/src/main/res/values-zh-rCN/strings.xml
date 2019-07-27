@@ -15,57 +15,57 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <string name="recurve_bow">反曲弓</string>
-  <string name="compound_bow">复合弓</string>
-  <string name="bare_bow">光弓</string>
-  <string name="long_bow">长弓</string>
-  <string name="horse_bow">马弓</string>
-  <string name="yumi">和弓</string>
-  <string name="sunny">晴</string>
-  <string name="partly_cloudy">局部多云</string>
-  <string name="cloudy">阴天</string>
-  <string name="light_rain">小雨</string>
-  <string name="rain">雨</string>
-  <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
-  <string name="mini">迷你</string>
-  <string name="small">小</string>
-  <string name="medium">中</string>
-  <string name="large">大</string>
-  <string name="xlarge">极大</string>
-  <string name="unknown">未知</string>
-  <string name="indoor">Indoor</string>
-  <string name="wind">风</string>
-  <string name="location">地点</string>
-  <string name="bft_0">0 级: 无风</string>
-  <string name="bft_1">1 级: 树叶不动</string>
-  <string name="bft_2">2 级: 树叶轻微摇动</string>
-  <string name="bft_3">3 级: 旗帜开始轻微飘扬</string>
-  <string name="bft_4">4 级: 小树枝开始摇动</string>
-  <string name="bft_5">5 级: 小树摇摆</string>
-  <string name="bft_6">6 级: 大树枝摇摆</string>
-  <string name="bft_7">7 级: 大树摇动</string>
-  <string name="bft_8">8 级: 小树枝断裂</string>
-  <string name="bft_9">9 级: 破坏型风暴</string>
-  <string name="front">从前方</string>
-  <string name="back">从后方</string>
-  <string name="left">从左方</string>
-  <string name="right">从右方</string>
-  <string name="left_front">从左前方</string>
-  <string name="right_front">从右前方</string>
-  <string name="left_back">从左后方</string>
-  <string name="right_back">从右后方</string>
-  <string name="stop">STOP</string>
-  <string name="end_n">End %d</string>
-  <string name="miss">Miss</string>
-  <string name="backspace">Backspace</string>
-  <string name="accessibility_description_shot_n_score">Shot %1$d: %2$s</string>
-  <plurals name="rounds">
-    <item quantity="other">%d rounds</item>
-  </plurals>
-  <plurals name="ends_arrow">
-    <item quantity="other">%1$d \u00D7 %2$d arrows</item>
-  </plurals>
-  <plurals name="arrows_per_end">
-    <item quantity="other">%d arrows per end</item>
-  </plurals>
+    <string name="recurve_bow">反曲弓</string>
+    <string name="compound_bow">复合弓</string>
+    <string name="bare_bow">光弓</string>
+    <string name="long_bow">长弓</string>
+    <string name="horse_bow">马弓</string>
+    <string name="yumi">和弓</string>
+    <string name="sunny">晴</string>
+    <string name="partly_cloudy">局部多云</string>
+    <string name="cloudy">阴天</string>
+    <string name="light_rain">小雨</string>
+    <string name="rain">雨</string>
+    <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (%4$s face)</string>
+    <string name="mini">迷你</string>
+    <string name="small">小</string>
+    <string name="medium">中</string>
+    <string name="large">大</string>
+    <string name="xlarge">极大</string>
+    <string name="unknown">未知</string>
+    <string name="indoor">Indoor</string>
+    <string name="wind">风</string>
+    <string name="location">地点</string>
+    <string name="bft_0">0 级: 无风</string>
+    <string name="bft_1">1 级: 树叶不动</string>
+    <string name="bft_2">2 级: 树叶轻微摇动</string>
+    <string name="bft_3">3 级: 旗帜开始轻微飘扬</string>
+    <string name="bft_4">4 级: 小树枝开始摇动</string>
+    <string name="bft_5">5 级: 小树摇摆</string>
+    <string name="bft_6">6 级: 大树枝摇摆</string>
+    <string name="bft_7">7 级: 大树摇动</string>
+    <string name="bft_8">8 级: 小树枝断裂</string>
+    <string name="bft_9">9 级: 破坏型风暴</string>
+    <string name="front">从前方</string>
+    <string name="back">从后方</string>
+    <string name="left">从左方</string>
+    <string name="right">从右方</string>
+    <string name="left_front">从左前方</string>
+    <string name="right_front">从右前方</string>
+    <string name="left_back">从左后方</string>
+    <string name="right_back">从右后方</string>
+    <string name="stop">STOP</string>
+    <string name="end_n">End %d</string>
+    <string name="miss">Miss</string>
+    <string name="backspace">Backspace</string>
+    <string name="accessibility_description_shot_n_score">Shot %1$d: %2$s</string>
+    <plurals name="rounds">
+        <item quantity="other">%d rounds</item>
+    </plurals>
+    <plurals name="ends_arrow">
+        <item quantity="other">%1$d \u00D7 %2$d arrows</item>
+    </plurals>
+    <plurals name="arrows_per_end">
+        <item quantity="other">%d arrows per end</item>
+    </plurals>
 </resources>

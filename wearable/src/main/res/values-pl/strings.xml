@@ -15,13 +15,13 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <string name="saved">Zapisano</string>
-  <string name="start_phone_app">Włącz aplikację na swoim telefonie aby kontynuować…</string>
-  <string name="add_end">Dodaj koniec</string>
-  <string name="toggle_timer">Przełącz zegar</string>
-  <string name="start_timer">Włącz zegar</string>
-  <string name="vibration">Wibracje</string>
-  <string name="sound">Dźwięk</string>
-  <string name="today">dzisiaj</string>
-  <string name="notification_channel_default">Default</string>
+    <string name="saved">Zapisano</string>
+    <string name="start_phone_app">Włącz aplikację na swoim telefonie aby kontynuować…</string>
+    <string name="add_end">Dodaj serię</string>
+    <string name="toggle_timer">Przełącz zegar</string>
+    <string name="start_timer">Włącz zegar</string>
+    <string name="vibration">Wibracje</string>
+    <string name="sound">Dźwięk</string>
+    <string name="today">dzisiaj</string>
+    <string name="notification_channel_default">Default</string>
 </resources>

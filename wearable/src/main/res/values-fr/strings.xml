@@ -15,13 +15,13 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <string name="saved">Enregistré</string>
-  <string name="start_phone_app">Démarrez l’application sur votre téléphone pour continuer…</string>
-  <string name="add_end">Ajouter une volée</string>
-  <string name="toggle_timer">Activer/désactiver le timer</string>
-  <string name="start_timer">Démarrer le timer</string>
-  <string name="vibration">Vibration</string>
-  <string name="sound">Son</string>
-  <string name="today">aujourd\'hui</string>
-  <string name="notification_channel_default">Défaut</string>
+    <string name="saved">Enregistré</string>
+    <string name="start_phone_app">Démarrez l’application sur votre téléphone pour continuer…</string>
+    <string name="add_end">Ajouter une volée</string>
+    <string name="toggle_timer">Activer/désactiver le timer</string>
+    <string name="start_timer">Démarrer le timer</string>
+    <string name="vibration">Vibration</string>
+    <string name="sound">Son</string>
+    <string name="today">aujourd\'hui</string>
+    <string name="notification_channel_default">Défaut</string>
 </resources>

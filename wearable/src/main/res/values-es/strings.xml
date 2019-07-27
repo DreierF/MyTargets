@@ -15,13 +15,13 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <string name="saved">Guardado</string>
-  <string name="start_phone_app">Iniciar la aplicación en su teléfono para seguir...</string>
-  <string name="add_end">Añadir Entrada</string>
-  <string name="toggle_timer">Activar cronometro</string>
-  <string name="start_timer">Iniciar cronómetro</string>
-  <string name="vibration">Vibración</string>
-  <string name="sound">Sonido</string>
-  <string name="today">hoy</string>
-  <string name="notification_channel_default">Predeterminado</string>
+    <string name="saved">Guardado</string>
+    <string name="start_phone_app">Iniciar la aplicación en su teléfono para seguir...</string>
+    <string name="add_end">Añadir Entrada</string>
+    <string name="toggle_timer">Activar cronometro</string>
+    <string name="start_timer">Iniciar cronómetro</string>
+    <string name="vibration">Vibración</string>
+    <string name="sound">Sonido</string>
+    <string name="today">hoy</string>
+    <string name="notification_channel_default">Predeterminado</string>
 </resources>
