@@ -20,7 +20,7 @@
 
     <uses-sdk
         android:targetSdkVersion="22"
-        android:minSdkVersion="10"
+        android:minSdkVersion="18"
         tools:overrideLibrary="androidx.test.uiautomator.v18"/>
 
     <!-- Allows unlocking your device and activating its screen so UI tests can succeed -->
