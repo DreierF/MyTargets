@@ -68,6 +68,7 @@ ext {
             androidxTestCore              : 'androidx.test:core:1.0.0',
             androidxTestExt               : 'androidx.test.ext:junit:1.1.1',
             androidxTestTruth             : 'androidx.test.ext:truth:1.2.0',
+            androidTestOrchestrator       : 'androidx.test:orchestrator:1.1.0',
 
             supportDesign                 : 'com.android.support:design:28.0.0',
 

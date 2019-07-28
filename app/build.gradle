@@ -241,6 +241,7 @@ dependencies {
     androidTestImplementation dependencies.androidxTestCore
     androidTestImplementation dependencies.runner
     androidTestImplementation dependencies.rules
+    androidTestUtil dependencies.androidTestOrchestrator
     androidTestImplementation dependencies.uiAutomator
     androidTestImplementation dependencies.espressoCore
     androidTestImplementation dependencies.espressoContrib
@@ -253,11 +254,11 @@ dependencies {
 
     implementation dependencies.multiDex
 
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestUtil 'androidx.test:orchestrator:1.1.0'
 }
 
-project.configurations.all {
+configurations.all {
+    exclude module: 'httpclient'
+    exclude module: 'commons-logging'
     resolutionStrategy.eachDependency { details ->
         if (details.requested.group == 'com.google.guava' && details.requested.name == 'guava') {
             details.useVersion '27.0.1-android'
