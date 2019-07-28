@@ -17,11 +17,10 @@ package de.dreier.mytargets
 
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
-import androidx.core.content.systemService
+import androidx.core.content.getSystemService
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.WearableListenerService
 import de.dreier.mytargets.shared.models.TimerSettings
@@ -63,11 +62,13 @@ class WearWearableListener : WearableListenerService() {
         val notificationIntent = Intent(this, RoundActivity::class.java)
         notificationIntent.putExtra(RoundActivity.EXTRA_ROUND, info.round)
         val pendingIntent = PendingIntent.getActivity(
-                this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+            this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT
+        )
 
         // Create the ongoing notification
         val image = BitmapFactory.decodeResource(resources, R.drawable.wear_bg)
-        val notificationBuilder = NotificationCompat.Builder(this, ApplicationInstance.DEFAULT_CHANNEL_ID)
+        val notificationBuilder =
+            NotificationCompat.Builder(this, ApplicationInstance.DEFAULT_CHANNEL_ID)
                 .setContentTitle(info.title)
                 .setContentText(describe(info))
                 .setSmallIcon(R.mipmap.ic_launcher)
@@ -75,9 +76,9 @@ class WearWearableListener : WearableListenerService() {
                 .extend(NotificationCompat.WearableExtender().setBackground(image))
 
         // Build the notification and show it
-        val notificationManager = systemService<NotificationManager>()
-        notificationManager.cancel(NOTIFICATION_ID)
-        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
+        val notificationManager = getSystemService<NotificationManager>()
+        notificationManager?.cancel(NOTIFICATION_ID)
+        notificationManager?.notify(NOTIFICATION_ID, notificationBuilder.build())
     }
 
     private fun describe(info: TrainingInfo): String {

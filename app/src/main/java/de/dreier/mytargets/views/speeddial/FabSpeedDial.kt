@@ -25,16 +25,6 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.annotation.IdRes
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.ViewPropertyAnimatorListenerAdapter
-import androidx.interpolator.view.animation.FastOutLinearInInterpolator
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import androidx.appcompat.view.SupportMenuInflater
-import androidx.appcompat.view.menu.MenuBuilder
-import androidx.cardview.widget.CardView
 import android.text.TextUtils
 import android.util.AndroidRuntimeException
 import android.util.AttributeSet
@@ -43,6 +33,16 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.annotation.IdRes
+import androidx.appcompat.view.SupportMenuInflater
+import androidx.appcompat.view.menu.MenuBuilder
+import androidx.cardview.widget.CardView
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.ViewPropertyAnimatorListenerAdapter
+import androidx.interpolator.view.animation.FastOutLinearInInterpolator
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.internal.NavigationMenu
 import de.dreier.mytargets.R
@@ -326,11 +326,12 @@ class FabSpeedDial : LinearLayout, View.OnClickListener, CoordinatorLayout.Attac
 
     override fun onSaveInstanceState(): Parcelable? {
         val superState = super.onSaveInstanceState()
-        val ss = SavedState(superState)
-
-        ss.isShowingMenu = isMenuOpen
-
-        return ss
+        if (superState != null) {
+            val ss = SavedState(superState)
+            ss.isShowingMenu = isMenuOpen
+            return ss
+        }
+        return null
     }
 
     override fun onRestoreInstanceState(state: Parcelable) {
@@ -564,7 +565,7 @@ class FabSpeedDial : LinearLayout, View.OnClickListener, CoordinatorLayout.Attac
         return super.dispatchKeyEventPreIme(event)
     }
 
-    internal class SavedState : View.BaseSavedState {
+    internal class SavedState : BaseSavedState {
 
         var isShowingMenu: Boolean = false
 
