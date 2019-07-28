@@ -157,6 +157,8 @@ object GoogleDriveBackup {
             when (requestCode) {
                 REQUEST_CODE_SIGN_IN -> if (resultCode == Activity.RESULT_OK && resultData != null) {
                     handleSignInResult(resultData)
+                } else if(resultCode == Activity.RESULT_CANCELED) {
+                    listener?.onLoginCancelled()
                 }
 
                 //TODO allow backup location choice

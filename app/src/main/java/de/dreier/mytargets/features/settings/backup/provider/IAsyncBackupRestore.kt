@@ -35,10 +35,9 @@ interface IAsyncBackupRestore {
 
     interface ConnectionListener {
         fun onStartIntent(intent: Intent, code: Int)
-
         fun onConnected()
-
         fun onConnectionSuspended()
+        fun onLoginCancelled()
     }
 
     interface OnLoadFinishedListener {

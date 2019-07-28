@@ -272,6 +272,10 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
         backup!!.connect(
             context!!,
             object : IAsyncBackupRestore.ConnectionListener {
+                override fun onLoginCancelled() {
+                    internalApplyBackupLocationWithPermissionCheck(EBackupLocation.INTERNAL_STORAGE)
+                }
+
                 override fun onStartIntent(intent: Intent, code: Int) {
                     startActivityForResult(intent, code)
                 }
