@@ -21,9 +21,9 @@ import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItem
 import androidx.test.espresso.matcher.ViewMatchers.*
-import android.support.test.rule.ActivityTestRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.rule.ActivityTestRule
 import de.dreier.mytargets.R
 import de.dreier.mytargets.features.main.MainActivity
 import de.dreier.mytargets.test.base.UITestBase

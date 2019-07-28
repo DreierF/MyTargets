@@ -21,8 +21,8 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
-import android.support.test.rule.ActivityTestRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.rule.ActivityTestRule
 import de.dreier.mytargets.R
 import de.dreier.mytargets.features.main.MainActivity
 import de.dreier.mytargets.test.base.UITestBase
@@ -41,11 +41,12 @@ import org.junit.runner.RunWith
 class EditArrowTest : UITestBase() {
 
     private val activityTestRule = ActivityTestRule(
-            MainActivity::class.java)
+        MainActivity::class.java
+    )
 
     @get:Rule
     val rule = RuleChain.outerRule(EmptyDbTestRule())
-            .around(activityTestRule)
+        .around(activityTestRule)
 
     @Test
     fun editArrowTest() {
@@ -54,43 +55,43 @@ class EditArrowTest : UITestBase() {
         // Add new arrow and change some properties
         onView(supportFab()).perform(click())
         onView(withId(R.id.name))
-                .perform(nestedScrollTo(), replaceText("Arrow"), closeSoftKeyboard())
+            .perform(nestedScrollTo(), replaceText("Arrow"), closeSoftKeyboard())
         onView(withText(R.string.more_fields))
-                .perform(nestedScrollTo(), click())
+            .perform(nestedScrollTo(), click())
         onView(withId(R.id.length))
-                .perform(nestedScrollTo(), replaceText("Length"))
+            .perform(nestedScrollTo(), replaceText("Length"))
         onView(withId(R.id.diameter))
-                .perform(nestedScrollTo(), replaceText("680"), closeSoftKeyboard())
+            .perform(nestedScrollTo(), replaceText("680"), closeSoftKeyboard())
 
         // Attempt to save and check if error is shown
         save()
         Thread.sleep(500)
         onView(withId(R.id.diameterTextInputLayout))
-                .check(matches(hasDescendant(withText(getString(R.string.not_within_expected_range_mm)))))
+            .check(matches(hasDescendant(withText(getString(R.string.not_within_expected_range_mm)))))
 
         // Fix input
         onView(withId(R.id.diameter))
-                .perform(nestedScrollTo(), replaceText("6.8"), closeSoftKeyboard())
+            .perform(nestedScrollTo(), replaceText("6.8"), closeSoftKeyboard())
         save()
 
         Thread.sleep(500)
 
         // Check if arrow has been saved
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
-                .check(matches(hasDescendant(withText("Arrow"))))
+            .check(matches(hasDescendant(withText("Arrow"))))
 
         // Open arrow again via CAB
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
-                .perform(longClick())
+            .perform(longClick())
         clickContextualActionBarItem(R.id.action_edit, R.string.edit)
 
         // Check if properties have been saved and are shown
         onView(withId(R.id.length))
-                .check(matches(withText("Length")))
+            .check(matches(withText("Length")))
         onView(withId(R.id.diameter))
-                .check(matches(withText("6.8")))
+            .check(matches(withText("6.8")))
         onView(withId(R.id.diameterUnit))
-                .check(matches(withSpinnerText("mm")))
+            .check(matches(withSpinnerText("mm")))
 
         // Change unit to inch
         onView(withId(R.id.diameterUnit)).perform(nestedScrollTo(), click())
@@ -101,9 +102,9 @@ class EditArrowTest : UITestBase() {
 
         // Correct value and save
         onView(withId(R.id.diameterTextInputLayout))
-                .check(matches(hasDescendant(withText(R.string.not_within_expected_range_inch))))
+            .check(matches(hasDescendant(withText(R.string.not_within_expected_range_inch))))
         onView(withId(R.id.diameter))
-                .perform(nestedScrollTo(), replaceText("0.5"), closeSoftKeyboard())
+            .perform(nestedScrollTo(), replaceText("0.5"), closeSoftKeyboard())
 
         // TODO Fix camera test
         //        onView(withId(R.id.coordinatorLayout)).perform(swipeDown());
@@ -122,19 +123,19 @@ class EditArrowTest : UITestBase() {
         Thread.sleep(500)
 
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
-                .perform(click())
+            .perform(click())
 
         onView(withId(R.id.diameter)).check(matches(withText("0.5")))
         onView(withId(R.id.diameterUnit))
-                .check(matches(withSpinnerText("inch")))
+            .check(matches(withSpinnerText("inch")))
 
         // Change name and discard it
         onView(withId(R.id.name))
-                .perform(nestedScrollTo(), replaceText("Arrrr"), closeSoftKeyboard())
+            .perform(nestedScrollTo(), replaceText("Arrrr"), closeSoftKeyboard())
         navigateUp()
 
         // Check if arrow has not been saved
         onView(withRecyclerView(R.id.recyclerView).atPosition(0))
-                .check(matches(hasDescendant(withText("Arrow"))))
+            .check(matches(hasDescendant(withText("Arrow"))))
     }
 }

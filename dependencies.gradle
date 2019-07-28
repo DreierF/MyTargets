@@ -64,7 +64,10 @@ ext {
             androidxV4                    : 'androidx.legacy:legacy-support-v4:1.0.0',
             androidxExifInterface         : 'androidx.exifinterface:exifinterface:1.0.0',
             androidxMediaCompat           : 'androidx.media:media:1.0.1',
+
+            androidxTestCore              : 'androidx.test:core:1.0.0',
             androidxTestExt               : 'androidx.test.ext:junit:1.1.1',
+            androidxTestTruth             : 'androidx.test.ext:truth:1.2.0',
 
             supportDesign                 : 'com.android.support:design:28.0.0',
 

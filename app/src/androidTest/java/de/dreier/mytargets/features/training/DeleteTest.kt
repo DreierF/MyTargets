@@ -15,6 +15,8 @@
 
 package de.dreier.mytargets.features.training
 
+import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.click
@@ -23,11 +25,9 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.matcher.ViewMatchers.*
-import android.support.test.filters.LargeTest
-import android.support.test.rule.ActivityTestRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.recyclerview.widget.RecyclerView
-import androidx.appcompat.widget.Toolbar
+import androidx.test.filters.LargeTest
+import androidx.test.rule.ActivityTestRule
 import de.dreier.mytargets.R
 import de.dreier.mytargets.features.main.MainActivity
 import de.dreier.mytargets.test.base.UITestBase
@@ -50,61 +50,77 @@ class DeleteTest : UITestBase() {
 
     @get:Rule
     val rule = RuleChain.outerRule(SimpleDbTestRule())
-            .around(activityTestRule)
+        .around(activityTestRule)
 
     @Test
     @Throws(Exception::class)
     fun testDeleteRound() {
         // Expand july
         onView(allOf(withId(R.id.recyclerView), isDisplayed())).perform(
-                actionOnItemAtPosition<RecyclerView.ViewHolder>(2, click()))
+            actionOnItemAtPosition<RecyclerView.ViewHolder>(2, click())
+        )
 
         // Delete and undo deletion
         onView(allOf(withId(R.id.recyclerView), isDisplayed())).perform(
-                actionOnItemAtPosition<RecyclerView.ViewHolder>(1, longClick()))
+            actionOnItemAtPosition<RecyclerView.ViewHolder>(1, longClick())
+        )
         onView(allOf(withId(R.id.recyclerView), isDisplayed())).perform(
-                actionOnItemAtPosition<RecyclerView.ViewHolder>(3, click()))
+            actionOnItemAtPosition<RecyclerView.ViewHolder>(3, click())
+        )
         clickContextualActionBarItem(R.id.action_delete, R.string.delete)
         onView(withId(R.id.snackbar_action)).perform(click())
 
         // Delete training
         onView(allOf(withId(R.id.recyclerView), isDisplayed())).perform(
-                actionOnItemAtPosition<RecyclerView.ViewHolder>(3, longClick()))
+            actionOnItemAtPosition<RecyclerView.ViewHolder>(3, longClick())
+        )
         clickContextualActionBarItem(R.id.action_delete, R.string.delete)
         val trainingText = activityTestRule
-                .activity.resources.getQuantityString(R.plurals.training_deleted, 1, 1)
+            .activity.resources.getQuantityString(R.plurals.training_deleted, 1, 1)
         onView(withId(R.id.snackbar_text)).check(matches(withText(trainingText)))
 
         // Open training
         onView(allOf(withId(R.id.recyclerView), isDisplayed())).perform(
-                actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
+            actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
+        )
         onView(allOf(withId(R.id.recyclerView), isDisplayed())).perform(
-                actionOnItemAtPosition<RecyclerView.ViewHolder>(1, click()))
+            actionOnItemAtPosition<RecyclerView.ViewHolder>(1, click())
+        )
         onView(withText("Aug 22, 2016")).check(matches(isDisplayed()))
 
         onView(withId(R.id.recyclerView)).perform(
-                actionOnItemAtPosition<RecyclerView.ViewHolder>(0, longClick()))
+            actionOnItemAtPosition<RecyclerView.ViewHolder>(0, longClick())
+        )
         clickContextualActionBarItem(R.id.action_delete, R.string.delete)
 
         // Open round
         onView(withId(R.id.recyclerView)).perform(
-                actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
+            actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
+        )
 
         // Delete ends and undo
         onView(withId(R.id.recyclerView)).perform(
-                actionOnItemAtPosition<RecyclerView.ViewHolder>(2, longClick()))
+            actionOnItemAtPosition<RecyclerView.ViewHolder>(2, longClick())
+        )
         onView(withId(R.id.recyclerView)).perform(
-                actionOnItemAtPosition<RecyclerView.ViewHolder>(3, click()))
+            actionOnItemAtPosition<RecyclerView.ViewHolder>(3, click())
+        )
         clickContextualActionBarItem(R.id.action_delete, R.string.delete)
         val endsText = activityTestRule
-                .activity.resources.getQuantityString(R.plurals.passe_deleted, 2, 2)
+            .activity.resources.getQuantityString(R.plurals.passe_deleted, 2, 2)
         onView(withId(R.id.snackbar_text)).check(matches(withText(endsText)))
         onView(withId(R.id.snackbar_action)).perform(click())
 
         // Delete ends
         onView(withId(R.id.recyclerView)).perform(
-                actionOnItemAtPosition<RecyclerView.ViewHolder>(1, longClick()))
-        onView(withId(R.id.recyclerView)).perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(3, click()))
+            actionOnItemAtPosition<RecyclerView.ViewHolder>(1, longClick())
+        )
+        onView(withId(R.id.recyclerView)).perform(
+            actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                3,
+                click()
+            )
+        )
         clickContextualActionBarItem(R.id.action_delete, R.string.delete)
 
         onView(withId(R.id.snackbar_text)).check(matches(withText(endsText)))
@@ -112,13 +128,14 @@ class DeleteTest : UITestBase() {
         pressBack()
 
         onView(withId(R.id.recyclerView)).perform(
-                actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
+            actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
+        )
 
         onView(withId(R.id.recyclerView)).check(itemCount(`is`(4)))
 
         pressBack()
         onView(allOf(isAssignableFrom(Toolbar::class.java), withId(R.id.toolbar)))
-                .check(ViewAssertions.matches(withToolbarTitle(`is`(getString(R.string.training)))))
+            .check(ViewAssertions.matches(withToolbarTitle(`is`(getString(R.string.training)))))
         pressBack()
         matchToolbarTitle(getString(R.string.my_targets))
     }

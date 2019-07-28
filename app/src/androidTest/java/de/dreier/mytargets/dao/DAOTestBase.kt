@@ -27,7 +27,7 @@ abstract class DAOTestBase {
     @Before
     fun initDb() {
         appDatabase = Room.inMemoryDatabaseBuilder(
-            InstrumentationRegistry.getContext(),
+            InstrumentationRegistry.getInstrumentation().context,
             AppDatabase::class.java
         ).build()
     }

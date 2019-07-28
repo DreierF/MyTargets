@@ -19,8 +19,8 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import android.support.test.rule.ActivityTestRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.rule.ActivityTestRule
 import androidx.test.uiautomator.UiObjectNotFoundException
 import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
@@ -45,22 +45,26 @@ import java.util.*
 class InputActivityTest : UITestBase() {
 
     private val activityTestRule = ActivityTestRule(
-            InputActivity::class.java, true, false)
+        InputActivity::class.java, true, false
+    )
 
     @get:Rule
     val rule: RuleChain = RuleChain.outerRule(object : DbTestRuleBase() {
         override fun addDatabaseContent() {
             val generator = Random(3435)
-            val standardRound = ApplicationInstance.db.standardRoundDAO().loadStandardRoundOrNull(32L)
+            val standardRound =
+                ApplicationInstance.db.standardRoundDAO().loadStandardRoundOrNull(32L)
 
             val (id) = saveDefaultTraining(standardRound!!.id, generator)
 
-            round = Round(ApplicationInstance.db.standardRoundDAO().loadRoundTemplates(standardRound.id)[0])
+            round =
+                Round(ApplicationInstance.db.standardRoundDAO().loadRoundTemplates(standardRound.id)[0])
             round.trainingId = id
             round.comment = ""
             ApplicationInstance.db.roundDAO().insertRound(round)
 
-            val round2 = Round(ApplicationInstance.db.standardRoundDAO().loadRoundTemplates(standardRound.id)[1])
+            val round2 =
+                Round(ApplicationInstance.db.standardRoundDAO().loadRoundTemplates(standardRound.id)[1])
             round2.trainingId = id
             round2.comment = ""
             ApplicationInstance.db.roundDAO().insertRound(round2)
@@ -85,9 +89,9 @@ class InputActivityTest : UITestBase() {
         activityTestRule.launchActivity(i)
 
         onView(withId(R.id.targetViewContainer))
-                .perform(TargetViewActions.clickVirtualButton("10"))
+            .perform(TargetViewActions.clickVirtualButton("10"))
         onView(withId(R.id.targetViewContainer))
-                .check(TargetViewAssertions.virtualButtonExists("Shot 1: 10"))
+            .check(TargetViewAssertions.virtualButtonExists("Shot 1: 10"))
 
         clickActionBarItem(R.id.action_settings, R.string.preferences)
         clickOnPreference(R.string.keyboard_enabled)
@@ -103,39 +107,39 @@ class InputActivityTest : UITestBase() {
         //assertVirtualViewNotExists("10");
 
         onView(withId(R.id.targetViewContainer))
-                .perform(TargetViewActions.clickTarget(0f, 0f))
+            .perform(TargetViewActions.clickTarget(0f, 0f))
         onView(withId(R.id.targetViewContainer))
-                .check(TargetViewAssertions.virtualButtonExists("Shot 2: X"))
+            .check(TargetViewAssertions.virtualButtonExists("Shot 2: X"))
 
         onView(withId(R.id.targetViewContainer))
-                .perform(TargetViewActions.clickVirtualButton("Backspace"))
+            .perform(TargetViewActions.clickVirtualButton("Backspace"))
         onView(withId(R.id.targetViewContainer))
-                .check(TargetViewAssertions.virtualButtonNotExists("Shot 2: X"))
+            .check(TargetViewAssertions.virtualButtonNotExists("Shot 2: X"))
 
         onView(withId(R.id.targetViewContainer))
-                .perform(TargetViewActions.clickTarget(0.1f, 0.2f))
+            .perform(TargetViewActions.clickTarget(0.1f, 0.2f))
         onView(withId(R.id.targetViewContainer))
-                .check(TargetViewAssertions.virtualButtonExists("Shot 2: 8"))
+            .check(TargetViewAssertions.virtualButtonExists("Shot 2: 8"))
 
         onView(withId(R.id.targetViewContainer))
-                .perform(TargetViewActions.clickTarget(0f, 0f))
+            .perform(TargetViewActions.clickTarget(0f, 0f))
         onView(withId(R.id.targetViewContainer))
-                .check(TargetViewAssertions.virtualButtonExists("Shot 3: X"))
+            .check(TargetViewAssertions.virtualButtonExists("Shot 3: X"))
 
         onView(withId(R.id.targetViewContainer))
-                .perform(TargetViewActions.clickTarget(-0.9f, -0.9f))
+            .perform(TargetViewActions.clickTarget(-0.9f, -0.9f))
         onView(withId(R.id.targetViewContainer))
-                .check(TargetViewAssertions.virtualButtonExists("Shot 4: Miss"))
+            .check(TargetViewAssertions.virtualButtonExists("Shot 4: Miss"))
 
         onView(withId(R.id.targetViewContainer))
-                .perform(TargetViewActions.clickTarget(0f, 0f))
+            .perform(TargetViewActions.clickTarget(0f, 0f))
         onView(withId(R.id.targetViewContainer))
-                .check(TargetViewAssertions.virtualButtonExists("Shot 5: X"))
+            .check(TargetViewAssertions.virtualButtonExists("Shot 5: X"))
 
         onView(withId(R.id.targetViewContainer))
-                .perform(TargetViewActions.clickTarget(0f, 0f))
+            .perform(TargetViewActions.clickTarget(0f, 0f))
         onView(withId(R.id.targetViewContainer))
-                .check(TargetViewAssertions.virtualButtonExists("Shot 6: X"))
+            .check(TargetViewAssertions.virtualButtonExists("Shot 6: X"))
 
         onView(withId(R.id.next)).perform(click())
     }

@@ -35,7 +35,7 @@ object RecyclerViewAssertions {
             }
 
             val recyclerView = view as RecyclerView
-            val adapter = recyclerView.adapter
+            val adapter = recyclerView.adapter!!
             assertThat(adapter.itemCount, matcher)
         }
     }
@@ -48,7 +48,7 @@ object RecyclerViewAssertions {
             val rv = view
             val outviews = ArrayList<View>()
             val title = view.getContext().getString(item)
-            for (index in 0 until rv.adapter.itemCount) {
+            for (index in 0 until rv.adapter!!.itemCount) {
                 val viewHolder = rv.findViewHolderForAdapterPosition(index) ?: continue
                 val itemView = viewHolder.itemView
                 itemView.findViewsWithText(outviews, title, FIND_VIEWS_WITH_TEXT)

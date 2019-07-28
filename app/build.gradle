@@ -38,13 +38,19 @@ android {
         targetSdkVersion 28
         versionCode gitVersionCode
         versionName gitVersionName
-        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+//        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary true
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // The following argument makes the Android Test Orchestrator run its
+        // "pm clear" command after each test invocation. This command ensures
+        // that the app's state is completely cleared between tests.
+        testInstrumentationRunnerArguments clearPackageData: 'true'
     }
 
     sourceSets {
@@ -122,6 +128,14 @@ android {
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/notice.txt'
         exclude 'META-INF/ASL2.0'
+    }
+
+    useLibrary 'android.test.runner'
+    useLibrary 'android.test.base'
+    useLibrary 'android.test.mock'
+
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
 }
 
@@ -224,6 +238,7 @@ dependencies {
     testImplementation dependencies.kotlinTestJunit
 
     androidTestImplementation dependencies.truth
+    androidTestImplementation dependencies.androidxTestCore
     androidTestImplementation dependencies.runner
     androidTestImplementation dependencies.rules
     androidTestImplementation dependencies.uiAutomator
@@ -237,6 +252,9 @@ dependencies {
     androidTestImplementation dependencies.androidxTestExt
 
     implementation dependencies.multiDex
+
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestUtil 'androidx.test:orchestrator:1.1.0'
 }
 
 project.configurations.all {

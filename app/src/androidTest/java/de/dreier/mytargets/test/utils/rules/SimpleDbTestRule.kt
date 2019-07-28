@@ -92,7 +92,8 @@ class SimpleDbTestRule : DbTestRuleBase() {
     private fun getRoundTemplate(index: Int, distance: Int): RoundTemplate {
         val roundTemplate = RoundTemplate()
         roundTemplate.index = index
-        roundTemplate.targetTemplate = Target(WAFull.ID, 0, Dimension(60f, Dimension.Unit.CENTIMETER))
+        roundTemplate.targetTemplate =
+            Target(WAFull.ID, 0, Dimension(60f, Dimension.Unit.CENTIMETER))
         roundTemplate.shotsPerEnd = 6
         roundTemplate.endCount = 6
         roundTemplate.distance = Dimension(distance.toFloat(), Dimension.Unit.METER)
@@ -101,7 +102,8 @@ class SimpleDbTestRule : DbTestRuleBase() {
 
     private fun addRandomTraining(seed: Int) {
         val generator = Random(seed.toLong())
-        val standardRound = ApplicationInstance.db.standardRoundDAO().loadAugmentedStandardRound(32L)
+        val standardRound =
+            ApplicationInstance.db.standardRoundDAO().loadAugmentedStandardRound(32L)
 
         val training = saveDefaultTraining(standardRound.id, generator)
 
@@ -127,10 +129,12 @@ class SimpleDbTestRule : DbTestRuleBase() {
     }
 
     private fun addFullTraining(bow: Bow) {
-        val standardRound = ApplicationInstance.db.standardRoundDAO().loadAugmentedStandardRound(32L)
+        val standardRound =
+            ApplicationInstance.db.standardRoundDAO().loadAugmentedStandardRound(32L)
 
         val training = Training()
-        training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training)
+        training.title =
+            InstrumentationRegistry.getInstrumentation().targetContext.getString(R.string.training)
         training.date = LocalDate.of(2016, 7, 15)
         training.environment.weather = EWeather.SUNNY
         training.environment.windSpeed = 1

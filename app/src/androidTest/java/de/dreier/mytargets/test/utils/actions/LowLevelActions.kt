@@ -17,14 +17,14 @@ package de.dreier.mytargets.test.utils.actions
 
 import android.graphics.Matrix
 import android.graphics.RectF
-import androidx.test.platform.app.InstrumentationRegistry
+import android.view.MotionEvent
+import android.view.View
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.MotionEvents
 import androidx.test.espresso.action.Press
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
-import android.view.MotionEvent
-import android.view.View
+import androidx.test.platform.app.InstrumentationRegistry
 import de.dreier.mytargets.shared.targets.drawable.TargetDrawable
 import org.hamcrest.Matcher
 
@@ -49,8 +49,8 @@ object LowLevelActions {
         val contentWidth = v.width.toFloat()
         val contentHeight = v.height.toFloat()
 
-        val density = InstrumentationRegistry.getTargetContext().resources
-                .displayMetrics.density
+        val density = InstrumentationRegistry.getInstrumentation().targetContext.resources
+            .displayMetrics.density
 
         val targetRectExt = RectF(0f, 80 * density, contentWidth, contentHeight)
         targetRectExt.inset(10 * density, 10 * density)
@@ -61,7 +61,7 @@ object LowLevelActions {
         targetRectExt.inset(30 * density, 30 * density)
         val fullExtendedMatrix = Matrix()
         fullExtendedMatrix
-                .setRectToRect(TargetDrawable.SRC_RECT, targetRectExt, Matrix.ScaleToFit.CENTER)
+            .setRectToRect(TargetDrawable.SRC_RECT, targetRectExt, Matrix.ScaleToFit.CENTER)
 
         val shotPos = FloatArray(2)
         fullExtendedMatrix.mapPoints(shotPos, coordinates)
@@ -78,7 +78,8 @@ object LowLevelActions {
         return coordinates
     }
 
-    class PressAndHoldAction internal constructor(internal val coordinates: FloatArray) : ViewAction {
+    class PressAndHoldAction internal constructor(internal val coordinates: FloatArray) :
+        ViewAction {
 
         override fun getConstraints(): Matcher<View> {
             return isDisplayingAtLeast(90)
@@ -95,8 +96,10 @@ object LowLevelActions {
 
             val precision = Press.FINGER.describePrecision()
             sMotionEventDownHeldView = MotionEvents
-                    .sendDown(uiController, getTargetCoordinates(view, coordinates),
-                            precision).down
+                .sendDown(
+                    uiController, getTargetCoordinates(view, coordinates),
+                    precision
+                ).down
             // TODO: save view information and make sure release() is on same view
 
         }
@@ -115,11 +118,14 @@ object LowLevelActions {
         override fun perform(uiController: UiController, view: View) {
             if (sMotionEventDownHeldView == null) {
                 throw AssertionError(
-                        "Before calling release(), you must call pressAndHold() on a view")
+                    "Before calling release(), you must call pressAndHold() on a view"
+                )
             }
 
-            MotionEvents.sendUp(uiController, sMotionEventDownHeldView!!,
-                    getTargetCoordinates(view, coordinates))
+            MotionEvents.sendUp(
+                uiController, sMotionEventDownHeldView!!,
+                getTargetCoordinates(view, coordinates)
+            )
         }
     }
 }
