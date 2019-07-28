@@ -12,14 +12,17 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
+plugins {
+    id 'com.android.application'
+    id 'com.github.triplet.play' version '2.2.0'
+    id 'com.getkeepsafe.dexcount'
+}
 
-apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.github.triplet.play'
-apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'io.fabric'
+apply plugin: 'androidx.navigation.safeargs'
 
 android {
     compileOptions {
@@ -29,29 +32,27 @@ android {
 
     compileSdkVersion compileSdkVersionCode
 
-    playAccountConfigs {
-        defaultAccountConfig {
-            jsonFile = file('../googlePlayAndroidDeveloper.json')
-        }
-    }
-
     defaultConfig {
         applicationId 'de.dreier.mytargets'
         minSdkVersion 16
         targetSdkVersion 28
         versionCode gitVersionCode
         versionName gitVersionName
-        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+//        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary true
-        playAccountConfig = playAccountConfigs.defaultAccountConfig
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // The following argument makes the Android Test Orchestrator run its
+        // "pm clear" command after each test invocation. This command ensures
+        // that the app's state is completely cleared between tests.
+        testInstrumentationRunnerArguments clearPackageData: 'true'
     }
 
-    // used by Room, to test migrations
     sourceSets {
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
@@ -66,6 +67,10 @@ android {
 
     signingConfigs {
         debug {
+            storeFile file('../debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
         }
 
         release {
@@ -113,6 +118,25 @@ android {
             enableSplit = false
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+    }
+
+    useLibrary 'android.test.runner'
+    useLibrary 'android.test.base'
+    useLibrary 'android.test.mock'
+
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+    }
 }
 
 apply from: '../tools/script-play-store.gradle'
@@ -122,24 +146,38 @@ dependencies {
 
     implementation dependencies.kotlinStdlibJdk7
 
-    implementation dependencies.supportCompat
-    implementation dependencies.supportCoreUtils
-    implementation dependencies.supportCoreUi
-    implementation dependencies.supportFragment
-    implementation dependencies.supportV13
+    implementation dependencies.androidxCore
+    implementation dependencies.androidxCoreUtils
+    implementation dependencies.androidxCoreUi
+    implementation dependencies.androidxFragment
+    implementation dependencies.androidxV13
     implementation dependencies.appCompat
-    implementation dependencies.supportDesign
-    implementation dependencies.supportAnnotations
-    implementation dependencies.supportPreference
-    implementation dependencies.supportExifInterface
+    implementation dependencies.androidxDesign
+    implementation dependencies.androidxAnnotations
+    implementation dependencies.androidxPreference
+    implementation dependencies.androidxExifInterface
     implementation dependencies.recyclerView
     implementation dependencies.cardView
-//    implementation dependencies.androidxCoreKtx
 
-    implementation dependencies.playServicesDrive
+    implementation dependencies.androidxCoreKtx
+    implementation dependencies.androidFragmentKtx
+
+    implementation dependencies.timber
+
     implementation dependencies.firebaseCore
-    implementation(dependencies.firebaseCrashlytics) {
-        transitive = true
+    implementation dependencies.firebaseCrashlytics
+
+    implementation dependencies.playServicesAuth
+    implementation(dependencies.googleHttpClientAuth) {
+//        exclude: group: 'com.google.http-client:google-http-client-apache'
+    }
+    implementation(dependencies.googleApiClientAndroid) {
+        exclude group: 'org.apache.httpcomponents'
+        exclude group: 'com.google.http-client', module: 'google-http-client-apache'
+    }
+    implementation(dependencies.googleApiServicesDrive) {
+        exclude group: 'org.apache.httpcomponents'
+        exclude group: 'com.google.http-client', module: 'google-http-client-apache'
     }
 
     implementation dependencies.gson
@@ -189,6 +227,8 @@ dependencies {
     kapt dependencies.archLifecycleCompiler
     implementation dependencies.archRoomRuntime
     kapt dependencies.archRoomCompiler
+    implementation dependencies.archNavigationFragment
+    implementation dependencies.archNavigationUi
 
     implementation project(':shared')
     wearApp project(':wearable')
@@ -198,30 +238,41 @@ dependencies {
     testImplementation dependencies.kotlinTestJunit
 
     androidTestImplementation dependencies.truth
-    androidTestImplementation dependencies.jsr305
+    androidTestImplementation dependencies.androidxTestCore
     androidTestImplementation dependencies.runner
     androidTestImplementation dependencies.rules
+    androidTestUtil dependencies.androidTestOrchestrator
     androidTestImplementation dependencies.uiAutomator
-    androidTestImplementation(dependencies.espressoCore, {
-        exclude group: 'com.android.support'
-    })
-    androidTestImplementation(dependencies.espressoContrib, {
-        exclude group: 'com.android.support'
-    })
-    androidTestImplementation(dependencies.espressoIntents, {
-        exclude group: 'com.android.support', module: 'appcompat'
-        exclude group: 'com.android.support', module: 'support-v4'
-        exclude module: 'recyclerview-v7'
-    })
+    androidTestImplementation dependencies.espressoCore
+    androidTestImplementation dependencies.espressoContrib
+    androidTestImplementation dependencies.espressoIntents
 
     implementation dependencies.espressoIdlingResource
     androidTestScreengrabImplementation dependencies.screengrab
     androidTestImplementation dependencies.archRoomTesting
+    androidTestImplementation dependencies.androidxTestExt
 
     implementation dependencies.multiDex
+
+}
+
+configurations.all {
+    exclude module: 'httpclient'
+    exclude module: 'commons-logging'
+    resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == 'com.google.guava' && details.requested.name == 'guava') {
+            details.useVersion '27.0.1-android'
+        } else if (details.requested.group == 'org.checkerframework' && details.requested.name == 'checker-compat-qual') {
+            details.useVersion '2.5.5'
+        } else if (details.requested.group == 'com.google.errorprone' && details.requested.name == 'error_prone_annotations') {
+            details.useVersion '2.3.1'
+        }
+    }
 }
 
 // Must be at the bottom
 if (HAS_GMS_SECRET) {
     apply plugin: 'com.google.gms.google-services'
+} else {
+    println 'GMS secret is missing!'
 }

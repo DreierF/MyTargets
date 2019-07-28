@@ -15,13 +15,13 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <string name="saved">Disimpan</string>
-  <string name="start_phone_app">Jalankan aplikasi di ponsel Anda untuk melanjutkan …</string>
-  <string name="add_end">Tambahkan akhir</string>
-  <string name="toggle_timer">Mengaktifkan timer</string>
-  <string name="start_timer">Mulai timer</string>
-  <string name="vibration">Getaran</string>
-  <string name="sound">Suara</string>
-  <string name="today">hari ini</string>
-  <string name="notification_channel_default">Bawaan</string>
+    <string name="saved">Disimpan</string>
+    <string name="start_phone_app">Jalankan aplikasi di ponsel Anda untuk melanjutkan …</string>
+    <string name="add_end">Tambahkan akhir</string>
+    <string name="toggle_timer">Mengaktifkan timer</string>
+    <string name="start_timer">Mulai timer</string>
+    <string name="vibration">Getaran</string>
+    <string name="sound">Suara</string>
+    <string name="today">hari ini</string>
+    <string name="notification_channel_default">Bawaan</string>
 </resources>

@@ -15,9 +15,9 @@
 package de.dreier.mytargets.features.training.environment
 
 import android.content.Intent
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.widget.SwitchCompat
+import androidx.appcompat.widget.SwitchCompat
 import android.view.*
 import android.view.View.GONE
 import android.view.View.VISIBLE

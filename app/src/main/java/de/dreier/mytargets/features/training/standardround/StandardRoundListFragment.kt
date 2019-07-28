@@ -18,13 +18,13 @@ package de.dreier.mytargets.features.training.standardround
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.util.LongSparseArray
-import android.support.v7.widget.SearchView
 import android.view.*
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.appcompat.widget.SearchView
+import androidx.collection.LongSparseArray
+import androidx.databinding.DataBindingUtil
 import com.afollestad.materialdialogs.MaterialDialog
 import com.evernote.android.state.State
 import de.dreier.mytargets.R
@@ -98,7 +98,7 @@ class StandardRoundListFragment :
                 it,
                 standardRoundDAO.loadRoundTemplates(it.id).toMutableList()
             )
-        }.toMutableList()
+        }
         return {
             adapter.setList(data)
             selectItem(binding.recyclerView, currentSelection!!)

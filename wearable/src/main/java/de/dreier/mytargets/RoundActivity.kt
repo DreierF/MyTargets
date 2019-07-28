@@ -18,11 +18,11 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.LocalBroadcastManager
-import android.support.v7.widget.RecyclerView
+import androidx.core.content.ContextCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.recyclerview.widget.RecyclerView
 import android.support.wearable.activity.WearableActivity
 import android.view.LayoutInflater
 import android.view.View
@@ -108,7 +108,7 @@ class RoundActivity : WearableActivity() {
     override fun onEnterAmbient(ambientDetails: Bundle?) {
         super.onEnterAmbient(ambientDetails)
         binding.drawerLayout.setBackgroundResource(R.color.md_black_1000)
-        binding.recyclerViewEnds.adapter.notifyDataSetChanged()
+        binding.recyclerViewEnds.adapter?.notifyDataSetChanged()
         binding.wearableDrawerView.visibility = View.INVISIBLE
         binding.clock!!.time.visibility = View.VISIBLE
         binding.clock!!.time.text = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date())
@@ -122,7 +122,7 @@ class RoundActivity : WearableActivity() {
     override fun onExitAmbient() {
         super.onExitAmbient()
         binding.drawerLayout.setBackgroundResource(R.color.md_wear_green_dark_background)
-        binding.recyclerViewEnds.adapter.notifyDataSetChanged()
+        binding.recyclerViewEnds.adapter?.notifyDataSetChanged()
         binding.wearableDrawerView.visibility = View.VISIBLE
         binding.clock!!.time.visibility = View.GONE
     }

@@ -24,18 +24,18 @@ import android.os.Build
 import android.os.Bundle
 import android.print.PrintAttributes
 import android.print.PrintManager
-import android.support.annotation.RequiresApi
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.content.LocalBroadcastManager
 import android.view.*
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
-import androidx.core.content.systemService
+import androidx.annotation.RequiresApi
+import androidx.core.content.getSystemService
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.google.android.material.snackbar.Snackbar
 import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.db.RoundRepository
@@ -180,8 +180,8 @@ class ScoreboardFragment : FragmentBase() {
             signatureDialogFragment.show(fm, "signature")
             fm.registerFragmentLifecycleCallbacks(object :
                 FragmentManager.FragmentLifecycleCallbacks() {
-                override fun onFragmentViewDestroyed(fm: FragmentManager?, f: Fragment?) {
-                    fm!!.unregisterFragmentLifecycleCallbacks(this)
+                override fun onFragmentViewDestroyed(fm: FragmentManager, f: Fragment) {
+                    fm.unregisterFragmentLifecycleCallbacks(this)
                     reloadData()
                 }
             }, false)
@@ -284,7 +284,7 @@ class ScoreboardFragment : FragmentBase() {
         val pda = CustomPrintDocumentAdapter(ViewToPdfWriter(content), fileName)
 
         // Create a print job with name and adapter instance
-        val printManager = context.systemService<PrintManager>()
+        val printManager = context.getSystemService<PrintManager>()!!
         printManager.print(jobName, pda, PrintAttributes.Builder().build())
     }
 

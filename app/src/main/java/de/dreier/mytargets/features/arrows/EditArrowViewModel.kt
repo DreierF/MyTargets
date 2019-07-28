@@ -16,14 +16,14 @@
 package de.dreier.mytargets.features.arrows
 
 import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations
-import android.databinding.ObservableBoolean
-import android.databinding.ObservableField
-import android.databinding.ObservableFloat
-import android.databinding.ObservableInt
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.databinding.ObservableBoolean
+import androidx.databinding.ObservableField
+import androidx.databinding.ObservableFloat
+import androidx.databinding.ObservableInt
 import android.text.TextUtils
 import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
@@ -116,7 +116,7 @@ class EditArrowViewModel(app: Application) : AndroidViewModel(app) {
 
     private fun validateInput(): Boolean {
         if (diameterUnit.get() == MILLIMETER) {
-            if (diameterValue.get() !in 1..20) {
+            if (diameterValue.get() !in 1f..20f) {
                 diameterErrorText.set(getApplication<ApplicationInstance>().getString(R.string.not_within_expected_range_mm))
                 return false
             }

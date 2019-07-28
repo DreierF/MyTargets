@@ -15,60 +15,60 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <string name="recurve_bow">Arc classique</string>
-  <string name="compound_bow">Arc à poulies</string>
-  <string name="bare_bow">Arc nu</string>
-  <string name="long_bow">Arc long</string>
-  <string name="horse_bow">Arc à cheval</string>
-  <string name="yumi">Yumi</string>
-  <string name="sunny">Ensoleillé</string>
-  <string name="partly_cloudy">Partiellement nuageux</string>
-  <string name="cloudy">Nuageux</string>
-  <string name="light_rain">Légère pluie</string>
-  <string name="rain">Pluvieux</string>
-  <string name="round_desc">%1$s: %2$d × %3$d flèches (blason %4$s)</string>
-  <string name="mini">Mini</string>
-  <string name="small">Petit</string>
-  <string name="medium">Moyen</string>
-  <string name="large">Grand</string>
-  <string name="xlarge">Très grand</string>
-  <string name="unknown">Inconnu</string>
-  <string name="indoor">En salle</string>
-  <string name="wind">Vent</string>
-  <string name="location">Lieu</string>
-  <string name="bft_0">0 Bf : Absence de vent</string>
-  <string name="bft_1">1 Bf : Les feuilles ne bougent pas</string>
-  <string name="bft_2">2 Bf : Les feuilles commencent à bouger</string>
-  <string name="bft_3">3 Bf : Les drapeaux légers commencent à bouger</string>
-  <string name="bft_4">4 Bf : Les petites branches commencent à bouger</string>
-  <string name="bft_5">5 Bf : Les petits arbres bougent</string>
-  <string name="bft_6">6 Bf : Les grosses branches bougent</string>
-  <string name="bft_7">7 Bf : Tous les arbres balancent</string>
-  <string name="bft_8">8 Bf : Les petites branches cassent</string>
-  <string name="bft_9">9 Bf : Dégâts de tempête</string>
-  <string name="front">de devant</string>
-  <string name="back">de derrière</string>
-  <string name="left">de la gauche</string>
-  <string name="right">de la droite</string>
-  <string name="left_front">de l\'avant gauche</string>
-  <string name="right_front">de l\'avant droit</string>
-  <string name="left_back">de l\'arrière gauche</string>
-  <string name="right_back">de l\'arrière droit</string>
-  <string name="stop">STOP</string>
-  <string name="end_n">Volée %d</string>
-  <string name="miss">Manqué</string>
-  <string name="backspace">Retour en arrière</string>
-  <string name="accessibility_description_shot_n_score">Tir %1$d: %2$s</string>
-  <plurals name="rounds">
-    <item quantity="one">%d série</item>
-    <item quantity="other">%d rounds</item>
-  </plurals>
-  <plurals name="ends_arrow">
-    <item quantity="one">%1$d \u00D7 %2$d flèche</item>
-    <item quantity="other">%1$d \u00D7 %2$d arrows</item>
-  </plurals>
-  <plurals name="arrows_per_end">
-    <item quantity="one">%d flèche par volée</item>
-    <item quantity="other">%d arrows per end</item>
-  </plurals>
+    <string name="recurve_bow">Arc classique</string>
+    <string name="compound_bow">Arc à poulies</string>
+    <string name="bare_bow">Arc nu</string>
+    <string name="long_bow">Arc long</string>
+    <string name="horse_bow">Arc à cheval</string>
+    <string name="yumi">Yumi</string>
+    <string name="sunny">Ensoleillé</string>
+    <string name="partly_cloudy">Partiellement nuageux</string>
+    <string name="cloudy">Nuageux</string>
+    <string name="light_rain">Légère pluie</string>
+    <string name="rain">Pluvieux</string>
+    <string name="round_desc">%1$s: %2$d × %3$d flèches (blason %4$s)</string>
+    <string name="mini">Mini</string>
+    <string name="small">Petit</string>
+    <string name="medium">Moyen</string>
+    <string name="large">Grand</string>
+    <string name="xlarge">Très grand</string>
+    <string name="unknown">Inconnu</string>
+    <string name="indoor">En salle</string>
+    <string name="wind">Vent</string>
+    <string name="location">Lieu</string>
+    <string name="bft_0">0 Bf : Absence de vent</string>
+    <string name="bft_1">1 Bf : Les feuilles ne bougent pas</string>
+    <string name="bft_2">2 Bf : Les feuilles commencent à bouger</string>
+    <string name="bft_3">3 Bf : Les drapeaux légers commencent à bouger</string>
+    <string name="bft_4">4 Bf : Les petites branches commencent à bouger</string>
+    <string name="bft_5">5 Bf : Les petits arbres bougent</string>
+    <string name="bft_6">6 Bf : Les grosses branches bougent</string>
+    <string name="bft_7">7 Bf : Tous les arbres balancent</string>
+    <string name="bft_8">8 Bf : Les petites branches cassent</string>
+    <string name="bft_9">9 Bf : Dégâts de tempête</string>
+    <string name="front">de devant</string>
+    <string name="back">de derrière</string>
+    <string name="left">de la gauche</string>
+    <string name="right">de la droite</string>
+    <string name="left_front">de l\'avant gauche</string>
+    <string name="right_front">de l\'avant droit</string>
+    <string name="left_back">de l\'arrière gauche</string>
+    <string name="right_back">de l\'arrière droit</string>
+    <string name="stop">STOP</string>
+    <string name="end_n">Volée %d</string>
+    <string name="miss">Manqué</string>
+    <string name="backspace">Retour en arrière</string>
+    <string name="accessibility_description_shot_n_score">Tir %1$d: %2$s</string>
+    <plurals name="rounds">
+        <item quantity="one">%d série</item>
+        <item quantity="other">%d rounds</item>
+    </plurals>
+    <plurals name="ends_arrow">
+        <item quantity="one">%1$d \u00D7 %2$d flèche</item>
+        <item quantity="other">%1$d \u00D7 %2$d arrows</item>
+    </plurals>
+    <plurals name="arrows_per_end">
+        <item quantity="one">%d flèche par volée</item>
+        <item quantity="other">%d arrows per end</item>
+    </plurals>
 </resources>

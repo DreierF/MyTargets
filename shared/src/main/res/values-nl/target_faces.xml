@@ -15,49 +15,49 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <!-- Target groups -->
-  <string name="target_type_target_archery">Normaal</string>
-  <string name="target_type_field_archery">Veld</string>
-  <string name="target_type_3d_archery">3D</string>
-  <!-- Target names -->
-  <string name="wa_full">WA Volledig</string>
-  <string name="wa_6_ring">WA 6 Ringen</string>
-  <string name="wa_5_ring">WA 5 Ringen</string>
-  <string name="wa_3_ring">WA 3 Ringen</string>
-  <string name="vegas_3_spot">Vegas 3 Spot</string>
-  <string name="vertical_3_spot">Dutch Target</string>
-  <string name="wa_3_ring_3_spot">WA 3 Ringen 3 Spot</string>
-  <string name="nfaa_field">NFAA veld</string>
-  <string name="nfaa_expert_field">NFAA Expert Veld</string>
-  <string name="nfaa_hunter">NFAA Hunter</string>
-  <string name="nfaa_indoor">NFAA Indoor</string>
-  <string name="nfaa_indoor_5_spot">NFAA Indoor 5 Spot</string>
-  <string name="worcester_face">Worcester</string>
-  <string name="wa_field">WA veld</string>
-  <string name="hit_or_miss">Raak of mis</string>
-  <string name="asa_3d">3D ASA</string>
-  <string name="asa_3d_14">3D-ASA 14</string>
-  <string name="ibo_3d">3D IBO</string>
-  <string name="nfas_3d">3D-NFAS</string>
-  <string name="dair_3d">3D Dair</string>
-  <string name="ifaa_animal">IFAA dier</string>
-  <string name="nfaa_animal">NFAA dier</string>
-  <string name="nfas_field">NFAS veld</string>
-  <string name="beursault">Beursault</string>
-  <string name="sca_period">SCA periode</string>
-  <string name="wa_field_3_spot">WA veld 3 Spot</string>
-  <string name="wa_danage_3_spot">WA Danage 3 Spot</string>
-  <string name="wa_danage_6_spot">WA Danage 6 Spot</string>
-  <string name="dbsc_blowpipe">DBSC Blaaspijp</string>
-  <!-- Scoring styles -->
-  <string name="fcfs_color_reversed">FCFS Color (Reversed 10–1)</string>
-  <string name="recurve_style_x_1">Recurve stijl (X-1)</string>
-  <string name="recurve_style_10_1">Recurve stijl (10-1)</string>
-  <string name="recurve_style_x_5">Recurve stijl (X-5)</string>
-  <string name="recurve_style_10_5">Recurve stijl (10-5)</string>
-  <string name="recurve_style_x_6">Recurve stijl (X-6)</string>
-  <string name="recurve_style_10_6">Recurve stijl (10-6)</string>
-  <string name="recurve_style_x_8">Recurve stijl (X-8)</string>
-  <string name="recurve_style_10_8">Recurve stijl (10-8)</string>
-  <string name="compound_style">Compound stijl</string>
+    <!-- Target groups -->
+    <string name="target_type_target_archery">Normaal</string>
+    <string name="target_type_field_archery">Veld</string>
+    <string name="target_type_3d_archery">3D</string>
+    <!-- Target names -->
+    <string name="wa_full">WA Volledig</string>
+    <string name="wa_6_ring">WA 6 Ringen</string>
+    <string name="wa_5_ring">WA 5 Ringen</string>
+    <string name="wa_3_ring">WA 3 Ringen</string>
+    <string name="vegas_3_spot">Vegas 3 Spot</string>
+    <string name="vertical_3_spot">Dutch Target</string>
+    <string name="wa_3_ring_3_spot">WA 3 Ringen 3 Spot</string>
+    <string name="nfaa_field">NFAA veld</string>
+    <string name="nfaa_expert_field">NFAA Expert Veld</string>
+    <string name="nfaa_hunter">NFAA Hunter</string>
+    <string name="nfaa_indoor">NFAA Indoor</string>
+    <string name="nfaa_indoor_5_spot">NFAA Indoor 5 Spot</string>
+    <string name="worcester_face">Worcester</string>
+    <string name="wa_field">WA veld</string>
+    <string name="hit_or_miss">Raak of mis</string>
+    <string name="asa_3d">3D ASA</string>
+    <string name="asa_3d_14">3D-ASA 14</string>
+    <string name="ibo_3d">3D IBO</string>
+    <string name="nfas_3d">3D-NFAS</string>
+    <string name="dair_3d">3D Dair</string>
+    <string name="ifaa_animal">IFAA dier</string>
+    <string name="nfaa_animal">NFAA dier</string>
+    <string name="nfas_field">NFAS veld</string>
+    <string name="beursault">Beursault</string>
+    <string name="sca_period">SCA periode</string>
+    <string name="wa_field_3_spot">WA veld 3 Spot</string>
+    <string name="wa_danage_3_spot">WA Danage 3 Spot</string>
+    <string name="wa_danage_6_spot">WA Danage 6 Spot</string>
+    <string name="dbsc_blowpipe">DBSC Blaaspijp</string>
+    <!-- Scoring styles -->
+    <string name="fcfs_color_reversed">FCFS Color (Reversed 10–1)</string>
+    <string name="recurve_style_x_1">Recurve stijl (X-1)</string>
+    <string name="recurve_style_10_1">Recurve stijl (10-1)</string>
+    <string name="recurve_style_x_5">Recurve stijl (X-5)</string>
+    <string name="recurve_style_10_5">Recurve stijl (10-5)</string>
+    <string name="recurve_style_x_6">Recurve stijl (X-6)</string>
+    <string name="recurve_style_10_6">Recurve stijl (10-6)</string>
+    <string name="recurve_style_x_8">Recurve stijl (X-8)</string>
+    <string name="recurve_style_10_8">Recurve stijl (10-8)</string>
+    <string name="compound_style">Compound stijl</string>
 </resources>

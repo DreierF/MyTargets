@@ -16,16 +16,16 @@
 package de.dreier.mytargets.features.statistics
 
 import android.content.Intent
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.os.Build
 import android.os.Bundle
 import android.print.PrintAttributes
 import android.print.PrintManager
-import android.support.annotation.RequiresApi
-import android.support.design.widget.Snackbar
+import androidx.annotation.RequiresApi
 import android.view.Menu
 import android.view.MenuItem
-import androidx.core.content.systemService
+import androidx.core.content.getSystemService
+import com.google.android.material.snackbar.Snackbar
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.activities.ChildActivityBase
 import de.dreier.mytargets.databinding.ActivityArrowRankingDetailsBinding
@@ -119,7 +119,7 @@ class DispersionPatternActivity : ChildActivityBase() {
         val pda = CustomPrintDocumentAdapter(DrawableToPdfWriter(target), fileName)
 
         // Create a print job with name and adapter instance
-        val printManager = systemService<PrintManager>()
+        val printManager = getSystemService<PrintManager>()!!
         val jobName = "Dispersion Pattern"
         printManager.print(jobName, pda, PrintAttributes.Builder().build())
     }

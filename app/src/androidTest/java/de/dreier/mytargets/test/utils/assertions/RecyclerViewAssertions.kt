@@ -15,10 +15,10 @@
 
 package de.dreier.mytargets.test.utils.assertions
 
-import android.support.annotation.StringRes
-import android.support.test.espresso.ViewAssertion
-import android.support.test.espresso.matcher.ViewMatchers.assertThat
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.StringRes
+import androidx.test.espresso.ViewAssertion
+import androidx.test.espresso.matcher.ViewMatchers.assertThat
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.View.FIND_VIEWS_WITH_TEXT
 import android.widget.TextView
@@ -35,7 +35,7 @@ object RecyclerViewAssertions {
             }
 
             val recyclerView = view as RecyclerView
-            val adapter = recyclerView.adapter
+            val adapter = recyclerView.adapter!!
             assertThat(adapter.itemCount, matcher)
         }
     }
@@ -48,7 +48,7 @@ object RecyclerViewAssertions {
             val rv = view
             val outviews = ArrayList<View>()
             val title = view.getContext().getString(item)
-            for (index in 0 until rv.adapter.itemCount) {
+            for (index in 0 until rv.adapter!!.itemCount) {
                 val viewHolder = rv.findViewHolderForAdapterPosition(index) ?: continue
                 val itemView = viewHolder.itemView
                 itemView.findViewsWithText(outviews, title, FIND_VIEWS_WITH_TEXT)

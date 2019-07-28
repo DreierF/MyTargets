@@ -15,19 +15,19 @@
 
 package de.dreier.mytargets.features.settings.backup.provider
 
-import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Environment
 import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.features.settings.backup.BackupEntry
 import de.dreier.mytargets.features.settings.backup.BackupException
-import de.dreier.mytargets.shared.SharedApplicationInstance.Companion
+import de.dreier.mytargets.shared.SharedApplicationInstance.Companion.getStr
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.*
+import java.lang.ref.WeakReference
 
 object InternalStorageBackup {
     private const val FOLDER_NAME = "MyTargets"
@@ -37,16 +37,16 @@ object InternalStorageBackup {
 
         directory.mkdir()
         if (!directory.exists() || !directory.isDirectory) {
-            throw IOException(Companion.getStr(R.string.dir_not_created))
+            throw IOException(getStr(R.string.dir_not_created))
         }
     }
 
     class AsyncRestore : IAsyncBackupRestore {
 
-        private var activity: Activity? = null
+        private var context: WeakReference<Context>? = null
 
-        override fun connect(activity: Activity, listener: IAsyncBackupRestore.ConnectionListener) {
-            this.activity = activity
+        override fun connect(context: Context, listener: IAsyncBackupRestore.ConnectionListener) {
+            this.context = WeakReference(context)
             listener.onConnected()
         }
 
@@ -54,16 +54,16 @@ object InternalStorageBackup {
             val backupDir = File(Environment.getExternalStorageDirectory(), FOLDER_NAME)
             if (backupDir.isDirectory) {
                 val backups = backupDir.listFiles()
-                    .filter { isBackup(it) }
-                    .map {
+                    ?.filter { isBackup(it) }
+                    ?.map {
                         BackupEntry(
                             it.absolutePath,
-                            Date(it.lastModified()),
+                            it.lastModified(),
                             it.length()
                         )
                     }
-                    .sortedByDescending { it.modifiedDate }
-                listener.onLoadFinished(backups)
+                    ?.sortedByDescending { it.lastModifiedAt }
+                listener.onLoadFinished(backups ?: emptyList())
             }
         }
 
@@ -78,7 +78,7 @@ object InternalStorageBackup {
         ) {
             val file = File(backup.fileId)
             try {
-                BackupUtils.importZip(activity!!, FileInputStream(file))
+                BackupUtils.importZip(context!!.get()!!, FileInputStream(file))
                 listener.onFinished()
             } catch (e: IOException) {
                 listener.onError(e.localizedMessage)
@@ -98,8 +98,8 @@ object InternalStorageBackup {
             }
         }
 
-        override fun stop() {
-            activity = null
+        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
+            return false
         }
     }
 

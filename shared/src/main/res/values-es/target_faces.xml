@@ -15,49 +15,49 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <!-- Target groups -->
-  <string name="target_type_target_archery">Regular</string>
-  <string name="target_type_field_archery">Campo</string>
-  <string name="target_type_3d_archery">3D</string>
-  <!-- Target names -->
-  <string name="wa_full">WA completo</string>
-  <string name="wa_6_ring">WA 6 anillos</string>
-  <string name="wa_5_ring">WA 5 anillos</string>
-  <string name="wa_3_ring">WA 3 anillos</string>
-  <string name="vegas_3_spot">Vegas 3 Spot</string>
-  <string name="vertical_3_spot">Triple Vertical</string>
-  <string name="wa_3_ring_3_spot">WA 3 Anillos 3 Spot</string>
-  <string name="nfaa_field">NFAA campo</string>
-  <string name="nfaa_expert_field">NFAA Campo experto</string>
-  <string name="nfaa_hunter">NFAA cazador</string>
-  <string name="nfaa_indoor">NFAA interior</string>
-  <string name="nfaa_indoor_5_spot">NFAA 5 Spot Indoor</string>
-  <string name="worcester_face">Worcester</string>
-  <string name="wa_field">WA Campo</string>
-  <string name="hit_or_miss">Hit or miss</string>
-  <string name="asa_3d">3D ASA</string>
-  <string name="asa_3d_14">3D ASA 14</string>
-  <string name="ibo_3d">3D IBO</string>
-  <string name="nfas_3d">3D NFAS</string>
-  <string name="dair_3d">3D Dair</string>
-  <string name="ifaa_animal">IFAA Animal</string>
-  <string name="nfaa_animal">NFAA Animal</string>
-  <string name="nfas_field">NFAS campo</string>
-  <string name="beursault">Beursault</string>
-  <string name="sca_period">SCA Period</string>
-  <string name="wa_field_3_spot">WA Campo 3 Anillos</string>
-  <string name="wa_danage_3_spot">WA Danage 3 Anillos</string>
-  <string name="wa_danage_6_spot">WA Danage 6 anillos</string>
-  <string name="dbsc_blowpipe">DBSC cerbatana</string>
-  <!-- Scoring styles -->
-  <string name="fcfs_color_reversed">Color FCFS (invertido 10 – 1)</string>
-  <string name="recurve_style_x_1">Estilo recurvo (X-1)</string>
-  <string name="recurve_style_10_1">Estilo recurvo (10-1)</string>
-  <string name="recurve_style_x_5">Estilo recurvo (X-5)</string>
-  <string name="recurve_style_10_5">Estilo recurvo (10-5)</string>
-  <string name="recurve_style_x_6">Estilo recurvo (X-6)</string>
-  <string name="recurve_style_10_6">Estilo recurvo (10-6)</string>
-  <string name="recurve_style_x_8">Estilo recurvo (X-8)</string>
-  <string name="recurve_style_10_8">Estilo recurvo (10-8)</string>
-  <string name="compound_style">Estilo compuesto</string>
+    <!-- Target groups -->
+    <string name="target_type_target_archery">Regular</string>
+    <string name="target_type_field_archery">Campo</string>
+    <string name="target_type_3d_archery">3D</string>
+    <!-- Target names -->
+    <string name="wa_full">WA completo</string>
+    <string name="wa_6_ring">WA 6 anillos</string>
+    <string name="wa_5_ring">WA 5 anillos</string>
+    <string name="wa_3_ring">WA 3 anillos</string>
+    <string name="vegas_3_spot">Vegas 3 Spot</string>
+    <string name="vertical_3_spot">Triple Vertical</string>
+    <string name="wa_3_ring_3_spot">WA 3 Anillos 3 Spot</string>
+    <string name="nfaa_field">NFAA campo</string>
+    <string name="nfaa_expert_field">NFAA Campo experto</string>
+    <string name="nfaa_hunter">NFAA cazador</string>
+    <string name="nfaa_indoor">NFAA interior</string>
+    <string name="nfaa_indoor_5_spot">NFAA 5 Spot Indoor</string>
+    <string name="worcester_face">Worcester</string>
+    <string name="wa_field">WA Campo</string>
+    <string name="hit_or_miss">Hit or miss</string>
+    <string name="asa_3d">3D ASA</string>
+    <string name="asa_3d_14">3D ASA 14</string>
+    <string name="ibo_3d">3D IBO</string>
+    <string name="nfas_3d">3D NFAS</string>
+    <string name="dair_3d">3D Dair</string>
+    <string name="ifaa_animal">IFAA Animal</string>
+    <string name="nfaa_animal">NFAA Animal</string>
+    <string name="nfas_field">NFAS campo</string>
+    <string name="beursault">Beursault</string>
+    <string name="sca_period">SCA Period</string>
+    <string name="wa_field_3_spot">WA Campo 3 Anillos</string>
+    <string name="wa_danage_3_spot">WA Danage 3 Anillos</string>
+    <string name="wa_danage_6_spot">WA Danage 6 anillos</string>
+    <string name="dbsc_blowpipe">DBSC cerbatana</string>
+    <!-- Scoring styles -->
+    <string name="fcfs_color_reversed">Color FCFS (invertido 10 – 1)</string>
+    <string name="recurve_style_x_1">Estilo recurvo (X-1)</string>
+    <string name="recurve_style_10_1">Estilo recurvo (10-1)</string>
+    <string name="recurve_style_x_5">Estilo recurvo (X-5)</string>
+    <string name="recurve_style_10_5">Estilo recurvo (10-5)</string>
+    <string name="recurve_style_x_6">Estilo recurvo (X-6)</string>
+    <string name="recurve_style_10_6">Estilo recurvo (10-6)</string>
+    <string name="recurve_style_x_8">Estilo recurvo (X-8)</string>
+    <string name="recurve_style_10_8">Estilo recurvo (10-8)</string>
+    <string name="compound_style">Estilo compuesto</string>
 </resources>

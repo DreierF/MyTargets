@@ -15,8 +15,8 @@
 
 package de.dreier.mytargets.base.db.migrations
 
-import android.arch.persistence.db.SupportSQLiteDatabase
-import android.arch.persistence.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.room.migration.Migration
 
 object Migration24 : Migration(23, 24) {
     override fun migrate(database: SupportSQLiteDatabase) {

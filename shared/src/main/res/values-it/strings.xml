@@ -15,60 +15,60 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <string name="recurve_bow">Arco ricurvo</string>
-  <string name="compound_bow">Arco compound</string>
-  <string name="bare_bow">Arco nudo</string>
-  <string name="long_bow">Arco lungo</string>
-  <string name="horse_bow">Arco da cavallo</string>
-  <string name="yumi">Yumi</string>
-  <string name="sunny">Sereno</string>
-  <string name="partly_cloudy">Parzialmente nuvoloso</string>
-  <string name="cloudy">Nuvoloso</string>
-  <string name="light_rain">Pioggia leggera</string>
-  <string name="rain">Piovoso</string>
-  <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (targa da %4$s)</string>
-  <string name="mini">Mini</string>
-  <string name="small">Piccolo</string>
-  <string name="medium">Medio</string>
-  <string name="large">Large</string>
-  <string name="xlarge">XLarge</string>
-  <string name="unknown">Sconosciuto</string>
-  <string name="indoor">Indoor</string>
-  <string name="wind">Vento</string>
-  <string name="location">Posizione</string>
-  <string name="bft_0">0 Bft: senza vento</string>
-  <string name="bft_1">1 Bft: Le foglie non si muovono</string>
-  <string name="bft_2">2 Bft: le foglie cominciano a muoversi</string>
-  <string name="bft_3">3 Bft: bandiere leggere comincano a muoversi</string>
-  <string name="bft_4">4 Bft: Small branches begin to move</string>
-  <string name="bft_5">5 Bft: Small trees move</string>
-  <string name="bft_6">6 Bft: Big branches move</string>
-  <string name="bft_7">7 Bft: Complete trees move</string>
-  <string name="bft_8">8 Bft: Small branches break</string>
-  <string name="bft_9">9 Bft: Storm damage</string>
-  <string name="front">da davanti</string>
-  <string name="back">da dietro</string>
-  <string name="left">da sinistra</string>
-  <string name="right">da destra</string>
-  <string name="left_front">da davanti a sinistra</string>
-  <string name="right_front">da davanti a destra</string>
-  <string name="left_back">da dietro a sinistra</string>
-  <string name="right_back">da dietro a destra</string>
-  <string name="stop">STOP</string>
-  <string name="end_n">Volée %d</string>
-  <string name="miss">Miss</string>
-  <string name="backspace">Backspace</string>
-  <string name="accessibility_description_shot_n_score">Shot %1$d: %2$s</string>
-  <plurals name="rounds">
-    <item quantity="one">%d round</item>
-    <item quantity="other">%d rounds</item>
-  </plurals>
-  <plurals name="ends_arrow">
-    <item quantity="one">%1$d \u00D7 %2$d arrow</item>
-    <item quantity="other">%1$d \u00D7 %2$d arrows</item>
-  </plurals>
-  <plurals name="arrows_per_end">
-    <item quantity="one">%d frecce per volée</item>
-    <item quantity="other">%d frecce per volée</item>
-  </plurals>
+    <string name="recurve_bow">Arco ricurvo olimpico</string>
+    <string name="compound_bow">Arco compound</string>
+    <string name="bare_bow">Arco nudo</string>
+    <string name="long_bow">Arco lungo</string>
+    <string name="horse_bow">Arco da cavallo</string>
+    <string name="yumi">Yumi</string>
+    <string name="sunny">Soleggiato</string>
+    <string name="partly_cloudy">Parzialmente nuvoloso</string>
+    <string name="cloudy">Nuvoloso</string>
+    <string name="light_rain">Pioggia leggera</string>
+    <string name="rain">Piovoso</string>
+    <string name="round_desc">%1$s: %2$d &#215; %3$d arrows (targa da %4$s)</string>
+    <string name="mini">Mini</string>
+    <string name="small">Piccolo</string>
+    <string name="medium">Medio</string>
+    <string name="large">Grande</string>
+    <string name="xlarge">Molto Grande</string>
+    <string name="unknown">Sconosciuto</string>
+    <string name="indoor">Al chiuso</string>
+    <string name="wind">Vento</string>
+    <string name="location">Posizione</string>
+    <string name="bft_0">0 Bft: Senza vento</string>
+    <string name="bft_1">1 Bft: Le foglie non si muovono</string>
+    <string name="bft_2">2 Bft: Le foglie iniziano a muoversi</string>
+    <string name="bft_3">3 Bft: Bandiere leggere iniziano ad agitarsi</string>
+    <string name="bft_4">4 Bft: Piccoli rami iniziano a ondeggiare</string>
+    <string name="bft_5">5 Bft: Oscillazione di piccoli alberi</string>
+    <string name="bft_6">6 Bft: Movimento di grossi rami</string>
+    <string name="bft_7">7 Bft: Interi alberi agitati</string>
+    <string name="bft_8">8 Bft: Ramoscelli strappati dagli alberi</string>
+    <string name="bft_9">9 Bft: Danni da tempesta</string>
+    <string name="front">da davanti</string>
+    <string name="back">da dietro</string>
+    <string name="left">da sinistra</string>
+    <string name="right">da destra</string>
+    <string name="left_front">da anteriore sinistra</string>
+    <string name="right_front">da anteriore destra</string>
+    <string name="left_back">da posteriore sinistra</string>
+    <string name="right_back">da posteriore destra</string>
+    <string name="stop">STOP</string>
+    <string name="end_n">Volée %d</string>
+    <string name="miss">Miss</string>
+    <string name="backspace">Backspace</string>
+    <string name="accessibility_description_shot_n_score">Shot %1$d: %2$s</string>
+    <plurals name="rounds">
+        <item quantity="one">%d sessione</item>
+        <item quantity="other">%d sessioni</item>
+    </plurals>
+    <plurals name="ends_arrow">
+        <item quantity="one">%1$d \u00D7 %2$d freccia</item>
+        <item quantity="other">%1$d \u00D7 %2$d frecce</item>
+    </plurals>
+    <plurals name="arrows_per_end">
+        <item quantity="one">%d freccia per volée</item>
+        <item quantity="other">%d frecce per volée</item>
+    </plurals>
 </resources>

@@ -15,12 +15,15 @@
 
 package de.dreier.mytargets.features.settings.backup.provider
 
-import android.app.Activity
-
+import android.content.Context
+import android.content.Intent
 import de.dreier.mytargets.features.settings.backup.BackupEntry
 
 interface IAsyncBackupRestore {
-    fun connect(activity: Activity, listener: ConnectionListener)
+    fun connect(
+        context: Context,
+        listener: ConnectionListener
+    )
 
     fun getBackups(listener: OnLoadFinishedListener)
 
@@ -28,12 +31,13 @@ interface IAsyncBackupRestore {
 
     fun deleteBackup(backup: BackupEntry, listener: BackupStatusListener)
 
-    fun stop()
+    fun onActivityResult(requestCode: Int, resultCode: Int, `data`: Intent?): Boolean
 
     interface ConnectionListener {
+        fun onStartIntent(intent: Intent, code: Int)
         fun onConnected()
-
         fun onConnectionSuspended()
+        fun onLoginCancelled()
     }
 
     interface OnLoadFinishedListener {

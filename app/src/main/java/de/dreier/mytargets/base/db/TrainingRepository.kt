@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.base.db
 
-import android.arch.persistence.room.RoomDatabase
+import androidx.room.RoomDatabase
 import de.dreier.mytargets.base.db.dao.RoundDAO
 import de.dreier.mytargets.base.db.dao.SignatureDAO
 import de.dreier.mytargets.base.db.dao.TrainingDAO

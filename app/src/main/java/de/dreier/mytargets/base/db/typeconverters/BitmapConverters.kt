@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.base.db.typeconverters
 
-import android.arch.persistence.room.TypeConverter
+import androidx.room.TypeConverter
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import de.dreier.mytargets.shared.utils.toByteArray

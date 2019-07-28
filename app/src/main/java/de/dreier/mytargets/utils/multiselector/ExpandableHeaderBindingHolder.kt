@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.utils.multiselector
 
-import android.support.annotation.IdRes
+import androidx.annotation.IdRes
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 

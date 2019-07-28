@@ -29,7 +29,7 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 28
-        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary true
     }
 
@@ -46,22 +46,23 @@ android {
 dependencies {
     Map<String, String> dependencies = rootProject.ext.dependencies
 
-    api dependencies.supportV4
-    api dependencies.supportFragment
-    api dependencies.supportCoreUi
-    api dependencies.supportCoreUtils
-    api dependencies.supportMediaCompat
-    api dependencies.supportAnnotations
+    api dependencies.androidxV4
+    api dependencies.androidxFragment
+    api dependencies.androidxCoreUi
+    api dependencies.androidxCoreUtils
+    api dependencies.androidxMediaCompat
+    api dependencies.androidxAnnotations
     api dependencies.threeTenABP
+    api dependencies.playServicesWearable
+    implementation dependencies.timber
 
-    implementation dependencies.archRoomRuntime
-//    implementation dependencies.androidxCoreKtx
+    implementation dependencies.archLifecycleExtensions
+
+    api dependencies.archRoomRuntime
+    implementation dependencies.androidxCoreKtx
 
     implementation dependencies.androidState
     kapt dependencies.androidStateProcessor
-
-    api dependencies.playServicesWearable
-    api dependencies.timber
 
     testImplementation dependencies.jUnit
     testImplementation dependencies.mockito

@@ -17,7 +17,7 @@ package de.dreier.mytargets.utils.transitions
 
 import android.graphics.Path
 import android.os.Build
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import android.transition.ArcMotion
 
 /**

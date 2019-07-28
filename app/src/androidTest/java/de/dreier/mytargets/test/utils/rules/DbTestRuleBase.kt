@@ -16,7 +16,7 @@
 package de.dreier.mytargets.test.utils.rules
 
 import android.content.Context
-import android.support.test.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry
 import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.base.db.AppDatabase
@@ -38,7 +38,7 @@ import java.io.IOException
 import java.util.*
 
 abstract class DbTestRuleBase : TestRule {
-    private val context: Context = InstrumentationRegistry.getTargetContext()
+    private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
 
     override fun apply(base: Statement, description: Description): Statement {
         return object : Statement() {
@@ -50,7 +50,8 @@ abstract class DbTestRuleBase : TestRule {
                 base.evaluate()
                 try {
                     ApplicationInstance.db.close()
-                } catch (e: IOException) {}
+                } catch (e: IOException) {
+                }
             }
         }
     }
@@ -116,7 +117,8 @@ abstract class DbTestRuleBase : TestRule {
 
     protected fun saveDefaultTraining(standardRoundId: Long?, generator: Random): Training {
         val training = Training()
-        training.title = InstrumentationRegistry.getTargetContext().getString(R.string.training)
+        training.title =
+            InstrumentationRegistry.getInstrumentation().targetContext.getString(R.string.training)
         training.date = LocalDate.of(2016, 4 + generator.nextInt(5), generator.nextInt(29))
         training.environment.location = ""
         training.environment.weather = EWeather.SUNNY

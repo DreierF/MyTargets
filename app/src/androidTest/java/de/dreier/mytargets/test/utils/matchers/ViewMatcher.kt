@@ -15,16 +15,16 @@
 
 package de.dreier.mytargets.test.utils.matchers
 
-import android.support.annotation.IdRes
-import android.support.annotation.StringRes
-import android.support.design.widget.FloatingActionButton
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.contrib.RecyclerViewActions.actionOnItem
-import android.support.test.espresso.matcher.ViewMatchers.*
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.view.View
+import androidx.annotation.IdRes
+import androidx.annotation.StringRes
+import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.RecyclerView
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItem
+import androidx.test.espresso.matcher.ViewMatchers.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import de.dreier.mytargets.R
 import de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isOnForegroundFragment
 import de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.withSpeedDialItem
@@ -34,8 +34,9 @@ import org.hamcrest.Matchers
 
 object ViewMatcher {
     fun androidHomeMatcher(): Matcher<View> {
-        return allOf(withParent(withClassName(`is`(Toolbar::class.java.name))),
-                withClassName(containsString("ImageButton"))
+        return allOf(
+            withParent(withClassName(`is`(Toolbar::class.java.name))),
+            withClassName(containsString("ImageButton"))
         )
     }
 
@@ -44,12 +45,12 @@ object ViewMatcher {
     }
 
     fun clickFabSpeedDialItem(@IdRes id: Int) {
-        onView(ViewMatcher.supportFab()).perform(click())
+        onView(supportFab()).perform(click())
         onView(withSpeedDialItem(withId(R.id.fabSpeedDial), id)).perform(click())
     }
 
     fun clickOnPreference(@StringRes text: Int) {
-        onView(Matchers.allOf(withId(R.id.list), isOnForegroundFragment()))
-                .perform(actionOnItem<RecyclerView.ViewHolder>(hasDescendant(withText(text)), click()))
+        onView(Matchers.allOf(withId(android.R.id.list), isOnForegroundFragment()))
+            .perform(actionOnItem<RecyclerView.ViewHolder>(hasDescendant(withText(text)), click()))
     }
 }

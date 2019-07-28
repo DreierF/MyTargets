@@ -15,8 +15,8 @@
 
 package de.dreier.mytargets.features.settings.backup.provider
 
-import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import de.dreier.mytargets.R
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.features.settings.backup.BackupEntry
@@ -27,7 +27,8 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.*
+import java.lang.ref.WeakReference
+
 
 object ExternalStorageBackup {
     private const val FOLDER_NAME = "MyTargets"
@@ -67,10 +68,10 @@ object ExternalStorageBackup {
     }
 
     class AsyncRestore : IAsyncBackupRestore {
-        private var activity: Activity? = null
+        private var context: WeakReference<Context>? = null
 
-        override fun connect(activity: Activity, listener: IAsyncBackupRestore.ConnectionListener) {
-            this.activity = activity
+        override fun connect(context: Context, listener: IAsyncBackupRestore.ConnectionListener) {
+            this.context = WeakReference(context)
             listener.onConnected()
         }
 
@@ -82,11 +83,11 @@ object ExternalStorageBackup {
                     .map {
                         BackupEntry(
                             it.absolutePath,
-                            Date(it.lastModified()),
+                            it.lastModified(),
                             it.length()
                         )
                     }
-                    .sortedByDescending { it.modifiedDate }
+                    .sortedByDescending { it.lastModifiedAt }
                 listener.onLoadFinished(backups)
             }
         }
@@ -101,7 +102,7 @@ object ExternalStorageBackup {
         ) {
             val file = File(backup.fileId)
             try {
-                BackupUtils.importZip(activity!!, FileInputStream(file))
+                BackupUtils.importZip(context!!.get()!!, FileInputStream(file))
                 listener.onFinished()
             } catch (e: IOException) {
                 listener.onError(e.localizedMessage)
@@ -121,8 +122,8 @@ object ExternalStorageBackup {
             }
         }
 
-        override fun stop() {
-            activity = null
+        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
+            return false
         }
     }
 

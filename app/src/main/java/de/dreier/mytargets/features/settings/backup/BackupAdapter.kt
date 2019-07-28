@@ -16,12 +16,13 @@
 package de.dreier.mytargets.features.settings.backup
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import de.dreier.mytargets.R
 import de.dreier.mytargets.databinding.ItemDetailsSecondaryActionBinding
+import org.threeten.bp.ZoneOffset
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -46,7 +47,7 @@ class BackupAdapter(
 
     override fun onBindViewHolder(holder: BackupViewHolder, position: Int) {
         val p = backupEntries[position]
-        val modified = formatDateTime.format(p.modifiedDate)
+        val modified = formatDateTime.format(p.lastModifiedAt)
         holder.binding.name.text = modified
         holder.binding.details.text = p.humanReadableSize
         holder.binding.primaryAction
@@ -56,7 +57,7 @@ class BackupAdapter(
     }
 
     override fun getItemId(position: Int): Long {
-        return backupEntries[position].modifiedDate!!.time
+        return backupEntries[position].lastModifiedAt
     }
 
     override fun getItemCount(): Int {

@@ -38,7 +38,7 @@ object BackupUtils {
         val file = unzip(context, `in`)
 
         // Replace database file
-        file!!.copyTo(context.getDatabasePath(AppDatabase.DATABASE_IMPORT_FILE_NAME), overwrite = true)
+        file.copyTo(context.getDatabasePath(AppDatabase.DATABASE_IMPORT_FILE_NAME), overwrite = true)
     }
 
     @Throws(IOException::class)
@@ -69,7 +69,7 @@ object BackupUtils {
     }
 
     @Throws(IOException::class)
-    private fun unzip(context: Context, input: InputStream): File? {
+    private fun unzip(context: Context, input: InputStream): File {
         val tmpDb = File.createTempFile("import", ".db")
         var dbFiles = 0
         input.use { `in` ->

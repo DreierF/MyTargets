@@ -14,15 +14,16 @@
  */
 package de.dreier.mytargets
 
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.wearable.activity.WearableActivity
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
+import androidx.wear.ambient.AmbientModeSupport
 import de.dreier.mytargets.databinding.ActivityTimerBinding
 import de.dreier.mytargets.databinding.FragmentTimerBinding
 import de.dreier.mytargets.shared.base.fragment.ETimerState
@@ -32,20 +33,20 @@ import de.dreier.mytargets.shared.models.TimerSettings
 /**
  * Demonstrates use of Navigation and Action Drawers on Android Wear.
  */
-class TimerActivity : WearableActivity(), MenuItem.OnMenuItemClickListener {
+class TimerActivity : FragmentActivity(), MenuItem.OnMenuItemClickListener, AmbientModeSupport.AmbientCallbackProvider {
 
     private lateinit var timerFragment: TimerFragment
     private lateinit var binding: ActivityTimerBinding
+    private lateinit var ambientController: AmbientModeSupport.AmbientController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_timer)
-        setAmbientEnabled()
+        ambientController = AmbientModeSupport.attach(this)
 
         val settings = intent.getParcelableExtra<TimerSettings>(EXTRA_TIMER_SETTINGS)
         timerFragment = TimerFragment.getInstance(settings)
-        val fragmentManager = fragmentManager
-        fragmentManager.beginTransaction().replace(R.id.content_frame, timerFragment).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.content_frame, timerFragment).commit()
 
         binding.primaryActionPeek
                 .setOnClickListener { binding.wearableDrawerView.controller.openDrawer() }
@@ -62,6 +63,8 @@ class TimerActivity : WearableActivity(), MenuItem.OnMenuItemClickListener {
                     R.drawable.ic_volume_off_white_24dp)
         binding.wearableDrawerView.controller.peekDrawer()
     }
+
+    override fun getAmbientCallback(): AmbientModeSupport.AmbientCallback = MyAmbientCallback()
 
     override fun onMenuItemClick(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
@@ -130,10 +133,25 @@ class TimerActivity : WearableActivity(), MenuItem.OnMenuItemClickListener {
             fun getInstance(settings: TimerSettings): TimerFragment {
                 val timer = TimerFragment()
                 val bundle = Bundle()
-                bundle.putParcelable(TimerFragmentBase.Companion.ARG_TIMER_SETTINGS, settings)
+                bundle.putParcelable(ARG_TIMER_SETTINGS, settings)
                 timer.arguments = bundle
                 return timer
             }
+        }
+    }
+
+    private class MyAmbientCallback : AmbientModeSupport.AmbientCallback() {
+
+        override fun onEnterAmbient(ambientDetails: Bundle?) {
+            // Handle entering ambient mode
+        }
+
+        override fun onExitAmbient() {
+            // Handle exiting ambient mode
+        }
+
+        override fun onUpdateAmbient() {
+            // Update the content
         }
     }
 

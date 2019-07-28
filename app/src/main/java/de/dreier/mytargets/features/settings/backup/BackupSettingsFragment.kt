@@ -17,34 +17,33 @@ package de.dreier.mytargets.features.settings.backup
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity.RESULT_OK
 import android.content.ContentResolver
 import android.content.ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE
 import android.content.ContentResolver.SYNC_OBSERVER_TYPE_PENDING
 import android.content.Context
 import android.content.Intent
 import android.content.SyncStatusObserver
-import android.databinding.DataBindingUtil
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
-import android.support.annotation.StringRes
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.text.format.DateUtils
 import android.view.*
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
 import com.afollestad.materialdialogs.MaterialDialog
 import de.dreier.mytargets.R
+import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.databinding.FragmentBackupBinding
 import de.dreier.mytargets.features.settings.SettingsFragmentBase
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.features.settings.backup.provider.BackupUtils
 import de.dreier.mytargets.features.settings.backup.provider.EBackupLocation
-import de.dreier.mytargets.features.settings.backup.provider.GoogleDriveBackup.AsyncRestore.Companion.REQUEST_CODE_RESOLUTION
 import de.dreier.mytargets.features.settings.backup.provider.IAsyncBackupRestore
 import de.dreier.mytargets.features.settings.backup.synchronization.GenericAccountService
 import de.dreier.mytargets.features.settings.backup.synchronization.SyncUtils
@@ -154,6 +153,9 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
         if (item.itemId == R.id.action_import) {
             showFilePickerWithPermissionCheck()
             return true
+        } else if (item.itemId == R.id.action_fix_db) {
+            DatabaseFixer.fix(ApplicationInstance.db)
+            return true
         }
         return super.onOptionsItemSelected(item)
     }
@@ -172,7 +174,6 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
     }
 
     override fun onPause() {
-        backup?.stop()
         updateLabelTimer?.cancel()
         if (syncObserverHandle != null) {
             ContentResolver.removeStatusChangeListener(syncObserverHandle)
@@ -182,9 +183,8 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_CODE_RESOLUTION && resultCode != RESULT_OK) {
-            leaveBackupSettings()
-        }
+        Timber.d("onActivityResult: ")
+        backup!!.onActivityResult(requestCode, resultCode, data)
         if (requestCode == IMPORT_FROM_URI && resultCode == AppCompatActivity.RESULT_OK && data != null) {
             importFromUri(data.data)
         }
@@ -232,9 +232,6 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
                 EBackupLocation.list.indexOf(item)
             ) { _, _, index, _ ->
                 val location = EBackupLocation.list[index]
-                if (backup != null) {
-                    backup!!.stop()
-                }
                 internalApplyBackupLocationWithPermissionCheck(location)
                 true
             }
@@ -272,16 +269,29 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
             }
         })
         binding.recentBackupsList.adapter = adapter
-        backup!!.connect(activity!!, object : IAsyncBackupRestore.ConnectionListener {
-            override fun onConnected() {
-                updateBackupLocation()
-                backup!!.getBackups(this@BackupSettingsFragment)
-            }
+        backup!!.connect(
+            context!!,
+            object : IAsyncBackupRestore.ConnectionListener {
+                override fun onLoginCancelled() {
+                    internalApplyBackupLocationWithPermissionCheck(EBackupLocation.INTERNAL_STORAGE)
+                }
 
-            override fun onConnectionSuspended() {
-                showError(R.string.loading_backups_failed, getString(R.string.connection_failed))
-            }
-        })
+                override fun onStartIntent(intent: Intent, code: Int) {
+                    startActivityForResult(intent, code)
+                }
+
+                override fun onConnected() {
+                    updateBackupLocation()
+                    backup!!.getBackups(this@BackupSettingsFragment)
+                }
+
+                override fun onConnectionSuspended() {
+                    showError(
+                        R.string.loading_backups_failed,
+                        getString(R.string.connection_failed)
+                    )
+                }
+            })
     }
 
     override fun setActivityTitle() {
@@ -295,7 +305,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
         binding.lastBackupLabel.visibility = if (list.isNotEmpty()) VISIBLE else GONE
         updateLabelTimer?.cancel()
         if (list.isNotEmpty()) {
-            val time = list[0].modifiedDate!!.time
+            val time = list[0].lastModifiedAt
             updateLabelTimer = Timer()
             val timerTask = object : TimerTask() {
                 override fun run() {
@@ -333,7 +343,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
             getString(R.string.restore_desc),
             getString(R.string.backup_details),
             SimpleDateFormat.getDateTimeInstance()
-                .format(item.modifiedDate),
+                .format(item.lastModifiedAt),
             item.humanReadableSize
         )
         MaterialDialog.Builder(context!!)

@@ -19,7 +19,7 @@ import android.accounts.AccountManager
 import android.content.ContentResolver
 import android.content.Context
 import android.os.Bundle
-import androidx.core.content.systemService
+import androidx.core.content.getSystemService
 import de.dreier.mytargets.BuildConfig
 import de.dreier.mytargets.features.settings.SettingsManager
 
@@ -57,7 +57,7 @@ object SyncUtils {
     fun createSyncAccount(context: Context) {
         // Create account, if it's missing. (Either first run, or user has deleted account.)
         val account = GenericAccountService.account
-        val accountManager = context.systemService<AccountManager>()
+        val accountManager = context.getSystemService<AccountManager>()!!
         if (accountManager.addAccountExplicitly(account, null, null)) {
             // Inform the system that this account supports sync
             ContentResolver.setIsSyncable(account, CONTENT_AUTHORITY, 1)
@@ -69,11 +69,8 @@ object SyncUtils {
     /**
      * Helper method to trigger an immediate sync ("refresh").
      *
-     *
-     *
      * This should only be used when we need to preempt the normal sync schedule. Typically, this
      * means the user has pressed the "refresh" button.
-     *
      *
      * Note that SYNC_EXTRAS_MANUAL will cause an immediate sync, without any optimization to
      * preserve battery life. If you know new data is available (perhaps via a GCM notification),
@@ -85,10 +82,6 @@ object SyncUtils {
         // Disable sync backoff and ignore sync preferences. In other words...perform sync NOW!
         b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true)
         b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)
-        ContentResolver.requestSync(
-            GenericAccountService.account,
-            CONTENT_AUTHORITY,
-            b
-        )
+        ContentResolver.requestSync(GenericAccountService.account, CONTENT_AUTHORITY, b)
     }
 }

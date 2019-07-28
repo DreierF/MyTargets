@@ -15,8 +15,8 @@
 
 package de.dreier.mytargets.shared.models.db
 
-import android.arch.persistence.room.*
-import android.arch.persistence.room.ForeignKey.SET_NULL
+import androidx.room.*
+import androidx.room.ForeignKey.SET_NULL
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.Environment
 import de.dreier.mytargets.shared.models.IIdSettable

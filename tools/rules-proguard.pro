@@ -1,9 +1,7 @@
 -renamesourcefileattribute SourceFile
--keepattributes SourceFile,LineNumberTable
 
 -keepattributes InnerClasses
 -keepattributes EnclosingMethod
--keepattributes *Annotation*
 -keepattributes Signature
 -keepattributes Exceptions
 
@@ -81,3 +79,10 @@
     java.lang.Object writeReplace();
     java.lang.Object readResolve();
 }
+
+# Crashlytics
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**

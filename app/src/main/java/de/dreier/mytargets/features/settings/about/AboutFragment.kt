@@ -17,12 +17,12 @@ package de.dreier.mytargets.features.settings.about
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.annotation.StringRes
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.core.net.toUri
+import androidx.fragment.app.Fragment
 import de.dreier.mytargets.BuildConfig
 import de.dreier.mytargets.R
 import mehdi.sakout.aboutpage.AboutPage
@@ -43,12 +43,12 @@ class AboutFragment : Fragment() {
         )
 
     private val betaTesterElement: Element
-        get() = WebElement(R.string.test_beta, R.drawable.about_icon_beta_test, URL_GOOGLE_PLUS)
+        get() = WebElement(R.string.test_beta, R.drawable.about_icon_beta_test, URL_PLAY_STORE)
 
-    private val googlePlusElement: Element
+    private val slackElement: Element
         get() = WebElement(
-            R.string.join_on_google_plus, R.drawable.about_icon_google_plus,
-            URL_GOOGLE_PLUS
+            R.string.join_on_slack, R.drawable.about_icon_slack,
+            URL_SLACK
         )
 
     private val payPalDonateElement: Element
@@ -69,7 +69,7 @@ class AboutFragment : Fragment() {
             sendIntent.putExtra(Intent.EXTRA_TEXT, URL_PLAY_STORE)
             sendIntent.type = "text/plain"
             shareElement.intent =
-                    Intent.createChooser(sendIntent, getString(R.string.share_with_friends))
+                Intent.createChooser(sendIntent, getString(R.string.share_with_friends))
             return shareElement
         }
 
@@ -98,7 +98,7 @@ class AboutFragment : Fragment() {
             .addGroup(getString(R.string.connect))
             .addEmail("dreier.florian@gmail.com")
             .addPlayStore("de.dreier.mytargets")
-            .addItem(googlePlusElement)
+            .addItem(slackElement)
             .addGitHub("DreierF")
             .addItem(linkedInItem)
             .addGroup(getString(R.string.special_thanks_to))
@@ -126,8 +126,8 @@ class AboutFragment : Fragment() {
     }
 
     companion object {
-        private const val URL_GOOGLE_PLUS =
-            "https://plus.google.com/u/0/communities/102686119334423317437"
+        private const val URL_SLACK =
+            "https://join.slack.com/t/mytargets/shared_invite/enQtNjk2NTE0MzU5NzE0LTc3NjAwYmZiNTcxMDA1NTI0M2UzYWY4ZGQwMjVhYjEyODQ0MDE2MjlhZjZiZTUwODg2YTE5YjhkN2FmZTQ2Njc"
         private const val URL_PLAY_STORE =
             "http://play.google.com/store/apps/details?id=de.dreier.mytargets"
         private const val URL_PAYPAL = "https://www.paypal.me/floriandreier"

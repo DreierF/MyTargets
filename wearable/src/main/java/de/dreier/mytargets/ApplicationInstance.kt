@@ -19,7 +19,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import androidx.core.content.systemService
+import androidx.core.content.getSystemService
 import de.dreier.mytargets.shared.SharedApplicationInstance
 import de.dreier.mytargets.utils.WearWearableClient
 
@@ -43,7 +43,7 @@ class ApplicationInstance : SharedApplicationInstance() {
             return
         }
         val channel = NotificationChannel(DEFAULT_CHANNEL_ID, getString(R.string.notification_channel_default), NotificationManager.IMPORTANCE_DEFAULT)
-        context.systemService<NotificationManager>().createNotificationChannel(channel)
+        context.getSystemService<NotificationManager>()?.createNotificationChannel(channel)
     }
 
     override fun onTerminate() {

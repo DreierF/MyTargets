@@ -28,21 +28,13 @@ import timber.log.Timber
 /**
  * Define a sync adapter for the app.
  *
- *
- *
  * This class is instantiated in [SyncService], which also binds SyncAdapter to the system.
  * SyncAdapter should only be initialized in SyncService, never anywhere else.
- *
- *
  *
  * The system calls onPerformSync() via an RPC call through the IBinder object supplied by
  * SyncService.
  */
-internal class SyncAdapter
-/**
- * Constructor. Obtains handle to content resolver for later use.
- */
-    (context: Context, autoInitialize: Boolean) :
+internal class SyncAdapter(context: Context, autoInitialize: Boolean) :
     AbstractThreadedSyncAdapter(context, autoInitialize) {
 
     /**
@@ -51,15 +43,10 @@ internal class SyncAdapter
      * done here. Extending AbstractThreadedSyncAdapter ensures that all methods within SyncAdapter
      * run on a background thread. For this reason, blocking I/O and other long-running tasks can be
      * run *in situ*, and you don't have to set up a separate thread for them.
-     * .
-     *
-     *
      *
      * This is where we actually perform any work required to perform a sync.
      * [AbstractThreadedSyncAdapter] guarantees that this will be called on a non-UI thread,
-     * so it is safe to peform blocking I/O here.
-     *
-     *
+     * so it is safe to perform blocking I/O here.
      *
      * The syncResult argument allows you to pass information back to the method that triggered
      * the sync.
@@ -68,15 +55,15 @@ internal class SyncAdapter
         account: Account, extras: Bundle, authority: String,
         provider: ContentProviderClient, syncResult: SyncResult
     ) {
-        Timber.e("Beginning network synchronization")
+        Timber.i("Beginning network synchronization")
         val backup = SettingsManager.backupLocation.createBackup()
         try {
             backup.performBackup(context)
         } catch (e: BackupException) {
-            e.printStackTrace()
+            Timber.w(e)
             syncResult.stats.numIoExceptions++
         }
 
-        Timber.e("Network synchronization complete")
+        Timber.i("Network synchronization complete")
     }
 }

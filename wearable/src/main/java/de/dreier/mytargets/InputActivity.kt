@@ -16,12 +16,13 @@
 package de.dreier.mytargets
 
 import android.content.Intent
-import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.os.Vibrator
 import android.support.wearable.activity.ConfirmationActivity
 import android.support.wearable.activity.WearableActivity
 import android.view.View
-import androidx.core.content.systemService
+import androidx.core.content.getSystemService
+import androidx.databinding.DataBindingUtil
 import de.dreier.mytargets.databinding.ActivityInputBinding
 import de.dreier.mytargets.shared.models.augmented.AugmentedEnd
 import de.dreier.mytargets.shared.models.augmented.AugmentedRound
@@ -49,8 +50,10 @@ class InputActivity : WearableActivity(), TargetViewBase.OnEndFinishedListener {
 
         // Set up target view
         binding.target.initWithTarget(round.round.target)
-        binding.target.replaceWithEnd((0 until round.round.shotsPerEnd)
-                .map { Shot(it) }.toMutableList(), false)
+        binding.target.replaceWithEnd(
+            (0 until round.round.shotsPerEnd)
+                .map { Shot(it) }.toMutableList(), false
+        )
         binding.target.setOnTargetSetListener(this)
 
         // Ensure Moto 360 is not cut off at the bottom
@@ -91,12 +94,16 @@ class InputActivity : WearableActivity(), TargetViewBase.OnEndFinishedListener {
         }
         binding.circularProgress.setOnTimerFinishedListener {
             val intent = Intent(this@InputActivity, ConfirmationActivity::class.java)
-            intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
-                    ConfirmationActivity.SUCCESS_ANIMATION)
-            intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, this@InputActivity
-                    .getString(R.string.saved))
+            intent.putExtra(
+                ConfirmationActivity.EXTRA_ANIMATION_TYPE,
+                ConfirmationActivity.SUCCESS_ANIMATION
+            )
+            intent.putExtra(
+                ConfirmationActivity.EXTRA_MESSAGE, this@InputActivity
+                    .getString(R.string.saved)
+            )
             this@InputActivity.startActivity(intent)
-            VibratorCompat.vibrate(systemService(), 200)
+            getSystemService<Vibrator>()?.let { VibratorCompat.vibrate(it, 200) }
             this@InputActivity.finish()
             val end = End(index = 0, roundId = round.round.id)
             val ae = AugmentedEnd(end, shotList.toMutableList(), mutableListOf())

@@ -16,7 +16,7 @@
 package de.dreier.mytargets.features.arrows
 
 import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
+import androidx.lifecycle.AndroidViewModel
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.shared.models.db.Arrow
 

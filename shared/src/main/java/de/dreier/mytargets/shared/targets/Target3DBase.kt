@@ -14,7 +14,7 @@
  */
 package de.dreier.mytargets.shared.targets
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import de.dreier.mytargets.shared.models.Diameter
 import de.dreier.mytargets.shared.models.ETargetType
 import de.dreier.mytargets.shared.targets.models.TargetModelBase

@@ -71,14 +71,21 @@ android {
 
 dependencies {
     Map<String, String> dependencies = rootProject.ext.dependencies
-    implementation dependencies.supportWearable
+
+    implementation dependencies.androidxWearable
     compileOnly dependencies.wearable
-    implementation dependencies.supportCompat
-    implementation dependencies.supportWear
-//    implementation dependencies.androidxCoreKtx
+    implementation dependencies.androidxCore
+    implementation dependencies.androidxWear
+    implementation dependencies.androidxCoreKtx
+
     implementation dependencies.androidState
     kapt dependencies.androidStateProcessor
+
+    implementation dependencies.archLifecycleExtensions
+    kapt dependencies.archLifecycleCompiler
+    implementation dependencies.archRoomRuntime
+    kapt dependencies.archRoomCompiler
+
     implementation project(':shared')
     implementation dependencies.kotlinStdlibJdk7
-    implementation "android.arch.lifecycle:livedata-core:$rootProject.ext.libraryVersion.architectureComponents"
 }

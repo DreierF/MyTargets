@@ -15,12 +15,12 @@
 
 package de.dreier.mytargets.features.main
 
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.matcher.ViewMatchers.*
-import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.rule.ActivityTestRule
 import de.dreier.mytargets.R
 import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.test.base.UITestBase
@@ -40,16 +40,16 @@ class IntroActivityTest : UITestBase() {
 
     @get:Rule
     val rule = RuleChain.outerRule(EmptyDbTestRule())
-            .around(activityTestRule)
+        .around(activityTestRule)
 
     @Test
     fun introActivityTest() {
         onView(allOf(withId(R.id.txt_title_slide), isDisplayed()))
-                .check(matches(withText(R.string.intro_title_track_training_progress)))
+            .check(matches(withText(R.string.intro_title_track_training_progress)))
         onView(withId(R.id.button_next)).perform(click())
 
         onView(allOf(withId(R.id.txt_title_slide), isDisplayed()))
-                .check(matches(withText(R.string.intro_title_everything_in_one_place)))
+            .check(matches(withText(R.string.intro_title_everything_in_one_place)))
         onView(withId(R.id.button_next)).perform(click())
 
         onView(withId(R.id.toolbar)).check(matches(hasDescendant(withText(R.string.my_targets))))

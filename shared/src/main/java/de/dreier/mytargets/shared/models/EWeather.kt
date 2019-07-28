@@ -14,8 +14,8 @@
  */
 package de.dreier.mytargets.shared.models
 
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import de.dreier.mytargets.shared.R
 import de.dreier.mytargets.shared.SharedApplicationInstance
 

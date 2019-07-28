@@ -15,8 +15,8 @@
 
 package de.dreier.mytargets.shared.models.db
 
-import android.arch.persistence.room.*
-import android.arch.persistence.room.ForeignKey.CASCADE
+import androidx.room.*
+import androidx.room.ForeignKey.CASCADE
 import android.os.Parcel
 import android.os.Parcelable
 import de.dreier.mytargets.shared.models.Dimension

@@ -15,8 +15,8 @@
 
 package de.dreier.mytargets.dao
 
-import android.arch.persistence.room.Room
-import android.support.test.InstrumentationRegistry
+import androidx.room.Room
+import androidx.test.platform.app.InstrumentationRegistry
 import de.dreier.mytargets.base.db.AppDatabase
 import org.junit.After
 import org.junit.Before
@@ -27,7 +27,7 @@ abstract class DAOTestBase {
     @Before
     fun initDb() {
         appDatabase = Room.inMemoryDatabaseBuilder(
-            InstrumentationRegistry.getContext(),
+            InstrumentationRegistry.getInstrumentation().context,
             AppDatabase::class.java
         ).build()
     }

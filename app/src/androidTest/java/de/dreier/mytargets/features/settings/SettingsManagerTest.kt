@@ -15,9 +15,9 @@
 
 package de.dreier.mytargets.features.settings
 
-import android.support.test.filters.SmallTest
-import android.support.test.runner.AndroidJUnit4
-import android.support.v4.util.LongSparseArray
+import androidx.collection.LongSparseArray
+import androidx.test.filters.SmallTest
+import androidx.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.features.settings.backup.EBackupInterval

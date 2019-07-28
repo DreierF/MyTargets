@@ -16,7 +16,7 @@
 package de.dreier.mytargets.features.statistics
 
 import android.content.Context
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
 import android.view.LayoutInflater

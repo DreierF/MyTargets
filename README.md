@@ -22,5 +22,10 @@ If you don't have a concrete idea, there a few issues in the backlog with some r
 
 If you want to help improve the translations of the app you can do so at https://crowdin.com/project/mytargets
 
+## Community
+Since Google+ has closed it's doors, I created a new Slack channel for discussions etc.
+Here's an invite link. If it's no longer valid give me a ping and I'll update it.
+https://join.slack.com/t/mytargets/shared_invite/enQtNjIwMjA5OTIxMTA4LWU2ZGIzMDE3ZjUyZDU4YzZkODcxNjYwZDQ2NTkwZTE0OWI0YzZiZGU2M2U0MzBkOTc4ZjQyZmE1NzQ5MTdlODE
+
 ## Licence ##
 Released under GNU GPL V2

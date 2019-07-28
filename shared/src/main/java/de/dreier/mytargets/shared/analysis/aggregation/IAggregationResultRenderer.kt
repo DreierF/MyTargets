@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.shared.analysis.aggregation
 
-import android.support.annotation.ColorInt
+import androidx.annotation.ColorInt
 
 import de.dreier.mytargets.shared.targets.drawable.CanvasWrapper
 

@@ -16,7 +16,7 @@
 package de.dreier.mytargets.features.settings
 
 import android.content.Context
-import android.support.v7.preference.ListPreference
+import androidx.preference.ListPreference
 import android.util.AttributeSet
 import im.delight.android.languages.LanguageList
 

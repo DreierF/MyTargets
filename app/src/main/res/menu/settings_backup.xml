@@ -22,4 +22,9 @@
         android:title="@string/import_action"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/action_fix_db"
+        android:title="@string/fix_db"
+        app:showAsAction="never"/>
+
 </menu>

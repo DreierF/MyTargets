@@ -17,12 +17,13 @@ package de.dreier.mytargets.views
 
 import android.content.Context
 import android.os.Build
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import android.util.AttributeSet
 import android.view.View
+import com.google.android.material.textfield.TextInputEditText
 
 
-class TextInputEditText : android.support.design.widget.TextInputEditText {
+class TextInputEditText : TextInputEditText {
 
     constructor(context: Context) : super(context)
 

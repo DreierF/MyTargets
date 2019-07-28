@@ -16,10 +16,10 @@
 package de.dreier.mytargets.features.distance
 
 import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import de.dreier.mytargets.app.ApplicationInstance
 import de.dreier.mytargets.shared.models.Dimension
 
@@ -39,7 +39,7 @@ class DistancesViewModel(app: Application) : AndroidViewModel(app) {
             val distances = mutableSetOf(de.dreier.mytargets.shared.models.Dimension.UNKNOWN)
 
             // Add currently selected distance to list
-            if (this.distance.value?.unit == unit) {
+            if (this.distance.value?.unit == unit.value) {
                 distances.add(this.distance.value!!)
             }
             distances.addAll(filteredDistances)

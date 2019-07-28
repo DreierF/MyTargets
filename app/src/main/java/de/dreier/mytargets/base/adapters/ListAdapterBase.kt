@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.base.adapters
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 
 abstract class ListAdapterBase<S : RecyclerView.ViewHolder, T> : RecyclerView.Adapter<S>() {
     abstract fun removeItem(item: T)

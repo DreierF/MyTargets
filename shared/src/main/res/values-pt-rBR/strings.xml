@@ -15,60 +15,60 @@
   ~ GNU General Public License for more details.
   -->
 <resources>
-  <string name="recurve_bow">Arco recurvo</string>
-  <string name="compound_bow">Arco Composto</string>
-  <string name="bare_bow">Instintivo</string>
-  <string name="long_bow">Long Bow</string>
-  <string name="horse_bow">Horse Bow</string>
-  <string name="yumi">Yumi</string>
-  <string name="sunny">Ensolarado</string>
-  <string name="partly_cloudy">Parcialmente Nublado</string>
-  <string name="cloudy">Nublado</string>
-  <string name="light_rain">Garoa</string>
-  <string name="rain">Chuvoso</string>
-  <string name="round_desc">%1$s: %2$d &#215; %3$d flechas (%4$s face)</string>
-  <string name="mini">Mini</string>
-  <string name="small">Pequeno</string>
-  <string name="medium">Médio</string>
-  <string name="large">Grande</string>
-  <string name="xlarge">Extra Grande</string>
-  <string name="unknown">Desconhecido</string>
-  <string name="indoor">Indoor</string>
-  <string name="wind">Vento</string>
-  <string name="location">Local</string>
-  <string name="bft_0">0 Bft: Sem vento</string>
-  <string name="bft_1">1 Bft: Folhas sem movimento</string>
-  <string name="bft_2">2 Bft: Folhas se movendo</string>
-  <string name="bft_3">3 Bft: Bandeirolas se movendo</string>
-  <string name="bft_4">4 Bft: Ramos se movendo</string>
-  <string name="bft_5">5 Bft: Arbustos se movendo</string>
-  <string name="bft_6">6 Bft: Galhos grandes se movendo</string>
-  <string name="bft_7">7 Bft: Árvores balançando</string>
-  <string name="bft_8">8 Bft: Pequenos galhos quebrando</string>
-  <string name="bft_9">9 Bft: Tempestade</string>
-  <string name="front">frontal</string>
-  <string name="back">traseiro</string>
-  <string name="left">da esquerda</string>
-  <string name="right">da direita</string>
-  <string name="left_front">de noroeste</string>
-  <string name="right_front">de nordeste</string>
-  <string name="left_back">de sudoeste</string>
-  <string name="right_back">de sudeste</string>
-  <string name="stop">STOP</string>
-  <string name="end_n">Série %d</string>
-  <string name="miss">Miss</string>
-  <string name="backspace">Backspace</string>
-  <string name="accessibility_description_shot_n_score">Shot %1$d: %2$s</string>
-  <plurals name="rounds">
-    <item quantity="one">%d round</item>
-    <item quantity="other">%d rounds</item>
-  </plurals>
-  <plurals name="ends_arrow">
-    <item quantity="one">%1$d \u00D7 %2$d flecha</item>
-    <item quantity="other">%1$d \u00D7 %2$d flechas</item>
-  </plurals>
-  <plurals name="arrows_per_end">
-    <item quantity="one">%d flecha por série</item>
-    <item quantity="other">%d flechas por série</item>
-  </plurals>
+    <string name="recurve_bow">Arco recurvo</string>
+    <string name="compound_bow">Arco Composto</string>
+    <string name="bare_bow">Instintivo</string>
+    <string name="long_bow">Long Bow</string>
+    <string name="horse_bow">Horse Bow</string>
+    <string name="yumi">Yumi</string>
+    <string name="sunny">Ensolarado</string>
+    <string name="partly_cloudy">Parcialmente Nublado</string>
+    <string name="cloudy">Nublado</string>
+    <string name="light_rain">Garoa</string>
+    <string name="rain">Chuvoso</string>
+    <string name="round_desc">%1$s: %2$d &#215; %3$d flechas (%4$s face)</string>
+    <string name="mini">Mini</string>
+    <string name="small">Pequeno</string>
+    <string name="medium">Médio</string>
+    <string name="large">Grande</string>
+    <string name="xlarge">Extra Grande</string>
+    <string name="unknown">Desconhecido</string>
+    <string name="indoor">Indoor</string>
+    <string name="wind">Vento</string>
+    <string name="location">Local</string>
+    <string name="bft_0">0 Bft: Sem vento</string>
+    <string name="bft_1">1 Bft: Folhas sem movimento</string>
+    <string name="bft_2">2 Bft: Folhas se movendo</string>
+    <string name="bft_3">3 Bft: Bandeirolas se movendo</string>
+    <string name="bft_4">4 Bft: Ramos se movendo</string>
+    <string name="bft_5">5 Bft: Arbustos se movendo</string>
+    <string name="bft_6">6 Bft: Galhos grandes se movendo</string>
+    <string name="bft_7">7 Bft: Árvores balançando</string>
+    <string name="bft_8">8 Bft: Pequenos galhos quebrando</string>
+    <string name="bft_9">9 Bft: Tempestade</string>
+    <string name="front">frontal</string>
+    <string name="back">traseiro</string>
+    <string name="left">da esquerda</string>
+    <string name="right">da direita</string>
+    <string name="left_front">de noroeste</string>
+    <string name="right_front">de nordeste</string>
+    <string name="left_back">de sudoeste</string>
+    <string name="right_back">de sudeste</string>
+    <string name="stop">STOP</string>
+    <string name="end_n">Série %d</string>
+    <string name="miss">Miss</string>
+    <string name="backspace">Backspace</string>
+    <string name="accessibility_description_shot_n_score">Shot %1$d: %2$s</string>
+    <plurals name="rounds">
+        <item quantity="one">%d round</item>
+        <item quantity="other">%d rounds</item>
+    </plurals>
+    <plurals name="ends_arrow">
+        <item quantity="one">%1$d \u00D7 %2$d flecha</item>
+        <item quantity="other">%1$d \u00D7 %2$d flechas</item>
+    </plurals>
+    <plurals name="arrows_per_end">
+        <item quantity="one">%d flecha por série</item>
+        <item quantity="other">%d flechas por série</item>
+    </plurals>
 </resources>

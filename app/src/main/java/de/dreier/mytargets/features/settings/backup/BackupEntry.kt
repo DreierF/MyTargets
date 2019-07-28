@@ -16,9 +16,15 @@
 package de.dreier.mytargets.features.settings.backup
 
 import de.dreier.mytargets.utils.Utils
-import java.util.*
+import org.threeten.bp.LocalDate
 
-data class BackupEntry(var fileId: String?, var modifiedDate: Date?, private var backupSize: Long) {
+data class BackupEntry(
+    var fileId: String,
+
+    /** Milliseconds since 1970 at UTC. */
+    var lastModifiedAt: Long,
+    private var backupSize: Long
+) {
     val humanReadableSize: String
         get() = Utils.humanReadableByteCount(backupSize, true)
 }

@@ -21,7 +21,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
-import android.support.test.runner.intent.IntentStubberRegistry
+import androidx.test.runner.intent.IntentStubberRegistry
 import java.io.IOException
 
 object ImageCaptureStubbingUtils {
@@ -48,7 +48,7 @@ object ImageCaptureStubbingUtils {
             val testResources = context.resources
             val inputStream = testResources.openRawResource(mockedImage)
             val outputStream = context.contentResolver
-                    .openOutputStream(uriToSaveImage)
+                .openOutputStream(uriToSaveImage)
             inputStream.copyTo(outputStream)
         } catch (e: IOException) {
             e.printStackTrace()

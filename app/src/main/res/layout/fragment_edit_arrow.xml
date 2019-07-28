@@ -42,7 +42,7 @@
                 android:contentDescription="@string/name"
                 app:srcCompat="@drawable/ic_title_grey600_24dp"/>
 
-            <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
+            <com.google.android.material.textfield.TextInputLayout style="@style/propertyTextInputLayout">
 
                 <de.dreier.mytargets.views.TextInputEditText
                     android:id="@+id/name"
@@ -52,7 +52,7 @@
                     android:inputType="textNoSuggestions"
                     android:text="@={arrow.name}"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </FrameLayout>
 
@@ -63,7 +63,7 @@
                 android:contentDescription="@string/max_arrow_number"
                 app:srcCompat="@drawable/ic_arrow_number_grey600_24dp"/>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/maxArrowNumberTextInputLayout"
                 style="@style/propertyTextInputLayout">
 
@@ -75,7 +75,7 @@
                     android:inputType="number"
                     android:text="@={`` + arrow.maxArrowNumber}"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </FrameLayout>
 
@@ -90,7 +90,7 @@
                 android:contentDescription="@string/length"
                 app:srcCompat="@drawable/ic_arrow_length_grey600_24dp"/>
 
-            <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
+            <com.google.android.material.textfield.TextInputLayout style="@style/propertyTextInputLayout">
 
                 <de.dreier.mytargets.views.TextInputEditText
                     android:id="@+id/length"
@@ -100,7 +100,7 @@
                     android:inputType="textNoSuggestions"
                     android:text="@={arrow.length}"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </FrameLayout>
 
@@ -115,7 +115,7 @@
                 android:contentDescription="@string/material"
                 app:srcCompat="@drawable/ic_arrow_material_grey600_24dp"/>
 
-            <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
+            <com.google.android.material.textfield.TextInputLayout style="@style/propertyTextInputLayout">
 
                 <de.dreier.mytargets.views.TextInputEditText
                     android:id="@+id/material"
@@ -125,7 +125,7 @@
                     android:inputType="textNoSuggestions"
                     android:text="@={arrow.material}"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </FrameLayout>
 
@@ -140,7 +140,7 @@
                 android:contentDescription="@string/spine"
                 app:srcCompat="@drawable/ic_arrow_spine_grey600_24dp"/>
 
-            <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
+            <com.google.android.material.textfield.TextInputLayout style="@style/propertyTextInputLayout">
 
                 <de.dreier.mytargets.views.TextInputEditText
                     android:id="@+id/spine"
@@ -150,7 +150,7 @@
                     android:inputType="textNoSuggestions"
                     android:text="@={arrow.spine}"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </FrameLayout>
 
@@ -167,7 +167,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/diameterTextInputLayout"
                     style="@style/propertyTextInputLayout"
                     android:layout_toLeftOf="@+id/diameterUnit"
@@ -182,7 +182,7 @@
                         android:inputType="numberDecimal"
                         android:text="@={``+arrow.diameterValue}"/>
 
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <Spinner
                     android:id="@+id/diameterUnit"
@@ -210,7 +210,7 @@
                 android:contentDescription="@string/weight"
                 app:srcCompat="@drawable/ic_arrow_weight_grey600_24dp"/>
 
-            <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
+            <com.google.android.material.textfield.TextInputLayout style="@style/propertyTextInputLayout">
 
                 <de.dreier.mytargets.views.TextInputEditText
                     android:id="@+id/weight"
@@ -220,7 +220,7 @@
                     android:inputType="textNoSuggestions"
                     android:text="@={arrow.weight}"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </FrameLayout>
 
@@ -235,7 +235,7 @@
                 android:contentDescription="@string/tip_weight"
                 app:srcCompat="@drawable/ic_arrow_tip_weight_grey600_24dp"/>
 
-            <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
+            <com.google.android.material.textfield.TextInputLayout style="@style/propertyTextInputLayout">
 
                 <de.dreier.mytargets.views.TextInputEditText
                     android:id="@+id/tip_weight"
@@ -245,7 +245,7 @@
                     android:inputType="textNoSuggestions"
                     android:text="@={arrow.tipWeight}"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </FrameLayout>
 
@@ -260,7 +260,7 @@
                 android:contentDescription="@string/vanes"
                 app:srcCompat="@drawable/ic_arrow_vanes_grey600_24dp"/>
 
-            <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
+            <com.google.android.material.textfield.TextInputLayout style="@style/propertyTextInputLayout">
 
                 <de.dreier.mytargets.views.TextInputEditText
                     android:id="@+id/vanes"
@@ -270,7 +270,7 @@
                     android:inputType="textNoSuggestions"
                     android:text="@={arrow.vanes}"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </FrameLayout>
 
@@ -285,7 +285,7 @@
                 android:contentDescription="@string/nock"
                 app:srcCompat="@drawable/ic_arrow_nock_grey600_24dp"/>
 
-            <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
+            <com.google.android.material.textfield.TextInputLayout style="@style/propertyTextInputLayout">
 
                 <de.dreier.mytargets.views.TextInputEditText
                     android:id="@+id/nock"
@@ -295,7 +295,7 @@
                     android:inputType="textNoSuggestions"
                     android:text="@={arrow.nock}"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </FrameLayout>
 
@@ -310,7 +310,7 @@
                 android:contentDescription="@string/comment"
                 app:srcCompat="@drawable/ic_comment_grey600_24dp"/>
 
-            <android.support.design.widget.TextInputLayout style="@style/propertyTextInputLayout">
+            <com.google.android.material.textfield.TextInputLayout style="@style/propertyTextInputLayout">
 
                 <de.dreier.mytargets.views.TextInputEditText
                     android:id="@+id/comment"
@@ -320,7 +320,7 @@
                     android:inputType="textMultiLine"
                     android:text="@={arrow.comment}"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </FrameLayout>
 

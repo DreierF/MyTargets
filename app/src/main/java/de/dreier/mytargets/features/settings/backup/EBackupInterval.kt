@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.features.settings.backup
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import de.dreier.mytargets.R
 import de.dreier.mytargets.shared.SharedApplicationInstance
 

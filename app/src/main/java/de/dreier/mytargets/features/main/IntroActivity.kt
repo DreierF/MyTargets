@@ -15,8 +15,8 @@
 
 package de.dreier.mytargets.features.main
 
-import agency.tango.materialintroscreen.MaterialIntroActivity
-import agency.tango.materialintroscreen.SlideFragmentBuilder
+import io.github.dreierf.materialintroscreen.MaterialIntroActivity
+import io.github.dreierf.materialintroscreen.SlideFragmentBuilder
 import android.os.Bundle
 import de.dreier.mytargets.R
 

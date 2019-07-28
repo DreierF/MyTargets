@@ -15,7 +15,7 @@
 
 package de.dreier.mytargets.shared.targets.scoringstyle
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import de.dreier.mytargets.shared.models.Score
 import de.dreier.mytargets.shared.models.db.Shot
 

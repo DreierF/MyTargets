@@ -15,14 +15,14 @@
 
 package de.dreier.mytargets.features.distance
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
-import android.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.adapters.SimpleListAdapterBase
 import de.dreier.mytargets.base.fragments.SelectItemFragmentBase
@@ -74,7 +74,7 @@ class DistanceGridFragment : SelectItemFragmentBase<Dimension, SimpleListAdapter
         val factory = ViewModelFactory(activity!!.application!!)
         viewModel = ViewModelProviders.of(this, factory).get(DistancesViewModel::class.java)
         val bundle = arguments!!
-        val distance: Dimension = bundle.getParcelable(ITEM)
+        val distance: Dimension = bundle.getParcelable(ITEM)!!
         unit = Unit.from(bundle.getString(DISTANCE_UNIT))!!
         viewModel.setUnit(unit)
         viewModel.setDistance(distance)
