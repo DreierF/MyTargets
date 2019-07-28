@@ -37,17 +37,15 @@ import de.dreier.mytargets.test.utils.matchers.MatcherUtils.matchToolbarTitle
 import de.dreier.mytargets.test.utils.matchers.ParentViewMatcher.isOnForegroundFragment
 import de.dreier.mytargets.test.utils.matchers.ViewMatcher.clickOnPreference
 import org.hamcrest.Matchers.*
-import org.junit.After
+import org.junit.*
 import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
 import org.junit.runner.RunWith
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
 
 @RunWith(AndroidJUnit4::class)
+@Ignore
 class SettingsActivityTest : UITestBase() {
 
     @get:Rule
