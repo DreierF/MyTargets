@@ -83,7 +83,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
      * bar. If a sync is active or pending, the progress is shown.
      */
     private val syncStatusObserver = SyncStatusObserver {
-        activity!!.runOnUiThread {
+        activity?.runOnUiThread {
             val account = GenericAccountService.account
             val syncActive = ContentResolver.isSyncActive(account, SyncUtils.CONTENT_AUTHORITY)
             val syncPending = ContentResolver.isSyncPending(account, SyncUtils.CONTENT_AUTHORITY)
@@ -93,7 +93,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
             binding.backupProgressBar.isIndeterminate = true
             binding.backupProgressBar.visibility = if (isRefreshing) VISIBLE else GONE
             if (wasRefreshing && !isRefreshing && backup != null) {
-                backup!!.getBackups(this)
+                backup?.getBackups(this)
             }
         }
     }
@@ -183,8 +183,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Timber.d("onActivityResult: ")
-        backup!!.onActivityResult(requestCode, resultCode, data)
+        backup?.onActivityResult(requestCode, resultCode, data)
         if (requestCode == IMPORT_FROM_URI && resultCode == AppCompatActivity.RESULT_OK && data != null) {
             importFromUri(data.data)
         }
@@ -203,7 +202,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
     }
 
     private fun onBackupIntervalClicked() {
-        val backupIntervals = Arrays.asList(*EBackupInterval.values())
+        val backupIntervals = listOf(*EBackupInterval.values())
         MaterialDialog.Builder(context!!)
             .title(R.string.backup_interval)
             .items(backupIntervals)
@@ -269,7 +268,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
             }
         })
         binding.recentBackupsList.adapter = adapter
-        backup!!.connect(
+        backup?.connect(
             context!!,
             object : IAsyncBackupRestore.ConnectionListener {
                 override fun onLoginCancelled() {
@@ -282,7 +281,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
 
                 override fun onConnected() {
                     updateBackupLocation()
-                    backup!!.getBackups(this@BackupSettingsFragment)
+                    backup?.getBackups(this@BackupSettingsFragment)
                 }
 
                 override fun onConnectionSuspended() {
@@ -301,7 +300,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
     private fun onBackupsLoaded(list: List<BackupEntry>) {
         binding.recentBackupsProgress.visibility = GONE
         binding.recentBackupsList.visibility = VISIBLE
-        adapter!!.setList(list.toMutableList())
+        adapter?.setList(list.toMutableList())
         binding.lastBackupLabel.visibility = if (list.isNotEmpty()) VISIBLE else GONE
         updateLabelTimer?.cancel()
         if (list.isNotEmpty()) {
@@ -359,7 +358,7 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
 
     private fun restoreBackup(item: BackupEntry) {
         val progress = showRestoreProgressDialog()
-        backup!!.restoreBackup(item,
+        backup?.restoreBackup(item,
             object : IAsyncBackupRestore.BackupStatusListener {
                 override fun onFinished() {
                     progress.dismiss()
@@ -374,10 +373,10 @@ class BackupSettingsFragment : SettingsFragmentBase(), IAsyncBackupRestore.OnLoa
     }
 
     private fun deleteBackup(backupEntry: BackupEntry) {
-        backup!!.deleteBackup(backupEntry, object : IAsyncBackupRestore.BackupStatusListener {
+        backup?.deleteBackup(backupEntry, object : IAsyncBackupRestore.BackupStatusListener {
             override fun onFinished() {
                 adapter!!.remove(backupEntry)
-                backup!!.getBackups(this@BackupSettingsFragment)
+                backup?.getBackups(this@BackupSettingsFragment)
             }
 
             override fun onError(message: String) {

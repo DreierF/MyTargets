@@ -20,15 +20,20 @@ import de.dreier.mytargets.features.settings.SettingsManager
 import de.dreier.mytargets.shared.models.EWeather
 import de.dreier.mytargets.shared.models.Environment
 import java.util.*
+import kotlin.math.pow
+import kotlin.math.roundToInt
 
 class CurrentWeather {
 
     @SerializedName("cod")
     var httpCode: Int? = null
+
     @SerializedName("name")
     var cityName: String = ""
+
     @SerializedName("weather")
     var weather: List<Weather> = ArrayList()
+
     @SerializedName("wind")
     var wind: Wind? = null
 
@@ -37,18 +42,18 @@ class CurrentWeather {
     }
 
     private fun kmhToBeaufort(kmh: Double): Int {
-        return Math.round(Math.pow(kmh / 3.01, 0.666666666)).toInt()
+        return (kmh / 3.01).pow(0.666666666).roundToInt()
     }
 
     fun toEnvironment(): Environment {
-        val code = Integer.parseInt(weather[0].icon!!.substring(0, 2))
+        val code = Integer.parseInt(weather[0].icon?.substring(0, 2) ?: "1")
         val e = Environment()
         e.indoor = SettingsManager.indoor
         e.weather = imageCodeToWeather(code)
         e.windDirection = 0
         e.location = cityName
         e.windDirection = 0
-        e.windSpeed = kmhToBeaufort(mpsToKmh(wind!!.speed!!))
+        e.windSpeed = kmhToBeaufort(mpsToKmh(wind?.speed ?: 0.0))
         return e
     }
 
