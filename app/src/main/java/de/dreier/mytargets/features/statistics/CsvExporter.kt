@@ -58,6 +58,7 @@ class CsvExporter(private val context: Context, database: AppDatabase) {
         csv.add(context.getString(R.string.passe))
         csv.add(context.getString(R.string.timestamp))
         csv.add(context.getString(R.string.points))
+        csv.add(context.getString(R.string.arrow_numbers))
         csv.add("x")
         csv.add("y")
         csv.newLine()
@@ -114,10 +115,12 @@ class CsvExporter(private val context: Context, database: AppDatabase) {
             csv.add((e.index + 1).toString())
             // Timestamp
             csv.add(e.saveTime!!.format(DateTimeFormatter.ISO_LOCAL_TIME))
-            for ((_, index, _, x, y, scoringRing) in endDAO.loadShots(e.id)) {
+            for ((_, index, _, x, y, scoringRing, arrowNumber) in endDAO.loadShots(e.id)) {
                 csv.enterScope()
                 // Score
                 csv.add(target.zoneToString(scoringRing, index))
+
+                csv.add(if (arrowNumber == null) "" else arrowNumber)
 
                 // Coordinates (X, Y)
                 csv.add(x.toString())
