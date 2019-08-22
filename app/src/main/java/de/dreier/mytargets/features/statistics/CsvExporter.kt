@@ -120,7 +120,7 @@ class CsvExporter(private val context: Context, database: AppDatabase) {
                 // Score
                 csv.add(target.zoneToString(scoringRing, index))
 
-                csv.add(if (arrowNumber == null) "" else arrowNumber)
+                csv.add(arrowNumber ?: "")
 
                 // Coordinates (X, Y)
                 csv.add(x.toString())
