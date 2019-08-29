@@ -127,14 +127,14 @@ object StandardRoundFactory {
             build(
                 ARCHERY_GB, R.string.bray_i,
                 YARDS, CENTIMETER,
-                WAFull.ID, 0, 6, 20, 40, 5
+                WAFull.ID, 0, 3, 20, 40, 10
             )
         )
         rounds.add(
             build(
                 ARCHERY_GB, R.string.bray_ii,
                 YARDS, CENTIMETER,
-                WAFull.ID, 0, 6, 25, 60, 5
+                WAFull.ID, 0, 3, 25, 60, 10
             )
         )
         rounds.add(

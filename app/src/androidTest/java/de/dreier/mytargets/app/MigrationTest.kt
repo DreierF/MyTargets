@@ -309,4 +309,74 @@ class MigrationTest : InstrumentedTestBase() {
         assertThat(db.endDAO().loadEnds(rounds[0].id)).hasSize(6)
         assertThat(db.endDAO().loadEnds(rounds[1].id)).hasSize(6)
     }
+
+
+    private fun insertTrainingDataForVersion26(db: SupportSQLiteDatabase) {
+        db.execSQL("INSERT INTO `Training` (id,title,date,standardRoundId,bowId,arrowId,arrowNumbering,comment,archerSignatureId,witnessSignatureId,indoor,weather,windSpeed,windDirection,location,reachedPoints,totalPoints,shotCount) VALUES (1,'Training','2019-08-27',11,NULL,NULL,0,'',NULL,NULL,0,0,0,0,'',178,300,30);")
+        db.execSQL("INSERT INTO `StandardRound` (id,club,name) VALUES (11,4,'Bray I');")
+        db.execSQL("INSERT INTO `StandardRound` (id,club,name) VALUES (12,4,'Bray II');")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (1,0,1,0.0909451246261597,0.140448212623596,2,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (2,1,1,0.158708214759827,-0.0522582530975342,2,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (3,2,1,-0.130176305770874,0.0333890914916992,2,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (4,3,1,-0.00534975528717041,-0.170023441314697,2,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (5,4,1,0.155141711235046,0.0512322187423706,2,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (6,5,1,-0.0802456140518188,0.176134705543518,2,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (7,0,2,0.169407725334167,0.21182119846344,3,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (8,1,2,-0.0445809364318848,0.254644751548767,3,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (9,2,2,-0.287101149559021,0.101193308830261,3,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (10,3,2,-0.172973990440369,-0.155748844146729,3,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (11,4,2,0.183673501014709,-0.380573153495789,5,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (12,5,2,0.408361554145813,-0.0593955516815186,-2,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (13,0,3,0.536754488945007,0.354566693305969,7,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (14,1,3,0.394095540046692,0.536567568778992,7,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (15,2,3,-0.226471185684204,0.679313063621521,8,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (16,3,3,-0.825638949871063,-0.14147424697876,9,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (17,4,3,-0.415494322776794,-0.605397462844849,8,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (18,5,3,0.793540835380554,-0.209278464317322,9,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (19,0,4,0.668714046478271,0.918412089347839,-1,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (20,1,4,0.597384691238403,0.886294007301331,-1,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (21,2,4,0.725777745246887,0.750685811042786,-1,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (22,3,4,0.839905142784119,-0.887320160865784,-1,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (23,4,4,0.458292126655579,-1.00508534908295,-1,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (24,5,4,0.0445809364318848,-0.915869355201721,10,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (25,0,5,-0.0338814258575439,-0.0843760967254639,1,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (26,1,5,-0.0267485380172729,-0.00943446159362793,0,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (27,2,5,-0.00178313255310059,0.0101931095123291,0,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (28,3,5,-0.0160490274429321,-0.0377378463745117,0,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (29,4,5,0.0124826431274414,-0.0389565229415894,0,NULL);")
+        db.execSQL("INSERT INTO `Shot` (id,`index`,endId,x,y,scoringRing,arrowNumber) VALUES (30,5,5,0.0392313003540039,0.00840866565704346,0,NULL);")
+
+        db.execSQL("INSERT INTO `RoundTemplate` (id,standardRoundId,`index`,shotsPerEnd,endCount,distance,targetId,targetScoringStyleIndex,targetDiameter) VALUES (13,11,0,6,5,'20.0 yd',0,0,'40.0 cm');")
+        db.execSQL("INSERT INTO `RoundTemplate` (id,standardRoundId,`index`,shotsPerEnd,endCount,distance,targetId,targetScoringStyleIndex,targetDiameter) VALUES (14,12,0,6,5,'25.0 yd',0,0,'60.0 cm');")
+
+        db.execSQL("INSERT INTO `Round` (id,trainingId,`index`,shotsPerEnd,maxEndCount,distance,comment,targetId,targetScoringStyleIndex,targetDiameter,reachedPoints,totalPoints,shotCount) VALUES (1,1,0,6,5,'20.0 yd','',0,0,'40.0 cm',178,300,30);")
+
+        db.execSQL("INSERT INTO `End` (id,`index`,roundId,exact,saveTime,comment,reachedPoints,totalPoints,shotCount) VALUES (1,0,1,1,'21:05:52.528','',54,60,6);")
+        db.execSQL("INSERT INTO `End` (id,`index`,roundId,exact,saveTime,comment,reachedPoints,totalPoints,shotCount) VALUES (2,1,1,1,'21:06:02.347','',45,60,6);")
+        db.execSQL("INSERT INTO `End` (id,`index`,roundId,exact,saveTime,comment,reachedPoints,totalPoints,shotCount) VALUES (3,2,1,1,'21:06:08.17','',18,60,6);")
+        db.execSQL("INSERT INTO `End` (id,`index`,roundId,exact,saveTime,comment,reachedPoints,totalPoints,shotCount) VALUES (4,3,1,1,'21:06:15.663','',1,60,6);")
+        db.execSQL("INSERT INTO `End` (id,`index`,roundId,exact,saveTime,comment,reachedPoints,totalPoints,shotCount) VALUES (5,4,1,1,'21:06:25.499','',60,60,6);")
+    }
+
+    @Test
+    fun upgrade26to27() {
+        val db = testHelper.createDatabase(TEST_DB_NAME, 26)
+        insertTrainingDataForVersion26(db)
+
+        val count = db.query("select * from StandardRound").count
+        assertThat(count).isEqualTo(2)
+
+        db.close()
+
+        testHelper.runMigrationsAndValidate(
+            TEST_DB_NAME, 27,
+            true,
+            Migration27
+        )
+
+        val migratedDb = getMigratedRoomDatabase()
+        val ends = migratedDb.endDAO().loadEnds(1)
+        assertThat(ends.size).isEqualTo(10)
+        assertThat(migratedDb.endDAO().loadShots(15).get(1).x).isEqualTo(0.0124826431274414.toFloat())
+    }
 }

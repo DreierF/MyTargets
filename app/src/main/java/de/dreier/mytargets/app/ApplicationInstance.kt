@@ -15,12 +15,12 @@
 
 package de.dreier.mytargets.app
 
-import androidx.room.Room
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
-import androidx.multidex.MultiDex
 import android.util.Log
+import androidx.multidex.MultiDex
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.crashlytics.android.Crashlytics
 import com.evernote.android.state.StateSaver
@@ -127,7 +127,7 @@ class ApplicationInstance : SharedApplicationInstance() {
                     Migration17, Migration18, Migration19,
                     Migration20, Migration21, Migration22,
                     Migration23, Migration24, Migration25,
-                    Migration26
+                    Migration26, Migration27
                 )
                 .build()
         }
