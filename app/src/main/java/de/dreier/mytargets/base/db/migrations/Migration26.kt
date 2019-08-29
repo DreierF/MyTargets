@@ -15,9 +15,9 @@
 
 package de.dreier.mytargets.base.db.migrations
 
-import androidx.sqlite.db.SupportSQLiteDatabase
-import androidx.room.migration.Migration
 import android.database.Cursor
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import de.dreier.mytargets.shared.models.Dimension
 import de.dreier.mytargets.shared.models.Target
 import de.dreier.mytargets.shared.models.db.Shot
@@ -28,55 +28,59 @@ object Migration26 : Migration(25, 26) {
     override fun migrate(database: SupportSQLiteDatabase) {
         Timber.i("Migrating DB from version 25 to 26")
 
-        database.execSQL("ALTER TABLE `Training` ADD COLUMN `reachedPoints` INTEGER DEFAULT 0;")
-        database.execSQL("ALTER TABLE `Training` ADD COLUMN `totalPoints` INTEGER DEFAULT 0;")
-        database.execSQL("ALTER TABLE `Training` ADD COLUMN `shotCount` INTEGER DEFAULT 0;")
+        try {
+            database.execSQL("ALTER TABLE `Training` ADD COLUMN `reachedPoints` INTEGER DEFAULT 0;")
+            database.execSQL("ALTER TABLE `Training` ADD COLUMN `totalPoints` INTEGER DEFAULT 0;")
+            database.execSQL("ALTER TABLE `Training` ADD COLUMN `shotCount` INTEGER DEFAULT 0;")
 
-        database.execSQL("ALTER TABLE `Round` ADD COLUMN `reachedPoints` INTEGER DEFAULT 0;")
-        database.execSQL("ALTER TABLE `Round` ADD COLUMN `totalPoints` INTEGER DEFAULT 0;")
-        database.execSQL("ALTER TABLE `Round` ADD COLUMN `shotCount` INTEGER DEFAULT 0;")
+            database.execSQL("ALTER TABLE `Round` ADD COLUMN `reachedPoints` INTEGER DEFAULT 0;")
+            database.execSQL("ALTER TABLE `Round` ADD COLUMN `totalPoints` INTEGER DEFAULT 0;")
+            database.execSQL("ALTER TABLE `Round` ADD COLUMN `shotCount` INTEGER DEFAULT 0;")
 
-        database.execSQL("ALTER TABLE `End` ADD COLUMN `reachedPoints` INTEGER DEFAULT 0;")
-        database.execSQL("ALTER TABLE `End` ADD COLUMN `totalPoints` INTEGER DEFAULT 0;")
-        database.execSQL("ALTER TABLE `End` ADD COLUMN `shotCount` INTEGER DEFAULT 0;")
+            database.execSQL("ALTER TABLE `End` ADD COLUMN `reachedPoints` INTEGER DEFAULT 0;")
+            database.execSQL("ALTER TABLE `End` ADD COLUMN `totalPoints` INTEGER DEFAULT 0;")
+            database.execSQL("ALTER TABLE `End` ADD COLUMN `shotCount` INTEGER DEFAULT 0;")
 
-        recreateTablesWithNonNull(database)
+            recreateTablesWithNonNull(database)
 
-        createScoreTriggers(database)
+            createScoreTriggers(database)
 
-        createIndices(database)
+            createIndices(database)
 
-        database.query("SELECT `id`, `targetId`, `targetScoringStyleIndex`, `targetDiameter` FROM `Round`")
-            .useEach { round ->
-                val diameter = Dimension.parse(round.getString(3))
-                val target = Target(round.getLong(1), round.getInt(2), diameter)
-                val roundId = round.getLong(0)
+            database.query("SELECT `id`, `targetId`, `targetScoringStyleIndex`, `targetDiameter` FROM `Round`")
+                .useEach { round ->
+                    val diameter = Dimension.parse(round.getString(3))
+                    val target = Target(round.getLong(1), round.getInt(2), diameter)
+                    val roundId = round.getLong(0)
 
-                database.query("SELECT `id` FROM `End` WHERE `roundId` = $roundId")
-                    .useEach { end ->
-                        val endId = end.getLong(0)
+                    database.query("SELECT `id` FROM `End` WHERE `roundId` = $roundId")
+                        .useEach { end ->
+                            val endId = end.getLong(0)
 
-                        val shots = mutableListOf<Shot>()
-                        database.query("SELECT `index`, `scoringRing` FROM `Shot` WHERE `endId` = $endId ORDER BY `index`")
-                            .useEach { shotCursor ->
-                                shots.add(
-                                    Shot(
-                                        index = shotCursor.getInt(0),
-                                        scoringRing = shotCursor.getInt(1)
+                            val shots = mutableListOf<Shot>()
+                            database.query("SELECT `index`, `scoringRing` FROM `Shot` WHERE `endId` = $endId ORDER BY `index`")
+                                .useEach { shotCursor ->
+                                    shots.add(
+                                        Shot(
+                                            index = shotCursor.getInt(0),
+                                            scoringRing = shotCursor.getInt(1)
+                                        )
                                     )
-                                )
-                            }
+                                }
 
-                        val score = target.getReachedScore(shots)
-                        database.execSQL(
-                            "UPDATE `End` SET " +
-                                    "`reachedPoints` = ${score.reachedPoints}, " +
-                                    "`totalPoints` = ${score.totalPoints}, " +
-                                    "`shotCount` = ${score.shotCount} " +
-                                    "WHERE `id` = $endId"
-                        )
-                    }
-            }
+                            val score = target.getReachedScore(shots)
+                            database.execSQL(
+                                "UPDATE `End` SET " +
+                                        "`reachedPoints` = ${score.reachedPoints}, " +
+                                        "`totalPoints` = ${score.totalPoints}, " +
+                                        "`shotCount` = ${score.shotCount} " +
+                                        "WHERE `id` = $endId"
+                            )
+                        }
+                }
+        } catch (e: Exception) {
+            Timber.i(e, "DB has changed because of restoring a backup")
+        }
     }
 
     private fun createScoreTriggers(database: SupportSQLiteDatabase) {
