@@ -34,23 +34,27 @@ object Migration27 : Migration(26, 27) {
 
         database.execSQL(
             "UPDATE RoundTemplate SET shotsPerEnd=3, endCount=10 " +
-                    "WHERE standardRoundId IN (SELECT id FROM StandardRound WHERE name ='Bray I')"
+                    "WHERE standardRoundId IN (SELECT id FROM StandardRound WHERE id = 11)" // Bray I
         )
         database.execSQL(
             "UPDATE RoundTemplate SET shotsPerEnd=3, endCount=10 " +
-                    "WHERE standardRoundId IN (SELECT id FROM StandardRound WHERE name ='Bray II')"
+                    "WHERE standardRoundId IN (SELECT id FROM StandardRound WHERE id = 12)" // Bray II
         )
         database.execSQL(
             "UPDATE Round SET shotsPerEnd=3, maxEndCount=10 " +
-                    "WHERE trainingId IN (SELECT t.id FROM Training as t JOIN StandardRound as s WHERE s.name ='Bray I')"
+                    "WHERE trainingId IN (SELECT t.id FROM Training AS t JOIN StandardRound AS s WHERE s.id = 11)" // Bray I
         )
         database.execSQL(
             "UPDATE Round SET shotsPerEnd=3, maxEndCount=10 " +
-                    "WHERE trainingId IN (SELECT t.id FROM Training as t JOIN StandardRound as s WHERE s.name ='Bray II')"
+                    "WHERE trainingId IN (SELECT t.id FROM Training AS t JOIN StandardRound AS s WHERE s.id = 12)" // Bray II
         )
 
+        migrate(database, 11) // Bray I
+        migrate(database, 12) // Bray II
+    }
 
-        database.query("SELECT `id`, `targetId`, `targetScoringStyleIndex`, `targetDiameter` FROM `Round` WHERE trainingId IN (SELECT t.id FROM Training as t JOIN StandardRound as s WHERE s.name in ('Bray I', 'Bray II'))")
+    fun migrate(database: SupportSQLiteDatabase, standardRoundId: Int) {
+        database.query("SELECT r.id, `targetId`, `targetScoringStyleIndex`, `targetDiameter` FROM `Round` AS r JOIN `Training` AS t ON r.trainingId = t.id WHERE t.standardRoundId = ${standardRoundId}")
             .useEach { round ->
                 val roundId = round.getLong(0)
                 val diameter = Dimension.parse(round.getString(3))
@@ -58,9 +62,9 @@ object Migration27 : Migration(26, 27) {
 
                 var index = 0
                 val ends = mutableListOf<Long>()
-                database.query("SELECT * FROM `End` WHERE `roundId` = $roundId")
+                database.query("SELECT `id`, `index`, `roundId`, `exact`, `saveTime`, `comment` FROM `End` WHERE `roundId` = $roundId")
                     .useEach { end ->
-                        val end = End(
+                        val mEnd = End(
                             id = end.getLong(0),
                             index = end.getInt(1),
                             roundId = end.getLong(2),
@@ -69,28 +73,28 @@ object Migration27 : Migration(26, 27) {
                             comment = end.getString(5)
                         )
 
-                        val cursor = database.query("SELECT `fileName` FROM `EndImage` WHERE `endId` = ${end.id}")
-                        var fileName: String? = null
-                        if (cursor.moveToFirst()) {
-                            fileName = cursor.getString(0)
-                        }
+                        val files = mutableListOf<String>()
+                        database.query("SELECT `fileName` FROM `EndImage` WHERE `endId` = ${mEnd.id}")
+                            .useEach { image ->
+                                files.add(image.getString(0))
+                            }
 
-                        ends.add(end.id)
+                        ends.add(mEnd.id)
 
-                        addEnd(database, target, end, fileName, index++)
-                        addEnd(database, target, end, fileName, index++)
+                        addEnd(database, target, mEnd, files, index++)
+                        addEnd(database, target, mEnd, files, index++)
 
-                        deleteEndImage(database, end.id) // trigger?
-                        deleteShots(database, end.id)
+                        deleteEndImage(database, mEnd.id)
+                        deleteShots(database, mEnd.id)
                     }
 
                 deleteEnds(database, ends.joinToString())
             }
     }
 
-    fun addEnd(database: SupportSQLiteDatabase, target: Target, end: End, fileName: String?, index: Int) {
+    fun addEnd(database: SupportSQLiteDatabase, target: Target, end: End, files: List<String>, index: Int) {
         val shots = mutableListOf<Shot>()
-        database.query("SELECT `id`, `index`, `scoringRing` FROM Shot WHERE endId = ${end.id} LIMIT 3")
+        database.query("SELECT `id`, `index`, `scoringRing` FROM `Shot` WHERE `endId` = ${end.id} ORDER BY `id` LIMIT 3")
             .useEach { shotCursor ->
                 shots.add(
                     Shot(
@@ -104,16 +108,17 @@ object Migration27 : Migration(26, 27) {
         val score = target.getReachedScore(shots)
 
         val endId = insertEnd(database, end, score, index)
-        if (fileName != null) {
+
+        files.forEach { fileName ->
             insertEndImage(database, fileName, endId)
         }
 
-        var shotIndex = 0;
-        shots.forEach {
-            database.execSQL("UPDATE Shot SET endId = ?, `index` = ? WHERE id = ?", arrayOf(endId, shotIndex++, it.id))
+        var shotIndex = 0
+        shots.forEach { shot ->
+            database.execSQL("UPDATE `Shot` SET `endId` = $endId, `index` = $shotIndex WHERE `id` = ${shot.id}")
+            shotIndex++
         }
     }
-
 
     private fun insertEnd(database: SupportSQLiteDatabase, item: End, score: Score, index: Int): Long {
         val values = ContentValues()
@@ -125,25 +130,25 @@ object Migration27 : Migration(26, 27) {
         values.put("reachedPoints", score.reachedPoints)
         values.put("totalPoints", score.totalPoints)
         values.put("shotCount", score.shotCount)
-        return database.insert("END", SQLiteDatabase.CONFLICT_NONE, values)
+        return database.insert("End", SQLiteDatabase.CONFLICT_NONE, values)
     }
 
     private fun insertEndImage(database: SupportSQLiteDatabase, fileName: String, endId: Long): Long {
         val values = ContentValues()
         values.put("fileName", fileName)
         values.put("endId", endId)
-        return database.insert("ENDIMAGE", SQLiteDatabase.CONFLICT_NONE, values)
+        return database.insert("EndImage", SQLiteDatabase.CONFLICT_NONE, values)
     }
 
     private fun deleteEndImage(database: SupportSQLiteDatabase, endId: Long) {
-        database.delete("ENDIMAGE", "endId = ?", arrayOf(endId))
+        database.delete("EndImage", "endId = ?", arrayOf(endId))
     }
 
     private fun deleteShots(database: SupportSQLiteDatabase, endId: Long) {
-        database.delete("SHOT", "endId = ?", arrayOf(endId))
+        database.delete("Shot", "endId = ?", arrayOf(endId))
     }
 
     private fun deleteEnds(database: SupportSQLiteDatabase, ids: String) {
-        database.execSQL("delete from end where id in (" + ids + ")")
+        database.execSQL("DELETE FROM `End` WHERE `id` IN ($ids)")
     }
 }
