@@ -15,7 +15,9 @@
 
 package de.dreier.mytargets.base.db
 
-import androidx.room.*
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import de.dreier.mytargets.base.db.dao.*
 import de.dreier.mytargets.base.db.typeconverters.*
 import de.dreier.mytargets.shared.models.db.*
@@ -50,7 +52,7 @@ abstract class AppDatabase : RoomDatabase() {
     companion object {
         const val DATABASE_FILE_NAME = "database.db"
         const val DATABASE_IMPORT_FILE_NAME = "database"
-        const val VERSION = 26
+        const val VERSION = 27
     }
 
     abstract fun arrowDAO(): ArrowDAO
