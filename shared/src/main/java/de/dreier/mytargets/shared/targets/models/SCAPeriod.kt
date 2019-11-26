@@ -33,7 +33,7 @@ class SCAPeriod : TargetModelBase(
                 CircularZone(0.4f, GREEN, DARK_GRAY, 2),
                 CircularZone(1.0f, WHITE, DARK_GRAY, 2)
         ),
-        scoringStyles = listOf(ScoringStyle(false, 8, 4, 2)),
+        scoringStyles = listOf(ScoringStyle(false, intArrayOf(8, 4, 2))),
         diameters = listOf(Dimension(60f, Dimension.Unit.CENTIMETER))
 ) {
     init {

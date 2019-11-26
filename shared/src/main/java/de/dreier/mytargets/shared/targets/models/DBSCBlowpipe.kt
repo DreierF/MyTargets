@@ -33,7 +33,7 @@ class DBSCBlowpipe : TargetModelBase(
                 CircularZone(0.6666f, DBSC_RED, DARK_GRAY, 8),
                 CircularZone(1f, DBSC_BLUE, DARK_GRAY, 8)
         ),
-        scoringStyles = listOf(ScoringStyle(false, 7, 5, 3))
+        scoringStyles = listOf(ScoringStyle(false, intArrayOf(7, 5, 3)))
 ) {
     companion object {
         const val ID = 28L

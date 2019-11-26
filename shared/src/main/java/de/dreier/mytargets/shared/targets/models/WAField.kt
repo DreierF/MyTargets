@@ -37,8 +37,8 @@ open class WAField internal constructor(id: Long, nameRes: Int) : TargetModelBas
                 CircularZone(1.0f, DARK_GRAY, WHITE, 4)
         ),
         scoringStyles = listOf(
-                ScoringStyle(true, 5, 5, 4, 3, 2, 1),
-                ScoringStyle(false, 6, 5, 4, 3, 2, 1)
+                ScoringStyle(true, intArrayOf(5, 5, 4, 3, 2, 1)),
+                ScoringStyle(false, intArrayOf(6, 5, 4, 3, 2, 1))
         ),
         diameters = listOf(
                 Dimension(20f, CENTIMETER),

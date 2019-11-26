@@ -36,5 +36,5 @@ class IBO3D : Target3DBase(
                 HeartZone(1.0f, 0.0f, 0.0f, LIGHT_GRAY, BLACK, 3),
                 CircularZone(1.0f, 0.0f, 0.0f, BROWN, GRAY, 5)
         ),
-        scoringStyles = listOf(ScoringStyle(false, 11, 11, 10, 8, 5))
+        scoringStyles = listOf(ScoringStyle(false, intArrayOf(11, 11, 10, 8, 5)))
 )

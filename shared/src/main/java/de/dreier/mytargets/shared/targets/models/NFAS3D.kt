@@ -36,5 +36,5 @@ class NFAS3D : Target3DBase(
                 HeartZone(1.0f, 0.0f, 0.0f, LIGHT_GRAY, BLACK, 3),
                 CircularZone(1.0f, 0.0f, 0.0f, BROWN, GRAY, 5)
         ),
-        scoringStyles = listOf(ScoringStyle(false, 24, 24, 20, 16, 0))
+        scoringStyles = listOf(ScoringStyle(false, intArrayOf(24, 24, 20, 16, 0)))
 )

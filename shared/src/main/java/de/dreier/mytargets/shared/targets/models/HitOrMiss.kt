@@ -30,7 +30,7 @@ class HitOrMiss : TargetModelBase(id = 14,
                 CircularZone(0.25f, YELLOW, DARK_GRAY, 3),
                 CircularZone(1.0f, RED_MISS, DARK_GRAY, 3)
         ),
-        scoringStyles = listOf(ScoringStyle(false, 1, 0)),
+        scoringStyles = listOf(ScoringStyle(false, intArrayOf(1, 0))),
         diameters = listOf(Dimension(30f, CENTIMETER), Dimension(96f, CENTIMETER))
 ) {
     init {

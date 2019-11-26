@@ -38,12 +38,12 @@ class WA6Ring : TargetModelBase(
                 CircularZone(1.0f, CERULEAN_BLUE, DARK_GRAY, 3)
         ),
         scoringStyles = listOf(
-                ScoringStyle(R.string.recurve_style_x_5, true, 10, 10, 9, 8, 7, 6, 5),
-                ScoringStyle(R.string.recurve_style_10_5, false, 10, 10, 9, 8, 7, 6, 5),
-                ScoringStyle(R.string.compound_style, false, 10, 9, 9, 8, 7, 6, 5),
-                ScoringStyle(false, 11, 10, 9, 8, 7, 6, 5),
-                ScoringStyle(true, 5, 5, 5, 4, 4, 3, 3),
-                ScoringStyle(false, 9, 9, 9, 7, 7, 5, 5)
+                ScoringStyle(R.string.recurve_style_x_5, true, intArrayOf(10, 10, 9, 8, 7, 6, 5)),
+                ScoringStyle(R.string.recurve_style_10_5, false, intArrayOf(10, 10, 9, 8, 7, 6, 5)),
+                ScoringStyle(R.string.compound_style, false, intArrayOf(10, 9, 9, 8, 7, 6, 5)),
+                ScoringStyle(false, intArrayOf(11, 10, 9, 8, 7, 6, 5)),
+                ScoringStyle(true, intArrayOf(5, 5, 5, 4, 4, 3, 3)),
+                ScoringStyle(false, intArrayOf(9, 9, 9, 7, 7, 5, 5))
         ),
         diameters = listOf(
                 Dimension(40f, CENTIMETER),

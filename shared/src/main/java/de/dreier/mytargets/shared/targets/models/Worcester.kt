@@ -34,7 +34,7 @@ class Worcester : TargetModelBase(
                 CircularZone(1.0f, DARK_GRAY, WHITE, 0)
         ),
         scoringStyles = listOf(
-                ScoringStyle(false, 5, 4, 3, 2, 1)
+                ScoringStyle(false, intArrayOf(5, 4, 3, 2, 1))
         ),
         diameters = listOf(Dimension(16f, INCH))
 ) {

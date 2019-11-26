@@ -18,27 +18,23 @@ import de.dreier.mytargets.shared.R
 import de.dreier.mytargets.shared.targets.Target3DBase
 import de.dreier.mytargets.shared.targets.scoringstyle.ScoringStyle
 import de.dreier.mytargets.shared.targets.zone.CircularZone
+import de.dreier.mytargets.shared.targets.zone.EllipseZone
 import de.dreier.mytargets.shared.targets.zone.HeartZone
 import de.dreier.mytargets.shared.utils.Color.BLACK
 import de.dreier.mytargets.shared.utils.Color.BROWN
 import de.dreier.mytargets.shared.utils.Color.CERULEAN_BLUE
 import de.dreier.mytargets.shared.utils.Color.GRAY
-import de.dreier.mytargets.shared.utils.Color.LIGHT_GRAY
-import de.dreier.mytargets.shared.utils.Color.TURBO_YELLOW
+import de.dreier.mytargets.shared.utils.Color.RED
 
-class ASA3D : Target3DBase(
-        id = 15,
-        nameRes = R.string.asa_3d,
-        zones = listOf(
-                CircularZone(0.053396f, 0.274396f, -0.089198f, TURBO_YELLOW, BLACK, 3),
-                CircularZone(0.053396f, -0.017104004f, 0.399802f, TURBO_YELLOW, BLACK, 3),
-                CircularZone(0.124f, 0.274396f, -0.089198f, TURBO_YELLOW, BLACK, 3),
-                CircularZone(0.124f, -0.017104004f, 0.399802f, TURBO_YELLOW, BLACK, 3),
-                CircularZone(0.417876f, 0.12875f, 0.15562597f, CERULEAN_BLUE, BLACK, 4),
-                HeartZone(1.0f, 0.0f, 0.0f, LIGHT_GRAY, BLACK, 3),
-                CircularZone(1.0f, 0.0f, 0.0f, BROWN, GRAY, 5)
-        ),
-        scoringStyles = listOf(
-                ScoringStyle(false, intArrayOf(12, 12, 12, 12, 10, 8, 5))
-        )
+class FADB3D : Target3DBase(
+    id = 29,
+    nameRes = R.string.fadb_3d,
+    zones = listOf(
+        CircularZone(0.1f, 0.12689404f, 0.15313196f, RED, BLACK, 3),
+        CircularZone(0.22f, 0.12689404f, 0.15313196f, RED, BLACK, 3),
+        HeartZone(0.5f, 0.0f, 0.0f, CERULEAN_BLUE, BLACK, 3),
+        CircularZone(1.0f, 0.0f, 0.0f, BROWN, GRAY, 5)
+    ),
+    scoringStyles = listOf(
+        ScoringStyle(false, -1, intArrayOf(5, 5, 3, -1)))
 )

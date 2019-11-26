@@ -38,7 +38,7 @@ class Beursault : TargetModelBase(
                 CircularZone(1.0f, WHITE, DARK_GRAY, 27, false)
         ),
         scoringStyles = listOf(
-                ScoringStyle(false, 4, 4, 3, 3, 2, 2, 1, 1)
+                ScoringStyle(false, intArrayOf(4, 4, 3, 3, 2, 2, 1, 1))
         )
 ) {
     init {

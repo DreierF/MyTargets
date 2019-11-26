@@ -36,9 +36,9 @@ class NFAAIndoor : TargetModelBase(
                 CircularZone(1.0f, SAPPHIRE_BLUE, WHITE, 4)
         ),
         scoringStyles = listOf(
-                ScoringStyle(true, 5, 5, 4, 3, 2, 1),
-                ScoringStyle(false, 6, 5, 4, 3, 2, 1),
-                ScoringStyle(false, 7, 5, 4, 3, 2, 1)
+                ScoringStyle(true, intArrayOf(5, 5, 4, 3, 2, 1)),
+                ScoringStyle(false, intArrayOf(6, 5, 4, 3, 2, 1)),
+                ScoringStyle(false, intArrayOf(7, 5, 4, 3, 2, 1))
         ),
         diameters = listOf(Dimension(40f, CENTIMETER))
 ) {
