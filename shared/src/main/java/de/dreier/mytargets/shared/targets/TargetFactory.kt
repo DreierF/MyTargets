@@ -58,6 +58,7 @@ object TargetFactory {
         list.add(IBO3D())
         list.add(NFAS3D())
         list.add(DAIR3D())
+        list.add(FADB3D())
     }
 
     init {

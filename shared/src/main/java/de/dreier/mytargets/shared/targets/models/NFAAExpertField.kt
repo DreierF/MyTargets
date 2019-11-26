@@ -35,7 +35,7 @@ class NFAAExpertField : TargetModelBase(
                 CircularZone(0.8f, DARK_GRAY, WHITE, 4),
                 CircularZone(1.0f, DARK_GRAY, DARK_GRAY, 0)
         ),
-        scoringStyles = listOf(ScoringStyle(true, 6, 5, 4, 3, 2, 1)),
+        scoringStyles = listOf(ScoringStyle(true, intArrayOf(6, 5, 4, 3, 2, 1))),
         diameters = listOf(
                 Dimension(20f, CENTIMETER),
                 Dimension(35f, CENTIMETER),

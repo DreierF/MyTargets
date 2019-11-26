@@ -38,8 +38,8 @@ class NFAAAnimal : TargetModelBase(
         ),
         scoringStyles = listOf(
                 ArrowAwareScoringStyle(false, arrayOf(intArrayOf(21, 20, 18), intArrayOf(17, 16, 14), intArrayOf(13, 12, 10))),
-                ScoringStyle(false, 20, 16, 10),
-                ScoringStyle(false, 15, 12, 7),
+                ScoringStyle(false, intArrayOf(20, 16, 10)),
+                ScoringStyle(false, intArrayOf(15, 12, 7)),
                 ArrowAwareScoringStyle(false, arrayOf(intArrayOf(20, 18, 16), intArrayOf(14, 12, 10), intArrayOf(8, 6, 4))),
                 ArrowAwareScoringStyle(false, arrayOf(intArrayOf(20, 18, 16), intArrayOf(12, 10, 8), intArrayOf(6, 4, 2))),
                 ArrowAwareScoringStyle(false, arrayOf(intArrayOf(15, 10, 5), intArrayOf(12, 7, 2)))

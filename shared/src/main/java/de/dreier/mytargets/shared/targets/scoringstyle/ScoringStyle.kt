@@ -15,6 +15,7 @@
 
 package de.dreier.mytargets.shared.targets.scoringstyle
 
+import android.util.Log
 import androidx.annotation.StringRes
 import de.dreier.mytargets.shared.SharedApplicationInstance
 import de.dreier.mytargets.shared.models.Score
@@ -24,13 +25,18 @@ import de.dreier.mytargets.shared.models.sum
 open class ScoringStyle private constructor(
         val title: String?,
         private val showAsX: Boolean,
+        private val pointMiss: Int,
         protected val points: Array<IntArray>
 ) {
     private val maxScorePerShot: List<Int> by lazy { points.map { it.max() ?: 0 } }
 
-    internal constructor(showAsX: Boolean, points: Array<IntArray>) : this(null, showAsX, points)
+    internal constructor(showAsX: Boolean, points: Array<IntArray>) : this(null, showAsX, 0, points)
 
-    constructor(@StringRes title: Int, showAsX: Boolean, vararg points: Int) : this(SharedApplicationInstance.getStr(title), showAsX, arrayOf<IntArray>(points))
+    constructor(showAsX: Boolean, points: IntArray) : this(showAsX, arrayOf<IntArray>(points))
+
+    constructor(showAsX: Boolean, pointMiss: Int, points: IntArray) : this(null, showAsX, pointMiss, arrayOf<IntArray>(points))
+
+    constructor(@StringRes title: Int, showAsX: Boolean, points: IntArray) : this(SharedApplicationInstance.getStr(title), showAsX, 0, arrayOf<IntArray>(points))
 
     private val descriptionString: String
         get() {
@@ -50,8 +56,6 @@ open class ScoringStyle private constructor(
             return style
         }
 
-    constructor(showAsX: Boolean, vararg points: Int) : this(showAsX, arrayOf<IntArray>(points))
-    
     override fun toString() = title ?: descriptionString
 
     fun zoneToString(zone: Int, arrow: Int): String {
@@ -68,7 +72,7 @@ open class ScoringStyle private constructor(
     }
 
     fun getPointsByScoringRing(zone: Int, arrow: Int): Int {
-        return if (isOutOfRange(zone)) 0 else getPoints(zone, arrow)
+        return if (isOutOfRange(zone)) pointMiss else getPoints(zone, arrow)
     }
 
     protected open fun getPoints(zone: Int, arrow: Int): Int {

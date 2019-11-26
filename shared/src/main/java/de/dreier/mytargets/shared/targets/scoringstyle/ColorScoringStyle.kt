@@ -19,7 +19,7 @@ import androidx.annotation.StringRes
 import de.dreier.mytargets.shared.models.Score
 import de.dreier.mytargets.shared.models.db.Shot
 
-class ColorScoringStyle(@StringRes title: Int, private val maxEndPoints: Int, vararg points: Int) : ScoringStyle(title, false, *points) {
+class ColorScoringStyle(@StringRes title: Int, private val maxEndPoints: Int, points: IntArray) : ScoringStyle(title, false, points) {
 
     override fun getReachedScore(shots: List<Shot>): Score {
         val reachedScore = shots

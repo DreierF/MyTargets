@@ -42,6 +42,6 @@ class ASA3D14 : Target3DBase(
                 CircularZone(1.0f, 0.0f, 0.0f, BROWN, GRAY, 5)
         ),
         scoringStyles = listOf(
-                ScoringStyle(false, 14, 14, 12, 12, 12, 12, 10, 8, 5)
+                ScoringStyle(false, intArrayOf(14, 14, 12, 12, 12, 12, 10, 8, 5))
         )
 )

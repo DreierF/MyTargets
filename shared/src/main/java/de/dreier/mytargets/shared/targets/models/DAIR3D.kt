@@ -45,11 +45,11 @@ class DAIR3D : Target3DBase(
                 CircularZone(1.0f, 0.0f, 0.0f, BROWN, GRAY, 5)
         ),
         scoringStyles = listOf(
-                ScoringStyle(false, 8, 8, 12, 12, 12, 12, 11, 11, 10, 8, 0),
-                ScoringStyle(false, 14, 14, 12, 12, 12, 12, 11, 11, 10, 8, 0),
-                ScoringStyle(false, 8, 8, 12, 12, 12, 12, 10, 10, 10, 8, 0),
-                ScoringStyle(false, 14, 14, 12, 12, 12, 12, 10, 10, 10, 8, 0),
-                ScoringStyle(false, 14, 14, 11, 11, 10, 10, 10, 10, 10, 8, 5)
+                ScoringStyle(false, intArrayOf(8, 8, 12, 12, 12, 12, 11, 11, 10, 8, 0)),
+                ScoringStyle(false, intArrayOf(14, 14, 12, 12, 12, 12, 11, 11, 10, 8, 0)),
+                ScoringStyle(false, intArrayOf(8, 8, 12, 12, 12, 12, 10, 10, 10, 8, 0)),
+                ScoringStyle(false, intArrayOf(14, 14, 12, 12, 12, 12, 10, 10, 10, 8, 0)),
+                ScoringStyle(false, intArrayOf(14, 14, 11, 11, 10, 10, 10, 10, 10, 8, 5))
         )
 ) {
     companion object {

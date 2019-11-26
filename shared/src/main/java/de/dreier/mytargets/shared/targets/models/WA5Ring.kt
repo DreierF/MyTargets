@@ -37,12 +37,12 @@ open class WA5Ring internal constructor(id: Long, nameRes: Int, diameters: List<
                 CircularZone(1.0f, CERULEAN_BLUE, DARK_GRAY, 4)
         ),
         scoringStyles = listOf(
-                ScoringStyle(R.string.recurve_style_x_6, true, 10, 10, 9, 8, 7, 6),
-                ScoringStyle(R.string.recurve_style_10_6, false, 10, 10, 9, 8, 7, 6),
-                ScoringStyle(R.string.compound_style, false, 10, 9, 9, 8, 7, 6),
-                ScoringStyle(false, 11, 10, 9, 8, 7, 6),
-                ScoringStyle(true, 5, 5, 5, 4, 4, 3),
-                ScoringStyle(false, 9, 9, 9, 7, 7, 5)
+                ScoringStyle(R.string.recurve_style_x_6, true, intArrayOf(10, 10, 9, 8, 7, 6)),
+                ScoringStyle(R.string.recurve_style_10_6, false, intArrayOf(10, 10, 9, 8, 7, 6)),
+                ScoringStyle(R.string.compound_style, false, intArrayOf(10, 9, 9, 8, 7, 6)),
+                ScoringStyle(false, intArrayOf(11, 10, 9, 8, 7, 6)),
+                ScoringStyle(true, intArrayOf(5, 5, 5, 4, 4, 3)),
+                ScoringStyle(false, intArrayOf(9, 9, 9, 7, 7, 5))
         ),
         diameters = diameters
 ) {

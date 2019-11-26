@@ -36,8 +36,8 @@ class NFAAField : TargetModelBase(
                 CircularZone(1.0f, DARK_GRAY, DARK_GRAY, 0)
         ),
         scoringStyles = listOf(
-                ScoringStyle(true, 5, 5, 4, 4, 3, 3),
-                ScoringStyle(false, 6, 5, 4, 4, 3, 3)
+                ScoringStyle(true, intArrayOf(5, 5, 4, 4, 3, 3)),
+                ScoringStyle(false, intArrayOf(6, 5, 4, 4, 3, 3))
         ),
         diameters = listOf(
                 Dimension(20f, CENTIMETER),
